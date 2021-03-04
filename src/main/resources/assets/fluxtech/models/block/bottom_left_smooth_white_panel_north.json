@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "particle": "fluxtech:block/bottom_left_smooth_white_panel",
+    "north": "fluxtech:block/bottom_left_smooth_white_panel",
+    "south": "fluxtech:block/bottom_left_smooth_white_panel",
+    "east": "fluxtech:block/bottom_right_smooth_white_panel",
+    "west": "fluxtech:block/bottom_right_smooth_white_panel",
+    "up": "fluxtech:block/smooth_white_panel",
+    "down": "fluxtech:block/bottom_right_smooth_white_panel_north"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "level=0": { "model": "fluxtech:block/endurium_block" },
+    "level=1": { "model": "fluxtech:block/endurium_block" },
+    "level=2": { "model": "fluxtech:block/endurium_block" },
+    "level=3": { "model": "fluxtech:block/endurium_block" },
+    "level=4": { "model": "fluxtech:block/endurium_block" },
+    "level=5": { "model": "fluxtech:block/endurium_block" },
+    "level=6": { "model": "fluxtech:block/endurium_block" },
+    "level=7": { "model": "fluxtech:block/endurium_block" },
+    "level=8": { "model": "fluxtech:block/endurium_block" },
+    "level=9": { "model": "fluxtech:block/endurium_block" },
+    "level=10": { "model": "fluxtech:block/endurium_block" },
+    "level=11": { "model": "fluxtech:block/endurium_block" },
+    "level=12": { "model": "fluxtech:block/endurium_block" },
+    "level=13": { "model": "fluxtech:block/endurium_block" },
+    "level=14": { "model": "fluxtech:block/endurium_block" },
+    "level=15": { "model": "fluxtech:block/endurium_block" }
+  }
+}

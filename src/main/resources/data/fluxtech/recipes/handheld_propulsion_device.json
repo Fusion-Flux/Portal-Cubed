@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "T# ",
+    " En",
+    "T# "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:obsidian"
+    },
+    "T": {
+      "item": "minecraft:gold_block"
+    },
+    "E": {
+      "item": "minecraft:end_crystal"
+    },
+    "n": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "result": {
+    "item": "fluxtech:handheld_propulsion_device",
+    "count": 1
+  }
+}

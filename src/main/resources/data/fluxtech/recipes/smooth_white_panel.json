@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#W#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:iron_nugget"
+    },
+    "W": {
+      "item": "minecraft:white_concrete"
+    }
+  },
+  "result": {
+    "item": "fluxtech:smooth_white_panel",
+    "count": 1
+  }
+}

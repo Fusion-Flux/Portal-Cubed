@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "fluxtech:block/smooth_white_panel",
+    "side": "fluxtech:block/top_smooth_white_panel"
+  }
+}

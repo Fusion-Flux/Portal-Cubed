@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "":[ { "model": "fluxtech:block/greypannel" },
+      { "model": "fluxtech:block/greypannel2" },
+      { "model": "fluxtech:block/greypannel3" },
+      { "model": "fluxtech:block/greypannel4" }
+
+
+    ]
+
+
+
+
+  }
+}

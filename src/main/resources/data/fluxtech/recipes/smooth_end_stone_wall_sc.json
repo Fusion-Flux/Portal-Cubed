@@ -1,0 +1,8 @@
+{
+    "type": "minecraft:stonecutting",
+    "ingredient": {
+        "item": "fluxtech:smooth_end_stone"
+    },
+    "result": "fluxtech:smooth_end_stone_wall",
+    "count": 1
+}

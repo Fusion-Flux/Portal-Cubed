@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.fusionflux.fluxtech.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "PlayerEntityMixin",
+    "ArmorItemMixin"
+  ],
+  "client": [
+
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

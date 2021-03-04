@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "item": "minecraft:honey_block"
+    },
+    {
+      "item": "minecraft:end_stone"
+    },
+    {
+      "item": "minecraft:white_dye"
+    }
+  ],
+  "result": {"item": "fluxtech:gel"}
+}
