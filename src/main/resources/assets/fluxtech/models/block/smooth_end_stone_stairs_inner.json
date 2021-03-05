@@ -1,8 +1,0 @@
-{
-  "parent": "block/inner_stairs",
-  "textures": {
-    "bottom": "fluxtech:block/smooth_end_stone",
-    "top": "fluxtech:block/smooth_end_stone",
-    "side": "fluxtech:block/smooth_end_stone"
-  }
-}

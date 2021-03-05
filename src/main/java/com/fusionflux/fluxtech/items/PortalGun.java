@@ -19,17 +19,7 @@ public class PortalGun extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        Portal portal = Portal.entityType.create(world);
-        portal.setOriginPos(new Vec3d(0, 70, 0));
-        portal.setDestinationDimension(World.NETHER);
-        portal.setDestination(new Vec3d(100, 70, 100));
-        portal.setOrientationAndSize(
-                new Vec3d(1, 0, 0),//axisW
-                new Vec3d(0, 1, 0),//axisH
-                4,//width
-                4//height
-        );
-        portal.world.spawnEntity(portal);
+
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
 }

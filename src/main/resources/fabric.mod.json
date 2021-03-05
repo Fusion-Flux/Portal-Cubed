@@ -11,7 +11,7 @@
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/fluxtech",
     "sources": "https://github.com/FabricMC/fabric-example-mod",
-    "issues": "https://github.com/Fusion-Flux/FluxTech/issues"
+    "issues": "https://github.com/Fusion-Flux/Origins-Umbrellas/issues"
   },
 
   "license": "MIT",
@@ -21,9 +21,6 @@
   "entrypoints": {
     "main": [
       "com.fusionflux.fluxtech.FluxTech"
-    ],
-    "client": [
-      "com.fusionflux.fluxtech.client.FluxTechClientMod"
     ],
     "modmenu" : [
       "com.fusionflux.fluxtech.compatability.ModMenuIntegration"

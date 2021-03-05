@@ -1,19 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "#",
-    "S"
+    "#N#",
+    " S ",
+    " A "
   ],
   "key": {
     "#": {
+      "item": "minecraft:feather"
+    },
+    "N": {
       "item": "minecraft:netherite_boots"
     },
     "S": {
       "item": "minecraft:slime_block"
+    },
+    "A": {
+      "item": "minecraft:anvil"
     }
   },
   "result": {
-    "item": "fluxtech:slime_coated_netherite_boots",
-    "count": 1
+    "item": "fluxtech:long_fall_boots"
   }
 }
