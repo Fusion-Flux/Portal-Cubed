@@ -6,7 +6,7 @@ repositories {
 	maven {
 		url = "https://jitpack.io"
 	}
-	maven { url "https://maven.shedaniel.me/" }
+	maven { url ="https://maven.shedaniel.me/" }
 	maven { url = "https://www.cursemaven.com" }
 	maven { url = "https://maven.terraformersmc.com/releases" }
 }
