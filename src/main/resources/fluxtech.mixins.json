@@ -4,11 +4,11 @@
   "package": "com.fusionflux.fluxtech.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "PlayerEntityMixin",
-    "ArmorItemMixin"
+    "ArmorItemMixin",
+    "EntityMixin",
+    "PlayerEntityMixin"
   ],
   "client": [
-
   ],
   "injectors": {
     "defaultRequire": 1
