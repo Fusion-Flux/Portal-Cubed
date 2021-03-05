@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * @author sailKite
  * @author FusionFlux
- *
+ * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
 public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Tickable {
@@ -38,12 +38,12 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
     public boolean shouldExtend = false;
 
     public boolean shouldRepair = false;
-    private List<BlockPos> repairPos = new ArrayList<>();
+    private final List<BlockPos> repairPos = new ArrayList<>();
 
     private BlockPos.Mutable obstructorPos;
 
     public HardLightBridgeEmitterBlockEntity() {
-        super( FluxTechBlocks.HLB_EMITTER_ENTITY );
+        super(FluxTechBlocks.HLB_EMITTER_ENTITY);
         this.obstructorPos = pos.mutableCopy();
     }
 
@@ -52,43 +52,43 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
         assert world != null;
         if (this.world.getTime() % 40L == 0L) {
 
-            if (world.getBlockState( pos ).get( Properties.POWERED )) {
+            if (world.getBlockState(pos).get(Properties.POWERED)) {
                 this.playSound2(SoundEvents.BLOCK_BEACON_AMBIENT);
             }
         }
 
         if (!world.isClient) {
-            boolean redstonePowered = world.isReceivingRedstonePower( getPos() );
+            boolean redstonePowered = world.isReceivingRedstonePower(getPos());
 
-            if( redstonePowered ) {
+            if (redstonePowered) {
                 // Update blockstate
-                if( !world.getBlockState( pos ).get( Properties.POWERED )) {
-                    togglePowered( world.getBlockState( pos ));
+                if (!world.getBlockState(pos).get(Properties.POWERED)) {
+                    togglePowered(world.getBlockState(pos));
                 }
 
                 // Prevents an issue with the emitter overwriting itself
-                if ( obstructorPos.equals( getPos() )) {
-                    obstructorPos.move( this.getCachedState().get( Properties.FACING ));
+                if (obstructorPos.equals(getPos())) {
+                    obstructorPos.move(this.getCachedState().get(Properties.FACING));
                 }
 
                 // Starts the extension logic by checking the frontal adjacent position for non-obstruction
-                if( extensionTicks <= EXTENSION_TIME ) {
-                    if( world.isAir( obstructorPos ) || world.getBlockState( obstructorPos ).getHardness(world, obstructorPos) <= 0.1F || world.getBlockState( obstructorPos ).getBlock().equals( FluxTechBlocks.HLB_BLOCK )) {
+                if (extensionTicks <= EXTENSION_TIME) {
+                    if (world.isAir(obstructorPos) || world.getBlockState(obstructorPos).getHardness(world, obstructorPos) <= 0.1F || world.getBlockState(obstructorPos).getBlock().equals(FluxTechBlocks.HLB_BLOCK)) {
                         shouldExtend = true;
-                        extendBridge( getCachedState(), (ServerWorld ) world, getPos());
+                        extendBridge(getCachedState(), (ServerWorld) world, getPos());
                     }
                 }
 
                 maintainBridge();
             }
-            if( !redstonePowered ) {
+            if (!redstonePowered) {
                 // Update blockstate
-                if( world.getBlockState( pos ).get( Properties.POWERED )) {
-                    togglePowered( world.getBlockState( pos ));
+                if (world.getBlockState(pos).get(Properties.POWERED)) {
+                    togglePowered(world.getBlockState(pos));
                 }
 
-                obstructorPos = new BlockPos.Mutable( pos.getX(), pos.getY(), pos.getZ() );
-                obstructorPos.move( getCachedState().get( Properties.FACING ) );
+                obstructorPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+                obstructorPos.move(getCachedState().get(Properties.FACING));
                 extensionTicks = 0;
                 shouldExtend = false;
             }
@@ -121,84 +121,81 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
         Direction facing = state.get(Properties.FACING);
         BlockPos.Mutable extendPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
 
-        extendPos.move( facing );
-        extendPos.move( facing, extensionTicks );
+        extendPos.move(facing);
+        extendPos.move(facing, extensionTicks);
         ++extensionTicks;
-        for(int i = 0; i < BLOCKS_PER_TICK; i++ ) {
-            if( extensionTicks <= EXTENSION_TIME ) {
-                if( world.getBlockState( extendPos ).getBlock().equals( FluxTechBlocks.HLB_BLOCK )) {
-                    ((HardLightBridgeBlockEntity) Objects.requireNonNull( world.getBlockEntity( extendPos ) ) ).emitters.add( new BlockPos.Mutable( getPos().getX(), getPos().getY(), getPos().getZ() ) );
-                }
-                else if( world.isAir( extendPos ) || world.getBlockState( obstructorPos ).getHardness(world, obstructorPos) <= 0.1F) {
-                    world.setBlockState( extendPos, FluxTechBlocks.HLB_BLOCK.getDefaultState().with( Properties.FACING, facing ) );
-                    ((HardLightBridgeBlockEntity) Objects.requireNonNull( world.getBlockEntity( extendPos ) ) ).emitters.add( new BlockPos.Mutable( getPos().getX(), getPos().getY(), getPos().getZ() ) );
-                }
-                else {
+        for (int i = 0; i < BLOCKS_PER_TICK; i++) {
+            if (extensionTicks <= EXTENSION_TIME) {
+                if (world.getBlockState(extendPos).getBlock().equals(FluxTechBlocks.HLB_BLOCK)) {
+                    ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(extendPos))).emitters.add(new BlockPos.Mutable(getPos().getX(), getPos().getY(), getPos().getZ()));
+                } else if (world.isAir(extendPos) || world.getBlockState(obstructorPos).getHardness(world, obstructorPos) <= 0.1F) {
+                    world.setBlockState(extendPos, FluxTechBlocks.HLB_BLOCK.getDefaultState().with(Properties.FACING, facing));
+                    ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(extendPos))).emitters.add(new BlockPos.Mutable(getPos().getX(), getPos().getY(), getPos().getZ()));
+                } else {
                     bridgeComplete = true;
                     shouldExtend = false;
                     break;
                 }
 
-            }
-            else {
+            } else {
                 bridgeComplete = true;
                 shouldExtend = false;
                 break;
             }
-            extendPos.move( facing );
+            extendPos.move(facing);
         }
 
-        obstructorPos.set( extendPos );
-       // System.out.println("Obstructor at end of extension call this tick: " + obstructorPos);
+        obstructorPos.set(extendPos);
+        // System.out.println("Obstructor at end of extension call this tick: " + obstructorPos);
     }
 
     /**
      * Primary method for fixing any erroneously broken {@link HardLightBridgeBlock}s due to explosions,
      * manual breaking, etc:
      * <p>1) Iterates from frontal adjacent {@link BlockPos} to the current {@link #obstructorPos}.
-     *       For each position, if it contains air, create a {@link HardLightBridgeBlock}, and add
-     *       {@link HardLightBridgeEmitterBlockEntity this}' {@link BlockPos} to its {@link HardLightBridgeBlockEntity#emitters emitters} list.
-     *       If the position contains a bridge, add an entry to that instead. Else, update the active
-     *       {@link #obstructorPos} and break the loop.</p>
+     * For each position, if it contains air, create a {@link HardLightBridgeBlock}, and add
+     * {@link HardLightBridgeEmitterBlockEntity this}' {@link BlockPos} to its {@link HardLightBridgeBlockEntity#emitters emitters} list.
+     * If the position contains a bridge, add an entry to that instead. Else, update the active
+     * {@link #obstructorPos} and break the loop.</p>
      * <p>2) If the obstructor position has been updated, iterate from the old obstructor position to
-     *       the new one, removing {@link HardLightBridgeEmitterBlockEntity this}' {@link BlockPos} from each {@link HardLightBridgeBlockEntity}'s
-     *       {@link HardLightBridgeBlockEntity#emitters emitters} list.</p>
+     * the new one, removing {@link HardLightBridgeEmitterBlockEntity this}' {@link BlockPos} from each {@link HardLightBridgeBlockEntity}'s
+     * {@link HardLightBridgeBlockEntity#emitters emitters} list.</p>
      */
     private void maintainBridge() {
         assert world != null;
-        if( !world.isClient ) {
+        if (!world.isClient) {
             Direction facing = this.getCachedState().get(Properties.FACING);
-            BlockPos.Mutable maintainPos = new BlockPos.Mutable( pos.getX(), pos.getY(), pos.getZ() );
-            maintainPos.move( facing );
+            BlockPos.Mutable maintainPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+            maintainPos.move(facing);
             boolean shouldRetract = false;
 
             // Iterate from first bridge block out to obstructor
-            while( !maintainPos.equals( obstructorPos ) ) {
+            while (!maintainPos.equals(obstructorPos)) {
                 // If position is empty (read: destroyed), create a bridge block
-                if( world.isAir( maintainPos ) ) {
-                    world.setBlockState( maintainPos, FluxTechBlocks.HLB_BLOCK.getDefaultState().with( Properties.FACING, facing ), 3 );
-                    ((HardLightBridgeBlockEntity) Objects.requireNonNull( world.getBlockEntity( maintainPos ) ) ).emitters.add( new BlockPos.Mutable( getPos().getX(), getPos().getY(), getPos().getZ() ) );
+                if (world.isAir(maintainPos)) {
+                    world.setBlockState(maintainPos, FluxTechBlocks.HLB_BLOCK.getDefaultState().with(Properties.FACING, facing), 3);
+                    ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(maintainPos))).emitters.add(new BlockPos.Mutable(getPos().getX(), getPos().getY(), getPos().getZ()));
                 }
                 // Else if position is not another bridge block, mark it as the obstructor and exit the loop
-                else if( !world.getBlockState( maintainPos ).getBlock().equals( FluxTechBlocks.HLB_BLOCK ) ) {
+                else if (!world.getBlockState(maintainPos).getBlock().equals(FluxTechBlocks.HLB_BLOCK)) {
                     shouldRetract = true;
                     break;
-                }else if( !((HardLightBridgeBlockEntity) Objects.requireNonNull( world.getBlockEntity( maintainPos ))).emitters.contains( pos.mutableCopy() )) {
-                    ((HardLightBridgeBlockEntity) Objects.requireNonNull( world.getBlockEntity( maintainPos ))).emitters.add( new BlockPos.Mutable( getPos().getX(), getPos().getY(), getPos().getZ() ));
+                } else if (!((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(maintainPos))).emitters.contains(pos.mutableCopy())) {
+                    ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(maintainPos))).emitters.add(new BlockPos.Mutable(getPos().getX(), getPos().getY(), getPos().getZ()));
                 }
 
                 // Step forward if still looping
-                maintainPos.move( facing );
+                maintainPos.move(facing);
             }
 
-            if( shouldRetract ) {
+            if (shouldRetract) {
                 int retractedDistance = 0; // <-- add this line
                 BlockPos.Mutable cullPos = getPos().mutableCopy();
-                while( !obstructorPos.equals( maintainPos )) {
+                while (!obstructorPos.equals(maintainPos)) {
                     ++retractedDistance; // <-- add this line
-                    obstructorPos.move( facing.getOpposite() );
-                    if( world.getBlockState( obstructorPos ).getBlock().equals( FluxTechBlocks.HLB_BLOCK )) {
-                        ((HardLightBridgeBlockEntity)Objects.requireNonNull( world.getBlockEntity( obstructorPos ))).emitters.remove( cullPos );
+                    obstructorPos.move(facing.getOpposite());
+                    if (world.getBlockState(obstructorPos).getBlock().equals(FluxTechBlocks.HLB_BLOCK)) {
+                        ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(obstructorPos))).emitters.remove(cullPos);
                     }
                 }
                 extensionTicks -= retractedDistance; // <-- add this line
@@ -210,13 +207,13 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
      * Callback method called by {@link HardLightBridgeBlockEntity}'s when removed.
      * <p>Supplies an entry of the {@link BlockEntity}'s {@link BlockPos} to the {@link #repairPos} list.</p>
      * Marks the need for repair, though this may be refactored later.
-     * @see HardLightBridgeBlock
-     * @see BlockEntity
      *
      * @param pos the BlockPos passed by the calling bridge block.
+     * @see HardLightBridgeBlock
+     * @see BlockEntity
      */
-    public void repairUpdate( BlockPos pos ) {
-        repairPos.add( pos );
+    public void repairUpdate(BlockPos pos) {
+        repairPos.add(pos);
         shouldRepair = true;
     }
 
@@ -227,54 +224,54 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
      *
      * @param ownerPos the {@link BlockPos} of the owning {@link HardLightBridgeEmitterBlock}.
      */
-    public void spookyUpdateObstructor( BlockPos ownerPos ) {
-        this.obstructorPos.set( ownerPos );
+    public void spookyUpdateObstructor(BlockPos ownerPos) {
+        this.obstructorPos.set(ownerPos);
     }
 
     @Override
-    public CompoundTag toTag( CompoundTag tag ) {
-        super.toTag( tag );
+    public CompoundTag toTag(CompoundTag tag) {
+        super.toTag(tag);
 
-        tag.putBoolean( "bridgeComplete", bridgeComplete );
-        tag.putBoolean( "alreadyPowered", alreadyPowered );
-        tag.putBoolean( "shouldExtend", shouldExtend );
+        tag.putBoolean("bridgeComplete", bridgeComplete);
+        tag.putBoolean("alreadyPowered", alreadyPowered);
+        tag.putBoolean("shouldExtend", shouldExtend);
 
-        tag.putInt( "extTicks", extensionTicks );
+        tag.putInt("extTicks", extensionTicks);
 
         // Due to limitations of CompoundTag, we have to separately write each part of any BlockPos
-        tag.putInt( "obsx", obstructorPos.getX() );
-        tag.putInt( "obsy", obstructorPos.getY() );
-        tag.putInt( "obsz", obstructorPos.getZ() );
+        tag.putInt("obsx", obstructorPos.getX());
+        tag.putInt("obsy", obstructorPos.getY());
+        tag.putInt("obsz", obstructorPos.getZ());
 
         return tag;
     }
 
     @Override
-    public void fromTag( BlockState state, CompoundTag tag ) {
-        super.fromTag( state, tag );
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
 
-        bridgeComplete = tag.getBoolean( "bridgeComplete" );
-        alreadyPowered = tag.getBoolean( "alreadyPowered" );
-        shouldExtend = tag.getBoolean( "shouldExtend" );
+        bridgeComplete = tag.getBoolean("bridgeComplete");
+        alreadyPowered = tag.getBoolean("alreadyPowered");
+        shouldExtend = tag.getBoolean("shouldExtend");
 
-        tag.getInt( "extTicks" );
+        tag.getInt("extTicks");
 
 
         // Due to limitations of CompoundTag, we have to separately read each part of any BlockPos
         obstructorPos = new BlockPos.Mutable(
-                tag.getInt( "obsx" ),
-                tag.getInt( "obsy" ),
-                tag.getInt( "obsz" )
+                tag.getInt("obsx"),
+                tag.getInt("obsy"),
+                tag.getInt("obsz")
         );
     }
 
-    private void togglePowered( BlockState state ) {
+    private void togglePowered(BlockState state) {
         assert world != null;
-        world.setBlockState( pos, (BlockState)state.cycle( Properties.POWERED ));
-        if (world.getBlockState( pos ).get( Properties.POWERED )) {
+        world.setBlockState(pos, state.cycle(Properties.POWERED));
+        if (world.getBlockState(pos).get(Properties.POWERED)) {
             this.playSound(SoundEvents.BLOCK_BEACON_ACTIVATE);
         }
-        if (!world.getBlockState( pos ).get( Properties.POWERED )) {
+        if (!world.getBlockState(pos).get(Properties.POWERED)) {
             this.playSound(SoundEvents.BLOCK_BEACON_DEACTIVATE);
         }
     }

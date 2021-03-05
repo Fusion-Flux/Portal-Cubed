@@ -24,8 +24,8 @@ import java.util.Objects;
 public class HardLightBridgeEmitterBlock extends BlockWithEntity {
 
 
-    public HardLightBridgeEmitterBlock( Settings settings ) {
-        super( settings );
+    public HardLightBridgeEmitterBlock(Settings settings) {
+        super(settings);
     }
 
 
@@ -33,11 +33,13 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
     public VoxelShape getVisualShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return VoxelShapes.empty();
     }
+
     @Override
     @Environment(EnvType.CLIENT)
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1.0F;
     }
+
     @Override
     public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
         return true;
@@ -52,36 +54,36 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
     public BlockEntity createBlockEntity(BlockView world) {
         return new HardLightBridgeEmitterBlockEntity();
     }
+
     @Override
-    protected void appendProperties( StateManager.Builder<Block, BlockState> builder) {
-        builder.add( Properties.FACING,Properties.POWERED );
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(Properties.FACING, Properties.POWERED);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return (BlockState)FluxTechBlocks.HLB_EMITTER_BLOCK.getDefaultState().with(Properties.FACING, ctx.getPlayerFacing().getOpposite()).with( Properties.POWERED, false );
+        return FluxTechBlocks.HLB_EMITTER_BLOCK.getDefaultState().with(Properties.FACING, ctx.getPlayerFacing().getOpposite()).with(Properties.POWERED, false);
     }
 
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        if( !world.isClient ) {
-            ((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull( world.getBlockEntity( pos ) ) ).spookyUpdateObstructor( pos );
+        if (!world.isClient) {
+            ((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).spookyUpdateObstructor(pos);
         }
     }
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return (BlockState)state.with(Properties.FACING, rotation.rotate((Direction)state.get(Properties.FACING)));
+        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public boolean isSideInvisible( BlockState state, BlockState stateFrom, Direction direction ) {
-        if( stateFrom.isOf( FluxTechBlocks.HLB_EMITTER_BLOCK )) {
-            return stateFrom.get( Properties.POWERED );
-        }
-        else return stateFrom.isOf( FluxTechBlocks.HLB_BLOCK );
+    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+        if (stateFrom.isOf(FluxTechBlocks.HLB_EMITTER_BLOCK)) {
+            return stateFrom.get(Properties.POWERED);
+        } else return stateFrom.isOf(FluxTechBlocks.HLB_BLOCK);
     }
 
 }

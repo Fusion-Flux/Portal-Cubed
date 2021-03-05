@@ -1,7 +1,9 @@
 package com.fusionflux.fluxtech.mixin;
 
 import com.fusionflux.fluxtech.items.FluxTechItems;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,22 +35,22 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow
     public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 
-    @Shadow public abstract void playSound(SoundEvent sound, float volume, float pitch);
+    @Shadow
+    public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void isInvulnerableTo(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         ItemStack itemStack5 = this.getEquippedStack(EquipmentSlot.FEET);
-        if (damageSource == DamageSource.FALL && (itemStack5.getItem().equals(FluxTechItems.LONG_FALL_BOOTS))){
+        if (damageSource == DamageSource.FALL && (itemStack5.getItem().equals(FluxTechItems.LONG_FALL_BOOTS))) {
             cir.setReturnValue(true);
         }
     }
 
 
-
-    @Inject(method="getFallSound", at = @At("HEAD"), cancellable = true)
-    protected void getFallSound(int distance, CallbackInfoReturnable<SoundEvent> cir){
+    @Inject(method = "getFallSound", at = @At("HEAD"), cancellable = true)
+    protected void getFallSound(int distance, CallbackInfoReturnable<SoundEvent> cir) {
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
-        if(itemFeet.getItem().equals(FluxTechItems.LONG_FALL_BOOTS)){
+        if (itemFeet.getItem().equals(FluxTechItems.LONG_FALL_BOOTS)) {
             cir.setReturnValue(SoundEvents.BLOCK_WOOL_FALL);
         }
     }

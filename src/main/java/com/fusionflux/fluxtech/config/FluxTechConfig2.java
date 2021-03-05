@@ -10,6 +10,16 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 
 @Config(name = FluxTech.MOD_ID)
 public class FluxTechConfig2 implements ConfigData {
+    @ConfigEntry.Gui.TransitiveObject
+    @ConfigEntry.Category("enabled")
+    public Enabled enabled = new Enabled();
+    @ConfigEntry.Gui.TransitiveObject
+    @ConfigEntry.Category("numbers")
+    public Numbers numbers = new Numbers();
+    @ConfigEntry.Gui.TransitiveObject
+    @ConfigEntry.Category("numbersblock")
+    public NumbersBlock numbersblock = new NumbersBlock();
+
     public static void register() {
         AutoConfig.register(FluxTechConfig2.class, JanksonConfigSerializer::new);
     }
@@ -27,22 +37,13 @@ public class FluxTechConfig2 implements ConfigData {
         public boolean enableGels = true;
         public boolean enablePortal2Blocks = true;
     }
+
     public static class Numbers {
 
     }
+
     public static class NumbersBlock {
         public int maxBridgeLength = 127;
     }
-    @ConfigEntry.Gui.TransitiveObject
-    @ConfigEntry.Category("enabled")
-    public Enabled enabled = new Enabled();
-
-    @ConfigEntry.Gui.TransitiveObject
-    @ConfigEntry.Category("numbers")
-    public Numbers numbers = new Numbers();
-
-    @ConfigEntry.Gui.TransitiveObject
-    @ConfigEntry.Category("numbersblock")
-    public NumbersBlock numbersblock = new NumbersBlock();
 }
 

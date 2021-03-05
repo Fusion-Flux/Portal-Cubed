@@ -18,34 +18,36 @@ import net.minecraft.world.BlockView;
 
 public class HardLightBridgeBlock extends BlockWithEntity {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    public HardLightBridgeBlock( Settings settings ) {
-        super( settings );
+
+    public HardLightBridgeBlock(Settings settings) {
+        super(settings);
     }
 
     @Override
-    public BlockEntity createBlockEntity( BlockView world ) {
+    public BlockEntity createBlockEntity(BlockView world) {
         return new HardLightBridgeBlockEntity();
     }
 
     @Override
-    protected void appendProperties( StateManager.Builder<Block, BlockState> builder) {
-        builder.add( Properties.FACING );
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(Properties.FACING);
     }
 
-@Override
+    @Override
     public VoxelShape getVisualShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return VoxelShapes.empty();
     }
+
     @Override
     @Environment(EnvType.CLIENT)
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1.0F;
     }
+
     @Override
     public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
         return true;
     }
-
 
 
     @Override
@@ -55,8 +57,9 @@ public class HardLightBridgeBlock extends BlockWithEntity {
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return (BlockState)state.with(Properties.FACING, rotation.rotate(( Direction )state.get(Properties.FACING)));
+        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }
+
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
@@ -67,12 +70,11 @@ public class HardLightBridgeBlock extends BlockWithEntity {
         return SHAPE;
     }
 
-@Override
+    @Override
     @Environment(EnvType.CLIENT)
-public boolean isSideInvisible( BlockState state, BlockState stateFrom, Direction direction ) {
-    if( stateFrom.isOf( FluxTechBlocks.HLB_EMITTER_BLOCK )) {
-        return stateFrom.get( Properties.POWERED );
+    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+        if (stateFrom.isOf(FluxTechBlocks.HLB_EMITTER_BLOCK)) {
+            return stateFrom.get(Properties.POWERED);
+        } else return stateFrom.isOf(FluxTechBlocks.HLB_BLOCK);
     }
-    else return stateFrom.isOf( FluxTechBlocks.HLB_BLOCK );
-}
 }
