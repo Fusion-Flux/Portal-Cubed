@@ -8,11 +8,12 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class CubeEntityModel extends EntityModel<CubeEntity> {
 
-    private final ModelPart base;
+    private final ModelPart cube;
 
     public CubeEntityModel() {
-        base = new ModelPart(this, 0, 0);
-        base.addCuboid(-8, -8, -8, 16, 16, 16);
+        textureWidth = 64;
+        textureHeight = 64;
+        cube = new ModelPart(this, 0, 0).addCuboid(-8, -8, -8, 16, 16, 16);
     }
 
     @Override
@@ -22,10 +23,7 @@ public class CubeEntityModel extends EntityModel<CubeEntity> {
 
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-        // translate model down
-        // matrices.translate(0, 1.125, 0);
-
         // render cube
-        base.render(matrices, vertices, light, overlay);
+        cube.render(matrices, vertices, light, overlay);
     }
 }

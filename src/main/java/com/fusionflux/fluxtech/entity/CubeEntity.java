@@ -1,7 +1,6 @@
 package com.fusionflux.fluxtech.entity;
 
 import com.fusionflux.fluxtech.FluxTech;
-import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.math.Vector3f;
 import dev.lazurite.rayon.api.element.PhysicsElement;
 import dev.lazurite.rayon.impl.Rayon;
@@ -14,17 +13,21 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 public class CubeEntity extends Entity implements PhysicsElement {
     private final ElementRigidBody RIGID_BODY = new ElementRigidBody(this);
     public static final Identifier SPAWN_PACKET = new Identifier(FluxTech.MOD_ID, "cube");
+    private float storedDamage = 0.0F;
 
     public CubeEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
@@ -67,12 +70,44 @@ public class CubeEntity extends Entity implements PhysicsElement {
 
     @Override
     public boolean isCollidable() {
+        return false;
+    }
+
+    @Override
+    public boolean collides() {
+        return !this.removed;
+    }
+
+    @Override
+    public boolean isPushable() {
         return true;
     }
 
     @Override
     protected void initDataTracker() {
 
+    }
+
+    public boolean damage(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source)) {
+            return false;
+        } else if (!this.world.isClient && !this.removed) {
+            this.storedDamage += amount;
+            this.scheduleVelocityUpdate();
+            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).abilities.creativeMode;
+            if (bl || this.storedDamage >= 20.0F) {
+                if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+                    // TODO
+                    this.dropItem(Items.APPLE);
+                }
+
+                this.remove();
+            }
+
+            return true;
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -86,7 +121,6 @@ public class CubeEntity extends Entity implements PhysicsElement {
     }
 
     @Override
-    //TODO
     public Packet<?> createSpawnPacket() {
         PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
 

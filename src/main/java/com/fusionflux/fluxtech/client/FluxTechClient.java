@@ -1,6 +1,7 @@
 package com.fusionflux.fluxtech.client;
 
 import com.fusionflux.fluxtech.client.render.CubeEntityRenderer;
+import com.fusionflux.fluxtech.entity.CompanionCubeEntity;
 import com.fusionflux.fluxtech.entity.CubeEntity;
 import com.fusionflux.fluxtech.entity.FluxTechEntities;
 import net.fabricmc.api.ClientModInitializer;
@@ -10,6 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.UUID;
@@ -22,13 +24,17 @@ public class FluxTechClient implements ClientModInitializer {
     }
 
     private void registerEntityRenderers() {
-        EntityRendererRegistry.INSTANCE.register(FluxTechEntities.CUBE, (dispatcher, context) -> {
-            return new CubeEntityRenderer(dispatcher);
-        });
+        EntityRendererRegistry.INSTANCE.register(FluxTechEntities.CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, false));
+        EntityRendererRegistry.INSTANCE.register(FluxTechEntities.COMPANION_CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, true));
     }
 
     private void registerClientPacketReceivers() {
-        ClientPlayNetworking.registerGlobalReceiver(CubeEntity.SPAWN_PACKET, (client, handler, packet, responder) -> {
+        ClientPlayNetworking.registerGlobalReceiver(CubeEntity.SPAWN_PACKET, entitySpawnPacket());
+        ClientPlayNetworking.registerGlobalReceiver(CompanionCubeEntity.SPAWN_PACKET, entitySpawnPacket());
+    }
+
+    private static ClientPlayNetworking.PlayChannelHandler entitySpawnPacket() {
+        return (client, handler, packet, responder) -> {
             EntityType<?> type = Registry.ENTITY_TYPE.get(packet.readVarInt());
             UUID entityUUID = packet.readUuid();
             int entityID = packet.readVarInt();
@@ -51,6 +57,6 @@ public class FluxTechClient implements ClientModInitializer {
                     world.addEntity(entityID, entity);
                 }
             });
-        });
+        };
     }
 }
