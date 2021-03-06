@@ -22,6 +22,9 @@
     "main": [
       "com.fusionflux.fluxtech.FluxTech"
     ],
+    "client": [
+      "com.fusionflux.fluxtech.client.FluxTechClient"
+    ],
     "modmenu" : [
       "com.fusionflux.fluxtech.compatability.ModMenuIntegration"
     ]

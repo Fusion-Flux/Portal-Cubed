@@ -4,6 +4,7 @@ package com.fusionflux.fluxtech;
 
 import com.fusionflux.fluxtech.blocks.FluxTechBlocks;
 import com.fusionflux.fluxtech.config.FluxTechConfig2;
+import com.fusionflux.fluxtech.entity.FluxTechEntities;
 import com.fusionflux.fluxtech.items.FluxTechItems;
 import com.fusionflux.fluxtech.sound.FluxTechSounds;
 import net.fabricmc.api.ModInitializer;
@@ -25,8 +26,9 @@ public class FluxTech implements ModInitializer {
     @Override
     public void onInitialize() {
         FluxTechConfig2.register();
-        FluxTechItems.registerItems();
         FluxTechBlocks.registerBlocks();
+        FluxTechItems.registerItems();
+        FluxTechEntities.registerEntities();
         FluxTechSounds.registerSounds();
     }
 
