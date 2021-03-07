@@ -23,6 +23,9 @@ import net.minecraft.world.World;
 public class PortalGun extends Item {
     public int flipflop = 0;
     public int bigflipflop = 1;
+    public int testv = 0;
+    public int testv2 = 0;
+
     public BlockPos blockPos;
     public BlockPos blockPos2;
     public static Portal portal;
@@ -87,8 +90,16 @@ public class PortalGun extends Item {
             );
         }
 
-        if (blockPos != null && blockPos2 != null) {
+       if(testv==2){
+            portal.rotation=quion2;
+            portal2.rotation=quion1;
+            portal.setDestination(portal2.getOriginPos());
+            portal2.setDestination(portal.getOriginPos());
+            portal.reloadAndSyncToClient();
+            portal2.reloadAndSyncToClient();
+        }
 
+        if (blockPos != null && blockPos2 != null && testv!=2) {
             portal.rotation=quion2;
             portal2.rotation=quion1;
             portal.setDestination(portal2.getOriginPos());
@@ -97,9 +108,13 @@ public class PortalGun extends Item {
             //portal2 = PortalAPI.createFlippedPortal(portal2);
             portal.world.spawnEntity(portal);
             portal2.world.spawnEntity(portal2);
-
+            //portal.isGlobalPortal=true;
+            //portal2.isGlobalPortal=true;
+//testv++;
             System.out.println("made portals");
         }
+
+
 
 
 
