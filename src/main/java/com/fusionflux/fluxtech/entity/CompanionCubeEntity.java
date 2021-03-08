@@ -15,14 +15,5 @@ public class CompanionCubeEntity extends CubeEntity {
 
     public CompanionCubeEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
-        Rayon.THREAD.get(world).execute(space -> {
-            this.RIGID_BODY.setCollisionShape(new BoundingBoxShape(this.getBoundingBox()));
-            this.RIGID_BODY.setMass(1.0f);              // 0.0f - ? kg
-            this.RIGID_BODY.setFriction(0.5f);          // 0.0f - 1.0f
-            this.RIGID_BODY.setRestitution(0.5f);       // 0.0f - 1.0f
-            this.RIGID_BODY.setDragCoefficient(0.05f);  // 0.0f - ?
-            this.RIGID_BODY.setBlockLoadDistance(1);    // 1 - ? (affects performance extremely)
-            this.RIGID_BODY.setDoFluidResistance(true);
-        });
     }
 }
