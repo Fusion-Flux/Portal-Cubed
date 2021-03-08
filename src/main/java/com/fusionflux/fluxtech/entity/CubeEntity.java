@@ -25,7 +25,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 public class CubeEntity extends Entity implements PhysicsElement {
-    private final ElementRigidBody RIGID_BODY = new ElementRigidBody(this);
+    protected final ElementRigidBody RIGID_BODY = new ElementRigidBody(this);
     public static final Identifier SPAWN_PACKET = new Identifier(FluxTech.MOD_ID, "cube");
     private float storedDamage = 0.0F;
 

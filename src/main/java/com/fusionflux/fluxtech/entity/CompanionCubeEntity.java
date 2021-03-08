@@ -11,7 +11,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 public class CompanionCubeEntity extends CubeEntity {
-    private final ElementRigidBody RIGID_BODY = new ElementRigidBody(this);
     public static final Identifier SPAWN_PACKET = new Identifier(FluxTech.MOD_ID, "companion_cube");
 
     public CompanionCubeEntity(EntityType<?> entityType, World world) {
@@ -25,35 +24,5 @@ public class CompanionCubeEntity extends CubeEntity {
             this.RIGID_BODY.setBlockLoadDistance(1);    // 1 - ? (affects performance extremely)
             this.RIGID_BODY.setDoFluidResistance(true);
         });
-    }
-
-    @Override
-    public boolean isCollidable() {
-        return true;
-    }
-
-    @Override
-    protected void initDataTracker() {
-
-    }
-
-    @Override
-    protected void readCustomDataFromTag(CompoundTag tag) {
-
-    }
-
-    @Override
-    protected void writeCustomDataToTag(CompoundTag tag) {
-
-    }
-
-    @Override
-    public void step(MinecraftSpace space) {
-
-    }
-
-    @Override
-    public ElementRigidBody getRigidBody() {
-        return this.RIGID_BODY;
     }
 }
