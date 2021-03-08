@@ -1,6 +1,5 @@
 package com.fusionflux.fluxtech.mixin;
 
-import com.fusionflux.fluxtech.accessor.EnduriumToucher;
 import com.fusionflux.fluxtech.blocks.FluxTechBlocks;
 import com.fusionflux.fluxtech.config.FluxTechConfig2;
 import com.fusionflux.fluxtech.entity.EntityAttachments;
@@ -33,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAttachments, EnduriumToucher {
+public abstract class EntityMixin implements EntityAttachments {
 
     private static final TrackedData<Boolean> IS_ROLLING = DataTracker.registerData(Entity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Direction> DIRECTION = DataTracker.registerData(Entity.class, TrackedDataHandlerRegistry.FACING);

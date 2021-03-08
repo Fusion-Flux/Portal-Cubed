@@ -9,6 +9,7 @@
     "PlayerEntityMixin"
   ],
   "client": [
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
