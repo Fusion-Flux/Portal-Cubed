@@ -6,11 +6,15 @@ import com.fusionflux.fluxtech.blocks.blockentities.HardLightBridgeBlockEntity;
 import com.fusionflux.fluxtech.blocks.blockentities.HardLightBridgeEmitterBlock;
 import com.fusionflux.fluxtech.blocks.blockentities.HardLightBridgeEmitterBlockEntity;
 import com.fusionflux.fluxtech.config.FluxTechConfig2;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
@@ -122,6 +126,19 @@ public class FluxTechBlocks {
             Registry.register(Registry.ITEM, new Identifier(FluxTech.MOD_ID, "bottom_2x2_gritty_white_panel"), new BlockItem(BOTTOM_2X2_GRITTY_WHITE_PANEL, new Item.Settings().group(FluxTech.FLUXTECH_GROUP)));
             Registry.register(Registry.BLOCK, new Identifier(FluxTech.MOD_ID, "top_2x2_gritty_white_panel"), TOP_2X2_GRITTY_WHITE_PANEL);
             Registry.register(Registry.ITEM, new Identifier(FluxTech.MOD_ID, "top_2x2_gritty_white_panel"), new BlockItem(TOP_2X2_GRITTY_WHITE_PANEL, new Item.Settings().group(FluxTech.FLUXTECH_GROUP)));
+
+            HLB_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(FluxTech.MOD_ID, "emitter_test_entity"), BlockEntityType.Builder.create(HardLightBridgeEmitterBlockEntity::new, HLB_EMITTER_BLOCK).build(null));
+            Registry.register(Registry.BLOCK, new Identifier(FluxTech.MOD_ID, "emitter"), HLB_EMITTER_BLOCK);
+            Registry.register(Registry.ITEM, new Identifier(FluxTech.MOD_ID, "emitter"), new BlockItem(HLB_EMITTER_BLOCK, new Item.Settings().group(FluxTech.FLUXTECH_GROUP)));
+            HLB_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(FluxTech.MOD_ID, "bridge_test_entity"), BlockEntityType.Builder.create(HardLightBridgeBlockEntity::new, HLB_BLOCK).build(null));
+            Registry.register(Registry.BLOCK, new Identifier(FluxTech.MOD_ID, "bridge_test"), HLB_BLOCK);
         }
+
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void registerRenderLayers() {
+        BlockRenderLayerMap.INSTANCE.putBlock(FluxTechBlocks.HLB_BLOCK, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(FluxTechBlocks.HLB_EMITTER_BLOCK, RenderLayer.getTranslucent());
     }
 }

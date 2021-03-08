@@ -1,5 +1,6 @@
 package com.fusionflux.fluxtech.client;
 
+import com.fusionflux.fluxtech.blocks.FluxTechBlocks;
 import com.fusionflux.fluxtech.client.render.CubeEntityRenderer;
 import com.fusionflux.fluxtech.entity.CompanionCubeEntity;
 import com.fusionflux.fluxtech.entity.CubeEntity;
@@ -21,6 +22,7 @@ public class FluxTechClient implements ClientModInitializer {
     public void onInitializeClient() {
         registerClientPacketReceivers();
         registerEntityRenderers();
+        FluxTechBlocks.registerRenderLayers();
     }
 
     private void registerEntityRenderers() {
