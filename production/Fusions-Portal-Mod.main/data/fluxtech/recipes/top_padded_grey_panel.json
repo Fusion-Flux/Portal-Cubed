@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "fluxtech:padded_grey_panel"
-  },
-  "result": "fluxtech:top_padded_grey_panel",
-  "count": 1
-}

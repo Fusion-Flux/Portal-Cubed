@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "fluxtech:block/padded_grey_panel",
-    "side": "fluxtech:block/top_padded_grey_panel"
-  }
-}
