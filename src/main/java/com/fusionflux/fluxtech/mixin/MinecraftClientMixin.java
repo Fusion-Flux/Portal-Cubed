@@ -33,12 +33,13 @@ public abstract class MinecraftClientMixin {
     @Shadow
     @Nullable
     public ClientPlayerEntity player;
+    @Shadow
+    @Nullable
+    public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     public MinecraftClientMixin() {
+        throw new AssertionError(FluxTech.MOD_ID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
     }
-
-    @Shadow
-    protected abstract void doItemPick();
 
    @Inject(
             method = "handleBlockBreaking",
@@ -52,7 +53,6 @@ public abstract class MinecraftClientMixin {
 
     }
 
-    @Shadow @Nullable public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
     private void onDoAttack(CallbackInfo ci) {
