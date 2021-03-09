@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values" : [
+    "fluxtech:chiseled_smooth_grey_panel",
+    "fluxtech:top_left_smooth_grey_panel",
+    "fluxtech:top_smooth_grey_panel",
+    "fluxtech:smooth_grey_panel",
+    "fluxtech:bottom_smooth_grey_panel",
+    "fluxtech:bottom_left_smooth_grey_panel",
+    "fluxtech:chiseled_padded_grey_panel",
+    "fluxtech:top_left_padded_grey_panel",
+    "fluxtech:top_padded_grey_panel",
+    "fluxtech:padded_grey_panel",
+    "fluxtech:bottom_padded_grey_panel",
+    "fluxtech:bottom_left_padded_grey_panel"
+  ]
+}

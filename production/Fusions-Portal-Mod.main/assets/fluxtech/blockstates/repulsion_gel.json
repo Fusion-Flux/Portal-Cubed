@@ -1,0 +1,85 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "fluxtech:block/repulsion_gel_main"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "fluxtech:block/repulsion_gel_north_west",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "fluxtech:block/repulsion_gel_north",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "fluxtech:block/repulsion_gel_north_east",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "fluxtech:block/repulsion_gel_east",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "fluxtech:block/repulsion_gel_south_east",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "fluxtech:block/repulsion_gel_south",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "fluxtech:block/repulsion_gel_south_west",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "fluxtech:block/repulsion_gel_west",
+        "uvlock": true
+      }
+    }
+  ]
+}

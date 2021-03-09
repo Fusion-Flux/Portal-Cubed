@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "fluxtech:gritty_white_panel"
+  },
+  "result": "fluxtech:top_gritty_white_panel",
+  "count": 1
+}

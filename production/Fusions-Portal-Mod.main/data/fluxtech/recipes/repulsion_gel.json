@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "fluxtech:gel"
+    },
+    {
+      "item": "minecraft:slime_block"
+    },
+    {
+      "item": "minecraft:lapis_lazuli"
+    }
+  ],
+  "result": {"item": "fluxtech:repulsion_gel"}
+}

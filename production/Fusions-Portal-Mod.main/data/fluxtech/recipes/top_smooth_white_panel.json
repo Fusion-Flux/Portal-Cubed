@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "fluxtech:smooth_white_panel"
+  },
+  "result": "fluxtech:top_smooth_white_panel",
+  "count": 1
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "fluxtech:block/gritty_white_panel"
+  }
+}

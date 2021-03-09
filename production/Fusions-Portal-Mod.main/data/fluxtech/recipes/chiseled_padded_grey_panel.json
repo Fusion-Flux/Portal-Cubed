@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "fluxtech:padded_grey_panel"
+  },
+  "result": "fluxtech:chiseled_padded_grey_panel",
+  "count": 1
+}

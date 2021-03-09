@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "fluxtech:block/top_smooth_grey_panel_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "fluxtech:block/top_smooth_grey_panel"
+    },
+    "axis=z": {
+      "model": "fluxtech:block/top_smooth_grey_panel_horizontal",
+      "x": 90
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "itemGroup.fluxtech.general": "FluxTech",
+
+  "subtitles.fluxtech.gelbounce": "Repulsion Gel Bounce",
+  "subtitles.fluxtech.gelrun": "Propulsion Gel Run",
+
+  "item.fluxtech.long_fall_boots": "Long Fall Boots",
+
+  "block.fluxtech.propulsion_gel": "Propulsion Gel",
+  "block.fluxtech.repulsion_gel": "Repulsion Gel",
+  "block.fluxtech.gel": "Gel",
+
+  "block.fluxtech.smooth_white_panel": "Smooth White Panel",
+  "block.fluxtech.chiseled_smooth_white_panel": "Chiseled Smooth White Panel",
+  "block.fluxtech.top_smooth_white_panel": "Top Smooth White Panel",
+  "block.fluxtech.bottom_smooth_white_panel": "Bottom Smooth White Panel",
+  "block.fluxtech.top_2x2_smooth_white_panel": "Top 2X2 Smooth White Panel",
+  "block.fluxtech.bottom_2x2_smooth_white_panel": "Bottom 2X2 Smooth White Panel",
+
+  "block.fluxtech.gritty_white_panel": "Gritty White Panel",
+  "block.fluxtech.chiseled_gritty_white_panel": "Chiseled Gritty White Panel",
+  "block.fluxtech.top_gritty_white_panel": "Top Gritty White Panel",
+  "block.fluxtech.bottom_gritty_white_panel": "Bottom Gritty White Panel",
+  "block.fluxtech.top_2x2_gritty_white_panel": "Top 2X2 Gritty White Panel",
+  "block.fluxtech.bottom_2x2_gritty_white_panel": "Bottom 2X2 Gritty White Panel",
+
+  "block.fluxtech.smooth_grey_panel": "Smooth Grey Panel",
+  "block.fluxtech.chiseled_smooth_grey_panel": "Chiseled Smooth Grey Panel",
+  "block.fluxtech.top_smooth_grey_panel": "Top Smooth Grey Panel",
+  "block.fluxtech.bottom_smooth_grey_panel": "Bottom Smooth Grey Panel",
+  "block.fluxtech.top_2x2_smooth_grey_panel": "Top 2X2 Smooth Grey Panel",
+  "block.fluxtech.bottom_2x2_smooth_grey_panel": "Bottom 2X2 Smooth Grey Panel",
+
+  "block.fluxtech.padded_grey_panel": "Padded Grey Panel",
+  "block.fluxtech.chiseled_padded_grey_panel": "Chiseled Padded Grey Panel",
+  "block.fluxtech.top_padded_grey_panel": "Top Padded Grey Panel",
+  "block.fluxtech.bottom_padded_grey_panel": "Bottom Padded Grey Panel",
+  "block.fluxtech.top_2x2_padded_grey_panel": "Top 2X2 Padded Grey Panel",
+  "block.fluxtech.bottom_2x2_padded_grey_panel": "Bottom 2X2 Padded Grey Panel",
+
+
+  "block.fluxtech.emitter": "Hardlight Bridge Emitter",
+
+  "text.autoconfig.fluxtech.title": "FluxTech Config",
+
+  "text.autoconfig.fluxtech.category.numbers": "Item Config",
+
+
+  "text.autoconfig.fluxtech.category.numbersblock": "Block Config",
+  "text.autoconfig.fluxtech.option.numbersblock.maxBridgeLength": "Hardlight Bridge Max Length",
+
+  "text.autoconfig.fluxtech.category.enabled": "Enabled Features",
+  "text.autoconfig.fluxtech.option.enabled.enableGels": "Enable Gels",
+  "text.autoconfig.fluxtech.option.enabled.enableLongFallBoots": "Enable Long Fall Boots",
+  "text.autoconfig.fluxtech.option.enabled.enablePortal2Blocks": "Enable Portal Pannels",
+  "text.autoconfig.fluxtech.option.enabled.enableHLB": "Enable Hardlight Bridges"
+}

@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "fluxtech:block/bottom_left_padded_grey_panel_east",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "fluxtech:block/bottom_left_padded_grey_panel_north",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "fluxtech:block/bottom_left_padded_grey_panel"
+    },
+    "facing=west": {
+      "model": "fluxtech:block/bottom_left_padded_grey_panel_west",
+      "y": 90
+    },
+    "facing=up": {
+      "model": "fluxtech:block/bottom_left_padded_grey_panel"
+    },
+    "facing=down": {
+      "model": "fluxtech:block/bottom_left_padded_grey_panel"
+    }
+  }
+}
