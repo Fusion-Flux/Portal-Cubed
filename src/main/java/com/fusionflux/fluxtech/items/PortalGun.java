@@ -111,10 +111,6 @@ public class PortalGun extends Item {
                 portalholder1.setRotationTransformation(quion1);
                 portalholder2.setRotationTransformation(quion2);
 
-                // Commented out for now as it just fills the portal data with too much text
-                // makeRoundPortal(portalholder1);
-                // makeRoundPortal(portalholder2);
-
                 world.spawnEntity(portalholder1);
                 world.spawnEntity(portalholder2);
 
@@ -123,24 +119,6 @@ public class PortalGun extends Item {
             }
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
-    }
-    public static void makeRoundPortal(Portal portal) {
-        GeometryPortalShape shape = new GeometryPortalShape();
-        final int triangleCount = 30;
-        double twoPi = Math.PI * 2;
-        shape.triangles = IntStream.range(0, triangleCount)
-                .mapToObj(x -> new GeometryPortalShape.TriangleInPlane(
-                        0, 0,
-                        portal.width * MathHelper.cos((float) twoPi * (x) / triangleCount) / 2,
-                        portal.height * MathHelper.sin((float) twoPi * (x) / triangleCount) / 2,
-                        portal.width * MathHelper.cos((float) twoPi * (x + 1) / triangleCount) / 2,
-                        portal.height * MathHelper.sin((float) twoPi * (x + 1) / triangleCount) / 2
-                )).collect(Collectors.toList());
-        portal.specialShape = shape;
-        portal.cullableXStart = 0;
-        portal.cullableXEnd = 0;
-        portal.cullableYStart = 0;
-        portal.cullableYEnd = 0;
     }
 
 }

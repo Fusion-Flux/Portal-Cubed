@@ -1,23 +1,17 @@
 package com.fusionflux.fluxtech.mixin;
 
 import com.fusionflux.fluxtech.FluxTech;
-import com.fusionflux.fluxtech.accessor.AttackUseCase;
 import com.fusionflux.fluxtech.items.FluxTechItems;
-import com.fusionflux.fluxtech.items.MinecraftClientMethods;
-import com.fusionflux.fluxtech.items.PortalGun;
-import com.qouteall.immersive_portals.network.McRemoteProcedureCall;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.HitResult;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
