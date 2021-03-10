@@ -1,5 +1,6 @@
 package com.fusionflux.fluxtech.mixin;
 
+import com.fusionflux.fluxtech.accessor.VelocityTransfer;
 import com.fusionflux.fluxtech.blocks.FluxTechBlocks;
 import com.fusionflux.fluxtech.config.FluxTechConfig2;
 import com.fusionflux.fluxtech.entity.EntityAttachments;
@@ -33,14 +34,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAttachments {
+public abstract class EntityMixin implements EntityAttachments, VelocityTransfer {
 
     private static final TrackedData<Boolean> IS_ROLLING = DataTracker.registerData(Entity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Direction> DIRECTION = DataTracker.registerData(Entity.class, TrackedDataHandlerRegistry.FACING);
 
 
     public double maxFallSpeed = 0;
-
+    public double storeVelocity1=0;
+    public double storeVelocity2=0;
+    public double storeVelocity3=0;
+    public double speedTransformApply=0;
     @Override
     public double getMaxFallSpeed() {
         return maxFallSpeed;
@@ -55,6 +59,8 @@ public abstract class EntityMixin implements EntityAttachments {
 
     @Shadow public abstract BlockPos getBlockPos();
 
+    @Shadow public abstract Vec3d getVelocity();
+
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
             if(maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == FluxTechBlocks.PROPULSION_GEL){
@@ -64,10 +70,33 @@ public abstract class EntityMixin implements EntityAttachments {
                     maxFallSpeed=maxFallSpeed-1;
                 }
             }
+if(world.isClient) {
+    storeVelocity3 =storeVelocity2;
+    storeVelocity2 = storeVelocity1;
+    storeVelocity1 = this.getVelocity().length();
 
+    /*if(storeVelocity3>storeVelocity1&&storeVelocity3>storeVelocity2){
+        speedTransformApply=storeVelocity3;
+    }*/
+
+}
+        if(storeVelocity1>storeVelocity2&&storeVelocity1>storeVelocity3){
+            speedTransformApply=storeVelocity1;
+        }
+        if(storeVelocity2>storeVelocity1&&storeVelocity2>storeVelocity3){
+            speedTransformApply=storeVelocity2;
+        }
     }
 
+    @Override
+    public void setVelocityTransfer(double speedValueTransferDuck) {
+        this.speedTransformApply = speedValueTransferDuck;
+    }
 
+    @Override
+    public double getVelocityTransfer() {
+        return this.speedTransformApply;
+    }
 
 
 

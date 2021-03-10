@@ -29,10 +29,10 @@ dependencies {
 	}
 	include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
-	modImplementation('com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.80-1.16') {
+	modImplementation('com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.81-1.16') {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	include 'com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.80-1.16'
+	include 'com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.81-1.16'
 
 	modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
 		exclude(module: "fabric-api")

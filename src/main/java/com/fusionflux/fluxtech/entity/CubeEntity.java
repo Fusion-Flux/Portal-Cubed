@@ -34,11 +34,11 @@ public class CubeEntity extends Entity implements PhysicsElement {
         Rayon.SPACE.get(world).getThread().execute(() -> {
             this.RIGID_BODY.setCollisionShape(new BoundingBoxShape(this.getBoundingBox()));
             this.RIGID_BODY.setMass(1.0f);                 // 0.0f - ? kg
-            this.RIGID_BODY.setFriction(0.5f);             // 0.0f - 1.0f
+            this.RIGID_BODY.setFriction(0.8f);             // 0.0f - 1.0f
             this.RIGID_BODY.setRestitution(0.5f);          // 0.0f - 1.0f
-            this.RIGID_BODY.setDragCoefficient(0.05f);     // 0.0f - ?
+            this.RIGID_BODY.setDragCoefficient(0.0f);     // 0.0f - ?
             this.RIGID_BODY.setEnvironmentLoadDistance(1); // 1 - ? (affects performance extremely)
-            this.RIGID_BODY.setDoFluidResistance(true);
+            this.RIGID_BODY.setDoFluidResistance(false);
         });
     }
 

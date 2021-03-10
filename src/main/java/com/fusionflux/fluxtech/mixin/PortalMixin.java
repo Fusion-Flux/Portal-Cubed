@@ -1,5 +1,6 @@
 package com.fusionflux.fluxtech.mixin;
 
+import com.fusionflux.fluxtech.accessor.VelocityTransfer;
 import com.qouteall.immersive_portals.PehkuiInterface;
 import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.portal.PortalLike;
@@ -27,12 +28,9 @@ public abstract class PortalMixin extends Entity implements PortalLike {
 
     @Inject(method = "transformVelocity", at = @At("TAIL"), cancellable = true,remap = false)
     public void transformVelocity(Entity entity, CallbackInfo ci) {
-       if(entity.getVelocity().length()<1.5){
-           double velocityavg = entity.getVelocity().multiply(1.64835432639D,1.64835432639D,1.64835432639D).length();
-            entity.setVelocity(entity.getVelocity().normalize().multiply(velocityavg));
-       }else{
-           entity.setVelocity((entity.getVelocity().normalize().multiply(1)));
-       }
+        double velocityScalar = ((VelocityTransfer)entity).getVelocityTransfer();
+        System.out.println(velocityScalar);
+        entity.setVelocity( entity.getVelocity().normalize().multiply( velocityScalar ));
 
     }
 }

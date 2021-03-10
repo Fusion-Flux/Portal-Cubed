@@ -57,7 +57,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
-
+        //System.out.println(this.getVelocity());
     }
 
 }
