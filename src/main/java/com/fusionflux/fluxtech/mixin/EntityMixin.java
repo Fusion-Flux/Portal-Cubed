@@ -3,6 +3,7 @@ package com.fusionflux.fluxtech.mixin;
 import com.fusionflux.fluxtech.blocks.FluxTechBlocks;
 import com.fusionflux.fluxtech.config.FluxTechConfig2;
 import com.fusionflux.fluxtech.entity.EntityAttachments;
+import com.qouteall.immersive_portals.api.PortalAPI;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;

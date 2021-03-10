@@ -6,7 +6,8 @@
   "mixins": [
     "ArmorItemMixin",
     "EntityMixin",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "PortalMixin"
   ],
   "client": [
     "MinecraftClientMixin"
