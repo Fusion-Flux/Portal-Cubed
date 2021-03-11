@@ -19,6 +19,9 @@ import net.minecraft.world.World;
 
 public class PortalGun extends Item {
 
+    // TODO
+    // All of these fields NEED to be moved to some other stored value,
+    // either nbt or a persistent state.
     private BlockPos blockPos1;
     private BlockPos blockPos2;
     public Portal portalholder1;
@@ -34,6 +37,12 @@ public class PortalGun extends Item {
         super(settings);
     }
 
+    /**
+     * Called when a user left clicks with an {@link ItemStack} of a {@link FluxTechItems#PORTAL_GUN} in hand.
+     * NOTE: Called serverside only.
+     *
+     * @author Platymemo
+     */
     public void useLeft(World world, PlayerEntity user, Hand hand) {
         useImpl(world, user, hand, true);
     }
@@ -114,6 +123,7 @@ public class PortalGun extends Item {
                 portalholder2.reloadAndSyncToClient();
             }
         }
+
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
 

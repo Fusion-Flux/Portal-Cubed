@@ -1,5 +1,6 @@
 package com.fusionflux.fluxtech.mixin;
 
+import com.fusionflux.fluxtech.FluxTech;
 import com.fusionflux.fluxtech.items.FluxTechItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -16,7 +17,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
@@ -30,6 +30,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+        throw new AssertionError(
+                FluxTech.MOD_ID + "'s PlayerEntityMixin dummy constructor was called, " +
+                        "something is very wrong here!"
+        );
     }
 
     @Shadow
@@ -46,18 +50,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
     }
 
-
     @Inject(method = "getFallSound", at = @At("HEAD"), cancellable = true)
     protected void getFallSound(int distance, CallbackInfoReturnable<SoundEvent> cir) {
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
         if (itemFeet.getItem().equals(FluxTechItems.LONG_FALL_BOOTS)) {
             cir.setReturnValue(SoundEvents.BLOCK_WOOL_FALL);
         }
-    }
-
-    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-    public void tick(CallbackInfo ci) {
-        //System.out.println(this.getVelocity());
     }
 
 }
