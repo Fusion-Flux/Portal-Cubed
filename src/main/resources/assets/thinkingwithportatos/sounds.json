@@ -1,0 +1,24 @@
+{
+	"gelbounce": {
+		"subtitle": "subtitles.thinkingwithportatos.gelbounce",
+		"sounds": [
+			"thinkingwithportatos:gelbounce",
+			"thinkingwithportatos:gelbounce2",
+			"thinkingwithportatos:gelbounce3"
+		]
+	},
+	"gelrun": {
+		"subtitle": "subtitles.thinkingwithportatos.gelrun",
+		"sounds": [
+			"thinkingwithportatos:gelrun"
+		]
+	},
+	"hpdblast": {
+		"subtitle": "subtitles.thinkingwithportatos.hpdblast",
+		"sounds": [
+			"thinkingwithportatos:hpdblast",
+			"thinkingwithportatos:hpdblast2",
+			"thinkingwithportatos:hpdblast3"
+		]
+	}
+}

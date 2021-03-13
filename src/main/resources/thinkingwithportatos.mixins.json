@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.fusionflux.thinkingwithportatos.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ArmorItemMixin",
+    "CollisionHelperMixin",
+    "EntityMixin",
+    "PlayerEntityMixin",
+    "PortalMixin"
+  ],
+  "client": [
+    "MinecraftClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "parent": "item/generated",
+  "textures": { "layer0": "thinkingwithportatos:item/repulsion_gel_bucket" }
+}

@@ -1,0 +1,48 @@
+{
+  "variants": {
+    "facing=east,powered=true": {
+      "model": "thinkingwithportatos:block/emitter_powered",
+      "y": 90
+    },
+    "facing=north,powered=true": {
+      "model": "thinkingwithportatos:block/emitter_powered",
+      "y": 0
+    },
+    "facing=south,powered=true": {
+      "model": "thinkingwithportatos:block/emitter_powered",
+      "y": 180
+    },
+    "facing=west,powered=true": {
+      "model": "thinkingwithportatos:block/emitter_powered",
+      "y": 270
+    },
+    "facing=up,powered=true": {
+      "model": "thinkingwithportatos:block/emitter_powered"
+    },
+    "facing=down,powered=true": {
+      "model": "thinkingwithportatos:block/emitter_powered"
+    },
+    "facing=east,powered=false": {
+      "model": "thinkingwithportatos:block/emitter",
+      "y": 90
+    },
+    "facing=north,powered=false": {
+      "model": "thinkingwithportatos:block/emitter",
+      "y": 0
+    },
+    "facing=south,powered=false": {
+      "model": "thinkingwithportatos:block/emitter",
+      "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "thinkingwithportatos:block/emitter",
+      "y": 270
+    },
+    "facing=up,powered=false": {
+      "model": "thinkingwithportatos:block/emitter"
+    },
+    "facing=down,powered=false": {
+      "model": "thinkingwithportatos:block/emitter"
+    }
+  }
+}

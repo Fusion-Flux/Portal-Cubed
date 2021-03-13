@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "thinkingwithportatos:block/bridge_test",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "thinkingwithportatos:block/bridge_test",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "thinkingwithportatos:block/bridge_test",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "thinkingwithportatos:block/bridge_test",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "thinkingwithportatos:block/bridge_test"
+    },
+    "facing=down": {
+      "model": "thinkingwithportatos:block/bridge_test"
+    }
+  }
+}

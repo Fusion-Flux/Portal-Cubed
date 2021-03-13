@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "particle": "thinkingwithportatos:block/bottom_left_smooth_white_panel",
+    "north": "thinkingwithportatos:block/bottom_left_smooth_white_panel",
+    "south": "thinkingwithportatos:block/bottom_left_smooth_white_panel",
+    "east": "thinkingwithportatos:block/bottom_right_smooth_white_panel",
+    "west": "thinkingwithportatos:block/bottom_right_smooth_white_panel",
+    "up": "thinkingwithportatos:block/smooth_white_panel",
+    "down": "thinkingwithportatos:block/bottom_right_smooth_white_panel_west"
+  }
+}

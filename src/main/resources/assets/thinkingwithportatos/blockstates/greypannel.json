@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "":[ { "model": "thinkingwithportatos:block/greypannel" },
+      { "model": "thinkingwithportatos:block/greypannel2" },
+      { "model": "thinkingwithportatos:block/greypannel3" },
+      { "model": "thinkingwithportatos:block/greypannel4" }
+
+
+    ]
+
+
+
+
+  }
+}

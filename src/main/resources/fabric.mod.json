@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "fluxtech",
+  "id": "thinkingwithportatos",
   "version": "${version}",
 
   "name": "FluxTech",
@@ -9,28 +9,28 @@
     "Fusion Flux"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/fluxtech",
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/thinkingwithportatos",
     "sources": "https://github.com/FabricMC/fabric-example-mod",
     "issues": "https://github.com/Fusion-Flux/Origins-Umbrellas/issues"
   },
 
   "license": "MIT",
-  "icon": "assets/fluxtech/icon.png",
+  "icon": "assets/thinkingwithportatos/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.fusionflux.fluxtech.FluxTech"
+      "com.fusionflux.thinkingwithportatos.ThinkingWithPortatos"
     ],
     "client": [
-      "com.fusionflux.fluxtech.client.FluxTechClient"
+      "com.fusionflux.thinkingwithportatos.client.ThinkingWithPortatosClient"
     ],
     "modmenu" : [
-      "com.fusionflux.fluxtech.compatability.ModMenuIntegration"
+      "com.fusionflux.thinkingwithportatos.compatability.ModMenuIntegration"
     ]
   },
   "mixins": [
-    "fluxtech.mixins.json"
+    "thinkingwithportatos.mixins.json"
   ],
 
   "depends": {

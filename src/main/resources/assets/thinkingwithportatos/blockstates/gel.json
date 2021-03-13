@@ -1,0 +1,85 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "thinkingwithportatos:block/gel_main"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/gel_north_west",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/gel_north",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/gel_north_east",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/gel_east",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/gel_south_east",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/gel_south",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/gel_south_west",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/gel_west",
+        "uvlock": true
+      }
+    }
+  ]
+}

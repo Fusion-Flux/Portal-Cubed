@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "thinkingwithportatos:block/padded_grey_panel",
+    "side": "thinkingwithportatos:block/top_padded_grey_panel"
+  }
+}
