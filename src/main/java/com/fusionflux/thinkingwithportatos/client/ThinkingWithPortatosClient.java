@@ -5,6 +5,7 @@ import com.fusionflux.thinkingwithportatos.client.render.CubeEntityRenderer;
 import com.fusionflux.thinkingwithportatos.entity.CompanionCubeEntity;
 import com.fusionflux.thinkingwithportatos.entity.CubeEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
+import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
@@ -22,6 +23,7 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         registerClientPacketReceivers();
         registerEntityRenderers();
         ThinkingWithPortatosBlocks.registerRenderLayers();
+        ThinkingWithPortatosItems.registerRenderLayers();
     }
 
     private void registerEntityRenderers() {

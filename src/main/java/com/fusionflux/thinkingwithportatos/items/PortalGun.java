@@ -7,8 +7,10 @@ import com.qouteall.immersive_portals.portal.Portal;
 
 import com.qouteall.immersive_portals.portal.PortalManipulation;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -17,7 +19,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 
-public class PortalGun extends Item {
+public class PortalGun extends Item implements DyeableItem {
 
     private BlockPos blockPos1;
     private BlockPos blockPos2;
@@ -42,6 +44,8 @@ public class PortalGun extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         return useImpl(world, user, hand, false);
     }
+
+
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
         if (!world.isClient) {
