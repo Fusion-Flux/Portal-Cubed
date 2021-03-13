@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ArmorItemMixin",
+    "CollisionHelperMixin",
     "EntityMixin",
     "PlayerEntityMixin",
     "PortalMixin"

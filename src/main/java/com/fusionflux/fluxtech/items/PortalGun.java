@@ -19,30 +19,21 @@ import net.minecraft.world.World;
 
 public class PortalGun extends Item {
 
-    // TODO
-    // All of these fields NEED to be moved to some other stored value,
-    // either nbt or a persistent state.
     private BlockPos blockPos1;
     private BlockPos blockPos2;
     public Portal portalholder1;
     public Portal portalholder2;
-    public Vec3i dirUpright1;
-    public Vec3i dirUpright2;
-    public Vec3i dirFacing1;
-    public Vec3i dirFacing2;
-    public Vec3i cross1;
-    public Vec3i cross2;
+    public Vec3i dirUp1;
+    public Vec3i dirUp2;
+    public Vec3i dirOut1;
+    public Vec3i dirOut2;
+    public Vec3i dirRight1;
+    public Vec3i dirRight2;
 
     public PortalGun(Settings settings) {
         super(settings);
     }
 
-    /**
-     * Called when a user left clicks with an {@link ItemStack} of a {@link FluxTechItems#PORTAL_GUN} in hand.
-     * NOTE: Called serverside only.
-     *
-     * @author Platymemo
-     */
     public void useLeft(World world, PlayerEntity user, Hand hand) {
         useImpl(world, user, hand, true);
     }
@@ -58,24 +49,24 @@ public class PortalGun extends Item {
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 if (leftClick) {
                     blockPos1 = ((BlockHitResult) hitResult).getBlockPos();
-                    dirFacing1 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
-                    if( dirFacing1.getY() == 0 ) {
-                        dirUpright1 = new Vec3i( 0, 1, 0 );
+                    dirOut1 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
+                    if( dirOut1.getY() == 0 ) {
+                        dirUp1 = new Vec3i( 0, 1, 0 );
                     }
                     else {
-                        dirUpright1 = user.getHorizontalFacing().getVector();
+                        dirUp1 = user.getHorizontalFacing().getVector();
                     }
-                    cross1 = dirUpright1.crossProduct( dirFacing1 );
+                    dirRight1 = dirUp1.crossProduct( dirOut1 );
                 } else {
                     blockPos2 = ((BlockHitResult) hitResult).getBlockPos();
-                    dirFacing2 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
-                    if( dirFacing2.getY() == 0 ) {
-                        dirUpright2 = new Vec3i( 0, 1, 0 );
+                    dirOut2 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
+                    if( dirOut2.getY() == 0 ) {
+                        dirUp2 = new Vec3i( 0, 1, 0 );
                     }
                     else {
-                        dirUpright2 = user.getHorizontalFacing().getVector();
+                        dirUp2 = user.getHorizontalFacing().getVector();
                     }
-                    cross2 = dirUpright2.crossProduct( dirFacing2 );
+                    dirRight2 = dirUp2.crossProduct( dirOut2 );
                 }
             }
             if ( blockPos1 != null && blockPos2 != null) {
@@ -93,37 +84,39 @@ public class PortalGun extends Item {
                 // Should never be null unless something is very wrong
                 assert portalBase != null;
 
-                Vec3d portalPos1 = calcPortalPos( blockPos1, dirUpright1, dirFacing1, cross1 );
-                Vec3d portalPos2 = calcPortalPos( blockPos2, dirUpright2, dirFacing2, cross2 );
+                Vec3d portalPos1 = calcPortalPos( blockPos1, dirUp1, dirOut1, dirRight1 );
+                Vec3d portalPos2 = calcPortalPos( blockPos2, dirUp2, dirOut2, dirRight2 );
 
-                portalBase.setOriginPos( portalPos2 );
-                portalBase.setDestination( portalPos1 );
+                // portal 1
+                portalBase.setOriginPos( portalPos1 );
+                portalBase.setDestination( portalPos2 );
                 portalBase.setDestinationDimension(World.OVERWORLD);
                 portalBase.setOrientationAndSize(
-                        new Vec3d( cross2.getX(), cross2.getY(), cross2.getZ() ), //axisW
-                        new Vec3d( dirUpright2.getX(), dirUpright2.getY(), dirUpright2.getZ() ), //axisH
-                        1, // width
-                        2 // height
+                        Vec3d.of( dirRight1 ), //axisW
+                        Vec3d.of( dirUp1 ), //axisH
+                        .9, // width
+                        1.9 // height
                 );
                 portalholder1 = PortalAPI.createFlippedPortal( portalBase );
-                portalBase.setOrientationAndSize(
-                        new Vec3d( cross1.getX(), cross1.getY(), cross1.getZ() ), //axisW
-                        new Vec3d( dirUpright1.getX(), dirUpright1.getY(), dirUpright1.getZ() ), //axisH
-                        1, // width
-                        2 // height
-                );
-                portalholder2 = PortalAPI.createReversePortal( portalBase );
 
-                alignPortalsTest2();
+                // portal 2
+                portalBase.setOriginPos( portalPos2 );
+                portalBase.setDestination( portalPos1 );
+                portalBase.setOrientationAndSize(
+                        Vec3d.of( dirRight2 ), //axisW
+                        Vec3d.of( dirUp2 ), //axisH
+                        .9, // width
+                        1.9 // height
+                );
+                portalholder2 = PortalAPI.createFlippedPortal( portalBase );
+
+                portalholder2.setRotationTransformation( alignPortal( portalholder1, portalholder2 ).toMcQuaternion() );
+                portalholder1.setRotationTransformation( alignPortal( portalholder2, portalholder1 ).toMcQuaternion() );
 
                 world.spawnEntity(portalholder1);
                 world.spawnEntity(portalholder2);
-
-                portalholder1.reloadAndSyncToClient();
-                portalholder2.reloadAndSyncToClient();
             }
         }
-
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
 
@@ -147,39 +140,24 @@ public class PortalGun extends Item {
     }
 
     /**
-     * oh god
+     * The implementation of this method is intended specifically for the use case of entering through
+     * a given portal and leaving through another portal with both portals having an arbitrary implementation.
+     * The axisW parameter of the out portal is inverted to represent that the transformation should involve
+     * leaving away from the output portal (as inverting the axisW also inverts the normal vector).
+     *
+     * @param from the portal to be entered.
+     * @param to the portal to be exited from.
+     * @return the unit quaternion representing the rotation from a portal to the other.
      */
-    private void alignPortalsTest1() {
-        // Quaternion time, let's declare some
-        DQuaternion dQuionIn1 = PortalManipulation.getPortalOrientationQuaternion( portalholder1.axisW, portalholder1.axisH ).getNormalized();
-        DQuaternion dQuionIn2 = PortalManipulation.getPortalOrientationQuaternion( portalholder2.axisW, portalholder2.axisH ).getNormalized();
-        DQuaternion dQuionOut1 = PortalManipulation.getPortalOrientationQuaternion( portalholder1.axisW, portalholder1.axisH ).getNormalized();
-        DQuaternion dQuionOut2 = PortalManipulation.getPortalOrientationQuaternion( portalholder2.axisW, portalholder2.axisH ).getNormalized();
+    private DQuaternion alignPortal( Portal from, Portal to ) {
+        DQuaternion in = PortalManipulation.getPortalOrientationQuaternion( from.axisW, from.axisH );
+        DQuaternion out = PortalManipulation.getPortalOrientationQuaternion( inv3d(to.axisW), to.axisH );
 
-        dQuionIn1 = q1TimesQ2( dQuionOut1, q1TimesQ2( dQuionIn1, dQuionOut1.getConjugated() ));
-        dQuionIn2 = q1TimesQ2( dQuionOut2, q1TimesQ2( dQuionIn2, dQuionOut2.getConjugated() ));
+        DQuaternion point;
+        point = q1TimesQ2( in, out.getConjugated() );
+        // something else supposedly happens here
 
-        Quaternion quion1 = dQuionIn1.toMcQuaternion();
-        Quaternion quion2 = dQuionIn2.toMcQuaternion();
-
-        portalholder1.setRotationTransformation( quion2 );
-        portalholder2.setRotationTransformation( quion1 );
-    }
-
-    /**
-     * ohH GOD
-     */
-    private void alignPortalsTest2() {
-        DQuaternion dQuion1 = DQuaternion.getRotationBetween( portalholder1.axisH, portalholder2.axisH ).getNormalized();
-        DQuaternion dQuion2 = DQuaternion.getRotationBetween( portalholder1.axisW, portalholder2.axisW.negate() ).getNormalized();
-        DQuaternion dQuion3 = DQuaternion.getRotationBetween( portalholder2.axisH, portalholder1.axisH ).getNormalized();
-        DQuaternion dQuion4 = DQuaternion.getRotationBetween( portalholder2.axisW, portalholder1.axisW.negate() ).getNormalized();
-
-        Quaternion quion1 = q1TimesQ2( dQuion2, dQuion1 ).toMcQuaternion();
-        Quaternion quion2 = q1TimesQ2( dQuion4, dQuion3 ).toMcQuaternion();
-
-        portalholder1.setRotationTransformation(quion1);
-        portalholder2.setRotationTransformation(quion2);
+        return point.getNormalized();
     }
 
     /**
@@ -209,5 +187,21 @@ public class PortalGun extends Item {
                 ( a*h + b*g - c*f + d*e ),
                 ( a*e - b*f - c*g - d*h )
         );
+    }
+
+    /**
+     * @param vec the vector to invert.
+     * @return an inversion of the input vector.
+     */
+    private Vec3i inv3i( Vec3i vec ) {
+        return new Vec3i( -vec.getX(), -vec.getY(), -vec.getZ() );
+    }
+
+    /**
+     * @param vec the vector to invert.
+     * @return an inversion of the input vector.
+     */
+    private Vec3d inv3d( Vec3d vec ) {
+        return new Vec3d( -vec.getX(), -vec.getY(), -vec.getZ() );
     }
 }

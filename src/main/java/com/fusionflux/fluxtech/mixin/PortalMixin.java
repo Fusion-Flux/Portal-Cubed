@@ -1,7 +1,6 @@
 package com.fusionflux.fluxtech.mixin;
 
 import com.fusionflux.fluxtech.FluxTech;
-import com.fusionflux.fluxtech.accessor.VelocityTransfer;
 import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.portal.PortalLike;
 import net.minecraft.entity.Entity;
@@ -29,7 +28,9 @@ public abstract class PortalMixin extends Entity implements PortalLike {
 
     @Inject(method = "transformVelocity", at = @At("TAIL"), cancellable = true,remap = false)
     public void transformVelocity(Entity entity, CallbackInfo ci) {
-        double velocityScalar = ((VelocityTransfer) entity).getVelocityTransfer();
-        entity.setVelocity(entity.getVelocity().normalize().multiply(velocityScalar));
+        //double velocityScalar = ((VelocityTransfer) entity).getVelocityTransfer();
+        //entity.setVelocity(entity.getVelocity().normalize().multiply(velocityScalar));
+
+        entity.setVelocity(entity.getVelocity());
     }
 }
