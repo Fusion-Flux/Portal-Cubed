@@ -96,21 +96,21 @@ public Vec3d movementTest = new Vec3d(0,0,0);
             maxFallSpeed--;
         }
 
-        Vec3d expand = new Vec3d (this.getVelocity().x*1.3,this.getVelocity().y*1.3,this.getVelocity().z*1.3);
+       /* Vec3d expand = new Vec3d (this.getVelocity().x*1,this.getVelocity().y*1,this.getVelocity().z*1);
 
         List<Portal> portallist = this.world.getEntitiesByClass(Portal.class,this.getBoundingBox().stretch(expand),null);
         for (Portal portal : portallist) {
             //if(this.getBoundingBox().stretch(expand).intersects(portal.getBoundingBox()))
                 if(this.getBoundingBox().stretch(expand).intersects(portal.getBoundingBox())) {
-                //\ ((IEEntity) this).notifyCollidingWithPortal(portal);
+                //((IEEntity) this).notifyCollidingWithPortal(portal);
                 if(this.world.isClient) {
                     if (Math.abs(this.getVelocity().x + this.getVelocity().z) > Math.abs(this.getVelocity().y)) {
                         this.horizontalCollision = false;
-                        //this.verticalCollision=true;
+                        this.verticalCollision=true;
                     }
                     if (Math.abs(this.getVelocity().x + this.getVelocity().z) < Math.abs(this.getVelocity().y)) {
                         this.verticalCollision = false;
-                        //this.horizontalCollision=false;
+                        this.horizontalCollision=true;
                     }
                     if (Math.abs(this.getVelocity().x + this.getVelocity().z) == Math.abs(this.getVelocity().y)) {
                         this.verticalCollision = false;
@@ -118,7 +118,8 @@ public Vec3d movementTest = new Vec3d(0,0,0);
                     }
                 }
             }
-        }
+        }*/
+        //this.noClip=false;
 
         if (world.isClient) {
             storeVelocity2 = storeVelocity1;

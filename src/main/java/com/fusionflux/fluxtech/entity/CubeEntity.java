@@ -1,6 +1,7 @@
 package com.fusionflux.fluxtech.entity;
 
 import com.fusionflux.fluxtech.FluxTech;
+import com.fusionflux.fluxtech.items.FluxTechItems;
 import com.jme3.math.Vector3f;
 import dev.lazurite.rayon.api.element.PhysicsElement;
 import dev.lazurite.rayon.impl.Rayon;
@@ -98,7 +99,7 @@ public class CubeEntity extends Entity implements PhysicsElement {
             if (bl || this.storedDamage >= 20.0F) {
                 if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
                     // TODO
-                    this.dropItem(Items.APPLE);
+                    this.dropItem(FluxTechItems.CUBE);
                 }
 
                 this.remove();

@@ -113,6 +113,9 @@ public class PortalGun extends Item {
                 portalholder2.setRotationTransformation( alignPortal( portalholder1, portalholder2 ).toMcQuaternion() );
                 portalholder1.setRotationTransformation( alignPortal( portalholder2, portalholder1 ).toMcQuaternion() );
 
+                portalholder1.isGlobalPortal = true;
+                portalholder2.isGlobalPortal = true;
+
                 world.spawnEntity(portalholder1);
                 world.spawnEntity(portalholder2);
             }
