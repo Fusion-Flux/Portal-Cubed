@@ -42,7 +42,7 @@ public abstract class MinecraftClientMixin {
      */
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
     private void onHandleBlockBreaking(boolean isKeyPressed, CallbackInfo ci) {
-        if (this.player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)) {
+        if (this.player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)||this.player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)) {
             ci.cancel();
         }
     }
@@ -60,9 +60,9 @@ public abstract class MinecraftClientMixin {
 
             // Need to get the hand, but there's probably a cooler looking method than this.
             Hand hand = null;
-            if (player.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN) {
+            if (player.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN||player.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
                 hand = Hand.MAIN_HAND;
-            } else if (player.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN) {
+            } else if (player.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN||player.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
                 hand = Hand.OFF_HAND;
             }
 

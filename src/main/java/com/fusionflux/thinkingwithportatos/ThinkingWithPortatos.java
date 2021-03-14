@@ -43,7 +43,7 @@ public class ThinkingWithPortatos implements ModInitializer {
             Hand hand = buf.readEnumConstant(Hand.class);
             ItemStack itemStack = player.getStackInHand(hand);
             player.updateLastActionTime();
-            if (!itemStack.isEmpty() && itemStack.getItem() == ThinkingWithPortatosItems.PORTAL_GUN) {
+            if (!itemStack.isEmpty() && itemStack.getItem() == ThinkingWithPortatosItems.PORTAL_GUN||itemStack.getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
                 server.execute(() -> ((PortalGun) itemStack.getItem()).useLeft(serverWorld, player, hand));
             }
         });
