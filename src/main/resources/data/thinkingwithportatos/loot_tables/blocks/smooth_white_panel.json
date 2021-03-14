@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "fluxtech:smooth_white_panel"
+          "name": "thinkingwithportatos:smooth_white_panel"
         }
       ],
       "conditions": [

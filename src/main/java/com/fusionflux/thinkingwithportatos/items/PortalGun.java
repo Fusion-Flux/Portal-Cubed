@@ -17,6 +17,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import org.apache.commons.codec.binary.Hex;
 
 
 public class PortalGun extends Item implements DyeableItem {
@@ -31,7 +32,8 @@ public class PortalGun extends Item implements DyeableItem {
     public Vec3i dirOut2;
     public Vec3i dirRight1;
     public Vec3i dirRight2;
-
+    private int ColorMain;
+    private boolean switchedColorCheck=false;
     public PortalGun(Settings settings) {
         super(settings);
     }
@@ -45,13 +47,18 @@ public class PortalGun extends Item implements DyeableItem {
         return useImpl(world, user, hand, false);
     }
 
-
+@Override
+public int getColor(ItemStack stack) {
+    CompoundTag compoundTag = stack.getSubTag("display");
+    return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : -14842149;
+}
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
         if (!world.isClient) {
             HitResult hitResult = user.raycast(128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 if (leftClick) {
+                    ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
                     blockPos1 = ((BlockHitResult) hitResult).getBlockPos();
                     dirOut1 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
                     if( dirOut1.getY() == 0 ) {
@@ -61,6 +68,9 @@ public class PortalGun extends Item implements DyeableItem {
                         dirUp1 = user.getHorizontalFacing().getVector();
                     }
                     dirRight1 = dirUp1.crossProduct( dirOut1 );
+
+                    ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
+                    setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain);
                 } else {
                     blockPos2 = ((BlockHitResult) hitResult).getBlockPos();
                     dirOut2 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
@@ -71,6 +81,15 @@ public class PortalGun extends Item implements DyeableItem {
                         dirUp2 = user.getHorizontalFacing().getVector();
                     }
                     dirRight2 = dirUp2.crossProduct( dirOut2 );
+
+                    //if(ColorMain)
+
+                    if(!switchedColorCheck) {
+                        ColorMain = getColor(user.getStackInHand(Hand.MAIN_HAND));
+                        switchedColorCheck=true;
+                    }
+
+                    setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain*-1);
                 }
             }
             if ( blockPos1 != null && blockPos2 != null) {

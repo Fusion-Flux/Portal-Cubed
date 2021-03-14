@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "fluxtech:gel"
+      "item": "thinkingwithportatos:gel"
     },
     {
       "item": "minecraft:blaze_rod"
@@ -11,5 +11,5 @@
       "item": "minecraft:magma_cream"
     }
   ],
-  "result": {"item": "fluxtech:propulsion_gel"}
+  "result": {"item": "thinkingwithportatos:propulsion_gel"}
 }

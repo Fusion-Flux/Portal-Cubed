@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "fluxtech:gritty_white_panel"
+          "name": "thinkingwithportatos:gritty_white_panel"
         }
       ],
       "conditions": [

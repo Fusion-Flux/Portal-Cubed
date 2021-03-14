@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "fluxtech:bottom_2x2_padded_grey_panel"
+          "name": "thinkingwithportatos:bottom_2x2_padded_grey_panel"
         }
       ],
       "conditions": [

@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "item": "fluxtech:gritty_white_panel"
+    "item": "thinkingwithportatos:gritty_white_panel"
   },
-  "result": "fluxtech:top_2x2_gritty_white_panel",
+  "result": "thinkingwithportatos:top_2x2_gritty_white_panel",
   "count": 1
 }
