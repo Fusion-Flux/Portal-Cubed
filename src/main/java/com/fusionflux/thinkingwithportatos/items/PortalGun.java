@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
+import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.portal.Portal;
@@ -54,6 +55,16 @@ public int getColor(ItemStack stack) {
 }
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
+
+            HitResult hitResult2 = user.raycast(128.0D, 0.0F, false);
+            if (hitResult2.getType() == HitResult.Type.BLOCK) {
+                if (leftClick) {
+                    user.playSound(ThinkingWithPortatosSounds.FIRE_EVENT_PRIMARY, .3F, 1F);
+                } else {
+                    user.playSound(ThinkingWithPortatosSounds.FIRE_EVENT_SECONDARY, .3F, 1F);
+                }
+            }
+
         if (!world.isClient) {
             HitResult hitResult = user.raycast(128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
@@ -71,6 +82,7 @@ public int getColor(ItemStack stack) {
 
                     ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
                     setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain);
+
                 } else {
                     blockPos2 = ((BlockHitResult) hitResult).getBlockPos();
                     dirOut2 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
@@ -90,6 +102,7 @@ public int getColor(ItemStack stack) {
                     }
 
                     setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain*-1);
+
                 }
             }
             if ( blockPos1 != null && blockPos2 != null) {
@@ -136,8 +149,9 @@ public int getColor(ItemStack stack) {
                 portalholder2.setRotationTransformation( alignPortal( portalholder1, portalholder2 ).toMcQuaternion() );
                 portalholder1.setRotationTransformation( alignPortal( portalholder2, portalholder1 ).toMcQuaternion() );
 
-                portalholder1.isGlobalPortal = true;
-                portalholder2.isGlobalPortal = true;
+                //portalholder1.isGlobalPortal = true;
+                //portalholder2.isGlobalPortal = true;
+
 
                 world.spawnEntity(portalholder1);
                 world.spawnEntity(portalholder2);
@@ -155,7 +169,7 @@ public int getColor(ItemStack stack) {
      */
     private Vec3d calcPortalPos( BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross ) {
         double upOffset = -0.5;
-        double faceOffset = -0.5005;
+        double faceOffset = -0.505;
         double crossOffset = 0.0;
         return new Vec3d(
                 ((hit.getX() + 0.5) + upOffset * upright.getX() + faceOffset * facing.getX() + crossOffset * cross.getX()), // x component

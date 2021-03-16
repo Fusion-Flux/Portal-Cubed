@@ -68,15 +68,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
         if (storeVelocity2 != null && storeVelocity1 != null){
             if (itemFeet.getItem().equals(ThinkingWithPortatosItems.LONG_FALL_BOOTS)) {
-                if (!this.isOnGround()) {
-                    if(Math.abs(storeVelocity1.x)<Math.abs(storeVelocity2.x)||Math.abs(storeVelocity1.z)<Math.abs(storeVelocity2.z)) {
-                        storeVelocity2 = new Vec3d(storeVelocity2.x, this.getVelocity().y, storeVelocity2.z);
-                        this.setVelocity(storeVelocity2);
-                    }else{
-                        storeVelocity1 = new Vec3d(storeVelocity1.x, this.getVelocity().y, storeVelocity1.z);
-                        this.setVelocity(storeVelocity1);
-                    }
-
+                if(!this.isOnGround()){
+                    this.setVelocity(this.getVelocity().x*1.035,this.getVelocity().y,this.getVelocity().z*1.035);
                 }
             }
     }

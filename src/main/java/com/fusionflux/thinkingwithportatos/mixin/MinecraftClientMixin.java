@@ -2,8 +2,10 @@ package com.fusionflux.thinkingwithportatos.mixin;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -73,6 +75,7 @@ public abstract class MinecraftClientMixin {
                 buf.writeEnumConstant(hand);
                 Packet<?> packet = ClientPlayNetworking.createC2SPacket(new Identifier(ThinkingWithPortatos.MOD_ID, "portal_left_click"), buf);
                 this.getNetworkHandler().sendPacket(packet);
+                player.playSound(ThinkingWithPortatosSounds.FIRE_EVENT_PRIMARY, .3F, 1F);
                 ci.cancel();
             }
         }

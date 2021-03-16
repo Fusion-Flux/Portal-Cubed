@@ -10,7 +10,9 @@ import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
@@ -45,8 +47,10 @@ public class ThinkingWithPortatos implements ModInitializer {
             player.updateLastActionTime();
             if (!itemStack.isEmpty() && itemStack.getItem() == ThinkingWithPortatosItems.PORTAL_GUN||itemStack.getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
                 server.execute(() -> ((PortalGun) itemStack.getItem()).useLeft(serverWorld, player, hand));
+
             }
         });
+
     }
 
 }

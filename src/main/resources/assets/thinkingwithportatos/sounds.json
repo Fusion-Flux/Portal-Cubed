@@ -13,12 +13,16 @@
 			"thinkingwithportatos:gelrun"
 		]
 	},
-	"hpdblast": {
-		"subtitle": "subtitles.thinkingwithportatos.hpdblast",
+	"portalgunprimary": {
+		"subtitle": "subtitles.thinkingwithportatos.portalgunprimaryfire",
 		"sounds": [
-			"thinkingwithportatos:hpdblast",
-			"thinkingwithportatos:hpdblast2",
-			"thinkingwithportatos:hpdblast3"
+			"thinkingwithportatos:portalgunprimary"
+		]
+	},
+	"portalgunsecondary": {
+		"subtitle": "subtitles.thinkingwithportatos.portalgunsecondaryfire",
+		"sounds": [
+			"thinkingwithportatos:portalgunsecondary"
 		]
 	}
 }

@@ -1,6 +1,8 @@
 package com.fusionflux.thinkingwithportatos.blocks;
 
 import com.fusionflux.thinkingwithportatos.entity.BlockCollisionLimiter;
+import com.fusionflux.thinkingwithportatos.entity.CubeEntity;
+import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
@@ -39,6 +41,7 @@ public class RepulsionGel extends Gel {
                 }
             }
         }
+
     }
 
 }

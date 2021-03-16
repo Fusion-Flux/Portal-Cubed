@@ -3,6 +3,9 @@ package com.fusionflux.thinkingwithportatos.mixin;
 import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
+import com.qouteall.immersive_portals.ducks.IEEntity;
+import com.qouteall.immersive_portals.portal.Portal;
+import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -18,6 +21,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, VelocityTransfer {
@@ -89,34 +94,13 @@ public Vec3d movementTest = new Vec3d(0,0,0);
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
-        if ((maxFallSpeed > 0 && maxFallSpeed != 10) || !(world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.PROPULSION_GEL)) {
-            maxFallSpeed--;
-        }
-
-       /* Vec3d expand = new Vec3d (this.getVelocity().x*1,this.getVelocity().y*1,this.getVelocity().z*1);
-
-        List<Portal> portallist = this.world.getEntitiesByClass(Portal.class,this.getBoundingBox().stretch(expand),null);
-        for (Portal portal : portallist) {
-            //if(this.getBoundingBox().stretch(expand).intersects(portal.getBoundingBox()))
-                if(this.getBoundingBox().stretch(expand).intersects(portal.getBoundingBox())) {
-                //((IEEntity) this).notifyCollidingWithPortal(portal);
-                if(this.world.isClient) {
-                    if (Math.abs(this.getVelocity().x + this.getVelocity().z) > Math.abs(this.getVelocity().y)) {
-                        this.horizontalCollision = false;
-                        this.verticalCollision=true;
-                    }
-                    if (Math.abs(this.getVelocity().x + this.getVelocity().z) < Math.abs(this.getVelocity().y)) {
-                        this.verticalCollision = false;
-                        this.horizontalCollision=true;
-                    }
-                    if (Math.abs(this.getVelocity().x + this.getVelocity().z) == Math.abs(this.getVelocity().y)) {
-                        this.verticalCollision = false;
-                        this.horizontalCollision=false;
-                    }
-                }
+        if(maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.PROPULSION_GEL){
+            maxFallSpeed = 10;
+        }else{
+            if(maxFallSpeed>0){
+                maxFallSpeed=maxFallSpeed-1;
             }
-        }*/
-        //this.noClip=false;
+        }
 
         if (world.isClient) {
             storeVelocity2 = storeVelocity1;
