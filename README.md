@@ -1,9 +1,5 @@
-# Fabric Example Mod
+# Thinking With Potatoes
+"Objectively the best portal mod" - hydos
+"yes" - someone probably
 
-## Setup
-
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
-
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+ok yes this is an improvement

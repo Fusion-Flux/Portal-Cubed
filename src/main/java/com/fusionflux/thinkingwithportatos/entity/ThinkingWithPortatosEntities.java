@@ -17,7 +17,7 @@ public class ThinkingWithPortatosEntities {
                                                                              .build();
 
     public static void registerEntities() {
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MOD_ID, "cube"), CUBE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MOD_ID, "companion_cube"), COMPANION_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "ptl_lft_click"), CUBE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "companion_cube"), COMPANION_CUBE);
     }
 }

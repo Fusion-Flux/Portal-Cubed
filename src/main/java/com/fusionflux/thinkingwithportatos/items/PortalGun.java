@@ -19,7 +19,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import org.apache.commons.codec.binary.Hex;
 
 
 public class PortalGun extends Item implements DyeableItem {

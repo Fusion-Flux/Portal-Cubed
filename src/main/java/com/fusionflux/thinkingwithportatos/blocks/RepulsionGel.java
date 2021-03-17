@@ -1,8 +1,6 @@
 package com.fusionflux.thinkingwithportatos.blocks;
 
 import com.fusionflux.thinkingwithportatos.entity.BlockCollisionLimiter;
-import com.fusionflux.thinkingwithportatos.entity.CubeEntity;
-import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
@@ -37,12 +35,11 @@ public class RepulsionGel extends Gel {
                     if (entity.getVelocity().y < 1.65)
                         entity.setVelocity(entity.getVelocity().add(0, 1.65D, 0));
                     if (limiter.check(world, entity)) {
-                        world.playSound(null,entity.getPos().getX(),entity.getPos().getY(),entity.getPos().getZ(),ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.MASTER, .3F, 1F);
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.MASTER, .3F, 1F);
                     }
                 }
             }
         }
 
     }
-
 }

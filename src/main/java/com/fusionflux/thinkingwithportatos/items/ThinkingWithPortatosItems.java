@@ -22,11 +22,11 @@ public class ThinkingWithPortatosItems {
 
     public static void registerItems() {
         if (ThinkingWithPortatosConfig.get().enabled.enableLongFallBoots)
-            Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MOD_ID, "long_fall_boots"), LONG_FALL_BOOTS);
-        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MOD_ID, "portal_gun"), PORTAL_GUN);
-        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MOD_ID, "portal_gun_model2"), PORTAL_GUN_MODEL2);
-        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MOD_ID, "cube"),CUBE);
-        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MOD_ID, "companion_cube"),COMPANION_CUBE);
+            Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "long_fall_boots"), LONG_FALL_BOOTS);
+        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "portal_gun"), PORTAL_GUN);
+        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "portal_gun_model2"), PORTAL_GUN_MODEL2);
+        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "cube"),CUBE);
+        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "companion_cube"),COMPANION_CUBE);
 
     }
 

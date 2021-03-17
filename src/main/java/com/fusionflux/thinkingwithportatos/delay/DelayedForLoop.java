@@ -4,7 +4,7 @@ public class DelayedForLoop {
 
     public final DelayedForLoopFunction function;
     public final double maxIValue;
-    public int iValue = 0;
+    public int iValue;
 
     public DelayedForLoop(DelayedForLoopFunction function, int i, double maxI) {
         this.function = function;
