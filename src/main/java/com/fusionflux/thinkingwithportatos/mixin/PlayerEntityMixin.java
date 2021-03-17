@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,12 +30,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private Vec3d storeVelocity1;
     @Unique
     private Vec3d storeVelocity2;
-    private boolean recentlyTouchedPortal = false;
+    private boolean recentlyTouchedPortal;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
         throw new AssertionError(
-                ThinkingWithPortatos.MOD_ID + "'s PlayerEntityMixin dummy constructor was called, " +
+                ThinkingWithPortatos.MODID + "'s PlayerEntityMixin dummy constructor was called, " +
                         "something is very wrong here!"
         );
     }

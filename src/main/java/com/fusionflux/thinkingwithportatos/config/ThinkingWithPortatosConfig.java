@@ -8,17 +8,19 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 
 
-@Config(name = ThinkingWithPortatos.MOD_ID)
+@Config(name = ThinkingWithPortatos.MODID)
 public class ThinkingWithPortatosConfig implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     @ConfigEntry.Category("enabled")
-    public Enabled enabled = new Enabled();
+    public final Enabled enabled = new Enabled();
+
     @ConfigEntry.Gui.TransitiveObject
     @ConfigEntry.Category("numbers")
     public Numbers numbers = new Numbers();
+
     @ConfigEntry.Gui.TransitiveObject
     @ConfigEntry.Category("numbersblock")
-    public NumbersBlock numbersblock = new NumbersBlock();
+    public final NumbersBlock numbersblock = new NumbersBlock();
 
     public static void register() {
         AutoConfig.register(ThinkingWithPortatosConfig.class, JanksonConfigSerializer::new);
@@ -33,9 +35,9 @@ public class ThinkingWithPortatosConfig implements ConfigData {
     }
 
     public static class Enabled {
-        public boolean enableLongFallBoots = true;
-        public boolean enableGels = true;
-        public boolean enablePortal2Blocks = true;
+        public final boolean enableLongFallBoots = true;
+        public final boolean enableGels = true;
+        public final boolean enablePortal2Blocks = true;
     }
 
     public static class Numbers {
@@ -43,7 +45,7 @@ public class ThinkingWithPortatosConfig implements ConfigData {
     }
 
     public static class NumbersBlock {
-        public int maxBridgeLength = 127;
+        public final int maxBridgeLength = 127;
     }
 }
 

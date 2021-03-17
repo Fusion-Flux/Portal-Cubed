@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class HardLightBridgeBlockEntity extends BlockEntity implements Tickable {
 
-    public List<BlockPos.Mutable> emitters = new ArrayList<>();
+    public final List<BlockPos.Mutable> emitters = new ArrayList<>();
 
     public HardLightBridgeBlockEntity() {
         super(ThinkingWithPortatosBlocks.HLB_BLOCK_ENTITY);

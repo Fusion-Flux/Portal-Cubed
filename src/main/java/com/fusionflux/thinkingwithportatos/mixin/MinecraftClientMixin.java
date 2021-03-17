@@ -2,10 +2,8 @@ package com.fusionflux.thinkingwithportatos.mixin;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
-import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -34,7 +32,7 @@ public abstract class MinecraftClientMixin {
     public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     public MinecraftClientMixin() {
-        throw new AssertionError(ThinkingWithPortatos.MOD_ID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
+        throw new AssertionError(ThinkingWithPortatos.MODID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
     }
 
     /**
@@ -73,7 +71,7 @@ public abstract class MinecraftClientMixin {
             if (hand != null) {
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                 buf.writeEnumConstant(hand);
-                Packet<?> packet = ClientPlayNetworking.createC2SPacket(new Identifier(ThinkingWithPortatos.MOD_ID, "portal_left_click"), buf);
+                Packet<?> packet = ClientPlayNetworking.createC2SPacket(new Identifier(ThinkingWithPortatos.MODID, "ptl_lft_click"), buf);
                 this.getNetworkHandler().sendPacket(packet);
                 ci.cancel();
             }

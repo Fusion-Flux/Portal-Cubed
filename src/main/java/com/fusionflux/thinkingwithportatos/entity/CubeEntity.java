@@ -1,11 +1,9 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
-import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.jme3.math.Vector3f;
 import dev.lazurite.rayon.api.element.PhysicsElement;
-import dev.lazurite.rayon.api.event.ElementCollisionEvents;
 import dev.lazurite.rayon.impl.Rayon;
 import dev.lazurite.rayon.impl.bullet.body.ElementRigidBody;
 import dev.lazurite.rayon.impl.bullet.body.shape.BoundingBoxShape;
@@ -28,9 +26,11 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
+import static com.fusionflux.thinkingwithportatos.ThinkingWithPortatos.id;
+
 public class CubeEntity extends Entity implements PhysicsElement {
     protected final ElementRigidBody RIGID_BODY = new ElementRigidBody(this);
-    public static final Identifier SPAWN_PACKET = new Identifier(ThinkingWithPortatos.MOD_ID, "cube");
+    public static final Identifier SPAWN_PACKET = id("spawn_cube");
     private float storedDamage = 0.0F;
 
     public CubeEntity(EntityType<?> entityType, World world) {
@@ -45,9 +45,10 @@ public class CubeEntity extends Entity implements PhysicsElement {
             this.RIGID_BODY.setDoFluidResistance(true);
         });
     }
-@Override
+
+    @Override
     protected void onBlockCollision(BlockState state) {
-    world.playSound(null,this.getPos().getX(),this.getPos().getY(),this.getPos().getZ(), ThinkingWithPortatosSounds.CUBE_HIT_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+        world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.CUBE_HIT_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
     }
 
 
@@ -58,16 +59,13 @@ public class CubeEntity extends Entity implements PhysicsElement {
     }
 
     private void doDamage() {
+        float velocity = getRigidBody().getLinearVelocity(new Vector3f()).length();
 
-        /* Velocity */
-        float v = getRigidBody().getLinearVelocity(new Vector3f()).length();
+        float momentum = velocity * getRigidBody().getMass();
 
-        /* Momentum */
-        float p = v * getRigidBody().getMass();
-
-        if (v >= 15) {
+        if (velocity >= 15) {
             for (Entity entity : this.getEntityWorld().getOtherEntities(this, this.getBoundingBox(), (entity) -> entity instanceof LivingEntity)) {
-                entity.damage(DamageSource.GENERIC, p / 20.0f);
+                entity.damage(DamageSource.GENERIC, momentum / 20.0f);
 
                 /* Loses 90% of its speed */
                 Rayon.SPACE.get(world).getThread().execute(() ->
@@ -103,7 +101,7 @@ public class CubeEntity extends Entity implements PhysicsElement {
         } else if (!this.world.isClient && !this.removed) {
             this.storedDamage += amount;
             this.scheduleVelocityUpdate();
-            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).abilities.creativeMode;
+            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).abilities.creativeMode;
             if (bl || this.storedDamage >= 20.0F) {
                 if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
                     // TODO
@@ -133,14 +131,14 @@ public class CubeEntity extends Entity implements PhysicsElement {
     public Packet<?> createSpawnPacket() {
         PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
 
-        packet.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()));
-        packet.writeUuid(this.getUuid());
-        packet.writeVarInt(this.getEntityId());
-        packet.writeDouble(this.getX());
-        packet.writeDouble(this.getY());
-        packet.writeDouble(this.getZ());
-        packet.writeByte(MathHelper.floor(this.pitch * 256.0F / 360.0F));
-        packet.writeByte(MathHelper.floor(this.yaw * 256.0F / 360.0F));
+        packet.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()))
+                .writeUuid(this.getUuid())
+                .writeVarInt(this.getEntityId())
+                .writeDouble(this.getX())
+                .writeDouble(this.getY())
+                .writeDouble(this.getZ())
+                .writeByte(MathHelper.floor(this.pitch * 256.0F / 360.0F))
+                .writeByte(MathHelper.floor(this.yaw * 256.0F / 360.0F));
 
         return ServerPlayNetworking.createS2CPacket(SPAWN_PACKET, packet);
     }
