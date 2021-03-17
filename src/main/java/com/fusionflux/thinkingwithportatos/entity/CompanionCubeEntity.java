@@ -2,9 +2,11 @@ package com.fusionflux.thinkingwithportatos.entity;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -16,6 +18,18 @@ public class CompanionCubeEntity extends CubeEntity {
         super(entityType, world);
     }
 
+    private int t = 1760;
+    @Override
+    public void tick() {
+        if(!this.world.isClient) {
+            if (t == 1760) {
+                world.playSoundFromEntity(null,this, ThinkingWithPortatosSounds.COMPANION_CUBE_AMBIANCE_EVENT, SoundCategory.NEUTRAL,1F,1F);
+                t--;
+
+            }
+        }
+        super.tick();
+    }
 
     @Override
     public boolean damage(DamageSource source, float amount) {

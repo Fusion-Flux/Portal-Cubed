@@ -18,17 +18,19 @@ public abstract class CollisionHelperMixin {
     }
 
     /**
-     * @author crab
+     * @author
      */
     @Overwrite(remap = false)
     public static Box getStretchedBoundingBox(Entity entity) {
-        Vec3d expand = entity.getVelocity().multiply(4 + Math.abs(entity.getVelocity().x), 4 + Math.abs(entity.getVelocity().y), 4 + Math.abs(entity.getVelocity().z));
-        if (Math.abs(entity.getVelocity().y) > 1)
-            expand = entity.getVelocity().multiply(4 + Math.abs(entity.getVelocity().x), 4 + Math.abs(entity.getVelocity().y), 4 + Math.abs(entity.getVelocity().z));
-
+        Vec3d expand = entity.getVelocity().multiply(.9);
+        Vec3d expand2 = entity.getVelocity();
+//if(Math.abs(entity.getVelocity().y)>1)
+        // expand = entity.getVelocity().multiply(4 + Math.abs(entity.getVelocity().x), 4+Math.abs(entity.getVelocity().y), 4 + Math.abs(entity.getVelocity().z));
+//entity.getVelocity().x*1.3, entity.getVelocity().y+(entity.getDimensions(entity.getPose()).height-entity.getEyeHeight(entity.getPose())), entity.getVelocity().z*1.3
    /* System.out.println(entity.getVelocity().y);
     System.out.println("expand");
 System.out.println(expand);*/
-        return entity.getBoundingBox().stretch(entity.getVelocity().x, entity.getVelocity().y + (entity.getDimensions(entity.getPose()).height - entity.getEyeHeight(entity.getPose())), entity.getVelocity().z).offset(0, -(entity.getDimensions(entity.getPose()).height - entity.getEyeHeight(entity.getPose())), 0);
+        //.offset(0,-(entity.getDimensions(entity.getPose()).height-entity.getEyeHeight(entity.getPose())),0)
+        return entity.getBoundingBox().stretch(expand);
     }
 }
