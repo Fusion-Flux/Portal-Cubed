@@ -40,26 +40,34 @@ public class PortalGun extends Item implements DyeableItem {
     }
 
     public void useLeft(World world, PlayerEntity user, Hand hand) {
+        ItemStack stack = user.getStackInHand(hand);
+        stack.getOrCreateTag().putBoolean("complementary", false);
         useImpl(world, user, hand, true);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack stack = user.getStackInHand(hand);
+        stack.getOrCreateTag().putBoolean("complementary", true);
         return useImpl(world, user, hand, false);
     }
 
 @Override
 public int getColor(ItemStack stack) {
-    CompoundTag compoundTag = stack.getSubTag("display");
-    return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : -14842149;
+    CompoundTag compoundTag = stack.getOrCreateTag();
+    boolean complementary = compoundTag.getBoolean("complementary");
+    compoundTag = stack.getSubTag("display");
+    return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : -14842149;
 }
+
+
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
         if (!world.isClient) {
             HitResult hitResult = user.raycast(128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 if (leftClick) {
-                    ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
+                   // ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
                     blockPos1 = ((BlockHitResult) hitResult).getBlockPos();
                     dirOut1 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
                     if( dirOut1.getY() == 0 ) {
@@ -70,8 +78,8 @@ public int getColor(ItemStack stack) {
                     }
                     dirRight1 = dirUp1.crossProduct( dirOut1 );
 
-                    ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
-                    setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain);
+                   // ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
+                   // setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain);
                     world.playSound(null,user.getPos().getX(),user.getPos().getY(),user.getPos().getZ(),ThinkingWithPortatosSounds.FIRE_EVENT_PRIMARY, SoundCategory.NEUTRAL, .3F, 1F);
                     if(portalholder1 !=null&& portalholder1.isAlive()){
                         world.playSound(null,portalholder1.getPos().getX(),portalholder1.getPos().getY(),portalholder1.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
@@ -89,12 +97,12 @@ public int getColor(ItemStack stack) {
 
                     //if(ColorMain)
 
-                    if(!switchedColorCheck) {
-                        ColorMain = getColor(user.getStackInHand(Hand.MAIN_HAND));
-                        switchedColorCheck=true;
-                    }
+                   // if(!switchedColorCheck) {
+                    //    ColorMain = getColor(user.getStackInHand(Hand.MAIN_HAND));
+                    //    switchedColorCheck=true;
+                   // }
 
-                    setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain*-1);
+                    //setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain*-1);
                     world.playSound(null,user.getPos().getX(),user.getPos().getY(),user.getPos().getZ(),ThinkingWithPortatosSounds.FIRE_EVENT_SECONDARY, SoundCategory.NEUTRAL, .3F, 1F);
                     if(portalholder2 !=null && portalholder2.isAlive()){
                         world.playSound(null,portalholder2.getPos().getX(),portalholder2.getPos().getY(),portalholder2.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
