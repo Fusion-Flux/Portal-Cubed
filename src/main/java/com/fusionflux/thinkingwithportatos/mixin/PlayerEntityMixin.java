@@ -2,14 +2,18 @@ package com.fusionflux.thinkingwithportatos.mixin;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
+import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +31,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private Vec3d storeVelocity1;
     @Unique
     private Vec3d storeVelocity2;
+    private boolean recentlyTouchedPortal = false;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -60,8 +65,22 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
+if(!world.isClient) {
+    if (CollisionHelper.isCollidingWithAnyPortal(this) && !recentlyTouchedPortal) {
+        world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+        recentlyTouchedPortal = true;
+    }
+    if (!CollisionHelper.isCollidingWithAnyPortal(this)&&recentlyTouchedPortal) {
+        world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+        recentlyTouchedPortal = false;
+    }
 
-
+    if (this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN||this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+        world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
+    } else if (this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN||this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+        world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
+    }
+}
         storeVelocity2 = storeVelocity1;
         storeVelocity1 = this.getVelocity();
 

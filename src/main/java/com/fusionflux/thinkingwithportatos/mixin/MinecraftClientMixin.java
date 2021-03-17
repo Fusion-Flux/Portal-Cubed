@@ -75,7 +75,6 @@ public abstract class MinecraftClientMixin {
                 buf.writeEnumConstant(hand);
                 Packet<?> packet = ClientPlayNetworking.createC2SPacket(new Identifier(ThinkingWithPortatos.MOD_ID, "portal_left_click"), buf);
                 this.getNetworkHandler().sendPacket(packet);
-                player.playSound(ThinkingWithPortatosSounds.FIRE_EVENT_PRIMARY, .3F, 1F);
                 ci.cancel();
             }
         }

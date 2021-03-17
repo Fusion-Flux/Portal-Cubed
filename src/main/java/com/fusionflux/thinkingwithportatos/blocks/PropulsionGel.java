@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -40,7 +41,7 @@ public class PropulsionGel extends Gel {
                             entity.setVelocity(entity.getVelocity().multiply(1.01, 1.0D, 1.01));
                         }
                         if (((EntityAttachments) entity).getMaxFallSpeed() == 0) {
-                            entity.playSound(ThinkingWithPortatosSounds.GEL_RUN_EVENT, .3F, 1F);
+                            world.playSound(null,entity.getPos().getX(),entity.getPos().getY(),entity.getPos().getZ(),ThinkingWithPortatosSounds.GEL_RUN_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
                         }
                         ((EntityAttachments) entity).setMaxFallSpeed(10);
                     }

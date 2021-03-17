@@ -12,6 +12,7 @@ import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -55,16 +56,6 @@ public int getColor(ItemStack stack) {
 }
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
-
-            HitResult hitResult2 = user.raycast(128.0D, 0.0F, false);
-            if (hitResult2.getType() == HitResult.Type.BLOCK) {
-                if (leftClick) {
-                    user.playSound(ThinkingWithPortatosSounds.FIRE_EVENT_PRIMARY, .3F, 1F);
-                } else {
-                    user.playSound(ThinkingWithPortatosSounds.FIRE_EVENT_SECONDARY, .3F, 1F);
-                }
-            }
-
         if (!world.isClient) {
             HitResult hitResult = user.raycast(128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
@@ -82,7 +73,10 @@ public int getColor(ItemStack stack) {
 
                     ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
                     setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain);
-
+                    world.playSound(null,user.getPos().getX(),user.getPos().getY(),user.getPos().getZ(),ThinkingWithPortatosSounds.FIRE_EVENT_PRIMARY, SoundCategory.NEUTRAL, .3F, 1F);
+                    if(portalholder1 !=null&& portalholder1.isAlive()){
+                        world.playSound(null,portalholder1.getPos().getX(),portalholder1.getPos().getY(),portalholder1.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
+                    }
                 } else {
                     blockPos2 = ((BlockHitResult) hitResult).getBlockPos();
                     dirOut2 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
@@ -102,8 +96,13 @@ public int getColor(ItemStack stack) {
                     }
 
                     setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain*-1);
-
+                    world.playSound(null,user.getPos().getX(),user.getPos().getY(),user.getPos().getZ(),ThinkingWithPortatosSounds.FIRE_EVENT_SECONDARY, SoundCategory.NEUTRAL, .3F, 1F);
+                    if(portalholder2 !=null && portalholder2.isAlive()){
+                        world.playSound(null,portalholder2.getPos().getX(),portalholder2.getPos().getY(),portalholder2.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
+                    }
                 }
+            }else{
+                world.playSound(null,user.getPos().getX(),user.getPos().getY(),user.getPos().getZ(),ThinkingWithPortatosSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
             }
             if ( blockPos1 != null && blockPos2 != null) {
 
@@ -155,6 +154,10 @@ public int getColor(ItemStack stack) {
 
                 world.spawnEntity(portalholder1);
                 world.spawnEntity(portalholder2);
+
+                world.playSound(null,portalholder1.getPos().getX(),portalholder1.getPos().getY(),portalholder1.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
+                world.playSound(null,portalholder2.getPos().getX(),portalholder2.getPos().getY(),portalholder2.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
+
             }
         }
         return TypedActionResult.pass(user.getStackInHand(hand));

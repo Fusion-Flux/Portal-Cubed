@@ -2,14 +2,18 @@ package com.fusionflux.thinkingwithportatos.mixin;
 
 import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
+import com.fusionflux.thinkingwithportatos.entity.CompanionCubeEntity;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
+import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.ducks.IEEntity;
 import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -91,6 +95,10 @@ public Vec3d movementTest = new Vec3d(0,0,0);
     @Shadow protected boolean onGround;
 
     @Shadow public abstract boolean collides();
+
+    @Shadow public abstract boolean equals(Object o);
+
+    @Shadow public abstract EntityType<?> getType();
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {

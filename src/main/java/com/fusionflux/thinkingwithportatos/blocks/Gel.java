@@ -107,4 +107,9 @@ public class Gel extends Block {
         return direction == null ? state : state.with(direction, canConnect(world, neighborPos));
     }
 
+@Override
+    public boolean hasDynamicBounds() {
+        return this.dynamicBounds;
+    }
+
 }

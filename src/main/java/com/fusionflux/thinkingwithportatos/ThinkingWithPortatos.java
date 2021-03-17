@@ -4,10 +4,12 @@ package com.fusionflux.thinkingwithportatos;
 
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
+import com.fusionflux.thinkingwithportatos.entity.CubeEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
+import dev.lazurite.rayon.api.event.ElementCollisionEvents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -16,6 +18,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
@@ -28,7 +31,7 @@ public class ThinkingWithPortatos implements ModInitializer {
     public static final ItemGroup ThinkingWithPortatosGroup = FabricItemGroupBuilder.build(
             new Identifier("thinkingwithportatos", "general"),
             () -> new ItemStack(ThinkingWithPortatosBlocks.BOTTOM_2X2_GRITTY_WHITE_PANEL));
-
+    int t = 0;
     @Override
     public void onInitialize() {
         ThinkingWithPortatosConfig.register();
@@ -37,6 +40,17 @@ public class ThinkingWithPortatos implements ModInitializer {
         ThinkingWithPortatosEntities.registerEntities();
         ThinkingWithPortatosSounds.registerSounds();
         registerPacketListener();
+        ElementCollisionEvents.BLOCK_COLLISION.register((element, blockPos, blockState) -> {
+            if(!((CubeEntity) element).world.isClient) {
+                if (element instanceof CubeEntity) {
+                    if (t == 0) {
+                        ((CubeEntity) element).world.playSound(null, ((CubeEntity) element).getPos().getX(), ((CubeEntity) element).getPos().getY(), ((CubeEntity) element).getPos().getZ(), ThinkingWithPortatosSounds.CUBE_HIT_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                        t = 3;
+                    }
+                }
+                t--;
+            }
+        });
     }
 
     private void registerPacketListener() {

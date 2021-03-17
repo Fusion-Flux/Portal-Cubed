@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -36,7 +37,7 @@ public class RepulsionGel extends Gel {
                     if (entity.getVelocity().y < 1.65)
                         entity.setVelocity(entity.getVelocity().add(0, 1.65D, 0));
                     if (limiter.check(world, entity)) {
-                        entity.playSound(ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, .4F, 1F);
+                        world.playSound(null,entity.getPos().getX(),entity.getPos().getY(),entity.getPos().getZ(),ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.MASTER, .3F, 1F);
                     }
                 }
             }

@@ -2,14 +2,17 @@ package com.fusionflux.thinkingwithportatos.entity;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.jme3.math.Vector3f;
 import dev.lazurite.rayon.api.element.PhysicsElement;
+import dev.lazurite.rayon.api.event.ElementCollisionEvents;
 import dev.lazurite.rayon.impl.Rayon;
 import dev.lazurite.rayon.impl.bullet.body.ElementRigidBody;
 import dev.lazurite.rayon.impl.bullet.body.shape.BoundingBoxShape;
 import dev.lazurite.rayon.impl.bullet.world.MinecraftSpace;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -18,6 +21,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
@@ -41,6 +45,11 @@ public class CubeEntity extends Entity implements PhysicsElement {
             this.RIGID_BODY.setDoFluidResistance(true);
         });
     }
+@Override
+    protected void onBlockCollision(BlockState state) {
+    world.playSound(null,this.getPos().getX(),this.getPos().getY(),this.getPos().getZ(), ThinkingWithPortatosSounds.CUBE_HIT_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+    }
+
 
     @Override
     public void tick() {

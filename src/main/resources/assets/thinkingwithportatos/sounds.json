@@ -24,5 +24,54 @@
 		"sounds": [
 			"thinkingwithportatos:portalgunsecondary"
 		]
+	},
+	"portalenter": {
+		"subtitle": "subtitles.thinkingwithportatos.portalenter",
+		"sounds": [
+			"thinkingwithportatos:portalenter1",
+			"thinkingwithportatos:portalenter2"
+		]
+	},
+	"portalexit": {
+		"subtitle": "subtitles.thinkingwithportatos.portalexit",
+		"sounds": [
+			"thinkingwithportatos:portalexit1",
+			"thinkingwithportatos:portalexit2"
+		]
+	},
+	"portal_open": {
+		"subtitle": "subtitles.thinkingwithportatos.portal_open",
+		"sounds": [
+			"thinkingwithportatos:portal_open1",
+			"thinkingwithportatos:portal_open2",
+			"thinkingwithportatos:portal_open3"
+		]
+	},
+	"portal_close": {
+		"subtitle": "subtitles.thinkingwithportatos.portal_close",
+		"sounds": [
+			"thinkingwithportatos:portal_close2"
+		]
+	},
+	"portal_invalid_surface": {
+		"subtitle": "subtitles.thinkingwithportatos.portal_invalid_surface",
+		"sounds": [
+			"thinkingwithportatos:portal_invalid_surface"
+		]
+	},
+	"portalambiance": {
+		"sounds": [
+			"thinkingwithportatos:portal_ambient_loop"
+		]
+	},
+	"cubehit": {
+		"sounds": [
+			"thinkingwithportatos:cubehitnoise"
+		]
+	},
+	"companioncubeambiance": {
+		"sounds": [
+			"thinkingwithportatos:companioncubeambiance"
+		]
 	}
 }
