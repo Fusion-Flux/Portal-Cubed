@@ -16,7 +16,7 @@ public class ThinkingWithPortatosEntities {
                                                                              .dimensions(EntityDimensions.fixed(1.0F, 1.0F))
                                                                              .build();
     public static final EntityType<PortalPlaceholderEntity> PORTAL_PLACEHOLDER = FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, PortalPlaceholderEntity::new)
-            .dimensions(EntityDimensions.changing(1F, 1F))
+            .dimensions(EntityDimensions.changing(0F, 0F))
             .build();
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "cube"), CUBE);
