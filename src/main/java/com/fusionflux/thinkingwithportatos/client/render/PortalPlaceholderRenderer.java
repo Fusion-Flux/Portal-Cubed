@@ -33,12 +33,12 @@ public class PortalPlaceholderRenderer extends EntityRenderer<PortalPlaceholderE
     public void render(PortalPlaceholderEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.push();
-        //matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(entity.pitch));
-        //matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(entity.yaw));
-
+        matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(entity.yaw));
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(entity.pitch));
+        //matrices.multiply(Vector3f.NEGATIVE_Z.getDegreesQuaternion(entity.getRoll()));
        // System.out.println(entity.rotation);
-        System.out.println(entity.color);
-        //matrices.multiply(entity.rotation);
+        //System.out.println(entity.color);
+       // matrices.multiply(entity.getRotation());
         int color = entity.color;
 
         int r = (color & 0xFF0000) >> 16;

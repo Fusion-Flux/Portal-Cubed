@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
+import com.fusionflux.thinkingwithportatos.accessor.QuaternionHandler;
 import com.fusionflux.thinkingwithportatos.client.render.model.entity.PortalPlaceholderModel;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -10,10 +11,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
@@ -31,7 +34,9 @@ public class PortalPlaceholderEntity extends Entity {
 
     public static final Identifier SPAWN_PACKET = id("portal_placeholder_spawn");
 
-    public Quaternion rotation;
+    public static final TrackedData<Quaternion> QUATERNION = DataTracker.registerData(PortalPlaceholderEntity.class, QuaternionHandler.QUATERNION_HANDLER);
+    public static final TrackedData<Float> ROLL= DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    public Quaternion rotation=Quaternion.IDENTITY;
 
     public int color;
 
@@ -42,28 +47,42 @@ public class PortalPlaceholderEntity extends Entity {
 
     @Override
     protected void initDataTracker() {
+        this.getDataTracker().startTracking(QUATERNION,new Quaternion(0,0,0,1));
+        this.getDataTracker().startTracking(ROLL,0f);
     }
 
     @Override
     protected void readCustomDataFromTag(CompoundTag compoundTag) {
         //this.color = compoundTag.getDouble("color");
-        CompoundTag rotation = compoundTag.getCompound("rotation"); // "tag" is the argument in the method
+      /*  CompoundTag rotation = compoundTag.getCompound("rotation"); // "tag" is the argument in the method
         float w = rotation.getFloat("w");
         float x = rotation.getFloat("x");
         float y = rotation.getFloat("y");
         float z = rotation.getFloat("z");
         this.rotation = new Quaternion(x,y,z,w);
        // this.rotation = new Quaternion(compoundTag.getFloat("x"),compoundTag.getFloat("y"),compoundTag.getFloat("z"),compoundTag.getFloat("w"));
-        this.color = compoundTag.getInt("color");
+        this.color = compoundTag.getInt("color");*/
     }
 
-    public void setRotationTransformation(Quaternion quaternion) {
-        this.rotation = quaternion;
+    public void setPlaceholderRotation(Quaternion quaternion) {
+       this.getDataTracker().set(QUATERNION,quaternion);
+    }
+
+    public Quaternion getRotation() {
+        return getDataTracker().get(QUATERNION);
+    }
+
+    public void setRoll(Float roll) {
+        this.getDataTracker().set(ROLL,roll);
+    }
+
+    public Float getRoll() {
+        return getDataTracker().get(ROLL);
     }
 
     @Override
     protected void writeCustomDataToTag(CompoundTag compoundTag) {
-        if (this.rotation != null) {
+       /* if (this.rotation != null) {
             CompoundTag rotation = new CompoundTag();
             rotation.putFloat("x", this.rotation.getX());
             rotation.putFloat("y", this.rotation.getY());
@@ -72,7 +91,7 @@ public class PortalPlaceholderEntity extends Entity {
 
             compoundTag.put("rotation", rotation); // "tag" is the argument in the method
     }
-        compoundTag.putInt("color", this.color);
+        compoundTag.putInt("color", this.color);*/
     }
 
     @Override

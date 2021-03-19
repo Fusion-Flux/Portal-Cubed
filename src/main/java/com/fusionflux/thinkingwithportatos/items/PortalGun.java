@@ -5,11 +5,13 @@ import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRender
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
+import com.jme3.math.Vector3f;
 import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.portal.Portal;
 
 import com.qouteall.immersive_portals.portal.PortalManipulation;
+import dev.lazurite.rayon.impl.util.math.QuaternionHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
@@ -72,7 +74,7 @@ public int getColor(ItemStack stack) {
 
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
-       // if (!world.isClient) {
+        if (!world.isClient) {
             HitResult hitResult = user.raycast(128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 if (leftClick) {
@@ -174,20 +176,27 @@ public int getColor(ItemStack stack) {
 
                 Pair<Double, Double> rotAngles = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion( portalholder1.axisW, portalholder1.axisH ));
                 Pair<Double, Double> rotAngles2 = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion( portalholder2.axisW, portalholder2.axisH ));
+                assert portalholder1.rotation != null;
+                Vector3f rotAngles3 = QuaternionHelper.toEulerAngles(QuaternionHelper.minecrafToBullet(portalholder1.rotation));
 
                 portalOutline1=new PortalPlaceholderEntity(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER,portalholder1.world);
                 portalOutline1.setPos(placeholderPos1.x,placeholderPos1.y,placeholderPos1.z);
-                portalOutline1.yaw=rotAngles.getRight().floatValue();
-                portalOutline1.pitch=rotAngles.getLeft().floatValue();
-                portalOutline1.rotation=alignPortal( portalholder1, portalholder2 ).toMcQuaternion();
-                System.out.println(portalOutline1.rotation);
-                portalOutline1.color = getColor(user.getStackInHand(Hand.MAIN_HAND));
+                //portalOutline1.yaw=rotAngles3.z;
+                //portalOutline1.pitch=rotAngles3.y;
+                //portalOutline1.setRoll(rotAngles3.x);
+                portalOutline1.yaw=rotAngles.getLeft().floatValue();
+                portalOutline1.pitch=rotAngles.getRight().floatValue();
+
+                //portalOutline1.setPlaceholderRotation(portalholder1.rotation);
+               // portalOutline1.color = getColor(user.getStackInHand(Hand.MAIN_HAND));
 
                 portalOutline2=new PortalPlaceholderEntity(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER,portalholder1.world);
                 portalOutline2.setPos(placeholderPos2.x,placeholderPos2.y,placeholderPos2.z);
-                portalOutline2.yaw=rotAngles2.getRight().floatValue();
-                portalOutline2.pitch=rotAngles2.getLeft().floatValue();
-                portalOutline2.rotation = alignPortal( portalholder2, portalholder1 ).toMcQuaternion();
+                portalOutline2.yaw=rotAngles2.getLeft().floatValue();
+                portalOutline2.pitch=rotAngles2.getRight().floatValue();
+                //portalOutline2.setPlaceholderRotation(portalholder2.rotation);
+System.out.println("yaw"+rotAngles.getLeft());
+                System.out.println("pitch"+rotAngles.getRight());
 
                 world.spawnEntity(portalOutline1);
                 world.spawnEntity(portalOutline2);
@@ -201,7 +210,7 @@ public int getColor(ItemStack stack) {
                 world.playSound(null,portalholder2.getPos().getX(),portalholder2.getPos().getY(),portalholder2.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
 
             }
-       // }
+        }
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
 
