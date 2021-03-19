@@ -77,7 +77,7 @@ public class CubeEntity extends Entity implements PhysicsElement {
 
     @Override
     public boolean isCollidable() {
-        return false;
+        return true;
     }
 
     @Override

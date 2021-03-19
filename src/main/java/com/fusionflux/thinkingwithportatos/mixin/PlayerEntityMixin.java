@@ -8,6 +8,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -46,6 +48,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow
     public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
+    @Shadow public abstract boolean isSwimming();
+
+    @Shadow public abstract boolean isCreative();
+
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void isInvulnerableTo(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         ItemStack itemStack5 = this.getEquippedStack(EquipmentSlot.FEET);
@@ -64,6 +70,19 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
+     /*   double reduceGravity = .06666666666;
+        double gravityBalancer = 1;
+            if (this.isTouchingWater()) {
+                gravityBalancer = gravityBalancer * .02;
+                if (this.hasStatusEffect(StatusEffects.SLOW_FALLING)) {
+                    gravityBalancer = gravityBalancer * .01;
+                }
+            }
+if(!this.isFallFlying()) {
+    if (!this.isSwimming()) {
+        this.setVelocity(this.getVelocity().add(0, reduceGravity * gravityBalancer, 0));
+    }
+}*/
 if(!world.isClient) {
     if (CollisionHelper.isCollidingWithAnyPortal(this) && !recentlyTouchedPortal) {
         world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);

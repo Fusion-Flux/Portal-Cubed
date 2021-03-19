@@ -2,8 +2,10 @@ package com.fusionflux.thinkingwithportatos.client;
 
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.client.render.CubeEntityRenderer;
+import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRenderer;
 import com.fusionflux.thinkingwithportatos.entity.CompanionCubeEntity;
 import com.fusionflux.thinkingwithportatos.entity.CubeEntity;
+import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import net.fabricmc.api.ClientModInitializer;
@@ -29,11 +31,13 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
     private void registerEntityRenderers() {
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, false));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.COMPANION_CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, true));
+        EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, (dispatcher, context) -> new PortalPlaceholderRenderer(dispatcher));
     }
 
     private void registerClientPacketReceivers() {
         ClientPlayNetworking.registerGlobalReceiver(CubeEntity.SPAWN_PACKET, entitySpawnPacket());
         ClientPlayNetworking.registerGlobalReceiver(CompanionCubeEntity.SPAWN_PACKET, entitySpawnPacket());
+        ClientPlayNetworking.registerGlobalReceiver(PortalPlaceholderEntity.SPAWN_PACKET, entitySpawnPacket());
     }
 
     private static ClientPlayNetworking.PlayChannelHandler entitySpawnPacket() {

@@ -26,7 +26,7 @@ public class ThinkingWithPortatos implements ModInitializer {
 
     public static final ItemGroup ThinkingWithPortatosGroup = FabricItemGroupBuilder.build(
             id("general"),
-            () -> new ItemStack(ThinkingWithPortatosBlocks.BOTTOM_2X2_GRITTY_WHITE_PANEL));
+            () -> new ItemStack(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2));
 
     int t = 0;
 

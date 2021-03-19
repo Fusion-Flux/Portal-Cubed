@@ -1,12 +1,16 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
+import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRenderer;
+import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
+import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.portal.Portal;
 
 import com.qouteall.immersive_portals.portal.PortalManipulation;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
@@ -14,11 +18,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import org.lwjgl.system.CallbackI;
 
 
 public class PortalGun extends Item implements DyeableItem {
@@ -26,7 +32,10 @@ public class PortalGun extends Item implements DyeableItem {
     private BlockPos blockPos1;
     private BlockPos blockPos2;
     public Portal portalholder1;
+    public PortalPlaceholderEntity portalOutline1;
     public Portal portalholder2;
+    public PortalPlaceholderEntity portalOutline2;
+
     public Vec3i dirUp1;
     public Vec3i dirUp2;
     public Vec3i dirOut1;
@@ -129,6 +138,9 @@ public int getColor(ItemStack stack) {
                 Vec3d portalPos1 = calcPortalPos( blockPos1, dirUp1, dirOut1, dirRight1 );
                 Vec3d portalPos2 = calcPortalPos( blockPos2, dirUp2, dirOut2, dirRight2 );
 
+                Vec3d placeholderPos1 = calcPlaceholderPos( blockPos1, dirUp1, dirOut1, dirRight1 );
+                Vec3d placeholderPos2 = calcPlaceholderPos( blockPos2, dirUp2, dirOut2, dirRight2 );
+
                 // portal 1
                 portalBase.setOriginPos( portalPos1 );
                 portalBase.setDestination( portalPos2 );
@@ -158,9 +170,21 @@ public int getColor(ItemStack stack) {
                 //portalholder1.isGlobalPortal = true;
                 //portalholder2.isGlobalPortal = true;
 
+                Pair<Double, Double> rotAngles = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion( portalholder1.axisW, portalholder1.axisH ));
+
+                portalOutline1=new PortalPlaceholderEntity(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER,portalholder1.world);
+                portalOutline1.setPos(placeholderPos1.x,placeholderPos1.y,placeholderPos1.z);
+                portalOutline1.yaw=rotAngles.getRight().floatValue();
+                portalOutline1.pitch=rotAngles.getLeft().floatValue();
+                //portalOutline1.setRotationTransformation(portalholder1.rotation);
+
+portalholder1.
+                world.spawnEntity(portalOutline1);
 
                 world.spawnEntity(portalholder1);
                 world.spawnEntity(portalholder2);
+
+
 
                 world.playSound(null,portalholder1.getPos().getX(),portalholder1.getPos().getY(),portalholder1.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
                 world.playSound(null,portalholder2.getPos().getX(),portalholder2.getPos().getY(),portalholder2.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
@@ -179,6 +203,18 @@ public int getColor(ItemStack stack) {
      */
     private Vec3d calcPortalPos( BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross ) {
         double upOffset = -0.5;
+        double faceOffset = -0.510;
+        double crossOffset = 0.0;
+        return new Vec3d(
+                ((hit.getX() + 0.5) + upOffset * upright.getX() + faceOffset * facing.getX() + crossOffset * cross.getX()), // x component
+                ((hit.getY() + 0.5) + upOffset * upright.getY() + faceOffset * facing.getY() + crossOffset * cross.getY()), // y component
+                ((hit.getZ() + 0.5) + upOffset * upright.getZ() + faceOffset * facing.getZ() + crossOffset * cross.getZ())  // z component
+        );
+
+    }
+
+    private Vec3d calcPlaceholderPos( BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross ) {
+        double upOffset = 0.0;
         double faceOffset = -0.505;
         double crossOffset = 0.0;
         return new Vec3d(
