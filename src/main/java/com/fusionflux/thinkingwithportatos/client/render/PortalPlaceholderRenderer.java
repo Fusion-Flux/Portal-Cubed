@@ -15,6 +15,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Quaternion;
@@ -37,6 +38,8 @@ public class PortalPlaceholderRenderer extends EntityRenderer<PortalPlaceholderE
         matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(entity.yaw));
         matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(entity.pitch));
         matrices.multiply(Vector3f.NEGATIVE_Z.getDegreesQuaternion(entity.getRoll()));
+
+
 
         int color = entity.getColor()*-1;
 

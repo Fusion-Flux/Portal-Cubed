@@ -38,7 +38,7 @@ public class PortalPlaceholderEntity extends Entity {
     public static final TrackedData<Float> ROLL= DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public static final TrackedData<Integer> COLOR= DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public Quaternion rotation=Quaternion.IDENTITY;
-
+public int color;
     //public int color;
 
     public PortalPlaceholderEntity(EntityType<?> entityType, World world) {
@@ -55,19 +55,15 @@ public class PortalPlaceholderEntity extends Entity {
 
     @Override
     protected void readCustomDataFromTag(CompoundTag compoundTag) {
-        //this.color = compoundTag.getDouble("color");
-      /*  CompoundTag rotation = compoundTag.getCompound("rotation"); // "tag" is the argument in the method
-        float w = rotation.getFloat("w");
-        float x = rotation.getFloat("x");
-        float y = rotation.getFloat("y");
-        float z = rotation.getFloat("z");
-        this.rotation = new Quaternion(x,y,z,w);
-       // this.rotation = new Quaternion(compoundTag.getFloat("x"),compoundTag.getFloat("y"),compoundTag.getFloat("z"),compoundTag.getFloat("w"));
-        this.color = compoundTag.getInt("color");*/
+        this.setColor(compoundTag.getInt("color"));
+        this.setRoll(compoundTag.getFloat("roll"));
+
     }
 
-    public void setPlaceholderRotation(Quaternion quaternion) {
-       this.getDataTracker().set(QUATERNION,quaternion);
+    @Override
+    protected void writeCustomDataToTag(CompoundTag compoundTag) {
+        compoundTag.putFloat("color", this.getColor());
+        compoundTag.putFloat("roll", this.getRoll());
     }
 
     public Quaternion getRotation() {
@@ -82,26 +78,13 @@ public class PortalPlaceholderEntity extends Entity {
         return getDataTracker().get(ROLL);
     }
 
-    public void setColor(Integer roll) {
-        this.getDataTracker().set(COLOR,roll);
+    public void setColor(Integer color) {
+        this.getDataTracker().set(COLOR,color);
+
     }
 
     public Integer getColor() {
         return getDataTracker().get(COLOR);
-    }
-
-    @Override
-    protected void writeCustomDataToTag(CompoundTag compoundTag) {
-       /* if (this.rotation != null) {
-            CompoundTag rotation = new CompoundTag();
-            rotation.putFloat("x", this.rotation.getX());
-            rotation.putFloat("y", this.rotation.getY());
-            rotation.putFloat("z", this.rotation.getZ());
-            rotation.putFloat("w", this.rotation.getW());
-
-            compoundTag.put("rotation", rotation); // "tag" is the argument in the method
-    }
-        compoundTag.putInt("color", this.color);*/
     }
 
     @Override
