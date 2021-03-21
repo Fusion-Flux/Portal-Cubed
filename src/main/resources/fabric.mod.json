@@ -32,13 +32,11 @@
   "mixins": [
     "thinkingwithportatos.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
+    "cloth-config2": "*",
+    "rayon": ">=1.1.2",
     "minecraft": "1.16.x"
-  },
-  "suggests": {
-    "flamingo": "*"
   }
 }
