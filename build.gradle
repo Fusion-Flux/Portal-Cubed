@@ -2,18 +2,20 @@ plugins {
 	id 'fabric-loom' version '0.6-SNAPSHOT'
 	id 'maven-publish'
 }
-repositories {
-	maven { url = "https://jitpack.io" }
-	maven { url = "https://maven.shedaniel.me/" }
-	maven { url = "https://www.cursemaven.com" }
-	maven { url = "https://maven.terraformersmc.com/releases" }
-}
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
+
+repositories {
+	maven { url = "https://jitpack.io" }
+	maven { url = "https://maven.shedaniel.me/" }
+	maven { url = "https://www.cursemaven.com" }
+	maven { url = "https://maven.terraformersmc.com/releases" }
+}
 
 dependencies {
 	// To change the versions see the gradle.properties file
@@ -27,12 +29,11 @@ dependencies {
 	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
-	modImplementation('com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.84-1.16') {
+	modImplementation("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	include 'com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.84-1.16'
+	include("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}")
 
 	modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
 		exclude(module: "fabric-api")
@@ -41,7 +42,6 @@ dependencies {
 	modImplementation ("com.github.LazuriteMC:Rayon:${project.rayon_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	include "com.github.LazuriteMC:Rayon:${project.rayon_version}"
 }
 
 processResources {
