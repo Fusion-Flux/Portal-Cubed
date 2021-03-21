@@ -8,8 +8,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectType;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -48,9 +46,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow
     public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
-    @Shadow public abstract boolean isSwimming();
+    @Shadow
+    public abstract boolean isSwimming();
 
-    @Shadow public abstract boolean isCreative();
+    @Shadow
+    public abstract boolean isCreative();
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void isInvulnerableTo(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
@@ -83,33 +83,33 @@ if(!this.isFallFlying()) {
         this.setVelocity(this.getVelocity().add(0, reduceGravity * gravityBalancer, 0));
     }
 }*/
-if(!world.isClient) {
-    if (CollisionHelper.isCollidingWithAnyPortal(this) && !recentlyTouchedPortal) {
-        world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-        recentlyTouchedPortal = true;
-    }
-    if (!CollisionHelper.isCollidingWithAnyPortal(this)&&recentlyTouchedPortal) {
-        world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-        recentlyTouchedPortal = false;
-    }
+        if (!world.isClient) {
+            if (CollisionHelper.isCollidingWithAnyPortal(this) && !recentlyTouchedPortal) {
+                world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+                recentlyTouchedPortal = true;
+            }
+            if (!CollisionHelper.isCollidingWithAnyPortal(this) && recentlyTouchedPortal) {
+                world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+                recentlyTouchedPortal = false;
+            }
 
-    if (this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN||this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
-        world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
-    } else if (this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN||this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
-        world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
-    }
-}
+            if (this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN || this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+                world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
+            } else if (this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN || this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+                world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
+            }
+        }
         storeVelocity2 = storeVelocity1;
         storeVelocity1 = this.getVelocity();
 
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
-        if (storeVelocity2 != null && storeVelocity1 != null){
+        if (storeVelocity2 != null && storeVelocity1 != null) {
             if (itemFeet.getItem().equals(ThinkingWithPortatosItems.LONG_FALL_BOOTS)) {
-                if(!this.isOnGround()){
-                    this.setVelocity(this.getVelocity().x*1.035,this.getVelocity().y,this.getVelocity().z*1.035);
+                if (!this.isOnGround()) {
+                    this.setVelocity(this.getVelocity().x * 1.035, this.getVelocity().y, this.getVelocity().z * 1.035);
                 }
             }
-    }
+        }
     }
 
 }

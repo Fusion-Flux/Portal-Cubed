@@ -20,26 +20,6 @@ import net.minecraft.util.registry.Registry;
 import java.util.UUID;
 
 public class ThinkingWithPortatosClient implements ClientModInitializer {
-    @Override
-    public void onInitializeClient() {
-        registerClientPacketReceivers();
-        registerEntityRenderers();
-        ThinkingWithPortatosBlocks.registerRenderLayers();
-        ThinkingWithPortatosItems.registerRenderLayers();
-    }
-
-    private void registerEntityRenderers() {
-        EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, false));
-        EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.COMPANION_CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, true));
-        EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, (dispatcher, context) -> new PortalPlaceholderRenderer(dispatcher));
-    }
-
-    private void registerClientPacketReceivers() {
-        ClientPlayNetworking.registerGlobalReceiver(CubeEntity.SPAWN_PACKET, entitySpawnPacket());
-        ClientPlayNetworking.registerGlobalReceiver(CompanionCubeEntity.SPAWN_PACKET, entitySpawnPacket());
-        ClientPlayNetworking.registerGlobalReceiver(PortalPlaceholderEntity.SPAWN_PACKET, entitySpawnPacket());
-    }
-
     private static ClientPlayNetworking.PlayChannelHandler entitySpawnPacket() {
         return (client, handler, packet, responder) -> {
             EntityType<?> type = Registry.ENTITY_TYPE.get(packet.readVarInt());
@@ -65,5 +45,25 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
                 }
             });
         };
+    }
+
+    @Override
+    public void onInitializeClient() {
+        registerClientPacketReceivers();
+        registerEntityRenderers();
+        ThinkingWithPortatosBlocks.registerRenderLayers();
+        ThinkingWithPortatosItems.registerRenderLayers();
+    }
+
+    private void registerEntityRenderers() {
+        EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, false));
+        EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.COMPANION_CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, true));
+        EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, (dispatcher, context) -> new PortalPlaceholderRenderer(dispatcher));
+    }
+
+    private void registerClientPacketReceivers() {
+        ClientPlayNetworking.registerGlobalReceiver(CubeEntity.SPAWN_PACKET, entitySpawnPacket());
+        ClientPlayNetworking.registerGlobalReceiver(CompanionCubeEntity.SPAWN_PACKET, entitySpawnPacket());
+        ClientPlayNetworking.registerGlobalReceiver(PortalPlaceholderEntity.SPAWN_PACKET, entitySpawnPacket());
     }
 }

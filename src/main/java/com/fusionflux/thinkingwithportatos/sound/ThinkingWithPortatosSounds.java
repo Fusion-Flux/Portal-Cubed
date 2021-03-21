@@ -29,6 +29,7 @@ public class ThinkingWithPortatosSounds {
     public static final SoundEvent ENTITY_PORTAL_CLOSE = new SoundEvent(PORTAL_CLOSE);
     public static final SoundEvent CUBE_HIT_EVENT = new SoundEvent(CUBE_HIT);
     public static final SoundEvent COMPANION_CUBE_AMBIANCE_EVENT = new SoundEvent(COMPANION_CUBE_AMBIANCE);
+
     public static void registerSounds() {
         Registry.register(Registry.SOUND_EVENT, GEL_BOUNCE, GEL_BOUNCE_EVENT);
         Registry.register(Registry.SOUND_EVENT, GEL_RUN, GEL_RUN_EVENT);

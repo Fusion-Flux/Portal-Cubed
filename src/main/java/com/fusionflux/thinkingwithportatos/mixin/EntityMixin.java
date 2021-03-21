@@ -27,21 +27,31 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     private static final TrackedData<Boolean> IS_ROLLING = DataTracker.registerData(Entity.class, TrackedDataHandlerRegistry.BOOLEAN);
     @Unique
     private static final TrackedData<Direction> DIRECTION = DataTracker.registerData(Entity.class, TrackedDataHandlerRegistry.FACING);
+    @Unique
+    private final double storeVelocity3 = 0;
+    public Vec3d movementTest = new Vec3d(0, 0, 0);
+    @Shadow
+    public World world;
+    @Shadow
+    public boolean horizontalCollision;
+    @Shadow
+    public boolean verticalCollision;
 
+    //private Portal portal;
+    @Shadow
+    public boolean noClip;
+    @Shadow
+    public float horizontalSpeed;
+    @Shadow
+    protected boolean onGround;
     @Unique
     private double maxFallSpeed = 0;
     @Unique
-    private double storeVelocity1= 0;
+    private double storeVelocity1 = 0;
     @Unique
-    private double storeVelocity2= 0;
+    private double storeVelocity2 = 0;
     @Unique
-    private final double storeVelocity3 = 0;
-    @Unique
-    private double speedTransformApply =0 ;
-
-    //private Portal portal;
-
-public Vec3d movementTest = new Vec3d(0,0,0);
+    private double speedTransformApply = 0;
 
     @Override
     public double getMaxFallSpeed() {
@@ -54,51 +64,48 @@ public Vec3d movementTest = new Vec3d(0,0,0);
     }
 
     @Shadow
-    public World world;
-
-    @Shadow
     public abstract BlockPos getBlockPos();
 
     @Shadow
     public abstract Vec3d getVelocity();
 
-    @Shadow public abstract void setVelocity(Vec3d velocity);
+    @Shadow
+    public abstract void setVelocity(Vec3d velocity);
 
-    @Shadow public abstract void addVelocity(double deltaX, double deltaY, double deltaZ);
+    @Shadow
+    public abstract void addVelocity(double deltaX, double deltaY, double deltaZ);
 
-    @Shadow public abstract boolean collidesWith(Entity other);
+    @Shadow
+    public abstract boolean collidesWith(Entity other);
 
-    @Shadow protected abstract boolean doesNotCollide(Box box);
+    @Shadow
+    protected abstract boolean doesNotCollide(Box box);
 
-    @Shadow public abstract Box getBoundingBox();
+    @Shadow
+    public abstract Box getBoundingBox();
 
-    @Shadow public boolean horizontalCollision;
+    @Shadow
+    public abstract boolean isInsideWall();
 
-    @Shadow public abstract boolean isInsideWall();
+    @Shadow
+    public abstract boolean isOnGround();
 
-    @Shadow public boolean verticalCollision;
+    @Shadow
+    public abstract boolean collides();
 
-    @Shadow public boolean noClip;
+    @Shadow
+    public abstract boolean equals(Object o);
 
-    @Shadow public float horizontalSpeed;
-
-    @Shadow public abstract boolean isOnGround();
-
-    @Shadow protected boolean onGround;
-
-    @Shadow public abstract boolean collides();
-
-    @Shadow public abstract boolean equals(Object o);
-
-    @Shadow public abstract EntityType<?> getType();
+    @Shadow
+    public abstract EntityType<?> getType();
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
-        if(maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.PROPULSION_GEL){
+        if (maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.PROPULSION_GEL) {
             maxFallSpeed = 10;
-        }else{
-            if(maxFallSpeed>0){
-                maxFallSpeed=maxFallSpeed-1;
+        } else {
+            if (maxFallSpeed > 0) {
+                maxFallSpeed = maxFallSpeed - 1;
             }
         }
 
@@ -113,18 +120,18 @@ public Vec3d movementTest = new Vec3d(0,0,0);
             -----------*/
         }
 
-            speedTransformApply = Math.max(storeVelocity1, storeVelocity2);
+        speedTransformApply = Math.max(storeVelocity1, storeVelocity2);
 
-    }
-
-    @Override
-    public void setVelocityTransfer(double speedValueTransferDuck) {
-        this.speedTransformApply = speedValueTransferDuck;
     }
 
     @Override
     public double getVelocityTransfer() {
         return this.speedTransformApply;
+    }
+
+    @Override
+    public void setVelocityTransfer(double speedValueTransferDuck) {
+        this.speedTransformApply = speedValueTransferDuck;
     }
 
     /*----------

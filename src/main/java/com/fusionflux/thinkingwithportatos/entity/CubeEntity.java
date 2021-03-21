@@ -29,8 +29,8 @@ import net.minecraft.world.World;
 import static com.fusionflux.thinkingwithportatos.ThinkingWithPortatos.id;
 
 public class CubeEntity extends Entity implements PhysicsElement {
-    protected final ElementRigidBody RIGID_BODY = new ElementRigidBody(this);
     public static final Identifier SPAWN_PACKET = id("spawn_cube");
+    protected final ElementRigidBody RIGID_BODY = new ElementRigidBody(this);
     private float storedDamage = 0.0F;
 
     public CubeEntity(EntityType<?> entityType, World world) {

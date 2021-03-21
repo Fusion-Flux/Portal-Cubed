@@ -1,18 +1,13 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
-import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
-import com.fusionflux.thinkingwithportatos.world.PortalsManager;
-import com.qouteall.immersive_portals.McHelper;
 import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.portal.Portal;
-
 import com.qouteall.immersive_portals.portal.PortalManipulation;
-import net.fabricmc.loader.util.sat4j.core.Vec;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
@@ -24,31 +19,61 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 
 public class PortalGun extends Item implements DyeableItem {
 
-    private BlockPos blockPos1;
-    private BlockPos blockPos2;
     public Portal portalholder1;
     public PortalPlaceholderEntity portalOutline1;
     public Portal portalholder2;
     public PortalPlaceholderEntity portalOutline2;
-
     public Vec3i dirUp1;
     public Vec3i dirUp2;
     public Vec3i dirOut1;
     public Vec3i dirOut2;
     public Vec3i dirRight1;
     public Vec3i dirRight2;
-    public boolean portalsActivated=false;
-    public int color1=0;
-    public int color2=0;
+    public boolean portalsActivated = false;
+    public int color1 = 0;
+    public int color2 = 0;
+    private BlockPos blockPos1;
+    private BlockPos blockPos2;
 
     public PortalGun(Settings settings) {
         super(settings);
+    }
+
+    /**
+     * I believe the methods for products supplied by Mojang and quoteall are correct,
+     * but I needed to be able to see things in a different visual format so I went ahead and implemented
+     * a version of the product here that I find to be easier to think in terms of. This will likely be
+     * unneeded as long as every other part of the code structure is correct, and thus this can be removed
+     * once the desired behavior for quaternion-based rotations works consistently.
+     *
+     * @param q1 the quaternion whose rotation will be applied second.
+     * @param q2 the quaternion whose rotation will be applied first.
+     * @return the product q1 * q2.
+     */
+    private static DQuaternion q1TimesQ2(DQuaternion q1, DQuaternion q2) {
+        double a = q1.getW();
+        double b = q1.getX();
+        double c = q1.getY();
+        double d = q1.getZ();
+        double e = q2.getW();
+        double f = q2.getX();
+        double g = q2.getY();
+        double h = q2.getZ();
+
+        return new DQuaternion(
+                (b * e + a * f + c * h - d * g),
+                (a * g - b * h + c * e + d * f),
+                (a * h + b * g - c * f + d * e),
+                (a * e - b * f - c * g - d * h)
+        );
     }
 
     public void useLeft(World world, PlayerEntity user, Hand hand) {
@@ -64,23 +89,19 @@ public class PortalGun extends Item implements DyeableItem {
         return useImpl(world, user, hand, false);
     }
 
-@Override
-public int getColor(ItemStack stack) {
-    CompoundTag compoundTag = stack.getOrCreateTag();
-    boolean complementary = compoundTag.getBoolean("complementary");
-    compoundTag = stack.getSubTag("display");
-    return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
-}
-
-
+    @Override
+    public int getColor(ItemStack stack) {
+        CompoundTag compoundTag = stack.getOrCreateTag();
+        boolean complementary = compoundTag.getBoolean("complementary");
+        compoundTag = stack.getSubTag("display");
+        return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
+    }
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
         if (!world.isClient) {
-
-
             if (portalsActivated) {
                 assert portalholder1 != null;
-                if(!portalholder1.isAlive()){
+                if (!portalholder1.isAlive()) {
                     portalholder2.kill();
                     blockPos1 = null;
                     dirUp1 = null;
@@ -89,7 +110,7 @@ public int getColor(ItemStack stack) {
                     portalsActivated = false;
                 }
                 assert portalholder2 != null;
-                    if(!portalholder2.isAlive()){
+                if (!portalholder2.isAlive()) {
                     portalholder1.kill();
                     blockPos2 = null;
                     dirUp2 = null;
@@ -188,7 +209,7 @@ public int getColor(ItemStack stack) {
                 world.spawnEntity(portalholder2);
 
                 //PortalsManager.getPortals().put(user.getUuidAsString() + "portal1",portalholder1);
-               // PortalsManager.getPortals().put(user.getUuidAsString() + "portal2",portalholder2);
+                // PortalsManager.getPortals().put(user.getUuidAsString() + "portal2",portalholder2);
 
                 portalsActivated = true;
 
@@ -229,13 +250,13 @@ public int getColor(ItemStack stack) {
     }
 
     /**
-     * @param hit the position designated by the player's input for a given portal.
+     * @param hit     the position designated by the player's input for a given portal.
      * @param upright the upright axial vector of the portal based on placement context.
-     * @param facing the facing axial vector of the portal based on placement context.
-     * @param cross the cross product of upright x facing.
+     * @param facing  the facing axial vector of the portal based on placement context.
+     * @param cross   the cross product of upright x facing.
      * @return a vector position specifying the portal's final position in the world.
      */
-    private Vec3d calcPortalPos( BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross ) {
+    private Vec3d calcPortalPos(BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross) {
         double upOffset = -0.5;
         double faceOffset = -0.510;
         double crossOffset = 0.0;
@@ -247,7 +268,7 @@ public int getColor(ItemStack stack) {
 
     }
 
-    private Vec3d calcPlaceholderPos( BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross ) {
+    private Vec3d calcPlaceholderPos(BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross) {
         double upOffset = -1.0;
         double faceOffset = -0.509;
         double crossOffset = 0.0;
@@ -266,62 +287,33 @@ public int getColor(ItemStack stack) {
      * leaving away from the output portal (as inverting the axisW also inverts the normal vector).
      *
      * @param from the portal to be entered.
-     * @param to the portal to be exited from.
+     * @param to   the portal to be exited from.
      * @return the unit quaternion representing the rotation from a portal to the other.
      */
-    private DQuaternion alignPortal( Portal from, Portal to ) {
-        DQuaternion in = PortalManipulation.getPortalOrientationQuaternion( from.axisW, from.axisH );
-        DQuaternion out = PortalManipulation.getPortalOrientationQuaternion( inv3d(to.axisW), to.axisH );
+    private DQuaternion alignPortal(Portal from, Portal to) {
+        DQuaternion in = PortalManipulation.getPortalOrientationQuaternion(from.axisW, from.axisH);
+        DQuaternion out = PortalManipulation.getPortalOrientationQuaternion(inv3d(to.axisW), to.axisH);
 
         DQuaternion point;
-        point = q1TimesQ2( in, out.getConjugated() );
+        point = q1TimesQ2(in, out.getConjugated());
         // something else supposedly happens here
 
         return point.getNormalized();
     }
 
     /**
-     * I believe the methods for products supplied by Mojang and quoteall are correct,
-     * but I needed to be able to see things in a different visual format so I went ahead and implemented
-     * a version of the product here that I find to be easier to think in terms of. This will likely be
-     * unneeded as long as every other part of the code structure is correct, and thus this can be removed
-     * once the desired behavior for quaternion-based rotations works consistently.
-     *
-     * @param q1 the quaternion whose rotation will be applied second.
-     * @param q2 the quaternion whose rotation will be applied first.
-     * @return the product q1 * q2.
+     * @param vec the vector to invert.
+     * @return an inversion of the input vector.
      */
-    private static DQuaternion q1TimesQ2( DQuaternion q1, DQuaternion q2 ) {
-        double a = q1.getW();
-        double b = q1.getX();
-        double c = q1.getY();
-        double d = q1.getZ();
-        double e = q2.getW();
-        double f = q2.getX();
-        double g = q2.getY();
-        double h = q2.getZ();
-
-        return new DQuaternion(
-                ( b*e + a*f + c*h - d*g ),
-                ( a*g - b*h + c*e + d*f ),
-                ( a*h + b*g - c*f + d*e ),
-                ( a*e - b*f - c*g - d*h )
-        );
+    private Vec3i inv3i(Vec3i vec) {
+        return new Vec3i(-vec.getX(), -vec.getY(), -vec.getZ());
     }
 
     /**
      * @param vec the vector to invert.
      * @return an inversion of the input vector.
      */
-    private Vec3i inv3i( Vec3i vec ) {
-        return new Vec3i( -vec.getX(), -vec.getY(), -vec.getZ() );
-    }
-
-    /**
-     * @param vec the vector to invert.
-     * @return an inversion of the input vector.
-     */
-    private Vec3d inv3d( Vec3d vec ) {
-        return new Vec3d( -vec.getX(), -vec.getY(), -vec.getZ() );
+    private Vec3d inv3d(Vec3d vec) {
+        return new Vec3d(-vec.getX(), -vec.getY(), -vec.getZ());
     }
 }

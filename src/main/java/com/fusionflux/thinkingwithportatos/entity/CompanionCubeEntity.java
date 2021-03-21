@@ -3,41 +3,34 @@ package com.fusionflux.thinkingwithportatos.entity;
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.EntityTrackingSoundInstance;
-import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.PlaySoundFromEntityS2CPacket;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-import java.util.Objects;
-
 public class CompanionCubeEntity extends CubeEntity {
     public static final Identifier SPAWN_PACKET = new Identifier(ThinkingWithPortatos.MODID, "companion_cube");
     private float storedDamage = 0.0F;
+    private int t = 1760;
+
+
     public CompanionCubeEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
     }
 
-
-    private int t = 1760;
     @Override
     public void tick() {
-        if(this.world.isClient) {
+        if (this.world.isClient) {
             if (t == 1760) {
-                MinecraftClient.getInstance().getSoundManager().play(new EntityTrackingSoundInstance(ThinkingWithPortatosSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundCategory(),.0008F,1F,this));
+                MinecraftClient.getInstance().getSoundManager().play(new EntityTrackingSoundInstance(ThinkingWithPortatosSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundCategory(), .0008F, 1F, this));
             }
             t--;
-            if(t==0){
-                t=1760;
+            if (t == 0) {
+                t = 1760;
             }
 
         }
@@ -51,7 +44,7 @@ public class CompanionCubeEntity extends CubeEntity {
         } else if (!this.world.isClient && !this.removed) {
             this.storedDamage += amount;
             this.scheduleVelocityUpdate();
-            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).abilities.creativeMode;
+            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).abilities.creativeMode;
             if (bl || this.storedDamage >= 20.0F) {
                 if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
                     // TODO

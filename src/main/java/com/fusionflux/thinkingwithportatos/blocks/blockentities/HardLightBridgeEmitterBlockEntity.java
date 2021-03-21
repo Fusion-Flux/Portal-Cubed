@@ -29,16 +29,12 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
     public final int MAX_RANGE = ThinkingWithPortatosConfig.get().numbersblock.maxBridgeLength;
     public final int BLOCKS_PER_TICK = 1;
     public final int EXTENSION_TIME = MAX_RANGE / BLOCKS_PER_TICK;
-
+    private final List<BlockPos> repairPos = new ArrayList<>();
     public int extensionTicks = 0;
-
     public boolean bridgeComplete = false;
     public boolean alreadyPowered = false;
     public boolean shouldExtend = false;
-
     public boolean shouldRepair = false;
-    private final List<BlockPos> repairPos = new ArrayList<>();
-
     private BlockPos.Mutable obstructorPos;
 
     public HardLightBridgeEmitterBlockEntity() {

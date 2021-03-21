@@ -1,9 +1,9 @@
 package com.fusionflux.thinkingwithportatos.accessor;
 
 import net.minecraft.entity.data.TrackedDataHandler;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Quaternion;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 
 public class QuaternionHandler implements TrackedDataHandler<Quaternion> {
     public static final QuaternionHandler QUATERNION_HANDLER = new QuaternionHandler();

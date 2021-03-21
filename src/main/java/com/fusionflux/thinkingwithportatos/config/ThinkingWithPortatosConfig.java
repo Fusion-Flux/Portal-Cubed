@@ -13,14 +13,12 @@ public class ThinkingWithPortatosConfig implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     @ConfigEntry.Category("enabled")
     public final Enabled enabled = new Enabled();
-
-    @ConfigEntry.Gui.TransitiveObject
-    @ConfigEntry.Category("numbers")
-    public Numbers numbers = new Numbers();
-
     @ConfigEntry.Gui.TransitiveObject
     @ConfigEntry.Category("numbersblock")
     public final NumbersBlock numbersblock = new NumbersBlock();
+    @ConfigEntry.Gui.TransitiveObject
+    @ConfigEntry.Category("numbers")
+    public Numbers numbers = new Numbers();
 
     public static void register() {
         AutoConfig.register(ThinkingWithPortatosConfig.class, JanksonConfigSerializer::new);

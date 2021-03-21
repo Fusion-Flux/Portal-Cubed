@@ -15,8 +15,8 @@ import net.minecraft.util.math.Quaternion;
 public class CubeEntityRenderer extends EntityRenderer<CubeEntity> {
     private static final Identifier BASE_TEXTURE = new Identifier(ThinkingWithPortatos.MODID, "textures/entity/cube.png");
     private static final Identifier COMPANION_TEXTURE = new Identifier(ThinkingWithPortatos.MODID, "textures/entity/companion_cube.png");
-    private final boolean companion;
     protected final CubeEntityModel model = new CubeEntityModel();
+    private final boolean companion;
 
     public CubeEntityRenderer(EntityRenderDispatcher dispatcher, boolean companion) {
         super(dispatcher);
