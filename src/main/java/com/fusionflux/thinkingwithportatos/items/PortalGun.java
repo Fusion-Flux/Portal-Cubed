@@ -76,6 +76,14 @@ public class PortalGun extends Item implements DyeableItem {
         );
     }
 
+    @Override
+    public int getColor(ItemStack stack) {
+        CompoundTag compoundTag = stack.getOrCreateTag();
+        boolean complementary = compoundTag.getBoolean("complementary");
+        compoundTag = stack.getSubTag("display");
+        return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
+    }
+
     public void useLeft(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", false);
@@ -87,14 +95,6 @@ public class PortalGun extends Item implements DyeableItem {
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", true);
         return useImpl(world, user, hand, false);
-    }
-
-    @Override
-    public int getColor(ItemStack stack) {
-        CompoundTag compoundTag = stack.getOrCreateTag();
-        boolean complementary = compoundTag.getBoolean("complementary");
-        compoundTag = stack.getSubTag("display");
-        return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
     }
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
@@ -175,8 +175,8 @@ public class PortalGun extends Item implements DyeableItem {
                 // Should never be null unless something is very wrong
                 assert portalBase != null;
 
-                Vec3d portalPos1 = calcPortalPos(blockPos1, dirUp1, dirOut1, dirRight1);
-                Vec3d portalPos2 = calcPortalPos(blockPos2, dirUp2, dirOut2, dirRight2);
+                Vec3d portalPos1 = calcPos(blockPos1, dirUp1, dirOut1, dirRight1, false);
+                Vec3d portalPos2 = calcPos(blockPos2, dirUp2, dirOut2, dirRight2, false);
 
 
                 // portal 1
@@ -202,8 +202,7 @@ public class PortalGun extends Item implements DyeableItem {
                 );
                 portalholder2 = PortalAPI.createFlippedPortal(portalBase);
                 //dirOut1=portalholder1.getNormal();
-                portalholder2.setRotationTransformation(alignPortal(portalholder1, portalholder2).toMcQuaternion());
-                portalholder1.setRotationTransformation(alignPortal(portalholder2, portalholder1).toMcQuaternion());
+                PortalManipulation.adjustRotationToConnect(portalholder1, portalholder2);
 
                 world.spawnEntity(portalholder1);
                 world.spawnEntity(portalholder2);
@@ -220,7 +219,7 @@ public class PortalGun extends Item implements DyeableItem {
             }
 
             if (leftClick) {
-                Vec3d placeholderPos1 = calcPlaceholderPos(blockPos1, dirUp1, dirOut1, dirRight1);
+                Vec3d placeholderPos1 = calcPos(blockPos1, dirUp1, dirOut1, dirRight1, true);
                 Pair<Double, Double> rotAngles = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion(Vec3d.of(dirRight1), Vec3d.of(dirUp1)));
                 portalOutline1 = new PortalPlaceholderEntity(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, user.world);
                 portalOutline1.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
@@ -232,7 +231,7 @@ public class PortalGun extends Item implements DyeableItem {
                 //portalOutline1.getOrCreateTag().putInt("colorValue",color1);
                 world.spawnEntity(portalOutline1);
             } else {
-                Vec3d placeholderPos2 = calcPlaceholderPos(blockPos2, dirUp2, dirOut2, dirRight2);
+                Vec3d placeholderPos2 = calcPos(blockPos2, dirUp2, dirOut2, dirRight2, true);
                 Pair<Double, Double> rotAngles2 = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion(Vec3d.of(dirRight2), Vec3d.of(dirUp2)));
                 portalOutline2 = new PortalPlaceholderEntity(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, user.world);
                 portalOutline2.setPos(placeholderPos2.x, placeholderPos2.y, placeholderPos2.z);
@@ -250,15 +249,16 @@ public class PortalGun extends Item implements DyeableItem {
     }
 
     /**
-     * @param hit     the position designated by the player's input for a given portal.
-     * @param upright the upright axial vector of the portal based on placement context.
-     * @param facing  the facing axial vector of the portal based on placement context.
-     * @param cross   the cross product of upright x facing.
+     * @param hit          the position designated by the player's input for a given portal.
+     * @param upright      the upright axial vector of the portal based on placement context.
+     * @param facing       the facing axial vector of the portal based on placement context.
+     * @param cross        the cross product of upright x facing.
+     * @param isBackground whether or not this is positioning for a {@link PortalPlaceholderEntity}
      * @return a vector position specifying the portal's final position in the world.
      */
-    private Vec3d calcPortalPos(BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross) {
-        double upOffset = -0.5;
-        double faceOffset = -0.510;
+    private Vec3d calcPos(BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross, boolean isBackground) {
+        double upOffset = isBackground ? -1.0 : -0.5;
+        double faceOffset = isBackground ? -0.509 : -0.510;
         double crossOffset = 0.0;
         return new Vec3d(
                 ((hit.getX() + 0.5) + upOffset * upright.getX() + faceOffset * facing.getX() + crossOffset * cross.getX()), // x component
@@ -266,54 +266,5 @@ public class PortalGun extends Item implements DyeableItem {
                 ((hit.getZ() + 0.5) + upOffset * upright.getZ() + faceOffset * facing.getZ() + crossOffset * cross.getZ())  // z component
         );
 
-    }
-
-    private Vec3d calcPlaceholderPos(BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross) {
-        double upOffset = -1.0;
-        double faceOffset = -0.509;
-        double crossOffset = 0.0;
-        return new Vec3d(
-                ((hit.getX() + 0.5) + upOffset * upright.getX() + faceOffset * facing.getX() + crossOffset * cross.getX()), // x component
-                ((hit.getY() + 0.5) + upOffset * upright.getY() + faceOffset * facing.getY() + crossOffset * cross.getY()), // y component
-                ((hit.getZ() + 0.5) + upOffset * upright.getZ() + faceOffset * facing.getZ() + crossOffset * cross.getZ())  // z component
-        );
-
-    }
-
-    /**
-     * The implementation of this method is intended specifically for the use case of entering through
-     * a given portal and leaving through another portal with both portals having an arbitrary implementation.
-     * The axisW parameter of the out portal is inverted to represent that the transformation should involve
-     * leaving away from the output portal (as inverting the axisW also inverts the normal vector).
-     *
-     * @param from the portal to be entered.
-     * @param to   the portal to be exited from.
-     * @return the unit quaternion representing the rotation from a portal to the other.
-     */
-    private DQuaternion alignPortal(Portal from, Portal to) {
-        DQuaternion in = PortalManipulation.getPortalOrientationQuaternion(from.axisW, from.axisH);
-        DQuaternion out = PortalManipulation.getPortalOrientationQuaternion(inv3d(to.axisW), to.axisH);
-
-        DQuaternion point;
-        point = q1TimesQ2(in, out.getConjugated());
-        // something else supposedly happens here
-
-        return point.getNormalized();
-    }
-
-    /**
-     * @param vec the vector to invert.
-     * @return an inversion of the input vector.
-     */
-    private Vec3i inv3i(Vec3i vec) {
-        return new Vec3i(-vec.getX(), -vec.getY(), -vec.getZ());
-    }
-
-    /**
-     * @param vec the vector to invert.
-     * @return an inversion of the input vector.
-     */
-    private Vec3d inv3d(Vec3d vec) {
-        return new Vec3d(-vec.getX(), -vec.getY(), -vec.getZ());
     }
 }
