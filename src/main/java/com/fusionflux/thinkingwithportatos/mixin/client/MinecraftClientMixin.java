@@ -1,4 +1,4 @@
-package com.fusionflux.thinkingwithportatos.mixin;
+package com.fusionflux.thinkingwithportatos.mixin.client;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
@@ -27,13 +27,14 @@ public abstract class MinecraftClientMixin {
     @Shadow
     @Nullable
     public ClientPlayerEntity player;
-    @Shadow
-    @Nullable
-    public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     public MinecraftClientMixin() {
         throw new AssertionError(ThinkingWithPortatos.MODID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
     }
+
+    @Shadow
+    @Nullable
+    public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     /**
      * Prevents block breaking on player left click while holding a portal gun as left click functionality is replaced.
@@ -42,7 +43,7 @@ public abstract class MinecraftClientMixin {
      */
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
     private void onHandleBlockBreaking(boolean isKeyPressed, CallbackInfo ci) {
-        if (this.player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)||this.player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)) {
+        if (this.player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN) || this.player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)) {
             ci.cancel();
         }
     }
@@ -60,9 +61,9 @@ public abstract class MinecraftClientMixin {
 
             // Need to get the hand, but there's probably a cooler looking method than this.
             Hand hand = null;
-            if (player.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN||player.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+            if (player.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN || player.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
                 hand = Hand.MAIN_HAND;
-            } else if (player.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN||player.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+            } else if (player.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN || player.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
                 hand = Hand.OFF_HAND;
             }
 

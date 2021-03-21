@@ -11,7 +11,7 @@
     "PortalMixin"
   ],
   "client": [
-    "MinecraftClientMixin"
+    "client.MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
