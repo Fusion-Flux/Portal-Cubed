@@ -8,6 +8,7 @@ import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import dev.lazurite.rayon.impl.util.math.QuaternionHelper;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.AbstractQuadRenderer;
 import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -35,23 +36,15 @@ public class PortalPlaceholderRenderer extends EntityRenderer<PortalPlaceholderE
         matrices.push();
         matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(entity.yaw));
         matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(entity.pitch));
-        //matrices.multiply(Vector3f.NEGATIVE_Z.getDegreesQuaternion(entity.getRoll()));
-       // System.out.println(entity.rotation);
-        //System.out.println(entity.color);
-       // matrices.multiply(entity.getRotation());
-        int color = entity.color;
+        matrices.multiply(Vector3f.NEGATIVE_Z.getDegreesQuaternion(entity.getRoll()));
+
+        int color = entity.getColor()*-1;
 
         int r = (color & 0xFF0000) >> 16;
         int g = (color & 0xFF00) >> 8;
         int b = color & 0xFF;
 
-        Direction direction = entity.getHorizontalFacing();
-        Vec3d vec3d = this.getPositionOffset(entity, tickDelta);
-        //matrices.translate(-vec3d.getX(), -vec3d.getY(), -vec3d.getZ());
-        //matrices.translate((double)direction.getOffsetX() * -0.5D, (double)direction.getOffsetY() * -0.5D, (double)direction.getOffsetZ() * -0.5D);
-//matrices.translate(entity.dirOffset.x,entity.dirOffset.y,entity.dirOffset.z);
-
-        this.model.render(matrices, vertexConsumers.getBuffer(this.model.getLayer(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 0F, 1.0F, 0.0F, 0.5F);
+        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
         matrices.pop();
     }
 

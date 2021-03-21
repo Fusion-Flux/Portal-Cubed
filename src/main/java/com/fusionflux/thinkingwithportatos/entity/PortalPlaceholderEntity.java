@@ -36,9 +36,10 @@ public class PortalPlaceholderEntity extends Entity {
 
     public static final TrackedData<Quaternion> QUATERNION = DataTracker.registerData(PortalPlaceholderEntity.class, QuaternionHandler.QUATERNION_HANDLER);
     public static final TrackedData<Float> ROLL= DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    public static final TrackedData<Integer> COLOR= DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public Quaternion rotation=Quaternion.IDENTITY;
 
-    public int color;
+    //public int color;
 
     public PortalPlaceholderEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
@@ -49,6 +50,7 @@ public class PortalPlaceholderEntity extends Entity {
     protected void initDataTracker() {
         this.getDataTracker().startTracking(QUATERNION,new Quaternion(0,0,0,1));
         this.getDataTracker().startTracking(ROLL,0f);
+        this.getDataTracker().startTracking(COLOR,0);
     }
 
     @Override
@@ -78,6 +80,14 @@ public class PortalPlaceholderEntity extends Entity {
 
     public Float getRoll() {
         return getDataTracker().get(ROLL);
+    }
+
+    public void setColor(Integer roll) {
+        this.getDataTracker().set(COLOR,roll);
+    }
+
+    public Integer getColor() {
+        return getDataTracker().get(COLOR);
     }
 
     @Override

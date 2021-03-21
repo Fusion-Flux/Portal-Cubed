@@ -1,18 +1,14 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
-import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRenderer;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
-import com.jme3.math.Vector3f;
 import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.portal.Portal;
 
 import com.qouteall.immersive_portals.portal.PortalManipulation;
-import dev.lazurite.rayon.impl.util.math.QuaternionHelper;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
@@ -26,7 +22,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import org.lwjgl.system.CallbackI;
 
 
 public class PortalGun extends Item implements DyeableItem {
@@ -44,8 +39,9 @@ public class PortalGun extends Item implements DyeableItem {
     public Vec3i dirOut2;
     public Vec3i dirRight1;
     public Vec3i dirRight2;
-    private int ColorMain;
-    private boolean switchedColorCheck=false;
+    public int color1=0;
+    public int color2=0;
+
     public PortalGun(Settings settings) {
         super(settings);
     }
@@ -78,7 +74,6 @@ public int getColor(ItemStack stack) {
             HitResult hitResult = user.raycast(128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 if (leftClick) {
-                   // ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
                     blockPos1 = ((BlockHitResult) hitResult).getBlockPos();
                     dirOut1 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
                     if( dirOut1.getY() == 0 ) {
@@ -89,12 +84,14 @@ public int getColor(ItemStack stack) {
                     }
                     dirRight1 = dirUp1.crossProduct( dirOut1 );
 
-                   // ColorMain=getColor(user.getStackInHand(Hand.MAIN_HAND));
-                   // setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain);
                     world.playSound(null,user.getPos().getX(),user.getPos().getY(),user.getPos().getZ(),ThinkingWithPortatosSounds.FIRE_EVENT_PRIMARY, SoundCategory.NEUTRAL, .3F, 1F);
                     if(portalholder1 !=null&& portalholder1.isAlive()){
                         world.playSound(null,portalholder1.getPos().getX(),portalholder1.getPos().getY(),portalholder1.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                     }
+                    color1=(this.getColor(user.getStackInHand(Hand.MAIN_HAND)));
+
+                    if(portalOutline1!=null)
+                    portalOutline1.kill();
                 } else {
                     blockPos2 = ((BlockHitResult) hitResult).getBlockPos();
                     dirOut2 = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
@@ -106,18 +103,14 @@ public int getColor(ItemStack stack) {
                     }
                     dirRight2 = dirUp2.crossProduct( dirOut2 );
 
-                    //if(ColorMain)
-
-                   // if(!switchedColorCheck) {
-                    //    ColorMain = getColor(user.getStackInHand(Hand.MAIN_HAND));
-                    //    switchedColorCheck=true;
-                   // }
-
-                    //setColor(user.getStackInHand(Hand.MAIN_HAND),ColorMain*-1);
                     world.playSound(null,user.getPos().getX(),user.getPos().getY(),user.getPos().getZ(),ThinkingWithPortatosSounds.FIRE_EVENT_SECONDARY, SoundCategory.NEUTRAL, .3F, 1F);
                     if(portalholder2 !=null && portalholder2.isAlive()){
                         world.playSound(null,portalholder2.getPos().getX(),portalholder2.getPos().getY(),portalholder2.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                     }
+
+                    color2=(this.getColor(user.getStackInHand(Hand.MAIN_HAND)));
+                    if(portalOutline2!=null)
+                        portalOutline2.kill();
                 }
             }else{
                 world.playSound(null,user.getPos().getX(),user.getPos().getY(),user.getPos().getZ(),ThinkingWithPortatosSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
@@ -129,9 +122,6 @@ public int getColor(ItemStack stack) {
                 if (portalholder1 != null && portalholder2 != null) {
                     portalholder1.kill();
                     portalholder2.kill();
-                    portalOutline1.kill();
-                    portalOutline2.kill();
-                    // System.out.println("removed portals");
                 }
 
                 portalBase = Portal.entityType.create(world);
@@ -142,13 +132,11 @@ public int getColor(ItemStack stack) {
                 Vec3d portalPos1 = calcPortalPos( blockPos1, dirUp1, dirOut1, dirRight1 );
                 Vec3d portalPos2 = calcPortalPos( blockPos2, dirUp2, dirOut2, dirRight2 );
 
-                Vec3d placeholderPos1 = calcPlaceholderPos( blockPos1, dirUp1, dirOut1, dirRight1 );
-                Vec3d placeholderPos2 = calcPlaceholderPos( blockPos2, dirUp2, dirOut2, dirRight2 );
 
                 // portal 1
                 portalBase.setOriginPos( portalPos1 );
                 portalBase.setDestination( portalPos2 );
-                portalBase.setDestinationDimension(World.OVERWORLD);
+                portalBase.setDestinationDimension(user.world.getRegistryKey());
                 portalBase.setOrientationAndSize(
                         Vec3d.of( dirRight1 ), //axisW
                         Vec3d.of( dirUp1 ), //axisH
@@ -171,36 +159,6 @@ public int getColor(ItemStack stack) {
                 portalholder2.setRotationTransformation( alignPortal( portalholder1, portalholder2 ).toMcQuaternion() );
                 portalholder1.setRotationTransformation( alignPortal( portalholder2, portalholder1 ).toMcQuaternion() );
 
-                //portalholder1.isGlobalPortal = true;
-                //portalholder2.isGlobalPortal = true;
-
-                Pair<Double, Double> rotAngles = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion( portalholder1.axisW, portalholder1.axisH ));
-                Pair<Double, Double> rotAngles2 = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion( portalholder2.axisW, portalholder2.axisH ));
-                assert portalholder1.rotation != null;
-                Vector3f rotAngles3 = QuaternionHelper.toEulerAngles(QuaternionHelper.minecrafToBullet(portalholder1.rotation));
-
-                portalOutline1=new PortalPlaceholderEntity(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER,portalholder1.world);
-                portalOutline1.setPos(placeholderPos1.x,placeholderPos1.y,placeholderPos1.z);
-                //portalOutline1.yaw=rotAngles3.z;
-                //portalOutline1.pitch=rotAngles3.y;
-                //portalOutline1.setRoll(rotAngles3.x);
-                portalOutline1.yaw=rotAngles.getLeft().floatValue();
-                portalOutline1.pitch=rotAngles.getRight().floatValue();
-
-                //portalOutline1.setPlaceholderRotation(portalholder1.rotation);
-               // portalOutline1.color = getColor(user.getStackInHand(Hand.MAIN_HAND));
-
-                portalOutline2=new PortalPlaceholderEntity(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER,portalholder1.world);
-                portalOutline2.setPos(placeholderPos2.x,placeholderPos2.y,placeholderPos2.z);
-                portalOutline2.yaw=rotAngles2.getLeft().floatValue();
-                portalOutline2.pitch=rotAngles2.getRight().floatValue();
-                //portalOutline2.setPlaceholderRotation(portalholder2.rotation);
-System.out.println("yaw"+rotAngles.getLeft());
-                System.out.println("pitch"+rotAngles.getRight());
-
-                world.spawnEntity(portalOutline1);
-                world.spawnEntity(portalOutline2);
-
                 world.spawnEntity(portalholder1);
                 world.spawnEntity(portalholder2);
 
@@ -210,6 +168,31 @@ System.out.println("yaw"+rotAngles.getLeft());
                 world.playSound(null,portalholder2.getPos().getX(),portalholder2.getPos().getY(),portalholder2.getPos().getZ(),ThinkingWithPortatosSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
 
             }
+
+            if (leftClick) {
+                Vec3d placeholderPos1 = calcPlaceholderPos(blockPos1, dirUp1, dirOut1, dirRight1);
+                Pair<Double, Double> rotAngles = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion(Vec3d.of(dirRight1), Vec3d.of(dirUp1)));
+                portalOutline1 = new PortalPlaceholderEntity(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, user.world);
+                portalOutline1.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
+                portalOutline1.yaw = rotAngles.getLeft().floatValue() + (90 * dirUp1.getX());
+                portalOutline1.pitch = rotAngles.getRight().floatValue();
+                portalOutline1.setRoll((rotAngles.getRight().floatValue() + (90)) * dirUp1.getX());
+                portalOutline1.setColor(color1);
+                portalOutline1.noClip = true;
+                world.spawnEntity(portalOutline1);
+            }else {
+                Vec3d placeholderPos2 = calcPlaceholderPos(blockPos2, dirUp2, dirOut2, dirRight2);
+                Pair<Double, Double> rotAngles2 = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion(Vec3d.of(dirRight2), Vec3d.of(dirUp2)));
+                portalOutline2 = new PortalPlaceholderEntity(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, user.world);
+                portalOutline2.setPos(placeholderPos2.x, placeholderPos2.y, placeholderPos2.z);
+                portalOutline2.yaw = rotAngles2.getLeft().floatValue() + (90 * dirUp2.getX());
+                portalOutline2.pitch = rotAngles2.getRight().floatValue();
+                portalOutline2.setRoll((rotAngles2.getRight().floatValue() + (90)) * dirUp2.getX());
+                portalOutline2.setColor(color2);
+                portalOutline2.noClip = true;
+                world.spawnEntity(portalOutline2);
+            }
+
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
@@ -234,8 +217,8 @@ System.out.println("yaw"+rotAngles.getLeft());
     }
 
     private Vec3d calcPlaceholderPos( BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross ) {
-        double upOffset = 0.0;
-        double faceOffset = -0.507;
+        double upOffset = -1.0;
+        double faceOffset = -0.509;
         double crossOffset = 0.0;
         return new Vec3d(
                 ((hit.getX() + 0.5) + upOffset * upright.getX() + faceOffset * facing.getX() + crossOffset * cross.getX()), // x component
