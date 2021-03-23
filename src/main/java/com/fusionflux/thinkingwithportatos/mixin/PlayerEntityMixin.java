@@ -3,6 +3,8 @@ package com.fusionflux.thinkingwithportatos.mixin;
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
+import com.qouteall.immersive_portals.McHelper;
+import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -13,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +25,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
@@ -70,6 +75,17 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
+
+        /*List<Portal> globalPortals = (List<Portal>) McHelper.getNearbyPortals(((PlayerEntity) (Object) this),50);
+        Vec3d expand = this.getVelocity().multiply(2);
+        Box streachedBB = this.getBoundingBox().stretch(expand);
+
+        for (Portal globalPortal : globalPortals) {
+            if (streachedBB.intersects(globalPortal.getBoundingBox())) {
+                this.setVelocity(this.getVelocity().multiply(5, 5, 5));
+            }
+        }
+
      /*   double reduceGravity = .06666666666;
         double gravityBalancer = 1;
             if (this.isTouchingWater()) {

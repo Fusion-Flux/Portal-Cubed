@@ -22,7 +22,7 @@ public abstract class CollisionHelperMixin {
      */
     @Overwrite(remap = false)
     public static Box getStretchedBoundingBox(Entity entity) {
-        Vec3d expand = entity.getVelocity().multiply(.9);
+        Vec3d expand = entity.getVelocity().multiply(1.2);
         Vec3d expand2 = entity.getVelocity();
 //if(Math.abs(entity.getVelocity().y)>1)
         // expand = entity.getVelocity().multiply(4 + Math.abs(entity.getVelocity().x), 4+Math.abs(entity.getVelocity().y), 4 + Math.abs(entity.getVelocity().z));

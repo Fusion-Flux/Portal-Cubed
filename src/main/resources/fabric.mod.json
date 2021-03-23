@@ -3,15 +3,17 @@
   "id": "thinkingwithportatos",
   "version": "${version}",
 
-  "name": "FluxTech",
-  "description": "A \"tech\" mod focused around cool movement",
+  "name": "Thinking With Portatos",
+  "description": "A portal gun mod for fabric",
   "authors": [
-    "Fusion Flux"
+    "Fusion Flux",
+    "sailKite",
+    "Platymemo"
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/thinkingwithportatos",
-    "sources": "https://github.com/FabricMC/fabric-example-mod",
-    "issues": "https://github.com/Fusion-Flux/Origins-Umbrellas/issues"
+    "sources": "https://github.com/Fusion-Flux/Thinking-With-Portatos",
+    "issues": "https://github.com/Fusion-Flux/Thinking-With-Portatos/issues"
   },
 
   "license": "MIT",

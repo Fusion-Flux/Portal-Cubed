@@ -3,8 +3,11 @@ package com.fusionflux.thinkingwithportatos.mixin;
 import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
+import com.qouteall.immersive_portals.McHelper;
+import com.qouteall.immersive_portals.portal.Portal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -19,6 +22,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Iterator;
+import java.util.List;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, VelocityTransfer {
@@ -99,8 +105,36 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     @Shadow
     public abstract EntityType<?> getType();
 
+    @Shadow public abstract double offsetX(double widthScale);
+
+    @Shadow public abstract boolean canFly();
+
+    @Shadow public abstract Direction getMovementDirection();
+
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
+        Vec3d expand = this.getVelocity().multiply(10);
+        Box streachedBB = this.getBoundingBox().stretch(expand);
+        List<Entity> globalPortals = this.world.getEntitiesByClass(Portal.class, streachedBB, null);
+            for (Entity globalPortal : globalPortals) {
+                if (streachedBB.intersects(globalPortal.getBoundingBox())) {
+                    double offsetX=0;
+                    double offsetZ=0;
+                    double offsetY=0;
+                    if(Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().x)||Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().x)) {
+                        offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x)*.02;
+                    }
+                    if(Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().z)||Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().z)) {
+                        offsetZ = (this.getBoundingBox().getCenter().z - globalPortal.getBoundingBox().getCenter().z)*.02;
+                    }
+                    if(Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().y)||Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().y)) {
+                        offsetY = (this.getBoundingBox().getCenter().y - globalPortal.getBoundingBox().getCenter().y)*.02;
+                    }
+                    if(!this.getBoundingBox().intersects(globalPortal.getBoundingBox()))
+                    this.setVelocity(this.getVelocity().add(-offsetX,-offsetY,-offsetZ));
+                }
+            }
+
         if (maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.PROPULSION_GEL) {
             maxFallSpeed = 10;
         } else {
