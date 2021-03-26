@@ -1,37 +1,13 @@
 {
   "multipart": [
     {
-      "apply": {
-        "model": "thinkingwithportatos:block/repulsion_gel_main"
-      }
-    },
-    {
-      "when": {
-        "north": "true",
-        "west": "true"
-      },
-      "apply": {
-        "model": "thinkingwithportatos:block/repulsion_gel_north_west",
-        "uvlock": true
-      }
-    },
-    {
       "when": {
         "north": "true"
       },
       "apply": {
-        "model": "thinkingwithportatos:block/repulsion_gel_north",
-        "uvlock": true
-      }
-    },
-    {
-      "when": {
-        "north": "true",
-        "east": "true"
-      },
-      "apply": {
-        "model": "thinkingwithportatos:block/repulsion_gel_north_east",
-        "uvlock": true
+        "model": "thinkingwithportatos:block/repulsion_gel",
+        "uvlock": true,
+        "x": 270
       }
     },
     {
@@ -39,18 +15,10 @@
         "east": "true"
       },
       "apply": {
-        "model": "thinkingwithportatos:block/repulsion_gel_east",
-        "uvlock": true
-      }
-    },
-    {
-      "when": {
-        "south": "true",
-        "east": "true"
-      },
-      "apply": {
-        "model": "thinkingwithportatos:block/repulsion_gel_south_east",
-        "uvlock": true
+        "model": "thinkingwithportatos:block/repulsion_gel",
+        "uvlock": true,
+        "x": 270,
+        "y": 90
       }
     },
     {
@@ -58,18 +26,9 @@
         "south": "true"
       },
       "apply": {
-        "model": "thinkingwithportatos:block/repulsion_gel_south",
-        "uvlock": true
-      }
-    },
-    {
-      "when": {
-        "south": "true",
-        "west": "true"
-      },
-      "apply": {
-        "model": "thinkingwithportatos:block/repulsion_gel_south_west",
-        "uvlock": true
+        "model": "thinkingwithportatos:block/repulsion_gel",
+        "uvlock": true,
+        "x": 90
       }
     },
     {
@@ -77,7 +36,28 @@
         "west": "true"
       },
       "apply": {
-        "model": "thinkingwithportatos:block/repulsion_gel_west",
+        "model": "thinkingwithportatos:block/repulsion_gel",
+        "uvlock": true,
+        "x": 90,
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/repulsion_gel",
+        "uvlock": true,
+        "x": 180
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "thinkingwithportatos:block/repulsion_gel",
         "uvlock": true
       }
     }

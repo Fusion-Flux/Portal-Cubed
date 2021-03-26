@@ -13,14 +13,14 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class PropulsionGel extends Gel {
+public class PropulsionGel extends GelFlat {
 
     private final BlockCollisionLimiter limiter = new BlockCollisionLimiter();
 
 
     public PropulsionGel(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, true));
     }
 
     @Override
