@@ -7,10 +7,12 @@ import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
-import dev.lazurite.rayon.api.event.ElementCollisionEvents;
+import com.jme3.math.Vector3f;
+import dev.lazurite.rayon.core.api.event.ElementCollisionEvents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
@@ -42,7 +44,7 @@ public class ThinkingWithPortatos implements ModInitializer {
         ThinkingWithPortatosEntities.registerEntities();
         ThinkingWithPortatosSounds.registerSounds();
         registerPacketListener();
-        ElementCollisionEvents.BLOCK_COLLISION.register((element, blockPos, blockState) -> {
+        /*ElementCollisionEvents.BLOCK_COLLISION.register((element, blockPos, blockState) -> {
             if (!((CubeEntity) element).world.isClient) {
                 if (t == 0) {
                     ((CubeEntity) element).world.playSound(null, ((CubeEntity) element).getPos().getX(), ((CubeEntity) element).getPos().getY(), ((CubeEntity) element).getPos().getZ(), ThinkingWithPortatosSounds.CUBE_HIT_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
@@ -50,7 +52,8 @@ public class ThinkingWithPortatos implements ModInitializer {
                 }
                 t--;
             }
-        });
+        });*/
+
     }
 
     private void registerPacketListener() {

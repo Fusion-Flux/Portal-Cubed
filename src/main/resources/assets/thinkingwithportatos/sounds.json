@@ -64,9 +64,21 @@
 			"thinkingwithportatos:portal_ambient_loop"
 		]
 	},
-	"cubehit": {
+	"cubehithigh": {
 		"sounds": [
-			"thinkingwithportatos:cubehitnoise"
+			"thinkingwithportatos:cube_hit_hard1",
+			"thinkingwithportatos:cube_hit_hard2"
+		]
+	},
+	"cubehitlow": {
+		"sounds": [
+			"thinkingwithportatos:cube_hit_soft1",
+			"thinkingwithportatos:cube_hit_soft2"
+		]
+	},
+	"cubescrape": {
+		"sounds": [
+			"thinkingwithportatos:cube_scrape"
 		]
 	},
 	"companioncubeambiance": {

@@ -26,7 +26,7 @@ public class CompanionCubeEntity extends CubeEntity {
     public void tick() {
         if (this.world.isClient) {
             if (t == 1760) {
-                MinecraftClient.getInstance().getSoundManager().play(new EntityTrackingSoundInstance(ThinkingWithPortatosSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundCategory(), .0008F, 1F, this));
+                MinecraftClient.getInstance().getSoundManager().play(new EntityTrackingSoundInstance(ThinkingWithPortatosSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundCategory(), .0009F, 1F, this));
             }
             t--;
             if (t == 0) {

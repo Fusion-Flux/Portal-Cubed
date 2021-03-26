@@ -15,6 +15,7 @@ repositories {
 	maven { url = "https://maven.shedaniel.me/" }
 	maven { url = "https://www.cursemaven.com" }
 	maven { url = "https://maven.terraformersmc.com/releases" }
+	maven { url = "https://hephaestus.dev/release" }
 }
 
 dependencies {

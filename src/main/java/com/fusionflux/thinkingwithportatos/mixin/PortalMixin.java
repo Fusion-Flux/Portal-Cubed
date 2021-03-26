@@ -35,7 +35,7 @@ public abstract class PortalMixin extends Entity implements PortalLike {
         //entity.noClip=true;
         //((IEEntity) entity).isRecentlyCollidingWithPortal();
         //((IEEntity) entity).tickCollidingPortal(5);
-        entity.setVelocity(entity.getVelocity());
+        //entity.setVelocity(entity.getVelocity());
     }
 
 

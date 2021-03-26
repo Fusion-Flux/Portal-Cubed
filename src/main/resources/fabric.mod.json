@@ -40,5 +40,22 @@
     "cloth-config2": "*",
     "rayon": ">=1.1.2",
     "minecraft": "1.16.x"
+  },
+  "custom": {
+    "rayon": {
+      "blocks": [
+        {
+          "name": "repulsion_gel",
+          "friction": 1.0,
+          "restitution": 4,
+          "collidable": true
+        },
+        {
+          "name": "propulsion_gel",
+          "friction": 0.01,
+          "restitution": 1.0
+        }
+      ]
+    }
   }
 }

@@ -3,6 +3,7 @@ package com.fusionflux.thinkingwithportatos.blocks;
 import com.fusionflux.thinkingwithportatos.entity.BlockCollisionLimiter;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
+import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -29,24 +30,24 @@ public class PropulsionGel extends Gel {
 
 
     private void addCollisionEffects(World world, Entity entity) {
-        if (entity.getType().equals(EntityType.BOAT)) {
-            entity.damage(DamageSource.MAGIC, 200);
-        } else {
-            if (entity.isOnGround()) {
-                if (!entity.isSneaking()) {
-                    if (limiter.check(world, entity)) {
-                        if (entity.getVelocity().x < 5 && entity.getVelocity().x > -2 && entity.getVelocity().y < 2 && entity.getVelocity().y > -2) {
-                            entity.setVelocity(entity.getVelocity().multiply(1.7, 1.0D, 1.7));
-                        } else if (entity.getVelocity().x > 2 && entity.getVelocity().x < -2 && entity.getVelocity().y > 2 && entity.getVelocity().y < -2) {
-                            entity.setVelocity(entity.getVelocity().multiply(1.01, 1.0D, 1.01));
+            if (entity.getType().equals(EntityType.BOAT)) {
+                entity.damage(DamageSource.MAGIC, 200);
+            } else {
+                if (entity.isOnGround()) {
+                    if (!entity.isSneaking()) {
+                        if (limiter.check(world, entity)) {
+                            if (entity.getVelocity().x < 5 && entity.getVelocity().x > -2 && entity.getVelocity().y < 2 && entity.getVelocity().y > -2) {
+                                entity.setVelocity(entity.getVelocity().multiply(1.7, 1.0D, 1.7));
+                            } else if (entity.getVelocity().x > 2 && entity.getVelocity().x < -2 && entity.getVelocity().y > 2 && entity.getVelocity().y < -2) {
+                                entity.setVelocity(entity.getVelocity().multiply(1.01, 1.0D, 1.01));
+                            }
+                            if (((EntityAttachments) entity).getMaxFallSpeed() == 0) {
+                                world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), ThinkingWithPortatosSounds.GEL_RUN_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                            }
+                            ((EntityAttachments) entity).setMaxFallSpeed(10);
                         }
-                        if (((EntityAttachments) entity).getMaxFallSpeed() == 0) {
-                            world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), ThinkingWithPortatosSounds.GEL_RUN_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                        }
-                        ((EntityAttachments) entity).setMaxFallSpeed(10);
                     }
                 }
             }
-        }
     }
-}
+    }

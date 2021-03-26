@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Objects;
+
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 
@@ -43,6 +45,7 @@ public abstract class MinecraftClientMixin {
      */
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
     private void onHandleBlockBreaking(boolean isKeyPressed, CallbackInfo ci) {
+        assert this.player != null;
         if (this.player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN) || this.player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)) {
             ci.cancel();
         }
@@ -73,7 +76,7 @@ public abstract class MinecraftClientMixin {
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                 buf.writeEnumConstant(hand);
                 Packet<?> packet = ClientPlayNetworking.createC2SPacket(new Identifier(ThinkingWithPortatos.MODID, "ptl_lft_click"), buf);
-                this.getNetworkHandler().sendPacket(packet);
+                Objects.requireNonNull(this.getNetworkHandler()).sendPacket(packet);
                 ci.cancel();
             }
         }

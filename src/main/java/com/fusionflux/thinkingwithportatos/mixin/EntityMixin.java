@@ -3,19 +3,27 @@ package com.fusionflux.thinkingwithportatos.mixin;
 import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
+import com.qouteall.immersive_portals.Global;
 import com.qouteall.immersive_portals.McHelper;
+import com.qouteall.immersive_portals.ducks.IEEntity;
+import com.qouteall.immersive_portals.mixin.common.collision.MixinEntity;
 import com.qouteall.immersive_portals.portal.Portal;
+import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.util.collection.ReusableStream;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -50,6 +58,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     public float horizontalSpeed;
     @Shadow
     protected boolean onGround;
+
     @Unique
     private double maxFallSpeed = 0;
     @Unique
@@ -110,6 +119,14 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     @Shadow public abstract boolean canFly();
 
     @Shadow public abstract Direction getMovementDirection();
+
+   // @Shadow public abstract Vec3d adjustMovementForCollisions(Vec3d movement, Box entityBoundingBox, ReusableStream<VoxelShape> collisions);
+
+    @Shadow protected abstract Vec3d adjustMovementForCollisions(Vec3d movement);
+
+    @Shadow protected abstract Vec3d adjustMovementForSneaking(Vec3d movement, MovementType type);
+
+    @Shadow @Final private EntityType<?> type;
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
