@@ -39,37 +39,39 @@ public class RepulsionGel extends GelFlat {
             entity.damage(DamageSource.MAGIC, 200);
         } else {
             BlockState state = world.getBlockState(pos);
-            if (!entity.isSneaking()) {
+            if (!entity.isSneaking()&&(entity.verticalCollision||entity.horizontalCollision)) {
               //  if (entity.getVelocity().y < 1.65)
                 Vec3d direction = new Vec3d(0,0,0);
-                if (state.get(UP)) {
-                    direction=direction.add(0,-1,0);
-                }
+                if(entity.verticalCollision) {
+                    if (state.get(UP)) {
+                        direction = direction.add(0, -1.65, 0);
+                    }
 
-                if (state.get(DOWN)) {
-                    direction=direction.add(0,1,0);
-                    System.out.println(direction);
+                    if (state.get(DOWN)) {
+                        direction = direction.add(0, 1.65, 0);
+                        System.out.println(direction);
+                    }
                 }
+                if(entity.horizontalCollision) {
+                    if (state.get(NORTH)) {
+                        direction = direction.add(0, 0.5, 1.65);
+                    }
 
-                if (state.get(NORTH)) {
-                    direction=direction.add(0,0,1);
-                }
+                    if (state.get(SOUTH)) {
+                        direction = direction.add(0, 0.5, -1.65);
+                    }
 
-                if (state.get(SOUTH)) {
-                    direction=direction.add(0,0,-1);
-                }
+                    if (state.get(EAST)) {
+                        direction = direction.add(-1.65, 00.5, 0);
+                    }
 
-                if (state.get(EAST)) {
-                    direction=direction.add(-1,0,0);
-                }
+                    if (state.get(WEST)) {
+                        direction = direction.add(1.65, 0.5, 0);
+                    }
+                }   //entity.setVelocity(entity.getVelocity().add(0, 1.65D, 0));
 
-                if (state.get(WEST)) {
-                    direction=direction.add(1,0,0);
-                }
-                    //entity.setVelocity(entity.getVelocity().add(0, 1.65D, 0));
-
-                entity.setVelocity(entity.getVelocity().add(1.65*direction.x,1.65*direction.y,1.65*direction.z));
                 if (limiter.check(world, entity)) {
+                    entity.setVelocity(entity.getVelocity().add(direction.x,direction.y,direction.z));
                     world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.MASTER, .3F, 1F);
                 }
 

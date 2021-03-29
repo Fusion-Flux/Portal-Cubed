@@ -52,7 +52,7 @@
         },
         {
           "name": "propulsion_gel",
-          "friction": 0.01,
+          "friction": 0,
           "restitution": 1.0
         }
       ]

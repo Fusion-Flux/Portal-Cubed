@@ -71,14 +71,14 @@ public class CubeEntity extends Entity implements EntityPhysicsElement {
                     if (impulse >= .15 && impulse <= .5) {
                         if (Math.abs(this.age - this.storedAge) > 2) {
                             ((CubeEntity) element).world.playSound(null, ((CubeEntity) element).getPos().getX(), ((CubeEntity) element).getPos().getY(), ((CubeEntity) element).getPos().getZ(), ThinkingWithPortatosSounds.CUBE_LOW_HIT_EVENT, SoundCategory.NEUTRAL, .15f, 1F);
-                            System.out.println("lowimpact");
+                            //System.out.println("lowimpact");
                             this.storedAge = this.age;
                         }
                     }
                     if (impulse >= .5) {
                         if (Math.abs(this.age - this.storedAge) > 2) {
                             ((CubeEntity) element).world.playSound(null, ((CubeEntity) element).getPos().getX(), ((CubeEntity) element).getPos().getY(), ((CubeEntity) element).getPos().getZ(), ThinkingWithPortatosSounds.CUBE_HIGH_HIT_EVENT, SoundCategory.NEUTRAL, .15f, 1F);
-                            System.out.println("highimpact");
+                            //System.out.println("highimpact");
                             this.storedAge = this.age;
                         }
                     }
