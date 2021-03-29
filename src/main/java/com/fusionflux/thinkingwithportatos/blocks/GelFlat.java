@@ -7,6 +7,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -58,9 +59,9 @@ public class GelFlat extends Block {
         propertyMap.put(Direction.DOWN, Properties.DOWN);
     }
 
-    public GelFlat(Settings settings) {
+    public GelFlat(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, true));
+        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
         this.field_26659 = ImmutableMap.copyOf((Map)this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), GelFlat::method_31018)));
     }
 
@@ -134,16 +135,24 @@ public class GelFlat extends Block {
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        World world = ctx.getWorld();
-        BlockPos pos = ctx.getBlockPos();
+        BlockState blockState = ctx.getWorld().getBlockState(ctx.getBlockPos());
+        boolean bl = blockState.isOf(this);
+        BlockState blockState2 = bl ? blockState : this.getDefaultState();
+        Direction[] var5 = ctx.getPlacementDirections();
+        int var6 = var5.length;
 
-        return getDefaultState()
-                .with(NORTH, canConnect(world, pos.north()))
-                .with(SOUTH, canConnect(world, pos.south()))
-                .with(EAST, canConnect(world, pos.east()))
-                .with(WEST, canConnect(world, pos.west()))
-                .with(UP, canConnect(world, pos.up()))
-                .with(DOWN, canConnect(world, pos.down()));
+        for(int var7 = 0; var7 < var6; ++var7) {
+            Direction direction = var5[var7];
+
+                BooleanProperty booleanProperty = getFacingProperty(direction);
+                boolean bl2 = bl && (Boolean)blockState.get(booleanProperty);
+                if (!bl2 && this.shouldHaveSide(ctx.getWorld(), ctx.getBlockPos(), direction)) {
+                    return (BlockState)blockState2.with(booleanProperty, true);
+                }
+
+        }
+
+        return bl ? blockState2 : null;
     }
 
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
@@ -156,9 +165,7 @@ public class GelFlat extends Block {
     }
 
     private boolean shouldHaveSide(BlockView world, BlockPos pos, Direction side) {
-        if (side == Direction.DOWN) {
-            return false;
-        } else {
+
             BlockPos blockPos = pos.offset(side);
             if (shouldConnectTo(world, blockPos, side)) {
                 return true;
@@ -169,15 +176,10 @@ public class GelFlat extends Block {
                 BlockState blockState = world.getBlockState(pos.up());
                 return blockState.isOf(this) && (Boolean)blockState.get(booleanProperty);
             }
-        }
+
     }
 
     private BlockState getPlacementShape(BlockState state, BlockView world, BlockPos pos) {
-        BlockPos blockPos = pos.up();
-        if (state.get(UP)) {
-            state = state.with(UP, shouldConnectTo(world, blockPos, Direction.DOWN));
-        }
-
         BlockState blockState = null;
         Iterator var6 = Direction.Type.HORIZONTAL.iterator();
 
@@ -196,7 +198,7 @@ public class GelFlat extends Block {
             boolean bl = this.shouldHaveSide(world, pos, direction);
             if (!bl) {
                 if (blockState == null) {
-                    blockState = world.getBlockState(blockPos);
+                    blockState = Blocks.AIR.getDefaultState();
                 }
 
                 bl = blockState.isOf(this) && blockState.get(booleanProperty);
@@ -209,6 +211,15 @@ public class GelFlat extends Block {
     public static BooleanProperty getFacingProperty(Direction direction) {
         return propertyMap.get(direction);
     }
+@Override
+    public boolean canReplace(BlockState state, ItemPlacementContext context) {
+        BlockState blockState = context.getWorld().getBlockState(context.getBlockPos());
+        if (blockState.isOf(this)) {
+            return this.getAdjacentBlockCount(blockState) < propertyMap.size();
+        } else {
+            return super.canReplace(state, context);
+        }
+    }
 
     public BlockState getStateForNeighborUpdate(
             BlockState state,
@@ -218,8 +229,9 @@ public class GelFlat extends Block {
             BlockPos pos,
             BlockPos neighborPos
     ) {
+        BooleanProperty direction = propertyMap.get(facing);
         BlockState blockState = this.getPlacementShape(state, world, pos);
-        return !this.hasAdjacentBlocks(blockState) ? Blocks.AIR.getDefaultState() : blockState;
+        return !this.hasAdjacentBlocks(blockState) ? Blocks.AIR.getDefaultState() : blockState.with(direction, false);
     }
 
     @Override

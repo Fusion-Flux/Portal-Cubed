@@ -123,7 +123,7 @@ if(!this.isFallFlying()) {
         if (storeVelocity2 != null && storeVelocity1 != null) {
             if (itemFeet.getItem().equals(ThinkingWithPortatosItems.LONG_FALL_BOOTS)) {
                 if (!this.isOnGround()) {
-                    this.setVelocity(this.getVelocity().x * 1.035, this.getVelocity().y, this.getVelocity().z * 1.035);
+                    this.setVelocity(this.getVelocity().x * 1.045, this.getVelocity().y, this.getVelocity().z * 1.035);
                 }
             }
         }

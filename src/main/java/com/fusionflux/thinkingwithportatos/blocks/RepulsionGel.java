@@ -25,7 +25,7 @@ public class RepulsionGel extends GelFlat {
 
     public RepulsionGel(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, true));
+        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
     }
 
 
@@ -44,34 +44,36 @@ public class RepulsionGel extends GelFlat {
                 Vec3d direction = new Vec3d(0,0,0);
                 if(entity.verticalCollision) {
                     if (state.get(UP)) {
-                        direction = direction.add(0, -1.65, 0);
+                        direction = direction.add(0, -entity.getVelocity().y, 0);
                     }
 
                     if (state.get(DOWN)) {
-                        direction = direction.add(0, 1.65, 0);
+                        direction = direction.add(0, -entity.getVelocity().y, 0);
                         System.out.println(direction);
                     }
                 }
                 if(entity.horizontalCollision) {
                     if (state.get(NORTH)) {
-                        direction = direction.add(0, 0.5, 1.65);
+                        direction = direction.add(0, 0.45, -entity.getVelocity().z);
                     }
 
                     if (state.get(SOUTH)) {
-                        direction = direction.add(0, 0.5, -1.65);
+                        direction = direction.add(0, 0.45, -entity.getVelocity().z);
                     }
 
                     if (state.get(EAST)) {
-                        direction = direction.add(-1.65, 00.5, 0);
+                        direction = direction.add(-entity.getVelocity().x, 00.45, 0);
                     }
 
                     if (state.get(WEST)) {
-                        direction = direction.add(1.65, 0.5, 0);
+                        direction = direction.add(-entity.getVelocity().x, 0.45, 0);
                     }
                 }   //entity.setVelocity(entity.getVelocity().add(0, 1.65D, 0));
 
                 if (limiter.check(world, entity)) {
+                    if(world.isClient && !direction.equals(new Vec3d(0,0,0)))
                     entity.setVelocity(entity.getVelocity().add(direction.x,direction.y,direction.z));
+
                     world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.MASTER, .3F, 1F);
                 }
 

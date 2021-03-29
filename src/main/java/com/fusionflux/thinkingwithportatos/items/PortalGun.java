@@ -77,7 +77,7 @@ public class PortalGun extends Item implements DyeableItem {
                 if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
                     portalholder = (Portal) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
                     if (portalholder == null) {
-                        portalholder = Portal.entityType.create(world);
+                        //portalholder = Portal.entityType.create(world);
                     } else {
                         portalExists = true;
                     }
@@ -128,7 +128,11 @@ public class PortalGun extends Item implements DyeableItem {
                     assert portalholder != null;
                     portalholder.setOriginPos(portalPos1);
                     portalholder.setDestination(portalPos1);
-                    portalholder.setDestinationDimension(world.getRegistryKey());
+                    if (otherPortal != null){
+                        portalholder.setDestinationDimension(otherPortal.getOriginWorld().getRegistryKey());
+                }else {
+                        portalholder.setDestinationDimension(world.getRegistryKey());
+                    }
                     portalholder.setOrientationAndSize(
                             Vec3d.of(right), //axisW
                             Vec3d.of(up).multiply(-1), //axisH
@@ -141,25 +145,29 @@ public class PortalGun extends Item implements DyeableItem {
 
                     if (otherPortal != null) {
                         portalholder.setDestination(otherPortal.getPos());
+                        portalholder.setDestinationDimension(otherPortal.getOriginWorld().getRegistryKey());
                         otherPortal.setDestination(portalholder.getPos());
+                        otherPortal.setDestinationDimension(portalholder.getOriginWorld().getRegistryKey());
                         PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
 
                         // Currently causes very weird visual bugs (portals move oddly)
                         // But is necessary for changes in axisW/axisH
-                        portalholder.reloadAndSyncToClient();
-                        otherPortal.reloadAndSyncToClient();
-                        System.out.println(portalholder.getPos());
+
+                        //System.out.println(portalholder.getPos());
 
                         world.playSound(null, portalholder.getPos().getX(), portalholder.getPos().getY(), portalholder.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
                     }
                 } else {
                     world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), ThinkingWithPortatosSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
                 }
-
+                if(portalholder!=null&&otherPortal!=null) {
+                    otherPortal.reloadAndSyncToClient();
+                    portalholder.reloadAndSyncToClient();
+                }
                 portalsTag.putUuid((leftClick ? "Left" : "Right") + "Portal", portalholder.getUuid());
                 portalsTag.putUuid((leftClick ? "Left" : "Right") + "Background", portalOutline.getUuid());
 
-                tag.put(world.getRegistryKey().toString(), portalsTag);
+                tag.put(portalholder.getOriginWorld().getRegistryKey().toString(), portalsTag);
 
 
         }
