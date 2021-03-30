@@ -138,7 +138,7 @@ public class PortalGun extends Item implements DyeableItem {
                             1.9 // height
                     );
                     portalOutline.axisH=portalholder.axisH;
-                    //portalholder.setUUID(null);
+
                     if(portalExists&&otherPortal==null) {
                         CustomPortalEntity portala;
                         portala = PortalAPI.copyPortal(portalholder,CustomPortalEntity.entityType);
@@ -147,14 +147,13 @@ public class PortalGun extends Item implements DyeableItem {
                         portalholder=portala;
 
                     }
-                    if (!portalExists) {
+                    if (!portalExists)
                         world.spawnEntity(portalholder);
-                    }
+
                     if (otherPortal != null) {
                         portalholder.setDestination(otherPortal.getOriginPos());
                         otherPortal.setDestination(portalholder.getOriginPos());
-                        portalholder.setUUID(otherPortal.getUuidAsString());
-                        otherPortal.setUUID(portalholder.getUuidAsString());
+
                         PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
 
                         //changed to a kill respawn system to fix reloadAndSync bug

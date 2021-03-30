@@ -17,7 +17,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -31,34 +30,10 @@ public class CustomPortalEntity extends Portal {
     public static final SignalArged<CustomPortalEntity> portalDisposeSignal;
     public static final SignalBiArged<CustomPortalEntity, CompoundTag> readPortalDataSignal;
     public static final SignalBiArged<CustomPortalEntity, CompoundTag> writePortalDataSignal;
-    public static final TrackedData<String> PORTALUUID = DataTracker.registerData(CustomPortalEntity.class, TrackedDataHandlerRegistry.STRING);
-
     public CustomPortalEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
     }
 
-    @Override
-    protected void initDataTracker() {
-        this.getDataTracker().startTracking(PORTALUUID,null);
-    }
-
-    @Override
-    protected void readCustomDataFromTag(CompoundTag compoundTag) {
-        this.setUUID(compoundTag.getString("uuidstring"));
-    }
-
-    @Override
-    protected void writeCustomDataToTag(CompoundTag compoundTag) {
-        compoundTag.putString("uuidstring", this.getUUID());
-    }
-
-    public String getUUID() {
-        return getDataTracker().get(PORTALUUID);
-    }
-
-    public void setUUID(String string) {
-        this.getDataTracker().set(PORTALUUID, string);
-    }
 
     @Override
     public void tick() {
@@ -76,16 +51,10 @@ public class CustomPortalEntity extends Portal {
 
         CollisionHelper.notifyCollidingPortals(this);
         if (!this.world.isClient) {
-            CustomPortalEntity otherPortal=null;
             if (this.world.getBlockState(this.getBlockPos()) != Blocks.AIR.getDefaultState()) {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                 System.out.println("killed");
-                if(getUUID() != null)
-                    otherPortal=(CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getUUID()));
-                if(otherPortal!=null){
-                    otherPortal.kill();
-                }
             }
             if (this.world.getBlockState(new BlockPos(
                     this.getPos().getX()+this.axisH.getX(),
@@ -95,11 +64,6 @@ public class CustomPortalEntity extends Portal {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                 System.out.println("killed");
-                if(getUUID() != null)
-                    otherPortal=(CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getUUID()));
-                if(otherPortal!=null){
-                    otherPortal.kill();
-                }
             }
         }
     }
