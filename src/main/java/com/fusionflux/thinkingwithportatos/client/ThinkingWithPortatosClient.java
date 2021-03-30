@@ -3,11 +3,12 @@ package com.fusionflux.thinkingwithportatos.client;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.client.render.CubeEntityRenderer;
 import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRenderer;
-import com.fusionflux.thinkingwithportatos.entity.CompanionCubeEntity;
-import com.fusionflux.thinkingwithportatos.entity.CubeEntity;
-import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
-import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
+import com.fusionflux.thinkingwithportatos.entity.*;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.qouteall.immersive_portals.portal.LoadingIndicatorEntity;
+import com.qouteall.immersive_portals.portal.Portal;
+import com.qouteall.immersive_portals.render.LoadingIndicatorRenderer;
+import com.qouteall.immersive_portals.render.PortalEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
@@ -16,7 +17,9 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.registry.Registry;
+import org.apache.commons.lang3.Validate;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class ThinkingWithPortatosClient implements ClientModInitializer {
@@ -59,6 +62,11 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, false));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.COMPANION_CUBE, (dispatcher, context) -> new CubeEntityRenderer(dispatcher, true));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, (dispatcher, context) -> new PortalPlaceholderRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(
+                CustomPortalEntity.entityType,
+                (dispatcher, context) -> new PortalEntityRenderer(dispatcher)
+        );
+
     }
 
     private void registerClientPacketReceivers() {

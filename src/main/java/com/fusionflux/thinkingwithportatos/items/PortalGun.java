@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
+import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
@@ -58,7 +59,7 @@ public class PortalGun extends Item implements DyeableItem {
                 CompoundTag tag = stack.getOrCreateTag();
 
                 PortalPlaceholderEntity portalOutline;
-                Portal portalholder;
+                CustomPortalEntity portalholder;
                 CompoundTag portalsTag = tag.getCompound(world.getRegistryKey().toString());
 
                 boolean outlineExists = false;
@@ -76,19 +77,19 @@ public class PortalGun extends Item implements DyeableItem {
 
                 boolean portalExists = false;
                 if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
-                    portalholder = (Portal) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
+                    portalholder = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
                     if (portalholder == null) {
-                        portalholder = Portal.entityType.create(world);
+                        portalholder = CustomPortalEntity.entityType.create(world);
                     } else {
                         portalExists = true;
                     }
                 } else {
-                    portalholder = Portal.entityType.create(world);
+                    portalholder = CustomPortalEntity.entityType.create(world);
                 }
 
-                Portal otherPortal;
+                CustomPortalEntity otherPortal;
                 if (portalsTag.contains((leftClick ? "Right" : "Left") + "Portal")) {
-                    otherPortal = (Portal) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Right" : "Left") + "Portal"));
+                    otherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Right" : "Left") + "Portal"));
                 } else {
                     otherPortal = null;
                 }
@@ -138,8 +139,8 @@ public class PortalGun extends Item implements DyeableItem {
                     );
 
                     if(portalExists&&otherPortal==null) {
-                        Portal portala;
-                        portala = PortalAPI.copyPortal(portalholder,Portal.entityType);
+                        CustomPortalEntity portala;
+                        portala = PortalAPI.copyPortal(portalholder,CustomPortalEntity.entityType);
                         portalholder.kill();
                         world.spawnEntity(portala);
                         portalholder=portala;
@@ -155,11 +156,11 @@ public class PortalGun extends Item implements DyeableItem {
                         PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
 
                         //changed to a kill respawn system to fix reloadAndSync bug
-                        Portal portala;
-                        portala = PortalAPI.copyPortal(portalholder,Portal.entityType);
+                        CustomPortalEntity portala;
+                        portala = PortalAPI.copyPortal(portalholder,CustomPortalEntity.entityType);
                         portalholder.kill();
                         world.spawnEntity(portala);
-                        portalholder=portala;
+                        portalholder = portala;
                         // Currently causes very weird visual bugs (portals move oddly)
                         // But is necessary for changes in axisW/axisH
                         otherPortal.reloadAndSyncToClient();

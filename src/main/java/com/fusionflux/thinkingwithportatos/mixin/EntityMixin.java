@@ -2,6 +2,7 @@ package com.fusionflux.thinkingwithportatos.mixin;
 
 import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
+import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
 import com.qouteall.immersive_portals.Global;
 import com.qouteall.immersive_portals.McHelper;
@@ -133,7 +134,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
         Vec3d expand = this.getVelocity().multiply(10);
         Box streachedBB = this.getBoundingBox().stretch(expand);
 
-        List<Entity> globalPortals = this.world.getEntitiesByClass(Portal.class, streachedBB, null);
+        List<Entity> globalPortals = this.world.getEntitiesByClass(CustomPortalEntity.class, streachedBB, null);
             for (Entity globalPortal : globalPortals) {
                 if (streachedBB.intersects(globalPortal.getBoundingBox())) {
                     double offsetX=0;

@@ -1,10 +1,14 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
 import com.fusionflux.thinkingwithportatos.accessor.QuaternionHandler;
+import com.qouteall.immersive_portals.Helper;
+import com.qouteall.immersive_portals.my_util.DQuaternion;
+import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -56,6 +60,16 @@ public class PortalPlaceholderEntity extends Entity {
     protected void writeCustomDataToTag(CompoundTag compoundTag) {
         compoundTag.putFloat("color", this.getColor());
         compoundTag.putFloat("roll", this.getRoll());
+    }
+
+    @Override
+    public void tick() {
+        if (!this.world.isClient) {
+            if (this.world.getBlockState(this.getBlockPos()) != Blocks.AIR.getDefaultState()) {
+                this.kill();
+                System.out.println("killed");
+            }
+        }
     }
 
     public Quaternion getRotation() {

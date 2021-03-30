@@ -44,6 +44,7 @@ public class ThinkingWithPortatos implements ModInitializer {
         ThinkingWithPortatosEntities.registerEntities();
         ThinkingWithPortatosSounds.registerSounds();
         registerPacketListener();
+
         /*ElementCollisionEvents.BLOCK_COLLISION.register((element, blockPos, blockState) -> {
             if (!((CubeEntity) element).world.isClient) {
                 if (t == 0) {
