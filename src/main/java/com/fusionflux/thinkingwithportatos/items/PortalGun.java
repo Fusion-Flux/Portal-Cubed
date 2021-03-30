@@ -138,9 +138,12 @@ public class PortalGun extends Item implements DyeableItem {
                             1.9 // height
                     );
                     portalOutline.axisH=portalholder.axisH;
+                    portalOutline.axisW=portalholder.axisW;
 
                     if(portalExists&&otherPortal==null) {
                         CustomPortalEntity portala;
+                        //PortalManipulation.adjustRotationToConnect(portalholder, portalholder);
+                        PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(portalholder), portalholder);
                         portala = PortalAPI.copyPortal(portalholder,CustomPortalEntity.entityType);
                         portalholder.kill();
                         world.spawnEntity(portala);

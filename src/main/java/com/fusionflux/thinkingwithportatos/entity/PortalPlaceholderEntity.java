@@ -29,6 +29,7 @@ public class PortalPlaceholderEntity extends Entity {
 
     public static final Identifier SPAWN_PACKET = id("portal_placeholder_spawn");
     public Vec3d axisH;
+    public Vec3d axisW;
     public static final TrackedData<Quaternion> QUATERNION = DataTracker.registerData(PortalPlaceholderEntity.class, QuaternionHandler.QUATERNION_HANDLER);
     public static final TrackedData<Float> ROLL = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public static final TrackedData<Integer> COLOR = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -53,6 +54,7 @@ public class PortalPlaceholderEntity extends Entity {
         this.setColor(compoundTag.getInt("color"));
         this.setRoll(compoundTag.getFloat("roll"));
         this.axisH = Helper.getVec3d(compoundTag, "axisH").normalize();
+        this.axisW = Helper.getVec3d(compoundTag, "axisW").normalize();
 
     }
 
@@ -61,25 +63,35 @@ public class PortalPlaceholderEntity extends Entity {
         compoundTag.putFloat("color", this.getColor());
         compoundTag.putFloat("roll", this.getRoll());
         Helper.putVec3d(compoundTag, "axisH", this.axisH);
+        Helper.putVec3d(compoundTag, "axisW", this.axisW);
 
     }
 
     @Override
     public void tick() {
         if (!this.world.isClient) {
-            if (this.world.getBlockState(this.getBlockPos()) != Blocks.AIR.getDefaultState()) {
-                this.kill();
-                System.out.println("killed");
-            }
-            if (this.world.getBlockState(new BlockPos(
+            if ((this.world.getBlockState(this.getBlockPos()) != Blocks.AIR.getDefaultState())||(this.world.getBlockState(new BlockPos(
                     this.getPos().getX()-this.axisH.getX(),
                     this.getPos().getY()-this.axisH.getY(),
                     this.getPos().getZ()-this.axisH.getZ()))
-                    != Blocks.AIR.getDefaultState()) {
+                    != Blocks.AIR.getDefaultState())) {
                 this.kill();
                 System.out.println("killed");
             }
+            if ((this.world.getBlockState(new BlockPos(
+                    this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX(),
+                    this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY(),
+                    this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()))
+                    == Blocks.AIR.getDefaultState())||(this.world.getBlockState(new BlockPos(
+                    this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX()-Math.abs(this.axisH.getX()),
+                    this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY()-this.axisH.getY(),
+                    this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()-Math.abs(this.axisH.getZ())))
+                    == Blocks.AIR.getDefaultState())) {
+
+                this.kill();
+            }
         }
+
     }
 
     public Quaternion getRotation() {

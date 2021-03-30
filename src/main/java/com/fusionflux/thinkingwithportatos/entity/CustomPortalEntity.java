@@ -91,17 +91,23 @@ public class CustomPortalEntity extends Portal {
                     CustomPortalEntity otherPortal;
                     otherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
                     assert otherPortal != null;
-                    otherPortal.setDestination(otherPortal.getPos());
-                    PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(otherPortal), otherPortal);
-                    otherPortal.setActive(false);
-                    otherPortal.reloadAndSyncToClient();
+                    if(otherPortal!=null) {
+                        otherPortal.setDestination(otherPortal.getPos());
+                        PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(otherPortal), otherPortal);
+                        otherPortal.setActive(false);
+                        otherPortal.reloadAndSyncToClient();
+                    }
                 }
             }
-            if (this.world.getBlockState(new BlockPos(
+            if ((this.world.getBlockState(new BlockPos(
                     this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX(),
-                    this.getPos().getY()+this.axisW.crossProduct(this.axisH).getY(),
+                    this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY(),
                     this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()))
-                    == Blocks.AIR.getDefaultState()) {
+                    == Blocks.AIR.getDefaultState())||(this.world.getBlockState(new BlockPos(
+                    this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX()-Math.abs(this.axisH.getX()),
+                    this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY()+this.axisH.getY(),
+                    this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()-Math.abs(this.axisH.getZ())))
+                    == Blocks.AIR.getDefaultState())) {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                 System.out.println("killed");
@@ -109,10 +115,12 @@ public class CustomPortalEntity extends Portal {
                     CustomPortalEntity otherPortal;
                     otherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
                     assert otherPortal != null;
-                    otherPortal.setDestination(otherPortal.getPos());
-                    PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(otherPortal), otherPortal);
-                    otherPortal.setActive(false);
-                    otherPortal.reloadAndSyncToClient();
+                    if(otherPortal!=null) {
+                        otherPortal.setDestination(otherPortal.getPos());
+                        PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(otherPortal), otherPortal);
+                        otherPortal.setActive(false);
+                        otherPortal.reloadAndSyncToClient();
+                    }
                 }
             }
         }
