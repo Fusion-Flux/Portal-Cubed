@@ -4,6 +4,7 @@ import com.fusionflux.thinkingwithportatos.accessor.QuaternionHandler;
 import com.qouteall.immersive_portals.Helper;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
+import dev.lazurite.rayon.core.impl.util.math.QuaternionHelper;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,9 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
@@ -29,7 +28,7 @@ import static com.fusionflux.thinkingwithportatos.ThinkingWithPortatos.id;
 public class PortalPlaceholderEntity extends Entity {
 
     public static final Identifier SPAWN_PACKET = id("portal_placeholder_spawn");
-
+    public Vec3d axisH;
     public static final TrackedData<Quaternion> QUATERNION = DataTracker.registerData(PortalPlaceholderEntity.class, QuaternionHandler.QUATERNION_HANDLER);
     public static final TrackedData<Float> ROLL = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public static final TrackedData<Integer> COLOR = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -53,6 +52,7 @@ public class PortalPlaceholderEntity extends Entity {
     protected void readCustomDataFromTag(CompoundTag compoundTag) {
         this.setColor(compoundTag.getInt("color"));
         this.setRoll(compoundTag.getFloat("roll"));
+        this.axisH = Helper.getVec3d(compoundTag, "axisH").normalize();
 
     }
 
@@ -60,12 +60,22 @@ public class PortalPlaceholderEntity extends Entity {
     protected void writeCustomDataToTag(CompoundTag compoundTag) {
         compoundTag.putFloat("color", this.getColor());
         compoundTag.putFloat("roll", this.getRoll());
+        Helper.putVec3d(compoundTag, "axisH", this.axisH);
+
     }
 
     @Override
     public void tick() {
         if (!this.world.isClient) {
             if (this.world.getBlockState(this.getBlockPos()) != Blocks.AIR.getDefaultState()) {
+                this.kill();
+                System.out.println("killed");
+            }
+            if (this.world.getBlockState(new BlockPos(
+                    this.getPos().getX()-this.axisH.getX(),
+                    this.getPos().getY()-this.axisH.getY(),
+                    this.getPos().getZ()-this.axisH.getZ()))
+                    != Blocks.AIR.getDefaultState()) {
                 this.kill();
                 System.out.println("killed");
             }
@@ -83,6 +93,8 @@ public class PortalPlaceholderEntity extends Entity {
     public void setRoll(Float roll) {
         this.getDataTracker().set(ROLL, roll);
     }
+
+
 
     public Integer getColor() {
         return getDataTracker().get(COLOR);
