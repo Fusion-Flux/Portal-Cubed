@@ -132,6 +132,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     public void tick(CallbackInfo ci) {
         Vec3d expand = this.getVelocity().multiply(10);
         Box streachedBB = this.getBoundingBox().stretch(expand);
+
         List<Entity> globalPortals = this.world.getEntitiesByClass(Portal.class, streachedBB, null);
             for (Entity globalPortal : globalPortals) {
                 if (streachedBB.intersects(globalPortal.getBoundingBox())) {
@@ -151,7 +152,6 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                     this.setVelocity(this.getVelocity().add(-offsetX,-offsetY,-offsetZ));
                 }
             }
-
         if (maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.PROPULSION_GEL) {
             maxFallSpeed = 10;
         } else {
