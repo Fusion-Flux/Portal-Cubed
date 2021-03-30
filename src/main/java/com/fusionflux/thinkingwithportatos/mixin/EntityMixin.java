@@ -4,6 +4,7 @@ import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
+import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.Global;
 import com.qouteall.immersive_portals.McHelper;
 import com.qouteall.immersive_portals.ducks.IEEntity;
@@ -17,6 +18,7 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.collection.ReusableStream;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -129,6 +131,8 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Shadow @Final private EntityType<?> type;
 
+    private boolean recentlyTouchedPortal;
+
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
         Vec3d expand = this.getVelocity().multiply(10);
@@ -153,6 +157,21 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                     this.setVelocity(this.getVelocity().add(-offsetX,-offsetY,-offsetZ));
                 }
             }
+        if (!world.isClient) {
+            List<Entity> portalSound = this.world.getEntitiesByClass(CustomPortalEntity.class, this.getBoundingBox().expand(2), null);
+            for (Entity globalportal : portalSound) {
+                CustomPortalEntity collidingportal = (CustomPortalEntity) globalportal;
+                collidingportal.getActive();
+                if (CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this))&&collidingportal.getActive() && !recentlyTouchedPortal) {
+                    world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+                    recentlyTouchedPortal = true;
+                }
+                if(!CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this))&&collidingportal.getActive()&&recentlyTouchedPortal){
+                    world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+                    recentlyTouchedPortal = false;
+                }
+            }
+        }
         if (maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.PROPULSION_GEL) {
             maxFallSpeed = 10;
         } else {

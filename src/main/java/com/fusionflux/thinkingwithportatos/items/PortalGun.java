@@ -147,25 +147,32 @@ public class PortalGun extends Item implements DyeableItem {
                         portalholder=portala;
 
                     }
-                    if (!portalExists)
+                    if (!portalExists) {
+                        portalholder.setString("null");
                         world.spawnEntity(portalholder);
-
+                    }
                     if (otherPortal != null) {
+
                         portalholder.setDestination(otherPortal.getOriginPos());
                         otherPortal.setDestination(portalholder.getOriginPos());
+                        portalholder.setActive(true);
+                        otherPortal.setActive(true);
+                        portalholder.setString(otherPortal.getUuidAsString());
+                        otherPortal.setString(portalholder.getUuidAsString());
 
                         PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
 
                         //changed to a kill respawn system to fix reloadAndSync bug
-                        CustomPortalEntity portala;
-                        portala = PortalAPI.copyPortal(portalholder,CustomPortalEntity.entityType);
-                        portalholder.kill();
-                        world.spawnEntity(portala);
-                        portalholder = portala;
+                        //CustomPortalEntity portala;
+                        //portala = PortalAPI.copyPortal(portalholder,CustomPortalEntity.entityType);
+                        //portalholder.kill();
+                        //world.spawnEntity(portala);
+                        //portalholder = portala;
                         // Currently causes very weird visual bugs (portals move oddly)
                         // But is necessary for changes in axisW/axisH
                         otherPortal.reloadAndSyncToClient();
-                       // portalholder.reloadAndSyncToClient();
+                        portalholder.reloadAndSyncToClient();
+                        //System.out.println(portalholder.getString());
                         //System.out.println(portalholder.getPos());
 
                         world.playSound(null, portalholder.getPos().getX(), portalholder.getPos().getY(), portalholder.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
