@@ -54,18 +54,10 @@ public class CubeEntity extends Entity implements EntityPhysicsElement {
             this.getRigidBody().setRestitution(0.3f);          // 0.0f - 1.0f
             this.getRigidBody().setDragCoefficient(0.0f);     // 0.0f - ?
             this.getRigidBody().setEnvironmentLoadDistance(1); // 1 - ? (affects performance extremely)
-            this.getRigidBody().setDoFluidResistance(true);
+            this.getRigidBody().setDoFluidResistance(false);
         });
         ElementCollisionEvents.BLOCK_COLLISION.register((thread, element, block, impulse) -> {
             if (element instanceof CubeEntity) {
-                //System.out.println(impulse);
-                /*if (impulse <.25&&impulse >=.05&&!MinecraftClient.getInstance().getSoundManager().isPlaying(CUBESCRAPENOISE)) {
-                    MinecraftClient.getInstance().getSoundManager().play(CUBESCRAPENOISE);
-                }
-                if(impulse>=.25){
-                    MinecraftClient.getInstance().getSoundManager().stop(CUBESCRAPENOISE);
-                    CUBESCRAPENOISE.isDone();
-                }*/
                 thread.execute(() -> {
                 if(!((CubeEntity) element).world.isClient) {
                     if (impulse >= .15 && impulse <= .5) {
@@ -115,7 +107,7 @@ public class CubeEntity extends Entity implements EntityPhysicsElement {
 
     @Override
     public boolean isCollidable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -125,7 +117,7 @@ public class CubeEntity extends Entity implements EntityPhysicsElement {
 
     @Override
     public boolean isPushable() {
-        return true;
+        return false;
     }
 
     @Override

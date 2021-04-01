@@ -83,9 +83,9 @@ public class PortalPlaceholderEntity extends Entity {
                     this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY(),
                     this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()))
                     == Blocks.AIR.getDefaultState())||(this.world.getBlockState(new BlockPos(
-                    this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX()-Math.abs(this.axisH.getX()),
+                    this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX()-this.axisH.getX(),
                     this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY()-this.axisH.getY(),
-                    this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()-Math.abs(this.axisH.getZ())))
+                    this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()-this.axisH.getZ()))
                     == Blocks.AIR.getDefaultState())) {
 
                 this.kill();

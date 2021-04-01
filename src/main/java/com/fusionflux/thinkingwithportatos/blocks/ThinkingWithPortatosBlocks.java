@@ -1,10 +1,7 @@
 package com.fusionflux.thinkingwithportatos.blocks;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
-import com.fusionflux.thinkingwithportatos.blocks.blockentities.HardLightBridgeBlock;
-import com.fusionflux.thinkingwithportatos.blocks.blockentities.HardLightBridgeBlockEntity;
-import com.fusionflux.thinkingwithportatos.blocks.blockentities.HardLightBridgeEmitterBlock;
-import com.fusionflux.thinkingwithportatos.blocks.blockentities.HardLightBridgeEmitterBlockEntity;
+import com.fusionflux.thinkingwithportatos.blocks.blockentities.*;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -65,8 +62,15 @@ public class ThinkingWithPortatosBlocks {
     public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
     public static BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY;
 
+    public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
+    public static BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY;
 
     public static void registerBlocks() {
+
+        NEUROTOXIN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("neurotoxin_entity"), BlockEntityType.Builder.create(NeurotoxinBlockEntity::new, NEUROTOXIN_BLOCK).build(null));
+        Registry.register(Registry.BLOCK, id("neurotoxin"), NEUROTOXIN_BLOCK);
+        Registry.register(Registry.ITEM, id("neurotoxin"), new BlockItem(NEUROTOXIN_BLOCK, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+
         if (ThinkingWithPortatosConfig.get().enabled.enableGels) {
             Registry.register(Registry.BLOCK, id("propulsion_gel"), PROPULSION_GEL);
             Registry.register(Registry.ITEM, id("propulsion_gel"), new GelBucket(PROPULSION_GEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup).maxCount(1)));
@@ -142,5 +146,6 @@ public class ThinkingWithPortatosBlocks {
     public static void registerRenderLayers() {
         BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.HLB_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.HLB_EMITTER_BLOCK, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK, RenderLayer.getTranslucent());
     }
 }
