@@ -67,7 +67,7 @@ public class NeurotoxinEmitterBlock extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return ThinkingWithPortatosBlocks.NEUROTOXIN_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerFacing().getOpposite()).with(Properties.POWERED, false);
+        return ThinkingWithPortatosBlocks.NEUROTOXIN_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(Properties.POWERED, false);
     }
 
 
