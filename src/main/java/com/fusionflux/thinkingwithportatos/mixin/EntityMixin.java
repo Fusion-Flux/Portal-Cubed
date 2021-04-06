@@ -5,28 +5,14 @@ import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
-import com.qouteall.immersive_portals.Global;
-import com.qouteall.immersive_portals.McHelper;
-import com.qouteall.immersive_portals.ducks.IEEntity;
-import com.qouteall.immersive_portals.mixin.common.collision.MixinEntity;
-import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.*;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.collection.ReusableStream;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,33 +20,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, VelocityTransfer {
 
-    @Unique
-    private static final TrackedData<Boolean> IS_ROLLING = DataTracker.registerData(Entity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    @Unique
-    private static final TrackedData<Direction> DIRECTION = DataTracker.registerData(Entity.class, TrackedDataHandlerRegistry.FACING);
-    @Unique
-    private final double storeVelocity3 = 0;
-    public Vec3d movementTest = new Vec3d(0, 0, 0);
     @Shadow
     public World world;
-    @Shadow
-    public boolean horizontalCollision;
-    @Shadow
-    public boolean verticalCollision;
 
-    //private Portal portal;
-    @Shadow
-    public boolean noClip;
-    @Shadow
-    public float horizontalSpeed;
-    @Shadow
-    protected boolean onGround;
+    private int timeinblock = 1;
 
     @Unique
     private double maxFallSpeed = 0;
@@ -91,25 +59,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     public abstract void setVelocity(Vec3d velocity);
 
     @Shadow
-    public abstract void addVelocity(double deltaX, double deltaY, double deltaZ);
-
-    @Shadow
-    public abstract boolean collidesWith(Entity other);
-
-    @Shadow
-    protected abstract boolean doesNotCollide(Box box);
-
-    @Shadow
     public abstract Box getBoundingBox();
-
-    @Shadow
-    public abstract boolean isInsideWall();
-
-    @Shadow
-    public abstract boolean isOnGround();
-
-    @Shadow
-    public abstract boolean collides();
 
     @Shadow
     public abstract boolean equals(Object o);
@@ -117,19 +67,21 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     @Shadow
     public abstract EntityType<?> getType();
 
-    @Shadow public abstract double offsetX(double widthScale);
+    @Shadow public abstract Vec3d getPos();
 
-    @Shadow public abstract boolean canFly();
+    @Shadow public abstract double getX();
 
-    @Shadow public abstract Direction getMovementDirection();
+    @Shadow public abstract double getY();
 
-   // @Shadow public abstract Vec3d adjustMovementForCollisions(Vec3d movement, Box entityBoundingBox, ReusableStream<VoxelShape> collisions);
+    @Shadow public abstract double getZ();
 
-    @Shadow protected abstract Vec3d adjustMovementForCollisions(Vec3d movement);
+    @Shadow public int age;
 
-    @Shadow protected abstract Vec3d adjustMovementForSneaking(Vec3d movement, MovementType type);
+    @Shadow public abstract boolean damage(DamageSource source, float amount);
 
-    @Shadow @Final private EntityType<?> type;
+    @Shadow public abstract float getEyeHeight(EntityPose pose);
+
+    @Shadow public abstract EntityPose getPose();
 
     private boolean recentlyTouchedPortal;
 
@@ -158,6 +110,13 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 }
             }
         if (!world.isClient) {
+if(world.getBlockState(new BlockPos(this.getX(),this.getY()+this.getEyeHeight(this.getPose()),this.getZ()))==ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK.getDefaultState()){
+if(Math.abs(timeinblock-this.age)>20){
+    this.damage(DamageSource.DROWN,2);
+}
+}else{
+    timeinblock=this.age;
+}
             List<Entity> portalSound = this.world.getEntitiesByClass(CustomPortalEntity.class, this.getBoundingBox().expand(2), null);
             for (Entity globalportal : portalSound) {
                 CustomPortalEntity collidingportal = (CustomPortalEntity) globalportal;

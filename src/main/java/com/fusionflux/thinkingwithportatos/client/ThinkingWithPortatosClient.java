@@ -8,9 +8,6 @@ import com.fusionflux.thinkingwithportatos.entity.*;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.qouteall.immersive_portals.portal.LoadingIndicatorEntity;
-import com.qouteall.immersive_portals.portal.Portal;
-import com.qouteall.immersive_portals.render.LoadingIndicatorRenderer;
 import com.qouteall.immersive_portals.render.PortalEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -27,13 +24,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.apache.commons.lang3.Validate;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 public class ThinkingWithPortatosClient implements ClientModInitializer {
@@ -179,5 +172,6 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         bufferBuilder.vertex(x, y, z).texture(u, v).color(r, g, b, a).next();
         tessellator.draw();
     }
+
 
 }

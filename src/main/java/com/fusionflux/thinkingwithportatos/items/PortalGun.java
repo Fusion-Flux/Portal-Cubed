@@ -1,16 +1,13 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
-import com.fusionflux.thinkingwithportatos.client.ThinkingWithPortatosClient;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
-import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.portal.PortalManipulation;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
@@ -35,7 +32,6 @@ public class PortalGun extends Item implements DyeableItem {
         super(settings);
     }
 
-    protected PortalPlaceholderEntity placeholder1;
 
     @Override
     public int getColor(ItemStack stack) {
@@ -122,6 +118,7 @@ public class PortalGun extends Item implements DyeableItem {
 
                     Vec3d placeholderPos1 = calcPos(blockPos, up, normal, right, true);
                     Pair<Double, Double> rotAngles = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
+                    assert portalOutline != null;
                     portalOutline.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
                     portalOutline.yaw = rotAngles.getLeft().floatValue() + (90 * up.getX());
                     portalOutline.pitch = rotAngles.getRight().floatValue();
@@ -190,7 +187,9 @@ public class PortalGun extends Item implements DyeableItem {
                     world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), ThinkingWithPortatosSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
                 }
 
+                assert portalholder != null;
                 portalsTag.putUuid((leftClick ? "Left" : "Right") + "Portal", portalholder.getUuid());
+                assert portalOutline != null;
                 portalsTag.putUuid((leftClick ? "Left" : "Right") + "Background", portalOutline.getUuid());
 
                 tag.put(world.getRegistryKey().toString(), portalsTag);
