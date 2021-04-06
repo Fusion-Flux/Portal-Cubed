@@ -139,7 +139,7 @@ public class ThinkingWithPortatosBlocks {
             Registry.register(Registry.BLOCK, id("bridge_test"), HLB_BLOCK);
             NEUROTOXIN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("neurotoxin_entity"), BlockEntityType.Builder.create(NeurotoxinBlockEntity::new, NEUROTOXIN_BLOCK).build(null));
             Registry.register(Registry.BLOCK, id("neurotoxin"), NEUROTOXIN_BLOCK);
-            Registry.register(Registry.ITEM, id("neurotoxin"), new BlockItem(NEUROTOXIN_BLOCK, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+           // Registry.register(Registry.ITEM, id("neurotoxin"), new BlockItem(NEUROTOXIN_BLOCK, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
             NEUROTOXIN_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("neurotoxin_emitter_entity"), BlockEntityType.Builder.create(NeurotoxinEmitterBlockEntity::new, NEUROTOXIN_EMITTER).build(null));
             Registry.register(Registry.BLOCK, id("neurotoxin_emitter"), NEUROTOXIN_EMITTER);
             Registry.register(Registry.ITEM, id("neurotoxin_emitter"), new BlockItem(NEUROTOXIN_EMITTER, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));

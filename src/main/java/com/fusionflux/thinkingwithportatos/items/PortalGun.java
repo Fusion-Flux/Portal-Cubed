@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
+import com.fusionflux.thinkingwithportatos.client.ThinkingWithPortatosClient;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
@@ -9,6 +10,7 @@ import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.portal.PortalManipulation;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
@@ -33,6 +35,8 @@ public class PortalGun extends Item implements DyeableItem {
         super(settings);
     }
 
+    protected PortalPlaceholderEntity placeholder1;
+
     @Override
     public int getColor(ItemStack stack) {
         CompoundTag compoundTag = stack.getOrCreateTag();
@@ -55,6 +59,7 @@ public class PortalGun extends Item implements DyeableItem {
     }
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, ItemStack stack, boolean leftClick) {
+
             if (!world.isClient) {
                 CompoundTag tag = stack.getOrCreateTag();
 
@@ -100,6 +105,7 @@ public class PortalGun extends Item implements DyeableItem {
                 BlockPos blockPos;
                 HitResult hitResult = user.raycast(128.0D, 0.0F, false);
                 if (hitResult.getType() == HitResult.Type.BLOCK) {
+                    //Block.isFaceFullSquare(world.getBlockState(((BlockHitResult) hitResult).getBlockPos()).getCollisionShape(world,((BlockHitResult) hitResult).getBlockPos()),((BlockHitResult) hitResult).getSide().getOpposite());
                     blockPos = ((BlockHitResult) hitResult).getBlockPos();
                     normal = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
                     if (normal.getY() == 0) {
