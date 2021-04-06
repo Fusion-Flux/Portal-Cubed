@@ -1,6 +1,5 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
-import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.Helper;
 import com.qouteall.immersive_portals.api.PortalAPI;
@@ -9,6 +8,7 @@ import com.qouteall.immersive_portals.my_util.SignalBiArged;
 import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.portal.PortalManipulation;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -17,10 +17,9 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.World;
+import virtuoel.pehkui.mixin.compat116plus.AbstractBlockStateMixin;
 
 import java.util.UUID;
 
@@ -79,6 +78,17 @@ public class CustomPortalEntity extends Portal {
 
         CollisionHelper.notifyCollidingPortals(this);
         if (!this.world.isClient) {
+           /* if(!this.getString().equals("null")) {
+                CustomPortalEntity lightAtOtherPortal;
+                lightAtOtherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
+                if (this.world.getLuminance(this.getBlockPos()) > lightAtOtherPortal.world.getLuminance(lightAtOtherPortal.getBlockPos())) {
+                    lightAtOtherPortal.setLuminance(this.world.getLuminance(this.getBlockPos()));
+                }
+                if (this.world.getLuminance(this.getBlockPos()) < lightAtOtherPortal.world.getLuminance(lightAtOtherPortal.getBlockPos())) {
+                    this.setLuminance(lightAtOtherPortal.world.getLuminance(this.getBlockPos()));
+                }
+            }*/
+
             if ((this.world.getBlockState(this.getBlockPos()) != Blocks.AIR.getDefaultState())||(this.world.getBlockState(new BlockPos(
                     this.getPos().getX()-Math.abs(this.axisH.getX()),
                     this.getPos().getY()+this.axisH.getY(),

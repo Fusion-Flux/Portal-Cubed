@@ -5,10 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ArmorItemMixin",
-
     "EntityMixin",
     "PlayerEntityMixin"
-
   ],
   "client": [
     "client.MinecraftClientMixin"
