@@ -92,6 +92,12 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         assert MinecraftClient.getInstance().player != null;
         if(MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)||MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)) {
             ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.MAINHAND);
+            if(!stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN)){
+                if(!stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)){
+                    stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
+                }
+            }
+
 
             CompoundTag tag = stack.getOrCreateTag();
             CompoundTag portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
@@ -135,6 +141,12 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         assert MinecraftClient.getInstance().player != null;
         if (MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)||MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)) {
             ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.MAINHAND);
+
+            if(!stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN)){
+                if(!stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)){
+                    stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
+                }
+            }
 
             CompoundTag tag = stack.getOrCreateTag();
             CompoundTag portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
