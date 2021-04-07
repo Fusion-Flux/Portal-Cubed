@@ -5,9 +5,23 @@ import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.shapes.EmptyShape;
+import com.jme3.bullet.joints.SixDofSpringJoint;
+import com.jme3.bullet.objects.PhysicsRigidBody;
+import com.jme3.math.Matrix3f;
+import com.jme3.math.Vector3f;
 import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.portal.PortalManipulation;
+import dev.lazurite.rayon.core.api.event.PhysicsSpaceEvents;
+import dev.lazurite.rayon.core.impl.physics.space.MinecraftSpace;
+import dev.lazurite.rayon.core.impl.physics.space.body.ElementRigidBody;
+
+import dev.lazurite.rayon.core.impl.util.math.VectorHelper;
+import dev.lazurite.rayon.entity.api.EntityPhysicsElement;
+
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
@@ -15,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
@@ -30,8 +45,65 @@ public class PortalGun extends Item implements DyeableItem {
 
     public PortalGun(Settings settings) {
         super(settings);
+        PhysicsSpaceEvents.STEP.register(space -> {
+            int i = 0;
+            if (space.getWorld().isClient) {
+                i = 1;
+            }
+
+            if (holds[i] != null) {
+                PhysicsRigidBody holdBody = holds[i];
+                PlayerEntity user = player[i];
+                Vector3f pos = VectorHelper.vec3dToVector3f(user.getCameraPosVec(1.0f).add(user.getRotationVector().multiply(2f)));
+                holdBody.setPhysicsLocation(pos);
+            }
+        });
     }
 
+
+    public static EmptyShape EMPTY_SHAPE = null;
+
+    public PlayerEntity[] player = {null, null};
+    public PhysicsRigidBody[] holds = {null, null};
+    public SixDofSpringJoint[] joints = {null, null};
+
+    @Override
+    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+        if (entity instanceof EntityPhysicsElement) {
+            EntityPhysicsElement ent = (EntityPhysicsElement) entity;
+            ElementRigidBody body = ent.getRigidBody();
+            MinecraftSpace space = body.getSpace();
+
+            if (EMPTY_SHAPE == null) {
+                EMPTY_SHAPE = new EmptyShape(false);
+            }
+
+            int i = 0;
+            if (user.world.isClient) {
+                i = 1;
+            }
+
+            if (holds[i] == null) {
+                Vector3f pos = VectorHelper.vec3dToVector3f(user.getCameraPosVec(1.0f).add(user.getRotationVector().multiply(2f)));
+                PhysicsRigidBody holdBody = new PhysicsRigidBody(EMPTY_SHAPE, 0);
+                holdBody.setPhysicsLocation(pos);
+                space.addCollisionObject(holdBody);
+                SixDofSpringJoint joint = new SixDofSpringJoint(body, holdBody, Vector3f.ZERO, Vector3f.ZERO, Matrix3f.IDENTITY, Matrix3f.IDENTITY, false);
+                joint.setLinearLowerLimit(Vector3f.ZERO);
+                joint.setLinearUpperLimit(Vector3f.ZERO);
+                joint.setAngularLowerLimit(Vector3f.ZERO);
+                joint.setAngularUpperLimit(Vector3f.ZERO);
+                space.addJoint(joint);
+
+                holds[i] = holdBody;
+                joints[i] = joint;
+                player[i] = user;
+                return ActionResult.CONSUME;
+            }
+        }
+
+        return super.useOnEntity(stack, user, entity, hand);
+    }
 
     @Override
     public int getColor(ItemStack stack) {
@@ -41,6 +113,10 @@ public class PortalGun extends Item implements DyeableItem {
         return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
     }
 
+
+
+
+
     public void useLeft(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", false);
@@ -49,6 +125,21 @@ public class PortalGun extends Item implements DyeableItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        int i = 0;
+        if (user.world.isClient) {
+            i = 1;
+        }
+        if (holds[i] != null) {
+            PhysicsRigidBody holdBody = holds[i];
+            SixDofSpringJoint joint = joints[i];
+            PhysicsSpace space = joint.getPhysicsSpace();
+
+            space.removeCollisionObject(holdBody);
+            space.removeJoint(joint);
+            holds[i] = null;
+            joints[i] = null;
+            return new TypedActionResult<>(ActionResult.CONSUME, user.getStackInHand(hand));
+        }
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", true);
         return useImpl(world, user, stack, false);

@@ -1,5 +1,6 @@
 package com.fusionflux.thinkingwithportatos.blocks;
 
+import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -12,6 +13,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -196,7 +200,7 @@ public class SlidingDoorBlock extends Block {
     }
 
     private void playOpenCloseSound(World world, BlockPos pos, boolean open) {
-        world.syncWorldEvent((PlayerEntity)null, open ? this.getCloseSoundEventId() : this.getOpenSoundEventId(), pos, 0);
+        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), open ? SoundEvents.BLOCK_PISTON_EXTEND:SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.MASTER, .3F, 2F);
     }
 
     public PistonBehavior getPistonBehavior(BlockState state) {

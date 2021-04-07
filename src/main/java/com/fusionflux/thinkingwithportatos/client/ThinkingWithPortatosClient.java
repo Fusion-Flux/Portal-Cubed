@@ -102,6 +102,12 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
             if(Math.abs(color)==14842149){
                 color=-color;
             }
+            if(color==-16383998){
+                color=1908001;
+            }
+            if(color==16383998){
+                color=-1908001;
+            }
             int r = (color & 0xFF0000) >> 16;
             int g = (color & 0xFF00) >> 8;
             int b = color & 0xFF;
@@ -137,7 +143,12 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
             if (Math.abs(color) == 14842149) {
                 color = -color;
             }
-
+            if(color==-16383998){
+                color=1908001;
+            }
+            if(color==16383998){
+                color=-1908001;
+            }
             int r = (color & 0xFF0000) >> 16;
             int g = (color & 0xFF00) >> 8;
             int b = color & 0xFF;

@@ -37,7 +37,7 @@ public class PropulsionGel extends GelFlat {
                     if (!entity.isSneaking()) {
                         if (limiter.check(world, entity)) {
                             if (Math.abs(entity.getVelocity().x) < 2 && Math.abs(entity.getVelocity().z) < 2) {
-                                entity.setVelocity(entity.getVelocity().multiply(1.5, 1.0D, 1.5));
+                                entity.setVelocity(entity.getVelocity().multiply(1.7, 1.0D, 1.7));
                             } else if (Math.abs(entity.getVelocity().x) > 2 && Math.abs(entity.getVelocity().z) > 2) {
                                 entity.setVelocity(entity.getVelocity().multiply(1.01, 1.0D, 1.01));
                             }
