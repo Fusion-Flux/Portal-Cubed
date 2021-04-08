@@ -1,11 +1,13 @@
 package com.fusionflux.thinkingwithportatos;
 
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
+import com.fusionflux.thinkingwithportatos.client.ThinkingWithPortatosClient;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
 import com.fusionflux.thinkingwithportatos.entity.CubeEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.jme3.math.Vector3f;
 import dev.lazurite.rayon.core.api.event.ElementCollisionEvents;
@@ -36,6 +38,8 @@ public class ThinkingWithPortatos implements ModInitializer {
         return new Identifier(MODID, path);
     }
 
+    public static final BodyGrabbingManager bodyGrabbingManager = new BodyGrabbingManager(true);
+
     @Override
     public void onInitialize() {
         ThinkingWithPortatosConfig.register();
@@ -44,6 +48,7 @@ public class ThinkingWithPortatos implements ModInitializer {
         ThinkingWithPortatosEntities.registerEntities();
         ThinkingWithPortatosSounds.registerSounds();
         registerPacketListener();
+        bodyGrabbingManager.init();
 
         /*ElementCollisionEvents.BLOCK_COLLISION.register((element, blockPos, blockState) -> {
             if (!((CubeEntity) element).world.isClient) {
@@ -55,6 +60,14 @@ public class ThinkingWithPortatos implements ModInitializer {
             }
         });*/
 
+    }
+
+    public static BodyGrabbingManager getBodyGrabbingManager(boolean client) {
+        if (client) {
+            return ThinkingWithPortatosClient.bodyGrabbingManager;
+        } else {
+            return bodyGrabbingManager;
+        }
     }
 
     private void registerPacketListener() {
