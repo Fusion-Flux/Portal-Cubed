@@ -32,6 +32,7 @@ public class PortalPlaceholderEntity extends Entity {
     public Vec3d axisW;
     public static final TrackedData<Quaternion> QUATERNION = DataTracker.registerData(PortalPlaceholderEntity.class, QuaternionHandler.QUATERNION_HANDLER);
     public static final TrackedData<Float> ROLL = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private Vec3d normal;
     public static final TrackedData<Integer> COLOR = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public Quaternion rotation = Quaternion.IDENTITY;
     public int color;
@@ -67,32 +68,7 @@ public class PortalPlaceholderEntity extends Entity {
 
     }
 
-    @Override
-    public void tick() {
-        if (!this.world.isClient) {
-            if ((this.world.getBlockState(this.getBlockPos()) != Blocks.AIR.getDefaultState())||(this.world.getBlockState(new BlockPos(
-                    this.getPos().getX()-this.axisH.getX(),
-                    this.getPos().getY()-this.axisH.getY(),
-                    this.getPos().getZ()-this.axisH.getZ()))
-                    != Blocks.AIR.getDefaultState())) {
-                this.kill();
-                System.out.println("killed");
-            }
-            if ((this.world.getBlockState(new BlockPos(
-                    this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX(),
-                    this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY(),
-                    this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()))
-                    == Blocks.AIR.getDefaultState())||(this.world.getBlockState(new BlockPos(
-                    this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX()-this.axisH.getX(),
-                    this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY()-this.axisH.getY(),
-                    this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()-this.axisH.getZ()))
-                    == Blocks.AIR.getDefaultState())) {
 
-                this.kill();
-            }
-        }
-
-    }
 
     public Quaternion getRotation() {
         return getDataTracker().get(QUATERNION);
@@ -106,6 +82,13 @@ public class PortalPlaceholderEntity extends Entity {
         this.getDataTracker().set(ROLL, roll);
     }
 
+    public Vec3d getNormal() {
+        if (this.normal == null) {
+            this.normal = this.axisW.crossProduct(this.axisH).normalize();
+        }
+
+        return this.normal;
+    }
 
 
     public Integer getColor() {

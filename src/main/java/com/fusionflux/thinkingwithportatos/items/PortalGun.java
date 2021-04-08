@@ -56,10 +56,6 @@ public class PortalGun extends Item implements DyeableItem {
         return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
     }
 
-
-
-
-
     public void useLeft(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", false);
@@ -147,9 +143,9 @@ public class PortalGun extends Item implements DyeableItem {
                     portalOutline.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
                     portalOutline.setColor(this.getColor(stack));
                     portalOutline.noClip = true;
-                    if (!outlineExists)
+                    if (!outlineExists) {
                         world.spawnEntity(portalOutline);
-
+                    }
                     Vec3d portalPos1 = calcPos(blockPos, up, normal, right, false);
 
                     assert portalholder != null;
@@ -162,17 +158,13 @@ public class PortalGun extends Item implements DyeableItem {
                             .9, // width
                             1.9 // height
                     );
+                    portalholder.setOutline(portalOutline.getUuidAsString());
                     portalOutline.axisH=portalholder.axisH;
                     portalOutline.axisW=portalholder.axisW;
 
                     if(portalExists&&otherPortal==null) {
-                        CustomPortalEntity portala;
-                        //PortalManipulation.adjustRotationToConnect(portalholder, portalholder);
-                        PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(portalholder), portalholder);
-                        portala = PortalAPI.copyPortal(portalholder,CustomPortalEntity.entityType);
-                        portalholder.kill();
-                        world.spawnEntity(portala);
-                        portalholder=portala;
+                        PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(portalholder),portalholder);
+                        portalholder.reloadAndSyncToClient();
 
                     }
                     if (!portalExists) {
@@ -190,18 +182,8 @@ public class PortalGun extends Item implements DyeableItem {
 
                         PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
 
-                        //changed to a kill respawn system to fix reloadAndSync bug
-                        //CustomPortalEntity portala;
-                        //portala = PortalAPI.copyPortal(portalholder,CustomPortalEntity.entityType);
-                        //portalholder.kill();
-                        //world.spawnEntity(portala);
-                        //portalholder = portala;
-                        // Currently causes very weird visual bugs (portals move oddly)
-                        // But is necessary for changes in axisW/axisH
                         otherPortal.reloadAndSyncToClient();
                         portalholder.reloadAndSyncToClient();
-                        //System.out.println(portalholder.getString());
-                        //System.out.println(portalholder.getPos());
 
                         world.playSound(null, portalholder.getPos().getX(), portalholder.getPos().getY(), portalholder.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
                     }
