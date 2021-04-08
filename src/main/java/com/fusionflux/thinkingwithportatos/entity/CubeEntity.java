@@ -1,6 +1,8 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
+import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
+import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.jme3.math.Vector3f;
@@ -28,6 +30,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
@@ -170,5 +174,15 @@ public class CubeEntity extends Entity implements EntityPhysicsElement {
     @Override
     public ElementRigidBody getRigidBody() {
         return this.RIGID_BODY;
+    }
+
+    @Override
+    public ActionResult interact(PlayerEntity user, Hand hand) {
+        if (user.getStackInHand(hand).getItem() instanceof PortalGun) {
+            if (ThinkingWithPortatos.getBodyGrabbingManager(user.world.isClient).tryGrab(user, this)){
+                return ActionResult.CONSUME;
+            }
+        }
+        return ActionResult.PASS;
     }
 }

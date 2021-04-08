@@ -7,6 +7,7 @@ import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRender
 import com.fusionflux.thinkingwithportatos.entity.*;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.qouteall.immersive_portals.render.PortalEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
@@ -59,6 +60,8 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
 
     private static final Identifier BASE_TEXTURE =new Identifier(ThinkingWithPortatos.MODID,"textures/gui/activeportalindicator.png");
 
+    public static final BodyGrabbingManager bodyGrabbingManager = new BodyGrabbingManager(false);
+
     @Override
     public void onInitializeClient() {
         registerClientPacketReceivers();
@@ -67,6 +70,7 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         ThinkingWithPortatosItems.registerRenderLayers();
         HudRenderCallback.EVENT.register(ThinkingWithPortatosClient::renderPortalLeft);
         HudRenderCallback.EVENT.register(ThinkingWithPortatosClient::renderPortalRight);
+        bodyGrabbingManager.init();
     }
 
     private void registerEntityRenderers() {

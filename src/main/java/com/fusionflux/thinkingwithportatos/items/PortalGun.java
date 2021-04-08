@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
+import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
@@ -45,64 +46,6 @@ public class PortalGun extends Item implements DyeableItem {
 
     public PortalGun(Settings settings) {
         super(settings);
-        PhysicsSpaceEvents.STEP.register(space -> {
-            int i = 0;
-            if (space.getWorld().isClient) {
-                i = 1;
-            }
-
-            if (holds[i] != null) {
-                PhysicsRigidBody holdBody = holds[i];
-                PlayerEntity user = player[i];
-                Vector3f pos = VectorHelper.vec3dToVector3f(user.getCameraPosVec(1.0f).add(user.getRotationVector().multiply(2f)));
-                holdBody.setPhysicsLocation(pos);
-            }
-        });
-    }
-
-
-    public static EmptyShape EMPTY_SHAPE = null;
-
-    public PlayerEntity[] player = {null, null};
-    public PhysicsRigidBody[] holds = {null, null};
-    public SixDofSpringJoint[] joints = {null, null};
-
-    @Override
-    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        if (entity instanceof EntityPhysicsElement) {
-            EntityPhysicsElement ent = (EntityPhysicsElement) entity;
-            ElementRigidBody body = ent.getRigidBody();
-            MinecraftSpace space = body.getSpace();
-
-            if (EMPTY_SHAPE == null) {
-                EMPTY_SHAPE = new EmptyShape(false);
-            }
-
-            int i = 0;
-            if (user.world.isClient) {
-                i = 1;
-            }
-
-            if (holds[i] == null) {
-                Vector3f pos = VectorHelper.vec3dToVector3f(user.getCameraPosVec(1.0f).add(user.getRotationVector().multiply(2f)));
-                PhysicsRigidBody holdBody = new PhysicsRigidBody(EMPTY_SHAPE, 0);
-                holdBody.setPhysicsLocation(pos);
-                space.addCollisionObject(holdBody);
-                SixDofSpringJoint joint = new SixDofSpringJoint(body, holdBody, Vector3f.ZERO, Vector3f.ZERO, Matrix3f.IDENTITY, Matrix3f.IDENTITY, false);
-                joint.setLinearLowerLimit(Vector3f.ZERO);
-                joint.setLinearUpperLimit(Vector3f.ZERO);
-                joint.setAngularLowerLimit(Vector3f.ZERO);
-                joint.setAngularUpperLimit(Vector3f.ZERO);
-                space.addJoint(joint);
-
-                holds[i] = holdBody;
-                joints[i] = joint;
-                player[i] = user;
-                return ActionResult.CONSUME;
-            }
-        }
-
-        return super.useOnEntity(stack, user, entity, hand);
     }
 
     @Override
@@ -125,20 +68,8 @@ public class PortalGun extends Item implements DyeableItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        int i = 0;
-        if (user.world.isClient) {
-            i = 1;
-        }
-        if (holds[i] != null) {
-            PhysicsRigidBody holdBody = holds[i];
-            SixDofSpringJoint joint = joints[i];
-            PhysicsSpace space = joint.getPhysicsSpace();
-
-            space.removeCollisionObject(holdBody);
-            space.removeJoint(joint);
-            holds[i] = null;
-            joints[i] = null;
-            return new TypedActionResult<>(ActionResult.CONSUME, user.getStackInHand(hand));
+        if (ThinkingWithPortatos.getBodyGrabbingManager(user.world.isClient).tryStopGrabbing(user)) {
+            return new TypedActionResult<>(ActionResult.SUCCESS, user.getStackInHand(hand));
         }
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", true);
