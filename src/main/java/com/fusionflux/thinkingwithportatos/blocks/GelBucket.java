@@ -8,7 +8,6 @@ import net.minecraft.util.ActionResult;
 
 public class GelBucket extends BlockItem {
 
-
     public GelBucket(Block block, Settings settings) {
         super(block, settings);
     }

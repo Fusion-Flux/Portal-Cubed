@@ -5,8 +5,10 @@ import com.fusionflux.thinkingwithportatos.client.ThinkingWithPortatosClient;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
 import com.fusionflux.thinkingwithportatos.entity.CubeEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
+import com.fusionflux.thinkingwithportatos.items.PaintGun;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.fusionflux.thinkingwithportatos.packet.ThinkingWithPortatosPackets;
 import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.jme3.math.Vector3f;
@@ -46,6 +48,7 @@ public class ThinkingWithPortatos implements ModInitializer {
         ThinkingWithPortatosBlocks.registerBlocks();
         ThinkingWithPortatosItems.registerItems();
         ThinkingWithPortatosEntities.registerEntities();
+        ThinkingWithPortatosPackets.receiveEntityPacket();
         ThinkingWithPortatosSounds.registerSounds();
         registerPacketListener();
         bodyGrabbingManager.init();

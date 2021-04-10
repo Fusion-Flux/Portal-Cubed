@@ -61,6 +61,8 @@ public class PortalGun extends Item implements DyeableItem {
         stack.getOrCreateTag().putBoolean("complementary", false);
         useImpl(world, user, stack, true);
     }
+//    @Override
+//    public onAttack
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
