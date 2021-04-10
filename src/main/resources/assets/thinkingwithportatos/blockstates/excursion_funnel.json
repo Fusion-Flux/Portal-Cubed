@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "thinkingwithportatos:block/excursion_funnel",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "thinkingwithportatos:block/excursion_funnel",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "thinkingwithportatos:block/excursion_funnel",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "thinkingwithportatos:block/excursion_funnel",
+      "y": 90
+    },
+    "facing=up": {
+      "model": "thinkingwithportatos:block/excursion_funnel",
+      "x": 90
+    },
+    "facing=down": {
+      "model": "thinkingwithportatos:block/excursion_funnel",
+      "x": 270
+    }
+  }
+}
