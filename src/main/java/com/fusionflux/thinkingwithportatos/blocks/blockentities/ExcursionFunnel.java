@@ -99,7 +99,7 @@ public class ExcursionFunnel extends BlockWithEntity {
             double zoffset = (entity.getPos().getZ()-pos.getZ())-.5;
             Vec3d direction = new Vec3d(0,0,0);
             direction=new Vec3d(state.get(Properties.FACING).getVector().getX(),state.get(Properties.FACING).getVector().getY(),state.get(Properties.FACING).getVector().getZ());
-            direction = direction.multiply(.3);
+            direction = direction.multiply(.1);
             if(direction.x!=0){
                 entity.setVelocity(direction.getX(),0-yoffset*.048,entity.getVelocity().getZ()-(zoffset/Math.abs(zoffset))*.01);
             }
