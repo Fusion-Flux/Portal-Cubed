@@ -32,7 +32,6 @@ public class PortalPlaceholderEntity extends Entity {
     public Vec3d axisW;
     public static final TrackedData<Quaternion> QUATERNION = DataTracker.registerData(PortalPlaceholderEntity.class, QuaternionHandler.QUATERNION_HANDLER);
     public static final TrackedData<Float> ROLL = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private Vec3d normal;
     public static final TrackedData<Integer> COLOR = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public Quaternion rotation = Quaternion.IDENTITY;
     public int color;
@@ -80,14 +79,6 @@ public class PortalPlaceholderEntity extends Entity {
 
     public void setRoll(Float roll) {
         this.getDataTracker().set(ROLL, roll);
-    }
-
-    public Vec3d getNormal() {
-        if (this.normal == null) {
-            this.normal = this.axisW.crossProduct(this.axisH).normalize();
-        }
-
-        return this.normal;
     }
 
 
