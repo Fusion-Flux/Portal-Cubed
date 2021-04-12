@@ -169,6 +169,7 @@ public class ThinkingWithPortatosBlocks {
         BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.HLB_EMITTER_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL_EMITTER, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.NEUROTOXIN_EMITTER, RenderLayer.getTranslucent());
     }
 }

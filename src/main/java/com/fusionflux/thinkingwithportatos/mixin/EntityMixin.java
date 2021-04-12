@@ -1,16 +1,27 @@
 package com.fusionflux.thinkingwithportatos.mixin;
 
+import com.fusionflux.thinkingwithportatos.accessor.EntityPortalsAccess;
 import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
+import com.fusionflux.thinkingwithportatos.blocks.RepulsionGel;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
+import com.google.common.collect.Lists;
+import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.EntityTrackingSoundInstance;
 import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAttachments, VelocityTransfer {
+public abstract class EntityMixin implements EntityAttachments, VelocityTransfer, EntityPortalsAccess {
 
     @Shadow
     public World world;
@@ -32,6 +43,8 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Unique
     private double maxFallSpeed = 0;
+    @Unique
+    private double repulsionGelSoundLimiter = 0;
     @Unique
     private double storeVelocity1 = 0;
     @Unique
@@ -48,6 +61,8 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     public void setMaxFallSpeed(double maxFallSpeed) {
         this.maxFallSpeed = maxFallSpeed;
     }
+
+
 
     @Shadow
     public abstract BlockPos getBlockPos();
@@ -83,7 +98,22 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Shadow public abstract EntityPose getPose();
 
+    @Shadow public boolean horizontalCollision;
+    @Shadow public boolean verticalCollision;
     private boolean recentlyTouchedPortal;
+
+    private List<Portal> portalList = Lists.newArrayList();
+
+    @Override
+    public List<Portal> getPortalList() {
+        return portalList;
+    }
+
+    @Override
+    public void addPortalToList(Portal portal) {
+        portalList.add(portal);
+    }
+
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
@@ -138,7 +168,46 @@ if(Math.abs(timeinblock-this.age)>20){
                 maxFallSpeed = maxFallSpeed - 1;
             }
         }
+        if (world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.REPULSION_GEL) {
+            BlockState state = world.getBlockState(this.getBlockPos());
+            Vec3d direction = new Vec3d(0, 0, 0);
+            if (this.verticalCollision) {
+            if (state.get(RepulsionGel.UP)) {
+                    direction = direction.add(0, -1, 0);
+                }
 
+                if (state.get(RepulsionGel.DOWN)) {
+                    direction = direction.add(0, 1, 0);
+                }
+
+            }
+            if (this.horizontalCollision) {
+                if (state.get(RepulsionGel.NORTH)) {
+                    direction = direction.add(0, 0, 1);
+                }
+
+                if (state.get(RepulsionGel.SOUTH)) {
+                    direction = direction.add(0, 0, -1);
+                }
+
+                if (state.get(RepulsionGel.EAST)) {
+                    direction = direction.add(-1, 0, 0);
+                }
+
+                if (state.get(RepulsionGel.WEST)) {
+                    direction = direction.add(1, 0, 0);
+                }
+                direction = direction.add(0, 0.45, 0);
+            }
+            if ( !direction.equals(new Vec3d(0, 0, 0))) {
+                if(world.isClient) {
+                    world.playSound((PlayerEntity) ((Entity) (Object) this), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                }else {
+                    world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                }
+                this.setVelocity(this.getVelocity().add(direction.x, direction.y, direction.z));
+            }
+        }
         if (world.isClient) {
             storeVelocity2 = storeVelocity1;
             storeVelocity1 = this.getVelocity().length();

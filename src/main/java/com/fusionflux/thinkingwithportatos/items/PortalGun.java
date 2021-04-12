@@ -2,7 +2,9 @@ package com.fusionflux.thinkingwithportatos.items;
 
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
+import com.fusionflux.thinkingwithportatos.accessor.EntityPortalsAccess;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
+import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
@@ -172,6 +174,7 @@ public class PortalGun extends Item implements DyeableItem {
                     if (!portalExists) {
                         portalholder.setString("null");
                         world.spawnEntity(portalholder);
+                        ((EntityPortalsAccess) user).addPortalToList(portalholder);
                     }
                     if (otherPortal != null) {
 

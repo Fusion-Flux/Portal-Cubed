@@ -5,7 +5,7 @@
 	"textures": {
 		"0": "thinkingwithportatos:block/sliding_door_frame",
 		"1": "thinkingwithportatos:block/door_top",
-		"particle": "thinkingwithportatos:block/door_top"
+		"particle": "thinkingwithportatos:block/sliding_door_particle_top"
 	},
 	"elements": [
 		{
