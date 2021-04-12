@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "thinkingwithportatos:portal_gun_casing"
+    },
+    {
+      "item": "thinkingwithportatos:portal_gun_frame"
+    },
+    {
+      "item": "thinkingwithportatos:mini_blackhole"
+    }
+  ],
+  "result": {
+    "item": "thinkingwithportatos:portal_gun",
+    "count": 1
+  }
+}
