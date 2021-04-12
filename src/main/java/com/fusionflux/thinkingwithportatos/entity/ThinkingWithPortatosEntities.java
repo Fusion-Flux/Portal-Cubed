@@ -29,6 +29,10 @@ public class ThinkingWithPortatosEntities {
             .dimensions(EntityDimensions.fixed(0.25F, 0.25F)) // dimensions in Minecraft units of the projectile
             .trackRangeBlocks(4).trackedUpdateRate(10) // necessary for all thrown projectiles (as it prevents it from breaking, lol)
             .build(); // VERY IMPORTANT DONT DELETE FOR THE LOVE OF GOD PSLSSSSSS
+    public static final EntityType<RepulsionGelOrbEntity> REPULSION_GEL_ORB = FabricEntityTypeBuilder.<RepulsionGelOrbEntity>create(SpawnGroup.MISC, RepulsionGelOrbEntity::new)
+            .dimensions(EntityDimensions.fixed(0.25F, 0.25F)) // dimensions in Minecraft units of the projectile
+            .trackRangeBlocks(4).trackedUpdateRate(10) // necessary for all thrown projectiles (as it prevents it from breaking, lol)
+            .build(); // VERY IMPORTANT DONT DELETE FOR THE LOVE OF GOD PSLSSSSSS
 
     private static <T extends Entity> void registerEntity(Consumer<EntityType<T>> setEntityType, Supplier<EntityType<T>> getEntityType, String id, EntityType.EntityFactory<T> constructor, Registry<EntityType<?>> registry) {
         EntityType<T> entityType = FabricEntityTypeBuilder.create(SpawnGroup.MISC, constructor).dimensions(new EntityDimensions(1.0F, 1.0F, true)).fireImmune().trackable(96, 20).build();
@@ -40,9 +44,11 @@ public class ThinkingWithPortatosEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "companion_cube"), COMPANION_CUBE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "portal_placeholder"), PORTAL_PLACEHOLDER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "gel_orb"), GEL_ORB);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "repulsion_gel_orb"), REPULSION_GEL_ORB);
         //Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID,"customportal"),CustomPortalEntity.entityType);
 
         EntityRendererRegistry.INSTANCE.register(GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
+        EntityRendererRegistry.INSTANCE.register(REPULSION_GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
 
         DefaultedRegistry<EntityType<?>> registry = Registry.ENTITY_TYPE;
         registerEntity((o) -> {

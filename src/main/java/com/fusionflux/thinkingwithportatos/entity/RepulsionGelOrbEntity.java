@@ -1,22 +1,15 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
-import com.fusionflux.thinkingwithportatos.blocks.Gel;
 import com.fusionflux.thinkingwithportatos.blocks.GelFlat;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.packet.EntitySpawnPacket;
 import com.fusionflux.thinkingwithportatos.packet.ThinkingWithPortatosPackets;
-
-import it.unimi.dsi.fastutil.Hash;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.BlazeEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,7 +17,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -35,7 +27,7 @@ import net.minecraft.world.World;
 
 import java.util.HashMap;
 
-public class GelOrbEntity extends ThrownItemEntity {
+public class RepulsionGelOrbEntity extends ThrownItemEntity {
     private static final HashMap<Vec3i, BooleanProperty> DIRECTIONS;
 
     static {
@@ -49,17 +41,17 @@ public class GelOrbEntity extends ThrownItemEntity {
         }};
     }
 
-    public GelOrbEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
+    public RepulsionGelOrbEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
     }
-    public GelOrbEntity(World world) {
-        super(ThinkingWithPortatosEntities.GEL_ORB, 0, 0, 0, world);
+    public RepulsionGelOrbEntity(World world) {
+        super(ThinkingWithPortatosEntities.REPULSION_GEL_ORB, 0, 0, 0, world);
     }
-    public GelOrbEntity(World world, LivingEntity owner) {
-        super(ThinkingWithPortatosEntities.GEL_ORB, owner, world);
+    public RepulsionGelOrbEntity(World world, LivingEntity owner) {
+        super(ThinkingWithPortatosEntities.REPULSION_GEL_ORB, owner, world);
     }
-    public GelOrbEntity(World world, double x, double y, double z) {
-        super(ThinkingWithPortatosEntities.GEL_ORB, x, y, z, world);
+    public RepulsionGelOrbEntity(World world, double x, double y, double z) {
+        super(ThinkingWithPortatosEntities.REPULSION_GEL_ORB, x, y, z, world);
     }
 
     @Override
@@ -103,7 +95,7 @@ public class GelOrbEntity extends ThrownItemEntity {
                 if(!this.world.getBlockState(hitPos.add(cardinalDir)).isAir()) {
                     BlockState initialState;
                     if (blockState.isAir()) {
-                        initialState = ThinkingWithPortatosBlocks.PROPULSION_GEL.getDefaultState();
+                        initialState = ThinkingWithPortatosBlocks.GEL.getDefaultState();
                     } else {
                         initialState = this.world.getBlockState(hitPos);
                     }

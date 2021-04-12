@@ -37,10 +37,6 @@ public class PaintGun extends Item {
         super(settings);
     }
 
-    protected LivingEntity player;
-    protected boolean using = false;
-    protected boolean usingLeft = false;
-
     public void useLeft(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", false);
@@ -53,27 +49,14 @@ public class PaintGun extends Item {
         }
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", true);
-        usingLeft = false;
-        using = true;
-        player = user;
+
+        if (!world.isClient) {
+            throwGel(world, user);
+        }
         return TypedActionResult.pass(stack);
     }
 
-    @Override
-    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        using = false;
-        return stack;
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (!world.isClient && selected && using) {
-
-            throwGel(world);
-        }
-    }
-
-    protected void throwGel(World world) {
+    protected void throwGel(World world, LivingEntity player) {
         GelOrbEntity gelOrbEntity = new GelOrbEntity(world, player);
         gelOrbEntity.setItem(new ItemStack(ThinkingWithPortatosItems.GEL_ORB));
         gelOrbEntity.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 0F);
