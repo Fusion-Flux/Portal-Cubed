@@ -1,14 +1,21 @@
 package com.fusionflux.thinkingwithportatos.mixin;
 
+import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
+import com.fusionflux.thinkingwithportatos.items.PortalGun;
+import com.fusionflux.thinkingwithportatos.physics.Grabbable;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -19,25 +26,32 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAttachments, VelocityTransfer {
+public abstract class EntityMixin implements EntityAttachments, VelocityTransfer, Grabbable {
+    @Unique
+    private boolean grabbed;
 
-    @Shadow
-    public World world;
-
+    @Unique
     private int timeinblock = 1;
 
     @Unique
     private double maxFallSpeed = 0;
+
     @Unique
     private double storeVelocity1 = 0;
+
     @Unique
     private double storeVelocity2 = 0;
+
     @Unique
     private double speedTransformApply = 0;
+
+    @Unique
+    private boolean recentlyTouchedPortal;
 
     @Override
     public double getMaxFallSpeed() {
@@ -48,6 +62,9 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     public void setMaxFallSpeed(double maxFallSpeed) {
         this.maxFallSpeed = maxFallSpeed;
     }
+
+    @Shadow
+    public World world;
 
     @Shadow
     public abstract BlockPos getBlockPos();
@@ -83,54 +100,59 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Shadow public abstract EntityPose getPose();
 
-    private boolean recentlyTouchedPortal;
-
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
         Vec3d expand = this.getVelocity().multiply(10);
         Box streachedBB = this.getBoundingBox().stretch(expand);
 
         List<Entity> globalPortals = this.world.getEntitiesByClass(CustomPortalEntity.class, streachedBB, null);
-            for (Entity globalPortal : globalPortals) {
-                if (streachedBB.intersects(globalPortal.getBoundingBox())) {
-                    double offsetX=0;
-                    double offsetZ=0;
-                    double offsetY=0;
-                    if(Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().x)||Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().x)) {
-                        offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x)*.02;
-                    }
-                    if(Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().z)||Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().z)) {
-                        offsetZ = (this.getBoundingBox().getCenter().z - globalPortal.getBoundingBox().getCenter().z)*.02;
-                    }
-                    if(Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().y)||Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().y)) {
-                        offsetY = (this.getBoundingBox().getCenter().y - globalPortal.getBoundingBox().getCenter().y)*.02;
-                    }
-                    if(!this.getBoundingBox().intersects(globalPortal.getBoundingBox()))
-                    this.setVelocity(this.getVelocity().add(-offsetX,-offsetY,-offsetZ));
+
+        for (Entity globalPortal : globalPortals) {
+            if (streachedBB.intersects(globalPortal.getBoundingBox())) {
+                double offsetX=0;
+                double offsetZ=0;
+                double offsetY=0;
+                if(Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().x)||Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().x)) {
+                    offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x)*.02;
                 }
+                if(Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().z)||Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().z)) {
+                    offsetZ = (this.getBoundingBox().getCenter().z - globalPortal.getBoundingBox().getCenter().z)*.02;
+                }
+                if(Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().y)||Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().y)) {
+                    offsetY = (this.getBoundingBox().getCenter().y - globalPortal.getBoundingBox().getCenter().y)*.02;
+                }
+                if(!this.getBoundingBox().intersects(globalPortal.getBoundingBox()))
+                this.setVelocity(this.getVelocity().add(-offsetX,-offsetY,-offsetZ));
             }
+        }
+
         if (!world.isClient) {
-if(world.getBlockState(new BlockPos(this.getX(),this.getY()+this.getEyeHeight(this.getPose()),this.getZ()))==ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK.getDefaultState()){
-if(Math.abs(timeinblock-this.age)>20){
-    this.damage(DamageSource.DROWN,2);
-}
-}else{
-    timeinblock=this.age;
-}
+            if(world.getBlockState(new BlockPos(this.getX(),this.getY()+this.getEyeHeight(this.getPose()),this.getZ())) == ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK.getDefaultState()) {
+                if(Math.abs(timeinblock-this.age)>20) {
+                    this.damage(DamageSource.DROWN,2);
+                }
+            } else {
+                timeinblock=this.age;
+            }
+
             List<Entity> portalSound = this.world.getEntitiesByClass(CustomPortalEntity.class, this.getBoundingBox().expand(2), null);
+
             for (Entity globalportal : portalSound) {
                 CustomPortalEntity collidingportal = (CustomPortalEntity) globalportal;
                 collidingportal.getActive();
+
                 if (CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this))&&collidingportal.getActive() && !recentlyTouchedPortal) {
                     world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
                     recentlyTouchedPortal = true;
                 }
+
                 if(!CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this))&&collidingportal.getActive()&&recentlyTouchedPortal){
                     world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), ThinkingWithPortatosSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
                     recentlyTouchedPortal = false;
                 }
             }
         }
+
         if (maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.PROPULSION_GEL) {
             maxFallSpeed = 10;
         } else {
@@ -151,7 +173,6 @@ if(Math.abs(timeinblock-this.age)>20){
         }
 
         speedTransformApply = Math.max(storeVelocity1, storeVelocity2);
-
     }
 
     @Override
@@ -172,4 +193,37 @@ if(Math.abs(timeinblock-this.age)>20){
         this.standingEyeHeight = this.getEyeHeight(entityPose2, entityDimensions3) - 1;
     }
     ----------*/
+
+    @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
+    public void interact(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> ci) {
+        if (!world.isClient() && player.getMainHandStack().getItem() instanceof PortalGun && !isGrabbed()) {
+            if (ThinkingWithPortatos.getBodyGrabbingManager(world.isClient).tryGrab(player, (Entity) (Object) this)) {
+                ci.setReturnValue(ActionResult.SUCCESS);
+            }
+        }
+    }
+
+    @Inject(method = "fall", at = @At("HEAD"), cancellable = true)
+    protected void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition, CallbackInfo ci) {
+        if (isGrabbed()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "move", at = @At("HEAD"), cancellable = true)
+    public void move(MovementType type, Vec3d movement, CallbackInfo ci) {
+        if (isGrabbed()) {
+            ci.cancel();
+        }
+    }
+
+    @Override
+    public void setGrabbed(boolean grabbed) {
+        this.grabbed = grabbed;
+    }
+
+    @Override
+    public boolean isGrabbed() {
+        return this.grabbed;
+    }
 }

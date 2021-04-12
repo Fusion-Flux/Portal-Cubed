@@ -6,23 +6,9 @@ import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
-import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.collision.shapes.EmptyShape;
-import com.jme3.bullet.joints.SixDofSpringJoint;
-import com.jme3.bullet.objects.PhysicsRigidBody;
-import com.jme3.math.Matrix3f;
-import com.jme3.math.Vector3f;
 import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.portal.PortalManipulation;
-import dev.lazurite.rayon.core.api.event.PhysicsSpaceEvents;
-import dev.lazurite.rayon.core.impl.physics.space.MinecraftSpace;
-import dev.lazurite.rayon.core.impl.physics.space.body.ElementRigidBody;
-
-import dev.lazurite.rayon.core.impl.util.math.VectorHelper;
-import dev.lazurite.rayon.entity.api.EntityPhysicsElement;
-
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
@@ -40,7 +26,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-
 
 public class PortalGun extends Item implements DyeableItem {
 
@@ -61,21 +46,19 @@ public class PortalGun extends Item implements DyeableItem {
         stack.getOrCreateTag().putBoolean("complementary", false);
         useImpl(world, user, stack, true);
     }
-//    @Override
-//    public onAttack
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (ThinkingWithPortatos.getBodyGrabbingManager(user.world.isClient).tryStopGrabbing(user)) {
+        if (!world.isClient() && ThinkingWithPortatos.getBodyGrabbingManager(false).tryStopGrabbing(user)) {
             return new TypedActionResult<>(ActionResult.SUCCESS, user.getStackInHand(hand));
         }
+
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", true);
         return useImpl(world, user, stack, false);
     }
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, ItemStack stack, boolean leftClick) {
-
             if (!world.isClient) {
                 CompoundTag tag = stack.getOrCreateTag();
 
@@ -100,12 +83,12 @@ public class PortalGun extends Item implements DyeableItem {
                 if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
                     portalholder = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
                     if (portalholder == null) {
-                        portalholder = CustomPortalEntity.entityType.create(world);
+                        portalholder = ThinkingWithPortatosEntities.CUSTOM_PORTAL.create(world);
                     } else {
                         portalExists = true;
                     }
                 } else {
-                    portalholder = CustomPortalEntity.entityType.create(world);
+                    portalholder = ThinkingWithPortatosEntities.CUSTOM_PORTAL.create(world);
                 }
 
                 CustomPortalEntity otherPortal;
