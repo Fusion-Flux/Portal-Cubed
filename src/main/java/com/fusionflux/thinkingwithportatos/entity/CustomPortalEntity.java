@@ -164,6 +164,7 @@ public class CustomPortalEntity extends Portal {
                 }
             }
         }
+        super.tick();
     }
     static {
         clientPortalTickSignal = new SignalArged();

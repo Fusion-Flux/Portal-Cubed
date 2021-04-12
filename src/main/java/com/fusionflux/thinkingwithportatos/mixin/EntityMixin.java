@@ -6,6 +6,7 @@ import com.fusionflux.thinkingwithportatos.blocks.RepulsionGel;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
+import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.google.common.collect.Lists;
 import com.qouteall.immersive_portals.portal.Portal;
@@ -17,6 +18,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -32,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import java.util.UUID;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, VelocityTransfer, EntityPortalsAccess {
@@ -100,23 +103,47 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Shadow public boolean horizontalCollision;
     @Shadow public boolean verticalCollision;
+
+    @Shadow public abstract boolean isAlive();
+
     private boolean recentlyTouchedPortal;
 
-    private List<Portal> portalList = Lists.newArrayList();
+    private List<CustomPortalEntity> portalList = Lists.newArrayList();
 
     @Override
-    public List<Portal> getPortalList() {
+    public List<CustomPortalEntity> getPortalList() {
         return portalList;
     }
 
     @Override
-    public void addPortalToList(Portal portal) {
+    public void addPortalToList(CustomPortalEntity portal) {
         portalList.add(portal);
     }
 
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
+
+        if(!world.isClient) {
+            if (!this.isAlive()) {
+                for (CustomPortalEntity checkedportal : portalList) {
+                    if (checkedportal != null) {
+                        if(!checkedportal.getOutline().equals("null")) {
+                            PortalPlaceholderEntity portalOutline;
+                            portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(checkedportal.getOutline()));
+                            assert portalOutline != null;
+                            if(portalOutline!=null) {
+                                portalOutline.kill();
+                            }
+                        }
+                        world.playSound(null, checkedportal.getPos().getX(), checkedportal.getPos().getY(), checkedportal.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
+                        checkedportal.kill();
+                        checkedportal.remove();
+                    }
+                }
+            }
+        }
+
         Vec3d expand = this.getVelocity().multiply(10);
         Box streachedBB = this.getBoundingBox().stretch(expand);
 
