@@ -75,8 +75,6 @@ public class ExcursionFunnel extends BlockWithEntity {
         return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }
 
-
-
     @Override
     @Environment(EnvType.CLIENT)
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
@@ -87,28 +85,27 @@ public class ExcursionFunnel extends BlockWithEntity {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        this.addCollisionEffects(world, entity,pos);
+        if(world.isClient()) {
+            addCollisionEffects(world, entity, pos);
+        }
     }
 
-
-    private void addCollisionEffects(World world, Entity entity,BlockPos pos) {
-        if(world.isClient()){
-            BlockState state = world.getBlockState(pos);
-            double xoffset = (entity.getPos().getX()-pos.getX())-.5;
-            double yoffset = (entity.getPos().getY()-pos.getY())-1.25;
-            double zoffset = (entity.getPos().getZ()-pos.getZ())-.5;
-            Vec3d direction = new Vec3d(0,0,0);
-            direction=new Vec3d(state.get(Properties.FACING).getVector().getX(),state.get(Properties.FACING).getVector().getY(),state.get(Properties.FACING).getVector().getZ());
-            direction = direction.multiply(.1);
-            if(direction.x!=0){
-                entity.setVelocity(direction.getX(),0-yoffset*.048,entity.getVelocity().getZ()-(zoffset/Math.abs(zoffset))*.01);
-            }
-            if(direction.y!=0){
-                entity.setVelocity(entity.getVelocity().getX()-(xoffset/Math.abs(xoffset))*.01,0.08+direction.getY(),entity.getVelocity().getZ()-(zoffset/Math.abs(zoffset))*.01);
-            }
-            if(direction.z!=0){
-                entity.setVelocity(entity.getVelocity().getX()-(xoffset/Math.abs(xoffset))*.01,0-yoffset*.048,direction.getZ());
-            }
+    static void addCollisionEffects(World world, Entity entity, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
+        double xoffset = (entity.getPos().getX()-pos.getX())-.5;
+        double yoffset = (entity.getPos().getY()-pos.getY())-1.25;
+        double zoffset = (entity.getPos().getZ()-pos.getZ())-.5;
+        Vec3d direction = new Vec3d(0,0,0);
+        direction=new Vec3d(state.get(Properties.FACING).getVector().getX(),state.get(Properties.FACING).getVector().getY(),state.get(Properties.FACING).getVector().getZ());
+        direction = direction.multiply(.1);
+        if(direction.x!=0){
+            entity.setVelocity(direction.getX(),0-yoffset*.048,entity.getVelocity().getZ()-(zoffset/Math.abs(zoffset))*.01);
+        }
+        if(direction.y!=0){
+            entity.setVelocity(entity.getVelocity().getX()-(xoffset/Math.abs(xoffset))*.01,0.08+direction.getY(),entity.getVelocity().getZ()-(zoffset/Math.abs(zoffset))*.01);
+        }
+        if(direction.z!=0){
+            entity.setVelocity(entity.getVelocity().getX()-(xoffset/Math.abs(xoffset))*.01,0-yoffset*.048,direction.getZ());
         }
     }
 

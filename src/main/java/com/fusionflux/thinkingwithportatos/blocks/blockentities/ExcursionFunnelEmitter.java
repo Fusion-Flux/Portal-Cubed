@@ -14,7 +14,6 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -136,29 +135,8 @@ public class ExcursionFunnelEmitter extends BlockWithEntity {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        this.addCollisionEffects(world, entity,pos);
-    }
-
-
-    private void addCollisionEffects(World world, Entity entity,BlockPos pos) {
-        if(world.isClient() && world.getBlockState(pos).get(Properties.POWERED)){
-            BlockState state = world.getBlockState(pos);
-            double xoffset = (entity.getPos().getX()-pos.getX())-.5;
-            double yoffset = (entity.getPos().getY()-pos.getY())-1.25;
-            double zoffset = (entity.getPos().getZ()-pos.getZ())-.5;
-            Vec3d direction = new Vec3d(0,0,0);
-            direction=new Vec3d(state.get(Properties.FACING).getVector().getX(),state.get(Properties.FACING).getVector().getY(),state.get(Properties.FACING).getVector().getZ());
-            direction = direction.multiply(.1);
-            if(direction.x!=0){
-                entity.setVelocity(direction.getX(),0-yoffset*.048,entity.getVelocity().getZ()-(zoffset/Math.abs(zoffset))*.01);
-            }
-            if(direction.y!=0){
-                entity.setVelocity(entity.getVelocity().getX()-(xoffset/Math.abs(xoffset))*.01,0.08+direction.getY(),entity.getVelocity().getZ()-(zoffset/Math.abs(zoffset))*.01);
-            }
-            if(direction.z!=0){
-                entity.setVelocity(entity.getVelocity().getX()-(xoffset/Math.abs(xoffset))*.01,0-yoffset*.048,direction.getZ());
-            }
+        if(world.isClient() && world.getBlockState(pos).get(Properties.POWERED)) {
+            ExcursionFunnel.addCollisionEffects(world, entity, pos);
         }
     }
-
 }
