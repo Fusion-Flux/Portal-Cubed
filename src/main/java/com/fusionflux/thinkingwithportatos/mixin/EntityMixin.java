@@ -108,13 +108,8 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Shadow public abstract boolean isAlive();
 
- main
-
     @Shadow public abstract boolean isSneaking();
 
-    private boolean recentlyTouchedPortal;
-
- main
     private List<CustomPortalEntity> portalList = Lists.newArrayList();
 
     @Override
@@ -129,7 +124,6 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
- main
         Vec3d expand = this.getVelocity().multiply(10);
         Box streachedBB = this.getBoundingBox().stretch(expand);
 
