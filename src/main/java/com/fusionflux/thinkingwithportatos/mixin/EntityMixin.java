@@ -257,7 +257,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
             }
             if (!this.isSneaking()&& !direction.equals(new Vec3d(0, 0, 0))) {
                 if(world.isClient) {
-                    world.playSound((PlayerEntity) ((Entity) (Object) this), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    world.playSound((PlayerEntity) (Object) this, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
                 }else {
                     world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
                 }
