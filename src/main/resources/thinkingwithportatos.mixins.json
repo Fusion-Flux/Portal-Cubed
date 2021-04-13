@@ -9,6 +9,7 @@
     "PlayerEntityMixin"
   ],
   "client": [
+    "client.ClientPlayNetworkHandlerMixin",
     "client.MinecraftClientMixin"
   ],
   "injectors": {

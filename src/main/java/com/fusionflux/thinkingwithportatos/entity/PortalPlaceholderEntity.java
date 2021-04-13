@@ -1,15 +1,12 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
 import com.fusionflux.thinkingwithportatos.accessor.QuaternionHandler;
+import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
 import com.qouteall.immersive_portals.Helper;
-import com.qouteall.immersive_portals.my_util.DQuaternion;
-import com.qouteall.immersive_portals.teleportation.CollisionHelper;
-import dev.lazurite.rayon.core.impl.util.math.QuaternionHelper;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -18,29 +15,21 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
-import static com.fusionflux.thinkingwithportatos.ThinkingWithPortatos.id;
-
 public class PortalPlaceholderEntity extends Entity {
-
-    public static final Identifier SPAWN_PACKET = id("portal_placeholder_spawn");
     public Vec3d axisH;
     public Vec3d axisW;
     public static final TrackedData<Quaternion> QUATERNION = DataTracker.registerData(PortalPlaceholderEntity.class, QuaternionHandler.QUATERNION_HANDLER);
     public static final TrackedData<Float> ROLL = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public static final TrackedData<Integer> COLOR = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public Quaternion rotation = Quaternion.IDENTITY;
-    public int color;
-    //public int color;
 
     public PortalPlaceholderEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
     }
-
 
     @Override
     protected void initDataTracker() {
@@ -55,7 +44,6 @@ public class PortalPlaceholderEntity extends Entity {
         this.setRoll(compoundTag.getFloat("roll"));
         this.axisH = Helper.getVec3d(compoundTag, "axisH").normalize();
         this.axisW = Helper.getVec3d(compoundTag, "axisW").normalize();
-
     }
 
     @Override
@@ -64,10 +52,7 @@ public class PortalPlaceholderEntity extends Entity {
         compoundTag.putFloat("roll", this.getRoll());
         Helper.putVec3d(compoundTag, "axisH", this.axisH);
         Helper.putVec3d(compoundTag, "axisW", this.axisW);
-
     }
-
-
 
     public Quaternion getRotation() {
         return getDataTracker().get(QUATERNION);
@@ -132,7 +117,7 @@ public class PortalPlaceholderEntity extends Entity {
                 .writeByte(MathHelper.floor(this.pitch * 256.0F / 360.0F))
                 .writeByte(MathHelper.floor(this.yaw * 256.0F / 360.0F));
 
-        return ServerPlayNetworking.createS2CPacket(SPAWN_PACKET, packet);
+        return ServerPlayNetworking.createS2CPacket(ThinkingWithPortatosClientPackets.SPAWN_PACKET, packet);
     }
 
 

@@ -9,8 +9,6 @@ import com.qouteall.immersive_portals.my_util.SignalBiArged;
 import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.portal.PortalManipulation;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -20,15 +18,11 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-import virtuoel.pehkui.mixin.compat116plus.AbstractBlockStateMixin;
 
 import java.util.UUID;
 
 public class CustomPortalEntity extends Portal {
-
-    public static EntityType<CustomPortalEntity> entityType;
     public static final SignalArged<CustomPortalEntity> clientPortalTickSignal;
     public static final SignalArged<CustomPortalEntity> serverPortalTickSignal;
     public static final SignalArged<CustomPortalEntity> portalCacheUpdateSignal;
@@ -77,6 +71,8 @@ public class CustomPortalEntity extends Portal {
 
     @Override
     public void tick() {
+        super.tick();
+
         if (this.world.isClient) {
             clientPortalTickSignal.emit(this);
         } else {
@@ -172,6 +168,7 @@ public class CustomPortalEntity extends Portal {
         }
         super.tick();
     }
+
     static {
         clientPortalTickSignal = new SignalArged();
         serverPortalTickSignal = new SignalArged();

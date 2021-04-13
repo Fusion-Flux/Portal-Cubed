@@ -1,6 +1,5 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
-import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import net.minecraft.client.MinecraftClient;
@@ -8,15 +7,12 @@ import net.minecraft.client.sound.EntityTrackingSoundInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 public class CompanionCubeEntity extends CubeEntity {
-    public static final Identifier SPAWN_PACKET = new Identifier(ThinkingWithPortatos.MODID, "companion_cube");
     private float storedDamage = 0.0F;
     private int t = 1760;
-
 
     public CompanionCubeEntity(EntityType<?> entityType, World world) {
         super(entityType, world);

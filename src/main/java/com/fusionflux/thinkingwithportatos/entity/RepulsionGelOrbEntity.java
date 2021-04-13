@@ -2,8 +2,8 @@ package com.fusionflux.thinkingwithportatos.entity;
 
 import com.fusionflux.thinkingwithportatos.blocks.GelFlat;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
+import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
 import com.fusionflux.thinkingwithportatos.packet.EntitySpawnPacket;
-import com.fusionflux.thinkingwithportatos.packet.ThinkingWithPortatosPackets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -114,6 +114,6 @@ public class RepulsionGelOrbEntity extends ThrownItemEntity {
 
     @Override
     public Packet createSpawnPacket() {
-        return EntitySpawnPacket.create(this, ThinkingWithPortatosPackets.SPAWN_PACKET);
+        return EntitySpawnPacket.create(this, ThinkingWithPortatosClientPackets.SPAWN_PACKET);
     }
 }

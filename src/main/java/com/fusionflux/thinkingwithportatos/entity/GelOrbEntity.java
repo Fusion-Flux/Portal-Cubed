@@ -1,22 +1,16 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
-import com.fusionflux.thinkingwithportatos.blocks.Gel;
 import com.fusionflux.thinkingwithportatos.blocks.GelFlat;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.packet.EntitySpawnPacket;
-import com.fusionflux.thinkingwithportatos.packet.ThinkingWithPortatosPackets;
+import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
 
-import it.unimi.dsi.fastutil.Hash;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.BlazeEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,7 +18,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -122,6 +115,6 @@ public class GelOrbEntity extends ThrownItemEntity {
 
     @Override
     public Packet createSpawnPacket() {
-        return EntitySpawnPacket.create(this, ThinkingWithPortatosPackets.SPAWN_PACKET);
+        return EntitySpawnPacket.create(this, ThinkingWithPortatosClientPackets.SPAWN_PACKET);
     }
 }

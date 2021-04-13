@@ -2,24 +2,20 @@ package com.fusionflux.thinkingwithportatos.mixin.client;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.fusionflux.thinkingwithportatos.packet.ThinkingWithPortatosServerPackets;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Objects;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
@@ -33,10 +29,6 @@ public abstract class MinecraftClientMixin {
     public MinecraftClientMixin() {
         throw new AssertionError(ThinkingWithPortatos.MODID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
     }
-
-    @Shadow
-    @Nullable
-    public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     /**
      * Prevents block breaking on player left click while holding a portal gun as left click functionality is replaced.
@@ -75,8 +67,7 @@ public abstract class MinecraftClientMixin {
             if (hand != null) {
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                 buf.writeEnumConstant(hand);
-                Packet<?> packet = ClientPlayNetworking.createC2SPacket(new Identifier(ThinkingWithPortatos.MODID, "ptl_lft_click"), buf);
-                Objects.requireNonNull(this.getNetworkHandler()).sendPacket(packet);
+                ClientPlayNetworking.send(ThinkingWithPortatosServerPackets.PORTAL_LEFT_CLICK, buf);
                 ci.cancel();
             }
         }
