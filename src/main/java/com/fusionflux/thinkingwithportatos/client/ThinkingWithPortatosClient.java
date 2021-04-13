@@ -3,6 +3,7 @@ package com.fusionflux.thinkingwithportatos.client;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.client.key.GrabKeyBinding;
 import com.fusionflux.thinkingwithportatos.client.render.CubeEntityRenderer;
+import com.fusionflux.thinkingwithportatos.client.render.PhysicsFallingBlockEntityRenderer;
 import com.fusionflux.thinkingwithportatos.client.render.PortalHud;
 import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRenderer;
 import com.fusionflux.thinkingwithportatos.entity.*;
@@ -47,6 +48,7 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, (dispatcher, context) -> new PortalPlaceholderRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.CUSTOM_PORTAL, (dispatcher, context) -> new PortalEntityRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer<GelOrbEntity>(dispatcher, context.getItemRenderer()));
+        EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.PHYSICS_FALLING_BLOCK, (dispatcher, context) -> new PhysicsFallingBlockEntityRenderer(dispatcher));
     }
 
     public static void registerBlockRenderLayers() {

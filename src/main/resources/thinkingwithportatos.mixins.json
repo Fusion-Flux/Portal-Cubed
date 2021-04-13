@@ -6,12 +6,10 @@
   "mixins": [
     "ArmorItemMixin",
     "EntityMixin",
-    "FallingBlockEntityMixin",
     "PlayerEntityMixin"
   ],
   "client": [
     "client.ClientPlayNetworkHandlerMixin",
-    "client.FallingBlockEntityRendererMixin",
     "client.MinecraftClientMixin"
   ],
   "injectors": {

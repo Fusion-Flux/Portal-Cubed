@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.packet;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
+import com.fusionflux.thinkingwithportatos.entity.PhysicsFallingBlockEntity;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -51,8 +52,7 @@ public class ThinkingWithPortatosServerPackets {
                             BlockState state = player.world.getBlockState(pos);
 
                             if (!state.getBlock().canMobSpawnInside() && player.world.getBlockEntity(pos) == null) {
-                                FallingBlockEntity fallingBlock = new FallingBlockEntity(player.world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
-                                fallingBlock.timeFalling = 1;
+                                PhysicsFallingBlockEntity fallingBlock = new PhysicsFallingBlockEntity(player.world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
                                 player.world.removeBlock(pos, false);
                                 player.world.spawnEntity(fallingBlock);
                                 ThinkingWithPortatos.getBodyGrabbingManager(false).tryGrab(player, fallingBlock);
