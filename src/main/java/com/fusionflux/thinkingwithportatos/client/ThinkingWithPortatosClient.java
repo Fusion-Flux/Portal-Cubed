@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.client;
 
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
+import com.fusionflux.thinkingwithportatos.client.key.GrabKeyBinding;
 import com.fusionflux.thinkingwithportatos.client.render.CubeEntityRenderer;
 import com.fusionflux.thinkingwithportatos.client.render.PortalHud;
 import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRenderer;
@@ -9,6 +10,7 @@ import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
 import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
 import com.qouteall.immersive_portals.render.PortalEntityRenderer;
+import dev.lazurite.rayon.core.impl.util.event.BetterClientLifecycleEvents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,7 +33,10 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         registerItemRenderLayers();
         registerBlockRenderLayers();
         ThinkingWithPortatosClientPackets.registerPackets();
-        ClientTickEvents.START_CLIENT_TICK.register(client -> bodyGrabbingManager.tick());
+        GrabKeyBinding.register();
+
+        BetterClientLifecycleEvents.DISCONNECT.register((client, world) -> bodyGrabbingManager.grabInstances.clear());
+        ClientTickEvents.END_CLIENT_TICK.register(client -> bodyGrabbingManager.tick());
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
     }

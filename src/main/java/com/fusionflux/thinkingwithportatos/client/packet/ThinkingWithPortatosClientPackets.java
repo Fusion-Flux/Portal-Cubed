@@ -78,7 +78,7 @@ public class ThinkingWithPortatosClientPackets {
                 Entity grabber = client.world.getEntityById(grabberId);
 
                 if (grabber instanceof PlayerEntity) {
-                    ThinkingWithPortatos.getBodyGrabbingManager(true).tryStopGrabbing((PlayerEntity) grabber);
+                    ThinkingWithPortatos.getBodyGrabbingManager(true).tryUngrab((PlayerEntity) grabber);
                 }
             }
         });

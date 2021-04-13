@@ -5,17 +5,12 @@ import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
-import com.fusionflux.thinkingwithportatos.items.PortalGun;
-import com.fusionflux.thinkingwithportatos.physics.Grabbable;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -31,10 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAttachments, VelocityTransfer, Grabbable {
-    @Unique
-    private boolean grabbed;
-
+public abstract class EntityMixin implements EntityAttachments, VelocityTransfer {
     @Unique
     private int timeinblock = 1;
 
@@ -194,36 +186,24 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     }
     ----------*/
 
-    @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
-    public void interact(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> ci) {
-        if (!world.isClient() && player.getMainHandStack().getItem() instanceof PortalGun && !isGrabbed()) {
-            if (ThinkingWithPortatos.getBodyGrabbingManager(world.isClient).tryGrab(player, (Entity) (Object) this)) {
-                ci.setReturnValue(ActionResult.SUCCESS);
-            }
-        }
-    }
-
     @Inject(method = "fall", at = @At("HEAD"), cancellable = true)
     protected void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition, CallbackInfo ci) {
-        if (isGrabbed()) {
+        if (ThinkingWithPortatos.getBodyGrabbingManager(world.isClient).isGrabbed((Entity) (Object) this)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "move", at = @At("HEAD"), cancellable = true)
     public void move(MovementType type, Vec3d movement, CallbackInfo ci) {
-        if (isGrabbed()) {
+        if (ThinkingWithPortatos.getBodyGrabbingManager(world.isClient).isGrabbed((Entity) (Object) this)) {
             ci.cancel();
         }
     }
 
-    @Override
-    public void setGrabbed(boolean grabbed) {
-        this.grabbed = grabbed;
-    }
-
-    @Override
-    public boolean isGrabbed() {
-        return this.grabbed;
+    @Inject(method = "getVelocity", at = @At("HEAD"), cancellable = true)
+    public void getVelocity(CallbackInfoReturnable<Vec3d> ci) {
+        if (ThinkingWithPortatos.getBodyGrabbingManager(world.isClient).isGrabbed((Entity) (Object) this)) {
+            ci.setReturnValue(Vec3d.ZERO);
+        }
     }
 }

@@ -62,5 +62,8 @@
   "text.autoconfig.thinkingwithportatos.option.enabled.enableGels": "Enable Gels",
   "text.autoconfig.thinkingwithportatos.option.enabled.enableLongFallBoots": "Enable Long Fall Boots",
   "text.autoconfig.thinkingwithportatos.option.enabled.enablePortal2Blocks": "Enable Portal Pannels",
-  "text.autoconfig.thinkingwithportatos.option.enabled.enableHLB": "Enable Hardlight Bridges"
+  "text.autoconfig.thinkingwithportatos.option.enabled.enableHLB": "Enable Hardlight Bridges",
+
+  "key.thinkingwithportatos.category" : "Thinking With Portatos",
+  "key.thinkingwithportatos.grab" : "Grab"
 }

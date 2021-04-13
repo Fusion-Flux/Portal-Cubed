@@ -1,7 +1,6 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
-import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
@@ -16,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
@@ -49,10 +47,6 @@ public class PortalGun extends Item implements DyeableItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient() && ThinkingWithPortatos.getBodyGrabbingManager(false).tryStopGrabbing(user)) {
-            return new TypedActionResult<>(ActionResult.SUCCESS, user.getStackInHand(hand));
-        }
-
         ItemStack stack = user.getStackInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", true);
         return useImpl(world, user, stack, false);

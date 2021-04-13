@@ -12,60 +12,64 @@ import dev.lazurite.rayon.core.impl.physics.space.MinecraftSpace;
 import dev.lazurite.rayon.core.impl.util.math.VectorHelper;
 import dev.lazurite.rayon.entity.api.EntityPhysicsElement;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BodyGrabbingManager {
     public static EmptyShape EMPTY_SHAPE = null;
     public final boolean isServer;
 
-    public HashMap<PlayerEntity, GrabInstance> grabInstances = new HashMap<>(); // TODO intToObjectMap?
+    public Map<UUID, GrabInstance> grabInstances = new ConcurrentHashMap<>();
 
     public BodyGrabbingManager(boolean isServer) {
         this.isServer = isServer;
+        PhysicsSpaceEvents.STEP.register(this::step);
+    }
 
-        PhysicsSpaceEvents.STEP.register(space -> {
-            if (EMPTY_SHAPE == null) {
-                EMPTY_SHAPE = new EmptyShape(false);
-            }
+    public void step(MinecraftSpace space) {
+        if (EMPTY_SHAPE == null) {
+            EMPTY_SHAPE = new EmptyShape(false);
+        }
 
-            for (GrabInstance grabInstance : grabInstances.values()) {
-                PlayerEntity grabber = grabInstance.grabber;
-                Vector3f pos = VectorHelper.vec3dToVector3f(grabber.getCameraPosVec(1.0f).add(grabber.getRotationVector().multiply(2f)));
-                grabInstance.grabPoint.setPhysicsLocation(pos);
+        grabInstances.values().forEach(grabInstance ->
+            grabInstance.grabPoint.setPhysicsLocation(VectorHelper.vec3dToVector3f(
+                    grabInstance.player.getCameraPosVec(1.0f).add(grabInstance.player.getRotationVector().multiply(2f)))));
+    }
+
+    public void tick() {
+        grabInstances.values().forEach(grabInstance -> {
+            if (grabInstance.grabbedBody instanceof EntityRigidBody) {
+                Vector3f location = grabInstance.grabbedBody.getPhysicsLocation(new Vector3f());
+                grabInstance.grabbedEntity.updatePosition(location.x, location.y - grabInstance.grabbedEntity.getBoundingBox().getYLength() / 2.0, location.z);
             }
         });
     }
 
-    public void tick() {
-        for (GrabInstance grabInstance : grabInstances.values()) {
-            if (grabInstance.grabbedBody instanceof EntityRigidBody) {
-                Vector3f location = grabInstance.grabbedBody.getPhysicsLocation(new Vector3f());
-                Entity entity = ((EntityRigidBody) grabInstance.grabbedBody).getEntity();
-                entity.updatePosition(location.x, location.y - entity.getBoundingBox().getYLength() / 2.0, location.z);
-            }
-        }
-    }
-
-    public boolean tryGrab(PlayerEntity grabber, Entity entity) {
-        if (grabInstances.containsKey(grabber)) {
+    public boolean tryGrab(PlayerEntity player, Entity entity) {
+        if (grabInstances.containsKey(player.getUuid())) {
             return false;
         }
 
-        if (isServer) {
-            sendGrabPacket((ServerPlayerEntity) grabber, entity);
+        if (player instanceof ServerPlayerEntity) {
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeInt(player.getEntityId());
+            buf.writeInt(entity.getEntityId());
+            PlayerLookup.tracking(entity).forEach(p ->
+                    ServerPlayNetworking.send(p, ThinkingWithPortatosClientPackets.GRAB_PACKET, buf));
         }
 
-        MinecraftSpace space = MinecraftSpace.get(grabber.getEntityWorld());
+        MinecraftSpace space = MinecraftSpace.get(player.getEntityWorld());
         GrabInstance grabInstance = new GrabInstance();
-        grabInstance.grabber = grabber;
-        ((Grabbable) entity).setGrabbed(true);
+        grabInstance.player = player;
+        grabInstance.grabbedEntity = entity;
 
         if (entity instanceof EntityPhysicsElement) {
             grabInstance.grabbedBody = ((EntityPhysicsElement) entity).getRigidBody();
@@ -74,7 +78,7 @@ public class BodyGrabbingManager {
             space.addCollisionObject(grabInstance.grabbedBody);
         }
 
-        Vector3f pos = VectorHelper.vec3dToVector3f(grabber.getCameraPosVec(1.0f).add(grabber.getRotationVector().multiply(2f)));
+        Vector3f pos = VectorHelper.vec3dToVector3f(player.getCameraPosVec(1.0f).add(player.getRotationVector().multiply(2f)));
         PhysicsRigidBody holdBody = new PhysicsRigidBody(EMPTY_SHAPE, 0);
         holdBody.setPhysicsLocation(pos);
         space.addCollisionObject(holdBody);
@@ -87,60 +91,60 @@ public class BodyGrabbingManager {
 
         grabInstance.grabJoint = joint;
         grabInstance.grabPoint = holdBody;
-        grabInstances.put(grabber, grabInstance);
+        grabInstances.put(player.getUuid(), grabInstance);
 
         return true;
     }
 
-    public boolean tryStopGrabbing(PlayerEntity user) {
-        GrabInstance grabInstance = grabInstances.remove(user);
+    public boolean tryUngrab(PlayerEntity player) {
+        GrabInstance grabInstance = grabInstances.remove(player.getUuid());
+
         if (grabInstance == null) {
             return false;
         }
 
-        if (isServer) {
-            sendUngrabPacket((ServerPlayerEntity) user);
-        }
+        if (player instanceof ServerPlayerEntity) {
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeInt(player.getEntityId());
+            PlayerLookup.tracking(grabInstance.grabbedEntity).forEach(p ->
+                    ServerPlayNetworking.send(p, ThinkingWithPortatosClientPackets.UNGRAB_PACKET, buf));
 
-        if (grabInstance.grabbedBody instanceof EntityRigidBody) {
-            ((Grabbable) ((EntityRigidBody) grabInstance.grabbedBody).getEntity()).setGrabbed(false);
+            if (grabInstance.grabbedBody instanceof EntityRigidBody) {
+                grabInstance.grabbedEntity.setVelocity(VectorHelper.vector3fToVec3d(grabInstance.grabbedBody.getLinearVelocity(new Vector3f()).multLocal(0.05f)));
+            }
         }
 
         SixDofSpringJoint joint = grabInstance.grabJoint;
         PhysicsSpace space = joint.getPhysicsSpace();
 
+        if (grabInstance.grabbedBody instanceof EntityRigidBody) {
+            space.removeCollisionObject(grabInstance.grabbedBody);
+        }
+
         space.removeCollisionObject(grabInstance.grabPoint);
         space.removeJoint(joint);
+
         return true;
     }
 
-    public void sendGrabPacket(ServerPlayerEntity grabber, Entity entity) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(grabber.getEntityId());
-        buf.writeInt(entity.getEntityId());
-        ServerPlayNetworking.send(grabber, ThinkingWithPortatosClientPackets.GRAB_PACKET, buf);
-    }
-
-    public void sendUngrabPacket(ServerPlayerEntity grabber) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(grabber.getEntityId());
-        ServerPlayNetworking.send(grabber, ThinkingWithPortatosClientPackets.UNGRAB_PACKET, buf);
-    }
-
-    public @Nullable PhysicsRigidBody get(Entity entity) {
+    public boolean isGrabbed(Entity entity) {
         for (GrabInstance grabInstance : grabInstances.values()) {
-            PhysicsRigidBody body = grabInstance.grabbedBody;
-
-            if (body instanceof EntityRigidBody && entity.equals(((EntityRigidBody) body).getEntity())) {
-                return body;
+            if (grabInstance.grabbedEntity.equals(entity)) {
+                return true;
             }
         }
 
-        return null;
+        return false;
+    }
+
+    public boolean isPlayerGrabbing(PlayerEntity player) {
+        return grabInstances.containsKey(player.getUuid());
     }
 
     public static class GrabInstance {
-        public PlayerEntity grabber;
+        public PlayerEntity player;
+
+        public Entity grabbedEntity;
         public PhysicsRigidBody grabbedBody;
 
         public SixDofSpringJoint grabJoint;

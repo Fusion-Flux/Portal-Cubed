@@ -10,6 +10,7 @@ import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -36,7 +37,8 @@ public class ThinkingWithPortatos implements ModInitializer {
         ThinkingWithPortatosEntities.registerEntities();
         ThinkingWithPortatosServerPackets.registerPackets();
         ThinkingWithPortatosSounds.registerSounds();
-        ServerTickEvents.START_SERVER_TICK.register(server -> bodyGrabbingManager.tick());
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> bodyGrabbingManager.grabInstances.clear());
+        ServerTickEvents.END_SERVER_TICK.register(server -> bodyGrabbingManager.tick());
     }
 
     public static BodyGrabbingManager getBodyGrabbingManager(boolean client) {

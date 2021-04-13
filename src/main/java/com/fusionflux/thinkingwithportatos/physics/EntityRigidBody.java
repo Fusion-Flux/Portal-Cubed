@@ -11,12 +11,14 @@ import dev.lazurite.rayon.core.impl.util.math.VectorHelper;
 import net.minecraft.entity.Entity;
 
 public class EntityRigidBody extends PhysicsRigidBody implements Debuggable, TerrainLoading {
+    private final int envLoadDistance;
     private final Entity entity;
     private Clump clump;
 
     public EntityRigidBody(Entity entity) {
         super(new BoundingBoxShape(entity.getBoundingBox()));
         this.entity = entity;
+        this.envLoadDistance = (int) boundingBox(new BoundingBox()).getExtent(new Vector3f()).length() + 1;
         this.setPhysicsLocation(VectorHelper.vec3dToVector3f(entity.getPos()));
     }
 
@@ -39,7 +41,7 @@ public class EntityRigidBody extends PhysicsRigidBody implements Debuggable, Ter
 
     @Override
     public int getEnvironmentLoadDistance() {
-        return (int) boundingBox(new BoundingBox()).getExtent(new Vector3f()).length() + 1;
+        return this.envLoadDistance;
     }
 
     @Override
