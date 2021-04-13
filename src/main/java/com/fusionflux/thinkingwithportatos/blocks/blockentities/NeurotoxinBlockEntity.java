@@ -29,5 +29,8 @@ public class NeurotoxinBlockEntity extends BlockEntity implements Tickable {
                 this.world.setBlockState(this.getPos().offset(dir), ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK.getDefaultState());
             }
         }
+        if(this.age>=6000){
+            this.world.setBlockState(this.getPos(), Blocks.AIR.getDefaultState());
+        }
     }
 }

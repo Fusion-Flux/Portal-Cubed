@@ -49,6 +49,7 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.CUSTOM_PORTAL, (dispatcher, context) -> new PortalEntityRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer<GelOrbEntity>(dispatcher, context.getItemRenderer()));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.PHYSICS_FALLING_BLOCK, (dispatcher, context) -> new PhysicsFallingBlockEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.REPULSION_GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
     }
 
     public static void registerBlockRenderLayers() {

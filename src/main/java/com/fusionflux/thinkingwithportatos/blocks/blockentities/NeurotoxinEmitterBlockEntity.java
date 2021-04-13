@@ -55,6 +55,7 @@ public class NeurotoxinEmitterBlockEntity extends BlockEntity implements Tickabl
             if(world.isAir(this.getPos().offset(this.getCachedState().get(Properties.FACING)))&&world.getBlockState(pos).get(Properties.POWERED)){
                 world.setBlockState(this.getPos().offset(this.getCachedState().get(Properties.FACING)),ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK.getDefaultState());
             }
+
         }
     }
     public void spookyUpdateObstructor(BlockPos ownerPos) {

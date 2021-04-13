@@ -79,6 +79,7 @@ public class BodyGrabbingManager {
 
         if (entity instanceof EntityPhysicsElement) {
             grabInstance.grabbedBody = ((EntityPhysicsElement) entity).getRigidBody();
+            grabInstance.grabbedBody.activate();
         } else {
             grabInstance.grabbedBody = new EntityRigidBody(entity);
             space.addCollisionObject(grabInstance.grabbedBody);
