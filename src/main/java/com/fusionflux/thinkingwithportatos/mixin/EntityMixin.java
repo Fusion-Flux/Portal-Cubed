@@ -138,7 +138,6 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                         }
                         world.playSound(null, checkedportal.getPos().getX(), checkedportal.getPos().getY(), checkedportal.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                         checkedportal.kill();
-                        checkedportal.remove();
                     }
                 }
             }
