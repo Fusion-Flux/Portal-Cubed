@@ -108,6 +108,13 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Shadow public abstract boolean isAlive();
 
+ main
+
+    @Shadow public abstract boolean isSneaking();
+
+    private boolean recentlyTouchedPortal;
+
+ main
     private List<CustomPortalEntity> portalList = Lists.newArrayList();
 
     @Override
@@ -122,25 +129,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
-        if(!world.isClient) {
-            if (!this.isAlive()) {
-                for (CustomPortalEntity checkedportal : portalList) {
-                    if (checkedportal != null) {
-                        if(!checkedportal.getOutline().equals("null")) {
-                            PortalPlaceholderEntity portalOutline;
-                            portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(checkedportal.getOutline()));
-                            assert portalOutline != null;
-                            if(portalOutline!=null) {
-                                portalOutline.kill();
-                            }
-                        }
-                        world.playSound(null, checkedportal.getPos().getX(), checkedportal.getPos().getY(), checkedportal.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
-                        checkedportal.kill();
-                    }
-                }
-            }
-        }
-
+ main
         Vec3d expand = this.getVelocity().multiply(10);
         Box streachedBB = this.getBoundingBox().stretch(expand);
 
@@ -199,6 +188,9 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 maxFallSpeed = maxFallSpeed - 1;
             }
         }
+
+
+
         if (world.getBlockState(this.getBlockPos()).getBlock() == ThinkingWithPortatosBlocks.REPULSION_GEL) {
             BlockState state = world.getBlockState(this.getBlockPos());
             Vec3d direction = new Vec3d(0, 0, 0);
@@ -230,7 +222,46 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 }
                 direction = direction.add(0, 0.45, 0);
             }
-            if ( !direction.equals(new Vec3d(0, 0, 0))) {
+            if (!this.isSneaking()&& !direction.equals(new Vec3d(0, 0, 0))) {
+                if(world.isClient) {
+                    world.playSound((PlayerEntity) ((Entity) (Object) this), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                }else {
+                    world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                }
+                this.setVelocity(this.getVelocity().add(direction.x, direction.y, direction.z));
+            }
+        }else if(world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock() == ThinkingWithPortatosBlocks.REPULSION_GEL){
+            BlockState state = world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ()));
+            Vec3d direction = new Vec3d(0, 0, 0);
+            if (this.verticalCollision) {
+                if (state.get(RepulsionGel.UP)) {
+                    direction = direction.add(0, -1, 0);
+                }
+
+                if (state.get(RepulsionGel.DOWN)) {
+                    direction = direction.add(0, 1, 0);
+                }
+
+            }
+            if (this.horizontalCollision) {
+                if (state.get(RepulsionGel.NORTH)) {
+                    direction = direction.add(0, 0, 1);
+                }
+
+                if (state.get(RepulsionGel.SOUTH)) {
+                    direction = direction.add(0, 0, -1);
+                }
+
+                if (state.get(RepulsionGel.EAST)) {
+                    direction = direction.add(-1, 0, 0);
+                }
+
+                if (state.get(RepulsionGel.WEST)) {
+                    direction = direction.add(1, 0, 0);
+                }
+                direction = direction.add(0, 0.45, 0);
+            }
+            if (!this.isSneaking()&& !direction.equals(new Vec3d(0, 0, 0))) {
                 if(world.isClient) {
                     world.playSound((PlayerEntity) ((Entity) (Object) this), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
                 }else {
@@ -262,6 +293,27 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     public void setVelocityTransfer(double speedValueTransferDuck) {
         this.speedTransformApply = speedValueTransferDuck;
     }
+
+    @Inject(method = "remove", at = @At("HEAD"), cancellable = true)
+    public void remove(CallbackInfo ci) {
+        if(!world.isClient) {
+            for (CustomPortalEntity checkedportal : portalList) {
+                if (checkedportal != null) {
+                    if(!checkedportal.getOutline().equals("null")) {
+                        PortalPlaceholderEntity portalOutline;
+                        portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(checkedportal.getOutline()));
+                        assert portalOutline != null;
+                        if(portalOutline!=null) {
+                            portalOutline.kill();
+                        }
+                    }
+                    world.playSound(null, checkedportal.getPos().getX(), checkedportal.getPos().getY(), checkedportal.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
+                    checkedportal.kill();
+                }
+            }
+        }
+    }
+
 
     /*----------
     @Inject(method = "calculateDimensions", at = @At("TAIL"))

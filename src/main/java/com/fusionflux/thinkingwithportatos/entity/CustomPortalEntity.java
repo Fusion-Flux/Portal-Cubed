@@ -1,5 +1,6 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
+import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.Helper;
 import com.qouteall.immersive_portals.api.PortalAPI;
@@ -106,7 +107,9 @@ public class CustomPortalEntity extends Portal {
                     PortalPlaceholderEntity portalOutline;
                     portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
                     assert portalOutline != null;
-                    portalOutline.kill();
+                    if(portalOutline!=null) {
+                        portalOutline.kill();
+                    }
                 }
 
                 this.kill();
@@ -136,13 +139,16 @@ public class CustomPortalEntity extends Portal {
             Direction portalFacing = Direction.fromVector((int)this.getNormal().getX(),(int)this.getNormal().getY(),(int)this.getNormal().getZ());
 
             if ((!this.world.getBlockState(alteredPos).isSideSolidFullSquare(world,alteredPos,portalFacing))||
-                    (!this.world.getBlockState(lowerPos).isSideSolidFullSquare(world,lowerPos,portalFacing)
+                    (!this.world.getBlockState(lowerPos).isSideSolidFullSquare(world,lowerPos,portalFacing)|| this.world.getBlockState(alteredPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
+                            ||this.world.getBlockState(lowerPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
                     )) {
                 if(!this.getOutline().equals("null")) {
                     PortalPlaceholderEntity portalOutline;
                     portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
                     assert portalOutline != null;
-                    portalOutline.kill();
+                    if(portalOutline!=null) {
+                        portalOutline.kill();
+                    }
                 }
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);

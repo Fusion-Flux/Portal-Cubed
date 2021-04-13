@@ -4,6 +4,7 @@ import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.blocks.blockentities.*;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.PillarBlock;
@@ -12,6 +13,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.tag.Tag;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import static com.fusionflux.thinkingwithportatos.ThinkingWithPortatos.id;
@@ -67,6 +70,8 @@ public class ThinkingWithPortatosBlocks {
     public static final ExcursionFunnel EXCURSION_FUNNEL = new ExcursionFunnel(FabricBlockSettings.of(Material.AIR).nonOpaque().noCollision());
     public static BlockEntityType<ExcursionFunnelEmitterEntity> EXCURSION_FUNNEL_EMMITER_ENTITY;
     public static BlockEntityType<ExcursionFunnelEntity> EXCURSION_FUNNEL_ENTITY;
+
+    public static Tag<Block> MY_TAG = TagRegistry.block(new Identifier("thinkingwithportatos", "hpd_deny_launch"));
 
     public static void registerBlocks() {
         if (ThinkingWithPortatosConfig.get().enabled.enableGels) {
