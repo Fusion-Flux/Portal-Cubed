@@ -52,6 +52,10 @@ public class GrabKeyBinding {
                         PacketByteBuf buf = PacketByteBufs.create();
                         buf.writeInt(toSend.getEntityId());
                         ClientPlayNetworking.send(ThinkingWithPortatosServerPackets.GRAB_KEY_PRESSED, buf);
+                    } else {
+                        PacketByteBuf buf = PacketByteBufs.create();
+                        buf.writeInt(-1);
+                        ClientPlayNetworking.send(ThinkingWithPortatosServerPackets.GRAB_KEY_PRESSED, buf);
                     }
                 } else {
                     PacketByteBuf buf = PacketByteBufs.create();

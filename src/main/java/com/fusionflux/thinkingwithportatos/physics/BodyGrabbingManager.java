@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.physics;
 
 import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
+import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.EmptyShape;
 import com.jme3.bullet.joints.SixDofSpringJoint;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -46,6 +48,10 @@ public class BodyGrabbingManager {
 
     public void tick() {
         grabInstances.values().forEach(grabInstance -> {
+            if (isServer && !(grabInstance.player.getMainHandStack().getItem() instanceof PortalGun)) {
+                tryUngrab(grabInstance.player);
+            }
+
             if (grabInstance.grabbedBody instanceof EntityRigidBody) {
                 Vector3f location = grabInstance.grabbedBody.getPhysicsLocation(new Vector3f());
                 grabInstance.grabbedEntity.updatePosition(location.x, location.y - grabInstance.grabbedEntity.getBoundingBox().getYLength() / 2.0, location.z);
@@ -111,6 +117,10 @@ public class BodyGrabbingManager {
 
             if (grabInstance.grabbedBody instanceof EntityRigidBody) {
                 grabInstance.grabbedEntity.setVelocity(VectorHelper.vector3fToVec3d(grabInstance.grabbedBody.getLinearVelocity(new Vector3f()).multLocal(0.05f)));
+
+                if (grabInstance.grabbedEntity instanceof FallingBlockEntity) {
+                    ((FallingBlockEntity) grabInstance.grabbedEntity).setFallingBlockPos(grabInstance.grabbedEntity.getBlockPos());
+                }
             }
         }
 
