@@ -132,7 +132,7 @@ if(!this.isFallFlying()) {
 
     @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At( value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D" ), cancellable = true)
     public void dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<@Nullable ItemEntity> cir) {
-    if(stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN)){
+    if(!this.world.isClient && stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN)){
         CompoundTag tag = stack.getOrCreateTag();
         CompoundTag portalsTag = tag.getCompound(world.getRegistryKey().toString());
         CustomPortalEntity portalholder;
