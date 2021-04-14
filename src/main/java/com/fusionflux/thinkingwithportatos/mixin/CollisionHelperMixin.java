@@ -13,13 +13,9 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(CollisionHelper.class)
 public abstract class CollisionHelperMixin {
 
-    @Shadow
-    public static boolean canCollideWithPortal(Entity entity, Portal portal, float tickDelta) {
-        return false;
-    }
-
     /**
      * @author
+     * @reason sick n tired of the startup error so I added a reason lol
      */
     @Overwrite(remap = false)
     public static Box getStretchedBoundingBox(Entity entity) {

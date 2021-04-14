@@ -7,6 +7,7 @@ import com.fusionflux.thinkingwithportatos.client.render.PhysicsFallingBlockEnti
 import com.fusionflux.thinkingwithportatos.client.render.PortalHud;
 import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRenderer;
 import com.fusionflux.thinkingwithportatos.entity.*;
+import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
 import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
@@ -36,6 +37,8 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         ThinkingWithPortatosClientPackets.registerPackets();
         GrabKeyBinding.register();
 
+        PortalGun.registerAlternateModels();
+
         BetterClientLifecycleEvents.DISCONNECT.register((client, world) -> bodyGrabbingManager.grabInstances.clear());
         ClientTickEvents.END_CLIENT_TICK.register(client -> bodyGrabbingManager.tick());
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
@@ -63,6 +66,5 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
 
     public static void registerItemRenderLayers() {
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem) stack.getItem()).getColor(stack), ThinkingWithPortatosItems.PORTAL_GUN);
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem) stack.getItem()).getColor(stack), ThinkingWithPortatosItems.PORTAL_GUN_MODEL2);
     }
 }
