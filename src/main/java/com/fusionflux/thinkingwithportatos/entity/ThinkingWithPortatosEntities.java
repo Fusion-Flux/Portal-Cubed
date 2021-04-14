@@ -15,11 +15,11 @@ import net.minecraft.world.World;
 
 public class ThinkingWithPortatosEntities {
     public static final EntityType<CubeEntity> CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CubeEntity::new)
-            .dimensions(EntityDimensions.fixed(1.0F, 1.0F))
+            .dimensions(EntityDimensions.fixed(0.625F, 0.625F))
             .build();
 
     public static final EntityType<CompanionCubeEntity> COMPANION_CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CompanionCubeEntity::new)
-            .dimensions(EntityDimensions.fixed(1.0F, 1.0F))
+            .dimensions(EntityDimensions.fixed(0.625F, 0.625F))
             .build();
 
     public static final EntityType<PortalPlaceholderEntity> PORTAL_PLACEHOLDER = FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, PortalPlaceholderEntity::new)

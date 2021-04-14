@@ -13,7 +13,7 @@ public class CubeEntityModel extends EntityModel<CubeEntity> {
     public CubeEntityModel() {
         textureWidth = 64;
         textureHeight = 64;
-        cube = new ModelPart(this, 0, 0).addCuboid(-8, -8, -8, 16, 16, 16);
+        cube = new ModelPart(this, 0, 0).addCuboid(-5, -5, -5, 10, 10, 10);
     }
 
     @Override

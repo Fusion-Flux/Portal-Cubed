@@ -140,13 +140,13 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 double offsetZ=0;
                 double offsetY=0;
                 if(Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().x)||Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().x)) {
-                    offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x)*.02;
+                    offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x)*.05;
                 }
                 if(Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().z)||Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().z)) {
-                    offsetZ = (this.getBoundingBox().getCenter().z - globalPortal.getBoundingBox().getCenter().z)*.02;
+                    offsetZ = (this.getBoundingBox().getCenter().z - globalPortal.getBoundingBox().getCenter().z)*.05;
                 }
                 if(Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().y)||Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().y)) {
-                    offsetY = (this.getBoundingBox().getCenter().y - globalPortal.getBoundingBox().getCenter().y)*.02;
+                    offsetY = (this.getBoundingBox().getCenter().y - globalPortal.getBoundingBox().getCenter().y)*.05;
                 }
                 if(!this.getBoundingBox().intersects(globalPortal.getBoundingBox()))
                 this.setVelocity(this.getVelocity().add(-offsetX,-offsetY,-offsetZ));
