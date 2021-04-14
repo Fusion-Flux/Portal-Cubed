@@ -1,7 +1,9 @@
 package com.fusionflux.thinkingwithportatos.items;
 
 
+import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.accessor.EntityPortalsAccess;
+import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
@@ -9,6 +11,9 @@ import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.qouteall.immersive_portals.api.PortalAPI;
 import com.qouteall.immersive_portals.my_util.DQuaternion;
 import com.qouteall.immersive_portals.portal.PortalManipulation;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
@@ -17,6 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -201,5 +207,16 @@ public class PortalGun extends Item implements DyeableItem {
                 ((hit.getY() + 0.5) + upOffset * upright.getY() + faceOffset * facing.getY() + crossOffset * cross.getY()), // y component
                 ((hit.getZ() + 0.5) + upOffset * upright.getZ() + faceOffset * facing.getZ() + crossOffset * cross.getZ())  // z component
         );
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void registerAlternateModels() {
+        FabricModelPredicateProviderRegistry.register(ThinkingWithPortatosItems.PORTAL_GUN, ThinkingWithPortatos.id("variant"), (stack, world, livingEntity) -> {
+            if (livingEntity == null) {
+                return 0;
+            }
+            // Defaults to 0
+            return stack.getOrCreateTag().getInt("variant");
+        });
     }
 }

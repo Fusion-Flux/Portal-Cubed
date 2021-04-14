@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.config;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
+import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;

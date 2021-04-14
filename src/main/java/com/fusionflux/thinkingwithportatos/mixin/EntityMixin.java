@@ -34,87 +34,41 @@ import java.util.UUID;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, VelocityTransfer, EntityPortalsAccess {
-    @Unique
-    private int timeinblock = 1;
+    @Unique private int timeinblock = 1;
+    @Unique private double maxFallSpeed = 0;
+    @Unique private double repulsionGelSoundLimiter = 0;
+    @Unique private double storeVelocity1 = 0;
+    @Unique private double storeVelocity2 = 0;
+    @Unique private double speedTransformApply = 0;
+    @Unique private boolean recentlyTouchedPortal;
 
-    @Unique
-    private double maxFallSpeed = 0;
-
-    @Unique
-    private double repulsionGelSoundLimiter = 0;
-
-    @Unique
-    private double storeVelocity1 = 0;
-
-    @Unique
-    private double storeVelocity2 = 0;
-
-    @Unique
-    private double speedTransformApply = 0;
-
-    @Unique
-    private boolean recentlyTouchedPortal;
-
-    @Override
-    public double getMaxFallSpeed() {
+    @Override public double getMaxFallSpeed() {
         return maxFallSpeed;
     }
 
-    @Override
-    public void setMaxFallSpeed(double maxFallSpeed) {
+    @Override public void setMaxFallSpeed(double maxFallSpeed) {
         this.maxFallSpeed = maxFallSpeed;
     }
 
-    @Shadow
-    public World world;
-
-    @Shadow
-    public abstract BlockPos getBlockPos();
-
-    @Shadow
-    public abstract Vec3d getVelocity();
-
-    @Shadow
-    public abstract void setVelocity(Vec3d velocity);
-
-    @Shadow
-    public abstract Box getBoundingBox();
-
-    @Shadow
-    public abstract boolean equals(Object o);
-
-    @Shadow
-    public abstract EntityType<?> getType();
-
+    @Shadow public World world;
+    @Shadow public abstract BlockPos getBlockPos();
+    @Shadow public abstract Vec3d getVelocity();
+    @Shadow public abstract void setVelocity(Vec3d velocity);
+    @Shadow public abstract Box getBoundingBox();
+    @Shadow public abstract boolean equals(Object o);
+    @Shadow public abstract EntityType<?> getType();
     @Shadow public abstract Vec3d getPos();
-
     @Shadow public abstract double getX();
-
     @Shadow public abstract double getY();
-
     @Shadow public abstract double getZ();
-
     @Shadow public int age;
-
     @Shadow public abstract boolean damage(DamageSource source, float amount);
-
     @Shadow public abstract float getEyeHeight(EntityPose pose);
-
     @Shadow public abstract EntityPose getPose();
-
     @Shadow public boolean horizontalCollision;
-
     @Shadow public boolean verticalCollision;
-
-    @Shadow public abstract boolean isAlive();
-
- main
-
     @Shadow public abstract boolean isSneaking();
 
-    private boolean recentlyTouchedPortal;
-
- main
     private List<CustomPortalEntity> portalList = Lists.newArrayList();
 
     @Override
@@ -129,7 +83,6 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
- main
         Vec3d expand = this.getVelocity().multiply(10);
         Box streachedBB = this.getBoundingBox().stretch(expand);
 

@@ -31,7 +31,7 @@ public class ThinkingWithPortatosServerPackets {
         ItemStack itemStack = player.getStackInHand(hand);
         player.updateLastActionTime();
 
-        if (!itemStack.isEmpty() && itemStack.getItem() == ThinkingWithPortatosItems.PORTAL_GUN || itemStack.getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+        if (!itemStack.isEmpty() && itemStack.getItem() == ThinkingWithPortatosItems.PORTAL_GUN) {
             server.execute(() -> ((PortalGun) itemStack.getItem()).useLeft(serverWorld, player, hand));
         }
     }

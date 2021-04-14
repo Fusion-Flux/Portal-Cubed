@@ -23,12 +23,10 @@ public class PortalHud {
         MinecraftClient.getInstance().getTextureManager().bindTexture(BASE_TEXTURE);
         assert MinecraftClient.getInstance().player != null;
 
-        if(MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)||MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)) {
+        if(MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)) {
             ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.MAINHAND);
             if(!stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN)){
-                if(!stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)){
-                    stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
-                }
+                stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
 
             CompoundTag tag = stack.getOrCreateTag();
@@ -77,13 +75,11 @@ public class PortalHud {
         MinecraftClient.getInstance().getTextureManager().bindTexture(BASE_TEXTURE);
         assert MinecraftClient.getInstance().player != null;
 
-        if (MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)||MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)) {
+        if (MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)) {
             ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.MAINHAND);
 
             if(!stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN)){
-                if(!stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2)){
-                    stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
-                }
+                stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
 
             CompoundTag tag = stack.getOrCreateTag();

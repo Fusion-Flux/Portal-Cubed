@@ -111,9 +111,9 @@ if(!this.isFallFlying()) {
                 recentlyTouchedPortal = false;
             }
 
-            if (this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN || this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+            if (this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN) {
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
-            } else if (this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN || this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+            } else if (this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN) {
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
             }
         }
