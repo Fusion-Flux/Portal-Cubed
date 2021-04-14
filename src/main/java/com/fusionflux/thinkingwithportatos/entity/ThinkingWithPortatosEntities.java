@@ -1,7 +1,11 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
+import com.jme3.math.Vector3f;
+import dev.lazurite.rayon.core.api.PhysicsElement;
 import dev.lazurite.rayon.core.api.event.ElementCollisionEvents;
+import dev.lazurite.rayon.core.impl.physics.space.body.BlockRigidBody;
+import dev.lazurite.rayon.core.impl.util.math.VectorHelper;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -12,6 +16,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+
+import java.util.concurrent.Executor;
 
 public class ThinkingWithPortatosEntities {
     public static final EntityType<CubeEntity> CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CubeEntity::new)
@@ -51,24 +57,25 @@ public class ThinkingWithPortatosEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "gel_orb"), GEL_ORB);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "repulsion_gel_orb"), REPULSION_GEL_ORB);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(ThinkingWithPortatos.MODID, "physics_falling_block"), PHYSICS_FALLING_BLOCK);
+        ElementCollisionEvents.BLOCK_COLLISION.register(ThinkingWithPortatosEntities::doBlockCollisions);
+    }
 
-        ElementCollisionEvents.BLOCK_COLLISION.register((executor, element, block, impulse) -> {
-            if (element instanceof CubeEntity) {
-                executor.execute(() -> ((CubeEntity) element).onCollision(impulse));
-            } else if (element instanceof PhysicsFallingBlockEntity) {
-                World world = ((PhysicsFallingBlockEntity) element).getEntityWorld();
+    public static void doBlockCollisions(Executor executor, PhysicsElement element, BlockRigidBody block, float impulse) {
+        if (element instanceof CubeEntity) {
+            executor.execute(() -> ((CubeEntity) element).onCollision(impulse));
+        } else if (element instanceof PhysicsFallingBlockEntity) {
+            World world = ((PhysicsFallingBlockEntity) element).getEntityWorld();
 
-                if (!world.isClient()) {
-                    executor.execute(() -> {
-                        if (!((PhysicsFallingBlockEntity) element).removed && !ThinkingWithPortatos.getBodyGrabbingManager(false).isGrabbed((PhysicsFallingBlockEntity) element)) {
-                            ((PhysicsFallingBlockEntity) element).remove();
-                            BlockPos pos = ((PhysicsFallingBlockEntity) element).getBlockPos();
-                            BlockState state = ((PhysicsFallingBlockEntity) element).getBlockState();
-                            world.setBlockState(pos, state);
-                        }
-                    });
-                }
+            if (!world.isClient()) {
+                executor.execute(() -> {
+                    if (!((PhysicsFallingBlockEntity) element).removed && !ThinkingWithPortatos.getBodyGrabbingManager(false).isGrabbed((PhysicsFallingBlockEntity) element)) {
+                        ((PhysicsFallingBlockEntity) element).remove();
+                        BlockPos pos = new BlockPos(VectorHelper.vector3fToVec3d(element.getPhysicsLocation(new Vector3f(), 1.0f)));
+                        BlockState state = ((PhysicsFallingBlockEntity) element).getBlockState();
+                        world.setBlockState(pos, state);
+                    }
+                });
             }
-        });
+        }
     }
 }
