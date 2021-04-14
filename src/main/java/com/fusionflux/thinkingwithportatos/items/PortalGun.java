@@ -199,7 +199,7 @@ public class PortalGun extends Item implements DyeableItem {
      * @return a vector position specifying the portal's final position in the world.
      */
     private Vec3d calcPos(BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross, boolean isBackground) {
-        double upOffset = isBackground ? -1.0 : -0.5;
+        double upOffset = isBackground ? 0.0 : 0.5;
         double faceOffset = isBackground ? -0.509 : -0.510;
         double crossOffset = 0.0;
         return new Vec3d(
