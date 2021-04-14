@@ -11,6 +11,7 @@ import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.google.common.collect.Lists;
 import com.qouteall.immersive_portals.teleportation.CollisionHelper;
+import net.fabricmc.loader.util.sat4j.core.Vec;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
@@ -22,6 +23,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -132,24 +134,29 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
         Vec3d expand = this.getVelocity().multiply(10);
         Box streachedBB = this.getBoundingBox().stretch(expand);
 
-        List<Entity> globalPortals = this.world.getEntitiesByClass(CustomPortalEntity.class, streachedBB, null);
+        List<CustomPortalEntity> globalPortals = this.world.getEntitiesByClass(CustomPortalEntity.class, streachedBB, null);
 
-        for (Entity globalPortal : globalPortals) {
+        for (CustomPortalEntity globalPortal : globalPortals) {
             if (streachedBB.intersects(globalPortal.getBoundingBox())) {
+                Vec3d portalFacing = new Vec3d((int) globalPortal.getNormal().getX(), (int) globalPortal.getNormal().getY(), (int) globalPortal.getNormal().getZ());
                 double offsetX = 0;
                 double offsetZ = 0;
                 double offsetY = 0;
-                if (Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().x) || Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().x)) {
-                    offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x) * .05;
-                }
+
+                Box streachedPortalBB = globalPortal.getBoundingBox().stretch(portalFacing.getX() * Math.abs(this.getVelocity().getX())*10, portalFacing.getY() * Math.abs(this.getVelocity().getY())*10, portalFacing.getZ() * Math.abs(this.getVelocity().getZ())*10);
+                if (streachedPortalBB.intersects(this.getBoundingBox())){
+                    if (Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().x) || Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().x)) {
+                        offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x) * .05;
+                    }
                 if (Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().z) || Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().z)) {
                     offsetZ = (this.getBoundingBox().getCenter().z - globalPortal.getBoundingBox().getCenter().z) * .05;
                 }
                 if (Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().y) || Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().y)) {
                     offsetY = (this.getBoundingBox().getCenter().y - globalPortal.getBoundingBox().getCenter().y) * .05;
                 }
-                if (!this.getBoundingBox().intersects(globalPortal.getBoundingBox()))
+                if (!this.getBoundingBox().intersects(globalPortal.getBoundingBox()) && !this.isSneaking())
                     this.setVelocity(this.getVelocity().add(-offsetX, -offsetY, -offsetZ));
+            }
             }
         }
 

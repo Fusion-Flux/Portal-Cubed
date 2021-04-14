@@ -1,5 +1,10 @@
 {
   "variants": {
-    "": { "model": "thinkingwithportatos:block/neurotoxin_emitter" }
+    "powered=false": {
+      "model": "thinkingwithportatos:block/neurotoxin_emitter_off"
+    },
+    "powered=true": {
+      "model": "thinkingwithportatos:block/neurotoxin_emitter_on"
+    }
   }
 }
