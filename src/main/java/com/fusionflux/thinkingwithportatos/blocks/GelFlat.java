@@ -7,13 +7,11 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
@@ -33,15 +31,13 @@ public class GelFlat extends Block {
     public static final BooleanProperty UP;
     public static final BooleanProperty DOWN;
     public static final Map<Direction, BooleanProperty> propertyMap;
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     private static final VoxelShape UP_SHAPE = Block.createCuboidShape(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 1.0D, 16.0D, 16.0D);
     private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(15.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 1.0D);
     private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
-    private final Map<BlockState, VoxelShape> field_26659;
-    //protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16D, 1.0D, 16);
 
     static {
         NORTH = Properties.NORTH;
@@ -58,27 +54,14 @@ public class GelFlat extends Block {
         propertyMap.put(Direction.UP, Properties.UP);
         propertyMap.put(Direction.DOWN, Properties.DOWN);
     }
+    //protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16D, 1.0D, 16);
+
+    private final Map<BlockState, VoxelShape> field_26659;
 
     public GelFlat(AbstractBlock.Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
-        this.field_26659 = ImmutableMap.copyOf((Map)this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), GelFlat::method_31018)));
-    }
-
-    private boolean hasAdjacentBlocks(BlockState state) {
-        return this.getAdjacentBlockCount(state) > 0;
-    }
-
-    private int getAdjacentBlockCount(BlockState state) {
-        int i = 0;
-
-        for (BooleanProperty booleanProperty : propertyMap.values()) {
-            if (state.get(booleanProperty)) {
-                ++i;
-            }
-        }
-
-        return i;
+        this.field_26659 = ImmutableMap.copyOf((Map) this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), GelFlat::method_31018)));
     }
 
     private static VoxelShape method_31018(BlockState blockState) {
@@ -110,6 +93,31 @@ public class GelFlat extends Block {
         return voxelShape;
     }
 
+    public static boolean shouldConnectTo(BlockView world, BlockPos pos, Direction direction) {
+        BlockState blockState = world.getBlockState(pos);
+        return Block.isFaceFullSquare(blockState.getCollisionShape(world, pos), direction.getOpposite());
+    }
+
+    public static BooleanProperty getFacingProperty(Direction direction) {
+        return propertyMap.get(direction);
+    }
+
+    private boolean hasAdjacentBlocks(BlockState state) {
+        return this.getAdjacentBlockCount(state) > 0;
+    }
+
+    private int getAdjacentBlockCount(BlockState state) {
+        int i = 0;
+
+        for (BooleanProperty booleanProperty : propertyMap.values()) {
+            if (state.get(booleanProperty)) {
+                ++i;
+            }
+        }
+
+        return i;
+    }
+
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return this.field_26659.get(state);
@@ -120,17 +128,16 @@ public class GelFlat extends Block {
         return this.field_26659.get(state);
     }
 
-
     public PistonBehavior getPistonBehavior(BlockState state) {
         return PistonBehavior.PUSH_ONLY;
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, WEST, SOUTH,UP,DOWN);
+        builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN);
     }
 
     protected boolean canConnect(WorldAccess world, BlockPos neighborPos) {
-        return world.getBlockState(neighborPos).getBlock().getDefaultState().isSolidBlock(world,neighborPos);
+        return world.getBlockState(neighborPos).getBlock().getDefaultState().isSolidBlock(world, neighborPos);
     }
 
     @Override
@@ -141,14 +148,14 @@ public class GelFlat extends Block {
         Direction[] var5 = ctx.getPlacementDirections();
         int var6 = var5.length;
 
-        for(int var7 = 0; var7 < var6; ++var7) {
+        for (int var7 = 0; var7 < var6; ++var7) {
             Direction direction = var5[var7];
 
-                BooleanProperty booleanProperty = getFacingProperty(direction);
-                boolean bl2 = bl && (Boolean)blockState.get(booleanProperty);
-                if (!bl2 && this.shouldHaveSide(ctx.getWorld(), ctx.getBlockPos(), direction)) {
-                    return (BlockState)blockState2.with(booleanProperty, true);
-                }
+            BooleanProperty booleanProperty = getFacingProperty(direction);
+            boolean bl2 = bl && blockState.get(booleanProperty);
+            if (!bl2 && this.shouldHaveSide(ctx.getWorld(), ctx.getBlockPos(), direction)) {
+                return blockState2.with(booleanProperty, true);
+            }
 
         }
 
@@ -159,23 +166,18 @@ public class GelFlat extends Block {
         return this.hasAdjacentBlocks(this.getPlacementShape(state, world, pos));
     }
 
-    public static boolean shouldConnectTo(BlockView world, BlockPos pos, Direction direction) {
-        BlockState blockState = world.getBlockState(pos);
-        return Block.isFaceFullSquare(blockState.getCollisionShape(world, pos), direction.getOpposite());
-    }
-
     private boolean shouldHaveSide(BlockView world, BlockPos pos, Direction side) {
 
-            BlockPos blockPos = pos.offset(side);
-            if (shouldConnectTo(world, blockPos, side)) {
-                return true;
-            } else if (side.getAxis() == Direction.Axis.Y) {
-                return false;
-            } else {
-                BooleanProperty booleanProperty = (BooleanProperty)propertyMap.get(side);
-                BlockState blockState = world.getBlockState(pos.up());
-                return blockState.isOf(this) && (Boolean)blockState.get(booleanProperty);
-            }
+        BlockPos blockPos = pos.offset(side);
+        if (shouldConnectTo(world, blockPos, side)) {
+            return true;
+        } else if (side.getAxis() == Direction.Axis.Y) {
+            return false;
+        } else {
+            BooleanProperty booleanProperty = propertyMap.get(side);
+            BlockState blockState = world.getBlockState(pos.up());
+            return blockState.isOf(this) && blockState.get(booleanProperty);
+        }
 
     }
 
@@ -183,7 +185,7 @@ public class GelFlat extends Block {
         BlockState blockState = null;
         Iterator var6 = Direction.Type.HORIZONTAL.iterator();
 
-        while(true) {
+        while (true) {
             Direction direction;
             BooleanProperty booleanProperty;
             do {
@@ -191,9 +193,9 @@ public class GelFlat extends Block {
                     return state;
                 }
 
-                direction = (Direction)var6.next();
+                direction = (Direction) var6.next();
                 booleanProperty = getFacingProperty(direction);
-            } while(!(Boolean)state.get(booleanProperty));
+            } while (!(Boolean) state.get(booleanProperty));
 
             boolean bl = this.shouldHaveSide(world, pos, direction);
             if (!bl) {
@@ -208,10 +210,7 @@ public class GelFlat extends Block {
         }
     }
 
-    public static BooleanProperty getFacingProperty(Direction direction) {
-        return propertyMap.get(direction);
-    }
-@Override
+    @Override
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         BlockState blockState = context.getWorld().getBlockState(context.getBlockPos());
         if (blockState.isOf(this)) {

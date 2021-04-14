@@ -1,6 +1,5 @@
 package com.fusionflux.thinkingwithportatos.accessor;
 
-import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.network.PacketByteBuf;
 

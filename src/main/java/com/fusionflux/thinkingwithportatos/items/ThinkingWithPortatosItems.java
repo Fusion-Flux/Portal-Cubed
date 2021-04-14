@@ -5,7 +5,10 @@ import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.*;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.Item;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -24,12 +27,12 @@ public class ThinkingWithPortatosItems {
     public static void registerItems() {
         if (ThinkingWithPortatosConfig.get().enabled.enableLongFallBoots)
             Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "long_fall_boots"), LONG_FALL_BOOTS);
-       // Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "gel_orb"), GEL_ORB);
+        // Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "gel_orb"), GEL_ORB);
         Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "portal_gun"), PORTAL_GUN);
         Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "portal_gun_frame"), PORTAL_GUN_FRAME);
         Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "portal_gun_casing"), PORTAL_GUN_CASING);
         Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "mini_blackhole"), MINI_BLACKHOLE);
-       // Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "paint_gun"), PAINT_GUN);
+        // Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "paint_gun"), PAINT_GUN);
         Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "cube"), CUBE);
         Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "companion_cube"), COMPANION_CUBE);
     }

@@ -17,8 +17,8 @@ import net.minecraft.world.World;
 import java.util.Optional;
 
 public class PhysicsFallingBlockEntity extends Entity implements EntityPhysicsElement {
-    private final ElementRigidBody rigidBody = new ElementRigidBody(this);
     private static final TrackedData<Optional<BlockState>> BLOCK_STATE = DataTracker.registerData(PhysicsFallingBlockEntity.class, TrackedDataHandlerRegistry.OPTIONAL_BLOCK_STATE);
+    private final ElementRigidBody rigidBody = new ElementRigidBody(this);
 
     public PhysicsFallingBlockEntity(EntityType<?> type, World world) {
         super(type, world);
@@ -60,11 +60,11 @@ public class PhysicsFallingBlockEntity extends Entity implements EntityPhysicsEl
         return this.rigidBody;
     }
 
-    public void setBlockState(BlockState blockState) {
-        getDataTracker().set(BLOCK_STATE, Optional.ofNullable(blockState));
-    }
-
     public BlockState getBlockState() {
         return getDataTracker().get(BLOCK_STATE).orElse(null);
+    }
+
+    public void setBlockState(BlockState blockState) {
+        getDataTracker().set(BLOCK_STATE, Optional.ofNullable(blockState));
     }
 }

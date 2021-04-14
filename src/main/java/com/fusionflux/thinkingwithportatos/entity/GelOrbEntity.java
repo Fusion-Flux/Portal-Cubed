@@ -2,9 +2,8 @@ package com.fusionflux.thinkingwithportatos.entity;
 
 import com.fusionflux.thinkingwithportatos.blocks.GelFlat;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
-import com.fusionflux.thinkingwithportatos.packet.EntitySpawnPacket;
 import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
-
+import com.fusionflux.thinkingwithportatos.packet.EntitySpawnPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -45,12 +44,15 @@ public class GelOrbEntity extends ThrownItemEntity {
     public GelOrbEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
     }
+
     public GelOrbEntity(World world) {
         super(ThinkingWithPortatosEntities.GEL_ORB, 0, 0, 0, world);
     }
+
     public GelOrbEntity(World world, LivingEntity owner) {
         super(ThinkingWithPortatosEntities.GEL_ORB, owner, world);
     }
+
     public GelOrbEntity(World world, double x, double y, double z) {
         super(ThinkingWithPortatosEntities.GEL_ORB, x, y, z, world);
     }
@@ -63,7 +65,7 @@ public class GelOrbEntity extends ThrownItemEntity {
     @Environment(EnvType.CLIENT)
     private ParticleEffect getParticleParameters() { // Not entirely sure, but probably has do to with the snowball's particles. (OPTIONAL)
         ItemStack itemStack = this.getItem();
-        return (ParticleEffect)(itemStack.isEmpty() ? ParticleTypes.ITEM_SNOWBALL : new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack));
+        return itemStack.isEmpty() ? ParticleTypes.ITEM_SNOWBALL : new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack);
     }
 
     @Environment(EnvType.CLIENT)
@@ -71,7 +73,7 @@ public class GelOrbEntity extends ThrownItemEntity {
         if (status == 3) {
             ParticleEffect particleEffect = this.getParticleParameters();
 
-            for(int i = 0; i < 8; ++i) {
+            for (int i = 0; i < 8; ++i) {
                 this.world.addParticle(particleEffect, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
             }
         }
@@ -89,18 +91,18 @@ public class GelOrbEntity extends ThrownItemEntity {
         BlockPos hitPos = new BlockPos(hitResult.getPos().subtract(nudgeVector)); // The block that the orb was in, where we put the gel
         BlockPos hitBlock = new BlockPos(hitResult.getPos().add(nudgeVector)); // Get the position of the block that was just hit
         BlockState blockState = this.world.getBlockState(hitPos);
-        if(blockState.isAir() || blockState.isOf(ThinkingWithPortatosBlocks.PROPULSION_GEL)) {
-            if(this.world.getBlockState(hitBlock).isFullCube(this.world, getBlockPos())) {
+        if (blockState.isAir() || blockState.isOf(ThinkingWithPortatosBlocks.PROPULSION_GEL)) {
+            if (this.world.getBlockState(hitBlock).isFullCube(this.world, getBlockPos())) {
                 Vec3i cardinalDir = hitBlock.subtract(hitPos);
 
-                if(!this.world.getBlockState(hitPos.add(cardinalDir)).isAir()) {
+                if (!this.world.getBlockState(hitPos.add(cardinalDir)).isAir()) {
                     BlockState initialState;
                     if (blockState.isAir()) {
                         initialState = ThinkingWithPortatosBlocks.PROPULSION_GEL.getDefaultState();
                     } else {
                         initialState = this.world.getBlockState(hitPos);
                     }
-                    if(DIRECTIONS.containsKey(cardinalDir)) {
+                    if (DIRECTIONS.containsKey(cardinalDir)) {
                         this.world.setBlockState(hitPos, initialState.with(DIRECTIONS.get(cardinalDir), true));
                     }
                 }
@@ -108,7 +110,7 @@ public class GelOrbEntity extends ThrownItemEntity {
         }
 
         if (!this.world.isClient) { // checks if the world is client
-            this.world.sendEntityStatus(this, (byte)3); // particle?
+            this.world.sendEntityStatus(this, (byte) 3); // particle?
             this.remove(); // kills the projectile
         }
     }

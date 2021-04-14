@@ -29,6 +29,14 @@ public class ThinkingWithPortatos implements ModInitializer {
         return new Identifier(MODID, path);
     }
 
+    public static BodyGrabbingManager getBodyGrabbingManager(boolean client) {
+        if (client) {
+            return ThinkingWithPortatosClient.bodyGrabbingManager;
+        } else {
+            return bodyGrabbingManager;
+        }
+    }
+
     @Override
     public void onInitialize() {
         ThinkingWithPortatosConfig.register();
@@ -39,13 +47,5 @@ public class ThinkingWithPortatos implements ModInitializer {
         ThinkingWithPortatosSounds.registerSounds();
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> bodyGrabbingManager.grabInstances.clear());
         ServerTickEvents.END_SERVER_TICK.register(server -> bodyGrabbingManager.tick());
-    }
-
-    public static BodyGrabbingManager getBodyGrabbingManager(boolean client) {
-        if (client) {
-            return ThinkingWithPortatosClient.bodyGrabbingManager;
-        } else {
-            return bodyGrabbingManager;
-        }
     }
 }

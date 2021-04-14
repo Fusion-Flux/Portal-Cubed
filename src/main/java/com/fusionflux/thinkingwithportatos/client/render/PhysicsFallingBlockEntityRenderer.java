@@ -4,7 +4,6 @@ import com.fusionflux.thinkingwithportatos.entity.PhysicsFallingBlockEntity;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import dev.lazurite.rayon.core.impl.util.math.QuaternionHelper;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;

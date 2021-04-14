@@ -42,8 +42,10 @@ public class BodyGrabbingManager {
         }
 
         grabInstances.values().forEach(grabInstance ->
-            grabInstance.grabPoint.setPhysicsLocation(VectorHelper.vec3dToVector3f(
-                    grabInstance.player.getCameraPosVec(1.0f).add(grabInstance.player.getRotationVector().multiply(2f)))));
+                grabInstance.grabPoint.setPhysicsLocation(VectorHelper.vec3dToVector3f(
+                        grabInstance.player.getCameraPosVec(1.0f).add(grabInstance.player.getRotationVector().multiply(2f)))
+                )
+        );
     }
 
     public void tick() {
@@ -69,7 +71,8 @@ public class BodyGrabbingManager {
             buf.writeInt(player.getEntityId());
             buf.writeInt(entity.getEntityId());
             PlayerLookup.tracking(entity).forEach(p ->
-                    ServerPlayNetworking.send(p, ThinkingWithPortatosClientPackets.GRAB_PACKET, buf));
+                    ServerPlayNetworking.send(p, ThinkingWithPortatosClientPackets.GRAB_PACKET, buf)
+            );
         }
 
         MinecraftSpace space = MinecraftSpace.get(player.getEntityWorld());
@@ -114,7 +117,8 @@ public class BodyGrabbingManager {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeInt(player.getEntityId());
             PlayerLookup.tracking(grabInstance.grabbedEntity).forEach(p ->
-                    ServerPlayNetworking.send(p, ThinkingWithPortatosClientPackets.UNGRAB_PACKET, buf));
+                    ServerPlayNetworking.send(p, ThinkingWithPortatosClientPackets.UNGRAB_PACKET, buf)
+            );
 
             if (grabInstance.grabbedBody instanceof EntityRigidBody) {
                 grabInstance.grabbedEntity.setVelocity(VectorHelper.vector3fToVec3d(grabInstance.grabbedBody.getLinearVelocity(new Vector3f()).multLocal(0.05f)));

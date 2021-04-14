@@ -15,16 +15,19 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public class PortalPlaceholderEntity extends Entity {
-    public Vec3d axisH;
-    public Vec3d axisW;
     public static final TrackedData<Quaternion> QUATERNION = DataTracker.registerData(PortalPlaceholderEntity.class, QuaternionHandler.QUATERNION_HANDLER);
     public static final TrackedData<Float> ROLL = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public static final TrackedData<Integer> COLOR = DataTracker.registerData(PortalPlaceholderEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    public Vec3d axisH;
+    public Vec3d axisW;
     public Quaternion rotation = Quaternion.IDENTITY;
 
     public PortalPlaceholderEntity(EntityType<?> entityType, World world) {
