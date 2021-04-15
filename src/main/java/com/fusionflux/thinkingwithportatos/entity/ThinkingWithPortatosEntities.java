@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
@@ -69,10 +70,14 @@ public class ThinkingWithPortatosEntities {
             if (!world.isClient()) {
                 executor.execute(() -> {
                     if (!((PhysicsFallingBlockEntity) element).removed && !ThinkingWithPortatos.getBodyGrabbingManager(false).isGrabbed((PhysicsFallingBlockEntity) element)) {
-                        ((PhysicsFallingBlockEntity) element).remove();
                         BlockPos pos = new BlockPos(VectorHelper.vector3fToVec3d(element.getPhysicsLocation(new Vector3f(), 1.0f)));
                         BlockState state = ((PhysicsFallingBlockEntity) element).getBlockState();
-                        world.setBlockState(pos, state);
+
+                        if (!world.getBlockState(pos.down()).isAir() && world.getFluidState(pos.down()).getFluid().equals(Fluids.EMPTY)) {
+                            ((PhysicsFallingBlockEntity) element).remove();
+                            world.breakBlock(pos, true);
+                            world.setBlockState(pos, state);
+                        }
                     }
                 });
             }

@@ -1,13 +1,14 @@
 package com.fusionflux.thinkingwithportatos.packet;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
-import com.fusionflux.thinkingwithportatos.entity.PhysicsFallingBlockEntity;
+import com.fusionflux.thinkingwithportatos.items.GravityGun;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
-import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
+import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
+import com.fusionflux.thinkingwithportatos.physics.GrabUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -16,12 +17,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 
 public class ThinkingWithPortatosServerPackets {
     public static final Identifier PORTAL_LEFT_CLICK = new Identifier(ThinkingWithPortatos.MODID, "portal_left_click");
+    public static final Identifier GRAVITY_LEFT_CLICK = new Identifier(ThinkingWithPortatos.MODID, "gravity_left_click");
     public static final Identifier GRAB_KEY_PRESSED = new Identifier(ThinkingWithPortatos.MODID, "grab_key_pressed");
 
     public static void onPortalLeftClick(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
@@ -30,43 +29,42 @@ public class ThinkingWithPortatosServerPackets {
         ItemStack itemStack = player.getStackInHand(hand);
         player.updateLastActionTime();
 
-        if (!itemStack.isEmpty() && itemStack.getItem() == ThinkingWithPortatosItems.PORTAL_GUN) {
+        if (!itemStack.isEmpty() && itemStack.getItem() instanceof PortalGun) {
             server.execute(() -> ((PortalGun) itemStack.getItem()).useLeft(serverWorld, player, hand));
         }
     }
 
+    public static void onGravityLeftClick(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        Hand hand = buf.readEnumConstant(Hand.class);
+        ItemStack itemStack = player.getStackInHand(hand);
+        player.updateLastActionTime();
+
+        if (!itemStack.isEmpty() && itemStack.getItem() instanceof GravityGun) {
+            server.execute(() -> ThinkingWithPortatos.getBodyGrabbingManager(false).tryUngrab(player, GravityGun.STRENGTH));
+        }
+    }
+
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        int entityId = buf.readInt();
-
         server.execute(() -> {
-            if (player.getMainHandStack().getItem() instanceof PortalGun) {
-                if (entityId == -1) {
-                    if (ThinkingWithPortatos.getBodyGrabbingManager(false).isPlayerGrabbing(player)) {
-                        ThinkingWithPortatos.getBodyGrabbingManager(false).tryUngrab(player);
-                    } else {
-                        HitResult result = player.raycast(4.5, 1.0f, false);
+            Item mainHand = player.getMainHandStack().getItem();
+            Item offHand = player.getOffHandStack().getItem();
 
-                        if (result.getType() != HitResult.Type.MISS) {
-                            BlockPos pos = ((BlockHitResult) result).getBlockPos();
-                            BlockState state = player.world.getBlockState(pos);
+            if (mainHand instanceof PortalGun || offHand instanceof PortalGun || mainHand instanceof GravityGun || offHand instanceof GravityGun) {
+                BodyGrabbingManager manager = ThinkingWithPortatos.getBodyGrabbingManager(false);
 
-                            if (!state.getBlock().canMobSpawnInside() && player.world.getBlockEntity(pos) == null) {
-                                PhysicsFallingBlockEntity fallingBlock = new PhysicsFallingBlockEntity(player.world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
-                                player.world.removeBlock(pos, false);
-                                player.world.spawnEntity(fallingBlock);
-                                ThinkingWithPortatos.getBodyGrabbingManager(false).tryGrab(player, fallingBlock);
-                            }
-                        }
-                    }
+                if (manager.isPlayerGrabbing(player)) {
+                    manager.tryUngrab(player, 0.0f);
                 } else {
-                    Entity entity = player.world.getEntityById(entityId);
+                    Entity entity = GrabUtil.getEntityToGrab(player);
 
-                    if (entity != null) {
-                        boolean isGrabbed = ThinkingWithPortatos.getBodyGrabbingManager(player.world.isClient).isGrabbed(entity);
+                    if (entity == null) {
+                        Entity block = GrabUtil.getBlockToGrab(player);
 
-                        if (player.getMainHandStack().getItem() instanceof PortalGun && !isGrabbed) {
-                            ThinkingWithPortatos.getBodyGrabbingManager(false).tryGrab(player, entity);
+                        if (block != null) {
+                            manager.tryGrab(player, block);
                         }
+                    } else {
+                        manager.tryGrab(player, entity);
                     }
                 }
             }
@@ -75,6 +73,7 @@ public class ThinkingWithPortatosServerPackets {
 
     public static void registerPackets() {
         ServerPlayNetworking.registerGlobalReceiver(PORTAL_LEFT_CLICK, ThinkingWithPortatosServerPackets::onPortalLeftClick);
+        ServerPlayNetworking.registerGlobalReceiver(GRAVITY_LEFT_CLICK, ThinkingWithPortatosServerPackets::onGravityLeftClick);
         ServerPlayNetworking.registerGlobalReceiver(GRAB_KEY_PRESSED, ThinkingWithPortatosServerPackets::onGrabKeyPressed);
     }
 }

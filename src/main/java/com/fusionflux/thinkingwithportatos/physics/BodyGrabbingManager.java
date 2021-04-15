@@ -1,13 +1,14 @@
 package com.fusionflux.thinkingwithportatos.physics;
 
 import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
+import com.fusionflux.thinkingwithportatos.items.GravityGun;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
-import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.EmptyShape;
 import com.jme3.bullet.joints.SixDofSpringJoint;
 import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
+import com.qouteall.immersive_portals.portal.Portal;
 import dev.lazurite.rayon.core.api.event.PhysicsSpaceEvents;
 import dev.lazurite.rayon.core.impl.physics.space.MinecraftSpace;
 import dev.lazurite.rayon.core.impl.util.math.VectorHelper;
@@ -16,12 +17,14 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,17 +44,21 @@ public class BodyGrabbingManager {
             EMPTY_SHAPE = new EmptyShape(false);
         }
 
-        grabInstances.values().forEach(grabInstance ->
-                grabInstance.grabPoint.setPhysicsLocation(VectorHelper.vec3dToVector3f(
-                        grabInstance.player.getCameraPosVec(1.0f).add(grabInstance.player.getRotationVector().multiply(2f)))
-                )
-        );
+        grabInstances.values().forEach(grabInstance -> {
+            grabInstance.grabbedBody.activate();
+            grabInstance.grabPoint.setPhysicsLocation(VectorHelper.vec3dToVector3f(
+                    grabInstance.player.getCameraPosVec(1.0f).add(grabInstance.player.getRotationVector().multiply(2f)))
+            );
+        });
     }
 
     public void tick() {
         grabInstances.values().forEach(grabInstance -> {
-            if (isServer && !(grabInstance.player.getMainHandStack().getItem() instanceof PortalGun)) {
-                tryUngrab(grabInstance.player);
+            Item mainHand = grabInstance.player.getMainHandStack().getItem();
+            Item offHand = grabInstance.player.getOffHandStack().getItem();
+
+            if (isServer && !(mainHand instanceof PortalGun || offHand instanceof PortalGun || mainHand instanceof GravityGun || offHand instanceof GravityGun)) {
+                tryUngrab(grabInstance.player, 0.0f);
             }
 
             if (grabInstance.grabbedBody instanceof EntityRigidBody) {
@@ -61,9 +68,9 @@ public class BodyGrabbingManager {
         });
     }
 
-    public boolean tryGrab(PlayerEntity player, Entity entity) {
-        if (grabInstances.containsKey(player.getUuid())) {
-            return false;
+    public void tryGrab(PlayerEntity player, Entity entity) {
+        if (isPlayerGrabbing(player) || isGrabbed(entity)) {
+            return;
         }
 
         if (player instanceof ServerPlayerEntity) {
@@ -85,61 +92,73 @@ public class BodyGrabbingManager {
             grabInstance.grabbedBody.activate();
         } else {
             grabInstance.grabbedBody = new EntityRigidBody(entity);
-            space.addCollisionObject(grabInstance.grabbedBody);
         }
 
         Vector3f pos = VectorHelper.vec3dToVector3f(player.getCameraPosVec(1.0f).add(player.getRotationVector().multiply(2f)));
         PhysicsRigidBody holdBody = new PhysicsRigidBody(EMPTY_SHAPE, 0);
         holdBody.setPhysicsLocation(pos);
-        space.addCollisionObject(holdBody);
         SixDofSpringJoint joint = new SixDofSpringJoint(grabInstance.grabbedBody, holdBody, Vector3f.ZERO, Vector3f.ZERO, Matrix3f.IDENTITY, Matrix3f.IDENTITY, false);
         joint.setLinearLowerLimit(Vector3f.ZERO);
         joint.setLinearUpperLimit(Vector3f.ZERO);
         joint.setAngularLowerLimit(Vector3f.ZERO);
         joint.setAngularUpperLimit(Vector3f.ZERO);
-        space.addJoint(joint);
+
+        space.getThread().execute(() -> {
+            if (!(entity instanceof EntityPhysicsElement)) {
+                space.addCollisionObject(grabInstance.grabbedBody);
+            }
+
+            space.addCollisionObject(holdBody);
+            space.addJoint(joint);
+        });
 
         grabInstance.grabJoint = joint;
         grabInstance.grabPoint = holdBody;
         grabInstances.put(player.getUuid(), grabInstance);
-
-        return true;
     }
 
-    public boolean tryUngrab(PlayerEntity player) {
+    public void tryUngrab(PlayerEntity player, float strength) {
         GrabInstance grabInstance = grabInstances.remove(player.getUuid());
 
         if (grabInstance == null) {
-            return false;
+            return;
         }
+
+        Vec3d unit = player.getRotationVector();
+        System.out.println("UNGRAB: " + unit);
 
         if (player instanceof ServerPlayerEntity) {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeInt(player.getEntityId());
+            buf.writeFloat(strength);
             PlayerLookup.tracking(grabInstance.grabbedEntity).forEach(p ->
                     ServerPlayNetworking.send(p, ThinkingWithPortatosClientPackets.UNGRAB_PACKET, buf)
             );
 
             if (grabInstance.grabbedBody instanceof EntityRigidBody) {
-                grabInstance.grabbedEntity.setVelocity(VectorHelper.vector3fToVec3d(grabInstance.grabbedBody.getLinearVelocity(new Vector3f()).multLocal(0.05f)));
-
-                if (grabInstance.grabbedEntity instanceof FallingBlockEntity) {
-                    ((FallingBlockEntity) grabInstance.grabbedEntity).setFallingBlockPos(grabInstance.grabbedEntity.getBlockPos());
-                }
+                Vec3d velocity = VectorHelper.vector3fToVec3d(grabInstance.grabbedBody.getLinearVelocity(new Vector3f()).multLocal(0.05f));
+                grabInstance.grabbedEntity.addVelocity(velocity.x, velocity.y, velocity.z);
+                grabInstance.grabbedEntity.addVelocity(unit.x * strength * 0.05f, unit.y * strength * 0.05f, unit.z * strength * 0.05f);
             }
         }
 
-        SixDofSpringJoint joint = grabInstance.grabJoint;
-        PhysicsSpace space = joint.getPhysicsSpace();
-
-        if (grabInstance.grabbedBody instanceof EntityRigidBody) {
-            space.removeCollisionObject(grabInstance.grabbedBody);
+        if (strength > 0.0f) {
+            Random rand = new Random();
+            grabInstance.grabbedBody.setAngularVelocity(new Vector3f(rand.nextFloat() * 4 - 2, rand.nextFloat() * 4 - 2, rand.nextFloat() * 4 - 2));
+            grabInstance.grabbedBody.applyCentralImpulse(VectorHelper.vec3dToVector3f(unit).multLocal(strength).multLocal(grabInstance.grabbedBody.getMass()));
         }
 
-        space.removeCollisionObject(grabInstance.grabPoint);
-        space.removeJoint(joint);
+        SixDofSpringJoint joint = grabInstance.grabJoint;
+        MinecraftSpace space = MinecraftSpace.get(player.world);
 
-        return true;
+        space.getThread().execute(() -> {
+            if (grabInstance.grabbedBody instanceof EntityRigidBody) {
+                space.removeCollisionObject(grabInstance.grabbedBody);
+            }
+
+            space.removeCollisionObject(grabInstance.grabPoint);
+            space.removeJoint(joint);
+        });
     }
 
     public boolean isGrabbed(Entity entity) {
@@ -154,6 +173,10 @@ public class BodyGrabbingManager {
 
     public boolean isPlayerGrabbing(PlayerEntity player) {
         return grabInstances.containsKey(player.getUuid());
+    }
+
+    public static boolean isEntityGrabbable(Entity entity) {
+        return !(entity instanceof Portal);
     }
 
     public static class GrabInstance {

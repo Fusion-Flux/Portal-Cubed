@@ -1,15 +1,19 @@
 package com.fusionflux.thinkingwithportatos.mixin.client;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
+import com.fusionflux.thinkingwithportatos.items.GravityGun;
+import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.packet.ThinkingWithPortatosServerPackets;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.Item;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,11 +21,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.function.BiConsumer;
+
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 
     @Shadow
     public ClientWorld world;
+
     @Shadow
     @Nullable
     public ClientPlayerEntity player;
@@ -51,23 +58,32 @@ public abstract class MinecraftClientMixin {
      */
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
     private void onDoAttack(CallbackInfo ci) {
-        // Probably an unnecessary check as there can't be an attack without a player.
-        if (player != null) {
+        if (this.player != null) {
+            Item mainHand = this.player.getMainHandStack().getItem();
+            Item offHand = this.player.getOffHandStack().getItem();
 
-            // Need to get the hand, but there's probably a cooler looking method than this.
-            Hand hand = null;
-            if (player.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN) {
-                hand = Hand.MAIN_HAND;
-            } else if (player.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN) {
-                hand = Hand.OFF_HAND;
+            BiConsumer<Hand, Identifier> sendLeftClickPacket = (hand, packetId) -> {
+                // If hand != null then there must be a portal gun in hand,
+                // so we can send the packet and cancel the rest of the doAttack method.
+                if (hand != null) {
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeEnumConstant(hand);
+                    ClientPlayNetworking.send(packetId, buf);
+                }
+            };
+
+            // Note: Doesn't allow user to fire two portal guns at once
+            if (mainHand instanceof PortalGun) {
+                sendLeftClickPacket.accept(Hand.MAIN_HAND, ThinkingWithPortatosServerPackets.PORTAL_LEFT_CLICK);
+            } else if (offHand instanceof PortalGun) {
+                sendLeftClickPacket.accept(Hand.OFF_HAND, ThinkingWithPortatosServerPackets.PORTAL_LEFT_CLICK);
+            } else if (mainHand instanceof GravityGun) {
+                sendLeftClickPacket.accept(Hand.MAIN_HAND, ThinkingWithPortatosServerPackets.GRAVITY_LEFT_CLICK);
+            } else if (offHand instanceof GravityGun) {
+                sendLeftClickPacket.accept(Hand.OFF_HAND, ThinkingWithPortatosServerPackets.GRAVITY_LEFT_CLICK);
             }
 
-            // If hand != null then there must be a portal gun in hand,
-            // so we can send the packet and cancel the rest of the doAttack method.
-            if (hand != null) {
-                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeEnumConstant(hand);
-                ClientPlayNetworking.send(ThinkingWithPortatosServerPackets.PORTAL_LEFT_CLICK, buf);
+            if (mainHand instanceof PortalGun || offHand instanceof PortalGun || mainHand instanceof GravityGun || offHand instanceof GravityGun) {
                 ci.cancel();
             }
         }

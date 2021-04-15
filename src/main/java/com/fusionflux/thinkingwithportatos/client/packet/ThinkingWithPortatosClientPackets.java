@@ -72,13 +72,14 @@ public class ThinkingWithPortatosClientPackets {
 
     public static void onUngrab(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         int grabberId = buf.readInt();
+        float punch = buf.readFloat();
 
         client.execute(() -> {
             if (client.world != null) {
                 Entity grabber = client.world.getEntityById(grabberId);
 
                 if (grabber instanceof PlayerEntity) {
-                    ThinkingWithPortatos.getBodyGrabbingManager(true).tryUngrab((PlayerEntity) grabber);
+                    ThinkingWithPortatos.getBodyGrabbingManager(true).tryUngrab((PlayerEntity) grabber, punch);
                 }
             }
         });

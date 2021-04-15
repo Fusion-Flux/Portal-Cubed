@@ -22,6 +22,8 @@ public class PhysicsFallingBlockEntity extends Entity implements EntityPhysicsEl
 
     public PhysicsFallingBlockEntity(EntityType<?> type, World world) {
         super(type, world);
+        getRigidBody().setDragCoefficient(0.001f);
+        getRigidBody().setMass(1.5f);
     }
 
     public PhysicsFallingBlockEntity(World world, double x, double y, double z, BlockState blockState) {
