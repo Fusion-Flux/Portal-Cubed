@@ -15,21 +15,20 @@ public class NeurotoxinBlockEntity extends BlockEntity implements Tickable {
     }
 
 
-
     @Override
     public void tick() {
         assert this.world != null;
-        if(!this.world.isClient){
+        if (!this.world.isClient) {
             age++;
         }
-        if(!this.world.isClient&&this.age % 5 == 0) {
+        if (!this.world.isClient && this.age % 5 == 0) {
             Direction dir = Direction.random(world.getRandom());
             if (this.world.getBlockState(this.getPos().offset(dir)).isAir()) {
                 this.world.setBlockState(this.getPos(), Blocks.AIR.getDefaultState());
                 this.world.setBlockState(this.getPos().offset(dir), ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK.getDefaultState());
             }
         }
-        if(this.age>=6000){
+        if (this.age >= 6000) {
             this.world.setBlockState(this.getPos(), Blocks.AIR.getDefaultState());
         }
     }

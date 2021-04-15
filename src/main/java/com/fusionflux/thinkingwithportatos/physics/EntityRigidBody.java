@@ -36,21 +36,21 @@ public class EntityRigidBody extends PhysicsRigidBody implements Debuggable, Ter
     }
 
     @Override
-    public void setEnvironmentLoadDistance(int environmentLoadDistance) {
-    }
-
-    @Override
     public int getEnvironmentLoadDistance() {
         return this.envLoadDistance;
     }
 
     @Override
-    public void setClump(Clump clump) {
-        this.clump = clump;
+    public void setEnvironmentLoadDistance(int environmentLoadDistance) {
     }
 
     @Override
     public Clump getClump() {
         return this.clump;
+    }
+
+    @Override
+    public void setClump(Clump clump) {
+        this.clump = clump;
     }
 }

@@ -33,6 +33,15 @@ public class CustomPortalEntity extends Portal {
     public static final TrackedData<Boolean> ISACTIVE = DataTracker.registerData(CustomPortalEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final TrackedData<String> STOREDOUTLINE = DataTracker.registerData(CustomPortalEntity.class, TrackedDataHandlerRegistry.STRING);
 
+    static {
+        clientPortalTickSignal = new SignalArged();
+        serverPortalTickSignal = new SignalArged();
+        portalCacheUpdateSignal = new SignalArged();
+        portalDisposeSignal = new SignalArged();
+        readPortalDataSignal = new SignalBiArged();
+        writePortalDataSignal = new SignalBiArged();
+    }
+
     public CustomPortalEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
     }
@@ -43,7 +52,6 @@ public class CustomPortalEntity extends Portal {
         this.getDataTracker().startTracking(STOREDOUTLINE, "null");
         this.getDataTracker().startTracking(ISACTIVE, false);
     }
-
 
     public String getString() {
         return getDataTracker().get(STOREDSTRING);
@@ -98,16 +106,16 @@ public class CustomPortalEntity extends Portal {
                 }
             }*/
 
-            if ((!this.world.getBlockState(this.getBlockPos()).isAir())||(!this.world.getBlockState(new BlockPos(
-                    this.getPos().getX()-Math.abs(this.axisH.getX()),
-                    this.getPos().getY()+this.axisH.getY(),
-                    this.getPos().getZ()-Math.abs(this.axisH.getZ()))).isAir())) {
+            if ((!this.world.getBlockState(this.getBlockPos()).isAir()) || (!this.world.getBlockState(new BlockPos(
+                    this.getPos().getX() - Math.abs(this.axisH.getX()),
+                    this.getPos().getY() + this.axisH.getY(),
+                    this.getPos().getZ() - Math.abs(this.axisH.getZ()))).isAir())) {
 
-                if(!this.getOutline().equals("null")) {
+                if (!this.getOutline().equals("null")) {
                     PortalPlaceholderEntity portalOutline;
                     portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
                     assert portalOutline != null;
-                    if(portalOutline!=null) {
+                    if (portalOutline != null) {
                         portalOutline.kill();
                     }
                 }
@@ -115,11 +123,11 @@ public class CustomPortalEntity extends Portal {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                 System.out.println("killed");
-                if(!this.getString().equals("null")){
+                if (!this.getString().equals("null")) {
                     CustomPortalEntity otherPortal;
                     otherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
                     assert otherPortal != null;
-                    if(otherPortal!=null) {
+                    if (otherPortal != null) {
                         otherPortal.setDestination(otherPortal.getOriginPos());
                         PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(otherPortal), otherPortal);
                         otherPortal.setActive(false);
@@ -128,36 +136,36 @@ public class CustomPortalEntity extends Portal {
                 }
             }
             BlockPos alteredPos = new BlockPos(
-                    this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX(),
-                    this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY(),
-                    this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ());
+                    this.getPos().getX() - this.axisW.crossProduct(this.axisH).getX(),
+                    this.getPos().getY() - this.axisW.crossProduct(this.axisH).getY(),
+                    this.getPos().getZ() - this.axisW.crossProduct(this.axisH).getZ());
             BlockPos lowerPos = new BlockPos(
-                    this.getPos().getX()-this.axisW.crossProduct(this.axisH).getX()-Math.abs(this.axisH.getX()),
-                    this.getPos().getY()-this.axisW.crossProduct(this.axisH).getY()+this.axisH.getY(),
-                    this.getPos().getZ()-this.axisW.crossProduct(this.axisH).getZ()-Math.abs(this.axisH.getZ()));
+                    this.getPos().getX() - this.axisW.crossProduct(this.axisH).getX() - Math.abs(this.axisH.getX()),
+                    this.getPos().getY() - this.axisW.crossProduct(this.axisH).getY() + this.axisH.getY(),
+                    this.getPos().getZ() - this.axisW.crossProduct(this.axisH).getZ() - Math.abs(this.axisH.getZ()));
 
-            Direction portalFacing = Direction.fromVector((int)this.getNormal().getX(),(int)this.getNormal().getY(),(int)this.getNormal().getZ());
+            Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
 
-            if ((!this.world.getBlockState(alteredPos).isSideSolidFullSquare(world,alteredPos,portalFacing))||
-                    (!this.world.getBlockState(lowerPos).isSideSolidFullSquare(world,lowerPos,portalFacing)|| this.world.getBlockState(alteredPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
-                            ||this.world.getBlockState(lowerPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
+            if ((!this.world.getBlockState(alteredPos).isSideSolidFullSquare(world, alteredPos, portalFacing)) ||
+                    (!this.world.getBlockState(lowerPos).isSideSolidFullSquare(world, lowerPos, portalFacing) || this.world.getBlockState(alteredPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
+                            || this.world.getBlockState(lowerPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
                     )) {
-                if(!this.getOutline().equals("null")) {
+                if (!this.getOutline().equals("null")) {
                     PortalPlaceholderEntity portalOutline;
                     portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
                     assert portalOutline != null;
-                    if(portalOutline!=null) {
+                    if (portalOutline != null) {
                         portalOutline.kill();
                     }
                 }
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                 System.out.println("killed");
-                if(!this.getString().equals("null")){
+                if (!this.getString().equals("null")) {
                     CustomPortalEntity otherPortal;
                     otherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
                     assert otherPortal != null;
-                    if(otherPortal!=null) {
+                    if (otherPortal != null) {
                         otherPortal.setDestination(otherPortal.getOriginPos());
                         PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(otherPortal), otherPortal);
                         otherPortal.setActive(false);
@@ -167,14 +175,5 @@ public class CustomPortalEntity extends Portal {
             }
         }
         super.tick();
-    }
-
-    static {
-        clientPortalTickSignal = new SignalArged();
-        serverPortalTickSignal = new SignalArged();
-        portalCacheUpdateSignal = new SignalArged();
-        portalDisposeSignal = new SignalArged();
-        readPortalDataSignal = new SignalBiArged();
-        writePortalDataSignal = new SignalBiArged();
     }
 }

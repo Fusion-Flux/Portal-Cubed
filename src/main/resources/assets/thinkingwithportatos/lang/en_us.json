@@ -12,7 +12,9 @@
   "item.thinkingwithportatos.companion_cube": "Companion Cube",
   "item.thinkingwithportatos.gel_orb": "Gel Orb",
   "item.thinkingwithportatos.portal_gun": "Portal Gun",
-  "item.thinkingwithportatos.portal_gun_model2": "Portal Gun",
+  "item.thinkingwithportatos.portal_gun_frame": "Portal Gun Frame",
+  "item.thinkingwithportatos.portal_gun_casing": "Portal Gun Casing",
+  "item.thinkingwithportatos.mini_blackhole": "Miniature Black hole",
   "item.thinkingwithportatos.paint_gun": "Paint Gun",
 
   "block.thinkingwithportatos.propulsion_gel": "Propulsion Gel",
@@ -46,6 +48,10 @@
   "block.thinkingwithportatos.bottom_padded_grey_panel": "Bottom Padded Grey Panel",
   "block.thinkingwithportatos.top_2x2_padded_grey_panel": "Top 2X2 Padded Grey Panel",
   "block.thinkingwithportatos.bottom_2x2_padded_grey_panel": "Bottom 2X2 Padded Grey Panel",
+
+  "block.thinkingwithportatos.neurotoxin_emitter": "Neurotoxin Emitter",
+  "block.thinkingwithportatos.excursion_funnel_emitter": "Excursion Funnel Emitter",
+  "block.thinkingwithportatos.sliding_door": "Sliding Door",
 
 
   "block.thinkingwithportatos.emitter": "Hardlight Bridge Emitter",

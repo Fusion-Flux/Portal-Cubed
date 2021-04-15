@@ -37,6 +37,34 @@ public class ExcursionFunnelEmitter extends BlockWithEntity {
         super(settings);
     }
 
+    private static VoxelShape method_31018(BlockState blockState) {
+        VoxelShape voxelShape = VoxelShapes.empty();
+        if (blockState.get(Properties.FACING) == Direction.UP) {
+            voxelShape = UP_SHAPE;
+        }
+
+        if (blockState.get(Properties.FACING) == Direction.DOWN) {
+            voxelShape = DOWN_SHAPE;
+        }
+
+        if (blockState.get(Properties.FACING) == Direction.NORTH) {
+            voxelShape = NORTH_SHAPE;
+        }
+
+        if (blockState.get(Properties.FACING) == Direction.SOUTH) {
+            voxelShape = SOUTH_SHAPE;
+        }
+
+        if (blockState.get(Properties.FACING) == Direction.EAST) {
+            voxelShape = EAST_SHAPE;
+        }
+
+        if (blockState.get(Properties.FACING) == Direction.WEST) {
+            voxelShape = WEST_SHAPE;
+        }
+
+        return voxelShape;
+    }
 
     @Override
     public VoxelShape getVisualShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -51,35 +79,6 @@ public class ExcursionFunnelEmitter extends BlockWithEntity {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return method_31018(state);
-    }
-
-    private static VoxelShape method_31018(BlockState blockState) {
-        VoxelShape voxelShape = VoxelShapes.empty();
-        if (blockState.get(Properties.FACING)==Direction.UP) {
-            voxelShape = UP_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.DOWN) {
-            voxelShape = DOWN_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.NORTH) {
-            voxelShape = NORTH_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.SOUTH) {
-            voxelShape = SOUTH_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.EAST) {
-            voxelShape = EAST_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.WEST) {
-            voxelShape = WEST_SHAPE;
-        }
-
-        return voxelShape;
     }
 
     @Override
@@ -136,27 +135,27 @@ public class ExcursionFunnelEmitter extends BlockWithEntity {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        this.addCollisionEffects(world, entity,pos);
+        this.addCollisionEffects(world, entity, pos);
     }
 
 
-    private void addCollisionEffects(World world, Entity entity,BlockPos pos) {
-        if(world.isClient() && world.getBlockState(pos).get(Properties.POWERED)){
+    private void addCollisionEffects(World world, Entity entity, BlockPos pos) {
+        if (world.isClient() && world.getBlockState(pos).get(Properties.POWERED)) {
             BlockState state = world.getBlockState(pos);
-            double xoffset = (entity.getPos().getX()-pos.getX())-.5;
-            double yoffset = (entity.getPos().getY()-pos.getY())-1.25;
-            double zoffset = (entity.getPos().getZ()-pos.getZ())-.5;
-            Vec3d direction = new Vec3d(0,0,0);
-            direction=new Vec3d(state.get(Properties.FACING).getVector().getX(),state.get(Properties.FACING).getVector().getY(),state.get(Properties.FACING).getVector().getZ());
+            double xoffset = (entity.getPos().getX() - pos.getX()) - .5;
+            double yoffset = (entity.getPos().getY() - pos.getY()) - 1.25;
+            double zoffset = (entity.getPos().getZ() - pos.getZ()) - .5;
+            Vec3d direction = new Vec3d(0, 0, 0);
+            direction = new Vec3d(state.get(Properties.FACING).getVector().getX(), state.get(Properties.FACING).getVector().getY(), state.get(Properties.FACING).getVector().getZ());
             direction = direction.multiply(.1);
-            if(direction.x!=0){
-                entity.setVelocity(direction.getX(),0-yoffset*.048,entity.getVelocity().getZ()-(zoffset/Math.abs(zoffset))*.01);
+            if (direction.x != 0) {
+                entity.setVelocity(direction.getX(), 0 - yoffset * .048, entity.getVelocity().getZ() - (zoffset / Math.abs(zoffset)) * .01);
             }
-            if(direction.y!=0){
-                entity.setVelocity(entity.getVelocity().getX()-(xoffset/Math.abs(xoffset))*.01,0.08+direction.getY(),entity.getVelocity().getZ()-(zoffset/Math.abs(zoffset))*.01);
+            if (direction.y != 0) {
+                entity.setVelocity(entity.getVelocity().getX() - (xoffset / Math.abs(xoffset)) * .01, 0.08 + direction.getY(), entity.getVelocity().getZ() - (zoffset / Math.abs(zoffset)) * .01);
             }
-            if(direction.z!=0){
-                entity.setVelocity(entity.getVelocity().getX()-(xoffset/Math.abs(xoffset))*.01,0-yoffset*.048,direction.getZ());
+            if (direction.z != 0) {
+                entity.setVelocity(entity.getVelocity().getX() - (xoffset / Math.abs(xoffset)) * .01, 0 - yoffset * .048, direction.getZ());
             }
         }
     }

@@ -2,13 +2,15 @@ package com.fusionflux.thinkingwithportatos.client;
 
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.client.key.GrabKeyBinding;
+import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
 import com.fusionflux.thinkingwithportatos.client.render.CubeEntityRenderer;
 import com.fusionflux.thinkingwithportatos.client.render.PhysicsFallingBlockEntityRenderer;
 import com.fusionflux.thinkingwithportatos.client.render.PortalHud;
 import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRenderer;
-import com.fusionflux.thinkingwithportatos.entity.*;
+import com.fusionflux.thinkingwithportatos.entity.GelOrbEntity;
+import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
+import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
-import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
 import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
 import com.qouteall.immersive_portals.render.PortalEntityRenderer;
 import dev.lazurite.rayon.core.impl.util.event.BetterClientLifecycleEvents;
@@ -28,6 +30,19 @@ import net.minecraft.item.DyeableItem;
 public class ThinkingWithPortatosClient implements ClientModInitializer {
     public static final BodyGrabbingManager bodyGrabbingManager = new BodyGrabbingManager(false);
 
+    public static void registerBlockRenderLayers() {
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.HLB_BLOCK, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.HLB_EMITTER_BLOCK, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL_EMITTER, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.NEUROTOXIN_EMITTER, RenderLayer.getTranslucent());
+    }
+
+    public static void registerItemRenderLayers() {
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem) stack.getItem()).getColor(stack), ThinkingWithPortatosItems.PORTAL_GUN);
+    }
+
     @Override
     public void onInitializeClient() {
         registerEntityRenderers();
@@ -35,6 +50,8 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         registerBlockRenderLayers();
         ThinkingWithPortatosClientPackets.registerPackets();
         GrabKeyBinding.register();
+
+        PortalGun.registerAlternateModels();
 
         BetterClientLifecycleEvents.DISCONNECT.register((client, world) -> bodyGrabbingManager.grabInstances.clear());
         ClientTickEvents.END_CLIENT_TICK.register(client -> bodyGrabbingManager.tick());
@@ -50,19 +67,5 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer<GelOrbEntity>(dispatcher, context.getItemRenderer()));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.PHYSICS_FALLING_BLOCK, (dispatcher, context) -> new PhysicsFallingBlockEntityRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.REPULSION_GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
-    }
-
-    public static void registerBlockRenderLayers() {
-        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.HLB_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.HLB_EMITTER_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL_EMITTER, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.NEUROTOXIN_EMITTER, RenderLayer.getTranslucent());
-    }
-
-    public static void registerItemRenderLayers() {
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem) stack.getItem()).getColor(stack), ThinkingWithPortatosItems.PORTAL_GUN);
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem) stack.getItem()).getColor(stack), ThinkingWithPortatosItems.PORTAL_GUN_MODEL2);
     }
 }

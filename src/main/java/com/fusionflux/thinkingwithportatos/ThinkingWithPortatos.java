@@ -12,6 +12,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -23,10 +24,18 @@ public class ThinkingWithPortatos implements ModInitializer {
 
     public static final ItemGroup ThinkingWithPortatosGroup = FabricItemGroupBuilder.build(
             id("general"),
-            () -> new ItemStack(ThinkingWithPortatosItems.PORTAL_GUN_MODEL2));
+            () -> new ItemStack(ThinkingWithPortatosItems.PORTAL_GUN));
 
     public static Identifier id(String path) {
         return new Identifier(MODID, path);
+    }
+
+    public static BodyGrabbingManager getBodyGrabbingManager(boolean client) {
+        if (client) {
+            return ThinkingWithPortatosClient.bodyGrabbingManager;
+        } else {
+            return bodyGrabbingManager;
+        }
     }
 
     @Override
@@ -39,13 +48,6 @@ public class ThinkingWithPortatos implements ModInitializer {
         ThinkingWithPortatosSounds.registerSounds();
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> bodyGrabbingManager.grabInstances.clear());
         ServerTickEvents.END_SERVER_TICK.register(server -> bodyGrabbingManager.tick());
-    }
-
-    public static BodyGrabbingManager getBodyGrabbingManager(boolean client) {
-        if (client) {
-            return ThinkingWithPortatosClient.bodyGrabbingManager;
-        } else {
-            return bodyGrabbingManager;
-        }
+        FlammableBlockRegistry.getDefaultInstance().add(ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK,10000,10000);
     }
 }

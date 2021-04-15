@@ -368,5 +368,19 @@
 			"origin": [14, 15, 10],
 			"children": [20, 21, 22]
 		}
+	],
+	"overrides": [
+		{
+			"predicate": {
+				"thinkingwithportatos:variant": 1
+			},
+			"model": "thinkingwithportatos:item/portal_gun_detailed"
+		},
+		{
+			"predicate": {
+				"thinkingwithportatos:variant": 2
+			},
+			"model": "thinkingwithportatos:item/portal_gun_ultra_detailed"
+		}
 	]
 }

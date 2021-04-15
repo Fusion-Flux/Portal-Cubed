@@ -111,9 +111,7 @@ if(!this.isFallFlying()) {
                 recentlyTouchedPortal = false;
             }
 
-            if (this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN || this.getMainHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
-                world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
-            } else if (this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN || this.getOffHandStack().getItem() == ThinkingWithPortatosItems.PORTAL_GUN_MODEL2) {
+            if (this.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)) {
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
             }
         }
@@ -130,38 +128,38 @@ if(!this.isFallFlying()) {
         }
     }
 
-    @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At( value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D" ), cancellable = true)
+    @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D"), cancellable = true)
     public void dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<@Nullable ItemEntity> cir) {
-    if(stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN)){
-        CompoundTag tag = stack.getOrCreateTag();
-        CompoundTag portalsTag = tag.getCompound(world.getRegistryKey().toString());
-        CustomPortalEntity portalholder;
-        if (portalsTag.contains(("Left") + "Portal")) {
-            portalholder = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Left") + "Portal"));
-            if(portalholder!=null){
-                portalholder.kill();
+        if (!this.world.isClient && stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN)) {
+            CompoundTag tag = stack.getOrCreateTag();
+            CompoundTag portalsTag = tag.getCompound(world.getRegistryKey().toString());
+            CustomPortalEntity portalholder;
+            if (portalsTag.contains(("Left") + "Portal")) {
+                portalholder = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Left") + "Portal"));
+                if (portalholder != null) {
+                    portalholder.kill();
+                }
+            }
+            if (portalsTag.contains(("Right") + "Portal")) {
+                portalholder = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Portal"));
+                if (portalholder != null) {
+                    portalholder.kill();
+                }
+            }
+            PortalPlaceholderEntity portalOutline;
+            if (portalsTag.contains(("Left") + "Background")) {
+                portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Left") + "Background"));
+                if (portalOutline != null) {
+                    portalOutline.kill();
+                }
+            }
+            if (portalsTag.contains(("Right") + "Background")) {
+                portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Background"));
+                if (portalOutline != null) {
+                    portalOutline.kill();
+                }
             }
         }
-        if (portalsTag.contains(("Right") + "Portal")) {
-            portalholder = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Portal"));
-            if(portalholder!=null){
-                portalholder.kill();
-            }
-        }
-        PortalPlaceholderEntity portalOutline;
-        if (portalsTag.contains(("Left") + "Background")) {
-            portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Left") + "Background"));
-            if(portalOutline!=null){
-                portalOutline.kill();
-            }
-        }
-        if (portalsTag.contains(("Right") + "Background")) {
-            portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Background"));
-            if(portalOutline!=null){
-                portalOutline.kill();
-            }
-        }
-    }
     }
 
 }

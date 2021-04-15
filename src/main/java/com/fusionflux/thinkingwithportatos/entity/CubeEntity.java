@@ -3,7 +3,6 @@ package com.fusionflux.thinkingwithportatos.entity;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.jme3.math.Vector3f;
-
 import dev.lazurite.rayon.core.impl.physics.PhysicsThread;
 import dev.lazurite.rayon.core.impl.physics.space.MinecraftSpace;
 import dev.lazurite.rayon.core.impl.physics.space.body.ElementRigidBody;
@@ -22,9 +21,9 @@ import net.minecraft.world.World;
 
 public class CubeEntity extends Entity implements EntityPhysicsElement {
     protected final ElementRigidBody RIGID_BODY = new ElementRigidBody(this);
+    protected final EntityTrackingSoundInstance CUBESCRAPENOISE = new EntityTrackingSoundInstance(ThinkingWithPortatosSounds.CUBE_SCRAPE_EVENT, this.getSoundCategory(), .05F, 1F, this);
     private float storedDamage = 0.0F;
     private int storedAge = 0;
-    protected final EntityTrackingSoundInstance CUBESCRAPENOISE = new EntityTrackingSoundInstance(ThinkingWithPortatosSounds.CUBE_SCRAPE_EVENT, this.getSoundCategory(), .05F, 1F, this);
 
     public CubeEntity(EntityType<?> entityType, World world) {
         super(entityType, world);

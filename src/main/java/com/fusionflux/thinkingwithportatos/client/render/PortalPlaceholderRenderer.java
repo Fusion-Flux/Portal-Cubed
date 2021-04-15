@@ -31,11 +31,11 @@ public class PortalPlaceholderRenderer extends EntityRenderer<PortalPlaceholderE
 
 
         int color = entity.getColor() * -1;
-        if(color==-16383998){
-            color=1908001;
+        if (color == -16383998) {
+            color = 1908001;
         }
-        if(color==16383998){
-            color=-1908001;
+        if (color == 16383998) {
+            color = -1908001;
         }
 //System.out.println(color);
         int r = (color & 0xFF0000) >> 16;

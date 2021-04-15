@@ -17,5 +17,4 @@ public interface EntityAttachments {
     void setMaxFallSpeed(double maxFallSpeed);
 
 
-
 }

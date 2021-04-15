@@ -27,7 +27,6 @@ public class ExcursionFunnelEntity extends BlockEntity implements Tickable {
         assert world != null;
 
 
-
         if (!world.isClient) {
             // Iterate over supporting emitters to guarantee support
             ArrayList<BlockPos.Mutable> emittersToRemove = new ArrayList<>();
