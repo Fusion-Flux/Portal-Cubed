@@ -23,6 +23,7 @@ import java.util.Optional;
 
 public class PhysicsFallingBlockEntity extends Entity implements EntityPhysicsElement {
     private static final TrackedData<Optional<BlockState>> BLOCK_STATE = DataTracker.registerData(PhysicsFallingBlockEntity.class, TrackedDataHandlerRegistry.OPTIONAL_BLOCK_STATE);
+    private static final TrackedData<BlockPos> BLOCK_POS = DataTracker.registerData(PhysicsFallingBlockEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
     private final ElementRigidBody rigidBody = new ElementRigidBody(this);
 
     public PhysicsFallingBlockEntity(EntityType<?> type, World world) {
@@ -35,6 +36,7 @@ public class PhysicsFallingBlockEntity extends Entity implements EntityPhysicsEl
         this(ThinkingWithPortatosEntities.PHYSICS_FALLING_BLOCK, world);
         this.updatePosition(x, y, z);
         this.setBlockState(blockState);
+        this.setFallingBlockPos(new BlockPos(x, y, z));
     }
 
     public void onCollision() {
@@ -53,6 +55,7 @@ public class PhysicsFallingBlockEntity extends Entity implements EntityPhysicsEl
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(BLOCK_STATE, Optional.ofNullable(Blocks.AIR.getDefaultState()));
+        this.getDataTracker().startTracking(BLOCK_POS, getBlockPos());
     }
 
     @Override
@@ -86,5 +89,13 @@ public class PhysicsFallingBlockEntity extends Entity implements EntityPhysicsEl
 
     public void setBlockState(BlockState blockState) {
         getDataTracker().set(BLOCK_STATE, Optional.ofNullable(blockState));
+    }
+
+    public BlockPos getFallingBlockPos() {
+        return getDataTracker().get(BLOCK_POS);
+    }
+
+    public void setFallingBlockPos(BlockPos blockPos) {
+        getDataTracker().set(BLOCK_POS, blockPos);
     }
 }
