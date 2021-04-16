@@ -19,12 +19,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class GrabUtil {
-    public static final float REACH = 4.5f;
-
     public static @Nullable Entity getEntityToGrab(PlayerEntity player) {
         Vec3d vec3d = player.getCameraPosVec(1.0f);
         Vec3d vec3d2 = player.getRotationVec(1.0f);
-        double d = REACH;
+        double d = 5.0;
         Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
         Box box = player.getBoundingBox().stretch(vec3d2.multiply(d)).expand(1.0D, 1.0D, 1.0D);
         EntityHitResult result = raycast(player, vec3d, vec3d3, box, GrabUtil::isEntityGrabbable, d);
