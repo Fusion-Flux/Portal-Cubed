@@ -1,7 +1,6 @@
 package com.fusionflux.thinkingwithportatos.mixin.client;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
-import com.fusionflux.thinkingwithportatos.items.GravityGun;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.packet.ThinkingWithPortatosServerPackets;
@@ -77,13 +76,9 @@ public abstract class MinecraftClientMixin {
                 sendLeftClickPacket.accept(Hand.MAIN_HAND, ThinkingWithPortatosServerPackets.PORTAL_LEFT_CLICK);
             } else if (offHand instanceof PortalGun) {
                 sendLeftClickPacket.accept(Hand.OFF_HAND, ThinkingWithPortatosServerPackets.PORTAL_LEFT_CLICK);
-            } else if (mainHand instanceof GravityGun) {
-                sendLeftClickPacket.accept(Hand.MAIN_HAND, ThinkingWithPortatosServerPackets.GRAVITY_LEFT_CLICK);
-            } else if (offHand instanceof GravityGun) {
-                sendLeftClickPacket.accept(Hand.OFF_HAND, ThinkingWithPortatosServerPackets.GRAVITY_LEFT_CLICK);
             }
 
-            if (mainHand instanceof PortalGun || offHand instanceof PortalGun || mainHand instanceof GravityGun || offHand instanceof GravityGun) {
+            if (mainHand instanceof PortalGun || offHand instanceof PortalGun) {
                 ci.cancel();
             }
         }

@@ -1,7 +1,6 @@
 package com.fusionflux.thinkingwithportatos.packet;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
-import com.fusionflux.thinkingwithportatos.items.GravityGun;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
 import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
 import com.fusionflux.thinkingwithportatos.physics.GrabUtil;
@@ -20,7 +19,6 @@ import net.minecraft.util.Identifier;
 
 public class ThinkingWithPortatosServerPackets {
     public static final Identifier PORTAL_LEFT_CLICK = new Identifier(ThinkingWithPortatos.MODID, "portal_left_click");
-    public static final Identifier GRAVITY_LEFT_CLICK = new Identifier(ThinkingWithPortatos.MODID, "gravity_left_click");
     public static final Identifier GRAB_KEY_PRESSED = new Identifier(ThinkingWithPortatos.MODID, "grab_key_pressed");
 
     public static void onPortalLeftClick(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
@@ -34,22 +32,12 @@ public class ThinkingWithPortatosServerPackets {
         }
     }
 
-    public static void onGravityLeftClick(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        Hand hand = buf.readEnumConstant(Hand.class);
-        ItemStack itemStack = player.getStackInHand(hand);
-        player.updateLastActionTime();
-
-        if (!itemStack.isEmpty() && itemStack.getItem() instanceof GravityGun) {
-            server.execute(() -> ThinkingWithPortatos.getBodyGrabbingManager(false).tryUngrab(player, GravityGun.STRENGTH));
-        }
-    }
-
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         server.execute(() -> {
             Item mainHand = player.getMainHandStack().getItem();
             Item offHand = player.getOffHandStack().getItem();
 
-            if (mainHand instanceof PortalGun || offHand instanceof PortalGun || mainHand instanceof GravityGun || offHand instanceof GravityGun) {
+            if (mainHand instanceof PortalGun || offHand instanceof PortalGun) {
                 BodyGrabbingManager manager = ThinkingWithPortatos.getBodyGrabbingManager(false);
 
                 if (manager.isPlayerGrabbing(player)) {
@@ -73,7 +61,6 @@ public class ThinkingWithPortatosServerPackets {
 
     public static void registerPackets() {
         ServerPlayNetworking.registerGlobalReceiver(PORTAL_LEFT_CLICK, ThinkingWithPortatosServerPackets::onPortalLeftClick);
-        ServerPlayNetworking.registerGlobalReceiver(GRAVITY_LEFT_CLICK, ThinkingWithPortatosServerPackets::onGravityLeftClick);
         ServerPlayNetworking.registerGlobalReceiver(GRAB_KEY_PRESSED, ThinkingWithPortatosServerPackets::onGrabKeyPressed);
     }
 }

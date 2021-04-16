@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.physics;
 
 import com.fusionflux.thinkingwithportatos.entity.PhysicsFallingBlockEntity;
+import com.qouteall.immersive_portals.portal.Portal;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +27,7 @@ public class GrabUtil {
         double d = REACH;
         Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
         Box box = player.getBoundingBox().stretch(vec3d2.multiply(d)).expand(1.0D, 1.0D, 1.0D);
-        EntityHitResult result = raycast(player, vec3d, vec3d3, box, BodyGrabbingManager::isEntityGrabbable, d);
+        EntityHitResult result = raycast(player, vec3d, vec3d3, box, GrabUtil::isEntityGrabbable, d);
 
         if (result != null && result.getEntity() != null) {
             if (result.getEntity().hasVehicle()) {
@@ -99,5 +100,9 @@ public class GrabUtil {
 
             return new EntityHitResult(entity2, vec3d3);
         }
+    }
+
+    public static boolean isEntityGrabbable(Entity entity) {
+        return !(entity instanceof Portal) && !(entity instanceof PlayerEntity);
     }
 }

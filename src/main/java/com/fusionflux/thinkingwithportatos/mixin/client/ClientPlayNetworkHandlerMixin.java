@@ -20,7 +20,7 @@ public class ClientPlayNetworkHandlerMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     public void onEntityPosition(EntityPositionS2CPacket packet, CallbackInfo info, Entity entity) {
-        if (ThinkingWithPortatos.getBodyGrabbingManager(entity.world.isClient).isGrabbed(entity)) {
+        if (entity != null && ThinkingWithPortatos.getBodyGrabbingManager(entity.world.isClient).isGrabbed(entity)) {
             info.cancel();
         }
     }
@@ -32,7 +32,7 @@ public class ClientPlayNetworkHandlerMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     public void onEntityUpdate(EntityS2CPacket packet, CallbackInfo info, Entity entity) {
-        if (ThinkingWithPortatos.getBodyGrabbingManager(entity.world.isClient).isGrabbed(entity)) {
+        if (entity != null && ThinkingWithPortatos.getBodyGrabbingManager(entity.world.isClient).isGrabbed(entity)) {
             info.cancel();
         }
     }
