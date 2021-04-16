@@ -30,6 +30,7 @@ public class CubeEntity extends Entity implements EntityPhysicsElement {
         this.getRigidBody().setMass(1.0f);
         this.getRigidBody().setFriction(0.8f);
         this.getRigidBody().setRestitution(0.3f);
+        this.getRigidBody().setDragCoefficient(0.001f);
     }
 
     @Override

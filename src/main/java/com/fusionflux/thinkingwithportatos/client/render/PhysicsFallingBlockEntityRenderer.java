@@ -41,8 +41,7 @@ public class PhysicsFallingBlockEntityRenderer extends EntityRenderer<PhysicsFal
             matrixStack.push();
             matrixStack.multiply(rot);
             matrixStack.translate(bounds.x, bounds.y, bounds.z);
-//            matrixStack.translate(-0.5D, 0.0D, -0.5D);
-            blockRenderManager.getModelRenderer().render(world, blockRenderManager.getModel(blockState), blockState, blockPos, matrixStack, vertexConsumerProvider.getBuffer(RenderLayers.getMovingBlockLayer(blockState)), false, new Random(), blockState.getRenderingSeed(fallingBlockEntity.getBlockPos()), OverlayTexture.DEFAULT_UV);
+            blockRenderManager.getModelRenderer().render(world, blockRenderManager.getModel(blockState), blockState, blockPos, matrixStack, vertexConsumerProvider.getBuffer(RenderLayers.getMovingBlockLayer(blockState)), false, new Random(), blockState.getRenderingSeed(fallingBlockEntity.getFallingBlockPos()), OverlayTexture.DEFAULT_UV);
             matrixStack.pop();
 
             super.render(fallingBlockEntity, f, g, matrixStack, vertexConsumerProvider, i);
