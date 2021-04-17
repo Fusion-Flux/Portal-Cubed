@@ -28,7 +28,7 @@ public class CubeEntity extends Entity implements EntityPhysicsElement {
     public CubeEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
         this.getRigidBody().setMass(1.0f);
-        this.getRigidBody().setFriction(0.8f);
+        this.getRigidBody().setFriction(1.5f);
         this.getRigidBody().setRestitution(0.3f);
         this.getRigidBody().setDragCoefficient(0.001f);
     }
@@ -41,20 +41,21 @@ public class CubeEntity extends Entity implements EntityPhysicsElement {
 
     public void onCollision(float impulse) {
         if (!world.isClient()) {
-            if (impulse >= .15 && impulse <= .5) {
-                if (Math.abs(this.age - this.storedAge) > 2) {
+          //  System.out.println(impulse);
+            if (impulse > .1 && impulse < 5) {
+                //if (Math.abs(this.age - this.storedAge) > 2) {
                     world.playSound(null, getX(), getY(), getZ(), ThinkingWithPortatosSounds.CUBE_LOW_HIT_EVENT, SoundCategory.NEUTRAL, .25f, 1F);
-                    //System.out.println("lowimpact");
-                    this.storedAge = this.age;
-                }
+                    //System.out.println("lowimpact"+impulse);
+                    //this.storedAge = this.age;
+                //}
             }
-            if (impulse >= .5) {
-                if (Math.abs(this.age - this.storedAge) > 2) {
+            if (impulse >= 5) {
+                //if (Math.abs(this.age - this.storedAge) > 2) {
                     world.playSound(null, getX(), getY(), getZ(), ThinkingWithPortatosSounds.CUBE_HIGH_HIT_EVENT, SoundCategory.NEUTRAL, .25f, 1F);
-                    //System.out.println("highimpact");
-                    this.storedAge = this.age;
+                   // System.out.println("highimpact"+impulse);
+                   // this.storedAge = this.age;
                 }
-            }
+           // }
         }
     }
 

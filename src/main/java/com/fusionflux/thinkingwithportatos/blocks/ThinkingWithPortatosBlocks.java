@@ -3,16 +3,18 @@ package com.fusionflux.thinkingwithportatos.blocks;
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.blocks.blockentities.*;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
+import com.fusionflux.thinkingwithportatos.fluids.AcidFluid;
+import com.fusionflux.thinkingwithportatos.fluids.CustomFluidBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.tag.TagRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.block.MaterialColor;
-import net.minecraft.block.PillarBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.Tag;
@@ -63,12 +65,19 @@ public class ThinkingWithPortatosBlocks {
     public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().noCollision().sounds(BlockSoundGroup.METAL));
     public static final ExcursionFunnelEmitter EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
     public static final ExcursionFunnel EXCURSION_FUNNEL = new ExcursionFunnel(FabricBlockSettings.of(Material.AIR).nonOpaque().noCollision());
+    public static final LightBlock LIGHT_CUBE = new LightBlock(FabricBlockSettings.of(Material.AIR).luminance(15).noCollision().air().hardness(3.5f));
+
     public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
     public static BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY;
     public static BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY;
     public static BlockEntityType<NeurotoxinEmitterBlockEntity> NEUROTOXIN_EMITTER_ENTITY;
     public static BlockEntityType<ExcursionFunnelEmitterEntity> EXCURSION_FUNNEL_EMMITER_ENTITY;
     public static BlockEntityType<ExcursionFunnelEntity> EXCURSION_FUNNEL_ENTITY;
+
+    public static FlowableFluid STILL_ACID;
+    public static FlowableFluid FLOWING_ACID;
+    public static Item ACID_BUCKET;
+    public static Block ACID;
 
     public static Tag<Block> MY_TAG = TagRegistry.block(new Identifier("thinkingwithportatos", "hpd_deny_launch"));
 
@@ -137,6 +146,7 @@ public class ThinkingWithPortatosBlocks {
             Registry.register(Registry.ITEM, id("bottom_2x2_gritty_white_panel"), new BlockItem(BOTTOM_2X2_GRITTY_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
             Registry.register(Registry.BLOCK, id("top_2x2_gritty_white_panel"), TOP_2X2_GRITTY_WHITE_PANEL);
             Registry.register(Registry.ITEM, id("top_2x2_gritty_white_panel"), new BlockItem(TOP_2X2_GRITTY_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("light_cube"), LIGHT_CUBE);
 
             HLB_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("emitter_test_entity"), BlockEntityType.Builder.create(HardLightBridgeEmitterBlockEntity::new, HLB_EMITTER_BLOCK).build(null));
             Registry.register(Registry.BLOCK, id("emitter"), HLB_EMITTER_BLOCK);
@@ -155,7 +165,10 @@ public class ThinkingWithPortatosBlocks {
             Registry.register(Registry.ITEM, id("excursion_funnel_emitter"), new BlockItem(EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
             EXCURSION_FUNNEL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_entity"), BlockEntityType.Builder.create(ExcursionFunnelEntity::new, EXCURSION_FUNNEL).build(null));
             Registry.register(Registry.BLOCK, id("excursion_funnel"), EXCURSION_FUNNEL);
-
+            STILL_ACID = Registry.register(Registry.FLUID, id("acid"), new AcidFluid.Still());
+            FLOWING_ACID = Registry.register(Registry.FLUID, id("flowing_acid"), new AcidFluid.Flowing());
+            ACID_BUCKET = Registry.register(Registry.ITEM, id("acid_bucket"), new BucketItem(STILL_ACID, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            ACID = Registry.register(Registry.BLOCK, id("acid"), new CustomFluidBlock(STILL_ACID, FabricBlockSettings.copy(Blocks.WATER)){});
         }
     }
 
