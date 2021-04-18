@@ -97,13 +97,13 @@ public class ExcursionFunnel extends BlockWithEntity {
             direction = new Vec3d(state.get(Properties.FACING).getVector().getX(), state.get(Properties.FACING).getVector().getY(), state.get(Properties.FACING).getVector().getZ());
             direction = direction.multiply(.1);
             if (direction.x != 0) {
-                entity.setVelocity(direction.getX(), 0 - yoffset * .048, entity.getVelocity().getZ() - zoffset* .03);
+                entity.setVelocity(direction.getX(), 0 - yoffset * .048,  - (zoffset/Math.abs(zoffset)) * .01);
             }
             if (direction.y != 0) {
-                entity.setVelocity(entity.getVelocity().getX() - xoffset * .03, 0.08 + direction.getY(), entity.getVelocity().getZ() - zoffset * .03);
+                entity.setVelocity(-(xoffset/Math.abs(xoffset)) * .01, 0.08 + direction.getY(),  -(zoffset/Math.abs(zoffset)) * .01);
             }
             if (direction.z != 0) {
-                entity.setVelocity(entity.getVelocity().getX() - xoffset * .03, 0 - yoffset * .048, direction.getZ());
+                entity.setVelocity( -(xoffset/Math.abs(xoffset))*.01, 0 - yoffset * .048, direction.getZ());
             }
         }
     }
