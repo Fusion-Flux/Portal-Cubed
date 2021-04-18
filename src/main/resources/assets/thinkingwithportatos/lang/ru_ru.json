@@ -1,0 +1,75 @@
+{
+  "itemGroup.thinkingwithportatos.general": "Thinking With Portatos",
+
+  "subtitles.thinkingwithportatos.gelbounce": "Отскок от отталкивающего геля",
+  "subtitles.thinkingwithportatos.gelrun": "Бег на проталкивающем геле",
+  "subtitles.thinkingwithportatos.portalgunsecondaryfire": "Вторичный огонь Портальной Пушки",
+  "subtitles.thinkingwithportatos.portalgunprimaryfire": "Основной огонь Портальной Пушки",
+
+
+  "item.thinkingwithportatos.long_fall_boots": "Сапоги Прыгуна",
+  "item.thinkingwithportatos.cube": "Утяжелённый грузовой куб",
+  "item.thinkingwithportatos.companion_cube": "Куб-компаньон",
+  "item.thinkingwithportatos.gel_orb": "Гелеевый шарик",
+  "item.thinkingwithportatos.portal_gun": "Портальная Пушка",
+  "item.thinkingwithportatos.portal_gun_frame": "Каркас Портальной Пушки",
+  "item.thinkingwithportatos.portal_gun_casing": "Обшивка Портальной Пушки",
+  "item.thinkingwithportatos.mini_blackhole": "Миниатюрная чёрная дыра",
+  "item.thinkingwithportatos.paint_gun": "Красящая пушка",
+
+  "block.thinkingwithportatos.propulsion_gel": "Проталкивающий гель",
+  "block.thinkingwithportatos.repulsion_gel": "Отталкивающий гель",
+  "block.thinkingwithportatos.gel": "Гель",
+
+  "block.thinkingwithportatos.smooth_white_panel": "Гладкая белая панель",
+  "block.thinkingwithportatos.chiseled_smooth_white_panel": "Резная гладкая белая панель",
+  "block.thinkingwithportatos.top_smooth_white_panel": "Верх гладкой белой панели",
+  "block.thinkingwithportatos.bottom_smooth_white_panel": "Низ гладкой белой панели",
+  "block.thinkingwithportatos.top_2x2_smooth_white_panel": "Верх глажкой белой панели 2x2",
+  "block.thinkingwithportatos.bottom_2x2_smooth_white_panel": "Низ гладкой белой панели 2x2",
+
+  "block.thinkingwithportatos.gritty_white_panel": "Песчаная белая панель",
+  "block.thinkingwithportatos.chiseled_gritty_white_panel": "Резная песчаная белая панель",
+  "block.thinkingwithportatos.top_gritty_white_panel": "Верх песчаной белой панели",
+  "block.thinkingwithportatos.bottom_gritty_white_panel": "Низ песчаной белой панели",
+  "block.thinkingwithportatos.top_2x2_gritty_white_panel": "Верх песчаной белой панели 2x2",
+  "block.thinkingwithportatos.bottom_2x2_gritty_white_panel": "Низ песчаной белой панели 2x2",
+
+  "block.thinkingwithportatos.smooth_grey_panel": "Гладкая серая панель",
+  "block.thinkingwithportatos.chiseled_smooth_grey_panel": "Резная гладкая серая панель",
+  "block.thinkingwithportatos.top_smooth_grey_panel": "Верх гладкой серой панели",
+  "block.thinkingwithportatos.bottom_smooth_grey_panel": "Низ гладкой серой панели",
+  "block.thinkingwithportatos.top_2x2_smooth_grey_panel": "Верх гладкой серой панели 2x2",
+  "block.thinkingwithportatos.bottom_2x2_smooth_grey_panel": "Низ гладкой серой панели 2x2",
+
+  "block.thinkingwithportatos.padded_grey_panel": "Мягкая серая панель",
+  "block.thinkingwithportatos.chiseled_padded_grey_panel": "Резная мягкая серая панель",
+  "block.thinkingwithportatos.top_padded_grey_panel": "Верх мягкой серой панели",
+  "block.thinkingwithportatos.bottom_padded_grey_panel": "Низ мягкой серой панели",
+  "block.thinkingwithportatos.top_2x2_padded_grey_panel": "Верх мягкой серой панели 2x2",
+  "block.thinkingwithportatos.bottom_2x2_padded_grey_panel": "Низ мягкой серой панели 2x2",
+
+  "block.thinkingwithportatos.neurotoxin_emitter": "Испускатель нейротоксина",
+  "block.thinkingwithportatos.excursion_funnel_emitter": "Испускатель экскурсионной воронки",
+  "block.thinkingwithportatos.sliding_door": "Скользящая дверь",
+
+
+  "block.thinkingwithportatos.emitter": "Испускатель моста плотного света",
+
+  "text.autoconfig.thinkingwithportatos.title": "Настройки Thinking With Portatos",
+
+  "text.autoconfig.thinkingwithportatos.category.numbers": "Настройка Предметов",
+
+
+  "text.autoconfig.thinkingwithportatos.category.numbersblock": "Настройка Блоков",
+  "text.autoconfig.thinkingwithportatos.option.numbersblock.maxBridgeLength": "Максимальная Длина Моста плотного света",
+
+  "text.autoconfig.thinkingwithportatos.category.enabled": "Включить Возможности",
+  "text.autoconfig.thinkingwithportatos.option.enabled.enableGels": "Включить Гели,
+  "text.autoconfig.thinkingwithportatos.option.enabled.enableLongFallBoots": "Включить Сапоги Прыгуна",
+  "text.autoconfig.thinkingwithportatos.option.enabled.enablePortal2Blocks": "Включить панели из Portal 2",
+  "text.autoconfig.thinkingwithportatos.option.enabled.enableHLB": "Включить Мосты плотного света",
+
+  "key.thinkingwithportatos.category" : "Thinking With Portatos",
+  "key.thinkingwithportatos.grab" : "Схватить"
+}
