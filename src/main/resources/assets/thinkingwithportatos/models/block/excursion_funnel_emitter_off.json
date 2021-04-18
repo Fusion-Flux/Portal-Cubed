@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"texture_size": [64, 64],
+	"texture_size": [32, 32],
 	"textures": {
 		"1": "thinkingwithportatos:block/excursion_funnel_emitter",
 		"particle": "thinkingwithportatos:block/excursion_funnel_emitter"
@@ -10,12 +10,12 @@
 			"from": [-7, -7, 0],
 			"to": [23, 23, 2],
 			"faces": {
-				"north": {"uv": [0, 0, 7.5, 7.5], "texture": "#1"},
-				"east": {"uv": [7.75, 0, 8.25, 7.5], "texture": "#1"},
-				"south": {"uv": [0, 7.75, 7.5, 15.25], "texture": "#1"},
-				"west": {"uv": [7.75, 7.75, 8.25, 15.25], "texture": "#1"},
-				"up": {"uv": [16, 0.5, 8.5, 0], "texture": "#1"},
-				"down": {"uv": [16, 0.75, 8.5, 1.25], "texture": "#1"}
+				"north": {"uv": [0, 0, 15, 15], "texture": "#1"},
+				"east": {"uv": [15, 0, 16, 15], "rotation": 180, "texture": "#1"},
+				"south": {"uv": [0, 0, 15, 15], "texture": "#1"},
+				"west": {"uv": [15, 0, 16, 15], "texture": "#1"},
+				"up": {"uv": [15, 15, 16, 0], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [15, 0, 16, 15], "rotation": 270, "texture": "#1"}
 			}
 		}
 	],
@@ -54,4 +54,4 @@
 			"scale": [0.2, 0.2, 0.2]
 		}
 	}
-}
+}}
