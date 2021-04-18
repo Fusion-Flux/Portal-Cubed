@@ -226,7 +226,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 direction = direction.add(0, 0.45, 0);
             }
             if (!this.isSneaking() && !direction.equals(new Vec3d(0, 0, 0))) {
-                if (world.isClient) {
+                if (world.isClient && (Object) this instanceof PlayerEntity) {
                     world.playSound((PlayerEntity) (Object) this, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
                 } else {
                     world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
@@ -265,7 +265,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 direction = direction.add(0, 0.45, 0);
             }
             if (!this.isSneaking() && !direction.equals(new Vec3d(0, 0, 0))) {
-                if (world.isClient) {
+                if (world.isClient && (Object) this instanceof PlayerEntity) {
                     world.playSound((PlayerEntity) (Object) this, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
                 } else {
                     world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
