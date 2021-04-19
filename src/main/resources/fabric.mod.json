@@ -47,12 +47,16 @@
         {
           "name": "repulsion_gel",
           "friction": 1.0,
-          "restitution": 4,
-          "collidable": true
+          "restitution": 4
         },
         {
           "name": "propulsion_gel",
           "friction": 0,
+          "restitution": 1.0
+        },
+        {
+          "name": "bridge_test",
+          "friction": 1.0,
           "restitution": 1.0
         }
       ]

@@ -67,6 +67,9 @@ public class ThinkingWithPortatosBlocks {
     public static final ExcursionFunnel EXCURSION_FUNNEL = new ExcursionFunnel(FabricBlockSettings.of(Material.AIR).nonOpaque().noCollision());
     public static final LightBlock LIGHT_CUBE = new LightBlock(FabricBlockSettings.of(Material.AIR).luminance(15).noCollision().air().hardness(3.5f));
 
+    public static final TallButton TALL_BUTTON = new TallButton(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+
+
     public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
     public static BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY;
     public static BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY;
@@ -169,6 +172,11 @@ public class ThinkingWithPortatosBlocks {
             FLOWING_ACID = Registry.register(Registry.FLUID, id("flowing_acid"), new AcidFluid.Flowing());
             ACID_BUCKET = Registry.register(Registry.ITEM, id("acid_bucket"), new BucketItem(STILL_ACID, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
             ACID = Registry.register(Registry.BLOCK, id("acid"), new CustomFluidBlock(STILL_ACID, FabricBlockSettings.copy(Blocks.WATER)){});
+
+            Registry.register(Registry.BLOCK, id("tall_button"), TALL_BUTTON);
+            Registry.register(Registry.ITEM, id("tall_button"), new BlockItem(TALL_BUTTON, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+
+
         }
     }
 

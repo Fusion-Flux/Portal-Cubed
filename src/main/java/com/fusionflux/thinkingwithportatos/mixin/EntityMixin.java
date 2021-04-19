@@ -199,11 +199,11 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
             Vec3d direction = new Vec3d(0, 0, 0);
             if (this.verticalCollision) {
                 if (state.get(RepulsionGel.UP)) {
-                    direction = direction.add(0, -1, 0);
+                    direction = direction.add(0, -2, 0);
                 }
 
                 if (state.get(RepulsionGel.DOWN)) {
-                    direction = direction.add(0, 1, 0);
+                    direction = direction.add(0, 2, 0);
                 }
 
             }
@@ -223,7 +223,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 if (state.get(RepulsionGel.WEST)) {
                     direction = direction.add(1, 0, 0);
                 }
-                direction = direction.add(0, 0.45, 0);
+                direction = direction.add(0, 0.5, 0);
             }
             if (!this.isSneaking() && !direction.equals(new Vec3d(0, 0, 0))) {
                 if (world.isClient && (Object) this instanceof PlayerEntity) {
@@ -231,6 +231,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 } else {
                     world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
                 }
+                this.setVelocity(this.getVelocity().multiply(1.4));
                 this.setVelocity(this.getVelocity().add(direction.x, direction.y, direction.z));
             }
         } else if (world.getBlockState(new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ())).getBlock() == ThinkingWithPortatosBlocks.REPULSION_GEL) {
