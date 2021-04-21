@@ -1,0 +1,4 @@
+{
+  "parent": "item/generated",
+  "textures": { "layer0": "thinkingwithportatos:item/toxic_goo_bucket" }
+}

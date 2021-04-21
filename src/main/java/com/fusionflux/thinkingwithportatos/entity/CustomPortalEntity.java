@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.UUID;
 
 public class CustomPortalEntity extends Portal {
@@ -95,18 +96,14 @@ public class CustomPortalEntity extends Portal {
 
         CollisionHelper.notifyCollidingPortals(this);
         if (!this.world.isClient) {
-           /* if(!this.getString().equals("null")) {
-                CustomPortalEntity lightAtOtherPortal;
-                lightAtOtherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
-                if (this.world.getLuminance(this.getBlockPos()) > lightAtOtherPortal.world.getLuminance(lightAtOtherPortal.getBlockPos())) {
-                    lightAtOtherPortal.setLuminance(this.world.getLuminance(this.getBlockPos()));
-                }
-                if (this.world.getLuminance(this.getBlockPos()) < lightAtOtherPortal.world.getLuminance(lightAtOtherPortal.getBlockPos())) {
-                    this.setLuminance(lightAtOtherPortal.world.getLuminance(this.getBlockPos()));
-                }
+
+       /*     List<CustomPortalEntity> globalPortals = this.world.getEntitiesByClass(CustomPortalEntity.class, this.getBoundingBox(), null);
+
+            for (CustomPortalEntity globalPortal : globalPortals) {
+
             }*/
 
-            if ((!this.world.getBlockState(this.getBlockPos()).isAir()) || (!this.world.getBlockState(new BlockPos(
+            /*if ((!this.world.getBlockState(this.getBlockPos()).isAir()) || (!this.world.getBlockState(new BlockPos(
                     this.getPos().getX() - Math.abs(this.axisH.getX()),
                     this.getPos().getY() + this.axisH.getY(),
                     this.getPos().getZ() - Math.abs(this.axisH.getZ()))).isAir())) {
@@ -134,7 +131,7 @@ public class CustomPortalEntity extends Portal {
                         otherPortal.reloadAndSyncToClient();
                     }
                 }
-            }
+            }*/
             BlockPos alteredPos = new BlockPos(
                     this.getPos().getX() - this.axisW.crossProduct(this.axisH).getX(),
                     this.getPos().getY() - this.axisW.crossProduct(this.axisH).getY(),
@@ -149,7 +146,10 @@ public class CustomPortalEntity extends Portal {
             if ((!this.world.getBlockState(alteredPos).isSideSolidFullSquare(world, alteredPos, portalFacing)) ||
                     (!this.world.getBlockState(lowerPos).isSideSolidFullSquare(world, lowerPos, portalFacing) || this.world.getBlockState(alteredPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
                             || this.world.getBlockState(lowerPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
-                    )) {
+                    )||(!this.world.getBlockState(this.getBlockPos()).isAir()) || (!this.world.getBlockState(new BlockPos(
+                    this.getPos().getX() - Math.abs(this.axisH.getX()),
+                    this.getPos().getY() + this.axisH.getY(),
+                    this.getPos().getZ() - Math.abs(this.axisH.getZ()))).isAir())) {
                 if (!this.getOutline().equals("null")) {
                     PortalPlaceholderEntity portalOutline;
                     portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));

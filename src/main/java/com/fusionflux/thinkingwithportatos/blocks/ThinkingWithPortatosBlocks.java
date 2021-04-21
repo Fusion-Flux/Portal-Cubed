@@ -3,7 +3,7 @@ package com.fusionflux.thinkingwithportatos.blocks;
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.blocks.blockentities.*;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
-import com.fusionflux.thinkingwithportatos.fluids.AcidFluid;
+import com.fusionflux.thinkingwithportatos.fluids.ToxicGooFluid;
 import com.fusionflux.thinkingwithportatos.fluids.CustomFluidBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
@@ -77,13 +77,13 @@ public class ThinkingWithPortatosBlocks {
     public static BlockEntityType<ExcursionFunnelEmitterEntity> EXCURSION_FUNNEL_EMMITER_ENTITY;
     public static BlockEntityType<ExcursionFunnelEntity> EXCURSION_FUNNEL_ENTITY;
 
-    public static FlowableFluid STILL_ACID;
-    public static FlowableFluid FLOWING_ACID;
-    public static Item ACID_BUCKET;
-    public static Block ACID;
+    public static FlowableFluid STILL_TOXIC_GOO;
+    public static FlowableFluid FLOWING_TOXIC_GOO;
+    public static Item TOXIC_GOO_BUCKET;
+    public static Block TOXIC_GOO;
 
     public static Tag<Block> MY_TAG = TagRegistry.block(new Identifier("thinkingwithportatos", "hpd_deny_launch"));
-
+    public static Tag<Block> IMMOVABLE_BLOCKS = TagRegistry.block(new Identifier("thinkingwithportatos", "immovable_blocks"));
     public static void registerBlocks() {
         if (ThinkingWithPortatosConfig.get().enabled.enableGels) {
             Registry.register(Registry.BLOCK, id("propulsion_gel"), PROPULSION_GEL);
@@ -168,10 +168,10 @@ public class ThinkingWithPortatosBlocks {
             Registry.register(Registry.ITEM, id("excursion_funnel_emitter"), new BlockItem(EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
             EXCURSION_FUNNEL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_entity"), BlockEntityType.Builder.create(ExcursionFunnelEntity::new, EXCURSION_FUNNEL).build(null));
             Registry.register(Registry.BLOCK, id("excursion_funnel"), EXCURSION_FUNNEL);
-            STILL_ACID = Registry.register(Registry.FLUID, id("acid"), new AcidFluid.Still());
-            FLOWING_ACID = Registry.register(Registry.FLUID, id("flowing_acid"), new AcidFluid.Flowing());
-            ACID_BUCKET = Registry.register(Registry.ITEM, id("acid_bucket"), new BucketItem(STILL_ACID, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            ACID = Registry.register(Registry.BLOCK, id("acid"), new CustomFluidBlock(STILL_ACID, FabricBlockSettings.copy(Blocks.WATER)){});
+            STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());
+            FLOWING_TOXIC_GOO = Registry.register(Registry.FLUID, id("flowing_toxic_goo"), new ToxicGooFluid.Flowing());
+            TOXIC_GOO_BUCKET = Registry.register(Registry.ITEM, id("toxic_goo_bucket"), new BucketItem(STILL_TOXIC_GOO, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            TOXIC_GOO = Registry.register(Registry.BLOCK, id("toxic_goo"), new CustomFluidBlock(STILL_TOXIC_GOO, FabricBlockSettings.copy(Blocks.WATER)){});
 
             Registry.register(Registry.BLOCK, id("tall_button"), TALL_BUTTON);
             Registry.register(Registry.ITEM, id("tall_button"), new BlockItem(TALL_BUTTON, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));

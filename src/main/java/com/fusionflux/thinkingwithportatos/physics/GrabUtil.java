@@ -1,5 +1,6 @@
 package com.fusionflux.thinkingwithportatos.physics;
 
+import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.PhysicsFallingBlockEntity;
 import com.qouteall.immersive_portals.portal.Portal;
 import net.minecraft.block.BlockState;
@@ -45,7 +46,7 @@ public class GrabUtil {
             BlockPos pos = ((BlockHitResult) result).getBlockPos();
             BlockState state = player.world.getBlockState(pos);
 
-            if (!state.getBlock().canMobSpawnInside() && player.world.getBlockEntity(pos) == null) {
+            if (!state.getBlock().canMobSpawnInside() && player.world.getBlockEntity(pos) == null && !state.getBlock().isIn(ThinkingWithPortatosBlocks.IMMOVABLE_BLOCKS)) {
                 PhysicsFallingBlockEntity fallingBlock = new PhysicsFallingBlockEntity(player.world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
                 player.world.removeBlock(pos, false);
                 player.world.spawnEntity(fallingBlock);

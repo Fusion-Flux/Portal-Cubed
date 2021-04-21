@@ -76,8 +76,8 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
 
-        setupFluidRendering(ThinkingWithPortatosBlocks.STILL_ACID, ThinkingWithPortatosBlocks.FLOWING_ACID, new Identifier("thinkingwithportatos", "acid"), 0x2D1B00);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ThinkingWithPortatosBlocks.STILL_ACID, ThinkingWithPortatosBlocks.FLOWING_ACID);
+        setupFluidRendering(ThinkingWithPortatosBlocks.STILL_TOXIC_GOO, ThinkingWithPortatosBlocks.FLOWING_TOXIC_GOO, new Identifier("thinkingwithportatos", "acid"), 0x2D1B00);
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ThinkingWithPortatosBlocks.STILL_TOXIC_GOO, ThinkingWithPortatosBlocks.FLOWING_TOXIC_GOO);
     }
 
     private void registerEntityRenderers() {

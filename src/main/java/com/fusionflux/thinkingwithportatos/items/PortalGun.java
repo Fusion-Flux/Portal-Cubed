@@ -3,6 +3,7 @@ package com.fusionflux.thinkingwithportatos.items;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.accessor.EntityPortalsAccess;
+import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
@@ -26,6 +27,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -124,12 +126,65 @@ public class PortalGun extends Item implements DyeableItem {
                 }
                 right = up.crossProduct(normal);
 
+
+
+                Vec3d portalPos1 = calcPos(blockPos, up, normal, right, false);
+                Vec3d placeholderPos1 = calcPos(blockPos, up, normal, right, true);
+if(!validPos(world,up,right,portalPos1)) {
+    for (int i = 1; i < 9; i++) {
+        Vec3d shiftedPortalPos = portalPos1;
+        Vec3d shiftedPortalPlaceholder = placeholderPos1;
+        switch (i) {
+            case 1:
+                shiftedPortalPos = portalPos1.add(Vec3d.of(up).negate());
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up).negate());
+                break;
+            case 2:
+                shiftedPortalPos = portalPos1.add(Vec3d.of(right).negate()).add(Vec3d.of(up).negate());
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).negate()).add(Vec3d.of(up).negate());
+                break;
+            case 3:
+                shiftedPortalPos = portalPos1.add(Vec3d.of(right).negate());
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).negate());
+                break;
+            case 4:
+                shiftedPortalPos = portalPos1.add(Vec3d.of(right).negate()).add(Vec3d.of(up));
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).negate()).add(Vec3d.of(up));
+                break;
+            case 5:
+                shiftedPortalPos = portalPos1.add(Vec3d.of(up));
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up));
+                break;
+            case 6:
+                shiftedPortalPos = portalPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
+                break;
+            case 7:
+                shiftedPortalPos = portalPos1.add(Vec3d.of(right));
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right));
+                break;
+            case 8:
+                shiftedPortalPos = portalPos1.add(Vec3d.of(right)).add(Vec3d.of(up).negate());
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right)).add(Vec3d.of(up).negate());
+                break;
+        }
+        if (validPos(world, up, right, shiftedPortalPos)) {
+            portalPos1 = shiftedPortalPos;
+            placeholderPos1 = shiftedPortalPlaceholder;
+            break;
+        }
+        if (i == 8) {
+            return TypedActionResult.pass(stack);
+        }
+    }
+}
+
                 world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), ThinkingWithPortatosSounds.FIRE_EVENT_PRIMARY, SoundCategory.NEUTRAL, .3F, 1F);
                 if (portalholder != null && portalholder.isAlive()) {
                     world.playSound(null, portalholder.getPos().getX(), portalholder.getPos().getY(), portalholder.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                 }
 
-                Vec3d placeholderPos1 = calcPos(blockPos, up, normal, right, true);
+
                 Pair<Double, Double> rotAngles = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
                 assert portalOutline != null;
                 portalOutline.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
@@ -141,7 +196,7 @@ public class PortalGun extends Item implements DyeableItem {
                 if (!outlineExists) {
                     world.spawnEntity(portalOutline);
                 }
-                Vec3d portalPos1 = calcPos(blockPos, up, normal, right, false);
+
 
                 assert portalholder != null;
                 portalholder.setOriginPos(portalPos1);
@@ -197,6 +252,37 @@ public class PortalGun extends Item implements DyeableItem {
 
         }
         return TypedActionResult.pass(stack);
+    }
+
+    private boolean validPos(World world, Vec3i up, Vec3i right, Vec3d portalPos1){
+        Vec3d CalculatedAxisW;
+        Vec3d CalculatedAxisH;
+        Vec3d posNormal;
+        CalculatedAxisW = Vec3d.of(right);
+        CalculatedAxisH = Vec3d.of(up).multiply(-1);
+        posNormal = CalculatedAxisW.crossProduct(CalculatedAxisH).normalize();
+        Direction portalFacing = Direction.fromVector((int) posNormal.getX(), (int) posNormal.getY(), (int) posNormal.getZ());
+
+        BlockPos alteredPos = new BlockPos(
+                portalPos1.getX() - CalculatedAxisW.crossProduct(CalculatedAxisH).getX(),
+                portalPos1.getY() - CalculatedAxisW.crossProduct(CalculatedAxisH).getY(),
+                portalPos1.getZ() - CalculatedAxisW.crossProduct(CalculatedAxisH).getZ());
+        BlockPos lowerPos = new BlockPos(
+                portalPos1.getX() - CalculatedAxisW.crossProduct(CalculatedAxisH).getX() - Math.abs(CalculatedAxisH.getX()),
+                portalPos1.getY() - CalculatedAxisW.crossProduct(CalculatedAxisH).getY() + CalculatedAxisH.getY(),
+                portalPos1.getZ() - CalculatedAxisW.crossProduct(CalculatedAxisH).getZ() - Math.abs(CalculatedAxisH.getZ()));
+
+        if ((!world.getBlockState(alteredPos).isSideSolidFullSquare(world, alteredPos, portalFacing)) ||
+                (!world.getBlockState(lowerPos).isSideSolidFullSquare(world, lowerPos, portalFacing) || world.getBlockState(alteredPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
+                        || world.getBlockState(lowerPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
+                )||(!world.getBlockState(new BlockPos(portalPos1)).isAir()) || (!world.getBlockState(new BlockPos(
+                portalPos1.getX() - Math.abs(CalculatedAxisH.getX()),
+                portalPos1.getY() + CalculatedAxisH.getY(),
+                portalPos1.getZ() - Math.abs(CalculatedAxisH.getZ()))).isAir())){
+            System.out.println("portalInvalid");
+            return false;
+        }
+        return true;
     }
 
     /**

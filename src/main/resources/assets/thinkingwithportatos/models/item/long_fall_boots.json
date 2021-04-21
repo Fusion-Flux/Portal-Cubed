@@ -1,4 +1,4 @@
 {
   "parent": "item/generated",
-  "textures": { "layer0": "thinkingwithportatos:item/gravitrons" }
+  "textures": { "layer0": "thinkingwithportatos:item/long_fall_boots" }
 }
