@@ -1,0 +1,75 @@
+{
+  "itemGroup.thinkingwithportatos.general": "Denken Mit Portoffeln",
+
+  "subtitles.thinkingwithportatos.gelbounce": "Rückstoßgel-Abprallen",
+  "subtitles.thinkingwithportatos.gelrun": "Rennen Auf Beschleunigungsgel",
+  "subtitles.thinkingwithportatos.portalgunsecondaryfire": "Portal Gun Sekundärer Schuß",
+  "subtitles.thinkingwithportatos.portalgunprimaryfire": "Portal Gun Primärer Schuß",
+
+
+  "item.thinkingwithportatos.long_fall_boots": "Langfallschuhe",
+  "item.thinkingwithportatos.cube": "Gewichteter Lagerwürfel",
+  "item.thinkingwithportatos.companion_cube": "Begleiterwürfel",
+  "item.thinkingwithportatos.gel_orb": "Geltropfen",
+  "item.thinkingwithportatos.portal_gun": "Portal Gun",
+  "item.thinkingwithportatos.portal_gun_frame": "Portal Gun Gestell",
+  "item.thinkingwithportatos.portal_gun_casing": "Portal Gun Gehäuse",
+  "item.thinkingwithportatos.mini_blackhole": "Miniatur-Schwarzes Loch",
+  "item.thinkingwithportatos.paint_gun": "Sprühpistole",
+
+  "block.thinkingwithportatos.propulsion_gel": "Beschleunigungsgel",
+  "block.thinkingwithportatos.repulsion_gel": "Rückstoßgel",
+  "block.thinkingwithportatos.gel": "Gel",
+
+  "block.thinkingwithportatos.smooth_white_panel": "Glate Weiße Platte",
+  "block.thinkingwithportatos.chiseled_smooth_white_panel": "Gemeißelte Glate Weiße Platte",
+  "block.thinkingwithportatos.top_smooth_white_panel": "Obere Glate Weiße Platte",
+  "block.thinkingwithportatos.bottom_smooth_white_panel": "Untere Glate Weiße Platte",
+  "block.thinkingwithportatos.top_2x2_smooth_white_panel": "Obere 2X2 Glate Weiße Platte",
+  "block.thinkingwithportatos.bottom_2x2_smooth_white_panel": "Untere 2X2 Glate Weiße Platte",
+
+  "block.thinkingwithportatos.gritty_white_panel": "Grobe Weiße Platte",
+  "block.thinkingwithportatos.chiseled_gritty_white_panel": "Gemeißelte Grobe Weiße Platte",
+  "block.thinkingwithportatos.top_gritty_white_panel": "Obere Grobe Weiße Platte",
+  "block.thinkingwithportatos.bottom_gritty_white_panel": "Untere Grobe Weiße Platte",
+  "block.thinkingwithportatos.top_2x2_gritty_white_panel": "Obere 2X2 Grobe Weiße Platte",
+  "block.thinkingwithportatos.bottom_2x2_gritty_white_panel": "Untere 2X2 Grobe Weiße Platte",
+
+  "block.thinkingwithportatos.smooth_grey_panel": "Glate Graue Platte",
+  "block.thinkingwithportatos.chiseled_smooth_grey_panel": "Gemeißelte Glate Graue Platte",
+  "block.thinkingwithportatos.top_smooth_grey_panel": "Obere Glate Graue Platte",
+  "block.thinkingwithportatos.bottom_smooth_grey_panel": "Untere Glate Graue Platte",
+  "block.thinkingwithportatos.top_2x2_smooth_grey_panel": "Obere 2X2 Glate Graue Platte",
+  "block.thinkingwithportatos.bottom_2x2_smooth_grey_panel": "Untere 2X2 Glate Graue Platte",
+
+  "block.thinkingwithportatos.padded_grey_panel": "Gepolsterte Graue Platte",
+  "block.thinkingwithportatos.chiseled_padded_grey_panel": "Gemeißelte Gepolsterte Graue Platte",
+  "block.thinkingwithportatos.top_padded_grey_panel": "Obere Gepolsterte Graue Platte",
+  "block.thinkingwithportatos.bottom_padded_grey_panel": "Untere Gepolsterte Graue Platte",
+  "block.thinkingwithportatos.top_2x2_padded_grey_panel": "Obere 2X2 Gepolsterte Graue Platte",
+  "block.thinkingwithportatos.bottom_2x2_padded_grey_panel": "Untere 2X2 Gepolsterte Graue Platte",
+
+  "block.thinkingwithportatos.neurotoxin_emitter": "Nervengiftausstrahler",
+  "block.thinkingwithportatos.excursion_funnel_emitter": "Exkursionskannal-Strahler",
+  "block.thinkingwithportatos.sliding_door": "Schiebetür",
+
+
+  "block.thinkingwithportatos.emitter": "Festlichtbrücken-Strahler",
+
+  "text.autoconfig.thinkingwithportatos.title": "Denken Mit Portoffeln Konfiguration",
+
+  "text.autoconfig.thinkingwithportatos.category.numbers": "Itemkonfiguration",
+
+
+  "text.autoconfig.thinkingwithportatos.category.numbersblock": "Blockkonfiguration",
+  "text.autoconfig.thinkingwithportatos.option.numbersblock.maxBridgeLength": "Maximale Festlichtbrücken-Länge",
+
+  "text.autoconfig.thinkingwithportatos.category.enabled": "Aktivierte Features",
+  "text.autoconfig.thinkingwithportatos.option.enabled.enableGels": "Aktiviere Gele",
+  "text.autoconfig.thinkingwithportatos.option.enabled.enableLongFallBoots": "Aktiviere Langfallschuhe",
+  "text.autoconfig.thinkingwithportatos.option.enabled.enablePortal2Blocks": "Aktiviere Portalplatten",
+  "text.autoconfig.thinkingwithportatos.option.enabled.enableHLB": "Aktiviere Festlichtbrücken",
+
+  "key.thinkingwithportatos.category" : "Denken Mit Portoffeln",
+  "key.thinkingwithportatos.grab" : "Greife"
+}
