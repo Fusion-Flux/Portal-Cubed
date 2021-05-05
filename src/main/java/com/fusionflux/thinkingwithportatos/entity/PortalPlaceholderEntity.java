@@ -76,7 +76,6 @@ public class PortalPlaceholderEntity extends Entity {
 
     public void setColor(Integer color) {
         this.getDataTracker().set(COLOR, color);
-
     }
 
     @Override
