@@ -36,7 +36,7 @@ public class PortalPlaceholderEntity extends Entity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(QUATERNION, new Quaternion(0, 0, 0, 1));
+        this.getDataTracker().startTracking(QUATERNION, Quaternion.IDENTITY);
         this.getDataTracker().startTracking(ROLL, 0f);
         this.getDataTracker().startTracking(COLOR, 0);
     }
