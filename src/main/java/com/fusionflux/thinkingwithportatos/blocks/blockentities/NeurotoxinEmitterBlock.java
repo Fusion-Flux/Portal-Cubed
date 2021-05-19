@@ -3,7 +3,9 @@ package com.fusionflux.thinkingwithportatos.blocks.blockentities;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -20,6 +22,8 @@ import java.util.Objects;
 public class NeurotoxinEmitterBlock extends BlockWithEntity {
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+
+
 
     public NeurotoxinEmitterBlock(Settings settings) {
         super(settings);
@@ -78,6 +82,8 @@ public class NeurotoxinEmitterBlock extends BlockWithEntity {
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }
+
+
 
 
 }

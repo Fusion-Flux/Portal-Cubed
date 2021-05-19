@@ -50,8 +50,6 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     @Unique
     private double maxFallSpeed = 0;
     @Unique
-    private final double repulsionGelSoundLimiter = 0;
-    @Unique
     private double storeVelocity1 = 0;
     @Unique
     private double storeVelocity2 = 0;
@@ -105,8 +103,6 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     @Shadow
     public abstract boolean damage(DamageSource source, float amount);
 
-    @Shadow
-    public abstract float getEyeHeight(EntityPose pose);
 
     @Shadow
     public abstract EntityPose getPose();
@@ -116,6 +112,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Shadow
     public abstract boolean isSneaking();
+
 
     @Override
     public List<CustomPortalEntity> getPortalList() {
@@ -159,13 +156,6 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
         }
 
         if (!world.isClient) {
-            if (world.getBlockState(new BlockPos(this.getX(), this.getY() + this.getEyeHeight(this.getPose()), this.getZ())) == ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK.getDefaultState()) {
-                if (Math.abs(timeinblock - this.age) > 20) {
-                    this.damage(DamageSource.DROWN, 2);
-                }
-            } else {
-                timeinblock = this.age;
-            }
 
             List<Entity> portalSound = this.world.getEntitiesByClass(CustomPortalEntity.class, this.getBoundingBox().expand(2), null);
 
