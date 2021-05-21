@@ -41,7 +41,7 @@ public class PhysicsFallingBlockEntity extends Entity implements EntityPhysicsEl
 
     public void onCollision() {
         if (!world.isClient() && !removed && !ThinkingWithPortatos.getBodyGrabbingManager(false).isGrabbed(this)) {
-            BlockPos pos = new BlockPos(VectorHelper.vector3fToVec3d(getPhysicsLocation(new Vector3f(), 1.0f)));
+            BlockPos pos = new BlockPos(VectorHelper.vector3fToVec3d(getRigidBody().getPhysicsLocation(new Vector3f())));
 
             if (!world.getBlockState(pos.down()).isAir() && world.getFluidState(pos.down()).getFluid().equals(Fluids.EMPTY)) {
                 this.getRigidBody().setDoTerrainLoading(false);

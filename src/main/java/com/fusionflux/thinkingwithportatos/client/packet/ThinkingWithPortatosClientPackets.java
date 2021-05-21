@@ -17,18 +17,18 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.UUID;
 
-@Environment(EnvType.CLIENT)
+
 public class ThinkingWithPortatosClientPackets {
     public static final Identifier SPAWN_PACKET = new Identifier(ThinkingWithPortatos.MODID, "spawn_packet");
     public static final Identifier GRAB_PACKET = new Identifier(ThinkingWithPortatos.MODID, "grab_packet");
     public static final Identifier UNGRAB_PACKET = new Identifier(ThinkingWithPortatos.MODID, "ungrab_packet");
-
+    @Environment(EnvType.CLIENT)
     public static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(SPAWN_PACKET, ThinkingWithPortatosClientPackets::onEntitySpawn);
         ClientPlayNetworking.registerGlobalReceiver(GRAB_PACKET, ThinkingWithPortatosClientPackets::onGrab);
         ClientPlayNetworking.registerGlobalReceiver(UNGRAB_PACKET, ThinkingWithPortatosClientPackets::onUngrab);
     }
-
+    @Environment(EnvType.CLIENT)
     public static void onEntitySpawn(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         EntityType<?> type = Registry.ENTITY_TYPE.get(buf.readVarInt());
         UUID entityUUID = buf.readUuid();
@@ -53,7 +53,7 @@ public class ThinkingWithPortatosClientPackets {
             }
         });
     }
-
+    @Environment(EnvType.CLIENT)
     public static void onGrab(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         int grabberId = buf.readInt();
         int entityId = buf.readInt();
@@ -69,7 +69,7 @@ public class ThinkingWithPortatosClientPackets {
             }
         });
     }
-
+    @Environment(EnvType.CLIENT)
     public static void onUngrab(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         int grabberId = buf.readInt();
         float punch = buf.readFloat();

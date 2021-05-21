@@ -21,7 +21,6 @@ import net.minecraft.world.World;
 
 public class CubeEntity extends Entity implements EntityPhysicsElement {
     protected final ElementRigidBody RIGID_BODY = new ElementRigidBody(this);
-    protected final EntityTrackingSoundInstance CUBESCRAPENOISE = new EntityTrackingSoundInstance(ThinkingWithPortatosSounds.CUBE_SCRAPE_EVENT, this.getSoundCategory(), .05F, 1F, this);
     private float storedDamage = 0.0F;
     private int storedAge = 0;
 

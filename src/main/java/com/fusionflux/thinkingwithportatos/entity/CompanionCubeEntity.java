@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public class CompanionCubeEntity extends CubeEntity {
     private float storedDamage = 0.0F;
-    private int t = 1760;
+    private int t = 1500;
 
     public CompanionCubeEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
@@ -20,13 +20,13 @@ public class CompanionCubeEntity extends CubeEntity {
 
     @Override
     public void tick() {
-        if (this.world.isClient) {
-            if (t == 1760) {
-                MinecraftClient.getInstance().getSoundManager().play(new EntityTrackingSoundInstance(ThinkingWithPortatosSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundCategory(), .01F, 1F, this));
+        if (!this.world.isClient) {
+            if (t == 1500) {
+                world.playSoundFromEntity(null,this,ThinkingWithPortatosSounds.COMPANION_CUBE_AMBIANCE_EVENT,this.getSoundCategory(),1f,1f);
             }
             t--;
             if (t == 0) {
-                t = 1760;
+                t = 1500;
             }
 
         }

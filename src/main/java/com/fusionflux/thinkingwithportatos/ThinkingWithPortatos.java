@@ -1,5 +1,6 @@
 package com.fusionflux.thinkingwithportatos;
 
+import com.fusionflux.thinkingwithportatos.accessor.QuaternionHandler;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.client.ThinkingWithPortatosClient;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
@@ -40,6 +41,7 @@ public class ThinkingWithPortatos implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        QuaternionHandler.QUATERNION_HANDLER.getClass();
         ThinkingWithPortatosConfig.register();
         ThinkingWithPortatosBlocks.registerBlocks();
         ThinkingWithPortatosItems.registerItems();

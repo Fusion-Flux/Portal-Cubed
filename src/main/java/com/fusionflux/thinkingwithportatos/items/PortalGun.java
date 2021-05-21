@@ -136,12 +136,12 @@ if(!validPos(world,up,right,portalPos1)) {
         Vec3d shiftedPortalPlaceholder = placeholderPos1;
         switch (i) {
             case 1:
-                shiftedPortalPos = portalPos1.add(Vec3d.of(up).negate());
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up).negate());
+                shiftedPortalPos = portalPos1.add(Vec3d.of(up).multiply(-1.0));
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up).multiply(-1.0));
                 break;
             case 2:
-                shiftedPortalPos = portalPos1.add(Vec3d.of(right).negate());
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).negate());
+                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0));
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).multiply(-1.0));
                 break;
             case 3:
                 shiftedPortalPos = portalPos1.add(Vec3d.of(up));
@@ -152,20 +152,20 @@ if(!validPos(world,up,right,portalPos1)) {
                 shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right));
                 break;
             case 5:
-                shiftedPortalPos = portalPos1.add(Vec3d.of(right).negate()).add(Vec3d.of(up).negate());
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).negate()).add(Vec3d.of(up).negate());
+                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up).multiply(-1.0));
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up).multiply(-1.0));
                 break;
             case 6:
-                shiftedPortalPos = portalPos1.add(Vec3d.of(right).negate()).add(Vec3d.of(up));
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).negate()).add(Vec3d.of(up));
+                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up));
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up));
                 break;
             case 7:
                 shiftedPortalPos = portalPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
                 shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
                 break;
             case 8:
-                shiftedPortalPos = portalPos1.add(Vec3d.of(right)).add(Vec3d.of(up).negate());
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right)).add(Vec3d.of(up).negate());
+                shiftedPortalPos = portalPos1.add(Vec3d.of(right)).add(Vec3d.of(up).multiply(-1.0));
+                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right)).add(Vec3d.of(up).multiply(-1.0));
                 break;
         }
         if (validPos(world, up, right, shiftedPortalPos)) {
