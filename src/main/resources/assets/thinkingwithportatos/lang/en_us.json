@@ -5,6 +5,8 @@
   "subtitles.thinkingwithportatos.gelrun": "Propulsion Gel Run",
   "subtitles.thinkingwithportatos.portalgunsecondaryfire": "Portal Gun Secondary Fire",
   "subtitles.thinkingwithportatos.portalgunprimaryfire": "Portal Gun Primary Fire",
+  "subtitles.thinkingwithportatos.portal_open": "Portal Opens",
+  "subtitles.thinkingwithportatos.portal_close": "Portal Closes",
 
 
   "item.thinkingwithportatos.long_fall_boots": "Long Fall Boots",
@@ -62,7 +64,7 @@
 
   "text.autoconfig.thinkingwithportatos.category.numbers": "Item Config",
 
-
+  
   "text.autoconfig.thinkingwithportatos.category.numbersblock": "Block Config",
   "text.autoconfig.thinkingwithportatos.option.numbersblock.maxBridgeLength": "Hardlight Bridge Max Length",
 
