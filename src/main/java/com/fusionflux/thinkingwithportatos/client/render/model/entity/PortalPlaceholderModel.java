@@ -5,7 +5,7 @@
 package com.fusionflux.thinkingwithportatos.client.render.model.entity;
 
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -13,12 +13,22 @@ import net.minecraft.client.util.math.MatrixStack;
 public class PortalPlaceholderModel extends EntityModel<PortalPlaceholderEntity> {
     private final ModelPart bb_main;
 
-    public PortalPlaceholderModel() {
-        textureWidth = 32;
-        textureHeight = 32;
-        bb_main = new ModelPart(this);
-        bb_main.setPivot(0.0F, 24.0F, 0.0F);
-        bb_main.setTextureOffset(0, 0).addCuboid(-8.0F, -32.0F, 0.0F, 16.0F, 32.0F, 0.0F, 0.0F, false);
+    public PortalPlaceholderModel(ModelPart root) {
+        //  TODO: add bone fields here!
+        this.bb_main = root.getChild("bb_main");
+    }
+
+    public static ModelData getModelData(){
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+
+        modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-8.0F, -16.0F, -8.0F, 16.0F, 32.0F, 0.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.0F, 24.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+        return modelData;
+    }
+
+
+    public static TexturedModelData getTexturedModelData() {
+        return TexturedModelData.of(getModelData(), 32, 32);
     }
 
     @Override
@@ -31,6 +41,10 @@ public class PortalPlaceholderModel extends EntityModel<PortalPlaceholderEntity>
 
         bb_main.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
-
+    public void setRotationAngle(ModelPart bone, float x, float y, float z) {
+        bone.pitch = x;
+        bone.yaw = y;
+        bone.roll = z;
+    }
 
 }

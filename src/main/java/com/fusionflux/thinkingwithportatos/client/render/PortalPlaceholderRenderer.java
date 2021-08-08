@@ -8,16 +8,18 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
+
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3f;
 
 public class PortalPlaceholderRenderer extends EntityRenderer<PortalPlaceholderEntity> {
 
     private static final Identifier BASE_TEXTURE = new Identifier(ThinkingWithPortatos.MODID, "textures/entity/portal_placeholder.png");
     protected final PortalPlaceholderModel model = new PortalPlaceholderModel();
 
-    public PortalPlaceholderRenderer(EntityRenderDispatcher dispatcher) {
+    public PortalPlaceholderRenderer(EntityRendererFactory.Context dispatcher) {
         super(dispatcher);
     }
 
@@ -25,9 +27,9 @@ public class PortalPlaceholderRenderer extends EntityRenderer<PortalPlaceholderE
     public void render(PortalPlaceholderEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.push();
-        matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(entity.yaw));
-        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(entity.pitch));
-        matrices.multiply(Vector3f.NEGATIVE_Z.getDegreesQuaternion(entity.getRoll()));
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getYaw()));
+        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(entity.getPitch()));
+        matrices.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(entity.getRoll()));
 
 
         int color = entity.getColor() * -1;

@@ -3,8 +3,13 @@ package com.fusionflux.thinkingwithportatos.blocks.blockentities;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -13,10 +18,9 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -29,10 +33,6 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
     }
 
 
-    @Override
-    public VoxelShape getVisualShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return VoxelShapes.empty();
-    }
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -50,10 +50,8 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
         return BlockRenderType.MODEL;
     }
 
-    @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new HardLightBridgeEmitterBlockEntity();
-    }
+
+
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -84,6 +82,16 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
         if (stateFrom.isOf(ThinkingWithPortatosBlocks.HLB_EMITTER_BLOCK)) {
             return stateFrom.get(Properties.POWERED);
         } else return stateFrom.isOf(ThinkingWithPortatosBlocks.HLB_BLOCK);
+    }
+
+    @Override
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new HardLightBridgeEmitterBlockEntity(pos,state);
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, ThinkingWithPortatosBlocks.HLB_EMITTER_ENTITY, HardLightBridgeEmitterBlockEntity::tick);
     }
 
 }

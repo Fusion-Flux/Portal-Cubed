@@ -1,11 +1,10 @@
 package com.fusionflux.thinkingwithportatos.blocks;
 
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 
 public class TallButton extends TallButtonVarient{
-    public TallButton(AbstractBlock.Settings settings) {
+    public TallButton(Settings settings) {
         super(false, settings);
     }
 

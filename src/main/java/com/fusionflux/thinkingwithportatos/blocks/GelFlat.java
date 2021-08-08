@@ -1,7 +1,10 @@
 package com.fusionflux.thinkingwithportatos.blocks;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -58,7 +61,7 @@ public class GelFlat extends Block {
 
     private final Map<BlockState, VoxelShape> field_26659;
 
-    public GelFlat(AbstractBlock.Settings settings) {
+    public GelFlat(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
         this.field_26659 = ImmutableMap.copyOf((Map) this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), GelFlat::method_31018)));

@@ -3,7 +3,6 @@ package com.fusionflux.thinkingwithportatos.blocks;
 import com.fusionflux.thinkingwithportatos.entity.BlockCollisionLimiter;
 import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,7 +15,7 @@ public class PropulsionGel extends GelFlat {
 
     private final BlockCollisionLimiter limiter = new BlockCollisionLimiter();
 
-    public PropulsionGel(AbstractBlock.Settings settings) {
+    public PropulsionGel(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
     }

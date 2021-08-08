@@ -7,12 +7,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 public class PortalHud {
@@ -29,8 +30,8 @@ public class PortalHud {
                 stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
 
-            CompoundTag tag = stack.getOrCreateTag();
-            CompoundTag portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
+            NbtCompound tag = stack.getOrCreateTag();
+            NbtCompound portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
             PortalGun gun = (PortalGun) stack.getItem();
             int color = Math.abs(gun.getColor(stack));
 
@@ -82,8 +83,8 @@ public class PortalHud {
                 stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
 
-            CompoundTag tag = stack.getOrCreateTag();
-            CompoundTag portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
+            NbtCompound tag = stack.getOrCreateTag();
+            NbtCompound portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
             PortalGun gun = (PortalGun) stack.getItem();
             int color = Math.abs(gun.getColor(stack)) * -1;
 
@@ -127,7 +128,7 @@ public class PortalHud {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         RenderSystem.enableTexture();
-        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
         bufferBuilder.vertex(x, y + height, z).texture(u, v + vh).color(r, g, b, a).next();
         bufferBuilder.vertex(x + width, y + height, z).texture(u + uw, v + vh).color(r, g, b, a).next();
         bufferBuilder.vertex(x + width, y, z).texture(u + uw, v).color(r, g, b, a).next();

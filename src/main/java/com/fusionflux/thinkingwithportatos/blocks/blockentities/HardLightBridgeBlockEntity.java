@@ -4,33 +4,33 @@ import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 
-public class HardLightBridgeBlockEntity extends BlockEntity implements Tickable {
+public class HardLightBridgeBlockEntity extends BlockEntity {
 
     public final List<BlockPos.Mutable> emitters = new ArrayList<>();
 
-    public HardLightBridgeBlockEntity() {
-        super(ThinkingWithPortatosBlocks.HLB_BLOCK_ENTITY);
+    public HardLightBridgeBlockEntity(BlockPos pos, BlockState state) {
+        super(ThinkingWithPortatosBlocks.HLB_BLOCK_ENTITY,pos,state);
     }
 
-    @Override
-    public void tick() {
+
+    public static void tick(World world, BlockPos pos, BlockState state, HardLightBridgeBlockEntity blockEntity) {
         assert world != null;
         if (!world.isClient) {
             // Iterate over supporting emitters to guarantee support
             ArrayList<BlockPos.Mutable> emittersToRemove = new ArrayList<>();
             BlockPos.Mutable emitter;
 
-            for (BlockPos.Mutable mutable : emitters) {
+            for (BlockPos.Mutable mutable : blockEntity.emitters) {
                 emitter = mutable;
                 if (!(world.getBlockEntity(emitter) instanceof HardLightBridgeEmitterBlockEntity && world.isReceivingRedstonePower(mutable))) {
                     emittersToRemove.add(mutable);
@@ -38,27 +38,27 @@ public class HardLightBridgeBlockEntity extends BlockEntity implements Tickable 
             }
 
 // Clean up emitters
-            for (BlockPos.Mutable pos : emittersToRemove) {
-                emitters.remove(pos);
+            for (BlockPos.Mutable pos2 : emittersToRemove) {
+                blockEntity.emitters.remove(pos2);
             }
 
             // If no remaining emitters or no power, replace with AIR
-            if (emitters.stream().noneMatch((emit) -> world.isReceivingRedstonePower(emit))) {
+            if (blockEntity.emitters.stream().noneMatch((emit) -> world.isReceivingRedstonePower(emit))) {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
             } else if (!world.getBlockState(pos).get(Properties.FACING)
-                    .equals(world.getBlockState(emitters.get(emitters.size() - 1)).get(Properties.FACING))) {
+                    .equals(world.getBlockState(blockEntity.emitters.get(blockEntity.emitters.size() - 1)).get(Properties.FACING))) {
                 world.setBlockState(
                         pos,
                         ThinkingWithPortatosBlocks.HLB_BLOCK.getDefaultState().with(Properties.FACING,
-                                world.getBlockState(emitters.get(emitters.size() - 1)).get(Properties.FACING)),
+                                world.getBlockState(blockEntity.emitters.get(blockEntity.emitters.size() - 1)).get(Properties.FACING)),
                         3); // here, and with the comma in the line above
             }
         }
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
 
         // Because CompoundTags only support a few types, we have to decompose the emitter BlockPos' into ints
         tag.putInt("size", emitters.size());
@@ -71,8 +71,8 @@ public class HardLightBridgeBlockEntity extends BlockEntity implements Tickable 
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
 
         // Because CompoundTags only support a few types, we have to recompose the emitter BlockPos' from ints
         int size = tag.getInt("size");

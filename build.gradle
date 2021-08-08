@@ -1,10 +1,10 @@
 plugins {
-	id 'fabric-loom' version '0.6-SNAPSHOT'
+	id 'fabric-loom' version '0.8-SNAPSHOT'
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -36,13 +36,17 @@ dependencies {
 	}
 	include("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}")
 
+	modImplementation ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v0.20-1.17'){
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	include ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v0.20-1.17')
+
+
 	modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
 		exclude(module: "fabric-api")
 	}
 
-	modImplementation ("com.github.LazuriteMC:Rayon:${project.rayon_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
+
 }
 
 processResources {

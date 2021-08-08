@@ -8,9 +8,7 @@ import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
-import com.qouteall.immersive_portals.api.PortalAPI;
-import com.qouteall.immersive_portals.my_util.DQuaternion;
-import com.qouteall.immersive_portals.portal.PortalManipulation;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
@@ -18,7 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
@@ -31,6 +29,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import qouteall.imm_ptl.core.api.PortalAPI;
+import qouteall.imm_ptl.core.portal.PortalManipulation;
+import qouteall.q_misc_util.my_util.DQuaternion;
 
 public class PortalGun extends Item implements DyeableItem {
 
@@ -38,7 +39,7 @@ public class PortalGun extends Item implements DyeableItem {
         super(settings);
     }
 
-    @Environment(EnvType.CLIENT)
+    /*@Environment(EnvType.CLIENT)
     public static void registerAlternateModels() {
         FabricModelPredicateProviderRegistry.register(ThinkingWithPortatosItems.PORTAL_GUN, ThinkingWithPortatos.id("variant"), (stack, world, livingEntity) -> {
             if (livingEntity == null) {
@@ -47,11 +48,11 @@ public class PortalGun extends Item implements DyeableItem {
             // Defaults to 0
             return stack.getOrCreateTag().getInt("variant");
         });
-    }
+    }*/
 
     @Override
     public int getColor(ItemStack stack) {
-        CompoundTag compoundTag = stack.getOrCreateTag();
+        NbtCompound compoundTag = stack.getOrCreateTag();
         boolean complementary = compoundTag.getBoolean("complementary");
         compoundTag = stack.getSubTag("display");
         return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
@@ -72,11 +73,11 @@ public class PortalGun extends Item implements DyeableItem {
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, ItemStack stack, boolean leftClick) {
         if (!world.isClient) {
-            CompoundTag tag = stack.getOrCreateTag();
+            NbtCompound tag = stack.getOrCreateTag();
 
             PortalPlaceholderEntity portalOutline;
             CustomPortalEntity portalholder;
-            CompoundTag portalsTag = tag.getCompound(world.getRegistryKey().toString());
+            NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());
 
             boolean outlineExists = false;
             if (portalsTag.contains((leftClick ? "Left" : "Right") + "Background")) {
@@ -188,8 +189,8 @@ if(!validPos(world,up,right,portalPos1)) {
                 Pair<Double, Double> rotAngles = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
                 assert portalOutline != null;
                 portalOutline.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
-                portalOutline.yaw = rotAngles.getLeft().floatValue() + (90 * up.getX());
-                portalOutline.pitch = rotAngles.getRight().floatValue();
+                portalOutline.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
+                portalOutline.setPitch(rotAngles.getRight().floatValue());
                 portalOutline.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
                 portalOutline.setColor(this.getColor(stack));
                 portalOutline.noClip = true;

@@ -73,7 +73,7 @@ public class SlidingDoorBlock extends Block {
         WEST_SOUTH_SHAPE = Block.createCuboidShape(2.0D, 0.0D, 13.0D, 5.0D, 16.0D, 16.0D);
     }
 
-    protected SlidingDoorBlock(AbstractBlock.Settings settings) {
+    protected SlidingDoorBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false).with(HINGE, DoorHinge.LEFT).with(POWERED, false).with(HALF, DoubleBlockHalf.LOWER));
     }

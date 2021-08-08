@@ -1,6 +1,9 @@
 package com.fusionflux.thinkingwithportatos.blocks;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.block.WallMountedBlock;
 import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +49,7 @@ public abstract class TallButtonVarient extends WallMountedBlock {
     protected static final VoxelShape EAST_PRESSED_SHAPE;
     private final boolean wooden;
 
-    protected TallButtonVarient(boolean wooden, AbstractBlock.Settings settings) {
+    protected TallButtonVarient(boolean wooden, Settings settings) {
         super(settings);
         this.setDefaultState((BlockState)((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH)).with(POWERED, false)).with(FACE, WallMountLocation.WALL));
         this.wooden = wooden;

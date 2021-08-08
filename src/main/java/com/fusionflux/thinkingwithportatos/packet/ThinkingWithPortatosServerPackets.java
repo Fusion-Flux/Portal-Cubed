@@ -2,7 +2,6 @@ package com.fusionflux.thinkingwithportatos.packet;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
-import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
 import com.fusionflux.thinkingwithportatos.physics.GrabUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

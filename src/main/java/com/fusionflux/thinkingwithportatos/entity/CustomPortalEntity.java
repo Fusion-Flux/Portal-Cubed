@@ -2,23 +2,23 @@ package com.fusionflux.thinkingwithportatos.entity;
 
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
-import com.qouteall.immersive_portals.Helper;
-import com.qouteall.immersive_portals.api.PortalAPI;
-import com.qouteall.immersive_portals.my_util.SignalArged;
-import com.qouteall.immersive_portals.my_util.SignalBiArged;
-import com.qouteall.immersive_portals.portal.Portal;
-import com.qouteall.immersive_portals.portal.PortalManipulation;
-import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import qouteall.imm_ptl.core.api.PortalAPI;
+import qouteall.imm_ptl.core.portal.Portal;
+import qouteall.imm_ptl.core.portal.PortalManipulation;
+import qouteall.imm_ptl.core.teleportation.CollisionHelper;
+import qouteall.q_misc_util.Helper;
+import qouteall.q_misc_util.my_util.SignalArged;
+import qouteall.q_misc_util.my_util.SignalBiArged;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,8 +28,8 @@ public class CustomPortalEntity extends Portal {
     public static final SignalArged<CustomPortalEntity> serverPortalTickSignal;
     public static final SignalArged<CustomPortalEntity> portalCacheUpdateSignal;
     public static final SignalArged<CustomPortalEntity> portalDisposeSignal;
-    public static final SignalBiArged<CustomPortalEntity, CompoundTag> readPortalDataSignal;
-    public static final SignalBiArged<CustomPortalEntity, CompoundTag> writePortalDataSignal;
+    public static final SignalBiArged<CustomPortalEntity, NbtCompound> readPortalDataSignal;
+    public static final SignalBiArged<CustomPortalEntity, NbtCompound> writePortalDataSignal;
     public static final TrackedData<String> STOREDSTRING = DataTracker.registerData(CustomPortalEntity.class, TrackedDataHandlerRegistry.STRING);
     public static final TrackedData<Boolean> ISACTIVE = DataTracker.registerData(CustomPortalEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final TrackedData<String> STOREDOUTLINE = DataTracker.registerData(CustomPortalEntity.class, TrackedDataHandlerRegistry.STRING);
@@ -87,7 +87,7 @@ public class CustomPortalEntity extends Portal {
         } else {
             if (!this.isPortalValid()) {
                 Helper.log("removed invalid portal" + this);
-                this.remove();
+                this.kill();
                 return;
             }
 

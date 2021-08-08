@@ -5,14 +5,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 // TODO replace with your own reference as appropriate
 
@@ -24,19 +27,11 @@ public class HardLightBridgeBlock extends BlockWithEntity {
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new HardLightBridgeBlockEntity();
-    }
-
-    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(Properties.FACING);
     }
 
-    @Override
-    public VoxelShape getVisualShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return VoxelShapes.empty();
-    }
+
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -77,4 +72,15 @@ public class HardLightBridgeBlock extends BlockWithEntity {
             return stateFrom.get(Properties.POWERED);
         } else return stateFrom.isOf(ThinkingWithPortatosBlocks.HLB_BLOCK);
     }
+
+    @Override
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new HardLightBridgeBlockEntity(pos,state);
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, ThinkingWithPortatosBlocks.HLB_BLOCK_ENTITY, HardLightBridgeBlockEntity::tick);
+    }
+
 }

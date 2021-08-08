@@ -3,6 +3,8 @@ package com.fusionflux.thinkingwithportatos.blocks.blockentities;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.util.math.BlockPos;
@@ -22,10 +24,7 @@ public class NeurotoxinBlock extends BlockWithEntity {
         super(settings);
     }
 
-    @Override
-    public VoxelShape getVisualShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
-    }
+
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -37,11 +36,7 @@ public class NeurotoxinBlock extends BlockWithEntity {
         return VoxelShapes.empty();
     }
 
-    @Nullable
-    @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new NeurotoxinBlockEntity();
-    }
+
 
     @Override
     public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
@@ -60,4 +55,13 @@ public class NeurotoxinBlock extends BlockWithEntity {
         }
     }
 
+    @Override
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new NeurotoxinBlockEntity(pos,state);
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK_ENTITY, NeurotoxinBlockEntity::tick);
+    }
 }

@@ -4,8 +4,8 @@ import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * @author sailKite
@@ -13,36 +13,37 @@ import net.minecraft.util.math.BlockPos;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public class NeurotoxinEmitterBlockEntity extends BlockEntity implements Tickable {
+public class NeurotoxinEmitterBlockEntity extends BlockEntity {
 
     public boolean shouldRepair = false;
     private final BlockPos.Mutable obstructorPos;
 
-    public NeurotoxinEmitterBlockEntity() {
-        super(ThinkingWithPortatosBlocks.NEUROTOXIN_EMITTER_ENTITY);
+    public NeurotoxinEmitterBlockEntity(BlockPos pos, BlockState state) {
+        super(ThinkingWithPortatosBlocks.NEUROTOXIN_EMITTER_ENTITY,pos,state);
         this.obstructorPos = pos.mutableCopy();
     }
 
-    @Override
-    public void tick() {
+
+
+    public static void tick(World world, BlockPos pos, BlockState state, NeurotoxinEmitterBlockEntity blockEntity) {
         assert world != null;
         if (!world.isClient) {
-            boolean redstonePowered = world.isReceivingRedstonePower(getPos());
+            boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 
             if (redstonePowered) {
                 // Update blockstate
                 if (!world.getBlockState(pos).get(Properties.POWERED)) {
-                    togglePowered(world.getBlockState(pos));
+                    blockEntity.togglePowered(world.getBlockState(pos));
                 }
             }
             if (!redstonePowered) {
                 // Update blockstate
                 if (world.getBlockState(pos).get(Properties.POWERED)) {
-                    togglePowered(world.getBlockState(pos));
+                    blockEntity.togglePowered(world.getBlockState(pos));
                 }
             }
-            if (world.isAir(this.getPos().offset(this.getCachedState().get(Properties.FACING))) && world.getBlockState(pos).get(Properties.POWERED)) {
-                world.setBlockState(this.getPos().offset(this.getCachedState().get(Properties.FACING)), ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK.getDefaultState());
+            if (world.isAir(blockEntity.getPos().offset(blockEntity.getCachedState().get(Properties.FACING))) && world.getBlockState(pos).get(Properties.POWERED)) {
+                world.setBlockState(blockEntity.getPos().offset(blockEntity.getCachedState().get(Properties.FACING)), ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK.getDefaultState());
             }
 
         }

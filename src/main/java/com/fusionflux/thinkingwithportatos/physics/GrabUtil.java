@@ -1,8 +1,7 @@
 package com.fusionflux.thinkingwithportatos.physics;
 
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
-import com.fusionflux.thinkingwithportatos.entity.PhysicsFallingBlockEntity;
-import com.qouteall.immersive_portals.portal.Portal;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,6 +13,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import qouteall.imm_ptl.core.portal.Portal;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -39,23 +39,7 @@ public class GrabUtil {
         return null;
     }
 
-    public static @Nullable PhysicsFallingBlockEntity getBlockToGrab(PlayerEntity player) {
-        HitResult result = player.raycast(4.5, 1.0f, false);
 
-        if (result.getType() != HitResult.Type.MISS) {
-            BlockPos pos = ((BlockHitResult) result).getBlockPos();
-            BlockState state = player.world.getBlockState(pos);
-
-            if (!state.getBlock().canMobSpawnInside() && player.world.getBlockEntity(pos) == null && !state.getBlock().isIn(ThinkingWithPortatosBlocks.IMMOVABLE_BLOCKS)) {
-                PhysicsFallingBlockEntity fallingBlock = new PhysicsFallingBlockEntity(player.world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
-                player.world.removeBlock(pos, false);
-                player.world.spawnEntity(fallingBlock);
-                return fallingBlock;
-            }
-        }
-
-        return null;
-    }
 
     public static EntityHitResult raycast(Entity entity, Vec3d vec3d, Vec3d vec3d2, Box box, Predicate<Entity> predicate, double d) {
         World world = entity.world;

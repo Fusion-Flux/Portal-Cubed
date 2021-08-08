@@ -7,7 +7,6 @@ import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
 import com.fusionflux.thinkingwithportatos.packet.ThinkingWithPortatosServerPackets;
-import com.fusionflux.thinkingwithportatos.physics.BodyGrabbingManager;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -20,7 +19,7 @@ import net.minecraft.util.Identifier;
 
 public class ThinkingWithPortatos implements ModInitializer {
     public static final ThinkingWithPortatosConfig CONFIG = new ThinkingWithPortatosConfig();
-    public static final BodyGrabbingManager bodyGrabbingManager = new BodyGrabbingManager(true);
+
     public static final String MODID = "thinkingwithportatos";
 
     public static final ItemGroup ThinkingWithPortatosGroup = FabricItemGroupBuilder.build(
@@ -31,13 +30,7 @@ public class ThinkingWithPortatos implements ModInitializer {
         return new Identifier(MODID, path);
     }
 
-    public static BodyGrabbingManager getBodyGrabbingManager(boolean client) {
-        if (client) {
-            return ThinkingWithPortatosClient.bodyGrabbingManager;
-        } else {
-            return bodyGrabbingManager;
-        }
-    }
+
 
     @Override
     public void onInitialize() {
@@ -48,8 +41,6 @@ public class ThinkingWithPortatos implements ModInitializer {
         ThinkingWithPortatosEntities.registerEntities();
         ThinkingWithPortatosServerPackets.registerPackets();
         ThinkingWithPortatosSounds.registerSounds();
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> bodyGrabbingManager.grabInstances.clear());
-        ServerTickEvents.END_SERVER_TICK.register(server -> bodyGrabbingManager.tick());
         FlammableBlockRegistry.getDefaultInstance().add(ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK,10000,10000);
     }
 }

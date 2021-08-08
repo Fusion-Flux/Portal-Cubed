@@ -34,7 +34,7 @@ public class PaintGun extends Item {
     protected void throwGel(World world, LivingEntity player) {
         GelOrbEntity gelOrbEntity = new GelOrbEntity(world, player);
         gelOrbEntity.setItem(new ItemStack(ThinkingWithPortatosItems.GEL_ORB));
-        gelOrbEntity.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 0F);
+        gelOrbEntity.setProperties(player, player.getPitch(), player.getYaw(), 0.0F, 1.5F, 0F);
         world.spawnEntity(gelOrbEntity); // spawns entity
     }
 }

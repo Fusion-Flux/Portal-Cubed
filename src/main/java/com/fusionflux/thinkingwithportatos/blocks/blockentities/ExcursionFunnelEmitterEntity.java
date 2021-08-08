@@ -4,15 +4,15 @@ import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.Objects;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public class ExcursionFunnelEmitterEntity extends BlockEntity implements Tickable {
+public class ExcursionFunnelEmitterEntity extends BlockEntity {
 
     public final int MAX_RANGE = ThinkingWithPortatosConfig.get().numbersblock.maxBridgeLength;
     public final int BLOCKS_PER_TICK = 1;
@@ -37,58 +37,57 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity implements Tickabl
     public boolean shouldRepair = false;
     private BlockPos.Mutable obstructorPos;
 
-    public ExcursionFunnelEmitterEntity() {
-        super(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL_EMMITER_ENTITY);
+    public ExcursionFunnelEmitterEntity(BlockPos pos, BlockState state) {
+        super(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL_EMMITER_ENTITY,pos,state);
         this.obstructorPos = pos.mutableCopy();
     }
 
-    @Override
-    public void tick() {
+    public static void tick(World world, BlockPos pos, BlockState state, ExcursionFunnelEmitterEntity blockEntity) {
         assert world != null;
-        if (this.world.getTime() % 40L == 0L) {
+        if (blockEntity.world.getTime() % 40L == 0L) {
 
             if (world.getBlockState(pos).get(Properties.POWERED)) {
-                this.playSound2(SoundEvents.BLOCK_BEACON_AMBIENT);
+                blockEntity.playSound2(SoundEvents.BLOCK_BEACON_AMBIENT);
             }
         }
 
         if (!world.isClient) {
-            boolean redstonePowered = world.isReceivingRedstonePower(getPos());
+            boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 
             if (redstonePowered) {
                 // Update blockstate
                 if (!world.getBlockState(pos).get(Properties.POWERED)) {
-                    togglePowered(world.getBlockState(pos));
+                    blockEntity.togglePowered(world.getBlockState(pos));
                 }
 
                 // Prevents an issue with the emitter overwriting itself
-                if (obstructorPos.equals(getPos())) {
-                    obstructorPos.move(this.getCachedState().get(Properties.FACING));
+                if (blockEntity.obstructorPos.equals(blockEntity.getPos())) {
+                    blockEntity.obstructorPos.move(blockEntity.getCachedState().get(Properties.FACING));
                 }
 
                 // Starts the extension logic by checking the frontal adjacent position for non-obstruction
-                if (extensionTicks <= EXTENSION_TIME) {
-                    if (world.isAir(obstructorPos) || world.getBlockState(obstructorPos).getHardness(world, obstructorPos) <= 0.1F || world.getBlockState(obstructorPos).getBlock().equals(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL)) {
-                        shouldExtend = true;
-                        extendBridge(getCachedState(), (ServerWorld) world, getPos());
+                if (blockEntity.extensionTicks <= blockEntity.EXTENSION_TIME) {
+                    if (world.isAir(blockEntity.obstructorPos) || world.getBlockState(blockEntity.obstructorPos).getHardness(world, blockEntity.obstructorPos) <= 0.1F || world.getBlockState(blockEntity.obstructorPos).getBlock().equals(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL)) {
+                        blockEntity.shouldExtend = true;
+                        blockEntity.extendBridge(blockEntity.getCachedState(), (ServerWorld) world, blockEntity.getPos());
                     }
                 }
 
-                maintainBridge();
+                blockEntity.maintainBridge();
             }
             if (!redstonePowered) {
                 // Update blockstate
                 if (world.getBlockState(pos).get(Properties.POWERED)) {
-                    togglePowered(world.getBlockState(pos));
+                    blockEntity.togglePowered(world.getBlockState(pos));
                 }
 
-                obstructorPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
-                obstructorPos.move(getCachedState().get(Properties.FACING));
-                extensionTicks = 0;
-                shouldExtend = false;
+                blockEntity.obstructorPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+                blockEntity.obstructorPos.move(blockEntity.getCachedState().get(Properties.FACING));
+                blockEntity.extensionTicks = 0;
+                blockEntity.shouldExtend = false;
             }
 
-            markDirty();
+            blockEntity.markDirty();
         }
     }
 
@@ -120,6 +119,11 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity implements Tickabl
         extendPos.move(facing, extensionTicks);
         ++extensionTicks;
         for (int i = 0; i < BLOCKS_PER_TICK; i++) {
+            if(extendPos.getY()+1>=world.getHeight()){
+                bridgeComplete = true;
+                shouldExtend = false;
+                break;
+            }
             if (extensionTicks <= EXTENSION_TIME) {
                 if (world.getBlockState(extendPos).getBlock().equals(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL)) {
                     ((ExcursionFunnelEntity) Objects.requireNonNull(world.getBlockEntity(extendPos))).emitters.add(new BlockPos.Mutable(getPos().getX(), getPos().getY(), getPos().getZ()));
@@ -137,7 +141,10 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity implements Tickabl
                 shouldExtend = false;
                 break;
             }
+
+
             extendPos.move(facing);
+
         }
 
         obstructorPos.set(extendPos);
@@ -214,7 +221,7 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity implements Tickabl
 
     /**
      * Used to correct a bug with the initial assignment and manipulation of {@link #obstructorPos}
-     * during its first {@link #tick()}. Without this method or some other solution, the position will
+     * during its first {@link}. Without this method or some other solution, the position will
      * always be [ 0, 0, 0 ].
      *
      * @param ownerPos the {@link BlockPos} of the owning {@link HardLightBridgeEmitterBlock}.
@@ -224,8 +231,8 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity implements Tickabl
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
 
         tag.putBoolean("bridgeComplete", bridgeComplete);
         tag.putBoolean("alreadyPowered", alreadyPowered);
@@ -242,8 +249,8 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity implements Tickabl
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
 
         bridgeComplete = tag.getBoolean("bridgeComplete");
         alreadyPowered = tag.getBoolean("alreadyPowered");

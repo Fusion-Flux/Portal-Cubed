@@ -4,15 +4,15 @@ import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.config.ThinkingWithPortatosConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.Objects;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Tickable {
+public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
 
     public final int MAX_RANGE = ThinkingWithPortatosConfig.get().numbersblock.maxBridgeLength;
     public final int BLOCKS_PER_TICK = 1;
@@ -37,58 +37,57 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
     public boolean shouldRepair = false;
     private BlockPos.Mutable obstructorPos;
 
-    public HardLightBridgeEmitterBlockEntity() {
-        super(ThinkingWithPortatosBlocks.HLB_EMITTER_ENTITY);
+    public HardLightBridgeEmitterBlockEntity(BlockPos pos, BlockState state) {
+        super(ThinkingWithPortatosBlocks.HLB_EMITTER_ENTITY,pos,state);
         this.obstructorPos = pos.mutableCopy();
     }
 
-    @Override
-    public void tick() {
+    public static void tick(World world, BlockPos pos, BlockState state, HardLightBridgeEmitterBlockEntity blockEntity) {
         assert world != null;
-        if (this.world.getTime() % 40L == 0L) {
+        if (blockEntity.world.getTime() % 40L == 0L) {
 
             if (world.getBlockState(pos).get(Properties.POWERED)) {
-                this.playSound2(SoundEvents.BLOCK_BEACON_AMBIENT);
+                blockEntity.playSound2(SoundEvents.BLOCK_BEACON_AMBIENT);
             }
         }
 
         if (!world.isClient) {
-            boolean redstonePowered = world.isReceivingRedstonePower(getPos());
+            boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 
             if (redstonePowered) {
                 // Update blockstate
                 if (!world.getBlockState(pos).get(Properties.POWERED)) {
-                    togglePowered(world.getBlockState(pos));
+                    blockEntity.togglePowered(world.getBlockState(pos));
                 }
 
                 // Prevents an issue with the emitter overwriting itself
-                if (obstructorPos.equals(getPos())) {
-                    obstructorPos.move(this.getCachedState().get(Properties.FACING));
+                if (blockEntity.obstructorPos.equals(blockEntity.getPos())) {
+                    blockEntity.obstructorPos.move(blockEntity.getCachedState().get(Properties.FACING));
                 }
 
                 // Starts the extension logic by checking the frontal adjacent position for non-obstruction
-                if (extensionTicks <= EXTENSION_TIME) {
-                    if (world.isAir(obstructorPos) || world.getBlockState(obstructorPos).getHardness(world, obstructorPos) <= 0.1F || world.getBlockState(obstructorPos).getBlock().equals(ThinkingWithPortatosBlocks.HLB_BLOCK)) {
-                        shouldExtend = true;
-                        extendBridge(getCachedState(), (ServerWorld) world, getPos());
+                if (blockEntity.extensionTicks <= blockEntity.EXTENSION_TIME) {
+                    if (world.isAir(blockEntity.obstructorPos) || world.getBlockState(blockEntity.obstructorPos).getHardness(world, blockEntity.obstructorPos) <= 0.1F || world.getBlockState(blockEntity.obstructorPos).getBlock().equals(ThinkingWithPortatosBlocks.HLB_BLOCK)) {
+                        blockEntity.shouldExtend = true;
+                        blockEntity.extendBridge(blockEntity.getCachedState(), (ServerWorld) world, blockEntity.getPos());
                     }
                 }
 
-                maintainBridge();
+                blockEntity.maintainBridge();
             }
             if (!redstonePowered) {
                 // Update blockstate
                 if (world.getBlockState(pos).get(Properties.POWERED)) {
-                    togglePowered(world.getBlockState(pos));
+                    blockEntity.togglePowered(world.getBlockState(pos));
                 }
 
-                obstructorPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
-                obstructorPos.move(getCachedState().get(Properties.FACING));
-                extensionTicks = 0;
-                shouldExtend = false;
+                blockEntity.obstructorPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+                blockEntity.obstructorPos.move(blockEntity.getCachedState().get(Properties.FACING));
+                blockEntity.extensionTicks = 0;
+                blockEntity.shouldExtend = false;
             }
 
-            markDirty();
+            blockEntity.markDirty();
         }
     }
 
@@ -214,7 +213,7 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
 
     /**
      * Used to correct a bug with the initial assignment and manipulation of {@link #obstructorPos}
-     * during its first {@link #tick()}. Without this method or some other solution, the position will
+     * during its first {@link #}. Without this method or some other solution, the position will
      * always be [ 0, 0, 0 ].
      *
      * @param ownerPos the {@link BlockPos} of the owning {@link HardLightBridgeEmitterBlock}.
@@ -224,8 +223,8 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
 
         tag.putBoolean("bridgeComplete", bridgeComplete);
         tag.putBoolean("alreadyPowered", alreadyPowered);
@@ -233,7 +232,7 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
 
         tag.putInt("extTicks", extensionTicks);
 
-        // Due to limitations of CompoundTag, we have to separately write each part of any BlockPos
+        // Due to limitations of NbtCompound, we have to separately write each part of any BlockPos
         tag.putInt("obsx", obstructorPos.getX());
         tag.putInt("obsy", obstructorPos.getY());
         tag.putInt("obsz", obstructorPos.getZ());
@@ -242,8 +241,8 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
 
         bridgeComplete = tag.getBoolean("bridgeComplete");
         alreadyPowered = tag.getBoolean("alreadyPowered");
@@ -252,7 +251,7 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity implements Ti
         tag.getInt("extTicks");
 
 
-        // Due to limitations of CompoundTag, we have to separately read each part of any BlockPos
+        // Due to limitations of NbtCompound, we have to separately read each part of any BlockPos
         obstructorPos = new BlockPos.Mutable(
                 tag.getInt("obsx"),
                 tag.getInt("obsy"),

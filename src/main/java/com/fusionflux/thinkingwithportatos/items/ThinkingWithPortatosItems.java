@@ -21,8 +21,6 @@ public class ThinkingWithPortatosItems {
     public static final Item PORTAL_GUN_CASING = new Item(new FabricItemSettings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup).maxCount(1).fireproof());
     public static final Item MINI_BLACKHOLE = new Item(new FabricItemSettings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup).maxCount(1).fireproof());
     public static final PaintGun PAINT_GUN = new PaintGun(new FabricItemSettings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup).maxCount(1).fireproof());
-    public static final SpawnEggItem CUBE = new SpawnEggItem(ThinkingWithPortatosEntities.CUBE, 1, 1, new FabricItemSettings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup));
-    public static final SpawnEggItem COMPANION_CUBE = new SpawnEggItem(ThinkingWithPortatosEntities.COMPANION_CUBE, 1, 1, new FabricItemSettings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup));
 
     public static void registerItems() {
         if (ThinkingWithPortatosConfig.get().enabled.enableLongFallBoots)
@@ -33,7 +31,5 @@ public class ThinkingWithPortatosItems {
         Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "portal_gun_casing"), PORTAL_GUN_CASING);
         Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "mini_blackhole"), MINI_BLACKHOLE);
         // Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "paint_gun"), PAINT_GUN);
-        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "cube"), CUBE);
-        Registry.register(Registry.ITEM, new Identifier(ThinkingWithPortatos.MODID, "companion_cube"), COMPANION_CUBE);
     }
 }

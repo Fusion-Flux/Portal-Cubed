@@ -23,12 +23,12 @@ public class GelOrb extends Item {
         if (!world.isClient) {
             GelOrbEntity gelOrbEntity = new GelOrbEntity(world, user);
             gelOrbEntity.setItem(itemStack);
-            gelOrbEntity.setProperties(user, user.pitch, user.yaw, 0.0F, 1.5F, 0F);
+            gelOrbEntity.setProperties(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 0F);
             world.spawnEntity(gelOrbEntity); // spawns entity
         }
 
         user.incrementStat(Stats.USED.getOrCreateStat(this));
-        if (!user.abilities.creativeMode) {
+        if (!user.getAbilities().creativeMode) {
             itemStack.decrement(1); // decrements itemStack if user is not in creative mode
         }
 

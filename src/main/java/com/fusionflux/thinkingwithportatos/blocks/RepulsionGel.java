@@ -1,7 +1,6 @@
 package com.fusionflux.thinkingwithportatos.blocks;
 
 import com.fusionflux.thinkingwithportatos.entity.BlockCollisionLimiter;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
@@ -11,7 +10,7 @@ public class RepulsionGel extends GelFlat {
 
     private final BlockCollisionLimiter limiter = new BlockCollisionLimiter();
 
-    public RepulsionGel(AbstractBlock.Settings settings) {
+    public RepulsionGel(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
     }
