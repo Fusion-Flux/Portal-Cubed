@@ -3,10 +3,13 @@ package com.fusionflux.thinkingwithportatos.client.render;
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.client.render.model.entity.PortalPlaceholderModel;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
+
+import net.minecraft.client.MinecraftClient;
+
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -17,7 +20,7 @@ import net.minecraft.util.math.Vec3f;
 public class PortalPlaceholderRenderer extends EntityRenderer<PortalPlaceholderEntity> {
 
     private static final Identifier BASE_TEXTURE = new Identifier(ThinkingWithPortatos.MODID, "textures/entity/portal_placeholder.png");
-    protected final PortalPlaceholderModel model = new PortalPlaceholderModel();
+    protected final PortalPlaceholderModel model = new PortalPlaceholderModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(PortalPlaceholderModel.MAIN_LAYER));
 
     public PortalPlaceholderRenderer(EntityRendererFactory.Context dispatcher) {
         super(dispatcher);

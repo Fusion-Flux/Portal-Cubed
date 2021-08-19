@@ -5,6 +5,7 @@ import com.fusionflux.thinkingwithportatos.client.key.GrabKeyBinding;
 import com.fusionflux.thinkingwithportatos.client.packet.ThinkingWithPortatosClientPackets;
 import com.fusionflux.thinkingwithportatos.client.render.PortalHud;
 import com.fusionflux.thinkingwithportatos.client.render.PortalPlaceholderRenderer;
+import com.fusionflux.thinkingwithportatos.client.render.model.entity.PortalPlaceholderModel;
 import com.fusionflux.thinkingwithportatos.entity.GelOrbEntity;
 import com.fusionflux.thinkingwithportatos.entity.ThinkingWithPortatosEntities;
 import com.fusionflux.thinkingwithportatos.items.PortalGun;
@@ -17,6 +18,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -71,19 +73,19 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
 
-        setupFluidRendering(ThinkingWithPortatosBlocks.STILL_TOXIC_GOO, ThinkingWithPortatosBlocks.FLOWING_TOXIC_GOO, new Identifier("thinkingwithportatos", "acid"), 0x2D1B00);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ThinkingWithPortatosBlocks.STILL_TOXIC_GOO, ThinkingWithPortatosBlocks.FLOWING_TOXIC_GOO);
+        //setupFluidRendering(ThinkingWithPortatosBlocks.STILL_TOXIC_GOO, ThinkingWithPortatosBlocks.FLOWING_TOXIC_GOO, new Identifier("thinkingwithportatos", "acid"), 0x2D1B00);
+        //BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ThinkingWithPortatosBlocks.STILL_TOXIC_GOO, ThinkingWithPortatosBlocks.FLOWING_TOXIC_GOO);
     }
 
     private void registerEntityRenderers() {
-
+        EntityModelLayerRegistry.registerModelLayer(PortalPlaceholderModel.MAIN_LAYER, PortalPlaceholderModel::getTexturedModelData);
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.PORTAL_PLACEHOLDER, (context) -> new PortalPlaceholderRenderer(context));
         EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.CUSTOM_PORTAL, (context) -> new PortalEntityRenderer(context));
         //EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer<GelOrbEntity>(dispatcher, context.getItemRenderer()));
        // EntityRendererRegistry.INSTANCE.register(ThinkingWithPortatosEntities.REPULSION_GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
     }
 
-    public static void setupFluidRendering(final Fluid still, final Fluid flowing, final Identifier textureFluidId, final int color) {
+    /*public static void setupFluidRendering(final Fluid still, final Fluid flowing, final Identifier textureFluidId, final int color) {
         final Identifier stillSpriteId = new Identifier(textureFluidId.getNamespace(), "block/" + textureFluidId.getPath() + "_still");
         final Identifier flowingSpriteId = new Identifier(textureFluidId.getNamespace(), "block/" + textureFluidId.getPath() + "_flow");
 
@@ -116,6 +118,6 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
 
         FluidRenderHandlerRegistry.INSTANCE.register(still, renderHandler);
         FluidRenderHandlerRegistry.INSTANCE.register(flowing, renderHandler);
-    }
+    }*/
 
 }

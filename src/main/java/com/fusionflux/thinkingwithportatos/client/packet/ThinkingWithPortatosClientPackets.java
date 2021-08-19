@@ -44,9 +44,9 @@ public class ThinkingWithPortatosClientPackets {
             if (entity != null) {
                 entity.updatePosition(x, y, z);
                 entity.updateTrackedPosition(x, y, z);
-                entity.pitch = pitch;
-                entity.yaw = yaw;
-                entity.setEntityId(entityID);
+                entity.setPitch(pitch);
+                entity.setYaw(yaw);
+                entity.setId(entityID);
                 entity.setUuid(entityUUID);
                 assert world != null;
                 world.addEntity(entityID, entity);
@@ -64,7 +64,7 @@ public class ThinkingWithPortatosClientPackets {
                 Entity entity = client.world.getEntityById(entityId);
 
                 if (grabber instanceof PlayerEntity) {
-                    ThinkingWithPortatos.getBodyGrabbingManager(true).tryGrab((PlayerEntity) grabber, entity);
+                    //ThinkingWithPortatos.getBodyGrabbingManager(true).tryGrab((PlayerEntity) grabber, entity);
                 }
             }
         });
@@ -79,7 +79,7 @@ public class ThinkingWithPortatosClientPackets {
                 Entity grabber = client.world.getEntityById(grabberId);
 
                 if (grabber instanceof PlayerEntity) {
-                    ThinkingWithPortatos.getBodyGrabbingManager(true).tryUngrab((PlayerEntity) grabber, punch);
+                   // ThinkingWithPortatos.getBodyGrabbingManager(true).tryUngrab((PlayerEntity) grabber, punch);
                 }
             }
         });

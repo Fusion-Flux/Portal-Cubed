@@ -36,7 +36,7 @@ public class ThinkingWithPortatosServerPackets {
             Item mainHand = player.getMainHandStack().getItem();
             Item offHand = player.getOffHandStack().getItem();
 
-            if (mainHand instanceof PortalGun || offHand instanceof PortalGun) {
+            /*if (mainHand instanceof PortalGun || offHand instanceof PortalGun) {
                 BodyGrabbingManager manager = ThinkingWithPortatos.getBodyGrabbingManager(false);
 
                 if (manager.isPlayerGrabbing(player)) {
@@ -54,7 +54,7 @@ public class ThinkingWithPortatosServerPackets {
                         manager.tryGrab(player, entity);
                     }
                 }
-            }
+            }*/
         });
     }
 

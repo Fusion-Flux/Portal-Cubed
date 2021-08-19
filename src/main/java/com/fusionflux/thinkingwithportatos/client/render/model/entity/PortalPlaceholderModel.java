@@ -4,13 +4,17 @@
 
 package com.fusionflux.thinkingwithportatos.client.render.model.entity;
 
+import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
 
 public class PortalPlaceholderModel extends EntityModel<PortalPlaceholderEntity> {
+    public static final EntityModelLayer MAIN_LAYER = new EntityModelLayer(new Identifier(ThinkingWithPortatos.MODID,"portal_placeholder"), "main");
     private final ModelPart bb_main;
 
     public PortalPlaceholderModel(ModelPart root) {
