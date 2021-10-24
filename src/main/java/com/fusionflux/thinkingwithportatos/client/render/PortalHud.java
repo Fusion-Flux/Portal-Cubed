@@ -21,7 +21,7 @@ public class PortalHud {
 
     public static void renderPortalLeft(MatrixStack matrices, float tickDelta) {
         RenderSystem.enableBlend();
-        MinecraftClient.getInstance().getTextureManager().bindTexture(BASE_TEXTURE);
+        RenderSystem.setShaderTexture(0,BASE_TEXTURE);
         assert MinecraftClient.getInstance().player != null;
 
         if (MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)) {
@@ -30,7 +30,7 @@ public class PortalHud {
                 stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
 
-            NbtCompound tag = stack.getOrCreateTag();
+            NbtCompound tag = stack.getOrCreateNbt();
             NbtCompound portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
             PortalGun gun = (PortalGun) stack.getItem();
             int color = Math.abs(gun.getColor(stack));
@@ -73,7 +73,7 @@ public class PortalHud {
 
     public static void renderPortalRight(MatrixStack matrices, float tickDelta) {
         RenderSystem.enableBlend();
-        MinecraftClient.getInstance().getTextureManager().bindTexture(BASE_TEXTURE);
+        RenderSystem.setShaderTexture(0,BASE_TEXTURE);
         assert MinecraftClient.getInstance().player != null;
 
         if (MinecraftClient.getInstance().player.isHolding(ThinkingWithPortatosItems.PORTAL_GUN)) {
@@ -83,7 +83,7 @@ public class PortalHud {
                 stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
 
-            NbtCompound tag = stack.getOrCreateTag();
+            NbtCompound tag = stack.getOrCreateNbt();
             NbtCompound portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
             PortalGun gun = (PortalGun) stack.getItem();
             int color = Math.abs(gun.getColor(stack)) * -1;

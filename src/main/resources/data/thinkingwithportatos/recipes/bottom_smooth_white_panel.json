@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "thinkingwithportatos:smooth_white_panel"
-  },
-  "result": "thinkingwithportatos:bottom_smooth_white_panel",
-  "count": 1
-}

@@ -17,13 +17,13 @@ public class PaintGun extends Item {
 
     public void useLeft(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        stack.getOrCreateTag().putBoolean("complementary", false);
+        stack.getOrCreateNbt().putBoolean("complementary", false);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        stack.getOrCreateTag().putBoolean("complementary", true);
+        stack.getOrCreateNbt().putBoolean("complementary", true);
 
         if (!world.isClient) {
             throwGel(world, user);

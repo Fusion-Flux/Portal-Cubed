@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 
 public class ThinkingWithPortatos implements ModInitializer {
@@ -34,6 +35,7 @@ public class ThinkingWithPortatos implements ModInitializer {
 
     @Override
     public void onInitialize() {
+
         QuaternionHandler.QUATERNION_HANDLER.getClass();
         ThinkingWithPortatosConfig.register();
         ThinkingWithPortatosBlocks.registerBlocks();

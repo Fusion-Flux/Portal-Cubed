@@ -16,13 +16,21 @@ import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -59,6 +67,21 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     private boolean recentlyTouchedPortal;
     @Unique
     private final List<CustomPortalEntity> portalList = Lists.newArrayList();
+
+    @Unique
+    private boolean IN_FUNNEL = false;
+
+    @Unique
+    private boolean IS_BOUNCED = false;
+
+    @Unique
+    private int FUNNEL_TIMER = 0;
+
+    @Unique
+    private static boolean IsInitalized = false;
+
+    @Unique
+    private static boolean IsInitalized2 = false;
 
     @Override
     public double getMaxFallSpeed() {
@@ -114,6 +137,16 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     public abstract boolean isSneaking();
 
 
+    @Shadow public abstract void setNoGravity(boolean noGravity);
+
+    @Shadow public abstract boolean hasNoGravity();
+
+    @Shadow @Final protected DataTracker dataTracker;
+
+    @Shadow protected abstract void onBlockCollision(BlockState state);
+
+    @Shadow public abstract int getId();
+
     @Override
     public List<CustomPortalEntity> getPortalList() {
         return portalList;
@@ -126,12 +159,23 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
+if(world.isClient()) {
+
+        if (this.isInFunnel() && this.getFunnelTimer() != 0) {
+            this.setFunnelTimer(this.getFunnelTimer() - 1);
+        }
+        if (this.isInFunnel() && this.getFunnelTimer() == 0 && this.hasNoGravity()) {
+            this.setNoGravity(false);
+            setInFunnel(false);
+        }
+
+}
         Vec3d expand = this.getVelocity().multiply(10);
         Box streachedBB = this.getBoundingBox().stretch(expand);
 
-        List<CustomPortalEntity> globalPortals = this.world.getEntitiesByClass(CustomPortalEntity.class, streachedBB, null);
+        List<CustomPortalEntity> globalPortals = this.world.getEntitiesByClass(CustomPortalEntity.class, streachedBB, e -> true);
 
-        for (CustomPortalEntity globalPortal : globalPortals) {
+        /*for (CustomPortalEntity globalPortal : globalPortals) {
             if (streachedBB.intersects(globalPortal.getBoundingBox())) {
                 Vec3d portalFacing = new Vec3d((int) globalPortal.getNormal().getX(), (int) globalPortal.getNormal().getY(), (int) globalPortal.getNormal().getZ());
                 double offsetX = 0;
@@ -141,23 +185,23 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 Box streachedPortalBB = globalPortal.getBoundingBox().stretch(portalFacing.getX() * Math.abs(this.getVelocity().getX())*10, portalFacing.getY() * Math.abs(this.getVelocity().getY())*10, portalFacing.getZ() * Math.abs(this.getVelocity().getZ())*10);
                 if (streachedPortalBB.intersects(this.getBoundingBox())){
                     if (Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().x) || Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().x)) {
-                        offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x) * .05;
+                        offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x) * .03;
                     }
                 if (Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().z) || Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().z)) {
-                    offsetZ = (this.getBoundingBox().getCenter().z - globalPortal.getBoundingBox().getCenter().z) * .05;
+                    offsetZ = (this.getBoundingBox().getCenter().z - globalPortal.getBoundingBox().getCenter().z) * .03;
                 }
                 if (Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().y) || Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().y)) {
-                    offsetY = (this.getBoundingBox().getCenter().y - globalPortal.getBoundingBox().getCenter().y) * .05;
+                    offsetY = (this.getBoundingBox().getCenter().y - globalPortal.getBoundingBox().getCenter().y) * .03;
                 }
                 if (!this.getBoundingBox().intersects(globalPortal.getBoundingBox()) && !this.isSneaking())
                     this.setVelocity(this.getVelocity().add(-offsetX, -offsetY, -offsetZ));
             }
             }
-        }
+        }*/
 
         if (!world.isClient) {
 
-            List<CustomPortalEntity> portalSound = this.world.getEntitiesByClass(CustomPortalEntity.class, this.getBoundingBox().expand(2), null);
+            List<CustomPortalEntity> portalSound = this.world.getEntitiesByClass(CustomPortalEntity.class, this.getBoundingBox().expand(2), e -> true);
 
             for (Entity globalportal : portalSound) {
                 CustomPortalEntity collidingportal = (CustomPortalEntity) globalportal;
@@ -224,6 +268,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 this.setVelocity(this.getVelocity().multiply(1.4));
                 this.setVelocity(this.getVelocity().add(direction.x, direction.y, direction.z));
             }
+            ((EntityAttachments) this).setBounced(true);
         } else if (world.getBlockState(new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ())).getBlock() == ThinkingWithPortatosBlocks.REPULSION_GEL) {
             BlockState state = world.getBlockState(new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ()));
             Vec3d direction = new Vec3d(0, 0, 0);
@@ -263,6 +308,7 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
                 }
                 this.setVelocity(this.getVelocity().add(direction.x, direction.y, direction.z));
             }
+            ((EntityAttachments) this).setBounced(true);
         }
         if (world.isClient) {
             storeVelocity2 = storeVelocity1;
@@ -276,7 +322,12 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
         }
 
         speedTransformApply = Math.max(storeVelocity1, storeVelocity2);
+
+
+
     }
+
+
 
     @Override
     public double getVelocityTransfer() {
@@ -309,6 +360,58 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     }
 
 
+    /*@Inject(method = "initDataTracker", at = @At("RETURN"), cancellable = true)
+    public void initTracker(CallbackInfo info) {
+        dataTracker.startTracking(IN_FUNNEL, false);
+    }*/
+
+    /*@Inject(method = "readCustomDataFromNbt", at = @At("RETURN"), cancellable = true)
+    public void readNbt(NbtCompound tag, CallbackInfo info) {
+        NbtCompound rootTag = tag.getCompound(ThinkingWithPortatos.MODID);
+
+        dataTracker.set(IN_FUNNEL, rootTag.getBoolean("IsInFunnel"));
+    }
+
+    @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"), cancellable = true)
+    public void writeNbt(NbtCompound tag, CallbackInfo info) {
+        NbtCompound rootTag = new NbtCompound();
+
+        tag.put(ThinkingWithPortatos.MODID, rootTag);
+        rootTag.putBoolean("IsInFunnel", dataTracker.get(IN_FUNNEL));
+    }*/
+
+
+    @Override
+    public boolean isInFunnel() {
+        return this.IN_FUNNEL;
+    }
+
+    @Override
+    public void setInFunnel(boolean inFunnel) {
+        this.IN_FUNNEL=inFunnel;
+    }
+
+    @Override
+    public boolean isBounced() {
+        return this.IS_BOUNCED;
+    }
+
+    @Override
+    public void setBounced(boolean bounced) {
+        this.IS_BOUNCED=bounced;
+    }
+
+    @Override
+    public int getFunnelTimer() {
+
+        return this.FUNNEL_TIMER;
+    }
+
+    @Override
+    public void setFunnelTimer(int funnelTimer) {
+        this.FUNNEL_TIMER=funnelTimer;
+    }
+
     /*----------
     @Inject(method = "calculateDimensions", at = @At("TAIL"))
     public void calculateDimensions(CallbackInfo ci) {
@@ -318,5 +421,25 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     }
     ----------*/
 
+    /*protected void checkBlockCollision() {
+        Box box = this.getBoundingBox();
+        BlockPos blockPos = new BlockPos(box.minX + 0.001D, box.minY + 0.001D, box.minZ + 0.001D);
+        BlockPos blockPos2 = new BlockPos(box.maxX - 0.001D, box.maxY - 0.001D, box.maxZ - 0.001D);
+        if (this.world.isRegionLoaded(blockPos, blockPos2)) {
+            BlockPos.Mutable mutable = new BlockPos.Mutable();
+
+            for(int i = blockPos.getX(); i <= blockPos2.getX(); ++i) {
+                for(int j = blockPos.getY(); j <= blockPos2.getY(); ++j) {
+                    for(int k = blockPos.getZ(); k <= blockPos2.getZ(); ++k) {
+                        mutable.set(i, j, k);
+                        BlockState blockState = this.world.getBlockState(mutable);
+
+
+                    }
+                }
+            }
+        }
+
+    }*/
 
 }

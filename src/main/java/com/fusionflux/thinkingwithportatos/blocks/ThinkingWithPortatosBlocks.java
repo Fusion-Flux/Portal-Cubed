@@ -25,42 +25,34 @@ import static com.fusionflux.thinkingwithportatos.ThinkingWithPortatos.id;
 
 public class ThinkingWithPortatosBlocks {
 
-    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(FabricBlockSettings.of(Material.WATER).hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
-    public static final RepulsionGel REPULSION_GEL = new RepulsionGel(FabricBlockSettings.of(Material.WATER).hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
-    public static final GelFlat GEL = new GelFlat(FabricBlockSettings.of(Material.WATER).hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
+    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
+    public static final RepulsionGel REPULSION_GEL = new RepulsionGel(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
+    public static final GelFlat GEL = new GelFlat(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
     // public static final GelFlat GEL_FLAT = new GelFlat(FabricBlockSettings.of(Material.WATER).hardness(0f).nonOpaque().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
 
     public static final HardLightBridgeEmitterBlock HLB_EMITTER_BLOCK = new HardLightBridgeEmitterBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
     public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(FabricBlockSettings.of(Material.PLANT).hardness(999999f).nonOpaque().luminance(10).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_METAL_BREAK, SoundEvents.BLOCK_METAL_STEP, SoundEvents.BLOCK_METAL_PLACE, SoundEvents.BLOCK_METAL_HIT, SoundEvents.BLOCK_METAL_FALL)));
 
-    public static final Block SMOOTH_WHITE_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block CHISELED_SMOOTH_WHITE_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock TOP_SMOOTH_WHITE_PANEL = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock BOTTOM_SMOOTH_WHITE_PANEL = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock BOTTOM_2X2_SMOOTH_WHITE_PANEL = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock TOP_2X2_SMOOTH_WHITE_PANEL = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block WHITE_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block WHITE_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final PillarBlock WHITE_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final PillarBlock WHITE_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block AGED_WHITE_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block AGED_WHITE_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final PillarBlock AGED_WHITE_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final PillarBlock AGED_WHITE_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
 
-    public static final Block SMOOTH_GREY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block CHISELED_SMOOTH_GREY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock TOP_SMOOTH_GREY_PANEL = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock BOTTOM_SMOOTH_GREY_PANEL = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock BOTTOM_2X2_SMOOTH_GREY_PANEL = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock TOP_2X2_SMOOTH_GREY_PANEL = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final SlidingDoorBlock SLIDINGDOOR = new SlidingDoorBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block PADDED_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block PADDED_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final PillarBlock PADDED_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final PillarBlock PADDED_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block AGED_PADDED_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block AGED_PADDED_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final PillarBlock AGED_PADDED_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final PillarBlock AGED_PADDED_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
 
-    public static final Block PADDED_GREY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block CHISELED_PADDED_GREY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock TOP_PADDED_GREY_PANEL = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock BOTTOM_PADDED_GREY_PANEL = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock BOTTOM_2X2_PADDED_GREY_PANEL = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock TOP_2X2_PADDED_GREY_PANEL = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
 
-    public static final Block GRITTY_WHITE_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block CHISELED_GRITTY_WHITE_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock TOP_GRITTY_WHITE_PANEL = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock BOTTOM_GRITTY_WHITE_PANEL = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock BOTTOM_2X2_GRITTY_WHITE_PANEL = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock TOP_2X2_GRITTY_WHITE_PANEL = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+
     public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(FabricBlockSettings.of(new FabricMaterialBuilder(MapColor.CLEAR).allowsMovement().lightPassesThrough().notSolid().replaceable().burnable().build()).nonOpaque().noCollision());
     public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().noCollision().sounds(BlockSoundGroup.METAL));
     public static final ExcursionFunnelEmitter EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
@@ -69,6 +61,7 @@ public class ThinkingWithPortatosBlocks {
 
     public static final TallButton TALL_BUTTON = new TallButton(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
 
+    public static final SlidingDoorBlock SLIDINGDOOR = new SlidingDoorBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
 
     public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
     public static BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY;
@@ -98,64 +91,50 @@ public class ThinkingWithPortatosBlocks {
             Registry.register(Registry.BLOCK, id("sliding_door"), SLIDINGDOOR);
             Registry.register(Registry.ITEM, id("sliding_door"), new BlockItem(SLIDINGDOOR, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
 
-            Registry.register(Registry.BLOCK, id("smooth_white_panel"), SMOOTH_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("smooth_white_panel"), new BlockItem(SMOOTH_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("chiseled_smooth_white_panel"), CHISELED_SMOOTH_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("chiseled_smooth_white_panel"), new BlockItem(CHISELED_SMOOTH_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("top_smooth_white_panel"), TOP_SMOOTH_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("top_smooth_white_panel"), new BlockItem(TOP_SMOOTH_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("bottom_smooth_white_panel"), BOTTOM_SMOOTH_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("bottom_smooth_white_panel"), new BlockItem(BOTTOM_SMOOTH_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("bottom_2x2_smooth_white_panel"), BOTTOM_2X2_SMOOTH_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("bottom_2x2_smooth_white_panel"), new BlockItem(BOTTOM_2X2_SMOOTH_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("top_2x2_smooth_white_panel"), TOP_2X2_SMOOTH_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("top_2x2_smooth_white_panel"), new BlockItem(TOP_2X2_SMOOTH_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("white_panel"), WHITE_PANEL);
+            Registry.register(Registry.ITEM, id("white_panel"), new BlockItem(WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("white_half_panel"), WHITE_HALF_PANEL);
+            Registry.register(Registry.ITEM, id("white_half_panel"), new BlockItem(WHITE_HALF_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("white_2x1_panel_top"), WHITE_2X1_PANEL_TOP);
+            Registry.register(Registry.ITEM, id("white_2x1_panel_top"), new BlockItem(WHITE_2X1_PANEL_TOP, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("white_2x1_panel_bottom"), WHITE_2X1_PANEL_BOTTOM);
+            Registry.register(Registry.ITEM, id("white_2x1_panel_bottom"), new BlockItem(WHITE_2X1_PANEL_BOTTOM, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
 
-            Registry.register(Registry.BLOCK, id("smooth_grey_panel"), SMOOTH_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("smooth_grey_panel"), new BlockItem(SMOOTH_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("chiseled_smooth_grey_panel"), CHISELED_SMOOTH_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("chiseled_smooth_grey_panel"), new BlockItem(CHISELED_SMOOTH_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("top_smooth_grey_panel"), TOP_SMOOTH_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("top_smooth_grey_panel"), new BlockItem(TOP_SMOOTH_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("bottom_smooth_grey_panel"), BOTTOM_SMOOTH_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("bottom_smooth_grey_panel"), new BlockItem(BOTTOM_SMOOTH_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("bottom_2x2_smooth_grey_panel"), BOTTOM_2X2_SMOOTH_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("bottom_2x2_smooth_grey_panel"), new BlockItem(BOTTOM_2X2_SMOOTH_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("top_2x2_smooth_grey_panel"), TOP_2X2_SMOOTH_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("top_2x2_smooth_grey_panel"), new BlockItem(TOP_2X2_SMOOTH_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("padded_gray_panel"), PADDED_GRAY_PANEL);
+            Registry.register(Registry.ITEM, id("padded_gray_panel"), new BlockItem(PADDED_GRAY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("padded_gray_half_panel"), PADDED_GRAY_HALF_PANEL);
+            Registry.register(Registry.ITEM, id("padded_gray_half_panel"), new BlockItem(PADDED_GRAY_HALF_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("padded_gray_2x1_panel_top"), PADDED_GRAY_2X1_PANEL_TOP);
+            Registry.register(Registry.ITEM, id("padded_gray_2x1_panel_top"), new BlockItem(PADDED_GRAY_2X1_PANEL_TOP, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("padded_gray_2x1_panel_bottom"), PADDED_GRAY_2X1_PANEL_BOTTOM);
+            Registry.register(Registry.ITEM, id("padded_gray_2x1_panel_bottom"), new BlockItem(PADDED_GRAY_2X1_PANEL_BOTTOM, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
 
-            Registry.register(Registry.BLOCK, id("padded_grey_panel"), PADDED_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("padded_grey_panel"), new BlockItem(PADDED_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("chiseled_padded_grey_panel"), CHISELED_PADDED_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("chiseled_padded_grey_panel"), new BlockItem(CHISELED_PADDED_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("top_padded_grey_panel"), TOP_PADDED_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("top_padded_grey_panel"), new BlockItem(TOP_PADDED_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("bottom_padded_grey_panel"), BOTTOM_PADDED_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("bottom_padded_grey_panel"), new BlockItem(BOTTOM_PADDED_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("bottom_2x2_padded_grey_panel"), BOTTOM_2X2_PADDED_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("bottom_2x2_padded_grey_panel"), new BlockItem(BOTTOM_2X2_PADDED_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("top_2x2_padded_grey_panel"), TOP_2X2_PADDED_GREY_PANEL);
-            Registry.register(Registry.ITEM, id("top_2x2_padded_grey_panel"), new BlockItem(TOP_2X2_PADDED_GREY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("aged_padded_gray_panel"), AGED_PADDED_GRAY_PANEL);
+            Registry.register(Registry.ITEM, id("aged_padded_gray_panel"), new BlockItem(AGED_PADDED_GRAY_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("aged_padded_gray_half_panel"), AGED_PADDED_GRAY_HALF_PANEL);
+            Registry.register(Registry.ITEM, id("aged_padded_gray_half_panel"), new BlockItem(AGED_PADDED_GRAY_HALF_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("aged_padded_gray_2x1_panel_top"), AGED_PADDED_GRAY_2X1_PANEL_TOP);
+            Registry.register(Registry.ITEM, id("aged_padded_gray_2x1_panel_top"), new BlockItem(AGED_PADDED_GRAY_2X1_PANEL_TOP, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("aged_padded_gray_2x1_panel_bottom"), AGED_PADDED_GRAY_2X1_PANEL_BOTTOM);
+            Registry.register(Registry.ITEM, id("aged_padded_gray_2x1_panel_bottom"), new BlockItem(AGED_PADDED_GRAY_2X1_PANEL_BOTTOM, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
 
-            Registry.register(Registry.BLOCK, id("gritty_white_panel"), GRITTY_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("gritty_white_panel"), new BlockItem(GRITTY_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("chiseled_gritty_white_panel"), CHISELED_GRITTY_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("chiseled_gritty_white_panel"), new BlockItem(CHISELED_GRITTY_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("top_gritty_white_panel"), TOP_GRITTY_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("top_gritty_white_panel"), new BlockItem(TOP_GRITTY_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("bottom_gritty_white_panel"), BOTTOM_GRITTY_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("bottom_gritty_white_panel"), new BlockItem(BOTTOM_GRITTY_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("bottom_2x2_gritty_white_panel"), BOTTOM_2X2_GRITTY_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("bottom_2x2_gritty_white_panel"), new BlockItem(BOTTOM_2X2_GRITTY_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            Registry.register(Registry.BLOCK, id("top_2x2_gritty_white_panel"), TOP_2X2_GRITTY_WHITE_PANEL);
-            Registry.register(Registry.ITEM, id("top_2x2_gritty_white_panel"), new BlockItem(TOP_2X2_GRITTY_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+
+            Registry.register(Registry.BLOCK, id("aged_white_panel"), AGED_WHITE_PANEL);
+            Registry.register(Registry.ITEM, id("aged_white_panel"), new BlockItem(AGED_WHITE_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("aged_white_half_panel"), AGED_WHITE_HALF_PANEL);
+            Registry.register(Registry.ITEM, id("aged_white_half_panel"), new BlockItem(AGED_WHITE_HALF_PANEL, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("aged_white_2x1_panel_top"), AGED_WHITE_2X1_PANEL_TOP);
+            Registry.register(Registry.ITEM, id("aged_white_2x1_panel_top"), new BlockItem(AGED_WHITE_2X1_PANEL_TOP, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            Registry.register(Registry.BLOCK, id("aged_white_2x1_panel_bottom"), AGED_WHITE_2X1_PANEL_BOTTOM);
+            Registry.register(Registry.ITEM, id("aged_white_2x1_panel_bottom"), new BlockItem(AGED_WHITE_2X1_PANEL_BOTTOM, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+
             Registry.register(Registry.BLOCK, id("light_cube"), LIGHT_CUBE);
 
-            HLB_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("emitter_test_entity"), FabricBlockEntityTypeBuilder.create(HardLightBridgeEmitterBlockEntity::new, HLB_EMITTER_BLOCK).build(null));
-            Registry.register(Registry.BLOCK, id("emitter"), HLB_EMITTER_BLOCK);
-            Registry.register(Registry.ITEM, id("emitter"), new BlockItem(HLB_EMITTER_BLOCK, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
-            HLB_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("bridge_test_entity"), FabricBlockEntityTypeBuilder.create(HardLightBridgeBlockEntity::new, HLB_BLOCK).build(null));
-            Registry.register(Registry.BLOCK, id("bridge_test"), HLB_BLOCK);
+            HLB_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_emitter_entity"), FabricBlockEntityTypeBuilder.create(HardLightBridgeEmitterBlockEntity::new, HLB_EMITTER_BLOCK).build(null));
+            Registry.register(Registry.BLOCK, id("light_bridge_emitter"), HLB_EMITTER_BLOCK);
+            Registry.register(Registry.ITEM, id("light_bridge_emitter"), new BlockItem(HLB_EMITTER_BLOCK, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));
+            HLB_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_entity"), FabricBlockEntityTypeBuilder.create(HardLightBridgeBlockEntity::new, HLB_BLOCK).build(null));
+            Registry.register(Registry.BLOCK, id("light_bridge"), HLB_BLOCK);
             NEUROTOXIN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("neurotoxin_entity"), FabricBlockEntityTypeBuilder.create(NeurotoxinBlockEntity::new, NEUROTOXIN_BLOCK).build(null));
             Registry.register(Registry.BLOCK, id("neurotoxin"), NEUROTOXIN_BLOCK);
             // Registry.register(Registry.ITEM, id("neurotoxin"), new BlockItem(NEUROTOXIN_BLOCK, new Item.Settings().group(ThinkingWithPortatos.ThinkingWithPortatosGroup)));

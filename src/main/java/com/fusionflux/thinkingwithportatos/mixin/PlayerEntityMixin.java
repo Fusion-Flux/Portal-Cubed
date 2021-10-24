@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.mixin;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
+import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
 import com.fusionflux.thinkingwithportatos.items.ThinkingWithPortatosItems;
@@ -10,6 +11,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -17,12 +19,11 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -58,6 +59,48 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow
     public abstract boolean isCreative();
 
+    @Shadow public abstract void increaseTravelMotionStats(double dx, double dy, double dz);
+
+    @Shadow @Final private PlayerAbilities abilities;
+
+    /**
+     * @author
+     */
+    @Overwrite
+    public void travel(Vec3d movementInput) {
+        double d = this.getX();
+        double e = this.getY();
+        double f = this.getZ();
+        double i;
+        if (this.isSwimming() && !this.hasVehicle()) {
+            i = this.getRotationVector().y;
+            double h = i < -0.2D ? 0.085D : 0.06D;
+            if (i <= 0.0D || this.jumping || !this.world.getBlockState(new BlockPos(this.getX(), this.getY() + 1.0D - 0.1D, this.getZ())).getFluidState().isEmpty()) {
+                Vec3d vec3d = this.getVelocity();
+                this.setVelocity(vec3d.add(0.0D, (i - vec3d.y) * h, 0.0D));
+            }
+        }
+
+        if (this.abilities.flying && !this.hasVehicle()) {
+            i = this.getVelocity().y;
+            float j = this.flyingSpeed;
+            this.flyingSpeed = this.abilities.getFlySpeed() * (float)(this.isSprinting() ? 2 : 1);
+            super.travel(movementInput);
+            Vec3d vec3d2 = this.getVelocity();
+            this.setVelocity(vec3d2.x, i * 0.6D, vec3d2.z);
+            this.flyingSpeed = j;
+            this.fallDistance = 0.0F;
+            this.setFlag(7, false);
+        } else {
+
+            super.travel(movementInput);
+            //System.out.println(movementInput);
+
+        }
+
+        this.increaseTravelMotionStats(this.getX() - d, this.getY() - e, this.getZ() - f);
+    }
+
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void isInvulnerableTo(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         ItemStack itemStack5 = this.getEquippedStack(EquipmentSlot.FEET);
@@ -74,8 +117,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
     }
 
+
+
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
+
+
 
         /*List<Portal> globalPortals = (List<Portal>) McHelper.getNearbyPortals(((PlayerEntity) (Object) this),50);
         Vec3d expand = this.getVelocity().multiply(2);
@@ -122,16 +169,26 @@ if(!this.isFallFlying()) {
         if (storeVelocity2 != null && storeVelocity1 != null) {
             if (itemFeet.getItem().equals(ThinkingWithPortatosItems.LONG_FALL_BOOTS)) {
                 if (!this.isOnGround()) {
-                    this.setVelocity(this.getVelocity().x * 1.045, this.getVelocity().y, this.getVelocity().z * 1.035);
+                   // this.setNoDrag(true);
+                    //this.setMovementSpeed(0);
+                    //this.horizontalCollision=true;
+                    //this.horizontalSpeed -= 0.6;
+                    //this.movementMultiplier=new Vec3d(.01,.01,.01);
+                    this.setVelocity(this.getVelocity().x * 1.045, this.getVelocity().y, this.getVelocity().z * 1.045);
                 }
             }
+        }
+
+        if (this.isOnGround()) {
+            this.setNoDrag(false);
+            //this.setVelocity(this.getVelocity().x * 1.045, this.getVelocity().y, this.getVelocity().z * 1.035);
         }
     }
 
     @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D"), cancellable = true)
     public void dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<@Nullable ItemEntity> cir) {
         if (!this.world.isClient && stack.getItem().equals(ThinkingWithPortatosItems.PORTAL_GUN)) {
-            NbtCompound tag = stack.getOrCreateTag();
+            NbtCompound tag = stack.getOrCreateNbt();
             NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());
             CustomPortalEntity portalholder;
             if (portalsTag.contains(("Left") + "Portal")) {

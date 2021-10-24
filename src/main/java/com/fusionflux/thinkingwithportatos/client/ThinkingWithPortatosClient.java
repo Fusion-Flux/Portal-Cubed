@@ -53,6 +53,9 @@ public class ThinkingWithPortatosClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL_EMITTER, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.NEUROTOXIN_EMITTER, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.GEL, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.PROPULSION_GEL, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ThinkingWithPortatosBlocks.REPULSION_GEL, RenderLayer.getTranslucent());
     }
 
     public static void registerItemRenderLayers() {

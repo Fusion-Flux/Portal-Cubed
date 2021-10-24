@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "thinkingwithportatos:gritty_white_panel"
-  },
-  "result": "thinkingwithportatos:bottom_2x2_gritty_white_panel",
-  "count": 1
-}

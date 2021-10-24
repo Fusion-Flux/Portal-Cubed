@@ -21,6 +21,7 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import qouteall.imm_ptl.core.portal.Portal;
 import qouteall.q_misc_util.Helper;
 
 public class PortalPlaceholderEntity extends Entity {
@@ -34,6 +35,7 @@ public class PortalPlaceholderEntity extends Entity {
     public PortalPlaceholderEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
     }
+
 
     @Override
     protected void initDataTracker() {
@@ -79,10 +81,15 @@ public class PortalPlaceholderEntity extends Entity {
         this.getDataTracker().set(COLOR, color);
 
     }
+    @Override
+    public boolean canUsePortals() {
+        return false;
+    }
+
 
     @Override
     public boolean isCollidable() {
-        return false;
+        return this.isAlive();
     }
 
     @Override
@@ -92,10 +99,10 @@ public class PortalPlaceholderEntity extends Entity {
         return distance < d * d;
     }
 
-    @Override
+   /* @Override
     public boolean doesNotCollide(double offsetX, double offsetY, double offsetZ) {
         return true;
-    }
+    }*/
 
     @Override
     public Direction getHorizontalFacing() {
@@ -103,10 +110,10 @@ public class PortalPlaceholderEntity extends Entity {
     }
 
 
-    @Override
+    /*@Override
     public boolean collidesWith(Entity other) {
         return false;
-    }
+    }*/
 
     @Override
     public Packet<?> createSpawnPacket() {

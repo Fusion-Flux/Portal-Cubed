@@ -52,28 +52,28 @@ public class PortalGun extends Item implements DyeableItem {
 
     @Override
     public int getColor(ItemStack stack) {
-        NbtCompound compoundTag = stack.getOrCreateTag();
+        NbtCompound compoundTag = stack.getOrCreateNbt();
         boolean complementary = compoundTag.getBoolean("complementary");
-        compoundTag = stack.getSubTag("display");
+        compoundTag = stack.getSubNbt("display");
         return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
     }
 
     public void useLeft(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        stack.getOrCreateTag().putBoolean("complementary", false);
+        stack.getOrCreateNbt().putBoolean("complementary", false);
         useImpl(world, user, stack, true);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        stack.getOrCreateTag().putBoolean("complementary", true);
+        stack.getOrCreateNbt().putBoolean("complementary", true);
         return useImpl(world, user, stack, false);
     }
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, ItemStack stack, boolean leftClick) {
         if (!world.isClient) {
-            NbtCompound tag = stack.getOrCreateTag();
+            NbtCompound tag = stack.getOrCreateNbt();
 
             PortalPlaceholderEntity portalOutline;
             CustomPortalEntity portalholder;
@@ -210,6 +210,7 @@ if(!validPos(world,up,right,portalPos1)) {
                         1.9 // height
                 );
                 portalholder.setOutline(portalOutline.getUuidAsString());
+                portalholder.hasCrossPortalCollision=false;
                 portalOutline.axisH = portalholder.axisH;
                 portalOutline.axisW = portalholder.axisW;
 
@@ -296,7 +297,7 @@ if(!validPos(world,up,right,portalPos1)) {
      */
     private Vec3d calcPos(BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross, boolean isBackground) {
         double upOffset = isBackground ? -1.0 : -0.5;
-        double faceOffset = isBackground ? -0.509 : -0.510;
+        double faceOffset = isBackground ? -0.508 : -0.510;
         double crossOffset = 0.0;
         return new Vec3d(
                 ((hit.getX() + 0.5) + upOffset * upright.getX() + faceOffset * facing.getX() + crossOffset * cross.getX()), // x component

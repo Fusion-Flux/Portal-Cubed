@@ -1,6 +1,7 @@
 package com.fusionflux.thinkingwithportatos.blocks.blockentities;
 
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
+import com.fusionflux.thinkingwithportatos.entity.EntityAttachments;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -87,19 +88,41 @@ public class ExcursionFunnel extends BlockWithEntity {
         if (world.isClient()) {
             BlockState state = world.getBlockState(pos);
             double xoffset = (entity.getPos().getX() - pos.getX()) - .5;
-            double yoffset = (entity.getPos().getY() - pos.getY()) - 1.25;
+            double yoffset = (entity.getPos().getY() - pos.getY()) + .5;
             double zoffset = (entity.getPos().getZ() - pos.getZ()) - .5;
             Vec3d direction = new Vec3d(0, 0, 0);
             direction = new Vec3d(state.get(Properties.FACING).getVector().getX(), state.get(Properties.FACING).getVector().getY(), state.get(Properties.FACING).getVector().getZ());
             direction = direction.multiply(.1);
+            //entity.setSwimming(true);
+            entity.setNoGravity(true);
+
+            if(!((EntityAttachments)entity).isInFunnel()){
+                ((EntityAttachments)entity).setInFunnel(true);
+                entity.setVelocity(0,0,0);
+            }
+
+                ((EntityAttachments) entity).setFunnelTimer(2);
+
+            /*if(Math.abs(entity.getVelocity().x)>.3){
+                entity.setVelocity(0,entity.getVelocity().y,entity.getVelocity().z);
+            }
+            if(Math.abs(entity.getVelocity().y)>.3){
+                entity.setVelocity(entity.getVelocity().x,0,entity.getVelocity().z);
+            }
+            if(Math.abs(entity.getVelocity().z)>.3){
+                entity.setVelocity(entity.getVelocity().x,entity.getVelocity().y,0);
+            }*/
             if (direction.x != 0) {
-                entity.setVelocity(direction.getX(), 0 - yoffset * .048,  - (zoffset/Math.abs(zoffset)) * .01);
+                entity.addVelocity(0, (- (yoffset/Math.abs(yoffset)) * .008),  - (zoffset/Math.abs(zoffset)) * .008);
+                entity.setVelocity(direction.getX(),entity.getVelocity().y,entity.getVelocity().z);
             }
             if (direction.y != 0) {
-                entity.setVelocity(-(xoffset/Math.abs(xoffset)) * .01, 0.08 + direction.getY(),  -(zoffset/Math.abs(zoffset)) * .01);
+                entity.addVelocity(-(xoffset/Math.abs(xoffset)) * .008, 0,  -(zoffset/Math.abs(zoffset)) * .008);
+                entity.setVelocity(entity.getVelocity().x,direction.getY(),entity.getVelocity().z);
             }
             if (direction.z != 0) {
-                entity.setVelocity( -(xoffset/Math.abs(xoffset))*.01, 0 - yoffset * .048, direction.getZ());
+                entity.addVelocity( -(xoffset/Math.abs(xoffset))*.008, (- (yoffset/Math.abs(yoffset)) * .008), 0);
+                entity.setVelocity(entity.getVelocity().x,entity.getVelocity().y,direction.getZ());
             }
         }
     }

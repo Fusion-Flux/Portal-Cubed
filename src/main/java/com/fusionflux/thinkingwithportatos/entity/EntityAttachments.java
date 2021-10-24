@@ -4,9 +4,17 @@ import net.minecraft.util.math.Direction;
 
 public interface EntityAttachments {
 
-    boolean isRolling();
+    boolean isBounced();
 
-    void setRolling(boolean rolling);
+    void setBounced(boolean bounced);
+
+    boolean isInFunnel();
+
+    void setInFunnel(boolean inFunnel);
+
+    int getFunnelTimer();
+
+    void setFunnelTimer(int funnelTimer);
 
     Direction getDirection();
 
