@@ -1,7 +1,9 @@
 package com.fusionflux.thinkingwithportatos.entity;
 
+import com.fusionflux.thinkingwithportatos.blocks.GelFlat;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -9,6 +11,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -132,24 +135,41 @@ public class CustomPortalEntity extends Portal {
                     }
                 }
             }*/
-            BlockPos alteredPos = new BlockPos(
+            BlockPos topBehind = new BlockPos(
                     this.getPos().getX() - this.axisW.crossProduct(this.axisH).getX(),
                     this.getPos().getY() - this.axisW.crossProduct(this.axisH).getY(),
                     this.getPos().getZ() - this.axisW.crossProduct(this.axisH).getZ());
-            BlockPos lowerPos = new BlockPos(
+            BlockPos bottomBehind = new BlockPos(
                     this.getPos().getX() - this.axisW.crossProduct(this.axisH).getX() - Math.abs(this.axisH.getX()),
                     this.getPos().getY() - this.axisW.crossProduct(this.axisH).getY() + this.axisH.getY(),
                     this.getPos().getZ() - this.axisW.crossProduct(this.axisH).getZ() - Math.abs(this.axisH.getZ()));
-
-            Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
-
-            if ((!this.world.getBlockState(alteredPos).isSideSolidFullSquare(world, alteredPos, portalFacing)) ||
-                    (!this.world.getBlockState(lowerPos).isSideSolidFullSquare(world, lowerPos, portalFacing) || this.world.getBlockState(alteredPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
-                            || this.world.getBlockState(lowerPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
-                    )||(!this.world.getBlockState(this.getBlockPos()).isAir()) || (!this.world.getBlockState(new BlockPos(
+            BlockPos bottom = new BlockPos(
                     this.getPos().getX() - Math.abs(this.axisH.getX()),
                     this.getPos().getY() + this.axisH.getY(),
-                    this.getPos().getZ() - Math.abs(this.axisH.getZ()))).isAir())) {
+                    this.getPos().getZ() - Math.abs(this.axisH.getZ()));
+
+
+            Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
+            boolean topValidBlock=false;
+            if(this.world.getBlockState(this.getBlockPos()).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&this.world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+                BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
+                topValidBlock = this.world.getBlockState(this.getBlockPos()).get(booleanProperty);
+            }else if (!this.world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+                topValidBlock=true;
+            }
+            boolean bottomValidBlock=false;
+            if(this.world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&this.world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+                BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
+                bottomValidBlock = this.world.getBlockState(bottomBehind).get(booleanProperty);
+            }else if (!this.world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+                bottomValidBlock=true;
+            }
+
+            if ((!this.world.getBlockState(topBehind).isSideSolidFullSquare(world, topBehind, portalFacing)) ||
+                    (!this.world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) ||
+                            !topValidBlock ||
+                            !bottomValidBlock)||
+                    ((!this.world.getBlockState(this.getBlockPos()).isAir())&& !this.world.getBlockState(this.getBlockPos()).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN) )|| (!this.world.getBlockState(bottom).isAir() && !this.world.getBlockState(bottom).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN))) {
                 if (!this.getOutline().equals("null")) {
                     PortalPlaceholderEntity portalOutline;
                     portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
@@ -161,6 +181,8 @@ public class CustomPortalEntity extends Portal {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                 System.out.println("killed");
+                System.out.println(this.world.getBlockState(this.getBlockPos()));
+                System.out.println(portalFacing);
                 if (!this.getString().equals("null")) {
                     CustomPortalEntity otherPortal;
                     otherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));

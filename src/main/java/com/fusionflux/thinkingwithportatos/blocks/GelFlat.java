@@ -33,13 +33,13 @@ public class GelFlat extends Block {
     public static final BooleanProperty UP;
     public static final BooleanProperty DOWN;
     public static final Map<Direction, BooleanProperty> propertyMap;
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 0.01D, 16.0D);
-    private static final VoxelShape UP_SHAPE = Block.createCuboidShape(0.0D, 15.99D, 0.0D, 16.0D, 15.999D, 16.0D);
-    private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0D, 0.001D, 0.0D, 16.0D, 0.01D, 16.0D);
-    private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.001D, 0.0D, 0.0D, 0.01D, 16.0D, 16.0D);
-    private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(15.99D, 0.0D, 0.0D, 15.999D, 16.0D, 16.0D);
-    private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.001D, 16.0D, 16.0D, 0.01D);
-    private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 15.99D, 16.0D, 16.0D, 15.999D);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 0.0D, 16.0D);
+    private static final VoxelShape UP_SHAPE = Block.createCuboidShape(0.0D, 16D, 0.0D, 16.0D, 16D, 16.0D);
+    private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0D, 0.00D, 0.0D, 16.0D, 0.0D, 16.0D);
+    private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.00D, 0.0D, 0.0D, 0.0D, 16.0D, 16.0D);
+    private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(16D, 0.0D, 0.0D, 16D, 16.0D, 16.0D);
+    private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.00D, 16.0D, 16.0D, 0.0D);
+    private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 16D, 16.0D, 16.0D, 16D);
 
     static {
         NORTH = Properties.NORTH;

@@ -76,6 +76,7 @@ public class ThinkingWithPortatosBlocks {
     public static Block TOXIC_GOO;
 
     public static Tag<Block> MY_TAG = TagRegistry.block(new Identifier("thinkingwithportatos", "hpd_deny_launch"));
+    public static Tag<Block> ALLOW_PORTAL_IN = TagRegistry.block(new Identifier("thinkingwithportatos", "allowinside"));
     public static Tag<Block> IMMOVABLE_BLOCKS = TagRegistry.block(new Identifier("thinkingwithportatos", "immovable_blocks"));
     public static void registerBlocks() {
         if (ThinkingWithPortatosConfig.get().enabled.enableGels) {

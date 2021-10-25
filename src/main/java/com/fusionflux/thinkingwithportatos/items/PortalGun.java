@@ -3,6 +3,7 @@ package com.fusionflux.thinkingwithportatos.items;
 
 import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.accessor.EntityPortalsAccess;
+import com.fusionflux.thinkingwithportatos.blocks.GelFlat;
 import com.fusionflux.thinkingwithportatos.blocks.ThinkingWithPortatosBlocks;
 import com.fusionflux.thinkingwithportatos.entity.CustomPortalEntity;
 import com.fusionflux.thinkingwithportatos.entity.PortalPlaceholderEntity;
@@ -19,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
@@ -265,22 +267,40 @@ if(!validPos(world,up,right,portalPos1)) {
         posNormal = CalculatedAxisW.crossProduct(CalculatedAxisH).normalize();
         Direction portalFacing = Direction.fromVector((int) posNormal.getX(), (int) posNormal.getY(), (int) posNormal.getZ());
 
-        BlockPos alteredPos = new BlockPos(
+        BlockPos topBehind = new BlockPos(
                 portalPos1.getX() - CalculatedAxisW.crossProduct(CalculatedAxisH).getX(),
                 portalPos1.getY() - CalculatedAxisW.crossProduct(CalculatedAxisH).getY(),
                 portalPos1.getZ() - CalculatedAxisW.crossProduct(CalculatedAxisH).getZ());
-        BlockPos lowerPos = new BlockPos(
+        BlockPos bottomBehind = new BlockPos(
                 portalPos1.getX() - CalculatedAxisW.crossProduct(CalculatedAxisH).getX() - Math.abs(CalculatedAxisH.getX()),
                 portalPos1.getY() - CalculatedAxisW.crossProduct(CalculatedAxisH).getY() + CalculatedAxisH.getY(),
                 portalPos1.getZ() - CalculatedAxisW.crossProduct(CalculatedAxisH).getZ() - Math.abs(CalculatedAxisH.getZ()));
-
-        if ((!world.getBlockState(alteredPos).isSideSolidFullSquare(world, alteredPos, portalFacing)) ||
-                (!world.getBlockState(lowerPos).isSideSolidFullSquare(world, lowerPos, portalFacing) || world.getBlockState(alteredPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
-                        || world.getBlockState(lowerPos).isIn(ThinkingWithPortatosBlocks.MY_TAG)
-                )||(!world.getBlockState(new BlockPos(portalPos1)).isAir()) || (!world.getBlockState(new BlockPos(
+        BlockPos bottom = new BlockPos(
                 portalPos1.getX() - Math.abs(CalculatedAxisH.getX()),
                 portalPos1.getY() + CalculatedAxisH.getY(),
-                portalPos1.getZ() - Math.abs(CalculatedAxisH.getZ()))).isAir())){
+                portalPos1.getZ() - Math.abs(CalculatedAxisH.getZ()));
+
+
+        boolean topValidBlock=false;
+        if(world.getBlockState(new BlockPos(portalPos1)).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+            BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
+            topValidBlock = world.getBlockState(new BlockPos(portalPos1)).get(booleanProperty);
+        }else if (!world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+            topValidBlock=true;
+        }
+        boolean bottomValidBlock=false;
+        if(world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+            BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
+            bottomValidBlock = world.getBlockState(bottomBehind).get(booleanProperty);
+        }else if (!world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+            bottomValidBlock=true;
+        }
+
+        if ((!world.getBlockState(topBehind).isSideSolidFullSquare(world, topBehind, portalFacing)) ||
+                (!world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) ||
+                        !topValidBlock ||
+                        !bottomValidBlock)||
+                ((!world.getBlockState(new BlockPos(portalPos1)).isAir())&& !world.getBlockState(new BlockPos(portalPos1)).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN) )|| (!world.getBlockState(bottom).isAir() && !world.getBlockState(bottom).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN))) {
             System.out.println("portalInvalid");
             return false;
         }
