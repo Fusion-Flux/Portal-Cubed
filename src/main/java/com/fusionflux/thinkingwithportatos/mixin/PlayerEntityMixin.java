@@ -56,6 +56,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow
     public abstract boolean isSwimming();
 
+    @Shadow
+    public abstract boolean isCreative();
+
+    @Shadow public abstract void increaseTravelMotionStats(double dx, double dy, double dz);
+
+    @Shadow @Final private PlayerAbilities abilities;
 
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
@@ -131,10 +137,7 @@ if(!this.isFallFlying()) {
             }
         }
 
-        if (this.isOnGround()) {
-            this.setNoDrag(false);
-            //this.setVelocity(this.getVelocity().x * 1.045, this.getVelocity().y, this.getVelocity().z * 1.035);
-        }
+
     }
 
     @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D"), cancellable = true)
