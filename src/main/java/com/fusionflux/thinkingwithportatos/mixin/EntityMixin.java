@@ -1,6 +1,5 @@
 package com.fusionflux.thinkingwithportatos.mixin;
 
-import com.fusionflux.thinkingwithportatos.ThinkingWithPortatos;
 import com.fusionflux.thinkingwithportatos.accessor.EntityPortalsAccess;
 import com.fusionflux.thinkingwithportatos.accessor.VelocityTransfer;
 import com.fusionflux.thinkingwithportatos.blocks.RepulsionGel;
@@ -12,32 +11,20 @@ import com.fusionflux.thinkingwithportatos.sound.ThinkingWithPortatosSounds;
 import com.google.common.collect.Lists;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.crash.CrashException;
-import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import qouteall.imm_ptl.core.teleportation.CollisionHelper;
 
 import java.util.List;
@@ -53,8 +40,6 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     public boolean horizontalCollision;
     @Shadow
     public boolean verticalCollision;
-    @Unique
-    private int timeinblock = 1;
     @Unique
     private double maxFallSpeed = 0;
     @Unique
@@ -76,12 +61,6 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
 
     @Unique
     private int FUNNEL_TIMER = 0;
-
-    @Unique
-    private static boolean IsInitalized = false;
-
-    @Unique
-    private static boolean IsInitalized2 = false;
 
     @Override
     public double getMaxFallSpeed() {
@@ -124,28 +103,12 @@ public abstract class EntityMixin implements EntityAttachments, VelocityTransfer
     public abstract double getZ();
 
     @Shadow
-    public abstract boolean damage(DamageSource source, float amount);
-
-
-    @Shadow
-    public abstract EntityPose getPose();
-
-    @Shadow
-    public abstract boolean isAlive();
-
-    @Shadow
     public abstract boolean isSneaking();
 
 
     @Shadow public abstract void setNoGravity(boolean noGravity);
 
     @Shadow public abstract boolean hasNoGravity();
-
-    @Shadow @Final protected DataTracker dataTracker;
-
-    @Shadow protected abstract void onBlockCollision(BlockState state);
-
-    @Shadow public abstract int getId();
 
     @Override
     public List<CustomPortalEntity> getPortalList() {
@@ -170,34 +133,6 @@ if(world.isClient()) {
         }
 
 }
-        Vec3d expand = this.getVelocity().multiply(10);
-        Box streachedBB = this.getBoundingBox().stretch(expand);
-
-        List<CustomPortalEntity> globalPortals = this.world.getEntitiesByClass(CustomPortalEntity.class, streachedBB, e -> true);
-
-        /*for (CustomPortalEntity globalPortal : globalPortals) {
-            if (streachedBB.intersects(globalPortal.getBoundingBox())) {
-                Vec3d portalFacing = new Vec3d((int) globalPortal.getNormal().getX(), (int) globalPortal.getNormal().getY(), (int) globalPortal.getNormal().getZ());
-                double offsetX = 0;
-                double offsetZ = 0;
-                double offsetY = 0;
-
-                Box streachedPortalBB = globalPortal.getBoundingBox().stretch(portalFacing.getX() * Math.abs(this.getVelocity().getX())*10, portalFacing.getY() * Math.abs(this.getVelocity().getY())*10, portalFacing.getZ() * Math.abs(this.getVelocity().getZ())*10);
-                if (streachedPortalBB.intersects(this.getBoundingBox())){
-                    if (Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().x) || Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().x)) {
-                        offsetX = (this.getBoundingBox().getCenter().x - globalPortal.getBoundingBox().getCenter().x) * .03;
-                    }
-                if (Math.abs(this.getVelocity().y) > Math.abs(this.getVelocity().z) || Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().z)) {
-                    offsetZ = (this.getBoundingBox().getCenter().z - globalPortal.getBoundingBox().getCenter().z) * .03;
-                }
-                if (Math.abs(this.getVelocity().z) > Math.abs(this.getVelocity().y) || Math.abs(this.getVelocity().x) > Math.abs(this.getVelocity().y)) {
-                    offsetY = (this.getBoundingBox().getCenter().y - globalPortal.getBoundingBox().getCenter().y) * .03;
-                }
-                if (!this.getBoundingBox().intersects(globalPortal.getBoundingBox()) && !this.isSneaking())
-                    this.setVelocity(this.getVelocity().add(-offsetX, -offsetY, -offsetZ));
-            }
-            }
-        }*/
 
         if (!world.isClient) {
 

@@ -180,9 +180,9 @@ public class CustomPortalEntity extends Portal {
                 }
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), ThinkingWithPortatosSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
-                System.out.println("killed");
-                System.out.println(this.world.getBlockState(this.getBlockPos()));
-                System.out.println(portalFacing);
+                //System.out.println("killed");
+                //System.out.println(this.world.getBlockState(this.getBlockPos()));
+                //System.out.println(portalFacing);
                 if (!this.getString().equals("null")) {
                     CustomPortalEntity otherPortal;
                     otherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));

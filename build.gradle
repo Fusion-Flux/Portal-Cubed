@@ -31,17 +31,18 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	modImplementation ('com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.24-1.17'){
+	modImplementation ('com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.29-1.17'){
+		exclude(group: "net.fabricmc.fabric-api")
+		transitive(false)
+	}
+	include ('com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.29-1.17')
+
+	modImplementation ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v0.29-1.17'){
 		exclude(group: "net.fabricmc.fabric-api")
 		transitive(false)
 	}
 
-	modImplementation ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v0.24-1.17'){
-		exclude(group: "net.fabricmc.fabric-api")
-		transitive(false)
-	}
-
-	include ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v0.20-1.17')
+	include ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v0.29-1.17')
 
 
 	modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {

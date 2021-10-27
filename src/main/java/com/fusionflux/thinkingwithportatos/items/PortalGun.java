@@ -212,7 +212,6 @@ if(!validPos(world,up,right,portalPos1)) {
                         1.9 // height
                 );
                 portalholder.setOutline(portalOutline.getUuidAsString());
-                portalholder.hasCrossPortalCollision=false;
                 portalOutline.axisH = portalholder.axisH;
                 portalOutline.axisW = portalholder.axisW;
 
@@ -301,7 +300,7 @@ if(!validPos(world,up,right,portalPos1)) {
                         !topValidBlock ||
                         !bottomValidBlock)||
                 ((!world.getBlockState(new BlockPos(portalPos1)).isAir())&& !world.getBlockState(new BlockPos(portalPos1)).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN) )|| (!world.getBlockState(bottom).isAir() && !world.getBlockState(bottom).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN))) {
-            System.out.println("portalInvalid");
+            //System.out.println("portalInvalid");
             return false;
         }
         return true;
