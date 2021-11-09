@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "particle": "thinkingwithportatos:block/aged_padded_gray_2x2_panel_top_right",
+    "north": "thinkingwithportatos:block/aged_padded_gray_2x2_panel_top_left",
+    "south": "thinkingwithportatos:block/aged_padded_gray_2x2_panel_top_right",
+    "east": "thinkingwithportatos:block/aged_padded_gray_2x2_panel_top_left",
+    "west": "thinkingwithportatos:block/aged_padded_gray_2x2_panel_top_left",
+    "up": "thinkingwithportatos:block/aged_padded_gray_2x2_panel_bottom_right",
+    "down": "thinkingwithportatos:block/aged_padded_gray_2x2_panel_top_right"
+  }
+}

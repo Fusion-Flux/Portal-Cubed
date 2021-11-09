@@ -151,17 +151,17 @@ public class CustomPortalEntity extends Portal {
 
             Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
             boolean topValidBlock=false;
-            if(this.world.getBlockState(this.getBlockPos()).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&this.world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+            if(this.world.getBlockState(this.getBlockPos()).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&this.world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
                 topValidBlock = this.world.getBlockState(this.getBlockPos()).get(booleanProperty);
-            }else if (!this.world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+            }else if (!this.world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){
                 topValidBlock=true;
             }
             boolean bottomValidBlock=false;
-            if(this.world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&this.world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+            if(this.world.getBlockState(bottom).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&this.world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
-                bottomValidBlock = this.world.getBlockState(bottomBehind).get(booleanProperty);
-            }else if (!this.world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.MY_TAG)){
+                bottomValidBlock = this.world.getBlockState(bottom).get(booleanProperty);
+            }else if (!this.world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){
                 bottomValidBlock=true;
             }
 

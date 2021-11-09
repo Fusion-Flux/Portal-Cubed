@@ -20,7 +20,7 @@ public class DirectionalBlock extends Block {
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.FACING, ctx.getSide().getOpposite());
+        return this.getDefaultState().with(Properties.FACING, ctx.getPlayerFacing().getOpposite());
     }
 
 
