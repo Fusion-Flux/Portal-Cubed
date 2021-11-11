@@ -29,48 +29,10 @@ import java.util.Objects;
 public class ExcursionFunnelEmitter extends BlockWithEntity {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
-    protected static final VoxelShape WEST_SHAPE = Block.createCuboidShape(14.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 2.0D, 16.0D, 16.0D);
-    protected static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape UP_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
-    protected static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 14.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 2.0D);
-
 
     public ExcursionFunnelEmitter(Settings settings) {
         super(settings);
     }
-
-    private static VoxelShape method_31018(BlockState blockState) {
-        VoxelShape voxelShape = VoxelShapes.empty();
-        if (blockState.get(Properties.FACING) == Direction.UP) {
-            voxelShape = UP_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING) == Direction.DOWN) {
-            voxelShape = DOWN_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING) == Direction.NORTH) {
-            voxelShape = NORTH_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING) == Direction.SOUTH) {
-            voxelShape = SOUTH_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING) == Direction.EAST) {
-            voxelShape = EAST_SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING) == Direction.WEST) {
-            voxelShape = WEST_SHAPE;
-        }
-
-        return voxelShape;
-    }
-
-
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
