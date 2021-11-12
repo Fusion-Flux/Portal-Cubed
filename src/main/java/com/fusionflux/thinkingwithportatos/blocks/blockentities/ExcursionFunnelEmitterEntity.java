@@ -172,7 +172,7 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity {
             boolean shouldRetract = false;
 
             // Iterate from first bridge block out to obstructor
-            while (!maintainPos.equals(obstructorPos)) {
+            while (!maintainPos.equals(obstructorPos) && !(maintainPos.getY() >= world.getTopY()) && !(maintainPos.getY() <= world.getBottomY())) {
                 // If position is empty (read: destroyed), create a bridge block
                 if (world.isAir(maintainPos)) {
                     world.setBlockState(maintainPos, ThinkingWithPortatosBlocks.EXCURSION_FUNNEL.getDefaultState().with(Properties.FACING, facing), 3);
@@ -193,7 +193,7 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity {
             if (shouldRetract) {
                 int retractedDistance = 0; // <-- add this line
                 BlockPos.Mutable cullPos = getPos().mutableCopy();
-                while (!obstructorPos.equals(maintainPos)) {
+                while (!obstructorPos.equals(maintainPos)&& !(obstructorPos.getY() >= world.getTopY()) && !(obstructorPos.getY() <= world.getBottomY())) {
                     ++retractedDistance; // <-- add this line
                     obstructorPos.move(facing.getOpposite());
                     if (world.getBlockState(obstructorPos).getBlock().equals(ThinkingWithPortatosBlocks.EXCURSION_FUNNEL)) {

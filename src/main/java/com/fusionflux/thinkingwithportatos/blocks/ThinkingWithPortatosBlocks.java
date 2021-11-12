@@ -114,6 +114,7 @@ public class ThinkingWithPortatosBlocks {
     public static Block TOXIC_GOO;
 
     public static Tag<Block> CANT_PLACE_PORTAL_ON = TagRegistry.block(new Identifier("thinkingwithportatos", "cant_place_portal_on"));
+    public static Tag<Block> GELCHECKTAG = TagRegistry.block(new Identifier("thinkingwithportatos", "gelchecktag"));
     public static Tag<Block> ALLOW_PORTAL_IN = TagRegistry.block(new Identifier("thinkingwithportatos", "allowinside"));
     public static Tag<Block> IMMOVABLE_BLOCKS = TagRegistry.block(new Identifier("thinkingwithportatos", "immovable_blocks"));
     public static void registerBlocks() {

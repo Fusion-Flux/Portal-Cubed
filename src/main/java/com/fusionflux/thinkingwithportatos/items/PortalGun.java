@@ -281,14 +281,14 @@ if(!validPos(world,up,right,portalPos1)) {
 
 
         boolean topValidBlock=false;
-        if(world.getBlockState(new BlockPos(portalPos1)).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){
+        if(world.getBlockState(new BlockPos(portalPos1)).isIn(ThinkingWithPortatosBlocks.GELCHECKTAG)&&world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){
             BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
             topValidBlock = world.getBlockState(new BlockPos(portalPos1)).get(booleanProperty);
         }else if (!world.getBlockState(topBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){
             topValidBlock=true;
         }
         boolean bottomValidBlock=false;
-        if(world.getBlockState(bottom).isIn(ThinkingWithPortatosBlocks.ALLOW_PORTAL_IN)&&world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){
+        if(world.getBlockState(bottom).isIn(ThinkingWithPortatosBlocks.GELCHECKTAG)&&world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){
             BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
             bottomValidBlock = world.getBlockState(bottom).get(booleanProperty);
         }else if (!world.getBlockState(bottomBehind).isIn(ThinkingWithPortatosBlocks.CANT_PLACE_PORTAL_ON)){

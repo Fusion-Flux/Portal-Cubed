@@ -10,10 +10,22 @@
 			"to": [13.75, 13.75, 16],
 			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 24]},
 			"faces": {
-				"east": {"uv": [2, 0, 14, 16], "rotation": 90, "texture": "#0"},
-				"west": {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#0"},
-				"up": {"uv": [2, 0, 14, 16], "texture": "#0"},
-				"down": {"uv": [2, 0, 14, 16], "rotation": 180, "texture": "#0"}
+				"east": {"uv": [3, 0, 13, 16], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [3, 0, 13, 16], "rotation": 270, "texture": "#0"},
+				"up": {"uv": [3, 0, 13, 16], "texture": "#0"},
+				"down": {"uv": [3, 0, 13, 16], "rotation": 180, "texture": "#0"}
+			}
+		},
+		{
+			"name": "cube_outline",
+			"from": [13.75, 13.75, 16],
+			"to": [2.25, 2.25, 0],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 24]},
+			"faces": {
+				"east": {"uv": [3, 0, 13, 16], "rotation": 270, "texture": "#0"},
+				"west": {"uv": [3, 0, 13, 16], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [3, 0, 13, 16], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [3, 0, 13, 16], "texture": "#0"}
 			}
 		}
 	],
