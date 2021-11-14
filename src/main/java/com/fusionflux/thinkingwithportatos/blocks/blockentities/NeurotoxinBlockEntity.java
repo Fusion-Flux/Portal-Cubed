@@ -9,28 +9,34 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public class NeurotoxinBlockEntity extends BlockEntity {
-
     private int age = 1;
 
     public NeurotoxinBlockEntity(BlockPos pos, BlockState state) {
         super(ThinkingWithPortatosBlocks.NEUROTOXIN_BLOCK_ENTITY,pos,state);
     }
 
-
     public static void tick(World world, BlockPos pos, BlockState state, NeurotoxinBlockEntity blockEntity) {
-        assert blockEntity.world != null;
-        if (!blockEntity.world.isClient) {
+        assert world != null;
+
+        if (!world.isClient) {
             blockEntity.age++;
         }
-        if (!blockEntity.world.isClient && blockEntity.age % 5 == 0) {
-            Direction dir = Direction.random(world.getRandom());
-            if (blockEntity.world.getBlockState(blockEntity.getPos().offset(dir)).isAir()) {
-                blockEntity.world.setBlockState(blockEntity.getPos().offset(dir), blockEntity.getCachedState());
-                blockEntity.world.setBlockState(blockEntity.getPos(), Blocks.AIR.getDefaultState());
+
+        if (!world.isClient && blockEntity.age % 5 == 0) {
+            for (int i = 0; i < 3; i++) {
+                Direction dir = Direction.random(world.getRandom());
+                if (world.getBlockState(blockEntity.getPos().offset(dir)).isAir()) {
+                    world.setBlockState(blockEntity.getPos().offset(dir), blockEntity.getCachedState());
+                    world.setBlockState(blockEntity.getPos(), Blocks.AIR.getDefaultState());
+                    if (world.getBlockEntity(pos.offset(dir)) instanceof NeurotoxinBlockEntity newBE) {
+                        newBE.age = blockEntity.age;
+                    }
+                    break;
+                }
             }
         }
-        /*if (this.age >= 100) {
-            this.world.setBlockState(this.getPos(), Blocks.AIR.getDefaultState());
-        }*/
+
+        if (world.random.nextInt(blockEntity.age) > 100)
+            world.setBlockState(blockEntity.getPos(), Blocks.AIR.getDefaultState());
     }
 }
