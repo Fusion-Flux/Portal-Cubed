@@ -7,6 +7,9 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -14,17 +17,14 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class NeurotoxinBlock extends BlockWithEntity {
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+import java.util.Random;
 
-    private int timeinblock = 1;
-    private int timerdiff = 1;
+public class NeurotoxinBlock extends BlockWithEntity {
+    IntProperty DECAY = IntProperty.of("decay", 0, 3);
 
     public NeurotoxinBlock(Settings settings) {
         super(settings);
     }
-
-
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -36,7 +36,20 @@ public class NeurotoxinBlock extends BlockWithEntity {
         return VoxelShapes.empty();
     }
 
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(DECAY);
+    }
 
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        // TODO Make decay better using the decay block state
+        // TODO also remove neurotoxin BE
+        if (random.nextInt(10) == 0) {
+            world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+        }
+    }
 
     @Override
     public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
