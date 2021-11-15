@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "portalcubed:block/white_2x1_panel_bottom_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "portalcubed:block/white_2x1_panel_bottom"
+    },
+    "axis=z": {
+      "model": "portalcubed:block/white_2x1_panel_bottom_horizontal",
+      "x": 90
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "itemGroup.portalcubed.general": "Thinking With Portatos",
+
+  "subtitles.portalcubed.gelbounce": "Repulsion Gel Bounce",
+  "subtitles.portalcubed.gelrun": "Propulsion Gel Run",
+  "subtitles.portalcubed.portalgunsecondaryfire": "Portal Gun Secondary Fire",
+  "subtitles.portalcubed.portalgunprimaryfire": "Portal Gun Primary Fire",
+
+
+  "item.portalcubed.long_fall_boots": "Long Fall Boots",
+  "item.portalcubed.cube": "Weighted Storage Cube",
+  "item.portalcubed.companion_cube": "Companion Cube",
+  "item.portalcubed.gel_orb": "Gel Orb",
+  "item.portalcubed.portal_gun": "Portal Gun",
+  "item.portalcubed.portal_gun_frame": "Portal Gun Frame",
+  "item.portalcubed.portal_gun_casing": "Portal Gun Casing",
+  "item.portalcubed.mini_blackhole": "Miniature Black hole",
+  "item.portalcubed.paint_gun": "Paint Gun",
+  "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
+
+  "block.portalcubed.propulsion_gel": "Propulsion Gel",
+  "block.portalcubed.repulsion_gel": "Repulsion Gel",
+  "block.portalcubed.gel": "Gel",
+
+  "block.portalcubed.smooth_white_panel": "Smooth White Panel",
+  "block.portalcubed.chiseled_smooth_white_panel": "Chiseled Smooth White Panel",
+  "block.portalcubed.top_smooth_white_panel": "Top Smooth White Panel",
+  "block.portalcubed.bottom_smooth_white_panel": "Bottom Smooth White Panel",
+  "block.portalcubed.top_2x2_smooth_white_panel": "Top 2X2 Smooth White Panel",
+  "block.portalcubed.bottom_2x2_smooth_white_panel": "Bottom 2X2 Smooth White Panel",
+
+  "block.portalcubed.gritty_white_panel": "Gritty White Panel",
+  "block.portalcubed.chiseled_gritty_white_panel": "Chiseled Gritty White Panel",
+  "block.portalcubed.top_gritty_white_panel": "Top Gritty White Panel",
+  "block.portalcubed.bottom_gritty_white_panel": "Bottom Gritty White Panel",
+  "block.portalcubed.top_2x2_gritty_white_panel": "Top 2X2 Gritty White Panel",
+  "block.portalcubed.bottom_2x2_gritty_white_panel": "Bottom 2X2 Gritty White Panel",
+
+  "block.portalcubed.smooth_grey_panel": "Smooth Grey Panel",
+  "block.portalcubed.chiseled_smooth_grey_panel": "Chiseled Smooth Grey Panel",
+  "block.portalcubed.top_smooth_grey_panel": "Top Smooth Grey Panel",
+  "block.portalcubed.bottom_smooth_grey_panel": "Bottom Smooth Grey Panel",
+  "block.portalcubed.top_2x2_smooth_grey_panel": "Top 2X2 Smooth Grey Panel",
+  "block.portalcubed.bottom_2x2_smooth_grey_panel": "Bottom 2X2 Smooth Grey Panel",
+
+  "block.portalcubed.padded_grey_panel": "Padded Grey Panel",
+  "block.portalcubed.chiseled_padded_grey_panel": "Chiseled Padded Grey Panel",
+  "block.portalcubed.top_padded_grey_panel": "Top Padded Grey Panel",
+  "block.portalcubed.bottom_padded_grey_panel": "Bottom Padded Grey Panel",
+  "block.portalcubed.top_2x2_padded_grey_panel": "Top 2X2 Padded Grey Panel",
+  "block.portalcubed.bottom_2x2_padded_grey_panel": "Bottom 2X2 Padded Grey Panel",
+
+  "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",
+  "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",
+  "block.portalcubed.sliding_door": "Sliding Door",
+  "block.portalcubed.tall_button": "Tall Button",
+
+
+  "block.portalcubed.emitter": "Hardlight Bridge Emitter",
+
+  "text.autoconfig.portalcubed.title": "Thinking With Portatos Config",
+
+  "text.autoconfig.portalcubed.category.numbers": "Item Config",
+
+
+  "text.autoconfig.portalcubed.category.numbersblock": "Block Config",
+  "text.autoconfig.portalcubed.option.numbersblock.maxBridgeLength": "Hardlight Bridge Max Length",
+
+  "text.autoconfig.portalcubed.category.enabled": "Enabled Features",
+  "text.autoconfig.portalcubed.option.enabled.enableGels": "Enable Gels",
+  "text.autoconfig.portalcubed.option.enabled.enableLongFallBoots": "Enable Long Fall Boots",
+  "text.autoconfig.portalcubed.option.enabled.enablePortal2Blocks": "Enable Portal Pannels",
+  "text.autoconfig.portalcubed.option.enabled.enableHLB": "Enable Hardlight Bridges",
+
+  "key.portalcubed.category" : "Thinking With Portatos",
+  "key.portalcubed.grab" : "Grab"
+}

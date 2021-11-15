@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "portalcubed:block/aged_padded_gray_2x1_panel_top",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "portalcubed:block/aged_padded_gray_2x1_panel_top"
+    },
+    "axis=z": {
+      "model": "portalcubed:block/aged_padded_gray_2x1_panel_top_horizontal",
+      "x": 90
+    }
+  }
+}

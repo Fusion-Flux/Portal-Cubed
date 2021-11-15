@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "portalcubed:block/excursion_funnel",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "portalcubed:block/excursion_funnel",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "portalcubed:block/excursion_funnel",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "portalcubed:block/excursion_funnel",
+      "y": 90
+    },
+    "facing=up": {
+      "model": "portalcubed:block/excursion_funnel",
+      "x": 90
+    },
+    "facing=down": {
+      "model": "portalcubed:block/excursion_funnel",
+      "x": 270
+    }
+  }
+}

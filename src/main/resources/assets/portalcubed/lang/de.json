@@ -1,0 +1,75 @@
+{
+  "itemGroup.portalcubed.general": "Denken Mit Portoffeln",
+
+  "subtitles.portalcubed.gelbounce": "Rückstoßgel-Abprallen",
+  "subtitles.portalcubed.gelrun": "Rennen Auf Beschleunigungsgel",
+  "subtitles.portalcubed.portalgunsecondaryfire": "Portal Gun Sekundärer Schuß",
+  "subtitles.portalcubed.portalgunprimaryfire": "Portal Gun Primärer Schuß",
+
+
+  "item.portalcubed.long_fall_boots": "Langfallschuhe",
+  "item.portalcubed.cube": "Gewichteter Lagerwürfel",
+  "item.portalcubed.companion_cube": "Begleiterwürfel",
+  "item.portalcubed.gel_orb": "Geltropfen",
+  "item.portalcubed.portal_gun": "Portal Gun",
+  "item.portalcubed.portal_gun_frame": "Portal Gun Gestell",
+  "item.portalcubed.portal_gun_casing": "Portal Gun Gehäuse",
+  "item.portalcubed.mini_blackhole": "Miniatur-Schwarzes Loch",
+  "item.portalcubed.paint_gun": "Sprühpistole",
+
+  "block.portalcubed.propulsion_gel": "Beschleunigungsgel",
+  "block.portalcubed.repulsion_gel": "Rückstoßgel",
+  "block.portalcubed.gel": "Gel",
+
+  "block.portalcubed.smooth_white_panel": "Glate Weiße Platte",
+  "block.portalcubed.chiseled_smooth_white_panel": "Gemeißelte Glate Weiße Platte",
+  "block.portalcubed.top_smooth_white_panel": "Obere Glate Weiße Platte",
+  "block.portalcubed.bottom_smooth_white_panel": "Untere Glate Weiße Platte",
+  "block.portalcubed.top_2x2_smooth_white_panel": "Obere 2X2 Glate Weiße Platte",
+  "block.portalcubed.bottom_2x2_smooth_white_panel": "Untere 2X2 Glate Weiße Platte",
+
+  "block.portalcubed.gritty_white_panel": "Grobe Weiße Platte",
+  "block.portalcubed.chiseled_gritty_white_panel": "Gemeißelte Grobe Weiße Platte",
+  "block.portalcubed.top_gritty_white_panel": "Obere Grobe Weiße Platte",
+  "block.portalcubed.bottom_gritty_white_panel": "Untere Grobe Weiße Platte",
+  "block.portalcubed.top_2x2_gritty_white_panel": "Obere 2X2 Grobe Weiße Platte",
+  "block.portalcubed.bottom_2x2_gritty_white_panel": "Untere 2X2 Grobe Weiße Platte",
+
+  "block.portalcubed.smooth_grey_panel": "Glate Graue Platte",
+  "block.portalcubed.chiseled_smooth_grey_panel": "Gemeißelte Glate Graue Platte",
+  "block.portalcubed.top_smooth_grey_panel": "Obere Glate Graue Platte",
+  "block.portalcubed.bottom_smooth_grey_panel": "Untere Glate Graue Platte",
+  "block.portalcubed.top_2x2_smooth_grey_panel": "Obere 2X2 Glate Graue Platte",
+  "block.portalcubed.bottom_2x2_smooth_grey_panel": "Untere 2X2 Glate Graue Platte",
+
+  "block.portalcubed.padded_grey_panel": "Gepolsterte Graue Platte",
+  "block.portalcubed.chiseled_padded_grey_panel": "Gemeißelte Gepolsterte Graue Platte",
+  "block.portalcubed.top_padded_grey_panel": "Obere Gepolsterte Graue Platte",
+  "block.portalcubed.bottom_padded_grey_panel": "Untere Gepolsterte Graue Platte",
+  "block.portalcubed.top_2x2_padded_grey_panel": "Obere 2X2 Gepolsterte Graue Platte",
+  "block.portalcubed.bottom_2x2_padded_grey_panel": "Untere 2X2 Gepolsterte Graue Platte",
+
+  "block.portalcubed.neurotoxin_emitter": "Nervengiftausstrahler",
+  "block.portalcubed.excursion_funnel_emitter": "Exkursionskannal-Strahler",
+  "block.portalcubed.sliding_door": "Schiebetür",
+
+
+  "block.portalcubed.emitter": "Festlichtbrücken-Strahler",
+
+  "text.autoconfig.portalcubed.title": "Denken Mit Portoffeln Konfiguration",
+
+  "text.autoconfig.portalcubed.category.numbers": "Itemkonfiguration",
+
+
+  "text.autoconfig.portalcubed.category.numbersblock": "Blockkonfiguration",
+  "text.autoconfig.portalcubed.option.numbersblock.maxBridgeLength": "Maximale Festlichtbrücken-Länge",
+
+  "text.autoconfig.portalcubed.category.enabled": "Aktivierte Features",
+  "text.autoconfig.portalcubed.option.enabled.enableGels": "Aktiviere Gele",
+  "text.autoconfig.portalcubed.option.enabled.enableLongFallBoots": "Aktiviere Langfallschuhe",
+  "text.autoconfig.portalcubed.option.enabled.enablePortal2Blocks": "Aktiviere Portalplatten",
+  "text.autoconfig.portalcubed.option.enabled.enableHLB": "Aktiviere Festlichtbrücken",
+
+  "key.portalcubed.category" : "Denken Mit Portoffeln",
+  "key.portalcubed.grab" : "Greife"
+}

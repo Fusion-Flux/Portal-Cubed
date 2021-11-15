@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "thinkingwithportatos:block/smooth_gray_panel"
-  }
-}

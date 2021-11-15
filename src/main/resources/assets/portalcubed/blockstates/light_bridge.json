@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "portalcubed:block/light_bridge",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "portalcubed:block/light_bridge",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "portalcubed:block/light_bridge",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "portalcubed:block/light_bridge",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "portalcubed:block/light_bridge"
+    },
+    "facing=down": {
+      "model": "portalcubed:block/light_bridge"
+    }
+  }
+}

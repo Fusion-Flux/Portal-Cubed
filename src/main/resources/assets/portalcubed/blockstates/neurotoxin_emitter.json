@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "portalcubed:block/neurotoxin_emitter_off"
+    },
+    "powered=true": {
+      "model": "portalcubed:block/neurotoxin_emitter_on"
+    }
+  }
+}
