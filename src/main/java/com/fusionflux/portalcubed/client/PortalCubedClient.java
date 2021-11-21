@@ -5,7 +5,9 @@ import com.fusionflux.portalcubed.client.key.GrabKeyBinding;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.PortalHud;
 import com.fusionflux.portalcubed.client.render.PortalPlaceholderRenderer;
+import com.fusionflux.portalcubed.client.render.StorageCubeRenderer;
 import com.fusionflux.portalcubed.client.render.model.entity.PortalPlaceholderModel;
+import com.fusionflux.portalcubed.client.render.model.entity.StorageCubeModel;
 import com.fusionflux.portalcubed.entity.GelOrbEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalGun;
@@ -82,8 +84,10 @@ public class PortalCubedClient implements ClientModInitializer {
 
     private void registerEntityRenderers() {
         EntityModelLayerRegistry.registerModelLayer(PortalPlaceholderModel.MAIN_LAYER, PortalPlaceholderModel::getTexturedModelData);
-        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.PORTAL_PLACEHOLDER, (context) -> new PortalPlaceholderRenderer(context));
-        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.CUSTOM_PORTAL, (context) -> new PortalEntityRenderer(context));
+        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.PORTAL_PLACEHOLDER, PortalPlaceholderRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.CUSTOM_PORTAL, PortalEntityRenderer::new);
+        EntityModelLayerRegistry.registerModelLayer(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER, StorageCubeModel::getTexturedModelData);
+        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.STORAGE_CUBE, StorageCubeRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer<GelOrbEntity>(dispatcher, context.getItemRenderer()));
        // EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.REPULSION_GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
     }

@@ -23,6 +23,8 @@ public class RepulsionGel extends GelFlat {
         this.addCollisionEffects(world, entity, pos);
     }
 
+
+
     private void addCollisionEffects(World world, Entity entity, BlockPos pos) {
             /*if (entity.getType().equals(EntityType.BOAT)) {
                 entity.damage(DamageSource.MAGIC, 200);

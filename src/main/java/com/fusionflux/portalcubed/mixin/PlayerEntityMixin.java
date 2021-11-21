@@ -85,8 +85,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
 
-
-
+        //System.out.println(this.getPos().y);
         /*List<Portal> globalPortals = (List<Portal>) McHelper.getNearbyPortals(((PlayerEntity) (Object) this),50);
         Vec3d expand = this.getVelocity().multiply(2);
         Box streachedBB = this.getBoundingBox().stretch(expand);
