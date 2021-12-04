@@ -3,9 +3,11 @@ package com.fusionflux.portalcubed.client;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.key.GrabKeyBinding;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.client.render.CompanionCubeRenderer;
 import com.fusionflux.portalcubed.client.render.PortalHud;
 import com.fusionflux.portalcubed.client.render.PortalPlaceholderRenderer;
 import com.fusionflux.portalcubed.client.render.StorageCubeRenderer;
+import com.fusionflux.portalcubed.client.render.model.entity.CompanionCubeModel;
 import com.fusionflux.portalcubed.client.render.model.entity.PortalPlaceholderModel;
 import com.fusionflux.portalcubed.client.render.model.entity.StorageCubeModel;
 import com.fusionflux.portalcubed.entity.GelOrbEntity;
@@ -86,8 +88,12 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(PortalPlaceholderModel.MAIN_LAYER, PortalPlaceholderModel::getTexturedModelData);
         EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.PORTAL_PLACEHOLDER, PortalPlaceholderRenderer::new);
         EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.CUSTOM_PORTAL, PortalEntityRenderer::new);
+
         EntityModelLayerRegistry.registerModelLayer(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER, StorageCubeModel::getTexturedModelData);
         EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.STORAGE_CUBE, StorageCubeRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(CompanionCubeModel.COMPANION_CUBE_MAIN_LAYER, CompanionCubeModel::getTexturedModelData);
+        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.COMPANION_CUBE, CompanionCubeRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer<GelOrbEntity>(dispatcher, context.getItemRenderer()));
        // EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.REPULSION_GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
     }
