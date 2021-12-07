@@ -1,8 +1,11 @@
 package com.fusionflux.portalcubed.entity;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,9 +14,11 @@ public class CompanionCubeEntity extends PathAwareEntity  {
         super(type, world);
     }
 
+    private float storedDamage = 0.0F;
+
     @Override
     public boolean collides() {
-        return false;
+        return !this.isRemoved();
     }
 
     @Override
@@ -39,6 +44,29 @@ public class CompanionCubeEntity extends PathAwareEntity  {
     @Nullable
     public Text getCustomName() {
         return null;
+    }
+
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source)) {
+            return false;
+        } else if (!this.world.isClient && !this.isRemoved()) {
+            this.storedDamage += amount;
+            //this.scheduleVelocityUpdate();
+            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
+            if (bl || this.storedDamage >= 20.0F) {
+                if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+                    // TODO
+                    //this.dropItem(ThinkingWithPortatosItems.COMPANION_CUBE);
+                }
+
+                this.discard();
+            }
+
+            return true;
+        } else {
+            return true;
+        }
     }
 
 }

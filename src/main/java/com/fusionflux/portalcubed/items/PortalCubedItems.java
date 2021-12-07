@@ -21,6 +21,8 @@ public class PortalCubedItems {
     public static final Item PORTAL_GUN_CASING = new Item(new FabricItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(1).fireproof());
     public static final Item MINI_BLACKHOLE = new Item(new FabricItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(1).fireproof());
     public static final PaintGun PAINT_GUN = new PaintGun(new FabricItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(1).fireproof());
+    public static final SpawnEggItem STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.STORAGE_CUBE, 1, 1, new FabricItemSettings().group(PortalCubed.PortalCubedGroup));
+    public static final SpawnEggItem COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.COMPANION_CUBE, 1, 1, new FabricItemSettings().group(PortalCubed.PortalCubedGroup));
 
     public static void registerItems() {
         if (PortalCubedConfig.get().enabled.enableLongFallBoots)
@@ -30,6 +32,8 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_gun_frame"), PORTAL_GUN_FRAME);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_gun_casing"), PORTAL_GUN_CASING);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "mini_blackhole"), MINI_BLACKHOLE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "storage_cube"), STORAGE_CUBE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "companion_cube"), COMPANION_CUBE);
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "paint_gun"), PAINT_GUN);
     }
 }
