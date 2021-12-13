@@ -64,6 +64,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow @Final private PlayerAbilities abilities;
 
 
+    @Shadow public abstract float getMovementSpeed();
+
+    double lastYaw =1;
+    double lastlastYaw =1;
+    double lastlastlastYaw =1;
+
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void isInvulnerableTo(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         ItemStack itemStack5 = this.getEquippedStack(EquipmentSlot.FEET);
@@ -80,11 +86,62 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
     }
 
+//0.11783440120041885=0.9800000190734863
+/**
+ * @author
+ */
+@Overwrite
+    public void travel(Vec3d movementInput) {
+    if (!this.isOnGround() && !this.abilities.flying && !this.isFallFlying()) {
+
+        double mathval = 1;
+
+        double horizontalvelocity = Math.abs(this.getVelocity().x)+Math.abs(this.getVelocity().z);
+        if(horizontalvelocity/0.01783440120041885 > 1){
+            mathval= horizontalvelocity/0.01783440120041885;
+        }
+
+        movementInput = new Vec3d(movementInput.x,movementInput.y,movementInput.z/mathval);
+    //movementInput=movementInput.multiply(1, 1, 0);
+        this.flyingSpeed = .035f;
+    }
+
+        double d = this.getX();
+        double e = this.getY();
+        double f = this.getZ();
+        double i;
+        if (this.isSwimming() && !this.hasVehicle()) {
+            i = this.getRotationVector().y;
+            double h = i < -0.2D ? 0.085D : 0.06D;
+            if (i <= 0.0D || this.jumping || !this.world.getBlockState(new BlockPos(this.getX(), this.getY() + 1.0D - 0.1D, this.getZ())).getFluidState().isEmpty()) {
+                Vec3d vec3d = this.getVelocity();
+                this.setVelocity(vec3d.add(0.0D, (i - vec3d.y) * h, 0.0D));
+            }
+        }
+
+        if (this.abilities.flying && !this.hasVehicle()) {
+            i = this.getVelocity().y;
+            float j = this.flyingSpeed;
+            this.flyingSpeed = this.abilities.getFlySpeed() * (float)(this.isSprinting() ? 2 : 1);
+            super.travel(movementInput);
+            Vec3d vec3d2 = this.getVelocity();
+            this.setVelocity(vec3d2.x, i * 0.6D, vec3d2.z);
+            this.flyingSpeed = j;
+            this.fallDistance = 0.0F;
+            this.setFlag(7, false);
+        } else {
+            super.travel(movementInput);
+        }
+
+        this.increaseTravelMotionStats(this.getX() - d, this.getY() - e, this.getZ() - f);
+    }
 
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
 
+        //this.setNoDrag(false);
+        this.setNoDrag(!this.isOnGround() && !this.abilities.flying && !this.isFallFlying());
         //System.out.println(this.getPos().y);
         /*List<Portal> globalPortals = (List<Portal>) McHelper.getNearbyPortals(((PlayerEntity) (Object) this),50);
         Vec3d expand = this.getVelocity().multiply(2);
