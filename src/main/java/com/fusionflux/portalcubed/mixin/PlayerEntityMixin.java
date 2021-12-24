@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.command.GiveCommand;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -92,18 +93,22 @@ public abstract class PlayerEntityMixin extends LivingEntity {
  */
 @Overwrite
     public void travel(Vec3d movementInput) {
+
     if (!this.isOnGround() && !this.abilities.flying && !this.isFallFlying()) {
 
         double mathval = 1;
-
         double horizontalvelocity = Math.abs(this.getVelocity().x)+Math.abs(this.getVelocity().z);
         if(horizontalvelocity/0.01783440120041885 > 1){
             mathval= horizontalvelocity/0.01783440120041885;
         }
+        double moveval = movementInput.z/mathval;
+        if(movementInput.z <0){
+            moveval=movementInput.z;
+        }
 
-        movementInput = new Vec3d(movementInput.x,movementInput.y,movementInput.z/mathval);
+        movementInput = new Vec3d(movementInput.x,movementInput.y,moveval);
     //movementInput=movementInput.multiply(1, 1, 0);
-        this.flyingSpeed = .035f;
+        this.flyingSpeed = .04f;
     }
 
         double d = this.getX();
@@ -141,7 +146,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     public void tick(CallbackInfo ci) {
 
         //this.setNoDrag(false);
-        this.setNoDrag(!this.isOnGround() && !this.abilities.flying && !this.isFallFlying());
+        //double horizontalvelocity = Math.abs(this.getVelocity().x)+Math.abs(this.getVelocity().z);
+        //this.setNoDrag(!this.isOnGround() && !this.abilities.flying && !this.isFallFlying());
+        //this.setNoDrag((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying()) || (this.isSneaking() && horizontalvelocity > 1));
+
+        double horizontalvelocity2 = Math.abs(this.getVelocity().x)+Math.abs(this.getVelocity().z);
+        //this.setNoDrag(!this.isOnGround() && !this.abilities.flying && !this.isFallFlying());
+        this.setNoDrag((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying()) || (this.isSneaking() && horizontalvelocity2 > 1));
+
         //System.out.println(this.getPos().y);
         /*List<Portal> globalPortals = (List<Portal>) McHelper.getNearbyPortals(((PlayerEntity) (Object) this),50);
         Vec3d expand = this.getVelocity().multiply(2);
@@ -184,14 +196,14 @@ if(!this.isFallFlying()) {
         storeVelocity2 = storeVelocity1;
         storeVelocity1 = this.getVelocity();
 
-        ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
+        /*ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
         if (storeVelocity2 != null && storeVelocity1 != null) {
             if (itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)) {
                 if (!this.isOnGround()) {
                     this.setVelocity(this.getVelocity().x * 1.045, this.getVelocity().y, this.getVelocity().z * 1.045);
                 }
             }
-        }
+        }*/
 
 
     }

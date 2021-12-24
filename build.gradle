@@ -1,5 +1,6 @@
 plugins {
-	id 'fabric-loom' version '0.8-SNAPSHOT'
+	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'io.github.juuxel.loom-quiltflower-mini' version '1.2.1'
 	id 'maven-publish'
 }
 
@@ -16,6 +17,7 @@ repositories {
 	maven { url = "https://www.cursemaven.com" }
 	maven { url = "https://maven.terraformersmc.com/releases" }
 	maven { url = "https://hephaestus.dev/release" }
+	maven { url "https://api.modrinth.com/maven" }
 }
 
 dependencies {
@@ -44,10 +46,14 @@ dependencies {
 
 	include ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v0.29-1.17')
 
+	modImplementation "maven.modrinth:stonecutter_recipe_tags:${project.stonecutter_recipe_tags_version}"
+	include "maven.modrinth:stonecutter_recipe_tags:${project.stonecutter_recipe_tags_version}"
 
 	modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
 		exclude(module: "fabric-api")
 	}
+
+	modImplementation("dev.architectury:architectury-fabric:2.8.50")
 
 
 }

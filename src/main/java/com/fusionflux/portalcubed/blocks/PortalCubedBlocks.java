@@ -113,6 +113,7 @@ public class PortalCubedBlocks {
     public static Item TOXIC_GOO_BUCKET;
     public static Block TOXIC_GOO;
 
+
     public static Tag<Block> CANT_PLACE_PORTAL_ON = TagRegistry.block(new Identifier("portalcubed", "cant_place_portal_on"));
     public static Tag<Block> GELCHECKTAG = TagRegistry.block(new Identifier("portalcubed", "gelchecktag"));
     public static Tag<Block> ALLOW_PORTAL_IN = TagRegistry.block(new Identifier("portalcubed", "allowinside"));
