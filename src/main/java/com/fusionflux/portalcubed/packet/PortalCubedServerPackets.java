@@ -21,7 +21,7 @@ public class PortalCubedServerPackets {
     public static final Identifier GRAB_KEY_PRESSED = new Identifier(PortalCubed.MODID, "grab_key_pressed");
 
     public static void onPortalLeftClick(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        ServerWorld serverWorld = player.getServerWorld();
+        ServerWorld serverWorld = player.getWorld();
         Hand hand = buf.readEnumConstant(Hand.class);
         ItemStack itemStack = player.getStackInHand(hand);
         player.updateLastActionTime();

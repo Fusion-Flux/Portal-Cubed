@@ -58,7 +58,7 @@ public class ExcursionFunnelEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
 
         // Because NbtCompounds only support a few types, we have to decompose the emitter BlockPos' into ints
@@ -68,7 +68,7 @@ public class ExcursionFunnelEntity extends BlockEntity {
             tag.putInt(i + "y", emitters.get(i).getY());
             tag.putInt(i + "z", emitters.get(i).getZ());
         }
-        return tag;
+
     }
 
     @Override

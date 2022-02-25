@@ -223,7 +223,7 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
 
         tag.putBoolean("bridgeComplete", bridgeComplete);
@@ -237,7 +237,6 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
         tag.putInt("obsy", obstructorPos.getY());
         tag.putInt("obsz", obstructorPos.getZ());
 
-        return tag;
     }
 
     @Override

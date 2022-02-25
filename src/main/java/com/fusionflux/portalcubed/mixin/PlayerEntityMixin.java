@@ -6,10 +6,8 @@ import com.fusionflux.portalcubed.entity.CustomPortalEntity;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.util.math.Vector3d;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import qouteall.imm_ptl.core.teleportation.CollisionHelper;
@@ -34,10 +33,6 @@ import qouteall.imm_ptl.core.teleportation.CollisionHelper;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
 
-    @Unique
-    private Vec3d storeVelocity1;
-    @Unique
-    private Vec3d storeVelocity2;
     private boolean recentlyTouchedPortal;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
@@ -57,19 +52,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow
     public abstract boolean isSwimming();
 
-    @Shadow
-    public abstract boolean isCreative();
-
-    @Shadow public abstract void increaseTravelMotionStats(double dx, double dy, double dz);
-
     @Shadow @Final private PlayerAbilities abilities;
 
-
     @Shadow public abstract float getMovementSpeed();
-
-    double lastYaw =1;
-    double lastlastYaw =1;
-    double lastlastlastYaw =1;
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void isInvulnerableTo(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
@@ -79,91 +64,48 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
     }
 
-    @Inject(method = "getFallSound", at = @At("HEAD"), cancellable = true)
+    /*@Inject(method = "getFallSound", at = @At("HEAD"), cancellable = true)
     protected void getFallSound(int distance, CallbackInfoReturnable<SoundEvent> cir) {
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
         if (itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)) {
             cir.setReturnValue(SoundEvents.BLOCK_WOOL_FALL);
         }
-    }
+    }*/
 
 //0.11783440120041885=0.9800000190734863
-/**
- * @author
- */
-@Overwrite
-    public void travel(Vec3d movementInput) {
 
-    if (!this.isOnGround() && !this.abilities.flying && !this.isFallFlying()) {
+    @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
+    private Vec3d uhhhhhhh(Vec3d travelVectorOriginal) {
+        ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
+        if (!this.isOnGround() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)) {
 
-        double mathval = 1;
-        double horizontalvelocity = Math.abs(this.getVelocity().x)+Math.abs(this.getVelocity().z);
-        if(horizontalvelocity/0.01783440120041885 > 1){
-            mathval= horizontalvelocity/0.01783440120041885;
-        }
-        double moveval = movementInput.z/mathval;
-        if(movementInput.z <0){
-            moveval=movementInput.z;
-        }
-
-        movementInput = new Vec3d(movementInput.x,movementInput.y,moveval);
-    //movementInput=movementInput.multiply(1, 1, 0);
-        this.flyingSpeed = .04f;
-    }
-
-        double d = this.getX();
-        double e = this.getY();
-        double f = this.getZ();
-        double i;
-        if (this.isSwimming() && !this.hasVehicle()) {
-            i = this.getRotationVector().y;
-            double h = i < -0.2D ? 0.085D : 0.06D;
-            if (i <= 0.0D || this.jumping || !this.world.getBlockState(new BlockPos(this.getX(), this.getY() + 1.0D - 0.1D, this.getZ())).getFluidState().isEmpty()) {
-                Vec3d vec3d = this.getVelocity();
-                this.setVelocity(vec3d.add(0.0D, (i - vec3d.y) * h, 0.0D));
+            double mathval = 1;
+            double horizontalvelocity = Math.abs(this.getVelocity().x) + Math.abs(this.getVelocity().z);
+            if (horizontalvelocity / 0.01783440120041885 > 1) {
+                mathval = horizontalvelocity / 0.01783440120041885;
             }
-        }
+            double moveval = travelVectorOriginal.z / mathval;
+            double moveval2 = travelVectorOriginal.x / mathval;
+            if (travelVectorOriginal.z < 0) {
+                moveval = travelVectorOriginal.z;
+            }
+            if (travelVectorOriginal.x < 0) {
+                moveval2 = travelVectorOriginal.x;
+            }
 
-        if (this.abilities.flying && !this.hasVehicle()) {
-            i = this.getVelocity().y;
-            float j = this.flyingSpeed;
-            this.flyingSpeed = this.abilities.getFlySpeed() * (float)(this.isSprinting() ? 2 : 1);
-            super.travel(movementInput);
-            Vec3d vec3d2 = this.getVelocity();
-            this.setVelocity(vec3d2.x, i * 0.6D, vec3d2.z);
-            this.flyingSpeed = j;
-            this.fallDistance = 0.0F;
-            this.setFlag(7, false);
-        } else {
-            super.travel(movementInput);
+            travelVectorOriginal = new Vec3d(moveval2, travelVectorOriginal.y, moveval);
+            this.airStrafingSpeed = .04f;
         }
-
-        this.increaseTravelMotionStats(this.getX() - d, this.getY() - e, this.getZ() - f);
+    return travelVectorOriginal;
     }
 
 
-    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
+        ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
 
-        //this.setNoDrag(false);
-        //double horizontalvelocity = Math.abs(this.getVelocity().x)+Math.abs(this.getVelocity().z);
-        //this.setNoDrag(!this.isOnGround() && !this.abilities.flying && !this.isFallFlying());
-        //this.setNoDrag((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying()) || (this.isSneaking() && horizontalvelocity > 1));
+        this.setNoDrag((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)));
 
-        double horizontalvelocity2 = Math.abs(this.getVelocity().x)+Math.abs(this.getVelocity().z);
-        //this.setNoDrag(!this.isOnGround() && !this.abilities.flying && !this.isFallFlying());
-        this.setNoDrag((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying()) || (this.isSneaking() && horizontalvelocity2 > 1));
-
-        //System.out.println(this.getPos().y);
-        /*List<Portal> globalPortals = (List<Portal>) McHelper.getNearbyPortals(((PlayerEntity) (Object) this),50);
-        Vec3d expand = this.getVelocity().multiply(2);
-        Box streachedBB = this.getBoundingBox().stretch(expand);
-
-        for (Portal globalPortal : globalPortals) {
-            if (streachedBB.intersects(globalPortal.getBoundingBox())) {
-                this.setVelocity(this.getVelocity().multiply(5, 5, 5));
-            }
-        }*/
 
         /*double reduceGravity = .06666666666;
         double gravityBalancer = 1;
@@ -193,8 +135,8 @@ if(!this.isFallFlying()) {
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
             }
         }
-        storeVelocity2 = storeVelocity1;
-        storeVelocity1 = this.getVelocity();
+
+
 
         /*ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
         if (storeVelocity2 != null && storeVelocity1 != null) {

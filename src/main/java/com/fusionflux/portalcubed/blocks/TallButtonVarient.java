@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Random;
 
@@ -104,7 +105,7 @@ public abstract class TallButtonVarient extends WallMountedBlock {
     public void powerOn(BlockState state, World world, BlockPos pos) {
         world.setBlockState(pos, (BlockState)state.with(POWERED, true), 3);
         this.updateNeighbors(state, world, pos);
-        world.getBlockTickScheduler().schedule(pos, this, this.getPressTicks());
+        world.createAndScheduleBlockTick(pos, this, this.getPressTicks());
     }
 
     protected void playClickSound(@Nullable PlayerEntity player, WorldAccess world, BlockPos pos, boolean powered) {
@@ -165,7 +166,7 @@ public abstract class TallButtonVarient extends WallMountedBlock {
         }
 
         if (bl) {
-            world.getBlockTickScheduler().schedule(new BlockPos(pos), this, this.getPressTicks());
+            world.createAndScheduleBlockTick(new BlockPos(pos), this, this.getPressTicks());
         }
 
     }

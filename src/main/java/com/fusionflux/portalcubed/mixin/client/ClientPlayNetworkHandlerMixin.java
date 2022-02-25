@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {
-    @Inject(
+    /*@Inject(
             method = "onEntityPosition(Lnet/minecraft/network/packet/s2c/play/EntityPositionS2CPacket;)V",
             at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/world/ClientWorld;getEntityById(I)Lnet/minecraft/entity/Entity;"),
             cancellable = true,
@@ -23,9 +23,9 @@ public class ClientPlayNetworkHandlerMixin {
         /*if (entity != null && portalcubed.getBodyGrabbingManager(entity.world.isClient).isGrabbed(entity)) {
             info.cancel();
         }*/
-    }
+    //}
 
-    @Inject(
+   /* @Inject(
             method = "onEntityUpdate(Lnet/minecraft/network/packet/s2c/play/EntityS2CPacket;)V",
             at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/packet/s2c/play/EntityS2CPacket;getEntity(Lnet/minecraft/world/World;)Lnet/minecraft/entity/Entity;"),
             cancellable = true,
@@ -35,5 +35,5 @@ public class ClientPlayNetworkHandlerMixin {
         /*if (entity != null && portalcubed.getBodyGrabbingManager(entity.world.isClient).isGrabbed(entity)) {
             info.cancel();
         }*/
-    }
+  //  }
 }
