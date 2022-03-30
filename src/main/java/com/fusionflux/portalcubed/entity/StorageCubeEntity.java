@@ -144,7 +144,6 @@ public class StorageCubeEntity extends PathAwareEntity  {
 
     public void tick() {
         super.tick();
-        System.out.println(this.getVelocity().y);
         this.bodyYaw = 0;
         this.headYaw = 0;
         if(!world.isClient)

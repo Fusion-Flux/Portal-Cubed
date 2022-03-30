@@ -93,7 +93,7 @@ public class ExcursionFunnelEntity extends BlockEntity {
             if (!emitters.isEmpty()) {
                 // Repair callbacks
                 emitters.forEach((emitter) -> {
-                    ((ExcursionFunnelEmitterEntity) Objects.requireNonNull(world.getBlockEntity(emitter))).repairUpdate(pos);
+                   // ((ExcursionFunnelEmitterEntity) Objects.requireNonNull(world.getBlockEntity(emitter))).repairUpdate(pos);
                 });
             }
         }
