@@ -80,6 +80,8 @@ public class PortalCubedClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
 
+
+
         //setupFluidRendering(PortalCubedBlocks.STILL_TOXIC_GOO, PortalCubedBlocks.FLOWING_TOXIC_GOO, new Identifier("portalcubed", "acid"), 0x2D1B00);
         //BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), PortalCubedBlocks.STILL_TOXIC_GOO, PortalCubedBlocks.FLOWING_TOXIC_GOO);
     }

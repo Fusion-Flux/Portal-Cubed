@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values" : [
+    "portalcubed:padded_gray_2x1_panel_bottom",
+    "portalcubed:padded_gray_2x1_panel_top",
+    "portalcubed:padded_gray_2x2_panel_top_left",
+    "portalcubed:padded_gray_2x2_panel_top_right",
+    "portalcubed:padded_gray_2x2_panel_bottom_left",
+    "portalcubed:padded_gray_2x2_panel_bottom_right",
+    "portalcubed:padded_gray_half_panel",
+    "portalcubed:padded_gray_panel"
+  ]
+}

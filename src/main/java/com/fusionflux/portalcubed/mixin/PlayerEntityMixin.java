@@ -1,14 +1,20 @@
 package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CustomPortalEntity;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
+import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandler;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -30,8 +36,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import qouteall.imm_ptl.core.teleportation.CollisionHelper;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity {
+public abstract class PlayerEntityMixin extends LivingEntity implements EntityPortalsAccess {
 
     private boolean recentlyTouchedPortal;
 
@@ -73,6 +82,35 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }*/
 
 //0.11783440120041885=0.9800000190734863
+
+    private static final TrackedData<Optional<UUID>> CUBEUUID = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+
+    @Inject(method = "initDataTracker",at = @At("HEAD"))
+    public void initDataTracker(CallbackInfo ci) {
+        this.getDataTracker().startTracking(CUBEUUID, Optional.empty());
+    }
+
+    @Override
+    public boolean getUUIDPresent() {
+        return getDataTracker().get(CUBEUUID).isPresent();
+    }
+
+    @Override
+    public UUID getCubeUUID() {
+        if (getDataTracker().get(CUBEUUID).isPresent()) {
+            return getDataTracker().get(CUBEUUID).get();
+        }
+        return null;
+    }
+
+@Override
+    public void setCubeUUID(UUID uuid) {
+    if(uuid != null) {
+        this.getDataTracker().set(CUBEUUID, Optional.of(uuid));
+    }else {
+        this.getDataTracker().set(CUBEUUID, Optional.empty());
+    }
+    }
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3d uhhhhhhh(Vec3d travelVectorOriginal) {

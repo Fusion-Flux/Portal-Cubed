@@ -6,7 +6,7 @@ import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.tag.TagRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -114,10 +115,10 @@ public class PortalCubedBlocks {
     public static Block TOXIC_GOO;
 
 
-    public static Tag<Block> CANT_PLACE_PORTAL_ON = TagRegistry.block(new Identifier("portalcubed", "cant_place_portal_on"));
-    public static Tag<Block> GELCHECKTAG = TagRegistry.block(new Identifier("portalcubed", "gelchecktag"));
-    public static Tag<Block> ALLOW_PORTAL_IN = TagRegistry.block(new Identifier("portalcubed", "allowinside"));
-    public static Tag<Block> IMMOVABLE_BLOCKS = TagRegistry.block(new Identifier("portalcubed", "immovable_blocks"));
+    public static TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "cant_place_portal_on"));
+    public static TagKey<Block> GELCHECKTAG = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "gelchecktag"));
+    public static TagKey<Block> ALLOW_PORTAL_IN = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "allowinside"));
+    public static TagKey<Block> IMMOVABLE_BLOCKS = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "immovable_blocks"));
     public static void registerBlocks() {
         if (PortalCubedConfig.get().enabled.enableGels) {
             Registry.register(Registry.BLOCK, id("propulsion_gel"), PROPULSION_GEL);

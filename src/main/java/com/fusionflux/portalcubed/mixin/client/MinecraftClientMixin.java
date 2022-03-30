@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.BiConsumer;
 
@@ -56,7 +57,7 @@ public abstract class MinecraftClientMixin {
      * @author Platymemo
      */
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
-    private void onDoAttack(CallbackInfo ci) {
+    private void onDoAttack(CallbackInfoReturnable<Boolean> cir) {
         if (this.player != null) {
             Item mainHand = this.player.getMainHandStack().getItem();
             Item offHand = this.player.getOffHandStack().getItem();
@@ -79,7 +80,7 @@ public abstract class MinecraftClientMixin {
             }
 
             if (mainHand instanceof PortalGun || offHand instanceof PortalGun) {
-                ci.cancel();
+                cir.cancel();
             }
         }
     }

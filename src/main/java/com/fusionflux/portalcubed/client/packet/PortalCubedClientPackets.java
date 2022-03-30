@@ -53,22 +53,22 @@ public class PortalCubedClientPackets {
             }
         });
     }
+
     @Environment(EnvType.CLIENT)
     public static void onGrab(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         int grabberId = buf.readInt();
         int entityId = buf.readInt();
-
         client.execute(() -> {
             if (client.world != null) {
                 Entity grabber = client.world.getEntityById(grabberId);
                 Entity entity = client.world.getEntityById(entityId);
-
                 if (grabber instanceof PlayerEntity) {
                     //portalcubed.getBodyGrabbingManager(true).tryGrab((PlayerEntity) grabber, entity);
                 }
             }
         });
     }
+
     @Environment(EnvType.CLIENT)
     public static void onUngrab(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         int grabberId = buf.readInt();

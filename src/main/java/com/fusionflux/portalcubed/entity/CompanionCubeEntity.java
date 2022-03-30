@@ -1,13 +1,23 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.s2c.play.MobSpawnS2CPacket;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+import java.util.UUID;
 
 public class CompanionCubeEntity extends PathAwareEntity  {
     public CompanionCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
@@ -67,6 +77,75 @@ public class CompanionCubeEntity extends PathAwareEntity  {
         } else {
             return true;
         }
+    }
+@Override
+    public void readFromPacket(MobSpawnS2CPacket packet) {
+        double d = packet.getX();
+        double e = packet.getY();
+        double f = packet.getZ();
+        float g = (float)(packet.getYaw() * 360) / 256.0F;
+        float h = (float)(packet.getPitch() * 360) / 256.0F;
+        this.updateTrackedPosition(d, e, f);
+        this.bodyYaw = 0;
+        this.headYaw = 0;
+        this.prevBodyYaw = this.bodyYaw;
+        this.prevHeadYaw = this.headYaw;
+        this.setId(packet.getId());
+        this.setUuid(packet.getUuid());
+        this.updatePositionAndAngles(d, e, f, 0, 0);
+        this.setVelocity((double)((float)packet.getVelocityX() / 8000.0F), (double)((float)packet.getVelocityY() / 8000.0F), (double)((float)packet.getVelocityZ() / 8000.0F));
+    }
+
+    public static final TrackedData<Optional<UUID>> HOLDERUUID = DataTracker.registerData(StorageCubeEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+
+
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.getDataTracker().startTracking(HOLDERUUID, Optional.empty());
+    }
+
+    public Boolean getUUIDPresent() {
+        return getDataTracker().get(HOLDERUUID).isPresent();
+    }
+
+    public UUID getHolderUUID() {
+        if (getDataTracker().get(HOLDERUUID).isPresent()) {
+            return getDataTracker().get(HOLDERUUID).get();
+        }
+        return null;
+    }
+
+    public void setHolderUUID(UUID uuid) {
+        if(uuid != null) {
+            if (getDataTracker().get(HOLDERUUID).isPresent()) {
+                PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
+                if(player != null)
+                    ((EntityPortalsAccess) player).setCubeUUID(null);
+            }
+            this.getDataTracker().set(HOLDERUUID, Optional.of(uuid));
+        }else {
+            this.getDataTracker().set(HOLDERUUID, Optional.empty());
+        }
+    }
+
+
+    public void tick() {
+        super.tick();
+        this.bodyYaw = 0;
+        this.headYaw = 0;
+        if(!world.isClient)
+            if(getUUIDPresent()){
+                PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
+                if(player != null) {
+                    Vec3d vec3d = player.getCameraPosVec(0);
+                    double d = 2;
+                    Vec3d vec3d2 = player.getRotationVec(1.0F);
+                    Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
+                    this.setVelocity(0,.03,0);
+                    this.setPosition(vec3d3);
+                    this.velocityModified = true;
+                }
+            }
     }
 
 }
