@@ -44,7 +44,7 @@ public class ExcursionFunnelEntity extends BlockEntity {
             }
 
             // If no remaining emitters or no power, replace with AIR
-            if (blockEntity.emitters.stream().noneMatch((emit) -> world.isReceivingRedstonePower(emit))) {
+            if (blockEntity.emitters.stream().noneMatch(world::isReceivingRedstonePower)) {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
             } else if (!world.getBlockState(pos).get(Properties.FACING)
                     .equals(world.getBlockState(blockEntity.emitters.get(blockEntity.emitters.size() - 1)).get(Properties.FACING))) {

@@ -10,42 +10,20 @@ import com.fusionflux.portalcubed.client.render.StorageCubeRenderer;
 import com.fusionflux.portalcubed.client.render.model.entity.CompanionCubeModel;
 import com.fusionflux.portalcubed.client.render.model.entity.PortalPlaceholderModel;
 import com.fusionflux.portalcubed.client.render.model.entity.StorageCubeModel;
-import com.fusionflux.portalcubed.entity.GelOrbEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
-import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.item.DyeableItem;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.BlockRenderView;
 import qouteall.imm_ptl.core.render.PortalEntityRenderer;
-
-import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class PortalCubedClient implements ClientModInitializer {

@@ -115,7 +115,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-        if (world.isClient()) {
+        //if (!world.isClient()) {
 
 
             if (this.isInFunnel() && this.getFunnelTimer() != 0) {
@@ -126,7 +126,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                 setInFunnel(false);
             }
 
-        }
+       // }
 
 
         if (!world.isClient) {

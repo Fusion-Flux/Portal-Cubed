@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
@@ -29,10 +30,10 @@ public class ExcursionFunnel extends BlockWithEntity {
     }
 
 
-    @Override
+    /*@Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
-    }
+    }*/
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -85,44 +86,74 @@ public class ExcursionFunnel extends BlockWithEntity {
 
 
     private void addCollisionEffects(World world, Entity entity, BlockPos pos) {
-        if (world.isClient()) {
-            BlockState state = world.getBlockState(pos);
-            double xoffset = (entity.getPos().getX() - pos.getX()) - .5;
-            double yoffset = (entity.getPos().getY() - pos.getY()) + .5;
-            double zoffset = (entity.getPos().getZ() - pos.getZ()) - .5;
-            Vec3d direction = new Vec3d(0, 0, 0);
-            direction = new Vec3d(state.get(Properties.FACING).getVector().getX(), state.get(Properties.FACING).getVector().getY(), state.get(Properties.FACING).getVector().getZ());
-            direction = direction.multiply(.1);
-            //entity.setSwimming(true);
-            entity.setNoGravity(true);
+        if(entity instanceof PlayerEntity) {
+            if (world.isClient()) {
+                BlockState state = world.getBlockState(pos);
+                double xoffset = (entity.getPos().getX() - pos.getX()) - .5;
+                double yoffset = ((entity.getPos().getY()+entity.getHeight()/2) - pos.getY()) - .5;
+                double zoffset = (entity.getPos().getZ() - pos.getZ()) - .5;
+                Vec3d direction = new Vec3d(0, 0, 0);
+                direction = new Vec3d(state.get(Properties.FACING).getVector().getX(), state.get(Properties.FACING).getVector().getY(), state.get(Properties.FACING).getVector().getZ());
+                direction = direction.multiply(.1);
 
-            if(!((EntityAttachments)entity).isInFunnel()){
-                ((EntityAttachments)entity).setInFunnel(true);
-                entity.setVelocity(0,0,0);
+                entity.setNoGravity(true);
+
+               // if(!world.isClient) {
+                    if (!((EntityAttachments) entity).isInFunnel()) {
+                        ((EntityAttachments) entity).setInFunnel(true);
+                        entity.setVelocity(0, 0, 0);
+                    }
+
+                    ((EntityAttachments) entity).setFunnelTimer(2);
+                //}
+                //entity.addVelocity(0,0.08 * 0.91D * .98,0);
+
+                if (direction.x != 0) {
+                    entity.addVelocity(0, (-(yoffset / Math.abs(yoffset)) * .004), -(zoffset / Math.abs(zoffset)) * .004);
+                    entity.setVelocity(direction.getX(), entity.getVelocity().y, entity.getVelocity().z);
+                }
+                if (direction.y != 0) {
+                    entity.addVelocity(-(xoffset / Math.abs(xoffset)) * .004, 0, -(zoffset / Math.abs(zoffset)) * .004);
+                    entity.setVelocity(entity.getVelocity().x, direction.getY(), entity.getVelocity().z);
+                }
+                if (direction.z != 0) {
+                    entity.addVelocity(-(xoffset / Math.abs(xoffset)) * .004, (-(yoffset / Math.abs(yoffset)) * .004), 0);
+                    entity.setVelocity(entity.getVelocity().x, entity.getVelocity().y, direction.getZ());
+                }
+                entity.velocityModified = true;
             }
+        }else{
+            if (!world.isClient()) {
+                BlockState state = world.getBlockState(pos);
+                double xoffset = (entity.getPos().getX() - pos.getX()) - .5;
+                double yoffset = ((entity.getPos().getY()+entity.getHeight()/2) - pos.getY()) - .5;
+                double zoffset = (entity.getPos().getZ() - pos.getZ()) - .5;
+                Vec3d direction = new Vec3d(0, 0, 0);
+                direction = new Vec3d(state.get(Properties.FACING).getVector().getX(), state.get(Properties.FACING).getVector().getY(), state.get(Properties.FACING).getVector().getZ());
+                direction = direction.multiply(.1);
 
+                entity.setNoGravity(true);
+
+                if (!((EntityAttachments) entity).isInFunnel()) {
+                    ((EntityAttachments) entity).setInFunnel(true);
+                    entity.setVelocity(0, 0, 0);
+                }
+                //entity.addVelocity(0,0.08 * 0.91D * .98D,0);
                 ((EntityAttachments) entity).setFunnelTimer(2);
 
-            /*if(Math.abs(entity.getVelocity().x)>.3){
-                entity.setVelocity(0,entity.getVelocity().y,entity.getVelocity().z);
-            }
-            if(Math.abs(entity.getVelocity().y)>.3){
-                entity.setVelocity(entity.getVelocity().x,0,entity.getVelocity().z);
-            }
-            if(Math.abs(entity.getVelocity().z)>.3){
-                entity.setVelocity(entity.getVelocity().x,entity.getVelocity().y,0);
-            }*/
-            if (direction.x != 0) {
-                entity.addVelocity(0, (- (yoffset/Math.abs(yoffset)) * .008),  - (zoffset/Math.abs(zoffset)) * .008);
-                entity.setVelocity(direction.getX(),entity.getVelocity().y,entity.getVelocity().z);
-            }
-            if (direction.y != 0) {
-                entity.addVelocity(-(xoffset/Math.abs(xoffset)) * .008, 0,  -(zoffset/Math.abs(zoffset)) * .008);
-                entity.setVelocity(entity.getVelocity().x,direction.getY(),entity.getVelocity().z);
-            }
-            if (direction.z != 0) {
-                entity.addVelocity( -(xoffset/Math.abs(xoffset))*.008, (- (yoffset/Math.abs(yoffset)) * .008), 0);
-                entity.setVelocity(entity.getVelocity().x,entity.getVelocity().y,direction.getZ());
+                if (direction.x != 0) {
+                    entity.addVelocity(0, (-(yoffset / Math.abs(yoffset)) * .004), -(zoffset / Math.abs(zoffset)) * .004);
+                    entity.setVelocity(direction.getX(), entity.getVelocity().y, entity.getVelocity().z);
+                }
+                if (direction.y != 0) {
+                    entity.addVelocity(-(xoffset / Math.abs(xoffset)) * .004, 0, -(zoffset / Math.abs(zoffset)) * .004);
+                    entity.setVelocity(entity.getVelocity().x, direction.getY(), entity.getVelocity().z);
+                }
+                if (direction.z != 0) {
+                    entity.addVelocity(-(xoffset / Math.abs(xoffset)) * .004, (-(yoffset / Math.abs(yoffset)) * .004), 0);
+                    entity.setVelocity(entity.getVelocity().x, entity.getVelocity().y, direction.getZ());
+                }
+                entity.velocityModified = true;
             }
         }
     }

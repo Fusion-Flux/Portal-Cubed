@@ -20,13 +20,9 @@ import java.util.UUID;
 
 public class PortalCubedClientPackets {
     public static final Identifier SPAWN_PACKET = new Identifier(PortalCubed.MODID, "spawn_packet");
-    public static final Identifier GRAB_PACKET = new Identifier(PortalCubed.MODID, "grab_packet");
-    public static final Identifier UNGRAB_PACKET = new Identifier(PortalCubed.MODID, "ungrab_packet");
     @Environment(EnvType.CLIENT)
     public static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(SPAWN_PACKET, PortalCubedClientPackets::onEntitySpawn);
-        ClientPlayNetworking.registerGlobalReceiver(GRAB_PACKET, PortalCubedClientPackets::onGrab);
-        ClientPlayNetworking.registerGlobalReceiver(UNGRAB_PACKET, PortalCubedClientPackets::onUngrab);
     }
     @Environment(EnvType.CLIENT)
     public static void onEntitySpawn(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
@@ -54,34 +50,4 @@ public class PortalCubedClientPackets {
         });
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void onGrab(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        int grabberId = buf.readInt();
-        int entityId = buf.readInt();
-        client.execute(() -> {
-            if (client.world != null) {
-                Entity grabber = client.world.getEntityById(grabberId);
-                Entity entity = client.world.getEntityById(entityId);
-                if (grabber instanceof PlayerEntity) {
-                    //portalcubed.getBodyGrabbingManager(true).tryGrab((PlayerEntity) grabber, entity);
-                }
-            }
-        });
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void onUngrab(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        int grabberId = buf.readInt();
-        float punch = buf.readFloat();
-
-        client.execute(() -> {
-            if (client.world != null) {
-                Entity grabber = client.world.getEntityById(grabberId);
-
-                if (grabber instanceof PlayerEntity) {
-                   // portalcubed.getBodyGrabbingManager(true).tryUngrab((PlayerEntity) grabber, punch);
-                }
-            }
-        });
-    }
 }

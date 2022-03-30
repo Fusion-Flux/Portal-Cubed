@@ -1,7 +1,9 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -14,6 +16,7 @@ import net.minecraft.network.packet.s2c.play.MobSpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -141,6 +144,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
 
     public void tick() {
         super.tick();
+        System.out.println(this.getVelocity().y);
         this.bodyYaw = 0;
         this.headYaw = 0;
         if(!world.isClient)
@@ -156,6 +160,45 @@ public class StorageCubeEntity extends PathAwareEntity  {
                  this.velocityModified = true;
              }
         }
+    }
+
+
+    public void onRemoved() {
+        if(!world.isClient) {
+            PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
+            if (player != null) {
+                ((EntityPortalsAccess) player).setCubeUUID(null);
+            }
+        }
+    }
+
+    public void onKilledOther(ServerWorld world, LivingEntity other) {
+        if(!world.isClient) {
+            PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
+            if (player != null) {
+                ((EntityPortalsAccess) player).setCubeUUID(null);
+            }
+        }
+    }
+
+    protected void updatePostDeath() {
+        if(!world.isClient) {
+            PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
+            if (player != null) {
+                ((EntityPortalsAccess) player).setCubeUUID(null);
+            }
+        }
+        super.updatePostDeath();
+    }
+
+    public void onDeath(DamageSource source) {
+        if(!world.isClient) {
+            PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
+            if (player != null) {
+                ((EntityPortalsAccess) player).setCubeUUID(null);
+            }
+        }
+        super.onDeath(source);
     }
 
 

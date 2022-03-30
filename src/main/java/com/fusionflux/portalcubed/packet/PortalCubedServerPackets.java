@@ -70,34 +70,28 @@ public class PortalCubedServerPackets {
         server.execute(() -> {
 
 
-
             if (entityHitResult != null) {
-
                 if (entityHitResult.getEntity() instanceof StorageCubeEntity entity) {
                     if (!((EntityPortalsAccess) player).getUUIDPresent()) {
                         entity.setHolderUUID(player.getUuid());
                         ((EntityPortalsAccess) player).setCubeUUID(entity.getUuid());
-                    }else {
-                        StorageCubeEntity playercube = (StorageCubeEntity) ((ServerWorld) player.world).getEntity(((EntityPortalsAccess) player).getCubeUUID());
-                        assert playercube != null;
-                        playercube.setHolderUUID(null);
-                        ((EntityPortalsAccess) player).setCubeUUID(null);
-                    }
-                }else if (entityHitResult.getEntity() instanceof CompanionCubeEntity entity) {
-                    if (!((EntityPortalsAccess) player).getUUIDPresent()) {
-                        entity.setHolderUUID(player.getUuid());
-                        ((EntityPortalsAccess) player).setCubeUUID(entity.getUuid());
                     } else {
-                        CompanionCubeEntity playercube = (CompanionCubeEntity) ((ServerWorld) player.world).getEntity(((EntityPortalsAccess) player).getCubeUUID());
-                        assert playercube != null;
-                        playercube.setHolderUUID(null);
+                        StorageCubeEntity playercube = (StorageCubeEntity) ((ServerWorld) player.world).getEntity(((EntityPortalsAccess) player).getCubeUUID());
+                        if (playercube != null) {
+                            playercube.setHolderUUID(null);
+                        }
                         ((EntityPortalsAccess) player).setCubeUUID(null);
                     }
+                } else {
+                    entityHitResult.getEntity();
                 }
-
+            } else {
+                StorageCubeEntity playercube = (StorageCubeEntity) ((ServerWorld) player.world).getEntity(((EntityPortalsAccess) player).getCubeUUID());
+                if (playercube != null) {
+                    playercube.setHolderUUID(null);
+                }
+                ((EntityPortalsAccess) player).setCubeUUID(null);
             }
-
-
 
 
         });
