@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.accessor.CustomRaycastContext;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -22,6 +23,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -45,6 +47,8 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity {
 
     public static void tick(World world, BlockPos pos, BlockState state, ExcursionFunnelEmitterEntity blockEntity) {
 
+        Direction facing = state.get(Properties.FACING);
+
         double dirX = (state.get(Properties.FACING).getOffsetX());
         double dirY = (state.get(Properties.FACING).getOffsetY());
         double dirZ = (state.get(Properties.FACING).getOffsetZ());
@@ -53,18 +57,34 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity {
         //System.out.println(dirY);
         //System.out.println(dirZ);
 
-        Vec3d endPos = new Vec3d((pos.getX() +.5)  + dirX* blockEntity.MAX_RANGE , (pos.getY() +.5) + dirY* blockEntity.MAX_RANGE,(pos.getZ() +.5) + dirZ* blockEntity.MAX_RANGE);
-        Vec3d blockFacePos = new Vec3d((pos.getX() +.5) +dirX/2  , (pos.getY() +.5) +dirY/2,(pos.getZ() +.5) +dirZ/2);
-        System.out.println(blockFacePos);
+        //Vec3d endPos = new Vec3d((pos.getX() +.5)  + dirX* blockEntity.MAX_RANGE , (pos.getY() +.5) + dirY* blockEntity.MAX_RANGE,(pos.getZ() +.5) + dirZ* blockEntity.MAX_RANGE);
+        //Vec3d blockFacePos = new Vec3d((pos.getX() +.5) +dirX/2  , (pos.getY() +.5) +dirY/2,(pos.getZ() +.5) +dirZ/2);
+        //Vec3d startPos = new Vec3d((pos.getX() ) +dirX  , (pos.getY() ) +dirY,(pos.getZ() ) +dirZ);
+        Vec3d endPos = new Vec3d((pos.getX())  + dirX* blockEntity.MAX_RANGE , (pos.getY()) + dirY* blockEntity.MAX_RANGE,(pos.getZ()) + dirZ* blockEntity.MAX_RANGE);
+
+
+        //System.out.println(blockFacePos);
         //Vec3d endPos = new Vec3d((blockEntity.pos.getX()-.5) + dirX + blockEntity.getCachedState().get(Properties.FACING).getOffsetX()*blockEntity.MAX_RANGE,(blockEntity.pos.getY()-.5)+dirY+ blockEntity.getCachedState().get(Properties.FACING).getOffsetX()*blockEntity.MAX_RANGE,(blockEntity.pos.getZ()-.5) +dirZ+ blockEntity.getCachedState().get(Properties.FACING).getOffsetX()*blockEntity.MAX_RANGE);
         //Vec3d blockFacePos = new Vec3d((blockEntity.pos.getX()-.5) + dirX,(blockEntity.pos.getY()-.5)+dirY,(blockEntity.pos.getZ()-.5) +dirZ);
         //blockFacePos.add(blockEntity.getCachedState().get(Properties.FACING));
 
 
 
-        BlockHitResult hitResult = static_raycastBlock(world, blockFacePos, endPos, poss -> world.getBlockState(blockEntity.obstructorPos).getHardness(world, blockEntity.obstructorPos) <= 0.1F || world.getBlockState(blockEntity.obstructorPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
-        System.out.println(hitResult.getPos());
+       // BlockHitResult hitResult = static_raycastBlock(world, blockFacePos, endPos, poss -> false);
+        //System.out.println(hitResult.getPos());
 
+        BlockPos startpos = new BlockPos((pos.getX() ) +dirX  , (pos.getY() ) +dirY,(pos.getZ() ) +dirZ);
+
+        //Iterator var9 = BlockPos.iterate(startpos,hitResult.getBlockPos()).iterator();
+
+        for (BlockPos blocks : BlockPos.iterate(startpos,new BlockPos(endPos.x,endPos.y,endPos.z))) {
+            //world.setBlockState(blocks, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState().with(Properties.FACING, facing) );
+
+        }
+
+       /* for (BlockPos blocks : BlockPos.iterate(startpos,new BlockPos(hitResult.getBlockPos().getX()-dirX/2,hitResult.getBlockPos().getY()-dirY/2,hitResult.getBlockPos().getZ()-dirZ/2))) {
+            world.setBlockState(blocks, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState().with(Properties.FACING, facing) );
+        }*/
 
         //System.out.println(hitResult.getPos());
     }
@@ -127,10 +147,10 @@ public class ExcursionFunnelEmitterEntity extends BlockEntity {
     }
 
     public static BlockHitResult static_raycastBlock(World world, Vec3d start, Vec3d end, Predicate<BlockPos> shouldSkip) {
-        return BlockView.raycast(start, end, new CustomRaycastContext(start, end, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE), (ctx, poss) -> {
+        return BlockView.raycast(start, end, new CustomRaycastContext(start, end, RaycastContext.FluidHandling.NONE), (ctx, poss) -> {
             if (shouldSkip.test(poss)) return null;
             BlockState state = world.getBlockState(poss);
-            VoxelShape shape = ctx.getBlockShape(state, world, poss);
+            VoxelShape shape =  Block.createCuboidShape(0.0D, 0.0D, 0.0D, 0.0D, 16.0D, 0.0D);
             return world.raycastBlock(start, end, poss, shape, state);
         }, (ctx)-> {
             Vec3d vec3d = ctx.getStart().subtract(ctx.getEnd());
