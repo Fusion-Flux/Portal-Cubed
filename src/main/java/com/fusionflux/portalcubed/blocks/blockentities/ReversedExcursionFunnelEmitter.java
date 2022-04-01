@@ -7,30 +7,23 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 
-
-public class ExcursionFunnelEmitter extends BlockWithEntity {
+public class ReversedExcursionFunnelEmitter extends BlockWithEntity {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
-    public ExcursionFunnelEmitter(Settings settings) {
+    public ReversedExcursionFunnelEmitter(Settings settings) {
         super(settings);
     }
 
@@ -69,7 +62,7 @@ public class ExcursionFunnelEmitter extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(Properties.POWERED, false);
+        return PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(Properties.POWERED, false);
     }
 
 
@@ -90,12 +83,12 @@ public class ExcursionFunnelEmitter extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new ExcursionFunnelEmitterEntity(pos,state);
+        return new ReversedExcursionFunnelEmitterEntity(pos,state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.EXCURSION_FUNNEL_EMMITER_ENTITY, ExcursionFunnelEmitterEntity::tick1);
+        return checkType(type, PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMMITER_ENTITY, ReversedExcursionFunnelEmitterEntity::tick3);
     }
 
 }

@@ -34,6 +34,7 @@ public class PortalCubedClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.NEUROTOXIN_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.EXCURSION_FUNNEL, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.NEUROTOXIN_EMITTER, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.GEL, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.PROPULSION_GEL, RenderLayer.getTranslucent());

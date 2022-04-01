@@ -22,24 +22,11 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 
-public class ExcursionFunnel extends BlockWithEntity {
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+public class ReversedExcursionFunnel extends BlockWithEntity {
 
-    public ExcursionFunnel(Settings settings) {
+    public ReversedExcursionFunnel(Settings settings) {
         super(settings);
     }
-
-
-    /*@Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
-    }*/
-
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
-    }
-
 
 
     @Override
@@ -84,7 +71,6 @@ public class ExcursionFunnel extends BlockWithEntity {
         this.addCollisionEffects(world, entity, pos);
     }
 
-
     private void addCollisionEffects(World world, Entity entity, BlockPos pos) {
         if(entity instanceof PlayerEntity) {
             if (world.isClient()) {
@@ -94,7 +80,7 @@ public class ExcursionFunnel extends BlockWithEntity {
                 double zoffset = (entity.getPos().getZ() - pos.getZ()) - .5;
                 Vec3d direction = new Vec3d(0, 0, 0);
                 direction = new Vec3d(state.get(Properties.FACING).getVector().getX(), state.get(Properties.FACING).getVector().getY(), state.get(Properties.FACING).getVector().getZ());
-                direction = direction.multiply(.1);
+                direction = direction.multiply(-.1);
 
                 entity.setNoGravity(true);
 
@@ -160,12 +146,12 @@ public class ExcursionFunnel extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new ExcursionFunnelEntity(pos,state);
+        return new ReversedExcursionFunnelEntity(pos,state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.EXCURSION_FUNNEL_ENTITY, ExcursionFunnelEntity::tick2);
+        return checkType(type, PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_ENTITY, ReversedExcursionFunnelEntity::tick);
     }
 
 }

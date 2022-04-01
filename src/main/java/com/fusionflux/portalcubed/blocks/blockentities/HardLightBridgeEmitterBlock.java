@@ -122,12 +122,6 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
         return this.field_26659.get(state);
     }
 
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        if (!world.isClient) {
-            ((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).spookyUpdateObstructor(pos);
-        }
-    }
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
