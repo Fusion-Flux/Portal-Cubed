@@ -1,26 +1,78 @@
 {
-  "variants": {
-    "facing=east": {
-      "model": "portalcubed:block/light_bridge",
-      "y": 90
+  "multipart": [
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 0
+      }
     },
-    "facing=north": {
-      "model": "portalcubed:block/light_bridge",
-      "y": 0
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 90
+      }
     },
-    "facing=south": {
-      "model": "portalcubed:block/light_bridge",
-      "y": 180
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 180
+      }
     },
-    "facing=west": {
-      "model": "portalcubed:block/light_bridge",
-      "y": 270
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 270
+      }
     },
-    "facing=up": {
-      "model": "portalcubed:block/light_bridge"
+
+
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 0
+      }
     },
-    "facing=down": {
-      "model": "portalcubed:block/light_bridge"
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 270
+      }
     }
-  }
+  ]
 }

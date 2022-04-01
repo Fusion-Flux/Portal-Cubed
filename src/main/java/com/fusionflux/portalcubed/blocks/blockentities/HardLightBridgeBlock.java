@@ -64,8 +64,7 @@ public class HardLightBridgeBlock extends BlockWithEntity {
     @Deprecated
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if(neighborState.getBlock() == PortalCubedBlocks.HLB_BLOCK) {
-            //if(pos.mutableCopy().move(rotateClockwise(state.get(Properties.FACING))) == neighborPos || pos.mutableCopy().move(rotateClockwise(state.get(Properties.FACING).getOpposite())) == neighborPos )
-           /* if (neighborState.get(Properties.FACING) != state.get(Properties.FACING)
+            if (neighborState.get(Properties.FACING) != state.get(Properties.FACING)
                     && neighborState.get(Properties.FACING).getOpposite() != state.get(Properties.FACING)
                     && state.get(Properties.FACING) != direction) {
 
@@ -80,7 +79,7 @@ public class HardLightBridgeBlock extends BlockWithEntity {
                     BooleanProperty booleanProperty = getFacingProperty(neighborState.get(Properties.FACING));
                     return state.with(booleanProperty, true);
                 }
-            }*/
+            }
         }
         return state;
     }
