@@ -13,6 +13,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -26,6 +27,7 @@ import org.lwjgl.system.CallbackI;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -61,28 +63,43 @@ public class HardLightBridgeBlock extends BlockWithEntity {
         //this.field_26659 = ImmutableMap.copyOf((Map) this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeBlock::method_31018)));
     }
 
-    @Deprecated
+    /*@Deprecated
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if(neighborState.getBlock() == PortalCubedBlocks.HLB_BLOCK) {
-            if (neighborState.get(Properties.FACING) != state.get(Properties.FACING)
-                    && neighborState.get(Properties.FACING).getOpposite() != state.get(Properties.FACING)
-                    && state.get(Properties.FACING) != direction) {
+        if(!world.isClient()) {
+            HardLightBridgeBlockEntity bridge = ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos)));
 
-                    BlockPos testa = pos;
-                BlockPos testb = pos;
+            boolean MNorth = false;
+            boolean MSouth = false;
+            boolean MEast = false;
+            boolean MWest = false;
 
-                testa.mutableCopy().move(rotateClockwise(state.get(Properties.FACING)));
-                testb.mutableCopy().move(rotateClockwise(state.get(Properties.FACING)).getOpposite());
+            for (BlockPos emitterPos : bridge.emitters) {
+                BlockState emitter = world.getBlockState(emitterPos);
+                //BooleanProperty booleanProperty = getFacingProperty(emitter.get(Properties.FACING));
 
-                if(world.getBlockState(testa).getBlock() == PortalCubedBlocks.HLB_BLOCK || world.getBlockState(testb).getBlock() == PortalCubedBlocks.HLB_BLOCK) {
-
-                    BooleanProperty booleanProperty = getFacingProperty(neighborState.get(Properties.FACING));
-                    return state.with(booleanProperty, true);
+                if (emitter.get(Properties.FACING).equals(Direction.NORTH)) {
+                    MNorth = true;
                 }
+                if (emitter.get(Properties.FACING).equals(Direction.EAST)) {
+                    MEast = true;
+                }
+                if (emitter.get(Properties.FACING).equals(Direction.SOUTH)) {
+                    MSouth = true;
+                }
+                if (emitter.get(Properties.FACING).equals(Direction.WEST)) {
+                    MWest = true;
+                }
+                //state = state.with(booleanProperty, true);
             }
+
+            state = state.with(NORTH, MNorth).with(EAST, MEast).with(SOUTH, MSouth).with(WEST, MWest);
         }
         return state;
-    }
+    }*/
+
+
+
+
 
     public static BooleanProperty getFacingProperty(Direction direction) {
         return propertyMap.get(direction);

@@ -35,44 +35,8 @@
         "model": "portalcubed:block/light_bridge",
         "y": 270
       }
-    },
-
-
-    {
-      "when": {
-        "facing": "north"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 0
-      }
-    },
-    {
-      "when": {
-        "facing": "east"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 90
-      }
-    },
-    {
-      "when": {
-        "facing": "south"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 180
-      }
-    },
-    {
-      "when": {
-        "facing": "west"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 270
-      }
     }
+
+
   ]
 }

@@ -66,9 +66,16 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
                             blockEntity.posXList.add(translatedPos.getX());
                             blockEntity.posYList.add(translatedPos.getY());
                             blockEntity.posZList.add(translatedPos.getZ());
-                            world.setBlockState(translatedPos, PortalCubedBlocks.HLB_BLOCK.getDefaultState().with(Properties.FACING, facing));
+                            if(!world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) {
+                                world.setBlockState(translatedPos, PortalCubedBlocks.HLB_BLOCK.getDefaultState().with(Properties.FACING, facing));
+                            }
+                            HardLightBridgeBlockEntity bridge = ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos))).emitters = pos;
+                            if(!bridge.emitters.contains(pos.mutableCopy()) ) {
+                                bridge.emitters.add(pos.mutableCopy());
+                            }
+                            bridge.updateState(world.getBlockState(translatedPos),world,translatedPos,bridge);
+
 
                         } else {
                             break;
