@@ -54,29 +54,25 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
 
                 BlockPos.Mutable translatedPos = pos.mutableCopy();
 
-                if (blockEntity.posXList != null) {
-                    List<Integer> emptyList = new ArrayList<>();
-                    blockEntity.posXList = emptyList;
-                    blockEntity.posYList = emptyList;
-                    blockEntity.posZList = emptyList;
-
+                if (blockEntity.funnels != null) {
+                    List<BlockPos.Mutable> modfunnels = new ArrayList<>();
 
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
                         translatedPos.move(blockEntity.getCachedState().get(Properties.FACING));
                         if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
-                            blockEntity.posXList.add(translatedPos.getX());
-                            blockEntity.posYList.add(translatedPos.getY());
-                            blockEntity.posZList.add(translatedPos.getZ());
-
                             world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState().with(Properties.FACING, facing));
 
                             ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
+
+                            modfunnels.add(funnel.getPos().mutableCopy());
+                            blockEntity.funnels.add(funnel.getPos().mutableCopy());
 
                             if(!funnel.emitters.contains(pos.mutableCopy()) ) {
                                 funnel.emitters.add(pos.mutableCopy());
                             }
                             funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
                         } else {
+                            blockEntity.funnels = modfunnels;
                             break;
                         }
                     }

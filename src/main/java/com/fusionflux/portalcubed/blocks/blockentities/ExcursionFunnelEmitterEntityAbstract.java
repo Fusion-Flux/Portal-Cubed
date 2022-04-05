@@ -29,18 +29,18 @@ import java.util.Objects;
 public abstract class ExcursionFunnelEmitterEntityAbstract extends BlockEntity {
 
     public final int MAX_RANGE = PortalCubedConfig.get().numbersblock.maxBridgeLength;
-    public List<Integer> posXList;
-    public List<Integer> posYList;
-    public List<Integer> posZList;
+   // public List<Integer> posXList;
+   // public List<Integer> posYList;
+   // public List<Integer> posZList;
 
     public List<BlockPos.Mutable> funnels;
 
     public ExcursionFunnelEmitterEntityAbstract(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type,pos,state);
         List<Integer> emptyList = new ArrayList<>();
-        this.posXList = emptyList;
-        this.posYList = emptyList;
-        this.posZList = emptyList;
+        //this.posXList = emptyList;
+        //this.posYList = emptyList;
+        //this.posZList = emptyList;
         this.funnels = new ArrayList<>();
     }
 
@@ -52,24 +52,41 @@ public abstract class ExcursionFunnelEmitterEntityAbstract extends BlockEntity {
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
+
+        List<Integer> posXList = new ArrayList<>();
+        List<Integer> posYList = new ArrayList<>();
+        List<Integer> posZList = new ArrayList<>();
+
+        for(BlockPos pos : funnels){
+            posXList.add(pos.getX());
+            posYList.add(pos.getY());
+            posZList.add(pos.getZ());
+        }
+
         tag.putIntArray("xList", posXList);
         tag.putIntArray("yList", posYList);
         tag.putIntArray("zList", posZList);
+
+        tag.putInt("size", funnels.size());
     }
 
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
-         posXList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("xList")));
-         posYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("yList")));
-         posZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("zList")));
+        List<Integer> posXList = new ArrayList<>();
+        List<Integer> posYList = new ArrayList<>();
+        List<Integer> posZList = new ArrayList<>();
 
-        //int size = tag.getInt("size");
+        posXList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("xList")));
+        posYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("yList")));
+        posZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("zList")));
+
+        int size = tag.getInt("size");
 
         if(!funnels.isEmpty())
             funnels.clear();
 
-        for (int i = 0; i < posZList.size(); i++) {
+        for (int i = 0; i < size; i++) {
             funnels.add(new BlockPos.Mutable(posXList.get(i), posYList.get(i), posZList.get(i)));
         }
     }

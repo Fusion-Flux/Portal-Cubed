@@ -155,12 +155,12 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                     if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof ExcursionFunnelEmitterEntityAbstract)) {
                         blockEntity.emitters.remove(i);
                         blockEntity.updateState(state,world,pos,blockEntity);
-                    } else if (!((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posXList.contains(blockEntity.pos.getX()) && !((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posYList.contains(blockEntity.pos.getY()) && !((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posZList.contains(blockEntity.pos.getZ())) {
+                    } else if (!(((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.pos.mutableCopy()))) {
                         blockEntity.emitters.remove(i);
                         blockEntity.updateState(state,world,pos,blockEntity);
                     } else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof DuelExcursionFunnelEmitterEntity && !world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
 
-                        if ((world.getBlockEntity(blockEntity.emitters.get(i)) instanceof ExcursionFunnelEmitterEntity) && !world.isReceivingRedstonePower(blockEntity.emitters.get(i))) {
+                        if ((world.getBlockEntity(blockEntity.emitters.get(i)) instanceof ExcursionFunnelEmitterEntityAbstract) && !world.isReceivingRedstonePower(blockEntity.emitters.get(i))) {
                             blockEntity.emitters.remove(i);
                             blockEntity.updateState(state, world, pos, blockEntity);
                         }

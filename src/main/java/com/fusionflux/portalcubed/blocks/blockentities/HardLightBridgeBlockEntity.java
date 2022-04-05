@@ -37,7 +37,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
                 if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof HardLightBridgeEmitterBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
                     blockEntity.emitters.remove(i);
                     blockEntity.updateState(state,world,pos,blockEntity);
-                } else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posXList.contains(blockEntity.pos.getX()) && !((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posYList.contains(blockEntity.pos.getY()) && !((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posZList.contains(blockEntity.pos.getZ())) {
+                } else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).bridges.contains(blockEntity.pos.mutableCopy())) {
                     blockEntity.emitters.remove(i);
                     blockEntity.updateState(state,world,pos,blockEntity);
                 }

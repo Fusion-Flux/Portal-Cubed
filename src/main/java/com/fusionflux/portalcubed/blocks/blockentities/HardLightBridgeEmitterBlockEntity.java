@@ -29,16 +29,11 @@ import java.util.Objects;
 public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
 
     public final int MAX_RANGE = PortalCubedConfig.get().numbersblock.maxBridgeLength;
-    public List<Integer> posXList;
-    public List<Integer> posYList;
-    public List<Integer> posZList;
+    public List<BlockPos.Mutable> bridges;
 
     public HardLightBridgeEmitterBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.HLB_EMITTER_ENTITY,pos,state);
-        List<Integer> emptyList = new ArrayList<>();
-        this.posXList = emptyList;
-        this.posYList = emptyList;
-        this.posZList = emptyList;
+        this.bridges = new ArrayList<>();
     }
     public static void tick(World world, BlockPos pos, BlockState state, HardLightBridgeEmitterBlockEntity blockEntity) {
         if (!world.isClient) {
@@ -53,23 +48,21 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
 
                 BlockPos.Mutable translatedPos = pos.mutableCopy();
 
-                if (blockEntity.posXList != null) {
-                    List<Integer> emptyList = new ArrayList<>();
-                    blockEntity.posXList = emptyList;
-                    blockEntity.posYList = emptyList;
-                    blockEntity.posZList = emptyList;
+                if (blockEntity.bridges != null) {
+                    List<BlockPos.Mutable> modfunnels = new ArrayList<>();
 
 
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
                         translatedPos.move(blockEntity.getCachedState().get(Properties.FACING));
                         if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) {
-                            blockEntity.posXList.add(translatedPos.getX());
-                            blockEntity.posYList.add(translatedPos.getY());
-                            blockEntity.posZList.add(translatedPos.getZ());
+
                             if(!world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) {
                                 world.setBlockState(translatedPos, PortalCubedBlocks.HLB_BLOCK.getDefaultState().with(Properties.FACING, facing));
                             }
                             HardLightBridgeBlockEntity bridge = ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
+
+                            modfunnels.add(bridge.getPos().mutableCopy());
+                            blockEntity.bridges.add(bridge.getPos().mutableCopy());
 
                             if(!bridge.emitters.contains(pos.mutableCopy()) ) {
                                 bridge.emitters.add(pos.mutableCopy());
@@ -78,6 +71,7 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
 
 
                         } else {
+                            blockEntity.bridges = modfunnels;
                             break;
                         }
                     }
@@ -103,17 +97,42 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
+        List<Integer> posXList = new ArrayList<>();
+        List<Integer> posYList = new ArrayList<>();
+        List<Integer> posZList = new ArrayList<>();
+
+        for(BlockPos pos : bridges){
+            posXList.add(pos.getX());
+            posYList.add(pos.getY());
+            posZList.add(pos.getZ());
+        }
+
         tag.putIntArray("xList", posXList);
         tag.putIntArray("yList", posYList);
         tag.putIntArray("zList", posZList);
+
+        tag.putInt("size", bridges.size());
     }
 
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
+        List<Integer> posXList = new ArrayList<>();
+        List<Integer> posYList = new ArrayList<>();
+        List<Integer> posZList = new ArrayList<>();
+
         posXList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("xList")));
         posYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("yList")));
         posZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("zList")));
+
+        int size = tag.getInt("size");
+
+        if(!bridges.isEmpty())
+            bridges.clear();
+
+        for (int i = 0; i < size; i++) {
+            bridges.add(new BlockPos.Mutable(posXList.get(i), posYList.get(i), posZList.get(i)));
+        }
     }
 
     private void togglePowered(BlockState state) {
