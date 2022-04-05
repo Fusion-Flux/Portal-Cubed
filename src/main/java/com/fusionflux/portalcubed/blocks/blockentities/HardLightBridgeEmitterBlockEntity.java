@@ -26,7 +26,7 @@ import java.util.Objects;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
+public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEntityAbstract {
 
     public final int MAX_RANGE = PortalCubedConfig.get().numbersblock.maxBridgeLength;
     public List<BlockPos.Mutable> bridges;
@@ -54,12 +54,12 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
 
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
                         translatedPos.move(blockEntity.getCachedState().get(Properties.FACING));
-                        if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) {
+                        if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
 
-                            if(!world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) {
-                                world.setBlockState(translatedPos, PortalCubedBlocks.HLB_BLOCK.getDefaultState().with(Properties.FACING, facing));
+                            if(!world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
+                                world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
                             }
-                            HardLightBridgeBlockEntity bridge = ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
+                            ExcursionFunnelEntityMain bridge = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
                             modfunnels.add(bridge.getPos().mutableCopy());
                             blockEntity.bridges.add(bridge.getPos().mutableCopy());
@@ -135,15 +135,5 @@ public class HardLightBridgeEmitterBlockEntity extends BlockEntity {
         }
     }
 
-    private void togglePowered(BlockState state) {
-        assert world != null;
-        world.setBlockState(pos, state.cycle(Properties.POWERED));
-        if (world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_ACTIVATE);
-        }
-        if (!world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_DEACTIVATE);
-        }
-    }
 
 }

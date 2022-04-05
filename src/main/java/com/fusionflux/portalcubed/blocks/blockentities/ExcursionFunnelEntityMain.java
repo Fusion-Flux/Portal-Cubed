@@ -44,6 +44,10 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                 boolean MRWest = false;
                 boolean MRUp = false;
                 boolean MRDown = false;
+                boolean MBNorth = false;
+                boolean MBSouth = false;
+                boolean MBEast = false;
+                boolean MBWest = false;
 
 
                 for (BlockPos emitterPos : bridge.emitters) {
@@ -93,10 +97,25 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
 
 
                     }
+                    if(emitter.getBlock() == PortalCubedBlocks.HLB_EMITTER_BLOCK) {
+                        if (emitter.get(Properties.FACING).equals(Direction.NORTH)) {
+                            MBNorth = true;
+                        }
+                        if (emitter.get(Properties.FACING).equals(Direction.EAST)) {
+                            MBEast = true;
+                        }
+                        if (emitter.get(Properties.FACING).equals(Direction.SOUTH)) {
+                            MBSouth = true;
+                        }
+                        if (emitter.get(Properties.FACING).equals(Direction.WEST)) {
+                            MBWest = true;
+                        }
+                    }
                 }
 
                 state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
-                        .with(CustomProperties.RNORTH, MRNorth).with(CustomProperties.REAST, MREast).with(CustomProperties.RSOUTH, MRSouth).with(CustomProperties.RWEST, MRWest).with(CustomProperties.RUP, MRUp).with(CustomProperties.RDOWN, MRDown);
+                        .with(CustomProperties.RNORTH, MRNorth).with(CustomProperties.REAST, MREast).with(CustomProperties.RSOUTH, MRSouth).with(CustomProperties.RWEST, MRWest).with(CustomProperties.RUP, MRUp).with(CustomProperties.RDOWN, MRDown)
+                        .with(CustomProperties.BNORTH, MBNorth).with(CustomProperties.BEAST, MBEast).with(CustomProperties.BSOUTH, MBSouth).with(CustomProperties.BWEST, MBWest);
             }
 
         world.setBlockState(pos,state,3);
