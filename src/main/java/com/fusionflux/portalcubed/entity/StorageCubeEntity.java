@@ -144,21 +144,6 @@ public class StorageCubeEntity extends PathAwareEntity  {
 
     public void tick() {
         super.tick();
-        this.bodyYaw = 0;
-        this.headYaw = 0;
-        if(!world.isClient)
-         if(getUUIDPresent()){
-            PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-             if(player != null) {
-                 Vec3d vec3d = player.getCameraPosVec(0);
-                 double d = 2;
-                 Vec3d vec3d2 = player.getRotationVec(1.0F);
-                 Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
-                 this.setVelocity(0,.03,0);
-                 this.setPosition(vec3d3);
-                 this.velocityModified = true;
-             }
-        }
     }
 
 

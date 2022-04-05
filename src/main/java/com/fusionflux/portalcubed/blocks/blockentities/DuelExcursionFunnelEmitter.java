@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.util.CustomProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -19,10 +20,49 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 
-public class DuelExcursionFunnelEmitter extends ExcursionFunnelEmitter {
+public class DuelExcursionFunnelEmitter extends BlockWithEntity {
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
     public DuelExcursionFunnelEmitter(Settings settings) {
         super(settings);
+        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED,false));
+    }
+
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+        return 1.0F;
+    }
+
+    @Override
+    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(Properties.FACING, Properties.POWERED, CustomProperties.REVERSED);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }
 
     @Override

@@ -97,8 +97,7 @@ public class PortalCubedBlocks {
     public static final ExcursionFunnelEmitter EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
     public static final DuelExcursionFunnelEmitter DUEL_EXCURSION_FUNNEL_EMITTER = new DuelExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
     public static final ReversedExcursionFunnelEmitter REVERSED_EXCURSION_FUNNEL_EMITTER = new ReversedExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
-    public static final ExcursionFunnel EXCURSION_FUNNEL = new ExcursionFunnel(FabricBlockSettings.of(Material.AIR).nonOpaque().noCollision());
-    public static final ReversedExcursionFunnel REVERSED_EXCURSION_FUNNEL = new ReversedExcursionFunnel(FabricBlockSettings.of(Material.AIR).nonOpaque().noCollision());
+    public static final ExcursionFunnelMain EXCURSION_FUNNEL = new ExcursionFunnelMain(FabricBlockSettings.of(Material.AIR).nonOpaque().noCollision());
     public static final LightBlock LIGHT_CUBE = new LightBlock(FabricBlockSettings.of(Material.AIR).luminance(15).noCollision().air().hardness(3.5f));
 
     public static final TallButton TALL_BUTTON = new TallButton(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
@@ -112,8 +111,7 @@ public class PortalCubedBlocks {
     public static BlockEntityType<ExcursionFunnelEmitterEntity> EXCURSION_FUNNEL_EMMITER_ENTITY;
     public static BlockEntityType<ReversedExcursionFunnelEmitterEntity> REVERSED_EXCURSION_FUNNEL_EMMITER_ENTITY;
     public static BlockEntityType<DuelExcursionFunnelEmitterEntity> DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY;
-    public static BlockEntityType<ExcursionFunnelEntity> EXCURSION_FUNNEL_ENTITY;
-    public static BlockEntityType<ReversedExcursionFunnelEntity> REVERSED_EXCURSION_FUNNEL_ENTITY;
+    public static BlockEntityType<ExcursionFunnelEntityMain> EXCURSION_FUNNEL_ENTITY;
 
     public static FlowableFluid STILL_TOXIC_GOO;
     public static FlowableFluid FLOWING_TOXIC_GOO;
@@ -262,7 +260,7 @@ public class PortalCubedBlocks {
             EXCURSION_FUNNEL_EMMITER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_emitter_entity"), FabricBlockEntityTypeBuilder.create(ExcursionFunnelEmitterEntity::new, EXCURSION_FUNNEL_EMITTER).build(null));
             Registry.register(Registry.BLOCK, id("excursion_funnel_emitter"), EXCURSION_FUNNEL_EMITTER);
             Registry.register(Registry.ITEM, id("excursion_funnel_emitter"), new BlockItem(EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
-            EXCURSION_FUNNEL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_entity"), FabricBlockEntityTypeBuilder.create(ExcursionFunnelEntity::new, EXCURSION_FUNNEL).build(null));
+            EXCURSION_FUNNEL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_entity"), FabricBlockEntityTypeBuilder.create(ExcursionFunnelEntityMain::new, EXCURSION_FUNNEL).build(null));
             Registry.register(Registry.BLOCK, id("excursion_funnel"), EXCURSION_FUNNEL);
 
             REVERSED_EXCURSION_FUNNEL_EMMITER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("reversed_excursion_funnel_emitter_entity"), FabricBlockEntityTypeBuilder.create(ReversedExcursionFunnelEmitterEntity::new, REVERSED_EXCURSION_FUNNEL_EMITTER).build(null));
@@ -275,8 +273,6 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("duel_excursion_funnel_emitter"), new BlockItem(DUEL_EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
 
 
-            REVERSED_EXCURSION_FUNNEL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("reversed_excursion_funnel_entity"), FabricBlockEntityTypeBuilder.create(ReversedExcursionFunnelEntity::new, REVERSED_EXCURSION_FUNNEL).build(null));
-            Registry.register(Registry.BLOCK, id("reversed_excursion_funnel"), REVERSED_EXCURSION_FUNNEL);
             //STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());
             //FLOWING_TOXIC_GOO = Registry.register(Registry.FLUID, id("flowing_toxic_goo"), new ToxicGooFluid.Flowing());
             //TOXIC_GOO_BUCKET = Registry.register(Registry.ITEM, id("toxic_goo_bucket"), new BucketItem(STILL_TOXIC_GOO, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(PortalCubed.PortalCubedGroup)));

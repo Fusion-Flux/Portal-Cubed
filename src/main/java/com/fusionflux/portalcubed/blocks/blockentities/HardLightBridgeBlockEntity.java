@@ -22,24 +22,14 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
 
     public List<BlockPos.Mutable> emitters;
 
-    //public List<Integer> posXList;
-    //public List<Integer> posYList;
-    //public List<Integer> posZList;
 
     public HardLightBridgeBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.HLB_BLOCK_ENTITY,pos,state);
-        List<Integer> emptyList = new ArrayList<>();
-        //this.posXList = emptyList;
-        //this.posYList = emptyList;
-        //this.posZList = emptyList;
         this.emitters = new ArrayList<>();
     }
     public static void tick(World world, BlockPos pos, BlockState state, HardLightBridgeBlockEntity blockEntity) {
         assert world != null;
-        List<BlockPos.Mutable> savedEmitters = blockEntity.emitters;
         if (!world.isClient) {
-
-
             if (!blockEntity.emitters.isEmpty()) {
 
                 for (int i = blockEntity.emitters.size()-1; i >= 0; i--) {
@@ -47,7 +37,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
                 if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof HardLightBridgeEmitterBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
                     blockEntity.emitters.remove(i);
                     blockEntity.updateState(state,world,pos,blockEntity);
-                } else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posXList.contains(blockEntity.pos.getX()) && !((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posYList.contains(blockEntity.pos.getY()) && !((ExcursionFunnelEmitterEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posZList.contains(blockEntity.pos.getZ())) {
+                } else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posXList.contains(blockEntity.pos.getX()) && !((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posYList.contains(blockEntity.pos.getY()) && !((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).posZList.contains(blockEntity.pos.getZ())) {
                     blockEntity.emitters.remove(i);
                     blockEntity.updateState(state,world,pos,blockEntity);
                 }
@@ -57,15 +47,10 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
             }
 
         }
-        /*if(!savedEmitters.equals(blockEntity.emitters)){
-            state.updateNeighbors(world,pos,3);
-        }*/
     }
 
     public void updateState(BlockState state, WorldAccess world, BlockPos pos,HardLightBridgeBlockEntity bridge) {
         if(!world.isClient()) {
-            //HardLightBridgeBlockEntity bridge = ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos)));
-
             boolean MNorth = false;
             boolean MSouth = false;
             boolean MEast = false;
@@ -73,7 +58,6 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
 
             for (BlockPos emitterPos : bridge.emitters) {
                 BlockState emitter = world.getBlockState(emitterPos);
-                //BooleanProperty booleanProperty = getFacingProperty(emitter.get(Properties.FACING));
 
                 if (emitter.get(Properties.FACING).equals(Direction.NORTH)) {
                     MNorth = true;
@@ -87,7 +71,6 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
                 if (emitter.get(Properties.FACING).equals(Direction.WEST)) {
                     MWest = true;
                 }
-                //state = state.with(booleanProperty, true);
             }
 
             state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest);

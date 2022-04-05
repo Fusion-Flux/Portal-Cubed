@@ -1,28 +1,121 @@
 {
-  "variants": {
-    "facing=east": {
-      "model": "portalcubed:block/excursion_funnel",
-      "y": 270
+  "multipart": [
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel",
+        "y": 180
+      }
     },
-    "facing=north": {
-      "model": "portalcubed:block/excursion_funnel",
-      "y": 180
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel",
+        "y": 270
+      }
     },
-    "facing=south": {
-      "model": "portalcubed:block/excursion_funnel",
-      "y": 0
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel",
+        "y": 0
+      }
     },
-    "facing=west": {
-      "model": "portalcubed:block/excursion_funnel",
-      "y": 90
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel",
+        "y": 90
+      }
     },
-    "facing=up": {
-      "model": "portalcubed:block/excursion_funnel",
-      "x": 90
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel",
+        "x": 90
+      }
     },
-    "facing=down": {
-      "model": "portalcubed:block/excursion_funnel",
-      "x": 270
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel",
+        "x": 270
+      }
+    },
+
+
+
+
+
+
+
+    {
+      "when": {
+        "rnorth": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel_reversed",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "reast": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel_reversed",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "rsouth": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel_reversed",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "rwest": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel_reversed",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "rup": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel_reversed",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "rdown": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/excursion_funnel_reversed",
+        "x": 270
+      }
     }
-  }
+
+
+  ]
 }

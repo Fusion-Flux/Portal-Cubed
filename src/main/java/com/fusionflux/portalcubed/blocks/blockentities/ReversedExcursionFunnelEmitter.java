@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.util.CustomProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -9,6 +10,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
@@ -23,8 +25,10 @@ public class ReversedExcursionFunnelEmitter extends BlockWithEntity {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
+
     public ReversedExcursionFunnelEmitter(Settings settings) {
         super(settings);
+        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED,true));
     }
 
     @Override
@@ -57,7 +61,7 @@ public class ReversedExcursionFunnelEmitter extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, Properties.POWERED);
+        builder.add(Properties.FACING, Properties.POWERED, CustomProperties.REVERSED);
     }
 
     @Override

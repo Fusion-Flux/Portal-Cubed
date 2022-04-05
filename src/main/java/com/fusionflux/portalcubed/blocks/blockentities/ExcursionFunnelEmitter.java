@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.util.CustomProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -32,6 +33,7 @@ public class ExcursionFunnelEmitter extends BlockWithEntity {
 
     public ExcursionFunnelEmitter(Settings settings) {
         super(settings);
+        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED,false));
     }
 
     @Override
@@ -64,7 +66,7 @@ public class ExcursionFunnelEmitter extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, Properties.POWERED);
+        builder.add(Properties.FACING, Properties.POWERED, CustomProperties.REVERSED);
     }
 
     @Override

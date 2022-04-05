@@ -63,65 +63,6 @@ public class HardLightBridgeBlock extends BlockWithEntity {
         //this.field_26659 = ImmutableMap.copyOf((Map) this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeBlock::method_31018)));
     }
 
-    /*@Deprecated
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if(!world.isClient()) {
-            HardLightBridgeBlockEntity bridge = ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos)));
-
-            boolean MNorth = false;
-            boolean MSouth = false;
-            boolean MEast = false;
-            boolean MWest = false;
-
-            for (BlockPos emitterPos : bridge.emitters) {
-                BlockState emitter = world.getBlockState(emitterPos);
-                //BooleanProperty booleanProperty = getFacingProperty(emitter.get(Properties.FACING));
-
-                if (emitter.get(Properties.FACING).equals(Direction.NORTH)) {
-                    MNorth = true;
-                }
-                if (emitter.get(Properties.FACING).equals(Direction.EAST)) {
-                    MEast = true;
-                }
-                if (emitter.get(Properties.FACING).equals(Direction.SOUTH)) {
-                    MSouth = true;
-                }
-                if (emitter.get(Properties.FACING).equals(Direction.WEST)) {
-                    MWest = true;
-                }
-                //state = state.with(booleanProperty, true);
-            }
-
-            state = state.with(NORTH, MNorth).with(EAST, MEast).with(SOUTH, MSouth).with(WEST, MWest);
-        }
-        return state;
-    }*/
-
-
-
-
-
-    public static BooleanProperty getFacingProperty(Direction direction) {
-        return propertyMap.get(direction);
-    }
-
-    public Direction rotateClockwise (Direction start){
-        if(start == Direction.NORTH){
-            return Direction.EAST;
-        }
-        if(start == Direction.EAST){
-            return Direction.SOUTH;
-        }
-        if(start == Direction.SOUTH){
-            return Direction.WEST;
-        }
-        if(start == Direction.WEST){
-            return Direction.NORTH;
-        }
-        return start;
-    }
-
-
     static {
         NORTH = Properties.NORTH;
         EAST = Properties.EAST;

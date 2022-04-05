@@ -57,10 +57,14 @@ public class ReversedExcursionFunnelEmitterEntity extends ExcursionFunnelEmitter
                             blockEntity.posXList.add(translatedPos.getX());
                             blockEntity.posYList.add(translatedPos.getY());
                             blockEntity.posZList.add(translatedPos.getZ());
-                            world.setBlockState(translatedPos, PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL.getDefaultState().with(Properties.FACING, facing));
+                            world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState().with(Properties.FACING, facing));
 
-                            ((ExcursionFunnelEntityAbstract) Objects.requireNonNull(world.getBlockEntity(translatedPos))).emitters = pos;
+                            ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
+                            if(!funnel.emitters.contains(pos.mutableCopy()) ) {
+                                funnel.emitters.add(pos.mutableCopy());
+                            }
+                            funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
                         } else {
                             break;
                         }

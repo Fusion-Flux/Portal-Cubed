@@ -33,12 +33,15 @@ public abstract class ExcursionFunnelEmitterEntityAbstract extends BlockEntity {
     public List<Integer> posYList;
     public List<Integer> posZList;
 
+    public List<BlockPos.Mutable> funnels;
+
     public ExcursionFunnelEmitterEntityAbstract(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type,pos,state);
         List<Integer> emptyList = new ArrayList<>();
         this.posXList = emptyList;
         this.posYList = emptyList;
         this.posZList = emptyList;
+        this.funnels = new ArrayList<>();
     }
 
 
@@ -60,6 +63,15 @@ public abstract class ExcursionFunnelEmitterEntityAbstract extends BlockEntity {
          posXList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("xList")));
          posYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("yList")));
          posZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("zList")));
+
+        //int size = tag.getInt("size");
+
+        if(!funnels.isEmpty())
+            funnels.clear();
+
+        for (int i = 0; i < posZList.size(); i++) {
+            funnels.add(new BlockPos.Mutable(posXList.get(i), posYList.get(i), posZList.get(i)));
+        }
     }
 
     public void togglePowered(BlockState state) {
