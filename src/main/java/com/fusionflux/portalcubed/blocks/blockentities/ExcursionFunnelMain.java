@@ -78,7 +78,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING,NORTH, EAST, WEST, SOUTH, UP, DOWN, RNORTH, REAST, RWEST, RSOUTH, RUP, RDOWN);
+        builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN, RNORTH, REAST, RWEST, RSOUTH, RUP, RDOWN);
     }
 
 
@@ -99,18 +99,11 @@ public class ExcursionFunnelMain extends BlockWithEntity {
         return BlockRenderType.MODEL;
     }
 
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
-    }
 
 
     @Override
-    @Environment(EnvType.CLIENT)
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-        if (stateFrom.isOf(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER)) {
-            return stateFrom.get(Properties.POWERED);
-        } else return stateFrom.isOf(PortalCubedBlocks.HLB_BLOCK);
+        return stateFrom.isOf(this) || super.isSideInvisible(state, stateFrom, direction);
     }
 
     @Override
@@ -254,18 +247,18 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                 if (direction.x != 0) {
                     entity.setVelocity(direction.getX(), entity.getVelocity().y, entity.getVelocity().z);
                 }else{
-                    entity.addVelocity((-(xoffset / Math.abs(yoffset)) * .002), 0, 0);
+                    entity.addVelocity((-(xoffset / Math.abs(xoffset)) * .004), 0, 0);
                 }
                 if (direction.y != 0) {
                     entity.setVelocity(entity.getVelocity().x, direction.getY(), entity.getVelocity().z);
                 }else{
-                    entity.addVelocity(0, (-(yoffset / Math.abs(yoffset)) * .002), 0);
+                    entity.addVelocity(0, (-(yoffset / Math.abs(yoffset)) * .004), 0);
                 }
                 if (direction.z != 0) {
                     entity.setVelocity(entity.getVelocity().x, entity.getVelocity().y, direction.getZ());
                 }
                 else{
-                    entity.addVelocity(0, 0, (-(yoffset / Math.abs(zoffset)) * .002));
+                    entity.addVelocity(0, 0, (-(zoffset / Math.abs(zoffset)) * .004));
                 }
                 entity.velocityModified = true;
             }

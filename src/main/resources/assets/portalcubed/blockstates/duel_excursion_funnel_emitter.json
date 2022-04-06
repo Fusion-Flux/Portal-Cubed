@@ -37,15 +37,15 @@
       "y": 0
     },
     "facing=west,powered=false": {
-      "model": "portalcubed:block/excursion_funnel_emitter_off",
+      "model": "portalcubed:block/excursion_funnel_emitter",
       "y": 90
     },
     "facing=up,powered=false": {
-      "model": "portalcubed:block/excursion_funnel_emitter_off",
+      "model": "portalcubed:block/excursion_funnel_emitter",
       "x": 90
     },
     "facing=down,powered=false": {
-      "model": "portalcubed:block/excursion_funnel_emitter_off",
+      "model": "portalcubed:block/excursion_funnel_emitter",
       "x": 270
     }
   }

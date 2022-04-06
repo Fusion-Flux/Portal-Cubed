@@ -60,7 +60,7 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
                         translatedPos.move(blockEntity.getCachedState().get(Properties.FACING));
                         if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
-                            world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState().with(Properties.FACING, facing));
+                            world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
 
                             ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 

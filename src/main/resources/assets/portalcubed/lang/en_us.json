@@ -1,5 +1,5 @@
 {
-  "itemGroup.portalcubed.general": "Thinking With Portatos",
+  "itemGroup.portalcubed.general": "Portal Cubed",
 
   "subtitles.portalcubed.gelbounce": "Repulsion Gel Bounce",
   "subtitles.portalcubed.gelrun": "Propulsion Gel Run",
@@ -8,7 +8,7 @@
 
 
   "item.portalcubed.long_fall_boots": "Long Fall Boots",
-  "item.portalcubed.cube": "Weighted Storage Cube",
+  "item.portalcubed.storage_cube": "Weighted Storage Cube",
   "item.portalcubed.companion_cube": "Companion Cube",
   "item.portalcubed.gel_orb": "Gel Orb",
   "item.portalcubed.portal_gun": "Portal Gun",
@@ -78,6 +78,8 @@
 
   "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",
   "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",
+  "block.portalcubed.reversed_excursion_funnel_emitter": "Reversed Excursion Funnel Emitter",
+  "block.portalcubed.duel_excursion_funnel_emitter": "Dual Excursion Funnel Emitter",
   "block.portalcubed.sliding_door": "Sliding Door",
   "block.portalcubed.tall_button": "Tall Button",
 
@@ -98,6 +100,6 @@
   "text.autoconfig.portalcubed.option.enabled.enablePortal2Blocks": "Enable Portal Pannels",
   "text.autoconfig.portalcubed.option.enabled.enableHLB": "Enable Hardlight Bridges",
 
-  "key.portalcubed.category" : "Thinking With Portatos",
+  "key.portalcubed.category" : "Portal³",
   "key.portalcubed.grab" : "Grab"
 }

@@ -97,7 +97,7 @@ public class PortalCubedBlocks {
     public static final ExcursionFunnelEmitter EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
     public static final DuelExcursionFunnelEmitter DUEL_EXCURSION_FUNNEL_EMITTER = new DuelExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
     public static final ReversedExcursionFunnelEmitter REVERSED_EXCURSION_FUNNEL_EMITTER = new ReversedExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
-    public static final ExcursionFunnelMain EXCURSION_FUNNEL = new ExcursionFunnelMain(FabricBlockSettings.of(Material.AIR).nonOpaque().noCollision());
+    public static final ExcursionFunnelMain EXCURSION_FUNNEL = new ExcursionFunnelMain(FabricBlockSettings.of(Material.AIR).nonOpaque().noCollision().luminance(10));
     public static final LightBlock LIGHT_CUBE = new LightBlock(FabricBlockSettings.of(Material.AIR).luminance(15).noCollision().air().hardness(3.5f));
 
     public static final TallButton TALL_BUTTON = new TallButton(FabricBlockSettings.of(Material.METAL).hardness(3.5f));

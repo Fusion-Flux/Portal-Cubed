@@ -33,7 +33,8 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
             if (!redstonePowered) {
 
-                if (!world.getBlockState(pos).get(Properties.POWERED)) {
+                if (world.getBlockState(pos).get(Properties.POWERED)) {
+                    blockEntity.togglePowered(world.getBlockState(pos));
                     blockEntity.duelTogglePowered(world.getBlockState(pos));
                 }
                 Direction facing = state.get(Properties.FACING);
@@ -48,7 +49,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                         translatedPos.move(blockEntity.getCachedState().get(Properties.FACING));
                         if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
 
-                            world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState().with(Properties.FACING, facing));
+                            world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
 
                             ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
@@ -69,9 +70,11 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
             }
 
             if (redstonePowered) {
-                if (world.getBlockState(pos).get(Properties.POWERED)) {
+                if (!world.getBlockState(pos).get(Properties.POWERED)) {
+                    blockEntity.togglePowered(world.getBlockState(pos));
                     blockEntity.duelTogglePowered(world.getBlockState(pos));
                 }
+
                 Direction facing = state.get(Properties.FACING);
 
                 BlockPos.Mutable translatedPos = pos.mutableCopy();
@@ -83,7 +86,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                         translatedPos.move(blockEntity.getCachedState().get(Properties.FACING));
                         if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
 
-                            world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState().with(Properties.FACING, facing));
+                            world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
 
                             ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
@@ -111,13 +114,6 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
     public void duelTogglePowered(BlockState state) {
         assert world != null;
-        world.setBlockState(pos, state.cycle(Properties.POWERED));
         world.setBlockState(pos, state.cycle(CustomProperties.REVERSED));
-        if (world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_ACTIVATE);
-        }
-        if (!world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_DEACTIVATE);
-        }
     }
 }

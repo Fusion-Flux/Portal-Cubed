@@ -58,18 +58,19 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
 
             for (BlockPos emitterPos : bridge.emitters) {
                 BlockState emitter = world.getBlockState(emitterPos);
-
-                if (emitter.get(Properties.FACING).equals(Direction.NORTH)) {
-                    MNorth = true;
-                }
-                if (emitter.get(Properties.FACING).equals(Direction.EAST)) {
-                    MEast = true;
-                }
-                if (emitter.get(Properties.FACING).equals(Direction.SOUTH)) {
-                    MSouth = true;
-                }
-                if (emitter.get(Properties.FACING).equals(Direction.WEST)) {
-                    MWest = true;
+                if (emitter.getBlock() == PortalCubedBlocks.HLB_EMITTER_BLOCK) {
+                    if (emitter.get(Properties.FACING).equals(Direction.NORTH)) {
+                        MNorth = true;
+                    }
+                    if (emitter.get(Properties.FACING).equals(Direction.EAST)) {
+                        MEast = true;
+                    }
+                    if (emitter.get(Properties.FACING).equals(Direction.SOUTH)) {
+                        MSouth = true;
+                    }
+                    if (emitter.get(Properties.FACING).equals(Direction.WEST)) {
+                        MWest = true;
+                    }
                 }
             }
 

@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class DuelExcursionFunnelEmitter extends BlockWithEntity {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
+
     public DuelExcursionFunnelEmitter(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED,false));
@@ -67,7 +68,7 @@ public class DuelExcursionFunnelEmitter extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(Properties.POWERED, false);
+        return PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(Properties.POWERED, false).with(CustomProperties.REVERSED, false);
     }
 
     @Override
