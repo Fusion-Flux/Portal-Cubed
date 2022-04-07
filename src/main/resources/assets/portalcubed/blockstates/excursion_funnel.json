@@ -114,45 +114,6 @@
         "model": "portalcubed:block/excursion_funnel_reversed",
         "x": 270
       }
-    },
-
-
-
-    {
-      "when": {
-        "bnorth": "true"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 0
-      }
-    },
-    {
-      "when": {
-        "beast": "true"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 90
-      }
-    },
-    {
-      "when": {
-        "bsouth": "true"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 180
-      }
-    },
-    {
-      "when": {
-        "bwest": "true"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 270
-      }
     }
   ]
 }

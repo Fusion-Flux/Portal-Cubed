@@ -3,16 +3,19 @@ package com.fusionflux.portalcubed.blocks;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
@@ -33,13 +36,15 @@ public class GelFlat extends Block {
     public static final BooleanProperty UP;
     public static final BooleanProperty DOWN;
     public static final Map<Direction, BooleanProperty> propertyMap;
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 0.0D, 16.0D);
-    private static final VoxelShape UP_SHAPE = Block.createCuboidShape(0.0D, 16D, 0.0D, 16.0D, 16D, 16.0D);
-    private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0D, 0.00D, 0.0D, 16.0D, 0.0D, 16.0D);
-    private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.00D, 0.0D, 0.0D, 0.0D, 16.0D, 16.0D);
-    private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(16D, 0.0D, 0.0D, 16D, 16.0D, 16.0D);
-    private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.00D, 16.0D, 16.0D, 0.0D);
-    private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 16D, 16.0D, 16.0D, 16D);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 0.01D, 16.0D);
+    private static final VoxelShape UP_SHAPE = Block.createCuboidShape(0.0D, 15.99D, 0.0D, 16.0D, 16D, 16.0D);
+    private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0D, 0.00D, 0.0D, 16.0D, 0.01D, 16.0D);
+    private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.00D, 0.0D, 0.0D, 0.01D, 16.0D, 16.0D);
+    private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(15.99D, 0.0D, 0.0D, 16D, 16.0D, 16.0D);
+    private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.00D, 16.0D, 16.0D, 0.01D);
+    private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 15.99D, 16.0D, 16.0D, 16D);
+
+    public static final Map<Direction, BooleanProperty> FACING_PROPERTIES = (Map)ConnectingBlock.FACING_PROPERTIES.entrySet().stream().collect(Util.toMap());
 
     static {
         NORTH = Properties.NORTH;
@@ -131,7 +136,7 @@ public class GelFlat extends Block {
     }
 
     public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.PUSH_ONLY;
+        return PistonBehavior.DESTROY;
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -141,6 +146,8 @@ public class GelFlat extends Block {
     protected boolean canConnect(WorldAccess world, BlockPos neighborPos) {
         return world.getBlockState(neighborPos).getBlock().getDefaultState().isSolidBlock(world, neighborPos);
     }
+
+
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -169,7 +176,6 @@ public class GelFlat extends Block {
     }
 
     private boolean shouldHaveSide(BlockView world, BlockPos pos, Direction side) {
-
         BlockPos blockPos = pos.offset(side);
         if (shouldConnectTo(world, blockPos, side)) {
             return true;

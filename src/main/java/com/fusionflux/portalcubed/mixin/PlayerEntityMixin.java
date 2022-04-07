@@ -123,14 +123,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityPo
             }
             double moveval = travelVectorOriginal.z / mathval;
             double moveval2 = travelVectorOriginal.x / mathval;
-            if (travelVectorOriginal.z < 0) {
-                moveval = travelVectorOriginal.z;
-            }
-            if (travelVectorOriginal.x < 0) {
-                moveval2 = travelVectorOriginal.x;
-            }
 
-            travelVectorOriginal = new Vec3d(moveval2, travelVectorOriginal.y, moveval);
+                moveval = travelVectorOriginal.z;
+
+
+                moveval2 = travelVectorOriginal.x;
+
+
+            travelVectorOriginal = new Vec3d(travelVectorOriginal.x / mathval, travelVectorOriginal.y, travelVectorOriginal.z / mathval);
             this.airStrafingSpeed = .04f;
         }
     return travelVectorOriginal;

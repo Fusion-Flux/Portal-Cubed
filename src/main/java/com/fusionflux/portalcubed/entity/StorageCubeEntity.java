@@ -102,6 +102,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         this.headYaw = 0;
         this.prevBodyYaw = this.bodyYaw;
         this.prevHeadYaw = this.headYaw;
+        this.setNoDrag(true);
         this.setId(packet.getId());
         this.setUuid(packet.getUuid());
         this.updatePositionAndAngles(d, e, f, g, h);
@@ -127,6 +128,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         }
         return null;
     }
+
 
     public void setHolderUUID(UUID uuid) {
         if(uuid != null) {

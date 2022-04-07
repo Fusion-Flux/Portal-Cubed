@@ -242,6 +242,8 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                     entity.setVelocity(0, 0, 0);
                 }
 
+                entity.fallDistance = 0;
+
                 ((EntityAttachments) entity).setFunnelTimer(2);
 
                 if (direction.x != 0) {

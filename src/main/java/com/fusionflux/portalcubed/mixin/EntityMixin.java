@@ -49,6 +49,15 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     private boolean IN_FUNNEL = false;
 
     @Unique
+    private double maxFallHeight = -100;
+
+    @Unique
+    private Vec3d lastVel = Vec3d.ZERO;
+
+    @Unique
+    private double lastMaxFallHeight = -100;
+
+    @Unique
     private boolean IS_BOUNCED = false;
 
     @Unique
@@ -102,6 +111,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow
     public abstract boolean hasNoGravity();
+
+    @Shadow public abstract boolean isOnGround();
 
     @Override
     public List<CustomPortalEntity> getPortalList() {
@@ -157,7 +168,21 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             }
         }
 
+        this.lastVel = this.getVelocity();
 
+        if(!this.isOnGround()) {
+            if (this.getPos().y > this.maxFallHeight) {
+                this.maxFallHeight = this.getPos().y;
+            }
+        }else{
+            this.maxFallHeight =-100;
+        }
+
+        if (world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.REPULSION_GEL && this.isBounced()){
+            this.setBounced(false);
+        }
+
+/*
         if (world.getBlockState(this.getBlockPos()).getBlock() == PortalCubedBlocks.REPULSION_GEL) {
             BlockState state = world.getBlockState(this.getBlockPos());
             Vec3d direction = new Vec3d(0, 0, 0);
@@ -240,7 +265,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             }
             ((EntityAttachments) this).setBounced(true);
         }
-
+*/
     }
 
     @Inject(method = "remove", at = @At("HEAD"))
@@ -289,6 +314,23 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         return this.FUNNEL_TIMER;
     }
+
+    @Override
+    public double getMaxFallHeight() {
+        return this.maxFallHeight;
+    }
+
+
+    @Override
+    public void setMaxFallHeight(double fall) {
+        this.maxFallHeight = fall;
+    }
+
+    @Override
+    public Vec3d getLastVel() {
+        return this.lastVel;
+    }
+
 
     @Override
     public void setFunnelTimer(int funnelTimer) {

@@ -1,10 +1,16 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.entity.BlockCollisionLimiter;
+import com.fusionflux.portalcubed.entity.EntityAttachments;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
@@ -23,64 +29,177 @@ public class RepulsionGel extends GelFlat {
         this.addCollisionEffects(world, entity, pos);
     }
 
-
-
-    private void addCollisionEffects(World world, Entity entity, BlockPos pos) {
-            /*if (entity.getType().equals(EntityType.BOAT)) {
-                entity.damage(DamageSource.MAGIC, 200);
-            } else {
-                BlockState state = world.getBlockState(pos);
-                if (!entity.isSneaking() && (entity.verticalCollision || entity.horizontalCollision)) {
-                    //  if (entity.getVelocity().y < 1.65)
-                    Vec3d direction = new Vec3d(0, 0, 0);
-                    if (entity.verticalCollision) {
-                        if (state.get(UP)) {
-                            direction = direction.add(0, -1, 0);
-                        }
-
-                        if (state.get(DOWN)) {
-                            direction = direction.add(0, 1, 0);
-                           // System.out.println(direction);
-                        }
-                    }
-                    if (entity.horizontalCollision) {
-                        if (state.get(NORTH)) {
-                            direction = direction.add(0, 0, 1);
-                        }
-
-                        if (state.get(SOUTH)) {
-                            direction = direction.add(0, 0, -1);
-                        }
-
-                        if (state.get(EAST)) {
-                            direction = direction.add(-1, 0, 0);
-                        }
-
-                        if (state.get(WEST)) {
-                            direction = direction.add(1, 0, 0);
-                        }
-                        direction = direction.add(0, 0.45, 0);
-                    }   //entity.setVelocity(entity.getVelocity().add(0, 1.65D, 0));
-
-                    //if (limiter.check(world, entity)) {
-                        if ( !direction.equals(new Vec3d(0, 0, 0))) {
-                            if(world.isClient) {
-                                if (limiter.check(world, entity)) {
-                                    world.playSound((PlayerEntity) entity, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
-                                }
-                                }else {
-                                world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
-                            }
-                            entity.setVelocity(entity.getVelocity().add(direction.x, direction.y, direction.z));
-                        }
-                   // }
-
-
-                }
-            }*/
-
+  /*  @Override
+    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
+        //if (entity.bypassesLandingEffects()) {
+        //    super.onLandedUpon(world, state, pos, entity, fallDistance);
+        //} else {
+            entity.handleFallDamage(fallDistance, 0.0F, DamageSource.FALL);
+        //}
 
     }
+
+    @Override
+    public void onEntityLand(BlockView world, Entity entity) {
+        //if (entity.bypassesLandingEffects()) {
+        //    super.onEntityLand(world, entity);
+        //} else {
+            this.bounce(entity);
+       // }
+
+    }
+
+    private void bounce(Entity entity) {
+        Vec3d vec3d = entity.getVelocity();
+       // if (vec3d.y < 0.0) {
+        double fall = 11+(11*.1);
+        double velocity = Math.sqrt(2*.08*fall);
+        entity.setVelocity(vec3d.x,velocity , vec3d.z);
+        //entity.setVelocity(vec3d.x, ((-vec3d.y)+.12)/.98, vec3d.z);
+       // }
+
+    }
+*/
+
+    private void addCollisionEffects(World world, Entity entity, BlockPos pos) {
+        Vec3d vec3d = entity.getVelocity();
+        Vec3d vec3dLast = ((EntityAttachments) entity).getLastVel();
+        // if (vec3d.y < 0.0) {
+        BlockState state = world.getBlockState(pos);
+        if (!entity.isSneaking()) {
+            if (entity.verticalCollision) {
+                if (state.get(DOWN) && vec3dLast.getY() < 0) {
+                    double fall = ((EntityAttachments) entity).getMaxFallHeight();
+                    if (fall != -100) {
+
+                        fall = fall - entity.getPos().y;
+                        if (fall < 5) {
+                            fall = 5;
+                        }
+                        fall = fall + (fall * .1);
+                        double velocity = Math.sqrt(2 * .08 * fall);
+                        entity.setVelocity(vec3d.x, velocity, vec3d.z);
+                        if (!world.isClient) {
+                            world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                        }
+                    }
+                }
+                if (state.get(UP) && vec3dLast.getY() > 0) {
+                    entity.setVelocity(vec3d.x, -vec3dLast.y, vec3d.z);
+                    if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                    }
+                }
+            }
+
+            double defaultVelocity = Math.sqrt(2 * .08 * .25);
+            if (entity.horizontalCollision) {
+                if (state.get(NORTH) && vec3dLast.getZ() < 0) {
+                    if (Math.abs(vec3dLast.z) < defaultVelocity) {
+                        entity.setVelocity(vec3d.x, vec3d.y, defaultVelocity);
+                    } else {
+                        entity.setVelocity(vec3d.x, vec3d.y, -vec3dLast.z);
+                    }
+
+                    if (vec3dLast.getY() != 0) {
+                        double fall = ((EntityAttachments) entity).getMaxFallHeight();
+                        if (fall != -100) {
+
+                            fall = fall - entity.getPos().y;
+                            if (fall < 1.5) {
+                                fall = 1.5;
+                            }
+                            fall = fall + (fall * .1);
+                            double velocity = Math.sqrt(2 * .08 * fall);
+                            entity.setVelocity(vec3d.x, velocity, vec3d.z);
+                            ((EntityAttachments) entity).setMaxFallHeight(-100);
+                        }
+                        ///entity.setVelocity(vec3d.z, -vec3dLast.y, vec3d.z);
+                    }
+                    if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                    }
+                }
+                if (state.get(SOUTH) && vec3dLast.getZ() > 0) {
+                    if (Math.abs(vec3dLast.z) < defaultVelocity) {
+                        entity.setVelocity(vec3d.x, vec3d.y, -defaultVelocity);
+                    } else {
+                        entity.setVelocity(vec3d.x, vec3d.y, -vec3dLast.z);
+                    }
+                    if (vec3dLast.getY() != 0) {
+                        double fall = ((EntityAttachments) entity).getMaxFallHeight();
+                        if (fall != -100) {
+
+                            fall = fall - entity.getPos().y;
+                            if (fall < 1.5) {
+                                fall = 1.5;
+                            }
+                            fall = fall + (fall * .1);
+                            double velocity = Math.sqrt(2 * .08 * fall);
+                            entity.setVelocity(vec3d.x, velocity, vec3d.z);
+                            ((EntityAttachments) entity).setMaxFallHeight(-100);
+                        }
+                        ///entity.setVelocity(vec3d.z, -vec3dLast.y, vec3d.z);
+                    }
+                    if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                    }
+                }
+                if (state.get(EAST) && vec3dLast.getX() > 0) {
+
+                    if (Math.abs(vec3dLast.x) < defaultVelocity) {
+                        entity.setVelocity(-defaultVelocity, vec3d.y, vec3d.z);
+                    } else {
+                        entity.setVelocity(-vec3dLast.x, vec3d.y, vec3d.z);
+                    }
+                    if (vec3dLast.getY() != 0) {
+                        double fall = ((EntityAttachments) entity).getMaxFallHeight();
+                        if (fall != -100) {
+
+                            fall = fall - entity.getPos().y;
+                            if (fall < 1.5) {
+                                fall = 1.5;
+                            }
+                            fall = fall + (fall * .1);
+                            double velocity = Math.sqrt(2 * .08 * fall);
+                            entity.setVelocity(vec3d.x, velocity, vec3d.z);
+                            ((EntityAttachments) entity).setMaxFallHeight(-100);
+                        }
+                        ///entity.setVelocity(vec3d.z, -vec3dLast.y, vec3d.z);
+                    }
+                    if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                    }
+                }
+                if (state.get(WEST) && vec3dLast.getX() < 0) {
+                    if (Math.abs(vec3dLast.x) < defaultVelocity) {
+                        entity.setVelocity(defaultVelocity, vec3d.y, vec3d.z);
+                    } else {
+                        entity.setVelocity(-vec3dLast.x, vec3d.y, vec3d.z);
+                    }
+                    if (vec3dLast.getY() != 0) {
+                        double fall = ((EntityAttachments) entity).getMaxFallHeight();
+                        if (fall != -100) {
+
+                            fall = fall - entity.getPos().y;
+                            if (fall < 1.5) {
+                                fall = 1.5;
+                            }
+                            fall = fall + (fall * .1);
+                            double velocity = Math.sqrt(2 * .08 * fall);
+                            entity.setVelocity(vec3d.x, velocity, vec3d.z);
+                            ((EntityAttachments) entity).setMaxFallHeight(-100);
+                        }
+                        ///entity.setVelocity(vec3d.z, -vec3dLast.y, vec3d.z);
+                    }
+                    if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
         return true;
