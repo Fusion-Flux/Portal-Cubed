@@ -44,10 +44,6 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                 boolean MRWest = false;
                 boolean MRUp = false;
                 boolean MRDown = false;
-                boolean MBNorth = false;
-                boolean MBSouth = false;
-                boolean MBEast = false;
-                boolean MBWest = false;
 
 
                 for (BlockPos emitterPos : bridge.emitters) {
@@ -96,20 +92,6 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                         }
 
 
-                    }
-                    if(emitter.getBlock() == PortalCubedBlocks.HLB_EMITTER_BLOCK) {
-                        if (emitter.get(Properties.FACING).equals(Direction.NORTH)) {
-                            MBNorth = true;
-                        }
-                        if (emitter.get(Properties.FACING).equals(Direction.EAST)) {
-                            MBEast = true;
-                        }
-                        if (emitter.get(Properties.FACING).equals(Direction.SOUTH)) {
-                            MBSouth = true;
-                        }
-                        if (emitter.get(Properties.FACING).equals(Direction.WEST)) {
-                            MBWest = true;
-                        }
                     }
                 }
 

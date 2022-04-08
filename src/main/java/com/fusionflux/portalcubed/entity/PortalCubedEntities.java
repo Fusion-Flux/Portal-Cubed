@@ -29,12 +29,16 @@ public class PortalCubedEntities {
     public static final EntityType<CompanionCubeEntity> COMPANION_CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CompanionCubeEntity::new)
             .dimensions(EntityDimensions.changing(0.625F, 0.625F))
             .build();
+    public static final EntityType<BridgeEntity> BRIDGE = FabricEntityTypeBuilder.create(SpawnGroup.MISC, BridgeEntity::new)
+            .dimensions(EntityDimensions.changing(1F, 1F))
+            .build();
 
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "portal_placeholder"), PORTAL_PLACEHOLDER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "custom_portal"), CUSTOM_PORTAL);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "storage_cube"), STORAGE_CUBE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "companion_cube"), COMPANION_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "bridge"), BRIDGE);
         FabricDefaultAttributeRegistry.register(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
     }

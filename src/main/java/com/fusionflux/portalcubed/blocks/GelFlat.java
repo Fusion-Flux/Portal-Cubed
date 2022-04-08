@@ -9,7 +9,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -43,8 +42,6 @@ public class GelFlat extends Block {
     private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(15.99D, 0.0D, 0.0D, 16D, 16.0D, 16.0D);
     private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.00D, 16.0D, 16.0D, 0.01D);
     private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 15.99D, 16.0D, 16.0D, 16D);
-
-    public static final Map<Direction, BooleanProperty> FACING_PROPERTIES = (Map)ConnectingBlock.FACING_PROPERTIES.entrySet().stream().collect(Util.toMap());
 
     static {
         NORTH = Properties.NORTH;
@@ -181,12 +178,8 @@ public class GelFlat extends Block {
             return true;
         } else if (side.getAxis() == Direction.Axis.Y) {
             return false;
-        } else {
-            BooleanProperty booleanProperty = propertyMap.get(side);
-            BlockState blockState = world.getBlockState(pos.up());
-            return blockState.isOf(this) && blockState.get(booleanProperty);
         }
-
+        return false;
     }
 
     private BlockState getPlacementShape(BlockState state, BlockView world, BlockPos pos) {
