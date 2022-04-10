@@ -74,6 +74,8 @@ public class BridgeEntity extends Entity {
         return ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.SPAWN_PACKET, packet);
     }
 
+
+
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
 
@@ -113,14 +115,12 @@ public class BridgeEntity extends Entity {
 
     @Override
     protected Box calculateBoundingBox() {
-
         BlockPos pos1 = this.dataTracker.get(BLOCKPOS1);
         BlockPos pos2 = this.dataTracker.get(BLOCKPOS2);
         BlockPos facing = this.dataTracker.get(DIRECTION);
 
         Box blockBox = new Box(pos1,new BlockPos(pos1.getX()+1,pos1.getY()+1,pos1.getZ()+1));
         Vec3d startPos = new Vec3d(blockBox.getCenter().x-(.5 * facing.getX()),blockBox.getCenter().y-.5,blockBox.getCenter().z-(.5 * facing.getZ()));
-        //System.out.println(new Vec3d(blockBox.getCenter().x-(.5 * facing.getVector().getX()),blockBox.getCenter().y,blockBox.getCenter().z-(.5 * facing.getVector().getZ())));
         Vec3d invertDirection = Vec3d.ZERO;
         if(facing.getX() != 0){
             invertDirection = new Vec3d(0,1,1);
@@ -147,6 +147,17 @@ public class BridgeEntity extends Entity {
         if(this.world.isClient){
             this.setPosition(this.getPos());
         }
+        /*if(!this.world.isClient){
+            for(int i = -1; i < 4; ++i) {
+                for(int j = -1; j < 4; ++j) {
+                    int k = this.getChunkPos().x + i;
+                    int l = this.getChunkPos().z + j;
+                    ((ServerWorld)(this.world)).setChunkForced(k, l, true);
+                }
+            }
+        }*/
+
+
     }
 
 
