@@ -29,18 +29,11 @@ import java.util.Objects;
 public abstract class ExcursionFunnelEmitterEntityAbstract extends BlockEntity {
 
     public final int MAX_RANGE = PortalCubedConfig.get().numbersblock.maxBridgeLength;
-   // public List<Integer> posXList;
-   // public List<Integer> posYList;
-   // public List<Integer> posZList;
 
     public List<BlockPos.Mutable> funnels;
 
     public ExcursionFunnelEmitterEntityAbstract(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type,pos,state);
-        List<Integer> emptyList = new ArrayList<>();
-        //this.posXList = emptyList;
-        //this.posYList = emptyList;
-        //this.posZList = emptyList;
         this.funnels = new ArrayList<>();
     }
 
