@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.blockentities.*;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -26,83 +27,85 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedBlocks {
 
+    public static final Item BASE_GEL = new Item(new FabricItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64).fireproof());
     public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
     public static final RepulsionGel REPULSION_GEL = new RepulsionGel(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
     public static final GelFlat GEL = new GelFlat(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
+    public static final AdhesionGel ADHESION_GEL = new AdhesionGel(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
     // public static final GelFlat GEL_FLAT = new GelFlat(FabricBlockSettings.of(Material.WATER).hardness(0f).nonOpaque().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
 
-    public static final HardLightBridgeEmitterBlock HLB_EMITTER_BLOCK = new HardLightBridgeEmitterBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
-    public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(FabricBlockSettings.of(Material.PLANT).hardness(999999f).nonOpaque().luminance(10).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_METAL_BREAK, SoundEvents.BLOCK_METAL_STEP, SoundEvents.BLOCK_METAL_PLACE, SoundEvents.BLOCK_METAL_HIT, SoundEvents.BLOCK_METAL_FALL)));
+    public static final HardLightBridgeEmitterBlock HLB_EMITTER_BLOCK = new HardLightBridgeEmitterBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().luminance(10).nonOpaque().sounds(BlockSoundGroup.STONE));
+    public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(FabricBlockSettings.of(Material.PLANT).hardness(999999f).nonOpaque().luminance(10).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)));
 
-    public static final Block WHITE_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block WHITE_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock WHITE_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock WHITE_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock WHITE_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock WHITE_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock WHITE_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock WHITE_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block WHITE_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final Block WHITE_HALF_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock WHITE_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock WHITE_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock WHITE_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock WHITE_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock WHITE_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock WHITE_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
-    public static final Block AGED_WHITE_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block AGED_WHITE_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock AGED_WHITE_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock AGED_WHITE_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_WHITE_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_WHITE_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_WHITE_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_WHITE_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-
-
-    public static final Block PADDED_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block PADDED_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock PADDED_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock PADDED_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock PADDED_GRAY_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock PADDED_GRAY_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock PADDED_GRAY_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock PADDED_GRAY_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block AGED_WHITE_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final Block AGED_WHITE_HALF_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock AGED_WHITE_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock AGED_WHITE_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_WHITE_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_WHITE_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_WHITE_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_WHITE_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
 
-    public static final Block AGED_PADDED_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block AGED_PADDED_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock AGED_PADDED_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock AGED_PADDED_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_PADDED_GRAY_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_PADDED_GRAY_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_PADDED_GRAY_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_PADDED_GRAY_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-
-    public static final Block SMOOTH_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block SMOOTH_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock SMOOTH_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock SMOOTH_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock SMOOTH_GRAY_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock SMOOTH_GRAY_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock SMOOTH_GRAY_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock SMOOTH_GRAY_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block PADDED_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final Block PADDED_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock PADDED_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock PADDED_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock PADDED_GRAY_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock PADDED_GRAY_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock PADDED_GRAY_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock PADDED_GRAY_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
 
-    public static final Block AGED_SMOOTH_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final Block AGED_SMOOTH_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock AGED_SMOOTH_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final PillarBlock AGED_SMOOTH_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_SMOOTH_GRAY_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_SMOOTH_GRAY_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_SMOOTH_GRAY_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
-    public static final DirectionalBlock AGED_SMOOTH_GRAY_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final Block AGED_PADDED_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final Block AGED_PADDED_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock AGED_PADDED_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock AGED_PADDED_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_PADDED_GRAY_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_PADDED_GRAY_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_PADDED_GRAY_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_PADDED_GRAY_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+
+    public static final Block SMOOTH_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final Block SMOOTH_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock SMOOTH_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock SMOOTH_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock SMOOTH_GRAY_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock SMOOTH_GRAY_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock SMOOTH_GRAY_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock SMOOTH_GRAY_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+
+
+    public static final Block AGED_SMOOTH_GRAY_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final Block AGED_SMOOTH_GRAY_HALF_PANEL = new Block(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock AGED_SMOOTH_GRAY_2X1_PANEL_TOP = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock AGED_SMOOTH_GRAY_2X1_PANEL_BOTTOM = new PillarBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_SMOOTH_GRAY_2X2_PANEL_TOP_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_SMOOTH_GRAY_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_SMOOTH_GRAY_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock AGED_SMOOTH_GRAY_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
 
     public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(FabricBlockSettings.of(new FabricMaterialBuilder(MapColor.CLEAR).allowsMovement().lightPassesThrough().notSolid().replaceable().burnable().build()).nonOpaque().noCollision());
-    public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().noCollision().sounds(BlockSoundGroup.METAL));
-    public static final ExcursionFunnelEmitter EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
-    public static final DuelExcursionFunnelEmitter DUEL_EXCURSION_FUNNEL_EMITTER = new DuelExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
-    public static final ReversedExcursionFunnelEmitter REVERSED_EXCURSION_FUNNEL_EMITTER = new ReversedExcursionFunnelEmitter(FabricBlockSettings.of(Material.METAL).hardness(3.5f).nonOpaque().sounds(BlockSoundGroup.METAL));
+    public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
+    public static final ExcursionFunnelEmitter EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitter(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
+    public static final DuelExcursionFunnelEmitter DUEL_EXCURSION_FUNNEL_EMITTER = new DuelExcursionFunnelEmitter(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
+    public static final ReversedExcursionFunnelEmitter REVERSED_EXCURSION_FUNNEL_EMITTER = new ReversedExcursionFunnelEmitter(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
     public static final ExcursionFunnelMain EXCURSION_FUNNEL = new ExcursionFunnelMain(FabricBlockSettings.of(Material.AIR).nonOpaque().noCollision().luminance(10));
-    public static final LightBlock LIGHT_CUBE = new LightBlock(FabricBlockSettings.of(Material.AIR).luminance(15).noCollision().air().hardness(3.5f));
+    public static final LightBlock LIGHT_CUBE = new LightBlock(FabricBlockSettings.of(Material.AIR).luminance(15).noCollision().air().strength(3.5f,3.5f).requiresTool());
 
-    public static final TallButton TALL_BUTTON = new TallButton(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final TallButton TALL_BUTTON = new TallButton(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
-    public static final SlidingDoorBlock SLIDINGDOOR = new SlidingDoorBlock(FabricBlockSettings.of(Material.METAL).hardness(3.5f));
+    public static final SlidingDoorBlock SLIDINGDOOR = new SlidingDoorBlock(FabricBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
     public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
     public static BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY;
@@ -125,12 +128,19 @@ public class PortalCubedBlocks {
     public static TagKey<Block> IMMOVABLE_BLOCKS = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "immovable_blocks"));
     public static void registerBlocks() {
         if (PortalCubedConfig.get().enabled.enableGels) {
+
+            Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "base_gel"), BASE_GEL);
+
             Registry.register(Registry.BLOCK, id("propulsion_gel"), PROPULSION_GEL);
-            Registry.register(Registry.ITEM, id("propulsion_gel"), new GelBucket(PROPULSION_GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(1)));
+            Registry.register(Registry.ITEM, id("propulsion_gel"), new BlockItem(PROPULSION_GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(64)));
             Registry.register(Registry.BLOCK, id("repulsion_gel"), REPULSION_GEL);
-            Registry.register(Registry.ITEM, id("repulsion_gel"), new GelBucket(REPULSION_GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(1)));
+            Registry.register(Registry.ITEM, id("repulsion_gel"), new BlockItem(REPULSION_GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(64)));
+
+            Registry.register(Registry.BLOCK, id("adhesion_gel"), ADHESION_GEL);
+            Registry.register(Registry.ITEM, id("adhesion_gel"), new BlockItem(ADHESION_GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(64)));
+
             Registry.register(Registry.BLOCK, id("gel"), GEL);
-            Registry.register(Registry.ITEM, id("gel"), new GelBucket(GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(1)));
+            Registry.register(Registry.ITEM, id("gel"), new BlockItem(GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(64)));
         }
 
         if (PortalCubedConfig.get().enabled.enablePortal2Blocks) {

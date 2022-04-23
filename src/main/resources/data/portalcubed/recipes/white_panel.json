@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#G",
+    "G#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:end_stone"
+    },
+    "G": {
+      "item": "minecraft:calcite"
+    }
+  },
+  "result": {"item": "portalcubed:white_panel",
+    "count": 4}
+}

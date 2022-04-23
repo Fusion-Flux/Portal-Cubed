@@ -8,6 +8,8 @@ import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.google.common.collect.Lists;
+import me.andrew.gravitychanger.api.GravityChangerAPI;
+import me.andrew.gravitychanger.util.RotationUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -49,13 +51,13 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     private boolean IN_FUNNEL = false;
 
     @Unique
-    private double maxFallHeight = -100;
+    private double maxFallHeight = -99999999;
 
     @Unique
     private Vec3d lastVel = Vec3d.ZERO;
 
     @Unique
-    private double lastMaxFallHeight = -100;
+    private int gelTransferTimer = 0;
 
     @Unique
     private boolean IS_BOUNCED = false;
@@ -114,6 +116,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract boolean isOnGround();
 
+    @Shadow public float fallDistance;
+
+    @Shadow private Vec3d pos;
+
     @Override
     public List<CustomPortalEntity> getPortalList() {
         return portalList;
@@ -139,6 +145,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
        // }
 
+        if(this.gelTransferTimer != 0){
+            this.gelTransferTimer -= 1;
+        }
 
         if (!world.isClient) {
 
@@ -170,12 +179,18 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         this.lastVel = this.getVelocity();
 
+        //System.out.println(this.fallDistance);
+        //this.maxFallHeight = fallDistance;
+        Vec3d rotatedPos = this.pos;
+        if((Object)this instanceof PlayerEntity){
+            rotatedPos = RotationUtil.vecWorldToPlayer(this.pos, GravityChangerAPI.getGravityDirection((PlayerEntity)(Object)this));
+        }
         if(!this.isOnGround()) {
-            if (this.getPos().y > this.maxFallHeight) {
-                this.maxFallHeight = this.getPos().y;
+            if (rotatedPos.y > this.maxFallHeight) {
+                this.maxFallHeight = rotatedPos.y;
             }
         }else{
-            this.maxFallHeight =-100;
+            this.maxFallHeight = rotatedPos.y;
         }
 
         if (world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.REPULSION_GEL && this.isBounced()){
@@ -336,5 +351,17 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public void setFunnelTimer(int funnelTimer) {
         this.FUNNEL_TIMER = funnelTimer;
     }
+
+    @Override
+    public void setGelTimer(int funnelTimer) {
+        this.gelTransferTimer = funnelTimer;
+    }
+
+    @Override
+    public int getGelTimer() {
+
+        return this.gelTransferTimer;
+    }
+
 
 }

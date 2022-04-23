@@ -18,6 +18,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.Portal;
+import qouteall.imm_ptl.core.portal.PortalAnimation;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
 import qouteall.imm_ptl.core.teleportation.CollisionHelper;
 import qouteall.q_misc_util.Helper;
@@ -49,6 +50,12 @@ public class CustomPortalEntity extends Portal {
 
     public CustomPortalEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    protected void writeCustomDataToNbt(NbtCompound compoundTag) {
+        super.writeCustomDataToNbt(compoundTag);
+        compoundTag.put("animation", new PortalAnimation(PortalAnimation.Curve.linear, 0, false).toNbt());
     }
 
     @Override

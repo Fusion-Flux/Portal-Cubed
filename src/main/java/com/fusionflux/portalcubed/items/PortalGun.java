@@ -13,6 +13,7 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
@@ -30,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
@@ -117,7 +119,8 @@ public class PortalGun extends Item implements DyeableItem {
             Vec3i normal;
             Vec3i right;
             BlockPos blockPos;
-            HitResult hitResult = user.raycast(128.0D, 0.0F, false);
+           // HitResult hitResult = user.raycast(128.0D, 0.0F, false);
+            HitResult hitResult = customRaycast(user,128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 //Block.isFaceFullSquare(world.getBlockState(((BlockHitResult) hitResult).getBlockPos()).getCollisionShape(world,((BlockHitResult) hitResult).getBlockPos()),((BlockHitResult) hitResult).getSide().getOpposite());
                 blockPos = ((BlockHitResult) hitResult).getBlockPos();
@@ -323,5 +326,22 @@ if(!validPos(world,up,right,portalPos1)) {
                 ((hit.getY() + 0.5) + upOffset * upright.getY() + faceOffset * facing.getY() + crossOffset * cross.getY()), // y component
                 ((hit.getZ() + 0.5) + upOffset * upright.getZ() + faceOffset * facing.getZ() + crossOffset * cross.getZ())  // z component
         );
+    }
+
+
+    public HitResult customRaycast(Entity user, double maxDistance, float tickDelta, boolean includeFluids) {
+        Vec3d vec3d = user.getCameraPosVec(tickDelta);
+        Vec3d vec3d2 = user.getRotationVec(tickDelta);
+        Vec3d vec3d3 = vec3d.add(vec3d2.x * maxDistance, vec3d2.y * maxDistance, vec3d2.z * maxDistance);
+        return user.world
+                .raycast(
+                        new RaycastContext(
+                                vec3d,
+                                vec3d3,
+                                RaycastContext.ShapeType.COLLIDER,
+                                includeFluids ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE,
+                                user
+                        )
+                );
     }
 }

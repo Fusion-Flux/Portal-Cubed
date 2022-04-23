@@ -2,6 +2,11 @@
   "replace": false,
   "values" : [
     "portalcubed:excursion_funnel",
-    "portalcubed:light_bridge"
+    "portalcubed:light_bridge",
+    "minecraft:light",
+    "portalcubed:gel",
+    "portalcubed:propulsion_gel",
+    "portalcubed:repulsion_gel",
+    "portalcubed:adhesion_gel"
   ]
 }

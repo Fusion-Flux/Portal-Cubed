@@ -46,7 +46,11 @@ dependencies {
 
 	include ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v1.3.5-1.18')
 
+	modImplementation ('com.github.Fusion-Flux:GravityChanger:0.3.2')
 
+	include ('com.github.Fusion-Flux:GravityChanger:0.3.2')
+
+	modApi include("maven.modrinth:stonecutter_recipe_tags:3.0.1")
 
 	modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
 		exclude(module: "fabric-api")

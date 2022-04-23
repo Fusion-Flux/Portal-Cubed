@@ -81,7 +81,7 @@ public class HardLightBridgeBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING,NORTH, EAST, WEST, SOUTH, UP, DOWN);
+        builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN);
     }
 
 
@@ -90,22 +90,6 @@ public class HardLightBridgeBlock extends BlockWithEntity {
     private static VoxelShape method_31018(BlockState blockState) {
         VoxelShape voxelShape = VoxelShapes.empty();
 
-
-        if (blockState.get(Properties.FACING)==Direction.NORTH) {
-            voxelShape =SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.SOUTH) {
-            voxelShape = SHAPE;
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.EAST) {
-            voxelShape = SHAPEROTATED;
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.WEST) {
-            voxelShape = SHAPEROTATED;
-        }
 
         if (blockState.get(WEST)||blockState.get(EAST)) {
             voxelShape = VoxelShapes.union(voxelShape, SHAPEROTATED);
@@ -139,11 +123,11 @@ public class HardLightBridgeBlock extends BlockWithEntity {
         return BlockRenderType.MODEL;
     }
 
-    @Override
+  /*  @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }
-
+*/
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return this.field_26659.get(state);

@@ -2,14 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "portalcubed:gel"
+      "item": "portalcubed:base_gel"
     },
     {
-      "item": "minecraft:slime_block"
+      "item": "minecraft:slime_ball"
     },
     {
-      "item": "minecraft:lapis_lazuli"
+      "item": "minecraft:blue_dye"
     }
   ],
-  "result": {"item": "portalcubed:repulsion_gel"}
+  "result": {"item": "portalcubed:repulsion_gel",
+    "count": 16}
 }

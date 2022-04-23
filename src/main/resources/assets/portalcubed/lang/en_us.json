@@ -18,9 +18,12 @@
   "item.portalcubed.paint_gun": "Paint Gun",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
 
-  "block.portalcubed.propulsion_gel": "Propulsion Gel",
-  "block.portalcubed.repulsion_gel": "Repulsion Gel",
-  "block.portalcubed.gel": "Gel",
+  "item.portalcubed.base_gel": "Base Gel Glob",
+
+  "block.portalcubed.propulsion_gel": "Propulsion Gel Glob",
+  "block.portalcubed.repulsion_gel": "Repulsion Gel Glob",
+  "block.portalcubed.adhesion_gel": "Adhesion Gel Glob",
+  "block.portalcubed.gel": "Gel Glob",
 
   "block.portalcubed.aged_padded_gray_2x1_panel_bottom": "Aged Padded Gray 2x1 Panel Bottom",
   "block.portalcubed.aged_padded_gray_2x1_panel_top": "Aged Padded Gray 2x1 Panel Top",

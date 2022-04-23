@@ -1,0 +1,65 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/adhesion_gel",
+        "uvlock": true,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/adhesion_gel",
+        "uvlock": true,
+        "x": 270,
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/adhesion_gel",
+        "uvlock": true,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/adhesion_gel",
+        "uvlock": true,
+        "x": 90,
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/adhesion_gel",
+        "uvlock": true,
+        "x": 180
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/adhesion_gel",
+        "uvlock": true
+      }
+    }
+  ]
+}

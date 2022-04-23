@@ -40,6 +40,7 @@ public class PortalCubedClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.GEL, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.PROPULSION_GEL, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.REPULSION_GEL, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.ADHESION_GEL, RenderLayer.getTranslucent());
     }
 
     public static void registerItemRenderLayers() {

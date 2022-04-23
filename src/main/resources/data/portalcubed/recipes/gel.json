@@ -2,17 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:bucket"
-    },
-    {
-      "item": "minecraft:honey_block"
-    },
-    {
       "item": "minecraft:end_stone"
     },
     {
       "item": "minecraft:white_dye"
+    },
+    {
+      "item": "portalcubed:base_gel"
     }
   ],
-  "result": {"item": "portalcubed:gel"}
+  "result": {"item": "portalcubed:gel",
+    "count": 16}
 }

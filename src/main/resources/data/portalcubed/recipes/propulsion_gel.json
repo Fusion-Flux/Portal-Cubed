@@ -2,14 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "portalcubed:gel"
+      "item": "portalcubed:base_gel"
     },
     {
-      "item": "minecraft:blaze_rod"
+      "item": "minecraft:packed_ice"
     },
     {
-      "item": "minecraft:magma_cream"
+      "item": "minecraft:orange_dye"
     }
   ],
-  "result": {"item": "portalcubed:propulsion_gel"}
+  "result": {"item": "portalcubed:propulsion_gel",
+    "count": 16}
 }

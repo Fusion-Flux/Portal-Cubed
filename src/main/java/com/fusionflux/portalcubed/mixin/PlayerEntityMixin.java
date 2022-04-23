@@ -4,10 +4,12 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CustomPortalEntity;
+import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import me.andrew.gravitychanger.api.GravityChangerAPI;
 import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -25,6 +27,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +43,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity implements EntityPortalsAccess {
+public abstract class PlayerEntityMixin extends LivingEntity implements EntityPortalsAccess, EntityAttachments {
 
     private boolean recentlyTouchedPortal;
 
@@ -61,9 +64,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityPo
     @Shadow
     public abstract boolean isSwimming();
 
+    private static final TrackedData<Boolean> changeGravity = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+
+    //boolean changeGravity = false;
+
     @Shadow @Final private PlayerAbilities abilities;
 
     @Shadow public abstract float getMovementSpeed();
+
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void isInvulnerableTo(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
@@ -88,6 +97,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityPo
     @Inject(method = "initDataTracker",at = @At("HEAD"))
     public void initDataTracker(CallbackInfo ci) {
         this.getDataTracker().startTracking(CUBEUUID, Optional.empty());
+        this.getDataTracker().startTracking(changeGravity, false);
     }
 
     @Override
@@ -121,15 +131,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityPo
             if (horizontalvelocity / 0.01783440120041885 > 1) {
                 mathval = horizontalvelocity / 0.01783440120041885;
             }
-            double moveval = travelVectorOriginal.z / mathval;
-            double moveval2 = travelVectorOriginal.x / mathval;
-
-                moveval = travelVectorOriginal.z;
-
-
-                moveval2 = travelVectorOriginal.x;
-
-
             travelVectorOriginal = new Vec3d(travelVectorOriginal.x / mathval, travelVectorOriginal.y, travelVectorOriginal.z / mathval);
             this.airStrafingSpeed = .04f;
         }
@@ -142,6 +143,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityPo
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
 
         this.setNoDrag((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)));
+
+        /*if(GravityChangerAPI.getGravityDirection(((PlayerEntity) (Object)this)) != Direction.DOWN && this.world.getBlockState(this.getBlockPos()).getBlock() == PortalCubedBlocks.ADHESION_GEL){
+            this.changeGravity = true;
+        }*/
+
+        if(this.world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.ADHESION_GEL && this.getDataTracker().get(changeGravity)){
+            this.getDataTracker().set(changeGravity,false);
+            GravityChangerAPI.setGravityDirection(((PlayerEntity) (Object)this), Direction.DOWN);
+        }
 
         //this.setNoGravity(this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) || this.world.getBlockState(new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
 
@@ -220,6 +230,17 @@ if(!this.isFallFlying()) {
                 }
             }
         }
+    }
+
+
+    @Override
+    public void setSwapGravity(boolean setValue) {
+        this.getDataTracker().set(changeGravity,setValue);
+    }
+
+    @Override
+    public boolean getSwapGravity() {
+        return this.getDataTracker().get(changeGravity);
     }
 
 }
