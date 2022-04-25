@@ -2,6 +2,8 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import me.andrew.gravitychanger.api.GravityChangerAPI;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -36,6 +38,10 @@ public class StorageCubeEntity extends PathAwareEntity  {
     }
 
     private float storedDamage = 0.0F;
+
+    private int gravityTimer = 0;
+
+    private boolean gravitySwap = false;
 
     @Override
     public boolean collides() {
@@ -148,19 +154,37 @@ public class StorageCubeEntity extends PathAwareEntity  {
         super.tick();
         this.bodyYaw = 0;
         this.headYaw = 0;
-        if(!world.isClient)
-            if(getUUIDPresent()){
+        if(!world.isClient) {
+            if (getUUIDPresent()) {
                 PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-                if(player != null) {
+                if (player != null) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
                     Vec3d vec3d2 = player.getRotationVec(1.0F);
                     Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
-                    this.setVelocity(0,.03,0);
+                    GravityChangerAPI.setGravityDirection(this, GravityChangerAPI.getGravityDirection(player));
+                    gravityTimer = 10;
+                    gravitySwap = true;
+                    this.setVelocity(0, .03, 0);
+                    this.fallDistance = 0;
                     this.setPosition(vec3d3);
                     this.velocityModified = true;
                 }
             }
+
+            if(gravityTimer > 0){
+                gravityTimer--;
+            }
+
+            if(gravityTimer == 0 && gravitySwap){
+                GravityChangerAPI.setGravityDirection(this, GravityChangerAPI.getDefaultGravityDirection(this));
+                gravitySwap=false;
+            }
+
+
+
+        }
+
     }
 
 

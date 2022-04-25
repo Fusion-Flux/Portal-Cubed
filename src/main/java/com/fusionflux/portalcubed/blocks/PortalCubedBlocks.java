@@ -30,7 +30,7 @@ public class PortalCubedBlocks {
     public static final Item BASE_GEL = new Item(new FabricItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64).fireproof());
     public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
     public static final RepulsionGel REPULSION_GEL = new RepulsionGel(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
-    public static final GelFlat GEL = new GelFlat(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
+    public static final GelFlat CONVERSION_GEL = new GelFlat(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
     public static final AdhesionGel ADHESION_GEL = new AdhesionGel(FabricBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
     // public static final GelFlat GEL_FLAT = new GelFlat(FabricBlockSettings.of(Material.WATER).hardness(0f).nonOpaque().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
 
@@ -139,8 +139,8 @@ public class PortalCubedBlocks {
             Registry.register(Registry.BLOCK, id("adhesion_gel"), ADHESION_GEL);
             Registry.register(Registry.ITEM, id("adhesion_gel"), new BlockItem(ADHESION_GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(64)));
 
-            Registry.register(Registry.BLOCK, id("gel"), GEL);
-            Registry.register(Registry.ITEM, id("gel"), new BlockItem(GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(64)));
+            Registry.register(Registry.BLOCK, id("conversion_gel"), CONVERSION_GEL);
+            Registry.register(Registry.ITEM, id("conversion_gel"), new BlockItem(CONVERSION_GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(64)));
         }
 
         if (PortalCubedConfig.get().enabled.enablePortal2Blocks) {

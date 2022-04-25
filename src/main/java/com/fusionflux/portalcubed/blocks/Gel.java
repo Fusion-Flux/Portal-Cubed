@@ -91,7 +91,7 @@ public class Gel extends Block {
     }
 
     private boolean canRunOnTop(BlockView world, BlockPos pos, BlockState floor) {
-        return floor.isSideSolidFullSquare(world, pos, Direction.UP) && !floor.isOf(PortalCubedBlocks.GEL);
+        return floor.isSideSolidFullSquare(world, pos, Direction.UP) && !floor.isOf(PortalCubedBlocks.CONVERSION_GEL);
     }
 
     public BlockState getStateForNeighborUpdate(

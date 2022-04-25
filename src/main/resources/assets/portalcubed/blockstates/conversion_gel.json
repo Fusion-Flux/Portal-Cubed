@@ -5,7 +5,7 @@
         "north": "true"
       },
       "apply": {
-        "model": "portalcubed:block/gel_flat",
+        "model": "portalcubed:block/conversion_gel",
         "uvlock": true,
         "x": 270
       }
@@ -15,7 +15,7 @@
         "east": "true"
       },
       "apply": {
-        "model": "portalcubed:block/gel_flat",
+        "model": "portalcubed:block/conversion_gel",
         "uvlock": true,
         "x": 270,
         "y": 90
@@ -26,7 +26,7 @@
         "south": "true"
       },
       "apply": {
-        "model": "portalcubed:block/gel_flat",
+        "model": "portalcubed:block/conversion_gel",
         "uvlock": true,
         "x": 90
       }
@@ -36,7 +36,7 @@
         "west": "true"
       },
       "apply": {
-        "model": "portalcubed:block/gel_flat",
+        "model": "portalcubed:block/conversion_gel",
         "uvlock": true,
         "x": 90,
         "y": 90
@@ -47,7 +47,7 @@
         "up": "true"
       },
       "apply": {
-        "model": "portalcubed:block/gel_flat",
+        "model": "portalcubed:block/conversion_gel",
         "uvlock": true,
         "x": 180
       }
@@ -57,7 +57,7 @@
         "down": "true"
       },
       "apply": {
-        "model": "portalcubed:block/gel_flat",
+        "model": "portalcubed:block/conversion_gel",
         "uvlock": true
       }
     }
