@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -69,7 +70,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
             if (bl || this.storedDamage >= 20.0F) {
                 if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
                     // TODO
-                    //this.dropItem(ThinkingWithPortatosItems.COMPANION_CUBE);
+                    this.dropItem(PortalCubedItems.STORAGE_CUBE);
                 }
 
                 this.discard();
@@ -112,7 +113,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         this.setId(packet.getId());
         this.setUuid(packet.getUuid());
         this.updatePositionAndAngles(d, e, f, g, h);
-        this.setVelocity((double)((float)packet.getVelocityX() / 8000.0F), (double)((float)packet.getVelocityY() / 8000.0F), (double)((float)packet.getVelocityZ() / 8000.0F));
+        this.setVelocity((double)((float)packet.getVelocityX() ), (double)((float)packet.getVelocityY() ), (double)((float)packet.getVelocityZ() ));
     }
 
 
@@ -165,9 +166,9 @@ public class StorageCubeEntity extends PathAwareEntity  {
                     GravityChangerAPI.setGravityDirection(this, GravityChangerAPI.getGravityDirection(player));
                     gravityTimer = 10;
                     gravitySwap = true;
-                    this.setVelocity(0, .03, 0);
                     this.fallDistance = 0;
                     this.setPosition(vec3d3);
+                    this.setVelocity(player.getVelocity().x, player.getVelocity().y, player.getVelocity().z);
                     this.velocityModified = true;
                 }
             }
