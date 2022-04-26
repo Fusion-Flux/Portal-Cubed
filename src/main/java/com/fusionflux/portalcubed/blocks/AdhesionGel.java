@@ -9,6 +9,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -117,7 +118,16 @@ public class AdhesionGel extends GelFlat {
 
         //if (entity instanceof PlayerEntity) {
             direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection( entity));
-            if (((EntityAttachments) entity).getGelTimer() == 0) {
+
+            boolean failednetwork = false;
+
+            if(entity instanceof ServerPlayerEntity){
+                if(((ServerPlayerEntity)entity).networkHandler == null){
+                    failednetwork = true;
+                }
+            }
+
+            if (((EntityAttachments) entity).getGelTimer() == 0 && !failednetwork) {
                 if (entity.verticalCollision) {
                     //if(GravityChangerAPI.getGravityDirection( entity) != Direction.DOWN)
                     if (direction.y == -1 || Math.abs(direction.y) == 2  && vec3dLast.getY() < 0) {

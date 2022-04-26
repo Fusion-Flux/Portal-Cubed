@@ -4,7 +4,6 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.key.GrabKeyBinding;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.*;
-import com.fusionflux.portalcubed.client.render.model.entity.BridgeModel;
 import com.fusionflux.portalcubed.client.render.model.entity.CompanionCubeModel;
 import com.fusionflux.portalcubed.client.render.model.entity.PortalPlaceholderModel;
 import com.fusionflux.portalcubed.client.render.model.entity.StorageCubeModel;
@@ -72,9 +71,6 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER, StorageCubeModel::getTexturedModelData);
         EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.STORAGE_CUBE, StorageCubeRenderer::new);
-
-
-        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.BRIDGE,BridgeRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(CompanionCubeModel.COMPANION_CUBE_MAIN_LAYER, CompanionCubeModel::getTexturedModelData);
         EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.COMPANION_CUBE, CompanionCubeRenderer::new);

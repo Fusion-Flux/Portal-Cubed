@@ -46,9 +46,9 @@ dependencies {
 
 	include ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v1.3.5-1.18')
 
-	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.4.6')
+	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.4.9')
 
-	include ('com.github.Fusion-Flux:GravityChanger:v0.4.6')
+	include ('com.github.Fusion-Flux:GravityChanger:v0.4.9')
 
 	modApi include("maven.modrinth:stonecutter_recipe_tags:3.0.1")
 
