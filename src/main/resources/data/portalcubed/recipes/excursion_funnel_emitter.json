@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#G#",
+    "KPK",
+    "#G#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:obsidian"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "K": {
+      "item": "minecraft:glow_ink_sac"
+    },
+    "P": {
+      "item": "minecraft:popped_chorus_fruit"
+    }
+  },
+  "result": {"item": "portalcubed:excursion_funnel_emitter"}
+}

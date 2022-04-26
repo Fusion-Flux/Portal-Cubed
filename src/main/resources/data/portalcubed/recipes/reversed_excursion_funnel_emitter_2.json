@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "portalcubed:excursion_funnel_emitter"
+    }
+  ],
+  "result": {"item": "portalcubed:reversed_excursion_funnel_emitter"}
+}

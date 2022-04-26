@@ -150,7 +150,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityPo
 
         if(this.world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.ADHESION_GEL && this.getDataTracker().get(changeGravity)){
             this.getDataTracker().set(changeGravity,false);
-            GravityChangerAPI.setGravityDirection(((PlayerEntity) (Object)this), Direction.DOWN);
+            GravityChangerAPI.setGravityDirection(((PlayerEntity) (Object)this), GravityChangerAPI.getDefaultGravityDirection(this));
         }
 
         //this.setNoGravity(this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) || this.world.getBlockState(new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
