@@ -1,22 +1,33 @@
 package com.fusionflux.portalcubed.blocks;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.entity.BlockCollisionLimiter;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.PortalCubedComponent;
+import dev.onyxstudios.cca.api.v3.component.Component;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.RotationUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class AdhesionGel extends GelFlat {
 
@@ -26,6 +37,8 @@ public class AdhesionGel extends GelFlat {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
     }
+
+
 
 
     @Override
@@ -107,37 +120,27 @@ public class AdhesionGel extends GelFlat {
     }
 
     private void addCollisionEffects(World world, Entity entity, BlockPos pos) {
-        Vec3d vec3d = entity.getVelocity();
         Vec3d vec3dLast = ((EntityAttachments) entity).getLastVel();
-        // if (vec3d.y < 0.0) {
+
         BlockState state = world.getBlockState(pos);
 
         Vec3d direction = getDirections(state);
 
-        Vec3d preChange = direction;
+        Vec3d preChange;
 
-        //if (entity instanceof PlayerEntity) {
             direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection( entity));
 
-            boolean failednetwork = false;
-
-            if(entity instanceof ServerPlayerEntity){
-                if(((ServerPlayerEntity)entity).networkHandler == null){
-                    failednetwork = true;
-                }
-            }
-
-            if (((EntityAttachments) entity).getGelTimer() == 0 && !failednetwork) {
+            if (((EntityAttachments) entity).getGelTimer() == 0) {
                 if (entity.verticalCollision) {
                     //if(GravityChangerAPI.getGravityDirection( entity) != Direction.DOWN)
                     if (direction.y == -1 || Math.abs(direction.y) == 2  && vec3dLast.getY() < 0) {
-                        ((EntityAttachments) entity).setSwapGravity(true);
+                        CalledValues.setSwapTimer(entity,true);
                     }
                     //if(GravityChangerAPI.getGravityDirection( entity) != Direction.UP)
                     if (direction.y == 1 || Math.abs(direction.y) == 2 && vec3dLast.getY() > 0) {
                         //UP
                         ((EntityAttachments) entity).setGelTimer(10);
-                        ((EntityAttachments) entity).setSwapGravity(true);
+                        CalledValues.setSwapTimer(entity,true);
                         preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, 1, 0), GravityChangerAPI.getGravityDirection( entity));
                         //entity.setVelocity(0,0,0);
                         GravityChangerAPI.setGravityDirection( entity, Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z));
@@ -150,7 +153,7 @@ public class AdhesionGel extends GelFlat {
                     if (direction.z == -1 || Math.abs(direction.z) == 2 && vec3dLast.getZ() < 0) {
                         //NORTH
                         ((EntityAttachments) entity).setGelTimer(10);
-                        ((EntityAttachments) entity).setSwapGravity(true);
+                        CalledValues.setSwapTimer(entity,true);
                         preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, 0, -1), GravityChangerAPI.getGravityDirection( entity));
                         //entity.setVelocity(0,0,0);
                         GravityChangerAPI.setGravityDirection( entity, Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z));
@@ -160,7 +163,7 @@ public class AdhesionGel extends GelFlat {
                     if (direction.z == 1 || Math.abs(direction.z) == 2 && vec3dLast.getZ() > 0) {
                         //SOUTH
                         ((EntityAttachments) entity).setGelTimer(10);
-                        ((EntityAttachments) entity).setSwapGravity(true);
+                        CalledValues.setSwapTimer(entity,true);
                         preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, 0, 1), GravityChangerAPI.getGravityDirection( entity));
                         //entity.setVelocity(0,0,0);
                         GravityChangerAPI.setGravityDirection( entity, Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z));
@@ -170,7 +173,7 @@ public class AdhesionGel extends GelFlat {
                     if (direction.x == 1 || Math.abs(direction.x) == 2 && vec3dLast.getX() > 0) {
                         // EAST
                         ((EntityAttachments) entity).setGelTimer(10);
-                        ((EntityAttachments) entity).setSwapGravity(true);
+                        CalledValues.setSwapTimer(entity,true);
                         preChange = RotationUtil.vecPlayerToWorld(new Vec3d(1, 0, 0), GravityChangerAPI.getGravityDirection( entity));
                         //entity.setVelocity(0,0,0);
                         GravityChangerAPI.setGravityDirection( entity, Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z));
@@ -180,14 +183,13 @@ public class AdhesionGel extends GelFlat {
                     if (direction.x == -1 || Math.abs(direction.x) == 2 && vec3dLast.getX() < 0) {
                         //WEST
                         ((EntityAttachments) entity).setGelTimer(10);
-                        ((EntityAttachments) entity).setSwapGravity(true);
+                        CalledValues.setSwapTimer(entity,true);
                         preChange = RotationUtil.vecPlayerToWorld(new Vec3d(-1, 0, 0), GravityChangerAPI.getGravityDirection( entity));
                         //entity.setVelocity(0,0,0);
                         GravityChangerAPI.setGravityDirection( entity, Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z));
                     }
                 }
             }
-       // }
     }
 
     @Override

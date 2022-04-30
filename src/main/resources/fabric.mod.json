@@ -29,6 +29,9 @@
     ],
     "modmenu" : [
       "com.fusionflux.portalcubed.compatability.ModMenuIntegration"
+    ],
+    "cardinal-components": [
+      "com.fusionflux.portalcubed.util.PortalCubedComponents"
     ]
   },
   "mixins": [
@@ -39,5 +42,14 @@
     "fabric": "*",
     "cloth-config2": "*",
     "minecraft": "1.18.x"
+  },
+  "custom": {
+    "cardinal-components": [
+      "portalcubed:gravitytimer"
+    ],
+    "lithium:options": {
+      "mixin.entity.collisions": false,
+      "mixin.entity.fast_suffocation_check": false
+    }
   }
 }

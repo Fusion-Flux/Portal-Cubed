@@ -37,27 +37,26 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                     blockEntity.togglePowered(world.getBlockState(pos));
                     blockEntity.duelTogglePowered(world.getBlockState(pos));
                 }
-                Direction facing = state.get(Properties.FACING);
 
-                BlockPos.Mutable translatedPos = pos.mutableCopy();
+                BlockPos translatedPos = pos;
 
                 if (blockEntity.funnels != null) {
-                    List<BlockPos.Mutable> modfunnels = new ArrayList<>();
+                    List<BlockPos> modfunnels = new ArrayList<>();
 
 
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
-                        translatedPos.move(blockEntity.getCachedState().get(Properties.FACING));
+                        translatedPos = translatedPos.offset(blockEntity.getCachedState().get(Properties.FACING));
                         if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
 
                             world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
 
                             ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modfunnels.add(funnel.getPos().mutableCopy());
-                            blockEntity.funnels.add(funnel.getPos().mutableCopy());
+                            modfunnels.add(funnel.getPos());
+                            blockEntity.funnels.add(funnel.getPos());
 
-                            if(!funnel.emitters.contains(pos.mutableCopy()) ) {
-                                funnel.emitters.add(pos.mutableCopy());
+                            if(!funnel.emitters.contains(pos) ) {
+                                funnel.emitters.add(pos);
                             }
                             funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
                         } else {
@@ -75,27 +74,26 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                     blockEntity.duelTogglePowered(world.getBlockState(pos));
                 }
 
-                Direction facing = state.get(Properties.FACING);
 
-                BlockPos.Mutable translatedPos = pos.mutableCopy();
+                BlockPos translatedPos = pos;
 
                 if (blockEntity.funnels != null) {
-                    List<BlockPos.Mutable> modfunnels = new ArrayList<>();
+                    List<BlockPos> modfunnels = new ArrayList<>();
 
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
-                        translatedPos.move(blockEntity.getCachedState().get(Properties.FACING));
+                        translatedPos = translatedPos.offset(blockEntity.getCachedState().get(Properties.FACING));
                         if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
 
                             world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
 
                             ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modfunnels.add(funnel.getPos().mutableCopy());
-                            blockEntity.funnels.add(funnel.getPos().mutableCopy());
+                            modfunnels.add(funnel.getPos());
+                            blockEntity.funnels.add(funnel.getPos());
 
 
-                            if(!funnel.emitters.contains(pos.mutableCopy()) ) {
-                                funnel.emitters.add(pos.mutableCopy());
+                            if(!funnel.emitters.contains(pos) ) {
+                                funnel.emitters.add(pos);
                             }
                             funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
                         } else {

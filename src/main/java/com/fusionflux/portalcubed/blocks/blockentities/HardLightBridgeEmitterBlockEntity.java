@@ -29,7 +29,7 @@ import java.util.Objects;
 public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEntityAbstract {
 
     public final int MAX_RANGE = PortalCubedConfig.get().numbersblock.maxBridgeLength;
-    public List<BlockPos.Mutable> bridges;
+    public List<BlockPos> bridges;
 
     public HardLightBridgeEmitterBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.HLB_EMITTER_ENTITY,pos,state);
@@ -44,16 +44,15 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
                 if (!world.getBlockState(pos).get(Properties.POWERED)) {
                     blockEntity.togglePowered(world.getBlockState(pos));
                 }
-                Direction facing = state.get(Properties.FACING);
 
-                BlockPos.Mutable translatedPos = pos.mutableCopy();
+                BlockPos translatedPos = pos;
 
                 if (blockEntity.bridges != null) {
-                    List<BlockPos.Mutable> modfunnels = new ArrayList<>();
+                    List<BlockPos> modfunnels = new ArrayList<>();
 
 
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
-                        translatedPos.move(blockEntity.getCachedState().get(Properties.FACING));
+                        translatedPos = translatedPos.offset(blockEntity.getCachedState().get(Properties.FACING));
                         if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) {
 
                             if(!world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) {
@@ -61,11 +60,11 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
                             }
                             HardLightBridgeBlockEntity bridge = ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modfunnels.add(bridge.getPos().mutableCopy());
-                            blockEntity.bridges.add(bridge.getPos().mutableCopy());
+                            modfunnels.add(bridge.getPos());
+                            blockEntity.bridges.add(bridge.getPos());
 
-                            if(!bridge.emitters.contains(pos.mutableCopy()) ) {
-                                bridge.emitters.add(pos.mutableCopy());
+                            if(!bridge.emitters.contains(pos) ) {
+                                bridge.emitters.add(pos);
                             }
                             bridge.updateState(world.getBlockState(translatedPos),world,translatedPos,bridge);
 

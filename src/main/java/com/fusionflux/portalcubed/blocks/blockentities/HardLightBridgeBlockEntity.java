@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class HardLightBridgeBlockEntity extends BlockEntity {
 
-    public List<BlockPos.Mutable> emitters;
+    public List<BlockPos> emitters;
 
 
     public HardLightBridgeBlockEntity(BlockPos pos, BlockState state) {

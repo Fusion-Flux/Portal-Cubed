@@ -22,7 +22,7 @@ import java.util.Objects;
 
 public class ExcursionFunnelEntityMain extends BlockEntity {
 
-    public List<BlockPos.Mutable> emitters;
+    public List<BlockPos> emitters;
 
     public ExcursionFunnelEntityMain(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.EXCURSION_FUNNEL_ENTITY, pos, state);

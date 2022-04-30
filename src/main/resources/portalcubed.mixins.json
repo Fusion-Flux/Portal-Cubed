@@ -7,7 +7,6 @@
     "ArmorItemMixin",
     "EntityMixin",
     "ItemEntityMixin",
-    "LivingEntityMixin",
     "PlayerEntityMixin"
   ],
   "client": [

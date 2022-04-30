@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.mixin;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.RepulsionGel;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -7,19 +8,31 @@ import com.fusionflux.portalcubed.entity.CustomPortalEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.PortalCubedComponent;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.fusionflux.portalcubed.util.TimerComponent;
 import com.google.common.collect.Lists;
+import dev.onyxstudios.cca.api.v3.component.Component;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.RotationUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,6 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import qouteall.imm_ptl.core.teleportation.CollisionHelper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Mixin(Entity.class)
@@ -133,7 +147,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
         //if (!world.isClient()) {
-
+        if(this.world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.ADHESION_GEL && CalledValues.getSwapTimer((Entity)(Object)this)){
+            CalledValues.setSwapTimer((Entity)(Object)this,false);
+            GravityChangerAPI.setGravityDirection(((Entity) (Object)this), GravityChangerAPI.getDefaultGravityDirection((Entity) (Object)this));
+        }
 
             if (this.isInFunnel() && this.getFunnelTimer() != 0) {
                 this.setFunnelTimer(this.getFunnelTimer() - 1);
@@ -144,6 +161,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             }
 
        // }
+
 
         if(this.gelTransferTimer != 0){
             this.gelTransferTimer -= 1;
@@ -362,7 +380,5 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         return this.gelTransferTimer;
     }
-
-
 
 }

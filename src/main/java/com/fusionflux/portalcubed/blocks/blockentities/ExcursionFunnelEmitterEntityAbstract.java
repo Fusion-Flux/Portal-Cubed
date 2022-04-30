@@ -30,7 +30,7 @@ public abstract class ExcursionFunnelEmitterEntityAbstract extends BlockEntity {
 
     public final int MAX_RANGE = PortalCubedConfig.get().numbersblock.maxBridgeLength;
 
-    public List<BlockPos.Mutable> funnels;
+    public List<BlockPos> funnels;
 
     public ExcursionFunnelEmitterEntityAbstract(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type,pos,state);

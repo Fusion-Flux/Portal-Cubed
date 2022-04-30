@@ -119,7 +119,8 @@ public class PortalGun extends Item implements DyeableItem {
             Vec3i normal;
             Vec3i right;
             BlockPos blockPos;
-           // HitResult hitResult = user.raycast(128.0D, 0.0F, false);
+
+           //= HitResult hitResult = user.raycast(128.0D, 0.0F, false);
             HitResult hitResult = customRaycast(user,128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 //Block.isFaceFullSquare(world.getBlockState(((BlockHitResult) hitResult).getBlockPos()).getCollisionShape(world,((BlockHitResult) hitResult).getBlockPos()),((BlockHitResult) hitResult).getSide().getOpposite());
