@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 
+import com.fusionflux.portalcubed.util.IPHelperDuplicate;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,8 +22,6 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import qouteall.imm_ptl.core.portal.Portal;
-import qouteall.q_misc_util.Helper;
 
 public class PortalPlaceholderEntity extends Entity {
     public static final TrackedData<Quaternion> QUATERNION = DataTracker.registerData(PortalPlaceholderEntity.class, QuaternionHandler.QUATERNION_HANDLER);
@@ -48,16 +47,16 @@ public class PortalPlaceholderEntity extends Entity {
     protected void readCustomDataFromNbt(NbtCompound compoundTag) {
         this.setColor(compoundTag.getInt("color"));
         this.setRoll(compoundTag.getFloat("roll"));
-        this.axisH = Helper.getVec3d(compoundTag, "axisH").normalize();
-        this.axisW = Helper.getVec3d(compoundTag, "axisW").normalize();
+        this.axisH = IPHelperDuplicate.getVec3d(compoundTag, "axisH").normalize();
+        this.axisW = IPHelperDuplicate.getVec3d(compoundTag, "axisW").normalize();
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound compoundTag) {
         compoundTag.putFloat("color", this.getColor());
         compoundTag.putFloat("roll", this.getRoll());
-        Helper.putVec3d(compoundTag, "axisH", this.axisH);
-        Helper.putVec3d(compoundTag, "axisW", this.axisW);
+        IPHelperDuplicate.putVec3d(compoundTag, "axisH", this.axisH);
+        IPHelperDuplicate.putVec3d(compoundTag, "axisW", this.axisW);
     }
 
     public Quaternion getRotation() {

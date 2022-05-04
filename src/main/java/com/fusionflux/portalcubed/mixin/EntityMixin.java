@@ -2,35 +2,24 @@ package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
-import com.fusionflux.portalcubed.blocks.RepulsionGel;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.CustomPortalEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
+import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
+import com.fusionflux.portalcubed.accessor.CustomCollisionView;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.PortalCubedComponent;
-import com.fusionflux.portalcubed.util.PortalCubedComponents;
-import com.fusionflux.portalcubed.util.TimerComponent;
 import com.google.common.collect.Lists;
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.RotationUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,11 +27,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import qouteall.imm_ptl.core.teleportation.CollisionHelper;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Mixin(Entity.class)
@@ -59,7 +48,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Unique
     private boolean recentlyTouchedPortal;
     @Unique
-    private final List<CustomPortalEntity> portalList = Lists.newArrayList();
+    private final List<ExperimentalPortal> portalList = Lists.newArrayList();
 
     @Unique
     private boolean IN_FUNNEL = false;
@@ -134,18 +123,31 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow private Vec3d pos;
 
+
+    @Shadow public abstract boolean doesNotCollide(double offsetX, double offsetY, double offsetZ);
+
     @Override
-    public List<CustomPortalEntity> getPortalList() {
+    public List<ExperimentalPortal> getPortalList() {
         return portalList;
     }
 
     @Override
-    public void addPortalToList(CustomPortalEntity portal) {
+    public void addPortalToList(ExperimentalPortal portal) {
         portalList.add(portal);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
+        //if(!this.world.isClient){
+        //    List<Entity> list = world.getEntitiesByClass(Entity.class, this.getBoundingBox(), e -> (e instanceof ExperimentalPortal));
+        //    for (Entity entity : list) {
+        //        if (entity instanceof ExperimentalPortal portal) {
+        //            //portal.getFacingDirection().getVector();
+        //           // System.out.println("AAAAAAAA");
+        //            this.doesNotCollide(portal.getFacingDirection().getOpposite().getVector().getX(),portal.getFacingDirection().getOpposite().getVector().getY(),portal.getFacingDirection().getOpposite().getVector().getZ());
+        //        }
+        //    }
+        //}
         //if (!world.isClient()) {
         if(this.world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.ADHESION_GEL && CalledValues.getSwapTimer((Entity)(Object)this)){
             CalledValues.setSwapTimer((Entity)(Object)this,false);
@@ -160,6 +162,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                 setInFunnel(false);
             }
 
+
        // }
 
 
@@ -169,21 +172,21 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         if (!world.isClient) {
 
-            List<CustomPortalEntity> portalSound = this.world.getEntitiesByClass(CustomPortalEntity.class, this.getBoundingBox().expand(2), e -> true);
+            List<ExperimentalPortal> portalSound = this.world.getEntitiesByClass(ExperimentalPortal.class, this.getBoundingBox().expand(2), e -> true);
 
             for (Entity globalportal : portalSound) {
-                CustomPortalEntity collidingportal = (CustomPortalEntity) globalportal;
+                ExperimentalPortal collidingportal = (ExperimentalPortal) globalportal;
                 collidingportal.getActive();
 
-                if (CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this)) && collidingportal.getActive() && !recentlyTouchedPortal) {
-                    world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-                    recentlyTouchedPortal = true;
-                }
-
-                if (!CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this)) && collidingportal.getActive() && recentlyTouchedPortal) {
-                    world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-                    recentlyTouchedPortal = false;
-                }
+                //if (CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this)) && collidingportal.getActive() && !recentlyTouchedPortal) {
+                //    world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+                //    recentlyTouchedPortal = true;
+                //}
+//
+                //if (!CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this)) && collidingportal.getActive() && recentlyTouchedPortal) {
+                //    world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+                //    recentlyTouchedPortal = false;
+                //}
             }
         }
 
@@ -301,10 +304,80 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 */
     }
 
+    ///**
+    // * @author
+    // */
+    //@Overwrite
+    //public static Vec3d adjustMovementForCollisions(@Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
+    //    ImmutableList.Builder<VoxelShape> builder = ImmutableList.builderWithExpectedSize(collisions.size() + 1);
+    //    if (!collisions.isEmpty()) {
+    //        builder.addAll(collisions);
+    //    }
+//
+    //    WorldBorder worldBorder = world.getWorldBorder();
+    //    boolean bl = entity != null && worldBorder.canCollide(entity, entityBoundingBox.stretch(movement));
+    //    if (bl) {
+    //        builder.add(worldBorder.asVoxelShape());
+    //    }
+//
+    //    List<Entity> list = world.getEntitiesByClass(Entity.class, entityBoundingBox, e -> !(e instanceof PlayerEntity && ((PlayerEntity) e).getAbilities().flying));
+    //    boolean test=false;
+    //    for (Entity entityList : list) {
+    //        if(entityList instanceof ExperimentalPortal portal){
+    //            test = true;
+    //            Direction portaldirec = portal.getFacingDirection();
+    //            movement.multiply(Math.abs(portaldirec.getUnitVector().getX())*-1,Math.abs(portaldirec.getUnitVector().getY())*-1,Math.abs(portaldirec.getUnitVector().getZ())*-1);
+    //            builder.addAll(world.getBlockCollisions(entity, entityBoundingBox.offset(movement)));
+    //        }
+    //    }
+    //    if(!test)
+    //        builder.addAll(world.getBlockCollisions(entity, entityBoundingBox.offset(movement)));
+//
+    //    return adjustMovementForCollisions(movement, entityBoundingBox, builder.build());
+    //}
+//
+    //private static Vec3d adjustMovementForCollisions(Vec3d movement, Box entityBoundingBox, List<VoxelShape> collisions) {
+    //    if (collisions.isEmpty()) {
+    //        return movement;
+    //    } else {
+    //        double d = movement.x;
+    //        double e = movement.y;
+    //        double f = movement.z;
+    //        if (e != 0.0) {
+    //            e = VoxelShapes.calculateMaxOffset(Direction.Axis.Y, entityBoundingBox, collisions, e);
+    //            if (e != 0.0) {
+    //                entityBoundingBox = entityBoundingBox.offset(0.0, e, 0.0);
+    //            }
+    //        }
+//
+    //        boolean bl = Math.abs(d) < Math.abs(f);
+    //        if (bl && f != 0.0) {
+    //            f = VoxelShapes.calculateMaxOffset(Direction.Axis.Z, entityBoundingBox, collisions, f);
+    //            if (f != 0.0) {
+    //                entityBoundingBox = entityBoundingBox.offset(0.0, 0.0, f);
+    //            }
+    //        }
+//
+    //        if (d != 0.0) {
+    //            d = VoxelShapes.calculateMaxOffset(Direction.Axis.X, entityBoundingBox, collisions, d);
+    //            if (!bl && d != 0.0) {
+    //                entityBoundingBox = entityBoundingBox.offset(d, 0.0, 0.0);
+    //            }
+    //        }
+//
+    //        if (!bl && f != 0.0) {
+    //            f = VoxelShapes.calculateMaxOffset(Direction.Axis.Z, entityBoundingBox, collisions, f);
+    //        }
+//
+    //        return new Vec3d(d, e, f);
+    //    }
+    //}
+
+
     @Inject(method = "remove", at = @At("HEAD"))
     public void remove(CallbackInfo ci) {
         if (!world.isClient) {
-            for (CustomPortalEntity checkedportal : portalList) {
+            for (ExperimentalPortal checkedportal : portalList) {
                 if (checkedportal != null) {
                     if (!checkedportal.getOutline().equals("null")) {
                         PortalPlaceholderEntity portalOutline;
@@ -380,5 +453,54 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         return this.gelTransferTimer;
     }
+    //@Overwrite
+    //public void checkBlockCollision() {
+    //}
+    //@Inject(method = "isInsideWall", at = @At("HEAD"), cancellable = true)
+    //public void isInsideWall(CallbackInfoReturnable<Boolean> cir) {
+    //cir.setReturnValue(false);
+    //}
+    //@Inject(method = "collidesWithStateAtPos", at = @At("HEAD"), cancellable = true)
+    //public void collidesWithStateAtPos(BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {
+    //    cir.setReturnValue(false);
+    //    //VoxelShape voxelShape = state.getCollisionShape(this.world, pos, ShapeContext.of(this));
+    //    //VoxelShape voxelShape2 = voxelShape.offset((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+    //    //return VoxelShapes.matchesAnywhere(voxelShape2, VoxelShapes.cuboid(this.getBoundingBox()), BooleanBiFunction.AND);
+    //}
 
+    @ModifyArgs(
+            method = "adjustMovementForCollisions(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Lnet/minecraft/world/World;Ljava/util/List;)Lnet/minecraft/util/math/Vec3d;",
+            at = @At(target = "Lcom/google/common/collect/ImmutableList$Builder;addAll(Ljava/lang/Iterable;)Lcom/google/common/collect/ImmutableList$Builder;", value = "INVOKE",ordinal = 1)
+    )
+    private static void addAllModifyArg(Args args, @Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
+        List<Entity> list = world.getEntitiesByClass(Entity.class, entityBoundingBox, e -> e instanceof ExperimentalPortal);
+        //if (!list.isEmpty()) {
+            for (Entity entity1 : list) {
+                args.set(0,((CustomCollisionView) world).getPortalBlockCollisions(entity, entityBoundingBox.stretch(movement), ((ExperimentalPortal) entity1).getFacingDirection()));
+                break;
+            }
+       // }
+    }
+
+    //private Vec3d adjustMovementForCollisions(@Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
+    //    ImmutableList.Builder<VoxelShape> builder = ImmutableList.builderWithExpectedSize(collisions.size() + 1);
+    //    if (!collisions.isEmpty()) {
+    //        builder.addAll(collisions);
+    //    }
+//
+    //    WorldBorder worldBorder = world.getWorldBorder();
+    //    boolean bl = entity != null && worldBorder.canCollide(entity, entityBoundingBox.stretch(movement));
+    //    if (bl) {
+    //        builder.add(worldBorder.asVoxelShape());
+    //    }
+    //    List<Entity> list = world.getEntitiesByClass(Entity.class, ((Entity) (Object) this).getBoundingBox(), e -> e instanceof ExperimentalPortal);
+    //    if (!list.isEmpty()) {
+    //        for (Entity entity1 : list) {
+    //            builder.addAll(((CustomCollisionView) world).getPortalBlockCollisions(entity, entityBoundingBox.stretch(movement), ((ExperimentalPortal) entity1).getFacingDirection()));
+    //        }
+    //    } else {
+    //        builder.addAll(world.getBlockCollisions(entity, entityBoundingBox.stretch(movement)));
+    //    }
+    //    return adjustMovementForCollisions(movement, entityBoundingBox, builder.build());
+    //}
 }

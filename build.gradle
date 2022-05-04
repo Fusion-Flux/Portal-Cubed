@@ -41,19 +41,6 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	modImplementation ('com.github.Fusion-Flux.ImmersivePortalsMod:imm_ptl_core:v1.4.5-1.18'){
-		exclude(group: "net.fabricmc.fabric-api")
-		transitive(false)
-	}
-	include ('com.github.Fusion-Flux.ImmersivePortalsMod:imm_ptl_core:v1.4.5-1.18')
-
-	modImplementation ('com.github.Fusion-Flux.ImmersivePortalsMod:q_misc_util:v1.4.5-1.18'){
-		exclude(group: "net.fabricmc.fabric-api")
-		transitive(false)
-	}
-
-	include ('com.github.Fusion-Flux.ImmersivePortalsMod:q_misc_util:v1.4.5-1.18')
-
 	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.5.10')
 
 	include ('com.github.Fusion-Flux:GravityChanger:v0.5.10')

@@ -45,7 +45,8 @@
   },
   "custom": {
     "cardinal-components": [
-      "portalcubed:gravitytimer"
+      "portalcubed:gravitytimer",
+      "portalcubed:portal_data"
     ],
     "lithium:options": {
       "mixin.entity.collisions": false,

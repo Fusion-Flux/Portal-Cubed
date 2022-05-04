@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.client.key.GrabKeyBinding;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.*;
 import com.fusionflux.portalcubed.client.render.model.entity.CompanionCubeModel;
+import com.fusionflux.portalcubed.client.render.model.entity.ExperimentalPortalModel;
 import com.fusionflux.portalcubed.client.render.model.entity.PortalPlaceholderModel;
 import com.fusionflux.portalcubed.client.render.model.entity.StorageCubeModel;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
@@ -20,7 +21,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.DyeableItem;
-import qouteall.imm_ptl.core.render.PortalEntityRenderer;
+
 
 @Environment(EnvType.CLIENT)
 public class PortalCubedClient implements ClientModInitializer {
@@ -67,7 +68,8 @@ public class PortalCubedClient implements ClientModInitializer {
     private void registerEntityRenderers() {
         EntityModelLayerRegistry.registerModelLayer(PortalPlaceholderModel.MAIN_LAYER, PortalPlaceholderModel::getTexturedModelData);
         EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.PORTAL_PLACEHOLDER, PortalPlaceholderRenderer::new);
-        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.CUSTOM_PORTAL, PortalEntityRenderer::new);
+        EntityModelLayerRegistry.registerModelLayer(ExperimentalPortalModel.MAIN_LAYER, ExperimentalPortalModel::getTexturedModelData);
+        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.EXPERIMENTAL_PORTAL, ExperimentalPortalRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER, StorageCubeModel::getTexturedModelData);
         EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.STORAGE_CUBE, StorageCubeRenderer::new);

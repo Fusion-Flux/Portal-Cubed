@@ -1,5 +1,7 @@
 package com.fusionflux.portalcubed.accessor;
 
+import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.util.CustomPortalDataComponent;
 import com.fusionflux.portalcubed.util.PortalCubedComponent;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
@@ -7,7 +9,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -37,5 +39,31 @@ public abstract class CalledValues {
         maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setSwapGravity(setValue));
     }
 
+    public static final ComponentKey<CustomPortalDataComponent> PORTAL_DATA =
+            ComponentRegistry.getOrCreate(new Identifier("portalcubed", "portal_data"), CustomPortalDataComponent.class);
+
+    public static Vec3d getAxisW(Entity entity) {
+        return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getAxisW).orElse(null);
+    }
+
+    public static void setOrientation(ExperimentalPortal entity, Vec3d AxisW,Vec3d AxisH) {
+        maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.setOrientation(AxisW,AxisH));
+    }
+
+    public static Vec3d getAxisH(Entity entity) {
+        return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getAxisH).orElse(null);
+    }
+
+    public static void setDestination(ExperimentalPortal entity, Vec3d Destination) {
+        maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.setDestination(Destination));
+    }
+
+    public static Vec3d getDestination(Entity entity) {
+        return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getDestination).orElse(null);
+    }
+
+    public static void teleportEntity(ExperimentalPortal entity, Vec3d TeleportTo,Entity TeleportedEntity,ExperimentalPortal OtherPortal) {
+        maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.teleportEntity(TeleportTo,TeleportedEntity,OtherPortal));
+    }
 
 }

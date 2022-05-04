@@ -2,14 +2,18 @@ package com.fusionflux.portalcubed.items;
 
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.CustomPortalEntity;
+import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 
+import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
@@ -27,15 +31,10 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import qouteall.imm_ptl.core.api.PortalAPI;
-import qouteall.imm_ptl.core.portal.PortalManipulation;
-import qouteall.q_misc_util.my_util.DQuaternion;
+
 
 public class PortalGun extends Item implements DyeableItem {
 
@@ -80,7 +79,7 @@ public class PortalGun extends Item implements DyeableItem {
             NbtCompound tag = stack.getOrCreateNbt();
 
             PortalPlaceholderEntity portalOutline;
-            CustomPortalEntity portalholder;
+            ExperimentalPortal portalholder;
             NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());
 
             boolean outlineExists = false;
@@ -98,19 +97,19 @@ public class PortalGun extends Item implements DyeableItem {
 
             boolean portalExists = false;
             if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
-                portalholder = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
+                portalholder = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
                 if (portalholder == null) {
-                    portalholder = PortalCubedEntities.CUSTOM_PORTAL.create(world);
+                    portalholder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
                 } else {
                     portalExists = true;
                 }
             } else {
-                portalholder = PortalCubedEntities.CUSTOM_PORTAL.create(world);
+                portalholder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
             }
 
-            CustomPortalEntity otherPortal;
+            ExperimentalPortal otherPortal;
             if (portalsTag.contains((leftClick ? "Right" : "Left") + "Portal")) {
-                otherPortal = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Right" : "Left") + "Portal"));
+                otherPortal = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Right" : "Left") + "Portal"));
             } else {
                 otherPortal = null;
             }
@@ -192,7 +191,7 @@ if(!validPos(world,up,right,portalPos1)) {
                 }
 
 
-                Pair<Double, Double> rotAngles = DQuaternion.getPitchYawFromRotation(PortalManipulation.getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
+                Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
                 assert portalOutline != null;
                 portalOutline.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
                 portalOutline.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
@@ -207,21 +206,21 @@ if(!validPos(world,up,right,portalPos1)) {
 
                 assert portalholder != null;
                 portalholder.setOriginPos(portalPos1);
-                portalholder.setDestination(portalPos1);
-                portalholder.setDestinationDimension(world.getRegistryKey());
-                portalholder.setOrientationAndSize(
-                        Vec3d.of(right), //axisW
-                        Vec3d.of(up).multiply(-1), //axisH
-                        .9, // width
-                        1.9 // height
-                );
+                CalledValues.setDestination(portalholder,portalPos1);
+                //portalholder.setDestination(portalPos1);
+                CalledValues.setOrientation(portalholder,Vec3d.of(right),Vec3d.of(up).multiply(-1));
+               // portalholder.setOrientationAndSize(
+               //         Vec3d.of(right), //axisW
+               //         Vec3d.of(up).multiply(-1)
+               // );
+                //PortalCubedComponents.PORTAL_DATA.sync(portalholder);
                 portalholder.setOutline(portalOutline.getUuidAsString());
-                portalOutline.axisH = portalholder.axisH;
-                portalOutline.axisW = portalholder.axisW;
+                portalOutline.axisH = CalledValues.getAxisH(portalholder);
+                portalOutline.axisW = CalledValues.getAxisW(portalholder);
 
                 if (portalExists && otherPortal == null) {
-                    PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(portalholder), portalholder);
-                    portalholder.reloadAndSyncToClient();
+                    //PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(portalholder), portalholder);
+                    //portalholder.reloadAndSyncToClient();
 
                 }
                 if (!portalExists) {
@@ -230,18 +229,19 @@ if(!validPos(world,up,right,portalPos1)) {
                     ((EntityPortalsAccess) user).addPortalToList(portalholder);
                 }
                 if (otherPortal != null) {
-
-                    portalholder.setDestination(otherPortal.getOriginPos());
-                    otherPortal.setDestination(portalholder.getOriginPos());
+                    CalledValues.setDestination(portalholder,otherPortal.getOriginPos());
+                    CalledValues.setDestination(otherPortal,portalholder.getOriginPos());
+                    //portalholder.setDestination(otherPortal.getOriginPos());
+                    //otherPortal.setDestination(portalholder.getOriginPos());
                     portalholder.setActive(true);
                     otherPortal.setActive(true);
                     portalholder.setString(otherPortal.getUuidAsString());
                     otherPortal.setString(portalholder.getUuidAsString());
 
-                    PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
+                    //PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
 
-                    otherPortal.reloadAndSyncToClient();
-                    portalholder.reloadAndSyncToClient();
+                    //otherPortal.reloadAndSyncToClient();
+                    //portalholder.reloadAndSyncToClient();
 
                     world.playSound(null, portalholder.getPos().getX(), portalholder.getPos().getY(), portalholder.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
                 }
@@ -345,4 +345,25 @@ if(!validPos(world,up,right,portalPos1)) {
                         )
                 );
     }
+
+    public static IPQuaternion getPortalOrientationQuaternion(
+            Vec3d axisW, Vec3d axisH
+    ) {
+        Vec3d normal = axisW.crossProduct(axisH);
+
+        return IPQuaternion.matrixToQuaternion(axisW, axisH, normal);
+    }
+
+    //public static IPQuaternion getPortalOrientationQuaternion(
+    //        Vec3d axisW, Vec3d axisH
+    //) {
+    //    Vec3f normal = new Vec3f((float)axisW.getX(),(float)axisW.getY(),(float)axisW.getZ());
+    //    normal.cross(new Vec3f((float)axisW.getX(),(float)axisW.getY(),(float)axisW.getZ()));
+    //    Vec3d aW = new Vec3d(axisW.getX(),axisW.getY(),axisW.getZ());
+    //    Vec3d aH = new Vec3d(axisH.getX(),axisH.getY(),axisH.getZ());
+    //    Vec3d aN = new Vec3d(normal.getX(),normal.getY(),normal.getZ());
+//
+    //    return IPQuaternion.matrixToQuaternion(aW, aH, aN);
+    //}
+
 }

@@ -1,14 +1,14 @@
 package com.fusionflux.portalcubed.accessor;
 
-import com.fusionflux.portalcubed.entity.CustomPortalEntity;
+import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface EntityPortalsAccess {
-    List<CustomPortalEntity> getPortalList();
+    List<ExperimentalPortal> getPortalList();
 
-    void addPortalToList(CustomPortalEntity portal);
+    void addPortalToList(ExperimentalPortal portal);
 
     UUID getCubeUUID();
 

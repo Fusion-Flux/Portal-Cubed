@@ -3,31 +3,25 @@ package com.fusionflux.portalcubed.mixin;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.CustomPortalEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
+import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
-import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.command.GiveCommand;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +31,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import qouteall.imm_ptl.core.teleportation.CollisionHelper;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -170,14 +163,14 @@ if(!this.isFallFlying()) {
 }*/
         if (!world.isClient) {
 
-            if (CollisionHelper.isCollidingWithAnyPortal(this) && !recentlyTouchedPortal) {
-                //world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-                recentlyTouchedPortal = true;
-            }
-            if (!CollisionHelper.isCollidingWithAnyPortal(this) && recentlyTouchedPortal) {
-                //world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-                recentlyTouchedPortal = false;
-            }
+            //if (CollisionHelper.isCollidingWithAnyPortal(this) && !recentlyTouchedPortal) {
+            //    //world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+            //    recentlyTouchedPortal = true;
+            //}
+            //if (!CollisionHelper.isCollidingWithAnyPortal(this) && recentlyTouchedPortal) {
+            //    //world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
+            //    recentlyTouchedPortal = false;
+            //}
 
             if (this.isHolding(PortalCubedItems.PORTAL_GUN)) {
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
@@ -203,15 +196,15 @@ if(!this.isFallFlying()) {
         if (!this.world.isClient && stack.getItem().equals(PortalCubedItems.PORTAL_GUN)) {
             NbtCompound tag = stack.getOrCreateNbt();
             NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());
-            CustomPortalEntity portalholder;
+            ExperimentalPortal portalholder;
             if (portalsTag.contains(("Left") + "Portal")) {
-                portalholder = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Left") + "Portal"));
+                portalholder = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Left") + "Portal"));
                 if (portalholder != null) {
                     portalholder.kill();
                 }
             }
             if (portalsTag.contains(("Right") + "Portal")) {
-                portalholder = (CustomPortalEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Portal"));
+                portalholder = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Portal"));
                 if (portalholder != null) {
                     portalholder.kill();
                 }
