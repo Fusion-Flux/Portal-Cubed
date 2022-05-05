@@ -10,9 +10,4 @@ public interface EntityPortalsAccess {
 
     void addPortalToList(ExperimentalPortal portal);
 
-    UUID getCubeUUID();
-
-    boolean getUUIDPresent();
-
-    void setCubeUUID(UUID uuid);
 }

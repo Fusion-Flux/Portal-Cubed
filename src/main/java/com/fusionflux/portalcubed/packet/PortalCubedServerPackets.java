@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.packet;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.fusionflux.portalcubed.items.PortalGun;
@@ -61,25 +62,25 @@ public class PortalCubedServerPackets {
 
             if (entityHitResult != null) {
                 if (entityHitResult.getEntity() instanceof StorageCubeEntity entity) {
-                    if (!((EntityPortalsAccess) player).getUUIDPresent()) {
+                    if (CalledValues.getCubeUUID(player)==null) {
                         entity.setHolderUUID(player.getUuid());
-                        ((EntityPortalsAccess) player).setCubeUUID(entity.getUuid());
+                        CalledValues.setCubeUUID(player,entity.getUuid());
                     } else {
-                        StorageCubeEntity playercube = (StorageCubeEntity) ((ServerWorld) player.world).getEntity(((EntityPortalsAccess) player).getCubeUUID());
+                        StorageCubeEntity playercube = (StorageCubeEntity) ((ServerWorld) player.world).getEntity(CalledValues.getCubeUUID(player));
                         if (playercube != null) {
                             playercube.setHolderUUID(null);
                         }
-                        ((EntityPortalsAccess) player).setCubeUUID(null);
+                        CalledValues.setCubeUUID(player,null);
                     }
                 } else {
                     entityHitResult.getEntity();
                 }
             } else {
-                StorageCubeEntity playercube = (StorageCubeEntity) ((ServerWorld) player.world).getEntity(((EntityPortalsAccess) player).getCubeUUID());
+                StorageCubeEntity playercube = (StorageCubeEntity) ((ServerWorld) player.world).getEntity(CalledValues.getCubeUUID(player));
                 if (playercube != null) {
                     playercube.setHolderUUID(null);
                 }
-                ((EntityPortalsAccess) player).setCubeUUID(null);
+                CalledValues.setCubeUUID(player,null);
             }
 
 

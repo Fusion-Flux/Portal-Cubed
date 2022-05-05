@@ -5,8 +5,6 @@ import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.CustomTrackedData;
-import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,7 +14,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
@@ -28,7 +25,6 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.UUID;
 
 public class ExperimentalPortal extends Entity {
@@ -235,18 +231,24 @@ return true;
             return nullBox;
         }
             double w = .9;
-            double h = 1.9;
+            double h;
+
+            if(getFacingDirection() == Direction.UP || getFacingDirection()==Direction.DOWN){
+                h = 1.9;
+            }else{
+                h = 2;
+            }
             //setBoundingBox(nullBox);
             Box portalBox = new Box(
                     getPointInPlane(w / 2, h / 2)
-                            .add(getNormal().multiply(0.2)),
+                            .add(getNormal().multiply(1)),
                     getPointInPlane(-w / 2, -h / 2)
-                            .add(getNormal().multiply(-0.2))
+                            .add(getNormal().multiply(-1))
             ).union(new Box(
                     getPointInPlane(-w / 2, h / 2)
-                            .add(getNormal().multiply(0.2)),
+                            .add(getNormal().multiply(1)),
                     getPointInPlane(w / 2, -h / 2)
-                            .add(getNormal().multiply(-0.2))
+                            .add(getNormal().multiply(-1))
             ));
             setBoundingBox(portalBox);
             return portalBox;

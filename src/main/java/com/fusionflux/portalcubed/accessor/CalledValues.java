@@ -14,6 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public abstract class CalledValues {
 
@@ -41,19 +42,19 @@ public abstract class CalledValues {
     }
 
     public static Vec3d getOmmitedDirections(Entity entity) {
-        return maybeGetSafe(GRAVITY_TIMER, entity).map(PortalCubedComponent::getOmmitDirection).orElse(null);
+        return maybeGetSafe(GRAVITY_TIMER, entity).map(PortalCubedComponent::getOmmitDirection).orElse(Vec3d.ZERO);
     }
 
     public static void setOmmitedDirections(Entity entity, Vec3d setValue) {
         maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setOmmitDirection(setValue));
     }
 
-    public static Box getPoralAdjustBoundingBox(Entity entity) {
-        return maybeGetSafe(GRAVITY_TIMER, entity).map(PortalCubedComponent::getPoralAdjustBoundingBox).orElse(null);
+    public static UUID getCubeUUID(Entity entity) {
+        return maybeGetSafe(GRAVITY_TIMER, entity).map(PortalCubedComponent::getCubeUUID).orElse(null);
     }
 
-    public static void setPoralAdjustBoundingBox(Entity entity, Box setValue) {
-        maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setPoralAdjustBoundingBox(setValue));
+    public static void setCubeUUID(Entity entity, UUID setValue) {
+        maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setCubeUUID(setValue));
     }
 
     public static final ComponentKey<CustomPortalDataComponent> PORTAL_DATA =

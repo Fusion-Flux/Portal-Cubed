@@ -4,14 +4,16 @@ import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.UUID;
+
 public interface PortalCubedComponent extends Component {
     boolean getSwapGravity();
 
     void setSwapGravity(boolean gravityState);
 
-    Box getPoralAdjustBoundingBox();
+    UUID getCubeUUID();
 
-    void setPoralAdjustBoundingBox(Box entityBB);
+    void setCubeUUID(UUID cubeUUID);
 
     Vec3d getOmmitDirection();
 

@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -142,7 +143,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
             if (getDataTracker().get(HOLDERUUID).isPresent()) {
                 PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
                 if(player != null)
-                ((EntityPortalsAccess) player).setCubeUUID(null);
+                CalledValues.setCubeUUID(player,null);
             }
             this.getDataTracker().set(HOLDERUUID, Optional.of(uuid));
         }else {
@@ -193,7 +194,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         if(!world.isClient) {
             PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
             if (player != null) {
-                ((EntityPortalsAccess) player).setCubeUUID(null);
+                CalledValues.setCubeUUID(player,null);
             }
         }
     }
@@ -202,7 +203,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         if(!world.isClient) {
             PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
             if (player != null) {
-                ((EntityPortalsAccess) player).setCubeUUID(null);
+                CalledValues.setCubeUUID(player,null);
             }
         }
     }
@@ -211,7 +212,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         if(!world.isClient) {
             PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
             if (player != null) {
-                ((EntityPortalsAccess) player).setCubeUUID(null);
+                CalledValues.setCubeUUID(player,null);
             }
         }
         super.updatePostDeath();
@@ -221,7 +222,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         if(!world.isClient) {
             PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
             if (player != null) {
-                ((EntityPortalsAccess) player).setCubeUUID(null);
+                CalledValues.setCubeUUID(player,null);
             }
         }
         super.onDeath(source);

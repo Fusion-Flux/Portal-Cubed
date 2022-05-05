@@ -1,19 +1,14 @@
 package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import me.andrew.gravitychanger.api.GravityChangerAPI;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -36,9 +31,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity implements EntityPortalsAccess, EntityAttachments {
-
-    private boolean recentlyTouchedPortal;
+public abstract class PlayerEntityMixin extends LivingEntity implements EntityAttachments {
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -57,11 +50,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityPo
     @Shadow
     public abstract boolean isSwimming();
 
-    private static final TrackedData<Boolean> changeGravity = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
-
-    //boolean changeGravity = false;
-
     @Shadow @Final private PlayerAbilities abilities;
 
     @Shadow public abstract float getMovementSpeed();
@@ -73,46 +61,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityPo
         if (damageSource == DamageSource.FALL && (itemStack5.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS))) {
             cir.setReturnValue(true);
         }
-    }
-
-    /*@Inject(method = "getFallSound", at = @At("HEAD"), cancellable = true)
-    protected void getFallSound(int distance, CallbackInfoReturnable<SoundEvent> cir) {
-        ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
-        if (itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)) {
-            cir.setReturnValue(SoundEvents.BLOCK_WOOL_FALL);
-        }
-    }*/
-
-//0.11783440120041885=0.9800000190734863
-
-    private static final TrackedData<Optional<UUID>> CUBEUUID = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-
-    @Inject(method = "initDataTracker",at = @At("HEAD"))
-    public void initDataTracker(CallbackInfo ci) {
-        this.getDataTracker().startTracking(CUBEUUID, Optional.empty());
-        this.getDataTracker().startTracking(changeGravity, false);
-    }
-
-    @Override
-    public boolean getUUIDPresent() {
-        return getDataTracker().get(CUBEUUID).isPresent();
-    }
-
-    @Override
-    public UUID getCubeUUID() {
-        if (getDataTracker().get(CUBEUUID).isPresent()) {
-            return getDataTracker().get(CUBEUUID).get();
-        }
-        return null;
-    }
-
-@Override
-    public void setCubeUUID(UUID uuid) {
-    if(uuid != null) {
-        this.getDataTracker().set(CUBEUUID, Optional.of(uuid));
-    }else {
-        this.getDataTracker().set(CUBEUUID, Optional.empty());
-    }
     }
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
@@ -134,33 +82,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityPo
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
-
         this.setNoDrag((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)));
 
-        /*if(GravityChangerAPI.getGravityDirection(((PlayerEntity) (Object)this)) != Direction.DOWN && this.world.getBlockState(this.getBlockPos()).getBlock() == PortalCubedBlocks.ADHESION_GEL){
-            this.changeGravity = true;
-        }*/
-
-        if(this.world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.ADHESION_GEL && this.getDataTracker().get(changeGravity)){
-            this.getDataTracker().set(changeGravity,false);
-            GravityChangerAPI.setGravityDirection(((PlayerEntity) (Object)this), GravityChangerAPI.getDefaultGravityDirection(this));
-        }
-
-        //this.setNoGravity(this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) || this.world.getBlockState(new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
-
-        /*double reduceGravity = .06666666666;
-        double gravityBalancer = 1;
-            if (this.isTouchingWater()) {
-                gravityBalancer = gravityBalancer * .02;
-                if (this.hasStatusEffect(StatusEffects.SLOW_FALLING)) {
-                    gravityBalancer = gravityBalancer * .01;
-                }
-            }
-if(!this.isFallFlying()) {
-    if (!this.isSwimming()) {
-        this.setVelocity(this.getVelocity().add(0, reduceGravity * gravityBalancer, 0));
-    }
-}*/
         if (!world.isClient) {
 
             //if (CollisionHelper.isCollidingWithAnyPortal(this) && !recentlyTouchedPortal) {
@@ -176,19 +99,6 @@ if(!this.isFallFlying()) {
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
             }
         }
-
-
-
-        /*ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
-        if (storeVelocity2 != null && storeVelocity1 != null) {
-            if (itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)) {
-                if (!this.isOnGround()) {
-                    this.setVelocity(this.getVelocity().x * 1.045, this.getVelocity().y, this.getVelocity().z * 1.045);
-                }
-            }
-        }*/
-
-
     }
 
     @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D"), cancellable = true)
@@ -223,17 +133,6 @@ if(!this.isFallFlying()) {
                 }
             }
         }
-    }
-
-
-    @Override
-    public void setSwapGravity(boolean setValue) {
-        this.getDataTracker().set(changeGravity,setValue);
-    }
-
-    @Override
-    public boolean getSwapGravity() {
-        return this.getDataTracker().get(changeGravity);
     }
 
 }

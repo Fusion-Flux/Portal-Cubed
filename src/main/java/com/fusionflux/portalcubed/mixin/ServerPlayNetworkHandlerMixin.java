@@ -29,19 +29,17 @@ public class ServerPlayNetworkHandlerMixin {
 
     @Shadow public ServerPlayerEntity player;
 
+    /**
+     * @author
+     */
     @Overwrite
     private boolean isPlayerNotCollidingWithBlocks(WorldView world, Box box) {
         Iterable<VoxelShape> iterable = world.getCollisions( ((ServerPlayNetworkHandler)(Object)this).player, ((ServerPlayNetworkHandler)(Object)this).player.getBoundingBox().contract(1.0E-5F));
-
-        if(CalledValues.getOmmitedDirections(((ServerPlayNetworkHandler)(Object)this).player) != Vec3d.ZERO){
-            iterable =(((CustomCollisionView) world).getPortalCollisions(((ServerPlayNetworkHandler)(Object)this).player, ((ServerPlayNetworkHandler)(Object)this).player.getBoundingBox().contract(1.0E-5F), CalledValues.getOmmitedDirections(((ServerPlayNetworkHandler)(Object)this).player)));
-        }
-        //List<ExperimentalPortal> list = player.world.getEntitiesByClass(ExperimentalPortal.class, player.getBoundingBox().expand(2), e -> true);
-        //for (ExperimentalPortal entity1 : list) {
-        //    iterable =(((CustomCollisionView) player.world).getPortalCollisions(player, player.getBoundingBox(), entity1.getFacingDirection()));
-        //}
-
         VoxelShape voxelShape = VoxelShapes.cuboid(box.contract(1.0E-5F));
+        Vec3d directions = CalledValues.getOmmitedDirections(((ServerPlayNetworkHandler)(Object)this).player);
+        if(directions != Vec3d.ZERO){
+            iterable =(((CustomCollisionView) world).getPortalCollisions(((ServerPlayNetworkHandler)(Object)this).player, ((ServerPlayNetworkHandler)(Object)this).player.getBoundingBox().contract(1.0E-5F), directions));
+        }
 
         for(VoxelShape voxelShape2 : iterable) {
             if (!VoxelShapes.matchesAnywhere(voxelShape2, voxelShape, BooleanBiFunction.AND)) {
