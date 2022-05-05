@@ -11,19 +11,24 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.google.common.collect.Lists;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.RotationUtil;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -154,15 +159,15 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         //    }
         //}
         //if (!world.isClient()) {
-
-        List<ExperimentalPortal> list = this.world.getEntitiesByClass(ExperimentalPortal.class, this.getBoundingBox().stretch(this.getVelocity()), e -> true);
-        Vec3d ommitedDirections = Vec3d.ZERO;
-        for (ExperimentalPortal entity1 : list) {
-            ommitedDirections = ommitedDirections.add(entity1.getFacingDirection().getUnitVector().getX(),entity1.getFacingDirection().getUnitVector().getY(),entity1.getFacingDirection().getUnitVector().getZ());
-        }
-        CalledValues.setOmmitedDirections(((Entity)(Object)this),ommitedDirections);
-        CalledValues.setPoralAdjustBoundingBox(((Entity)(Object)this),this.getBoundingBox().stretch(this.getVelocity()));
-
+//if(!world.isClient) {
+    List<ExperimentalPortal> list = this.world.getEntitiesByClass(ExperimentalPortal.class, this.getBoundingBox().stretch(this.getVelocity()), e -> true);
+    Vec3d ommitedDirections = Vec3d.ZERO;
+    for (ExperimentalPortal entity1 : list) {
+        ommitedDirections = ommitedDirections.add(entity1.getFacingDirection().getUnitVector().getX(), entity1.getFacingDirection().getUnitVector().getY(), entity1.getFacingDirection().getUnitVector().getZ());
+    }
+    CalledValues.setOmmitedDirections(((Entity) (Object) this), ommitedDirections);
+    CalledValues.setPoralAdjustBoundingBox(((Entity) (Object) this), this.getBoundingBox().stretch(this.getVelocity()));
+//}
         if(this.world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.ADHESION_GEL && CalledValues.getSwapTimer((Entity)(Object)this)){
             CalledValues.setSwapTimer((Entity)(Object)this,false);
             GravityChangerAPI.setGravityDirection(((Entity) (Object)this), GravityChangerAPI.getDefaultGravityDirection((Entity) (Object)this));
@@ -321,26 +326,22 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             at = @At(target = "Lcom/google/common/collect/ImmutableList$Builder;addAll(Ljava/lang/Iterable;)Lcom/google/common/collect/ImmutableList$Builder;", value = "INVOKE",ordinal = 1)
     )
     private static void addAllModifyArg(Args args, @Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
-        List<ExperimentalPortal> list = world.getEntitiesByClass(ExperimentalPortal.class, entityBoundingBox.stretch(movement), e -> true);
-        for (ExperimentalPortal entity1 : list) {
-            args.set(0, ((CustomCollisionView) world).getPortalBlockCollisions(entity, entityBoundingBox.stretch(movement), entity1.getFacingDirection()));
-            break;
-        }
+        Vec3d directions = CalledValues.getOmmitedDirections(entity);
+        if(directions != Vec3d.ZERO)
+        args.set(0, ((CustomCollisionView) world).getPortalBlockCollisions(entity, entityBoundingBox.stretch(movement), directions));
     }
 
     @Inject(method = "doesNotCollide(Lnet/minecraft/util/math/Box;)Z", at = @At("RETURN"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void doesNotCollide(Box box, CallbackInfoReturnable<Boolean> cir) {
-        List<ExperimentalPortal> list = ((Entity)(Object)this).world.getEntitiesByClass(ExperimentalPortal.class, box, e -> true);
-        for (ExperimentalPortal entity1 : list) {
-            cir.setReturnValue(((CustomCollisionView) ((Entity)(Object)this).world).canPortalCollide(((Entity)(Object)this), box, entity1.getFacingDirection()));
-        }
-    }
-    @Inject(method = "wouldPoseNotCollide", at = @At("RETURN"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    public void wouldPoseNotCollide(EntityPose pose, CallbackInfoReturnable<Boolean> cir) {
-        List<ExperimentalPortal> list = ((Entity)(Object)this).world.getEntitiesByClass(ExperimentalPortal.class, this.calculateBoundsForPose(pose), e -> true);
-        for (ExperimentalPortal entity1 : list) {
-            cir.setReturnValue(((CustomCollisionView) ((Entity)(Object)this).world).canPortalCollide(((Entity)(Object)this), this.calculateBoundsForPose(pose), entity1.getFacingDirection()));
-        }
+        Vec3d directions = CalledValues.getOmmitedDirections(((Entity)(Object)this));
+        if(directions != Vec3d.ZERO)
+            cir.setReturnValue(((CustomCollisionView) ((Entity)(Object)this).world).canPortalCollide(((Entity)(Object)this), box, directions)  && !this.world.containsFluid(box));
     }
 
+    @Inject(method = "wouldPoseNotCollide", at = @At("RETURN"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    public void wouldPoseNotCollide(EntityPose pose, CallbackInfoReturnable<Boolean> cir) {
+        Vec3d directions = CalledValues.getOmmitedDirections(((Entity)(Object)this));
+        if(directions != Vec3d.ZERO)
+            cir.setReturnValue(((CustomCollisionView) ((Entity)(Object)this).world).canPortalCollide(((Entity)(Object)this), this.calculateBoundsForPose(pose).contract(1.0E-7), directions));
+    }
 }

@@ -20,7 +20,7 @@ public class PortalCubedComponents implements EntityComponentInitializer {
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerFor(Entity.class, GRAVITY_TIMER, e -> new TimerComponent());
+        registry.registerFor(Entity.class, GRAVITY_TIMER, TimerComponent::new);
         registry.registerFor(ExperimentalPortal.class, PORTAL_DATA, PortalDataComponent::new);
     }
 }

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape> {
     private final Box box;
-    private final Direction omittedDirection;
+    private final Vec3d omittedDirection;
     private final ShapeContext context;
     private final CuboidBlockIterator blockIterator;
     private final BlockPos.Mutable pos;
@@ -27,11 +27,11 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
     private BlockView chunk;
     private long chunkPos;
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box, Direction direction) {
+    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box, Vec3d direction) {
         this(world, entity, box, direction,false);
     }
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box,Direction direction, boolean forEntity) {
+    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box,Vec3d direction, boolean forEntity) {
         this.context = entity == null ? ShapeContext.absent() : ShapeContext.of(entity);
         this.pos = new BlockPos.Mutable();
         this.boxShape = VoxelShapes.cuboid(box);

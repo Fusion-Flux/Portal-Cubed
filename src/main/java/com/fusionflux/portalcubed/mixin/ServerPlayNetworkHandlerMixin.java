@@ -1,12 +1,15 @@
 package com.fusionflux.portalcubed.mixin;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.CustomCollisionView;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockCollisionSpliterator;
@@ -28,13 +31,15 @@ public class ServerPlayNetworkHandlerMixin {
 
     @Overwrite
     private boolean isPlayerNotCollidingWithBlocks(WorldView world, Box box) {
-        Iterable<VoxelShape> iterable = world.getCollisions(this.player, this.player.getBoundingBox().contract(1.0E-5F));
+        Iterable<VoxelShape> iterable = world.getCollisions( ((ServerPlayNetworkHandler)(Object)this).player, ((ServerPlayNetworkHandler)(Object)this).player.getBoundingBox().contract(1.0E-5F));
 
-
-        List<ExperimentalPortal> list = player.world.getEntitiesByClass(ExperimentalPortal.class, player.getBoundingBox().expand(2), e -> true);
-        for (ExperimentalPortal entity1 : list) {
-            iterable =(((CustomCollisionView) player.world).getPortalCollisions(player, player.getBoundingBox(), entity1.getFacingDirection()));
+        if(CalledValues.getOmmitedDirections(((ServerPlayNetworkHandler)(Object)this).player) != Vec3d.ZERO){
+            iterable =(((CustomCollisionView) world).getPortalCollisions(((ServerPlayNetworkHandler)(Object)this).player, ((ServerPlayNetworkHandler)(Object)this).player.getBoundingBox().contract(1.0E-5F), CalledValues.getOmmitedDirections(((ServerPlayNetworkHandler)(Object)this).player)));
         }
+        //List<ExperimentalPortal> list = player.world.getEntitiesByClass(ExperimentalPortal.class, player.getBoundingBox().expand(2), e -> true);
+        //for (ExperimentalPortal entity1 : list) {
+        //    iterable =(((CustomCollisionView) player.world).getPortalCollisions(player, player.getBoundingBox(), entity1.getFacingDirection()));
+        //}
 
         VoxelShape voxelShape = VoxelShapes.cuboid(box.contract(1.0E-5F));
 

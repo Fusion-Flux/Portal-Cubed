@@ -134,30 +134,30 @@ return true;
         if(this.getBoundingBox() == nullBox){
             this.calculateBoundingBox();
         }
-        if(CalledValues.getDestination(this) != null) {
-            if (!this.world.isClient) {
-                List<Entity> list = world.getEntitiesByClass(Entity.class, this.getBoundingBox(), e -> true);
-                for (Entity entity : list) {
-                    //System.out.println(entity);
-                    if (!this.getString().equals("null")) {
-                        ExperimentalPortal otherPortal;
-                        otherPortal = (ExperimentalPortal) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
-                        assert otherPortal != null;
-
-
-                        if (!(entity instanceof ExperimentalPortal)) {
-                           // CalledValues.teleportEntity(this,CalledValues.getDestination(this),entity,otherPortal);
-                          //  if (entity.horizontalCollision && this.getFacingDirection() != Direction.UP && this.getFacingDirection() != Direction.DOWN) {
-                          //      entity.teleport(CalledValues.getDestination(this).getX(), CalledValues.getDestination(this).getY(), CalledValues.getDestination(this).getZ());
-                          //  }
-                          //  if (entity.verticalCollision && this.getFacingDirection() == Direction.UP && this.getFacingDirection() == Direction.DOWN) {
-                          //      entity.teleport(CalledValues.getDestination(this).getX(), CalledValues.getDestination(this).getY(), CalledValues.getDestination(this).getZ());
-                          //  }
-                        }
-                    }
-                }
-            }
-        }
+        //if(CalledValues.getDestination(this) != null) {
+        //    if (!this.world.isClient) {
+        //        List<Entity> list = world.getEntitiesByClass(Entity.class, this.getBoundingBox(), e -> true);
+        //        for (Entity entity : list) {
+        //            //System.out.println(entity);
+        //            if (!this.getString().equals("null")) {
+        //                ExperimentalPortal otherPortal;
+        //                otherPortal = (ExperimentalPortal) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
+        //                assert otherPortal != null;
+//
+//
+        //                if (!(entity instanceof ExperimentalPortal)) {
+        //                   // CalledValues.teleportEntity(this,CalledValues.getDestination(this),entity,otherPortal);
+        //                  //  if (entity.horizontalCollision && this.getFacingDirection() != Direction.UP && this.getFacingDirection() != Direction.DOWN) {
+        //                  //      entity.teleport(CalledValues.getDestination(this).getX(), CalledValues.getDestination(this).getY(), CalledValues.getDestination(this).getZ());
+        //                  //  }
+        //                  //  if (entity.verticalCollision && this.getFacingDirection() == Direction.UP && this.getFacingDirection() == Direction.DOWN) {
+        //                  //      entity.teleport(CalledValues.getDestination(this).getX(), CalledValues.getDestination(this).getY(), CalledValues.getDestination(this).getZ());
+        //                  //  }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         if (!this.world.isClient && CalledValues.getAxisW(this) != null) {
             BlockPos topBehind = new BlockPos(
