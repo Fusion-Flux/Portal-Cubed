@@ -9,6 +9,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +38,22 @@ public abstract class CalledValues {
 
     public static void setSwapTimer(Entity entity, boolean setValue) {
         maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setSwapGravity(setValue));
+    }
+
+    public static Vec3d getOmmitedDirections(Entity entity) {
+        return maybeGetSafe(GRAVITY_TIMER, entity).map(PortalCubedComponent::getOmmitDirection).orElse(null);
+    }
+
+    public static void setOmmitedDirections(Entity entity, Vec3d setValue) {
+        maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setOmmitDirection(setValue));
+    }
+
+    public static Box getPoralAdjustBoundingBox(Entity entity) {
+        return maybeGetSafe(GRAVITY_TIMER, entity).map(PortalCubedComponent::getPoralAdjustBoundingBox).orElse(null);
+    }
+
+    public static void setPoralAdjustBoundingBox(Entity entity, Box setValue) {
+        maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setPoralAdjustBoundingBox(setValue));
     }
 
     public static final ComponentKey<CustomPortalDataComponent> PORTAL_DATA =

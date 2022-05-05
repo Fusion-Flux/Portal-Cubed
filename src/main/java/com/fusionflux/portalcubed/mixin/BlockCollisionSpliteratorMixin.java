@@ -23,6 +23,6 @@ public class BlockCollisionSpliteratorMixin {
             method = "computeNext()Lnet/minecraft/util/shape/VoxelShape;"
     )
     private boolean redirectIntersectionCheck(Box ins, double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-        return ins.minX < maxX-.1 && ins.maxX > minX && ins.minY < maxY && ins.maxY > minY && ins.minZ < maxZ && ins.maxZ > minZ;
+        return false;
     }
 }

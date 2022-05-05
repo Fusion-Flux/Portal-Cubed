@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.mixin.portalmixins;
+package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.accessor.CustomCollisionView;
 import net.minecraft.world.WorldView;

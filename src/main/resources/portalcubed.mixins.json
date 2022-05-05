@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ArmorItemMixin",
+    "ClientPlayerEntityMixin",
     "EntityMixin",
     "ItemEntityMixin",
     "PlayerEntityMixin",
-    "portalmixins.WorldViewMixin"
+    "ServerPlayNetworkHandlerMixin",
+    "WorldViewMixin"
   ],
   "client": [
     "client.ClientPlayNetworkHandlerMixin",
