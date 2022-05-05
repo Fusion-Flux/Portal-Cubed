@@ -99,6 +99,26 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
     }
 
     public boolean intersects(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-        return this.box.minX < maxX-.1 && this.box.maxX > minX && this.box.minY < maxY && this.box.maxY > minY && this.box.minZ < maxZ && this.box.maxZ > minZ;
+        if(omittedDirection != null) {
+            if (omittedDirection.x == 1) {
+                maxX = maxX - .1;
+            }
+            if (omittedDirection.x == -1) {
+                minX = minX + .1;
+            }
+            if (omittedDirection.y == 1) {
+                maxY = maxY - .1;
+            }
+            if (omittedDirection.y == -1) {
+                minY = minY + .1;
+            }
+            if (omittedDirection.z == 1) {
+                maxZ = maxZ - .1;
+            }
+            if (omittedDirection.z == -1) {
+                minZ = minZ + .1;
+            }
+        }
+        return this.box.minX < maxX && this.box.maxX > minX && this.box.minY < maxY && this.box.maxY > minY && this.box.minZ < maxZ && this.box.maxZ > minZ;
     }
 }
