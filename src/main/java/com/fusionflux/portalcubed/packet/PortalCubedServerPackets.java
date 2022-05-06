@@ -46,17 +46,6 @@ public class PortalCubedServerPackets {
         Box box = player.getBoundingBox().stretch(vec3d2.multiply(d)).expand(1.0D, 1.0D, 1.0D);
         EntityHitResult entityHitResult = ProjectileUtil.raycast(player, vec3d, vec3d3, box, (entityx) -> !entityx.isSpectator() && entityx.collides(), d);
 
-
-        /*if (entityHitResult != null) {
-            if (entityHitResult.getEntity() instanceof StorageCubeEntity entity) {
-                if (!((EntityPortalsAccess) player).getUUIDPresent()) {
-                    entity.setHolderUUID(player.getUuid());
-                    ((EntityPortalsAccess) player).setCubeUUID(entity.getUuid());
-
-                }
-            }
-        }*/
-
         server.execute(() -> {
 
 

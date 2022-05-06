@@ -19,11 +19,14 @@ repositories {
 	maven { url = "https://hephaestus.dev/release" }
 	maven { url "https://api.modrinth.com/maven" }
 	maven {
-		name = "Ladysnake Mods"
+		name = 'Ladysnake Mods'
 		url = 'https://ladysnake.jfrog.io/artifactory/mods'
+	}
+
+	maven {
+		url "https://www.cursemaven.com"
 		content {
-			includeGroup 'io.github.ladysnake'
-			includeGroupByRegex 'io\\.github\\.onyxstudios.*'
+			includeGroup "curse.maven"
 		}
 	}
 }
@@ -52,14 +55,14 @@ dependencies {
 	}
 
 	// Replace modImplementation with modApi if you expose components in your own API
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:4.0.0"
+	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4"
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:4.0.0"
+	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4"
 
 	// Replace modImplementation with modApi if you expose components in your own API
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:4.0.0"
+	//modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-cardinal-components-entity:4.1.4"
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:4.0.0"
+	//include "dev.onyxstudios.cardinal-components-api:cardinal-components-cardinal-components-entity:4.1.4"
 
 
 

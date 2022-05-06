@@ -98,21 +98,10 @@ public class PortalPlaceholderEntity extends Entity {
         return distance < d * d;
     }
 
-   /* @Override
-    public boolean doesNotCollide(double offsetX, double offsetY, double offsetZ) {
-        return true;
-    }*/
-
     @Override
     public Direction getHorizontalFacing() {
         return Direction.fromRotation(this.getYaw());
     }
-
-
-    /*@Override
-    public boolean collidesWith(Entity other) {
-        return false;
-    }*/
 
     @Override
     public Packet<?> createSpawnPacket() {

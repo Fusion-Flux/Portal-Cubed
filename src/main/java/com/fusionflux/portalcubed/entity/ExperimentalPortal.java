@@ -29,7 +29,6 @@ import java.util.UUID;
 
 public class ExperimentalPortal extends Entity {
 
-    public static final UUID nullUUID = Util.NIL_UUID;
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
 
     /**
@@ -37,20 +36,13 @@ public class ExperimentalPortal extends Entity {
      * They should be normalized and should be perpendicular to each other
      */
 
-    //public Vec3d destination;
-
-    //private Vec3d normal;
-
     public static final TrackedData<String> STOREDSTRING = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
     public static final TrackedData<Boolean> ISACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final TrackedData<String> STOREDOUTLINE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
 
 
     public Vec3d getNormal() {
-        //if (normal == null) {
-            return CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).normalize();
-       // }
-        //return normal;
+        return CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).normalize();
     }
 
     public ExperimentalPortal(EntityType<?> entityType, World world) {
@@ -123,37 +115,12 @@ return true;
         return Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
     }
 
-    boolean updateClient = false;
 
     @Override
     public void tick() {
         if(this.getBoundingBox() == nullBox){
             this.calculateBoundingBox();
         }
-        //if(CalledValues.getDestination(this) != null) {
-        //    if (!this.world.isClient) {
-        //        List<Entity> list = world.getEntitiesByClass(Entity.class, this.getBoundingBox(), e -> true);
-        //        for (Entity entity : list) {
-        //            //System.out.println(entity);
-        //            if (!this.getString().equals("null")) {
-        //                ExperimentalPortal otherPortal;
-        //                otherPortal = (ExperimentalPortal) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
-        //                assert otherPortal != null;
-//
-//
-        //                if (!(entity instanceof ExperimentalPortal)) {
-        //                   // CalledValues.teleportEntity(this,CalledValues.getDestination(this),entity,otherPortal);
-        //                  //  if (entity.horizontalCollision && this.getFacingDirection() != Direction.UP && this.getFacingDirection() != Direction.DOWN) {
-        //                  //      entity.teleport(CalledValues.getDestination(this).getX(), CalledValues.getDestination(this).getY(), CalledValues.getDestination(this).getZ());
-        //                  //  }
-        //                  //  if (entity.verticalCollision && this.getFacingDirection() == Direction.UP && this.getFacingDirection() == Direction.DOWN) {
-        //                  //      entity.teleport(CalledValues.getDestination(this).getX(), CalledValues.getDestination(this).getY(), CalledValues.getDestination(this).getZ());
-        //                  //  }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
 
         if (!this.world.isClient && CalledValues.getAxisW(this) != null) {
             BlockPos topBehind = new BlockPos(
@@ -208,10 +175,7 @@ return true;
                     assert otherPortal != null;
                     if (otherPortal != null) {
                         CalledValues.setDestination(otherPortal,otherPortal.getOriginPos());
-                        //otherPortal.setDestination(otherPortal.getOriginPos());
-                        //PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(otherPortal), otherPortal);
                         otherPortal.setActive(false);
-                        //otherPortal.reloadAndSyncToClient();
                     }
                 }
             }
@@ -230,14 +194,10 @@ return true;
             setBoundingBox(nullBox);
             return nullBox;
         }
-            double w = .9;
-            double h;
+            double w =2;
+            double h = 4;
 
-            if(getFacingDirection() == Direction.UP || getFacingDirection()==Direction.DOWN){
-                h = 1.9;
-            }else{
-                h = 2;
-            }
+
             //setBoundingBox(nullBox);
             Box portalBox = new Box(
                     getPointInPlane(w / 2, h / 2)
@@ -252,6 +212,44 @@ return true;
             ));
             setBoundingBox(portalBox);
             return portalBox;
+    }
+
+
+    public Box calculateCuttoutBox() {
+        if (CalledValues.getAxisW(this) == null) {
+            if(this.world.isClient) {
+                System.out.println("axisW is null Client");
+            }else{
+                System.out.println("axisW is null Server");
+            }
+            return nullBox;
+        }
+        double w = .9;
+        double h = 1.9;
+        Box portalBox = new Box(
+                getCutoutPointInPlane(w / 2, h / 2)
+                        .add(getNormal().multiply(2.5)),
+                getCutoutPointInPlane(-w / 2, -h / 2)
+                        .add(getNormal().multiply(-2.5))
+        ).union(new Box(
+                getCutoutPointInPlane(-w / 2, h / 2)
+                        .add(getNormal().multiply(2.5)),
+                getCutoutPointInPlane(w / 2, -h / 2)
+                        .add(getNormal().multiply(-2.5))
+        ));
+
+        if(portalBox == nullBox){
+            if(this.world.isClient) {
+                System.out.println("portalbox is null Client");
+            }else{
+                System.out.println("portalbox is null Server");
+            }
+        }
+        return portalBox;
+    }
+
+    public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*-2.5,getFacingDirection().getUnitVector().getY()*-2.5,getFacingDirection().getUnitVector().getZ()*-2.5);
     }
 
     public Vec3d getPointInPlane(double xInPlane, double yInPlane) {
@@ -270,14 +268,4 @@ return true;
         setPosition(pos);
     }
 
-
-    //public void setOrientationAndSize(
-    //        Vec3d newAxisW, Vec3d newAxisH
-    //) {
-    //    setBoundingBox(nullBox);
-    //    System.out.println("AAA");
-    //    CalledValues.setAxisW(this,newAxisW);
-    //    CalledValues.setAxisH(this,newAxisH);
-    //    calculateBoundingBox();
-    //}
 }

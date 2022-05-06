@@ -20,25 +20,31 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public class ServerPlayNetworkHandlerMixin {
+public abstract class ServerPlayNetworkHandlerMixin {
 
     @Shadow public ServerPlayerEntity player;
+
+    @Shadow public abstract ServerPlayerEntity getPlayer();
 
     /**
      * @author
      */
     @Overwrite
     private boolean isPlayerNotCollidingWithBlocks(WorldView world, Box box) {
-        Iterable<VoxelShape> iterable = world.getCollisions( ((ServerPlayNetworkHandler)(Object)this).player, ((ServerPlayNetworkHandler)(Object)this).player.getBoundingBox().contract(1.0E-5F));
+        Iterable<VoxelShape> iterable = world.getCollisions( this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F));
         VoxelShape voxelShape = VoxelShapes.cuboid(box.contract(1.0E-5F));
-        Vec3d directions = CalledValues.getOmmitedDirections(((ServerPlayNetworkHandler)(Object)this).player);
-        if(directions != Vec3d.ZERO){
-            iterable =(((CustomCollisionView) world).getPortalCollisions(((ServerPlayNetworkHandler)(Object)this).player, ((ServerPlayNetworkHandler)(Object)this).player.getBoundingBox().contract(1.0E-5F), directions));
+
+        VoxelShape directions = CalledValues.getPortalCutout(this.getPlayer());
+        if(directions != VoxelShapes.empty()){
+            iterable =(((CustomCollisionView) world).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), directions));
+            //System.out.println("ServerPlayNetworkHandler" + iterable);
         }
 
         for(VoxelShape voxelShape2 : iterable) {
@@ -49,4 +55,19 @@ public class ServerPlayNetworkHandlerMixin {
 
         return false;
     }
+
+    //@Inject(method = "tick", at = @At("TAIL"))
+    //public void tick(CallbackInfo ci) {
+//
+    //    //if(!((Entity) (Object) this).world.isClient) {
+    //    List<ExperimentalPortal> list = this.getPlayer().world.getNonSpectatingEntities(ExperimentalPortal.class, this.getPlayer().getBoundingBox());
+    //    VoxelShape ommitedDirections = VoxelShapes.empty();
+    //    for (ExperimentalPortal entity1 : list) {
+//
+    //        ommitedDirections = VoxelShapes.union(ommitedDirections, VoxelShapes.cuboid(entity1.calculateCuttoutBox()));
+    //    }
+    //    CalledValues.setPortalCutout(this.getPlayer(), ommitedDirections);
+//
+    //}
+
 }

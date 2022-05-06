@@ -3,6 +3,8 @@ package com.fusionflux.portalcubed.util;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 import java.util.UUID;
 
@@ -15,8 +17,8 @@ public interface PortalCubedComponent extends Component {
 
     void setCubeUUID(UUID cubeUUID);
 
-    Vec3d getOmmitDirection();
+    VoxelShape getPortalCutout();
 
-    void setOmmitDirection(Vec3d directions);
+    void setPortalCutout(VoxelShape portalCutout);
 
 }

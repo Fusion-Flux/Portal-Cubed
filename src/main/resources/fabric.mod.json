@@ -45,7 +45,7 @@
   },
   "custom": {
     "cardinal-components": [
-      "portalcubed:gravitytimer",
+      "portalcubed:entity_component",
       "portalcubed:portal_data"
     ],
     "lithium:options": {

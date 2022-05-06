@@ -45,6 +45,7 @@ public class PortalCubedClientPackets {
                 entity.setId(entityID);
                 entity.setUuid(entityUUID);
                 assert world != null;
+                if(world != null)
                 world.addEntity(entityID, entity);
             }
         });

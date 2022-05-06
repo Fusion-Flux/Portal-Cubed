@@ -11,6 +11,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -18,8 +20,8 @@ import java.util.UUID;
 
 public abstract class CalledValues {
 
-    public static final ComponentKey<PortalCubedComponent> GRAVITY_TIMER =
-            ComponentRegistry.getOrCreate(new Identifier("portalcubed", "gravitytimer"), PortalCubedComponent.class);
+    public static final ComponentKey<PortalCubedComponent> ENTITY_COMPONENT =
+            ComponentRegistry.getOrCreate(new Identifier("portalcubed", "entity_component"), PortalCubedComponent.class);
 
     // workaround for a CCA bug; maybeGet throws an NPE in internal code if the DataTracker isn't initialized
     // null check the component container to avoid it
@@ -34,27 +36,27 @@ public abstract class CalledValues {
     }
 
     public static boolean getSwapTimer(Entity entity) {
-        return maybeGetSafe(GRAVITY_TIMER, entity).map(PortalCubedComponent::getSwapGravity).orElse(false);
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getSwapGravity).orElse(false);
     }
 
     public static void setSwapTimer(Entity entity, boolean setValue) {
-        maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setSwapGravity(setValue));
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setSwapGravity(setValue));
     }
 
-    public static Vec3d getOmmitedDirections(Entity entity) {
-        return maybeGetSafe(GRAVITY_TIMER, entity).map(PortalCubedComponent::getOmmitDirection).orElse(Vec3d.ZERO);
+    public static VoxelShape getPortalCutout(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortalCutout).orElse(VoxelShapes.empty());
     }
 
-    public static void setOmmitedDirections(Entity entity, Vec3d setValue) {
-        maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setOmmitDirection(setValue));
+    public static void setPortalCutout(Entity entity, VoxelShape setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setPortalCutout(setValue));
     }
 
     public static UUID getCubeUUID(Entity entity) {
-        return maybeGetSafe(GRAVITY_TIMER, entity).map(PortalCubedComponent::getCubeUUID).orElse(null);
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getCubeUUID).orElse(null);
     }
 
     public static void setCubeUUID(Entity entity, UUID setValue) {
-        maybeGetSafe(GRAVITY_TIMER, entity).ifPresent(gc -> gc.setCubeUUID(setValue));
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setCubeUUID(setValue));
     }
 
     public static final ComponentKey<CustomPortalDataComponent> PORTAL_DATA =

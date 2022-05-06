@@ -14,10 +14,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(BlockCollisionSpliterator.class)
 public class BlockCollisionSpliteratorMixin {
 
-    @Shadow @Final private Box box;
-
-    @Shadow @Final private CollisionView world;
-
     @Redirect(
             at = @At(target = "Lnet/minecraft/util/math/Box;intersects(DDDDDD)Z", value = "INVOKE"),
             method = "computeNext()Lnet/minecraft/util/shape/VoxelShape;"
