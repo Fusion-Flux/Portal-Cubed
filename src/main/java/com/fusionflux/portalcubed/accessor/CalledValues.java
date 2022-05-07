@@ -43,11 +43,11 @@ public abstract class CalledValues {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setSwapGravity(setValue));
     }
 
-    public static VoxelShape getPortalCutout(Entity entity) {
-        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortalCutout).orElse(VoxelShapes.empty());
+    public static Box getPortalCutout(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortalCutout).orElse(new Box(0, 0, 0, 0, 0, 0));
     }
 
-    public static void setPortalCutout(Entity entity, VoxelShape setValue) {
+    public static void setPortalCutout(Entity entity, Box setValue) {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setPortalCutout(setValue));
     }
 

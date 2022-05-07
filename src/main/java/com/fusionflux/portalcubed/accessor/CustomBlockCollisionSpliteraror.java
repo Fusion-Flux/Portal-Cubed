@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape> {
     private final Box box;
-    private final VoxelShape portalBox;
+    private final Box portalBox;
     private final ShapeContext context;
     private final CuboidBlockIterator blockIterator;
     private final BlockPos.Mutable pos;
@@ -27,11 +27,11 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
     private BlockView chunk;
     private long chunkPos;
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box, VoxelShape portalBox) {
+    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box, Box portalBox) {
         this(world, entity, box, portalBox,false);
     }
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box,VoxelShape portalBox, boolean forEntity) {
+    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box,Box portalBox, boolean forEntity) {
         this.context = entity == null ? ShapeContext.absent() : ShapeContext.of(entity);
         this.pos = new BlockPos.Mutable();
         this.boxShape = VoxelShapes.cuboid(box);
@@ -81,12 +81,12 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
                         if (voxelShape == VoxelShapes.fullCube()) {
                             if (this.box.intersects(i, j, k, (double)i + 1.0, (double)j + 1.0, (double)k + 1.0)) {
                                 voxelShape.offset(i, j, k);
-                                return portalBox;
+                                return VoxelShapes.combine(voxelShape,VoxelShapes.cuboid(portalBox),BooleanBiFunction.ONLY_FIRST);
                             }
                         } else {
                             VoxelShape voxelShape2 = voxelShape.offset((double)i, (double)j, (double)k);
                             if (VoxelShapes.matchesAnywhere(voxelShape2, this.boxShape, BooleanBiFunction.AND)) {
-                                return portalBox;
+                                return VoxelShapes.combine(voxelShape2,VoxelShapes.cuboid(portalBox),BooleanBiFunction.ONLY_FIRST);
                             }
                         }
                     }

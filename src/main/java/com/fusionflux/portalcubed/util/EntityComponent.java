@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
     boolean gravityState = false;
-    VoxelShape portalCutout = VoxelShapes.empty();
+    Box portalCutout = new Box(0, 0, 0, 0, 0, 0);
     UUID cubeUUID = null;
     private final Entity entity;
 
@@ -38,16 +38,18 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public VoxelShape getPortalCutout() {
+    public Box getPortalCutout() {
         return this.portalCutout;
     }
 
     @Override
-    public void setPortalCutout(VoxelShape portalCutout) {
-        //if(portalCutout != this.portalCutout) {
-            this.portalCutout = portalCutout;
-            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
-        //}
+    public void setPortalCutout(Box portalCutout) {
+        if(portalCutout != this.portalCutout) {
+            if(!entity.world.isClient) {
+                this.portalCutout = portalCutout;
+                PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+            }
+        }
     }
 
 
@@ -86,11 +88,22 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-
+        double maxX = tag.getDouble("maxX");
+        double maxY = tag.getDouble("maxY");
+        double maxZ = tag.getDouble("maxZ");
+        double minX = tag.getDouble("minX");
+        double minY = tag.getDouble("minY");
+        double minZ = tag.getDouble("minZ");
+        portalCutout = new Box(minX,minY,minZ,maxX,maxY,maxZ);
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-
+        tag.putDouble("maxX",this.portalCutout.getMax(Direction.Axis.X));
+        tag.putDouble("maxY",this.portalCutout.getMax(Direction.Axis.Y));
+        tag.putDouble("maxZ",this.portalCutout.getMax(Direction.Axis.Z));
+        tag.putDouble("minX",this.portalCutout.getMin(Direction.Axis.X));
+        tag.putDouble("minY",this.portalCutout.getMin(Direction.Axis.Y));
+        tag.putDouble("minZ",this.portalCutout.getMin(Direction.Axis.Z));
     }
 }

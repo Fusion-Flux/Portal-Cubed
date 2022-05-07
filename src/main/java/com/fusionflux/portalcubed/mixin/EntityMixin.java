@@ -136,10 +136,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             //if(!(((Entity) (Object) this) instanceof ClientPlayerEntity) && !(((Entity) (Object) this) instanceof ServerPlayerEntity)){
         if(!this.world.isClient) {
             List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, getBoundingBox());
-            VoxelShape ommitedDirections = VoxelShapes.empty();
+            Box ommitedDirections = nullBox;
             for (ExperimentalPortal entity1 : list) {
                 if(entity1.calculateCuttoutBox() != nullBox)
-                ommitedDirections = VoxelShapes.union(ommitedDirections,VoxelShapes.cuboid(entity1.calculateCuttoutBox()));
+                ommitedDirections = entity1.calculateCuttoutBox();
             }
             CalledValues.setPortalCutout(((Entity) (Object) this), ommitedDirections);
         }
@@ -301,25 +301,25 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     )
     private static void addAllModifyArg(Args args, @Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
         //if(!world.isClient) {
-            VoxelShape portalBox = CalledValues.getPortalCutout(entity);
-            if (portalBox != VoxelShapes.empty())
+            Box portalBox = CalledValues.getPortalCutout(entity);
+            if (portalBox != nullBox)
                 args.set(0, ((CustomCollisionView) world).getPortalBlockCollisions(entity, entityBoundingBox.stretch(movement), portalBox));
         //}
     }
 
     @Inject(method = "doesNotCollide(Lnet/minecraft/util/math/Box;)Z", at = @At("RETURN"), cancellable = true)
     private void doesNotCollide(Box box, CallbackInfoReturnable<Boolean> cir) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
+        Box portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
 
-        if (portalBox != VoxelShapes.empty())
+        if (portalBox != nullBox)
             cir.setReturnValue(((CustomCollisionView) ((Entity) (Object) this).world).isPortalSpaceEmpty(((Entity) (Object) this), box, portalBox) && !this.world.containsFluid(box));
         //System.out.println("doesnotcollide");
     }
 
     @Inject(method = "wouldPoseNotCollide", at = @At("RETURN"), cancellable = true)
     public void wouldPoseNotCollide(EntityPose pose, CallbackInfoReturnable<Boolean> cir) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(((Entity)(Object)this));
-        if(portalBox != VoxelShapes.empty())
+        Box portalBox = CalledValues.getPortalCutout(((Entity)(Object)this));
+        if(portalBox != nullBox)
             cir.setReturnValue(((CustomCollisionView) ((Entity)(Object)this).world).isPortalSpaceEmpty(((Entity)(Object)this), this.calculateBoundsForPose(pose).contract(1.0E-7), portalBox));
         //System.out.println("wouldposenotcollide");
     }

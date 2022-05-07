@@ -32,7 +32,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Shadow public ServerPlayerEntity player;
 
     @Shadow public abstract ServerPlayerEntity getPlayer();
-
+    private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
     /**
      * @author
      */
@@ -41,8 +41,8 @@ public abstract class ServerPlayNetworkHandlerMixin {
         Iterable<VoxelShape> iterable = world.getCollisions( this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F));
         VoxelShape voxelShape = VoxelShapes.cuboid(box.contract(1.0E-5F));
 
-        VoxelShape directions = CalledValues.getPortalCutout(this.getPlayer());
-        if(directions != VoxelShapes.empty()){
+        Box directions = CalledValues.getPortalCutout(this.getPlayer());
+        if(directions != nullBox){
             iterable =(((CustomCollisionView) world).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), directions));
             //System.out.println("ServerPlayNetworkHandler" + iterable);
         }
