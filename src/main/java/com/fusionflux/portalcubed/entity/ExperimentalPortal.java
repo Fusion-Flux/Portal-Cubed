@@ -194,8 +194,8 @@ return true;
             setBoundingBox(nullBox);
             return nullBox;
         }
-            double w =2;
-            double h = 4;
+            double w =.9;
+            double h = 1.9;
 
 
             //setBoundingBox(nullBox);
@@ -217,11 +217,11 @@ return true;
 
     public Box calculateCuttoutBox() {
         if (CalledValues.getAxisW(this) == null) {
-            if(this.world.isClient) {
-                System.out.println("axisW is null Client");
-            }else{
-                System.out.println("axisW is null Server");
-            }
+            //if(this.world.isClient) {
+            //    System.out.println("axisW is null Client");
+            //}else{
+            //    System.out.println("axisW is null Server");
+            //}
             return nullBox;
         }
         double w = .9;
@@ -238,13 +238,13 @@ return true;
                         .add(getNormal().multiply(-2.5))
         ));
 
-        if(portalBox == nullBox){
-            if(this.world.isClient) {
-                System.out.println("portalbox is null Client");
-            }else{
-                System.out.println("portalbox is null Server");
-            }
-        }
+       // if(portalBox == nullBox){
+       //     if(this.world.isClient) {
+       //         System.out.println("portalbox is null Client");
+       //     }else{
+       //         System.out.println("portalbox is null Server");
+       //     }
+       // }
         return portalBox;
     }
 

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape> {
     private final Box box;
-    private final VoxelShape portalBox;
+    private final Box portalBox;
     private final ShapeContext context;
     private final CuboidBlockIterator blockIterator;
     private final BlockPos.Mutable pos;
@@ -27,11 +27,11 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
     private BlockView chunk;
     private long chunkPos;
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box, VoxelShape portalBox) {
+    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box, Box portalBox) {
         this(world, entity, box, portalBox,false);
     }
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box,VoxelShape portalBox, boolean forEntity) {
+    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box,Box portalBox, boolean forEntity) {
         this.context = entity == null ? ShapeContext.absent() : ShapeContext.of(entity);
         this.pos = new BlockPos.Mutable();
         this.boxShape = VoxelShapes.cuboid(box);
@@ -74,19 +74,21 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
                 if (blockView != null) {
                     this.pos.set(i, j, k);
                     BlockState blockState = blockView.getBlockState(this.pos);
-                    if ((!this.forEntity)
+                    if ((!this.forEntity || blockState.shouldSuffocate(blockView, this.pos))
                             && (l != 1 || blockState.exceedsCube())
                             && (l != 2 || blockState.isOf(Blocks.MOVING_PISTON))) {
                         VoxelShape voxelShape = blockState.getCollisionShape(this.world, this.pos, this.context);
+                        VoxelShape cutout = VoxelShapes.cuboid(portalBox).offset(-i,-j,-k);
+                        voxelShape = VoxelShapes.combine(voxelShape, cutout, BooleanBiFunction.ONLY_FIRST);
+
                         if (voxelShape == VoxelShapes.fullCube()) {
-                            if (this.box.intersects(i, j, k, (double)i + 1.0, (double)j + 1.0, (double)k + 1.0)) {
-                                voxelShape.offset(i, j, k);
-                                return portalBox;
+                            if (this.box.intersects((double)i, (double)j, (double)k, (double)i + 1.0, (double)j + 1.0, (double)k + 1.0)) {
+                                return voxelShape.offset((double)i, (double)j, (double)k);
                             }
                         } else {
                             VoxelShape voxelShape2 = voxelShape.offset((double)i, (double)j, (double)k);
                             if (VoxelShapes.matchesAnywhere(voxelShape2, this.boxShape, BooleanBiFunction.AND)) {
-                                return portalBox;
+                                return voxelShape2;
                             }
                         }
                     }

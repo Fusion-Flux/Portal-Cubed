@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
+import java.util.Objects;
 
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
@@ -36,12 +37,11 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
 
     @Inject(method = "wouldCollideAt", at = @At("RETURN"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     public void wouldCollideAt(BlockPos pos, CallbackInfoReturnable<Boolean> cir, Box box, Box box2) {
-        VoxelShape directions = CalledValues.getPortalCutout(this);
+        Box directions = CalledValues.getPortalCutout(this);
 
-        if(directions != VoxelShapes.empty()){
+        if(!Objects.equals(directions, new Box(0, 0, 0, 0, 0, 0))){
             cir.setReturnValue(((CustomCollisionView) this.world).canPortalCollide(this, box2, directions));
         }
-        //System.out.println("ClientPlayerEntity");
     }
 
 

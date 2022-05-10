@@ -17,8 +17,8 @@ public interface PortalCubedComponent extends Component {
 
     void setCubeUUID(UUID cubeUUID);
 
-    VoxelShape getPortalCutout();
+    Box getPortalCutout();
 
-    void setPortalCutout(VoxelShape portalCutout);
+    void setPortalCutout(Box portalCutout);
 
 }

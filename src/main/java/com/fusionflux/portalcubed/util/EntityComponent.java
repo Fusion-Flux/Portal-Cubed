@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
     boolean gravityState = false;
-    VoxelShape portalCutout = VoxelShapes.empty();
+    Box portalCutout = new Box(0,0,0,0,0,0);
     UUID cubeUUID = null;
     private final Entity entity;
 
@@ -38,15 +38,15 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public VoxelShape getPortalCutout() {
+    public Box getPortalCutout() {
         return this.portalCutout;
     }
 
     @Override
-    public void setPortalCutout(VoxelShape portalCutout) {
+    public void setPortalCutout(Box portalCutout) {
         //if(portalCutout != this.portalCutout) {
             this.portalCutout = portalCutout;
-            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+            //PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
         //}
     }
 

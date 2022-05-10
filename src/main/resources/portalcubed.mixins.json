@@ -5,9 +5,10 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ArmorItemMixin",
+    "ClientPlayerEntityMixin",
+    "CollisionViewMixin",
     "EntityMixin",
     "PlayerEntityMixin",
-    "ClientPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "WorldViewMixin"
   ],

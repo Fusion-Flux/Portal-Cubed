@@ -11,19 +11,17 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.google.common.collect.Lists;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.RotationUtil;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,6 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(Entity.class)
@@ -134,15 +133,16 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
             //if(!(((Entity) (Object) this) instanceof ClientPlayerEntity) && !(((Entity) (Object) this) instanceof ServerPlayerEntity)){
-        if(!this.world.isClient) {
+        //if(!this.world.isClient) {
             List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, getBoundingBox());
-            VoxelShape ommitedDirections = VoxelShapes.empty();
+            Box ommitedDirections = new Box(0,0,0,0,0,0);
             for (ExperimentalPortal entity1 : list) {
-                if(entity1.calculateCuttoutBox() != nullBox)
-                ommitedDirections = VoxelShapes.union(ommitedDirections,VoxelShapes.cuboid(entity1.calculateCuttoutBox()));
+                if(entity1.calculateCuttoutBox() != nullBox) {
+                    ommitedDirections = entity1.calculateCuttoutBox();
+                }
             }
             CalledValues.setPortalCutout(((Entity) (Object) this), ommitedDirections);
-        }
+        //}
 
         if(this.world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.ADHESION_GEL && CalledValues.getSwapTimer((Entity)(Object)this)){
             CalledValues.setSwapTimer((Entity)(Object)this,false);
@@ -301,26 +301,35 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     )
     private static void addAllModifyArg(Args args, @Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
         //if(!world.isClient) {
-            VoxelShape portalBox = CalledValues.getPortalCutout(entity);
-            if (portalBox != VoxelShapes.empty())
+        Box portalBox = CalledValues.getPortalCutout(entity);
+            if (!Objects.equals(portalBox, new Box(0, 0, 0, 0, 0, 0)))
                 args.set(0, ((CustomCollisionView) world).getPortalBlockCollisions(entity, entityBoundingBox.stretch(movement), portalBox));
         //}
     }
 
     @Inject(method = "doesNotCollide(Lnet/minecraft/util/math/Box;)Z", at = @At("RETURN"), cancellable = true)
     private void doesNotCollide(Box box, CallbackInfoReturnable<Boolean> cir) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
+        Box portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
 
-        if (portalBox != VoxelShapes.empty())
+        if (!Objects.equals(portalBox, new Box(0, 0, 0, 0, 0, 0)))
             cir.setReturnValue(((CustomCollisionView) ((Entity) (Object) this).world).isPortalSpaceEmpty(((Entity) (Object) this), box, portalBox) && !this.world.containsFluid(box));
         //System.out.println("doesnotcollide");
     }
 
     @Inject(method = "wouldPoseNotCollide", at = @At("RETURN"), cancellable = true)
     public void wouldPoseNotCollide(EntityPose pose, CallbackInfoReturnable<Boolean> cir) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(((Entity)(Object)this));
-        if(portalBox != VoxelShapes.empty())
+        Box portalBox = CalledValues.getPortalCutout(((Entity)(Object)this));
+        if(!Objects.equals(portalBox, new Box(0, 0, 0, 0, 0, 0)))
             cir.setReturnValue(((CustomCollisionView) ((Entity)(Object)this).world).isPortalSpaceEmpty(((Entity)(Object)this), this.calculateBoundsForPose(pose).contract(1.0E-7), portalBox));
         //System.out.println("wouldposenotcollide");
     }
+
+    @Inject(method = "adjustMovementForSneaking", at = @At("HEAD"), cancellable = true)
+    protected void adjustMovementForSneaking(Vec3d movement, MovementType type, CallbackInfoReturnable<Vec3d> cir) {
+        cir.setReturnValue(movement);
+    }
+
+
+
+
 }

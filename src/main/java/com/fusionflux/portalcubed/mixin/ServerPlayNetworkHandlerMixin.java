@@ -12,7 +12,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockCollisionSpliterator;
 import net.minecraft.world.CollisionView;
 import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Final;
@@ -25,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import java.util.Objects;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public abstract class ServerPlayNetworkHandlerMixin {
@@ -41,8 +41,8 @@ public abstract class ServerPlayNetworkHandlerMixin {
         Iterable<VoxelShape> iterable = world.getCollisions( this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F));
         VoxelShape voxelShape = VoxelShapes.cuboid(box.contract(1.0E-5F));
 
-        VoxelShape directions = CalledValues.getPortalCutout(this.getPlayer());
-        if(directions != VoxelShapes.empty()){
+        Box directions = CalledValues.getPortalCutout(this.getPlayer());
+        if(!Objects.equals(directions, new Box(0, 0, 0, 0, 0, 0))){
             iterable =(((CustomCollisionView) world).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), directions));
             //System.out.println("ServerPlayNetworkHandler" + iterable);
         }
