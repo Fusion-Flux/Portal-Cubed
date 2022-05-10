@@ -41,10 +41,9 @@ public abstract class ServerPlayNetworkHandlerMixin {
         Iterable<VoxelShape> iterable = world.getCollisions( this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F));
         VoxelShape voxelShape = VoxelShapes.cuboid(box.contract(1.0E-5F));
 
-        Box directions = CalledValues.getPortalCutout(this.getPlayer());
-        if(!Objects.equals(directions, new Box(0, 0, 0, 0, 0, 0))){
-            iterable =(((CustomCollisionView) world).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), directions));
-            //System.out.println("ServerPlayNetworkHandler" + iterable);
+        VoxelShape portalBox = CalledValues.getPortalCutout(this.getPlayer());
+        if(portalBox != VoxelShapes.empty()){
+            iterable = (((CustomCollisionView) world).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), portalBox));
         }
 
         for(VoxelShape voxelShape2 : iterable) {

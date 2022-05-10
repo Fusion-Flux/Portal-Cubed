@@ -35,12 +35,11 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
         super(world, profile);
     }
 
-    @Inject(method = "wouldCollideAt", at = @At("RETURN"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    public void wouldCollideAt(BlockPos pos, CallbackInfoReturnable<Boolean> cir, Box box, Box box2) {
-        Box directions = CalledValues.getPortalCutout(this);
-
-        if(!Objects.equals(directions, new Box(0, 0, 0, 0, 0, 0))){
-            cir.setReturnValue(((CustomCollisionView) this.world).canPortalCollide(this, box2, directions));
+    @Inject(method = "wouldCollideAt", at = @At("HEAD"), cancellable = true)
+    public void wouldCollideAt(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        VoxelShape portalBox = CalledValues.getPortalCutout(((ClientPlayerEntity)(Object)this));
+        if(portalBox != VoxelShapes.empty()){
+            cir.setReturnValue(false);
         }
     }
 

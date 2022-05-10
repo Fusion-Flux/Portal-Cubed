@@ -31,6 +31,7 @@ public class ExperimentalPortal extends Entity {
 
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
 
+    private Box cutoutBoundingBox = nullBox;
     /**
      * axisW and axisH define the orientation of the portal
      * They should be normalized and should be perpendicular to each other
@@ -121,6 +122,9 @@ return true;
         if(this.getBoundingBox() == nullBox){
             this.calculateBoundingBox();
         }
+        if(this.getCutoutBoundingBox() == nullBox){
+            this.calculateCuttoutBox();
+        }
 
         if (!this.world.isClient && CalledValues.getAxisW(this) != null) {
             BlockPos topBehind = new BlockPos(
@@ -185,6 +189,9 @@ return true;
 
     public void syncRotations(){
         this.setBoundingBox(nullBox);
+        this.setCutoutBoundingBox(nullBox);
+        this.calculateBoundingBox();
+        this.calculateCuttoutBox();
     }
 
     @Override
@@ -201,14 +208,14 @@ return true;
             //setBoundingBox(nullBox);
             Box portalBox = new Box(
                     getPointInPlane(w / 2, h / 2)
-                            .add(getNormal().multiply(1)),
+                            .add(getNormal().multiply(.2)),
                     getPointInPlane(-w / 2, -h / 2)
-                            .add(getNormal().multiply(-1))
+                            .add(getNormal().multiply(-.2))
             ).union(new Box(
                     getPointInPlane(-w / 2, h / 2)
-                            .add(getNormal().multiply(1)),
+                            .add(getNormal().multiply(.2)),
                     getPointInPlane(w / 2, -h / 2)
-                            .add(getNormal().multiply(-1))
+                            .add(getNormal().multiply(-.2))
             ));
             setBoundingBox(portalBox);
             return portalBox;
@@ -217,39 +224,37 @@ return true;
 
     public Box calculateCuttoutBox() {
         if (CalledValues.getAxisW(this) == null) {
-            //if(this.world.isClient) {
-            //    System.out.println("axisW is null Client");
-            //}else{
-            //    System.out.println("axisW is null Server");
-            //}
+            setCutoutBoundingBox(nullBox);
             return nullBox;
         }
         double w = .9;
         double h = 1.9;
         Box portalBox = new Box(
                 getCutoutPointInPlane(w / 2, h / 2)
-                        .add(getNormal().multiply(2.5)),
+                        .add(getNormal().multiply(5)),
                 getCutoutPointInPlane(-w / 2, -h / 2)
-                        .add(getNormal().multiply(-2.5))
+                        .add(getNormal().multiply(-5))
         ).union(new Box(
                 getCutoutPointInPlane(-w / 2, h / 2)
-                        .add(getNormal().multiply(2.5)),
+                        .add(getNormal().multiply(5)),
                 getCutoutPointInPlane(w / 2, -h / 2)
-                        .add(getNormal().multiply(-2.5))
+                        .add(getNormal().multiply(-5))
         ));
-
-       // if(portalBox == nullBox){
-       //     if(this.world.isClient) {
-       //         System.out.println("portalbox is null Client");
-       //     }else{
-       //         System.out.println("portalbox is null Server");
-       //     }
-       // }
+        setCutoutBoundingBox(portalBox);
         return portalBox;
     }
 
+    public final Box getCutoutBoundingBox() {
+        return this.cutoutBoundingBox;
+    }
+
+    public final void setCutoutBoundingBox(Box boundingBox) {
+        this.cutoutBoundingBox = boundingBox;
+    }
+
+
     public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
-        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*-2.5,getFacingDirection().getUnitVector().getY()*-2.5,getFacingDirection().getUnitVector().getZ()*-2.5);
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*-5,getFacingDirection().getUnitVector().getY()*-5,getFacingDirection().getUnitVector().getZ()*-5);
     }
 
     public Vec3d getPointInPlane(double xInPlane, double yInPlane) {

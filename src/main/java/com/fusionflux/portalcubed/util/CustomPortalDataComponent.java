@@ -12,10 +12,14 @@ public interface CustomPortalDataComponent extends Component {
 
     Vec3d getDestination();
 
+    Vec3d getOtherFacing();
+
     void setDestination(Vec3d Destination);
 
     void teleportEntity(Vec3d TeleportTo, Entity TeleportedEntity, ExperimentalPortal OtherPortal);
 
     void setOrientation(Vec3d AxisW,Vec3d AxisH);
+
+    void setOtherFacing(Vec3d Facing);
 
 }

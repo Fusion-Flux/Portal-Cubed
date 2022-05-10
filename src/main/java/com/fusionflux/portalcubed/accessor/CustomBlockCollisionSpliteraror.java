@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape> {
     private final Box box;
-    private final Box portalBox;
+    private final VoxelShape portalBox;
     private final ShapeContext context;
     private final CuboidBlockIterator blockIterator;
     private final BlockPos.Mutable pos;
@@ -27,11 +27,11 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
     private BlockView chunk;
     private long chunkPos;
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box, Box portalBox) {
+    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box, VoxelShape portalBox) {
         this(world, entity, box, portalBox,false);
     }
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box,Box portalBox, boolean forEntity) {
+    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box,VoxelShape portalBox, boolean forEntity) {
         this.context = entity == null ? ShapeContext.absent() : ShapeContext.of(entity);
         this.pos = new BlockPos.Mutable();
         this.boxShape = VoxelShapes.cuboid(box);
@@ -78,7 +78,7 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
                             && (l != 1 || blockState.exceedsCube())
                             && (l != 2 || blockState.isOf(Blocks.MOVING_PISTON))) {
                         VoxelShape voxelShape = blockState.getCollisionShape(this.world, this.pos, this.context);
-                        VoxelShape cutout = VoxelShapes.cuboid(portalBox).offset(-i,-j,-k);
+                        VoxelShape cutout = portalBox.offset(-i,-j,-k);
                         voxelShape = VoxelShapes.combine(voxelShape, cutout, BooleanBiFunction.ONLY_FIRST);
 
                         if (voxelShape == VoxelShapes.fullCube()) {

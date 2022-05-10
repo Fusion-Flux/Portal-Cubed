@@ -15,7 +15,7 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
     Vec3d axisW=null;
     Vec3d axisH=null;
     Vec3d destination=null;
-
+    Vec3d facing=Vec3d.ZERO;
     private final ExperimentalPortal entity;
 
     public PortalDataComponent(ExperimentalPortal entity) {
@@ -40,6 +40,17 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
     @Override
     public void setDestination(Vec3d Destination) {
         destination = Destination;
+        PortalCubedComponents.PORTAL_DATA.sync(entity);
+    }
+
+    @Override
+    public Vec3d getOtherFacing() {
+        return facing;
+    }
+
+    @Override
+    public void setOtherFacing(Vec3d Facing) {
+        facing = Facing;
         PortalCubedComponents.PORTAL_DATA.sync(entity);
     }
 
@@ -85,6 +96,7 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
     public void readFromNbt(NbtCompound tag) {
         this.setOrientation(IPHelperDuplicate.getVec3d(tag, "axisW").normalize(),IPHelperDuplicate.getVec3d(tag, "axisH").normalize());
         this.setDestination(IPHelperDuplicate.getVec3d(tag, "destination"));
+        this.setOtherFacing(IPHelperDuplicate.getVec3d(tag, "facing"));
     }
 
     @Override
@@ -92,5 +104,6 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
         IPHelperDuplicate.putVec3d(tag, "axisW", this.getAxisW());
         IPHelperDuplicate.putVec3d(tag, "axisH", this.getAxisH());
         IPHelperDuplicate.putVec3d(tag, "destination", this.getDestination());
+        IPHelperDuplicate.putVec3d(tag, "facing", this.getOtherFacing());
     }
 }

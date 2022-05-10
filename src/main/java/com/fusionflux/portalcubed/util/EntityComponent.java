@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.util;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.Entity;
@@ -17,7 +18,8 @@ import java.util.UUID;
 
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
     boolean gravityState = false;
-    Box portalCutout = new Box(0,0,0,0,0,0);
+    VoxelShape portalCutout = VoxelShapes.empty();
+    Vec3d velocity = Vec3d.ZERO;
     UUID cubeUUID = null;
     private final Entity entity;
 
@@ -38,18 +40,28 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public Box getPortalCutout() {
+    public VoxelShape getPortalCutout() {
         return this.portalCutout;
     }
 
     @Override
-    public void setPortalCutout(Box portalCutout) {
-        //if(portalCutout != this.portalCutout) {
+    public void setPortalCutout(VoxelShape portalCutout) {
             this.portalCutout = portalCutout;
-            //PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
-        //}
     }
 
+    @Override
+    public void teleport(Vec3d teleportTo, Direction dira,Direction dirb) {
+
+    }
+
+    @Override
+    public Vec3d getVelocity() {
+        return this.velocity;
+    }
+
+    @Override
+    public void setVelocity(Vec3d velocity) {
+    }
 
     @Override
     public UUID getCubeUUID() {
@@ -62,35 +74,11 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
-   // @Override
-   // public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity player) {
-   //     buf.writeDouble(this.portalCutout.getMax(Direction.Axis.X)); // only synchronize the information you need!
-   //     buf.writeDouble(this.portalCutout.getMax(Direction.Axis.Y)); // only synchronize the information you need!
-   //     buf.writeDouble(this.portalCutout.getMax(Direction.Axis.Z)); // only synchronize the information you need!
-   //     buf.writeDouble(this.portalCutout.getMin(Direction.Axis.X)); // only synchronize the information you need!
-   //     buf.writeDouble(this.portalCutout.getMin(Direction.Axis.Y)); // only synchronize the information you need!
-   //     buf.writeDouble(this.portalCutout.getMin(Direction.Axis.Z)); // only synchronize the information you need!
-   // }
-////
-   // @Override
-   // public void applySyncPacket(PacketByteBuf buf) {
-   //     double maxX = buf.readDouble();
-   //     double maxY = buf.readDouble();
-   //     double maxZ = buf.readDouble();
-   //     double minX = buf.readDouble();
-   //     double minY = buf.readDouble();
-   //     double minZ = buf.readDouble();
-   //     System.out.println(minX +" "+ minY +" "+ minZ +" "+ maxX +" "+ maxY +" "+ maxZ);
-   //     this.portalCutout = VoxelShapes.cuboid(minX,minY,minZ,maxX,maxY,maxZ);
-   // }
-
     @Override
     public void readFromNbt(NbtCompound tag) {
-
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-
     }
 }

@@ -10,6 +10,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -43,12 +44,24 @@ public abstract class CalledValues {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setSwapGravity(setValue));
     }
 
-    public static Box getPortalCutout(Entity entity) {
-        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortalCutout).orElse(new Box(0, 0, 0, 0, 0, 0));
+    public static VoxelShape getPortalCutout(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortalCutout).orElse(VoxelShapes.empty());
     }
 
-    public static void setPortalCutout(Entity entity, Box setValue) {
+    public static void setPortalCutout(Entity entity, VoxelShape setValue) {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setPortalCutout(setValue));
+    }
+
+    public static Vec3d getVelocity(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getVelocity).orElse(Vec3d.ZERO);
+    }
+
+    public static void setVelocity(Entity entity, Vec3d setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setVelocity(setValue));
+    }
+
+    public static void teleportSync(Entity entity, Vec3d TeleportTo, Direction dira, Direction dirb) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.teleport(TeleportTo,dira,dirb));
     }
 
     public static UUID getCubeUUID(Entity entity) {
@@ -81,6 +94,15 @@ public abstract class CalledValues {
     public static Vec3d getDestination(Entity entity) {
         return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getDestination).orElse(null);
     }
+
+    public static void setOtherFacing(ExperimentalPortal entity, Vec3d Destination) {
+        maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.setOtherFacing(Destination));
+    }
+
+    public static Vec3d getOtherFacing(Entity entity) {
+        return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getOtherFacing).orElse(Vec3d.ZERO);
+    }
+
 
     public static void teleportEntity(ExperimentalPortal entity, Vec3d TeleportTo,Entity TeleportedEntity,ExperimentalPortal OtherPortal) {
         maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.teleportEntity(TeleportTo,TeleportedEntity,OtherPortal));

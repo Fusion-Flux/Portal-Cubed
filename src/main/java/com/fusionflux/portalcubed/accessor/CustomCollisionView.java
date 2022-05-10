@@ -6,6 +6,7 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelSet;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -23,17 +24,17 @@ public interface CustomCollisionView extends BlockView {
 
     WorldBorder getWorldBorder();
 
-    default Iterable<VoxelShape> getPortalBlockCollisions(@Nullable Entity entity, Box box, Box portalBox) {
+    default Iterable<VoxelShape> getPortalBlockCollisions(@Nullable Entity entity, Box box, VoxelShape portalBox) {
         return () -> new CustomBlockCollisionSpliteraror(this, entity, box,portalBox);
     }
 
-    default Iterable<VoxelShape> getPortalCollisions(@Nullable Entity entity, Box box,Box portalBox) {
+    default Iterable<VoxelShape> getPortalCollisions(@Nullable Entity entity, Box box,VoxelShape portalBox) {
         List<VoxelShape> list = this.getEntityCollisions(entity, box);
         Iterable<VoxelShape> iterable = this.getPortalBlockCollisions(entity, box,portalBox);
         return list.isEmpty() ? iterable : Iterables.concat(list, iterable);
     }
 
-    default boolean canPortalCollide(@Nullable Entity entity, Box box, Box portalBox) {
+    default boolean canPortalCollide(@Nullable Entity entity, Box box, VoxelShape portalBox) {
         CustomBlockCollisionSpliteraror customBlockCollisionSpliterator = new CustomBlockCollisionSpliteraror(this, entity, box,portalBox, true);
 
         while(customBlockCollisionSpliterator.hasNext()) {
@@ -53,16 +54,16 @@ public interface CustomCollisionView extends BlockView {
         return worldBorder.canCollide(entity, box) ? worldBorder.asVoxelShape() : null;
     }
 
-    default boolean isPortalSpaceEmpty(Box box,Box portalBox) {
+    default boolean isPortalSpaceEmpty(Box box,VoxelShape portalBox) {
         return this.isPortalSpaceEmpty((Entity)null, box,portalBox);
     }
 
-    default boolean isPortalSpaceEmpty(Entity entity,Box portalBox) {
+    default boolean isPortalSpaceEmpty(Entity entity,VoxelShape portalBox) {
         return this.isPortalSpaceEmpty(entity, entity.getBoundingBox(),portalBox);
     }
 
 
-    default boolean isPortalSpaceEmpty(@Nullable Entity entity, Box box,Box portalBox) {
+    default boolean isPortalSpaceEmpty(@Nullable Entity entity, Box box,VoxelShape portalBox) {
         for(VoxelShape voxelShape : this.getPortalBlockCollisions(entity, box,portalBox)) {
             if (!voxelShape.isEmpty()) {
                 return false;
