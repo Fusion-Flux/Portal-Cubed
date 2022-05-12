@@ -12,6 +12,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.CollisionView;
 import org.jetbrains.annotations.Nullable;
 
 public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape> {
@@ -56,7 +57,7 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
         if (this.chunk != null && this.chunkPos == l) {
             return this.chunk;
         } else {
-            BlockView blockView = this.world.getChunkAsView(i, j);
+            BlockView blockView = ((this.world)).getChunkAsView(i, j);
             this.chunk = blockView;
             this.chunkPos = l;
             return blockView;

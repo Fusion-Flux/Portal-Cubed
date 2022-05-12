@@ -44,9 +44,9 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.5.10')
+	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.6.3')
 
-	include ('com.github.Fusion-Flux:GravityChanger:v0.5.10')
+	include ('com.github.Fusion-Flux:GravityChanger:v0.6.3')
 
 	modApi include("maven.modrinth:stonecutter_recipe_tags:3.0.1")
 

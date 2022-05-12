@@ -7,7 +7,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 
-public class FluxTechArmor implements ArmorMaterial {
+public class PortalArmor implements ArmorMaterial {
 
     private static final int[] BASE_DURABILITY = new int[]{13, 15, 16, 11};
     private static final int[] PROTECTION_VALUES = new int[]{3, 6, 8, 3};
@@ -40,7 +40,7 @@ public class FluxTechArmor implements ArmorMaterial {
 
     @Override
     public String getName() {
-        return "movementarmor";
+        return "portalarmor";
     }
 
     @Override

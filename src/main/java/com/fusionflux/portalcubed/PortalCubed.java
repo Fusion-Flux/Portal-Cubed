@@ -11,6 +11,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -34,7 +35,16 @@ public class PortalCubed implements ModInitializer {
 
     @Override
     public void onInitialize() {
-
+        ServerPlayNetworking.registerGlobalReceiver(id("portalpacket"), (server, player, handler, buf, responseSender) -> {
+            // read the velocity from the bytebuf
+            double x =  buf.readDouble();
+            double y =  buf.readDouble();
+            double z =  buf.readDouble();
+            server.execute(() -> {
+                player.setVelocity(x,y,z);
+                // set the player's velocity
+            });
+        });
         QuaternionHandler.QUATERNION_HANDLER.getClass();
         PortalCubedConfig.register();
         PortalCubedBlocks.registerBlocks();

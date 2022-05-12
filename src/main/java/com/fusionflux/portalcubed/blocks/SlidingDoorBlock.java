@@ -176,14 +176,14 @@ public class SlidingDoorBlock extends Block {
     }
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (this.material == Material.METAL) {
+        //if (this.material == Material.METAL) {
             return ActionResult.PASS;
-        } else {
-            state = state.cycle(OPEN);
-            world.setBlockState(pos, state, 10);
-            world.syncWorldEvent(player, state.get(OPEN) ? this.getCloseSoundEventId() : this.getOpenSoundEventId(), pos, 0);
-            return ActionResult.success(world.isClient);
-        }
+        //} else {
+        //    state = state.cycle(OPEN);
+        //    world.setBlockState(pos, state, 10);
+        //    world.syncWorldEvent(player, state.get(OPEN) ? this.getCloseSoundEventId() : this.getOpenSoundEventId(), pos, 0);
+        //    return ActionResult.success(world.isClient);
+        //}
     }
 
     public boolean method_30841(BlockState blockState) {

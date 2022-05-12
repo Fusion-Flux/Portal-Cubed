@@ -16,25 +16,18 @@ public class CompanionCubeEntity extends StorageCubeEntity  {
 
     private int t = 1500;
 
-    private float storedDamage = 0.0F;
-
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (this.isInvulnerableTo(source)) {
+        if (this.isInvulnerableTo(source) && !(source.getAttacker() instanceof PlayerEntity)) {
             return false;
         } else if (!this.world.isClient && !this.isRemoved()) {
-            this.storedDamage += amount;
-            //this.scheduleVelocityUpdate();
             boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
-            if (bl || this.storedDamage >= 20.0F) {
-                if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                    // TODO
+            if (source.getAttacker() instanceof PlayerEntity) {
+                if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                     this.dropItem(PortalCubedItems.COMPANION_CUBE);
                 }
-
                 this.discard();
             }
-
             return true;
         } else {
             return true;

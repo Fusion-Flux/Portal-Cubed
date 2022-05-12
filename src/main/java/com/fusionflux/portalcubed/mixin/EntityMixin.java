@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.mixin;
 
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -12,6 +13,8 @@ import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.google.common.collect.Lists;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.RotationUtil;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
@@ -142,6 +145,18 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract void setPosition(double x, double y, double z);
 
+    @Shadow public double lastRenderX;
+
+    @Shadow public double lastRenderY;
+
+    @Shadow public double lastRenderZ;
+
+    @Shadow public double prevX;
+
+    @Shadow public double prevY;
+
+    @Shadow public double prevZ;
+
     @Override
     public List<ExperimentalPortal> getPortalList() {
         return portalList;
@@ -157,7 +172,16 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-            List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, getBoundingBox().stretch(this.getVelocity().multiply(1.5)));
+        Entity thisentity = ((Entity) (Object) this);
+        if(thisentity instanceof PlayerEntity && this.world.isClient){
+            var bytebuf = PacketByteBufs.create();
+            bytebuf.writeDouble(this.getVelocity().getX());
+            bytebuf.writeDouble(this.getVelocity().getY());
+            bytebuf.writeDouble(this.getVelocity().getZ());
+            ClientPlayNetworking.send(PortalCubed.id("portalpacket"), bytebuf);
+        }
+
+            List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, getBoundingBox().stretch(this.getVelocity().multiply(1)));
             VoxelShape ommitedDirections = VoxelShapes.empty();
             for (ExperimentalPortal portal : list) {
                 if (portal.calculateCuttoutBox() != nullBox) {
@@ -165,58 +189,91 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                     ommitedDirections = VoxelShapes.union(ommitedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
                 }
 
-                Entity thisentity = ((Entity) (Object) this);
+
                 if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive()) {
                     Direction portalFacing = portal.getFacingDirection();
                     Direction otherDirec = Direction.fromVector((int) CalledValues.getOtherFacing(portal).getX(), (int) CalledValues.getOtherFacing(portal).getY(), (int) CalledValues.getOtherFacing(portal).getZ());
                     if (otherDirec != null){
                         double teleportYOffset = switch (otherDirec) {
                             case DOWN -> 2;
-                            case NORTH, SOUTH, EAST, WEST -> 1;
+                            case NORTH, SOUTH, EAST, WEST -> portal.getPos().y-thisentity.getPos().y;
                             default -> 0;
                         };
 
+                        double teleportXOffset = portal.getPos().x-thisentity.getPos().x;
+                        double teleportZOffset = portal.getPos().z-thisentity.getPos().z;
+
+                        if(portalFacing == Direction.NORTH || portalFacing == Direction.SOUTH){
+                            if(otherDirec == Direction.EAST || otherDirec == Direction.WEST ){
+                                teleportZOffset = -teleportXOffset;
+                                teleportXOffset = 0;
+                            }
+                        }
+
+                        if(portalFacing == Direction.EAST || portalFacing == Direction.WEST){
+                            if(otherDirec == Direction.NORTH || otherDirec == Direction.SOUTH ){
+                                teleportXOffset = -teleportZOffset;
+                                teleportZOffset = 0;
+                            }
+                        }
+
+                        if(portalFacing == Direction.DOWN || portalFacing==Direction.UP ){
+                            if(otherDirec == Direction.EAST || otherDirec == Direction.WEST) {
+                                teleportXOffset = 0;
+                            }
+                            if(otherDirec == Direction.NORTH || otherDirec == Direction.SOUTH) {
+                                teleportZOffset = 0;
+                            }
+                        }
+                        Vec3d entityVelocity = this.getVelocity();
+                        Vec3d entityEyePos = this.getEyePos();
                     if (portalFacing.getUnitVector().getX() < 0) {
-                        if (this.getEyePos().getX() + this.getVelocity().getX() > portal.getPos().getX()) {
-                            this.setPosition(CalledValues.getDestination(portal).getX(), CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ());
-                            this.setVelocity(PortalVelocityHelper.rotateVelocity(this.getVelocity().multiply(1,.98,1), portal.getFacingDirection(), otherDirec));
+                        if (entityEyePos.getX() + entityVelocity.getX() > portal.getPos().getX()) {
+                            this.setPosition(CalledValues.getDestination(portal).getX()-teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ()-teleportZOffset);
+                            this.setLastPosition(this.getPos());
+                            this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity.multiply(1,.98,1), portal.getFacingDirection(), otherDirec));
                             this.setYaw(this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec));
                         }
                     }
                     if (portalFacing.getUnitVector().getY() < 0) {
-                        if (this.getEyePos().getY() + this.getVelocity().getY() > portal.getPos().getY()) {
-                            this.setPosition(CalledValues.getDestination(portal).getX(), CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ());
-                            this.setVelocity(PortalVelocityHelper.rotateVelocity(this.getVelocity().multiply(0,.98,0), portal.getFacingDirection(), otherDirec));
+                        if (entityEyePos.getY() + entityVelocity.getY() > portal.getPos().getY()) {
+                            this.setPosition(CalledValues.getDestination(portal).getX()-teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ()-teleportZOffset);
+                            this.setLastPosition(this.getPos());
+                            this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity.multiply(0,.98,0), portal.getFacingDirection(), otherDirec));
                             this.setYaw(this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec));
                         }
                     }
                     if (portalFacing.getUnitVector().getZ() < 0) {
-                        if (this.getEyePos().getZ() + this.getVelocity().getZ() > portal.getPos().getZ()) {
-                            this.setPosition(CalledValues.getDestination(portal).getX(), CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ());
-                            this.setVelocity(PortalVelocityHelper.rotateVelocity(this.getVelocity().multiply(1,.98,1), portal.getFacingDirection(), otherDirec));
+                        if (entityEyePos.getZ() + entityVelocity.getZ() > portal.getPos().getZ()) {
+                            this.setPosition(CalledValues.getDestination(portal).getX()-teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ()-teleportZOffset);
+                            this.setLastPosition(this.getPos());
+                            this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity.multiply(1,.98,1), portal.getFacingDirection(), otherDirec));
                             this.setYaw(this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec));
                         }
                     }
 
 
                     if (portalFacing.getUnitVector().getX() > 0) {
-                        if (this.getEyePos().getX() + this.getVelocity().getX() < portal.getPos().getX()) {
-                            this.setPosition(CalledValues.getDestination(portal).getX(), CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ());
-                            this.setVelocity(PortalVelocityHelper.rotateVelocity(this.getVelocity().multiply(1,.98,1), portal.getFacingDirection(), otherDirec));
+                        if (entityEyePos.getX() + entityVelocity.getX() < portal.getPos().getX()) {
+                            this.setPosition(CalledValues.getDestination(portal).getX()-teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ()-teleportZOffset);
+                            this.setLastPosition(this.getPos());
+                            this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity.multiply(1,.98,1), portal.getFacingDirection(), otherDirec));
                             this.setYaw(this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec));
                         }
                     }
                     if (portalFacing.getUnitVector().getY() > 0) {
-                        if (this.getEyePos().getY() + this.getVelocity().getY() < portal.getPos().getY()) {
-                            this.setPosition(CalledValues.getDestination(portal).getX(), CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ());
-                            this.setVelocity(PortalVelocityHelper.rotateVelocity(this.getVelocity().multiply(0,.98,0), portal.getFacingDirection(), otherDirec));
+                        if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY()) {
+                            this.setPosition(CalledValues.getDestination(portal).getX()-teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ()-teleportZOffset);
+                            this.setLastPosition(this.getPos());
+                            this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity.multiply(0,.98,0), portal.getFacingDirection(), otherDirec));
                             this.setYaw(this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec));
                         }
                     }
                     if (portalFacing.getUnitVector().getZ() > 0) {
-                        if (this.getEyePos().getZ() + this.getVelocity().getZ() < portal.getPos().getZ()) {
-                            this.setPosition(CalledValues.getDestination(portal).getX(), CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ());
-                            this.setVelocity(PortalVelocityHelper.rotateVelocity(this.getVelocity().multiply(1,.98,1), portal.getFacingDirection(), otherDirec));
+                        if (entityEyePos.getZ() + entityVelocity.getZ() < portal.getPos().getZ()) {
+                            this.setPosition(CalledValues.getDestination(portal).getX()-teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ()-teleportZOffset);
+                            this.setLastPosition(this.getPos());
+                            this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity.multiply(1,.98,1), portal.getFacingDirection(), otherDirec));
                             this.setYaw(this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec));
                         }
                     }
@@ -413,5 +470,13 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             cir.setReturnValue(false);
     }
 
+    public final void setLastPosition(Vec3d pos) {
+        this.lastRenderX = pos.getX();
+        this.lastRenderY = pos.getY();
+        this.lastRenderZ = pos.getZ();
+        this.prevX = pos.getX();
+        this.prevY = pos.getY();
+        this.prevZ = pos.getZ();
+    }
 
 }

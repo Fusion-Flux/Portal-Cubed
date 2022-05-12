@@ -78,11 +78,21 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     return travelVectorOriginal;
     }
 
+    private boolean enableNoDrag2= false;
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
-        this.setNoDrag((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)));
+        if((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL))){
+            if(!enableNoDrag2) {
+                enableNoDrag2 = true;
+                this.setNoDrag(true);
+            }
+        }else if (enableNoDrag2){
+            enableNoDrag2 = false;
+            this.setNoDrag(false);
+        }
+
         if(itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)){
             if(this.getVelocity().y < -3.5){
                 this.setVelocity(this.getVelocity().add(0,.81d,0));

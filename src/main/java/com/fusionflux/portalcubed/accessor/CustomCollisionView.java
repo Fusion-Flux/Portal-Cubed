@@ -10,6 +10,7 @@ import net.minecraft.util.shape.VoxelSet;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.CollisionView;
 import net.minecraft.world.border.WorldBorder;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,12 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-public interface CustomCollisionView extends BlockView {
-
-    @Nullable
-    BlockView getChunkAsView(int chunkX, int chunkZ);
-
-    WorldBorder getWorldBorder();
+public interface CustomCollisionView extends CollisionView {
 
     default Iterable<VoxelShape> getPortalBlockCollisions(@Nullable Entity entity, Box box, VoxelShape portalBox) {
         return () -> new CustomBlockCollisionSpliteraror(this, entity, box,portalBox);
@@ -46,7 +42,6 @@ public interface CustomCollisionView extends BlockView {
         return false;
     }
 
-    List<VoxelShape> getEntityCollisions(@Nullable Entity entity, Box box);
 
     @Nullable
     private VoxelShape getWorldBorderCollisions(Entity entity, Box box) {

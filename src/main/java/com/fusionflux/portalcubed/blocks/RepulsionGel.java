@@ -107,17 +107,17 @@ public class RepulsionGel extends GelFlat {
     }
 
     private void addCollisionEffects(World world, Entity entity, BlockPos pos) {
-        Vec3d vec3d = entity.getVelocity();
         Vec3d vec3dLast = ((EntityAttachments) entity).getLastVel();
+        Vec3d vec3d = new Vec3d(Math.max(entity.getVelocity().getX(),vec3dLast.getX()),Math.max(entity.getVelocity().getY(),vec3dLast.getY()),Math.max(entity.getVelocity().getZ(),vec3dLast.getZ()));
         // if (vec3d.y < 0.0) {
         BlockState state = world.getBlockState(pos);
 
         Vec3d direction = getDirections(state);
         Vec3d rotatedPos = entity.getPos();
-        if(entity instanceof PlayerEntity){
+        //if(entity instanceof PlayerEntity){
             direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection((PlayerEntity) entity));
             rotatedPos = RotationUtil.vecWorldToPlayer(rotatedPos, GravityChangerAPI.getGravityDirection((PlayerEntity) entity));
-        }
+        //}
 
         if (!entity.isSneaking()) {
             if (entity.verticalCollision) {
