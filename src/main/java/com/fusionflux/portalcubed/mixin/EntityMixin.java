@@ -8,12 +8,12 @@ import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.accessor.CustomCollisionView;
+import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.google.common.collect.Lists;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.RotationUtil;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -178,7 +178,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             bytebuf.writeDouble(this.getVelocity().getX());
             bytebuf.writeDouble(this.getVelocity().getY());
             bytebuf.writeDouble(this.getVelocity().getZ());
-            ClientPlayNetworking.send(PortalCubed.id("portalpacket"), bytebuf);
+            NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
         }
 
             List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, getBoundingBox().stretch(this.getVelocity().multiply(1)));
