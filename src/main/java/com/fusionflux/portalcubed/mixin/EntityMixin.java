@@ -64,6 +64,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     private Vec3d lastVel = Vec3d.ZERO;
 
     @Unique
+    private Vec3d serverVel = Vec3d.ZERO;
+
+    @Unique
     private int gelTransferTimer = 0;
 
     @Unique
@@ -173,15 +176,12 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
         Entity thisentity = ((Entity) (Object) this);
-        if(thisentity instanceof PlayerEntity && this.world.isClient){
-            var bytebuf = PacketByteBufs.create();
-            bytebuf.writeDouble(this.getVelocity().getX());
-            bytebuf.writeDouble(this.getVelocity().getY());
-            bytebuf.writeDouble(this.getVelocity().getZ());
-            NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
+        Vec3d entityVelocity = this.getVelocity();
+        if(thisentity instanceof PlayerEntity && !this.world.isClient){
+            entityVelocity = this.getServerVel();
         }
 
-            List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, getBoundingBox().stretch(this.getVelocity().multiply(1)));
+            List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, getBoundingBox().stretch(entityVelocity));
             VoxelShape ommitedDirections = VoxelShapes.empty();
             for (ExperimentalPortal portal : list) {
                 if (portal.calculateCuttoutBox() != nullBox) {
@@ -225,7 +225,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                 teleportZOffset = 0;
                             }
                         }
-                        Vec3d entityVelocity = this.getVelocity();
                         Vec3d entityEyePos = this.getEyePos();
                     if (portalFacing.getUnitVector().getX() < 0) {
                         if (entityEyePos.getX() + entityVelocity.getX() > portal.getPos().getX()) {
@@ -280,6 +279,13 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                 }
                 }
             }
+        if(thisentity instanceof PlayerEntity && this.world.isClient && ommitedDirections != VoxelShapes.empty()){
+            var bytebuf = PacketByteBufs.create();
+            bytebuf.writeDouble(this.getVelocity().getX());
+            bytebuf.writeDouble(this.getVelocity().getY());
+            bytebuf.writeDouble(this.getVelocity().getZ());
+            NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
+        }
             CalledValues.setPortalCutout(((Entity) (Object) this), ommitedDirections);
 
         if(this.world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.ADHESION_GEL && CalledValues.getSwapTimer((Entity)(Object)this)){
@@ -415,6 +421,16 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         return this.lastVel;
     }
 
+
+    @Override
+    public void setServerVel(Vec3d fall) {
+        this.serverVel = fall;
+    }
+
+    @Override
+    public Vec3d getServerVel() {
+        return this.serverVel;
+    }
 
     @Override
     public void setFunnelTimer(int funnelTimer) {

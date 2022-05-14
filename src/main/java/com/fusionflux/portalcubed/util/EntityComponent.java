@@ -61,6 +61,9 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void setVelocity(Vec3d velocity) {
+        //System.out.println("i was set");
+        this.velocity =velocity;
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
     @Override
@@ -76,9 +79,11 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void readFromNbt(NbtCompound tag) {
+        velocity = IPHelperDuplicate.getVec3d(tag, "ccaVelocity");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
+        IPHelperDuplicate.putVec3d(tag, "ccaVelocity", velocity);
     }
 }

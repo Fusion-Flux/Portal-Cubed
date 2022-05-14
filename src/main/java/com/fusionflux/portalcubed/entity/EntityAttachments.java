@@ -35,5 +35,10 @@ public interface EntityAttachments {
 
     void setMaxFallHeight(double maxFallHeight);
 
+    void setServerVel(Vec3d serverVel);
+
+    Vec3d getServerVel();
+
+
 
 }

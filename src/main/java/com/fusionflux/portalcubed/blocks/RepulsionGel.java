@@ -115,8 +115,8 @@ public class RepulsionGel extends GelFlat {
         Vec3d direction = getDirections(state);
         Vec3d rotatedPos = entity.getPos();
         //if(entity instanceof PlayerEntity){
-            direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection((PlayerEntity) entity));
-            rotatedPos = RotationUtil.vecWorldToPlayer(rotatedPos, GravityChangerAPI.getGravityDirection((PlayerEntity) entity));
+            direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection(entity));
+            rotatedPos = RotationUtil.vecWorldToPlayer(rotatedPos, GravityChangerAPI.getGravityDirection(entity));
         //}
 
         if (!entity.isSneaking()) {

@@ -66,7 +66,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3d uhhhhhhh(Vec3d travelVectorOriginal) {
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
-        if (!this.isOnGround() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
+        if (!this.isOnGround() &&!this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
             double mathval = 1;
             double horizontalvelocity = Math.abs(this.getVelocity().x) + Math.abs(this.getVelocity().z);
             if (horizontalvelocity / 0.01783440120041885 > 1) {
@@ -83,7 +83,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
-        if((!this.isOnGround() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL))){
+        if((!this.isOnGround() && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL))){
             if(!enableNoDrag2) {
                 enableNoDrag2 = true;
                 this.setNoDrag(true);

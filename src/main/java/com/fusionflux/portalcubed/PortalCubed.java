@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed;
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
@@ -17,6 +18,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 
 public class PortalCubed implements ModInitializer {
     public static final PortalCubedConfig CONFIG = new PortalCubedConfig();
@@ -41,7 +43,7 @@ public class PortalCubed implements ModInitializer {
             double y =  buf.readDouble();
             double z =  buf.readDouble();
             server.execute(() -> {
-                player.setVelocity(x,y,z);
+                ((EntityAttachments)(player)).setServerVel(new Vec3d(x,y,z));
                 // set the player's velocity
             });
         });
