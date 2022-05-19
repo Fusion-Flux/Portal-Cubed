@@ -288,10 +288,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
             CalledValues.setPortalCutout(((Entity) (Object) this), ommitedDirections);
 
-        if(this.world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.ADHESION_GEL && CalledValues.getSwapTimer((Entity)(Object)this)){
-            CalledValues.setSwapTimer((Entity)(Object)this,false);
-            GravityChangerAPI.setGravityDirection(((Entity) (Object)this), GravityChangerAPI.getDefaultGravityDirection((Entity) (Object)this));
-        }
 
             if (this.isInFunnel() && this.getFunnelTimer() != 0) {
                 this.setFunnelTimer(this.getFunnelTimer() - 1);

@@ -109,9 +109,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             //    recentlyTouchedPortal = false;
             //}
 
-            if (this.isHolding(PortalCubedItems.PORTAL_GUN)) {
-                world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
-            }
+           //if (this.isHolding(PortalCubedItems.PORTAL_GUN)) {
+           //    world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
+           //}
         }
     }
 
