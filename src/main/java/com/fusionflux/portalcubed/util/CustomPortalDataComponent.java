@@ -10,6 +10,10 @@ public interface CustomPortalDataComponent extends Component {
 
     Vec3d getAxisH();
 
+    Vec3d getOtherAxisH();
+
+    void setOtherAxisH(Vec3d Destination);
+
     Vec3d getDestination();
 
     Vec3d getOtherFacing();

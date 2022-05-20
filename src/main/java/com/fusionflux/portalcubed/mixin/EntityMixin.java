@@ -160,6 +160,11 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public double prevZ;
 
+
+    public double lastX = 0;
+    public double lastY = 0;
+    public double lastZ = 0;
+
     @Override
     public List<ExperimentalPortal> getPortalList() {
         return portalList;
@@ -177,11 +182,16 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public void tick(CallbackInfo ci) {
         Entity thisentity = ((Entity) (Object) this);
         Vec3d entityVelocity = this.getVelocity();
-        if(thisentity instanceof PlayerEntity && !this.world.isClient){
-            entityVelocity = this.getServerVel();
-        }
 
-            List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, getBoundingBox().stretch(entityVelocity));
+            Box portalCheckBox = getBoundingBox();
+
+            if(thisentity instanceof PlayerEntity && !this.world.isClient){
+                portalCheckBox = portalCheckBox.expand(10);
+            }else{
+                portalCheckBox = portalCheckBox.stretch(entityVelocity);
+            }
+
+            List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox );
             VoxelShape ommitedDirections = VoxelShapes.empty();
             for (ExperimentalPortal portal : list) {
                 if (portal.calculateCuttoutBox() != nullBox) {
@@ -192,16 +202,87 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
                 if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive()) {
                     Direction portalFacing = portal.getFacingDirection();
+                    Direction portalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x,CalledValues.getAxisH(portal).y,CalledValues.getAxisH(portal).z));
+
                     Direction otherDirec = Direction.fromVector((int) CalledValues.getOtherFacing(portal).getX(), (int) CalledValues.getOtherFacing(portal).getY(), (int) CalledValues.getOtherFacing(portal).getZ());
+                    Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getOtherAxisH(portal).x,CalledValues.getOtherAxisH(portal).y,CalledValues.getOtherAxisH(portal).z));
+
                     if (otherDirec != null){
                         double teleportYOffset = switch (otherDirec) {
                             case DOWN -> 2;
-                            case NORTH, SOUTH, EAST, WEST -> portal.getPos().y-thisentity.getPos().y;
+                            case NORTH, SOUTH, EAST, WEST -> {
+                                if(portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
+                                    yield portal.getPos().y - thisentity.getPos().y;
+                                }else{
+                                    yield 1;
+                                }
+                            }
                             default -> 0;
                         };
 
                         double teleportXOffset = portal.getPos().x-thisentity.getPos().x;
                         double teleportZOffset = portal.getPos().z-thisentity.getPos().z;
+
+                        if(portalFacing == Direction.UP || portalFacing == Direction.DOWN){
+                            if(otherDirec != Direction.UP && otherDirec!= Direction.DOWN){
+                                if(portalVertFacing == Direction.NORTH || portalVertFacing == Direction.SOUTH){
+                                    if(otherDirec == Direction.EAST || otherDirec == Direction.WEST ){
+                                        teleportZOffset = -teleportXOffset;
+                                        teleportXOffset = 0;
+                                    }
+                                }
+
+                                if(portalVertFacing == Direction.EAST || portalVertFacing == Direction.WEST){
+                                    if(otherDirec == Direction.NORTH || otherDirec == Direction.SOUTH ){
+                                        teleportXOffset = -teleportZOffset;
+                                        teleportZOffset = 0;
+                                    }
+                                }
+                            }
+                        }
+
+                        if(otherDirec == Direction.UP || otherDirec == Direction.DOWN){
+                            if(portalFacing != Direction.UP && portalFacing!= Direction.DOWN){
+                                if(otherPortalVertFacing == Direction.NORTH || otherPortalVertFacing == Direction.SOUTH){
+                                    if(portalFacing == Direction.EAST || portalFacing == Direction.WEST ){
+                                        teleportXOffset = -teleportZOffset;
+                                        teleportZOffset = 0;
+                                    }
+                                }
+
+                                if(otherPortalVertFacing == Direction.EAST || otherPortalVertFacing == Direction.WEST){
+                                    if(portalFacing == Direction.NORTH || portalFacing == Direction.SOUTH ){
+                                        teleportZOffset = -teleportXOffset;
+                                        teleportXOffset = 0;
+                                    }
+                                }
+                            }
+                        }
+
+                        if(otherDirec == Direction.UP || otherDirec == Direction.DOWN){
+                            if(portalFacing == Direction.UP || portalFacing== Direction.DOWN){
+                                if(otherPortalVertFacing == Direction.NORTH || otherPortalVertFacing == Direction.SOUTH){
+                                    if(portalVertFacing == Direction.EAST || portalVertFacing == Direction.WEST ){
+                                        double storedx = teleportXOffset;
+                                        teleportXOffset = -teleportZOffset;
+                                        teleportZOffset = -storedx;
+                                    }
+                                }
+
+                                if(otherPortalVertFacing == Direction.EAST || otherPortalVertFacing == Direction.WEST){
+                                    if(portalVertFacing == Direction.NORTH || portalVertFacing == Direction.SOUTH ){
+                                        double storedz = teleportZOffset;
+                                        teleportZOffset = -teleportXOffset;
+                                        teleportXOffset = -storedz;
+                                    }
+                                }
+                                if(portalVertFacing != null)
+                                if(otherPortalVertFacing == portalVertFacing.getOpposite()){
+                                    teleportZOffset = -teleportZOffset;
+                                    teleportXOffset = -teleportXOffset;
+                                }
+                            }
+                        }
 
                         if(portalFacing == Direction.NORTH || portalFacing == Direction.SOUTH){
                             if(otherDirec == Direction.EAST || otherDirec == Direction.WEST ){
@@ -213,15 +294,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                         if(portalFacing == Direction.EAST || portalFacing == Direction.WEST){
                             if(otherDirec == Direction.NORTH || otherDirec == Direction.SOUTH ){
                                 teleportXOffset = -teleportZOffset;
-                                teleportZOffset = 0;
-                            }
-                        }
-
-                        if(portalFacing == Direction.DOWN || portalFacing==Direction.UP ){
-                            if(otherDirec == Direction.EAST || otherDirec == Direction.WEST) {
-                                teleportXOffset = 0;
-                            }
-                            if(otherDirec == Direction.NORTH || otherDirec == Direction.SOUTH) {
                                 teleportZOffset = 0;
                             }
                         }
@@ -279,13 +351,13 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                 }
                 }
             }
-        if(thisentity instanceof PlayerEntity && this.world.isClient && ommitedDirections != VoxelShapes.empty()){
-            var bytebuf = PacketByteBufs.create();
-            bytebuf.writeDouble(this.getVelocity().getX());
-            bytebuf.writeDouble(this.getVelocity().getY());
-            bytebuf.writeDouble(this.getVelocity().getZ());
-            NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
-        }
+       // if(thisentity instanceof PlayerEntity && this.world.isClient && ommitedDirections != VoxelShapes.empty()){
+       //     var bytebuf = PacketByteBufs.create();
+       //     bytebuf.writeDouble(this.getVelocity().getX());
+       //     bytebuf.writeDouble(this.getVelocity().getY());
+       //     bytebuf.writeDouble(this.getVelocity().getZ());
+       //     NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
+       // }
             CalledValues.setPortalCutout(((Entity) (Object) this), ommitedDirections);
 
 

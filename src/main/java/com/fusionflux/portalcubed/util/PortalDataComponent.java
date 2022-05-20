@@ -14,6 +14,7 @@ import net.minecraft.util.math.Vec3d;
 public class PortalDataComponent implements CustomPortalDataComponent, AutoSyncedComponent {
     Vec3d axisW=null;
     Vec3d axisH=null;
+    Vec3d axisOH=Vec3d.ZERO;
     Vec3d destination=null;
     Vec3d facing=Vec3d.ZERO;
     private final ExperimentalPortal entity;
@@ -30,6 +31,18 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
     @Override
     public Vec3d getAxisH() {
         return axisH;
+    }
+
+    @Override
+    public Vec3d getOtherAxisH() {
+        return axisOH;
+    }
+
+
+    @Override
+    public void setOtherAxisH(Vec3d h) {
+        axisOH = h;
+        PortalCubedComponents.PORTAL_DATA.sync(entity);
     }
 
     @Override
@@ -95,6 +108,7 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
     @Override
     public void readFromNbt(NbtCompound tag) {
         this.setOrientation(IPHelperDuplicate.getVec3d(tag, "axisW").normalize(),IPHelperDuplicate.getVec3d(tag, "axisH").normalize());
+        this.setOtherAxisH(IPHelperDuplicate.getVec3d(tag, "axisOH").normalize());
         this.setDestination(IPHelperDuplicate.getVec3d(tag, "destination"));
         this.setOtherFacing(IPHelperDuplicate.getVec3d(tag, "facing"));
     }
@@ -103,6 +117,7 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
     public void writeToNbt(NbtCompound tag) {
         IPHelperDuplicate.putVec3d(tag, "axisW", this.getAxisW());
         IPHelperDuplicate.putVec3d(tag, "axisH", this.getAxisH());
+        IPHelperDuplicate.putVec3d(tag, "axisOH", this.getOtherAxisH());
         IPHelperDuplicate.putVec3d(tag, "destination", this.getDestination());
         IPHelperDuplicate.putVec3d(tag, "facing", this.getOtherFacing());
     }

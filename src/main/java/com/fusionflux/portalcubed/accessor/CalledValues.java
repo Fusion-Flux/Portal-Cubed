@@ -87,6 +87,14 @@ public abstract class CalledValues {
         return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getAxisH).orElse(null);
     }
 
+    public static Vec3d getOtherAxisH(Entity entity) {
+        return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getOtherAxisH).orElse(null);
+    }
+
+    public static void setOtherAxisH(ExperimentalPortal entity, Vec3d AxisH) {
+        maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.setOtherAxisH(AxisH));
+    }
+
     public static void setDestination(ExperimentalPortal entity, Vec3d Destination) {
         maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.setDestination(Destination));
     }

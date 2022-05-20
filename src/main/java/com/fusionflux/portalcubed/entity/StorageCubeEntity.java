@@ -41,9 +41,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         super(type, world);
     }
 
-    private int gravityTimer = 0;
-
-    private boolean gravitySwap = false;
+    private boolean canUsePortals = true;
 
     @Override
     public boolean collides() {
@@ -152,17 +150,23 @@ public class StorageCubeEntity extends PathAwareEntity  {
         }
     }
 
+    @Override
+    public boolean canUsePortals() {
+        return canUsePortals;
+    }
 
     public void tick() {
         super.tick();
         this.bodyYaw = 0;
         this.headYaw = 0;
+        canUsePortals = !getUUIDPresent();
         if(!world.isClient) {
             if (getUUIDPresent()) {
                 PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-                if (player != null) {
+                if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
+                    canUsePortals = false;
                     Vec3d vec3d2 = player.getRotationVec(1.0F);
                     Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
                     GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,10,"player_interaction"));
@@ -170,6 +174,11 @@ public class StorageCubeEntity extends PathAwareEntity  {
                     this.setPosition(vec3d3);
                     this.setVelocity(player.getVelocity().x, player.getVelocity().y, player.getVelocity().z);
                     this.velocityModified = true;
+                }else{
+                    if(player != null ){
+                        setHolderUUID(null);
+                    }
+                    canUsePortals = true;
                 }
             }
         }

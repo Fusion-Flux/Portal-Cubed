@@ -46,6 +46,10 @@ public class ExperimentalPortal extends Entity {
         return CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).normalize();
     }
 
+    public Vec3d getNormalB() {
+        return CalledValues.getAxisH(this).crossProduct(CalledValues.getAxisW(this)).normalize();
+    }
+
     public ExperimentalPortal(EntityType<?> entityType, World world) {
         super(entityType, world);
     }
@@ -114,6 +118,10 @@ return true;
 
     public Direction getFacingDirection(){
         return Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
+    }
+
+    public Direction getFacingDirectionB(){
+        return Direction.fromVector((int) this.getNormalB().getX(), (int) this.getNormalB().getY(), (int) this.getNormalB().getZ());
     }
 
 
