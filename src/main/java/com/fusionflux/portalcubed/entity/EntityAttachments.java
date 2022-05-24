@@ -39,6 +39,10 @@ public interface EntityAttachments {
 
     Vec3d getServerVel();
 
+    void setShouldTeleport(boolean shouldTeleport);
+
+    boolean getShouldTeleport();
+
 
 
 }

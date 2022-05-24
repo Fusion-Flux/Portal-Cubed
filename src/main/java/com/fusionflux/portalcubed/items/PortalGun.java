@@ -231,10 +231,10 @@ if(!validPos(world,up,right,portalPos1)) {
                     ((EntityPortalsAccess) user).addPortalToList(portalholder);
                 }
                 if (otherPortal != null) {
-                    CalledValues.setDestination(portalholder,otherPortal.getOriginPos().add(otherPortal.getFacingDirection().getUnitVector().getX()*.3,otherPortal.getFacingDirection().getUnitVector().getY()*.3,otherPortal.getFacingDirection().getUnitVector().getZ()*.3));
+                    CalledValues.setDestination(portalholder,otherPortal.getOriginPos());
                     CalledValues.setOtherFacing(portalholder,new Vec3d(otherPortal.getFacingDirection().getUnitVector().getX(),otherPortal.getFacingDirection().getUnitVector().getY(),otherPortal.getFacingDirection().getUnitVector().getZ()));
                     CalledValues.setOtherAxisH(portalholder,CalledValues.getAxisH(otherPortal));
-                    CalledValues.setDestination(otherPortal,portalholder.getOriginPos().add(portalholder.getFacingDirection().getUnitVector().getX()*.3,portalholder.getFacingDirection().getUnitVector().getY()*.3,portalholder.getFacingDirection().getUnitVector().getZ()*.3));
+                    CalledValues.setDestination(otherPortal,portalholder.getOriginPos());
                     CalledValues.setOtherFacing(otherPortal,new Vec3d(portalholder.getFacingDirection().getUnitVector().getX(),portalholder.getFacingDirection().getUnitVector().getY(),portalholder.getFacingDirection().getUnitVector().getZ()));
                     CalledValues.setOtherAxisH(otherPortal,CalledValues.getAxisH(portalholder));
                     //CalledValues.setOtherAxisH();

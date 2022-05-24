@@ -1,0 +1,36 @@
+package com.fusionflux.portalcubed.mixin.client;
+
+import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.InGameOverlayRenderer;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.Frustum;
+import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+@Mixin(InGameOverlayRenderer.class)
+public class InGameOverlayRendererMixin {
+
+    //private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
+
+    @WrapWithCondition(
+            method = "renderOverlays",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameOverlayRenderer;renderInWallOverlay(Lnet/minecraft/client/texture/Sprite;Lnet/minecraft/client/util/math/MatrixStack;)V")
+    )
+    private static boolean renderOverlays(Sprite sprite, MatrixStack matrices) {
+        VoxelShape portalBox = CalledValues.getPortalCutout(MinecraftClient.getInstance().player);
+        return portalBox == VoxelShapes.empty();
+    }
+
+
+}

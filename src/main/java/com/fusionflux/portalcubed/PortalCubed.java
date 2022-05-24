@@ -42,9 +42,10 @@ public class PortalCubed implements ModInitializer {
             double x =  buf.readDouble();
             double y =  buf.readDouble();
             double z =  buf.readDouble();
+            boolean tp =  buf.readBoolean();
             server.execute(() -> {
                 ((EntityAttachments)(player)).setServerVel(new Vec3d(x,y,z));
-                // set the player's velocity
+                ((EntityAttachments)(player)).setShouldTeleport(tp);
             });
         });
         QuaternionHandler.QUATERNION_HANDLER.getClass();

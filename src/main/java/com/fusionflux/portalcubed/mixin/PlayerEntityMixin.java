@@ -94,7 +94,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
         }
 
         if(itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)){
-            if(this.getVelocity().y < -3.5){
+            if(this.getVelocity().y < -3.92){
                 this.setVelocity(this.getVelocity().add(0,.81d,0));
             }
         }

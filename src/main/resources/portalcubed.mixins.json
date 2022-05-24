@@ -10,10 +10,12 @@
     "EntityMixin",
     "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
+    "WorldMixin",
     "WorldViewMixin"
   ],
   "client": [
-    "client.MinecraftClientMixin"
+    "client.MinecraftClientMixin",
+    "client.InGameOverlayRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

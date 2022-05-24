@@ -7,6 +7,7 @@ import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.RotationUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -118,20 +119,35 @@ public class RepulsionGel extends GelFlat {
             direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection(entity));
             rotatedPos = RotationUtil.vecWorldToPlayer(rotatedPos, GravityChangerAPI.getGravityDirection(entity));
         //}
+        boolean canBounce = !(entity instanceof PlayerEntity) || world.isClient;
 
-        if (!entity.isSneaking()) {
+        if (!entity.isSneaking() && canBounce) {
             if (entity.verticalCollision) {
                 if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.getY() < 0 || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6)) {
                     double fall = ((EntityAttachments) entity).getMaxFallHeight();
                     if (fall != rotatedPos.y || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6) {
 
                         fall = fall - rotatedPos.y;
+                        //System.out.println(fall);
+                        //System.out.println(vec3dLast+"last");
+                        //System.out.println(vec3d+"max");
                         if (fall < 5) {
                             fall = 5;
                         }
-                        fall = fall + (fall * .1);
-                        double velocity = Math.sqrt(2 * .08 * fall);
+                        //fall = fall + (fall * .1);
+                        //System.out.println(fall);
+                            //fall = fall * 1.21;
+                        //+ (1-.799999999999983)
+                        //+ (1-0.9908902300206535)
+                        //+ (1-0.9991905510704413)
+                        //+ (1-0.9999265614187323)
+                        //+ (1-0.9999933249809487)
+                        //1-1.7197979746446634
+                        //+ (2-1.7197979746446634) + (2-1.9880945919865383) + (2-1.9991181013993327) + (2-1.9999335328092798) + (2-1.9999949841262605)
+                        double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
+                        entity.setOnGround(false);
                         entity.setVelocity(vec3d.x, velocity, vec3d.z);
+                        ((EntityAttachments) entity).setMaxFallHeight(rotatedPos.y);
                         if (!world.isClient) {
                             world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
                         }
@@ -162,8 +178,8 @@ public class RepulsionGel extends GelFlat {
                             if (fall < 1.5) {
                                 fall = 1.5;
                             }
-                            fall = fall + (fall * .1);
-                            double velocity = Math.sqrt(2 * .08 * fall);
+
+                            double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
                             entity.setVelocity(vec3d.x, velocity, vec3d.z);
                             ((EntityAttachments) entity).setMaxFallHeight(rotatedPos.y);
                         }
@@ -189,8 +205,7 @@ public class RepulsionGel extends GelFlat {
                             if (fall < 1.5) {
                                 fall = 1.5;
                             }
-                            fall = fall + (fall * .1);
-                            double velocity = Math.sqrt(2 * .08 * fall);
+                            double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
                             entity.setVelocity(vec3d.x, velocity, vec3d.z);
                             ((EntityAttachments) entity).setMaxFallHeight(rotatedPos.y);
                         }
@@ -216,8 +231,7 @@ public class RepulsionGel extends GelFlat {
                             if (fall < 1.5) {
                                 fall = 1.5;
                             }
-                            fall = fall + (fall * .1);
-                            double velocity = Math.sqrt(2 * .08 * fall);
+                            double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
                             entity.setVelocity(vec3d.x, velocity, vec3d.z);
                             ((EntityAttachments) entity).setMaxFallHeight(rotatedPos.y);
                         }
@@ -242,8 +256,7 @@ public class RepulsionGel extends GelFlat {
                             if (fall < 1.5) {
                                 fall = 1.5;
                             }
-                            fall = fall + (fall * .1);
-                            double velocity = Math.sqrt(2 * .08 * fall);
+                            double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
                             entity.setVelocity(vec3d.x, velocity, vec3d.z);
                             ((EntityAttachments) entity).setMaxFallHeight(rotatedPos.y);
                         }

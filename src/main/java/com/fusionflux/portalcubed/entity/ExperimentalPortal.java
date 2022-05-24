@@ -32,6 +32,7 @@ public class ExperimentalPortal extends Entity {
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
 
     private Box cutoutBoundingBox = nullBox;
+    private Box intersectionBoundingBox = nullBox;
     /**
      * axisW and axisH define the orientation of the portal
      * They should be normalized and should be perpendicular to each other
@@ -133,6 +134,9 @@ return true;
         if(this.getCutoutBoundingBox() == nullBox){
             this.calculateCuttoutBox();
         }
+        //if(this.getIntersectionBoundingBox() == nullBox){
+        //    this.calculateIntersectionBox();
+        //}
 
         if (!this.world.isClient && CalledValues.getAxisW(this) != null) {
             BlockPos topBehind = new BlockPos(
@@ -198,8 +202,10 @@ return true;
     public void syncRotations(){
         this.setBoundingBox(nullBox);
         this.setCutoutBoundingBox(nullBox);
+        //this.setIntersectionBoundingBox(nullBox);
         this.calculateBoundingBox();
         this.calculateCuttoutBox();
+        //this.calculateIntersectionBox();
     }
 
     @Override
@@ -252,17 +258,51 @@ return true;
         return portalBox;
     }
 
+    public Box calculateIntersectionBox() {
+        if (CalledValues.getAxisW(this) == null) {
+            setIntersectionBoundingBox(nullBox);
+            return nullBox;
+        }
+        double w = .9;
+        double h = 1.9;
+        Box portalBox = new Box(
+                getIntersectionPointInPlane(w / 2, h / 2)
+                        .add(getNormal().multiply(5.2)),
+                getIntersectionPointInPlane(-w / 2, -h / 2)
+                        .add(getNormal().multiply(-5.2))
+        ).union(new Box(
+                getIntersectionPointInPlane(-w / 2, h / 2)
+                        .add(getNormal().multiply(5.2)),
+                getIntersectionPointInPlane(w / 2, -h / 2)
+                        .add(getNormal().multiply(-5.2))
+        ));
+        setIntersectionBoundingBox(portalBox);
+        return portalBox;
+    }
+
     public final Box getCutoutBoundingBox() {
         return this.cutoutBoundingBox;
+    }
+
+    public final Box getIntersectionBoundingBox() {
+        return this.intersectionBoundingBox;
     }
 
     public final void setCutoutBoundingBox(Box boundingBox) {
         this.cutoutBoundingBox = boundingBox;
     }
 
+    public final void setIntersectionBoundingBox(Box boundingBox) {
+        this.intersectionBoundingBox = boundingBox;
+    }
+
 
     public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
         return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*-5,getFacingDirection().getUnitVector().getY()*-5,getFacingDirection().getUnitVector().getZ()*-5);
+    }
+
+    public Vec3d getIntersectionPointInPlane(double xInPlane, double yInPlane) {
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*5,getFacingDirection().getUnitVector().getY()*5,getFacingDirection().getUnitVector().getZ()*5);
     }
 
     public Vec3d getPointInPlane(double xInPlane, double yInPlane) {

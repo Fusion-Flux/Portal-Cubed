@@ -44,7 +44,7 @@ public class AdhesionGel extends GelFlat {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        this.addCollisionEffects(world, entity, pos);
+        this.addCollisionEffects(world, entity, pos,state);
     }
 
   /*  @Override
@@ -120,17 +120,16 @@ public class AdhesionGel extends GelFlat {
         return result;
     }
 
-    private void addCollisionEffects(World world, Entity entity, BlockPos pos) {
+    private void addCollisionEffects(World world, Entity entity, BlockPos pos,BlockState state) {
         Vec3d vec3dLast = ((EntityAttachments) entity).getLastVel();
-
-        BlockState state = world.getBlockState(pos);
 
         Vec3d direction = getDirections(state);
 
         Vec3d preChange;
 
             direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection( entity));
-        GravityChangerAPI.addGravity( entity, new Gravity(GravityChangerAPI.getGravityDirection(entity),10,2,"adhesion_gel"));
+            //if(entity.getBoundingBox().intersects(state.getCollisionShape(world,pos).getBoundingBox()))
+        GravityChangerAPI.addGravity( entity, new Gravity(GravityChangerAPI.getGravityDirection(entity),10,1,"adhesion_gel"));
 
             if (((EntityAttachments) entity).getGelTimer() == 0) {
                 if (entity.verticalCollision) {

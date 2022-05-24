@@ -1,11 +1,13 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.Gravity;
+import me.andrew.gravitychanger.util.RotationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -23,6 +25,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -43,6 +46,10 @@ public class StorageCubeEntity extends PathAwareEntity  {
 
     private boolean canUsePortals = true;
 
+    private Vec3d lastPos = this.getPos();
+
+    private final Vec3d offset = new Vec3d(0,this.getWidth()/2,0);
+
     @Override
     public boolean collides() {
         return !this.isRemoved();
@@ -50,7 +57,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
 
     @Override
     public boolean isCollidable() {
-        return true;
+        return canUsePortals;
     }
 
     @Override
@@ -160,20 +167,22 @@ public class StorageCubeEntity extends PathAwareEntity  {
         this.bodyYaw = 0;
         this.headYaw = 0;
         canUsePortals = !getUUIDPresent();
+        Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offset, GravityChangerAPI.getGravityDirection(this));
         if(!world.isClient) {
+            this.setNoDrag(!this.isOnGround());
             if (getUUIDPresent()) {
                 PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
                 if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
                     canUsePortals = false;
-                    Vec3d vec3d2 = player.getRotationVec(1.0F);
-                    Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
-                    GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,10,"player_interaction"));
+                    Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(),player.getYaw());
+                    Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
+                    GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,1,"player_interaction"));
                     this.fallDistance = 0;
                     this.setPosition(vec3d3);
-                    this.setVelocity(player.getVelocity().x, player.getVelocity().y, player.getVelocity().z);
-                    this.velocityModified = true;
+                    this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)));
+                    //this.velocityModified = true;
                 }else{
                     if(player != null ){
                         setHolderUUID(null);
@@ -181,10 +190,33 @@ public class StorageCubeEntity extends PathAwareEntity  {
                     canUsePortals = true;
                 }
             }
+        }else{
+            if (getUUIDPresent()) {
+                PlayerEntity player = (PlayerEntity)((Accessors) world).getEntity(getHolderUUID());
+                if (player != null && player.isAlive()) {
+                    Vec3d vec3d = player.getCameraPosVec(0);
+                    double d = 2;
+                    Vec3d vec3d2 = player.getRotationVec(1.0F);
+                    Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
+                    this.setPosition(vec3d3);
+                }
+            }
         }
-
+        if(this.getVelocity().y < -3.92){
+            this.setVelocity(this.getVelocity().add(0,.81d,0));
+        }
+        this.lastPos = this.getPos();
     }
 
+    protected final Vec3d getPlayerRotationVector(float pitch, float yaw) {
+        float f = pitch * (float) (Math.PI / 180.0);
+        float g = -yaw * (float) (Math.PI / 180.0);
+        float h = MathHelper.cos(g);
+        float i = MathHelper.sin(g);
+        float j = MathHelper.cos(f);
+        float k = MathHelper.sin(f);
+        return RotationUtil.vecPlayerToWorld(new Vec3d((double)(i * j), (double)(-k), (double)(h * j)), GravityChangerAPI.getGravityDirection(this));
+    }
 
     public void onRemoved() {
         if(!world.isClient) {
