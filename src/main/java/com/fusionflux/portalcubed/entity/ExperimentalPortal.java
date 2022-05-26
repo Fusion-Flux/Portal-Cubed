@@ -134,6 +134,8 @@ return true;
         if(this.getCutoutBoundingBox() == nullBox){
             this.calculateCuttoutBox();
         }
+        if(!this.world.isClient)
+            ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x,getChunkPos().z,true);
         //if(this.getIntersectionBoundingBox() == nullBox){
         //    this.calculateIntersectionBox();
         //}

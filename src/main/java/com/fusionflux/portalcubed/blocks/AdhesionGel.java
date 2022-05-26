@@ -15,6 +15,7 @@ import me.andrew.gravitychanger.util.RotationUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -129,6 +130,9 @@ public class AdhesionGel extends GelFlat {
 
             direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection( entity));
             //if(entity.getBoundingBox().intersects(state.getCollisionShape(world,pos).getBoundingBox()))
+        if(entity instanceof ItemEntity)
+            GravityChangerAPI.addGravity( entity, new Gravity(GravityChangerAPI.getGravityDirection(entity),10,10,"adhesion_gel"));
+        else
         GravityChangerAPI.addGravity( entity, new Gravity(GravityChangerAPI.getGravityDirection(entity),10,1,"adhesion_gel"));
 
             if (((EntityAttachments) entity).getGelTimer() == 0) {

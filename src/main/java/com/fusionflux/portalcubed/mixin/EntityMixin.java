@@ -165,9 +165,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract void requestTeleport(double destX, double destY, double destZ);
 
-    public Vec3d teleportVelocity = Vec3d.ZERO;
-    public boolean shouldTeleport = false;
-    public boolean shouldTeleportClient = false;
+    private Vec3d teleportVelocity = Vec3d.ZERO;
+    private boolean shouldTeleport = false;
+    private boolean shouldTeleportClient = false;
     public double lastZ = 0;
 
     @Override
@@ -185,8 +185,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
+        if(!world.isClient)
         if (shouldTeleport) {
-            this.teleport(serverPos.x, serverPos.y, serverPos.z);
+            this.requestTeleport(serverPos.x, serverPos.y, serverPos.z);
+            this.setServerVel(Vec3d.ZERO);
             this.setShouldTeleport(false);
         }
         if (shouldTeleportClient && this.getPos().equals(serverPos)) {
@@ -318,7 +320,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                     if (canTeleport) {
                         if (portalFacing.getUnitVector().getX() < 0) {
                             if (entityEyePos.getX() + entityVelocity.getX() > portal.getPos().getX()) {
-                                if (thisentity instanceof PlayerEntity && this.world.isClient) {
+                                if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
                                     var bytebuf = PacketByteBufs.create();
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getX() - teleportXOffset);
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getY() - teleportYOffset);
@@ -328,7 +330,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     serverPos = new Vec3d(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     shouldTeleportClient = true;
                                     teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
-                                } else {
+                                } else if(!(thisentity instanceof PlayerEntity)) {
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                 }
@@ -338,7 +340,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                         }
                         if (portalFacing.getUnitVector().getY() < 0) {
                             if (entityEyePos.getY() + entityVelocity.getY() > portal.getPos().getY()) {
-                                if (thisentity instanceof PlayerEntity && this.world.isClient) {
+                                if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
                                     var bytebuf = PacketByteBufs.create();
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getX() - teleportXOffset);
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getY() - teleportYOffset);
@@ -348,7 +350,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     serverPos = new Vec3d(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     shouldTeleportClient = true;
                                     teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
-                                } else {
+                                } else if(!(thisentity instanceof PlayerEntity)) {
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                 }
@@ -358,7 +360,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                         }
                         if (portalFacing.getUnitVector().getZ() < 0) {
                             if (entityEyePos.getZ() + entityVelocity.getZ() > portal.getPos().getZ()) {
-                                if (thisentity instanceof PlayerEntity && this.world.isClient) {
+                                if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
                                     var bytebuf = PacketByteBufs.create();
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getX() - teleportXOffset);
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getY() - teleportYOffset);
@@ -368,7 +370,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     serverPos = new Vec3d(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     shouldTeleportClient = true;
                                     teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
-                                } else {
+                                } else if(!(thisentity instanceof PlayerEntity)) {
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                 }
@@ -380,7 +382,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
                         if (portalFacing.getUnitVector().getX() > 0) {
                             if (entityEyePos.getX() + entityVelocity.getX() < portal.getPos().getX()) {
-                                if (thisentity instanceof PlayerEntity && this.world.isClient) {
+                                if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
                                     var bytebuf = PacketByteBufs.create();
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getX() - teleportXOffset);
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getY() - teleportYOffset);
@@ -390,7 +392,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     serverPos = new Vec3d(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     shouldTeleportClient = true;
                                     teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
-                                } else {
+                                } else if(!(thisentity instanceof PlayerEntity)) {
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                 }
@@ -400,7 +402,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                         }
                         if (portalFacing.getUnitVector().getY() > 0) {
                             if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY()) {
-                                if (thisentity instanceof PlayerEntity && this.world.isClient) {
+                                if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
                                     var bytebuf = PacketByteBufs.create();
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getX() - teleportXOffset);
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getY() - teleportYOffset);
@@ -409,8 +411,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
                                     serverPos = new Vec3d(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     shouldTeleportClient = true;
-                                    teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity.multiply(1, .98, 1), portal.getFacingDirection(), otherDirec);
-                                } else {
+                                    teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
+                                } else if(!(thisentity instanceof PlayerEntity)) {
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                 }
@@ -420,7 +422,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                         }
                         if (portalFacing.getUnitVector().getZ() > 0) {
                             if (entityEyePos.getZ() + entityVelocity.getZ() < portal.getPos().getZ()) {
-                                if (thisentity instanceof PlayerEntity && this.world.isClient) {
+                                if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
                                     var bytebuf = PacketByteBufs.create();
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getX() - teleportXOffset);
                                     bytebuf.writeDouble(CalledValues.getDestination(portal).getY() - teleportYOffset);
@@ -429,10 +431,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
                                     serverPos = new Vec3d(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     shouldTeleportClient = true;
-                                    teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity.multiply(1, .98, 1), portal.getFacingDirection(), otherDirec);
-                                } else {
+                                    teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
+                                } else if(!(thisentity instanceof PlayerEntity)) {
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
-                                    this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity.multiply(1, .98, 1), portal.getFacingDirection(), otherDirec));
+                                    this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                 }
                                 this.setLastPosition(this.getPos());
                                 this.setYaw(this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec));

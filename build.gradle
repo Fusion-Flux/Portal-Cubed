@@ -44,9 +44,9 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.7.1')
+	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.7.6')
 
-	include ('com.github.Fusion-Flux:GravityChanger:v0.7.1')
+	include ('com.github.Fusion-Flux:GravityChanger:v0.7.6')
 
 	modApi include("maven.modrinth:stonecutter_recipe_tags:3.0.1")
 
@@ -64,6 +64,7 @@ dependencies {
 	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4"
 
 	implementation("com.github.LlamaLad7:MixinExtras:0.0.10")
+	include("com.github.LlamaLad7:MixinExtras:0.0.10")
 	annotationProcessor("com.github.LlamaLad7:MixinExtras:0.0.10")
 
 
