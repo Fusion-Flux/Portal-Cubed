@@ -6,7 +6,6 @@ package com.fusionflux.portalcubed.client.render.model.entity;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;

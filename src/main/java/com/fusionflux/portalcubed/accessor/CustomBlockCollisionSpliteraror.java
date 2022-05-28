@@ -12,7 +12,6 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.CollisionView;
 import org.jetbrains.annotations.Nullable;
 
 public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape> {

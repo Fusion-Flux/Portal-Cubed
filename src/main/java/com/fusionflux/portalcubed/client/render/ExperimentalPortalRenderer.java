@@ -3,7 +3,6 @@ package com.fusionflux.portalcubed.client.render;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.client.render.model.entity.ExperimentalPortalModel;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;

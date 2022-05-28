@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.packet;
 
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
@@ -9,6 +8,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 public class EntitySpawnPacket {
     public static Packet<?> create(Entity e, Identifier packetID) {

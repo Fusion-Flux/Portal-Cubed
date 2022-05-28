@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "id": "portalcubed",
+    "group": "com.fusionflux",
+    "provides": [],
+    "version": "${version}",
+    "entrypoints": {
+      "preLaunch": "com.llamalad7.mixinextras.MixinExtrasBootstrap::init",
+      "init": "com.fusionflux.portalcubed.PortalCubed",
+      "client_init": "com.fusionflux.portalcubed.client.PortalCubedClient",
+      "modmenu": "com.fusionflux.portalcubed.compatability.ModMenuIntegration",
+      "cardinal-components": "com.fusionflux.portalcubed.util.PortalCubedComponents"
+    },
+
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.16.0-"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=1.0.0-"
+      },
+      {
+        "id": "minecraft",
+        "versions": ">=1.18.2"
+      }
+    ],
+
+    "breaks": [
+      {
+        "id": "fabric",
+        "reason": "This mod uses QSL for its content, please use Quilted Fabric API instead of Fabric API to allow for this.",
+        "unless": "quilted_fabric_api"
+      }
+    ],
+
+    "metadata": {
+      "name": "Portal Cubed",
+      "description": "A portal gun mod for Quilt",
+      "contributors": {
+        "Fusion Flux": "Developer",
+        "sailKite": "ADD CONTRIBUTIONS HERE",
+        "Platymemo": "ADD CONTRIBUTIONS HERE",
+        "Siuolplex": "Quilt Porter"
+      },
+      "license": "MIT",
+      "contact": {
+        "homepage": "https://www.curseforge.com/minecraft/mc-mods/portalcubed",
+        "sources": "https://github.com/Fusion-Flux/Thinking-With-Portatos",
+        "issues": "https://github.com/Fusion-Flux/Thinking-With-Portatos/issues"
+      },
+      "icon": "assets/portalcubed/icon.png"
+    },
+
+    "intermediate_mappings": "net.fabricmc:intermediary"
+
+  },
+  "mixin": [
+    "portalcubed.mixins.json"
+  ],
+  "cardinal-components": [
+    "portalcubed:entity_component",
+    "portalcubed:portal_data"
+  ],
+  "lithium:options": {
+    "mixin.entity.collisions": false,
+    "mixin.entity.fast_suffocation_check": false
+  }
+}

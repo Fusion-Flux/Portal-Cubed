@@ -2,12 +2,8 @@ package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import me.andrew.gravitychanger.util.GravityChangerComponents;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
