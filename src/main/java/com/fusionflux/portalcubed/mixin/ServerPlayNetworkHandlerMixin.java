@@ -34,7 +34,8 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Shadow public abstract ServerPlayerEntity getPlayer();
 
     /**
-     * @author
+     * @author Fusion-Flux
+     * @reason Im just Siuol I do not know what reason this Overwrite exists
      */
     @Overwrite
     private boolean isPlayerNotCollidingWithBlocks(WorldView world, Box box) {

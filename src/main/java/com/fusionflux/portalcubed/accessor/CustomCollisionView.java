@@ -46,7 +46,8 @@ public interface CustomCollisionView extends CollisionView {
     @Nullable
     private VoxelShape getWorldBorderCollisions(Entity entity, Box box) {
         WorldBorder worldBorder = this.getWorldBorder();
-        return worldBorder.canCollide(entity, box) ? worldBorder.asVoxelShape() : null;
+        // HEY QM PEOPLE! MAP THIS PLEASE
+        return worldBorder.method_39459(entity, box) ? worldBorder.asVoxelShape() : null;
     }
 
     default boolean isPortalSpaceEmpty(Box box,VoxelShape portalBox) {

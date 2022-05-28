@@ -36,7 +36,7 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
     }
 
     @Inject(method = "wouldCollideAt", at = @At("HEAD"), cancellable = true)
-    public void wouldCollideAt(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    public void portalCubed$changeCollision(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         VoxelShape portalBox = CalledValues.getPortalCutout(((ClientPlayerEntity)(Object)this));
         if(portalBox != VoxelShapes.empty()){
             cir.setReturnValue(false);

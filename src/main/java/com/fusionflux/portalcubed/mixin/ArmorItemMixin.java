@@ -34,13 +34,14 @@ public abstract class ArmorItemMixin {
     @Mutable
     private Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
+    //God QSL/FAPI better just unlock this themselves some day.
+
     @Inject(method = "<init>", at = @At(value = "RETURN"))
-    private void constructor(ArmorMaterial material, EquipmentSlot slot, Item.Settings settings, CallbackInfo ci) {
+    private void portalCubed$constructor(ArmorMaterial material, EquipmentSlot slot, Item.Settings settings, CallbackInfo ci) {
         UUID uUID = MODIFIERS[slot.getEntitySlotId()];
 
         if (material == PortalCubedItems.PortalArmor) {
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-
             this.attributeModifiers.forEach(builder::put);
 
             builder.put(

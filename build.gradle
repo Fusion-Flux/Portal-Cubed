@@ -1,6 +1,7 @@
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
-	id 'io.github.juuxel.loom-quiltflower-mini' version '1.2.1'
+	id 'fabric-loom' version '0.12.+'
+	id 'org.quiltmc.quilt-mappings-on-loom' version '4.+'
+	id 'io.github.juuxel.loom-quiltflower' version '1.+'
 	id 'maven-publish'
 }
 
@@ -33,8 +34,11 @@ repositories {
 
 dependencies {
 	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings(loom.layered {
+		addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${mappings_version}:v2"))
+	})
+
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
@@ -59,7 +63,7 @@ dependencies {
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
 	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4"
 
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4"
+	//modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4"
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
 	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4"
 

@@ -56,7 +56,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
-    public void isInvulnerableTo(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
+    public void portalCubed$letYouFallLonger(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         ItemStack itemStack5 = this.getEquippedStack(EquipmentSlot.FEET);
         if (damageSource == DamageSource.FALL && (itemStack5.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS))) {
             cir.setReturnValue(true);
@@ -64,7 +64,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     }
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
-    private Vec3d uhhhhhhh(Vec3d travelVectorOriginal) {
+    private Vec3d portalCubed$what(Vec3d travelVectorOriginal) {
         if (!this.hasNoGravity()) {
             ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
             if (!this.isOnGround() && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
@@ -74,7 +74,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                     mathval = horizontalvelocity / 0.01783440120041885;
                 }
                 travelVectorOriginal = new Vec3d(travelVectorOriginal.x / mathval, travelVectorOriginal.y, travelVectorOriginal.z / mathval);
-                this.airStrafingSpeed = .04f;
+                this.flyingSpeed = .04f;
             }
         }
     return travelVectorOriginal;
@@ -83,7 +83,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     private boolean enableNoDrag2= false;
 
     @Inject(method = "tick", at = @At("HEAD"))
-    public void tick(CallbackInfo ci) {
+    public void portalCubed$tick(CallbackInfo ci) {
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
         if((!this.isOnGround() && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL))){
             if(!enableNoDrag2) {
@@ -118,7 +118,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     }
 
     @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D"), cancellable = true)
-    public void dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<@Nullable ItemEntity> cir) {
+    public void portalCubed$dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<@Nullable ItemEntity> cir) {
         if (!this.world.isClient && stack.getItem().equals(PortalCubedItems.PORTAL_GUN)) {
             NbtCompound tag = stack.getOrCreateNbt();
             NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());

@@ -1,19 +1,14 @@
 package com.fusionflux.portalcubed.mixin;
 
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import net.minecraft.block.ShapeContext;
 import net.minecraft.util.math.Box;
-import net.minecraft.world.BlockCollisionSpliterator;
-import net.minecraft.world.CollisionView;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.world.BlockCollisions;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(BlockCollisionSpliterator.class)
-public class BlockCollisionSpliteratorMixin {
-
+@Mixin(BlockCollisions.class)
+public class BlockCollisionsMixin {
+    //Todo: Noticed this is unused seemingly, removal soon?
     @Redirect(
             at = @At(target = "Lnet/minecraft/util/math/Box;intersects(DDDDDD)Z", value = "INVOKE"),
             method = "computeNext()Lnet/minecraft/util/shape/VoxelShape;"
