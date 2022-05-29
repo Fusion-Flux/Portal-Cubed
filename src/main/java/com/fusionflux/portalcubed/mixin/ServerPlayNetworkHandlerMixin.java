@@ -9,9 +9,14 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.WorldView;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(ServerPlayNetworkHandler.class)
@@ -21,27 +26,15 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     @Shadow public abstract ServerPlayerEntity getPlayer();
 
-    /**
-     * @author Fusion-Flux
-     * @reason Im just Siuol I do not know what reason this Overwrite exists
-     */
-    @Overwrite
-    private boolean isPlayerNotCollidingWithBlocks(WorldView world, Box box) {
-        Iterable<VoxelShape> iterable = world.getCollisions( this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F));
-        VoxelShape voxelShape = VoxelShapes.cuboid(box.contract(1.0E-5F));
-
+    @ModifyVariable(method = "isPlayerNotCollidingWithBlocks(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/Box;)Z", at = @At("STORE"), ordinal = 0)
+    private Iterable<VoxelShape> isPlayerNotCollidingWithBlocks(Iterable<VoxelShape> shapes) {
         VoxelShape portalBox = CalledValues.getPortalCutout(this.getPlayer());
-        if(portalBox != VoxelShapes.empty()){
-            iterable = (((CustomCollisionView) world).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), portalBox));
+        if(portalBox != VoxelShapes.empty()) {
+            // Would take in the world value from the code but I guess I cant
+            return shapes = (((CustomCollisionView) this.player.getWorld()).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), portalBox));
         }
 
-        for(VoxelShape voxelShape2 : iterable) {
-            if (!VoxelShapes.matchesAnywhere(voxelShape2, voxelShape, BooleanBiFunction.AND)) {
-                return true;
-            }
-        }
-
-        return false;
+        return shapes;
     }
 
     //@Inject(method = "tick", at = @At("TAIL"))

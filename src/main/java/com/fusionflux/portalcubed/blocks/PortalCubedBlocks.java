@@ -122,7 +122,7 @@ public class PortalCubedBlocks {
     public static TagKey<Block> ALLOW_PORTAL_IN = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "allowinside"));
     public static TagKey<Block> IMMOVABLE_BLOCKS = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "immovable_blocks"));
     public static void registerBlocks() {
-        if (PortalCubedConfig.get().enabled.enableGels) {
+        if (PortalCubedConfig.enableGels) {
 
             Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "base_gel"), BASE_GEL);
 
@@ -138,7 +138,7 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("conversion_gel"), new BlockItem(CONVERSION_GEL, new Item.Settings().group(PortalCubed.PortalCubedGroup).maxCount(64)));
         }
 
-        if (PortalCubedConfig.get().enabled.enablePortal2Blocks) {
+        if (PortalCubedConfig.enablePortal2Blocks) {
             Registry.register(Registry.BLOCK, id("sliding_door"), SLIDINGDOOR);
             Registry.register(Registry.ITEM, id("sliding_door"), new BlockItem(SLIDINGDOOR, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
 

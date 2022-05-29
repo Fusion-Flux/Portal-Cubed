@@ -30,8 +30,7 @@ repositories {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${minecraft_version}"
+	minecraft "com.mojang:minecraft:$project.minecraft_version"
 	mappings(loom.layered {
 		addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${mappings_version}:v2"))
 	})
@@ -39,28 +38,38 @@ dependencies {
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 	modImplementation ("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${qsl_version}+${qfapi_version}")
 
-	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
+	modImplementation ("com.terraformersmc:modmenu:3.1.1") {
+		exclude group: "net.fabricmc.fabric-api"
+		exclude group: "net.fabricmc"
 	}
 
-	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.7.6')
+	//Gravity Changer - UPDATE TO NEWEST VERSION WHEN ITS RELEASED ON MODRINTH
+	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.7.7') {
+		exclude group: "net.fabricmc.fabric-api"
+		exclude group: "net.fabricmc"
+		exclude group: "dev.onyxstudios.cardinal-components-api"
+	}
 
-	include ('com.github.Fusion-Flux:GravityChanger:v0.7.6')
+	//include ('com.github.Fusion-Flux:GravityChanger:v0.7.6')
 
 	modApi include("maven.modrinth:stonecutter_recipe_tags:3.0.1")
-
-	modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
-		exclude(module: "fabric-api")
-	}
+//
 
 	// Replace modImplementation with modApi if you expose components in your own API
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4"
-	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4"
+	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4") {
+		exclude group: "net.fabricmc.fabric-api"
+		exclude group: "net.fabricmc"
+	}
 
-	//modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4"
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4"
+	//include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4"
+
+	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4") {
+		exclude group: "net.fabricmc.fabric-api"
+		exclude group: "net.fabricmc"
+	}
+	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
+	//include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4"
 
 	implementation("com.github.LlamaLad7:MixinExtras:0.0.10")
 	include("com.github.LlamaLad7:MixinExtras:0.0.10")
@@ -72,7 +81,7 @@ dependencies {
 processResources {
 	inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
+	filesMatching("quilt.mod.json") {
 		expand "version": project.version
 	}
 }
@@ -85,7 +94,7 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 
 	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 16
+	it.options.release = 17
 }
 
 java {

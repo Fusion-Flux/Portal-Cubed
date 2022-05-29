@@ -10,6 +10,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+//todo: Seemingly unused, may remove later
 public class EntitySpawnPacket {
     public static Packet<?> create(Entity e, Identifier packetID) {
         if (e.world.isClient)

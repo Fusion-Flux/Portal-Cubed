@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed;
 
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.config.MidnightConfig;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
@@ -45,7 +46,7 @@ public class PortalCubed implements ModInitializer {
             });
         });
         QuaternionHandler.QUATERNION_HANDLER.getClass();
-        PortalCubedConfig.register();
+        MidnightConfig.init("portalcubed", PortalCubedConfig.class);
         PortalCubedBlocks.registerBlocks();
         PortalCubedItems.registerItems();
         PortalCubedEntities.registerEntities();

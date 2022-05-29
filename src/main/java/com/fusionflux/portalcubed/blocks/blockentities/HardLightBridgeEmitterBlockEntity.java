@@ -24,7 +24,7 @@ import java.util.Objects;
  */
 public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEntityAbstract {
 
-    public final int MAX_RANGE = PortalCubedConfig.get().numbersblock.maxBridgeLength;
+    public final int MAX_RANGE = PortalCubedConfig.maxBridgeLength;
     public List<BlockPos> bridges;
 
     public HardLightBridgeEmitterBlockEntity(BlockPos pos, BlockState state) {

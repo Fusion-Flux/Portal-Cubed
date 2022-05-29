@@ -43,7 +43,7 @@ public abstract class MinecraftClientMixin {
      * @author Platymemo
      */
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
-    private void onHandleBlockBreaking(boolean isKeyPressed, CallbackInfo ci) {
+    private void portalCubed$onHandleBlockBreaking(boolean isKeyPressed, CallbackInfo ci) {
         assert this.player != null;
         if (this.player.isHolding(PortalCubedItems.PORTAL_GUN)) {
             ci.cancel();
@@ -57,7 +57,7 @@ public abstract class MinecraftClientMixin {
      * @author Platymemo
      */
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
-    private void onDoAttack(CallbackInfoReturnable<Boolean> cir) {
+    private void portalCubed$onDoAttack(CallbackInfoReturnable<Boolean> cir) {
         if (this.player != null) {
             Item mainHand = this.player.getMainHandStack().getItem();
             Item offHand = this.player.getOffHandStack().getItem();

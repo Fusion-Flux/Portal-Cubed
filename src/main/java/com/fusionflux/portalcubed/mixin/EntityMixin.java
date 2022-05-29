@@ -183,8 +183,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-        if(!world.isClient)
-        if (shouldTeleport) {
+        if (!world.isClient && shouldTeleport) {
             this.requestTeleport(serverPos.x, serverPos.y, serverPos.z);
             this.setServerVel(Vec3d.ZERO);
             this.setShouldTeleport(false);
@@ -652,8 +651,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         @Inject(method = "isInsideWall", at = @At("HEAD"), cancellable = true)
     public void isInsideWall(CallbackInfoReturnable<Boolean> cir) {
         VoxelShape portalBox = CalledValues.getPortalCutout(((Entity)(Object)this));
-        if(portalBox != VoxelShapes.empty())
-        cir.setReturnValue(false);
+        if (portalBox != VoxelShapes.empty()) cir.setReturnValue(false);
     }
     @Inject(method = "collidesWithStateAtPos", at = @At("HEAD"), cancellable = true)
     public void collidesWithStateAtPos(BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {

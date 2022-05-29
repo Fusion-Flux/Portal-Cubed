@@ -24,9 +24,8 @@ public class PortalCubedItems {
     public static final SpawnEggItem STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64));
     public static final SpawnEggItem COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.COMPANION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64));
 
-    //todo: Do the funny registry
     public static void registerItems() {
-        if (PortalCubedConfig.get().enabled.enableLongFallBoots)
+        if (PortalCubedConfig.enableLongFallBoots)
             Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "long_fall_boots"), LONG_FALL_BOOTS);
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "gel_orb"), GEL_ORB);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_gun"), PORTAL_GUN);
