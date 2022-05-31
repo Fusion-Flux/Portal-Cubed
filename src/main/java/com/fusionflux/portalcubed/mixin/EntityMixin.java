@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.mixin;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -15,8 +14,6 @@ import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.google.common.collect.Lists;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.RotationUtil;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
@@ -32,6 +29,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -185,8 +183,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-        if(!world.isClient)
-        if (shouldTeleport) {
+        if (!world.isClient && shouldTeleport) {
             this.requestTeleport(serverPos.x, serverPos.y, serverPos.z);
             this.setServerVel(Vec3d.ZERO);
             this.setShouldTeleport(false);
@@ -628,7 +625,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
 
     @ModifyArgs(
-            method = "adjustMovementForCollisions(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Lnet/minecraft/world/World;Ljava/util/List;)Lnet/minecraft/util/math/Vec3d;",
+            method = "adjustSingleAxisMovementForCollisions(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Lnet/minecraft/world/World;Ljava/util/List;)Lnet/minecraft/util/math/Vec3d;",
             at = @At(target = "Lcom/google/common/collect/ImmutableList$Builder;addAll(Ljava/lang/Iterable;)Lcom/google/common/collect/ImmutableList$Builder;", value = "INVOKE",ordinal = 1)
     )
     private static void addAllModifyArg(Args args, @Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
@@ -654,8 +651,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         @Inject(method = "isInsideWall", at = @At("HEAD"), cancellable = true)
     public void isInsideWall(CallbackInfoReturnable<Boolean> cir) {
         VoxelShape portalBox = CalledValues.getPortalCutout(((Entity)(Object)this));
-        if(portalBox != VoxelShapes.empty())
-        cir.setReturnValue(false);
+        if (portalBox != VoxelShapes.empty()) cir.setReturnValue(false);
     }
     @Inject(method = "collidesWithStateAtPos", at = @At("HEAD"), cancellable = true)
     public void collidesWithStateAtPos(BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {

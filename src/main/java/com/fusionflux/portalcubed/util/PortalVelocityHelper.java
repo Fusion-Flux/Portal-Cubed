@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.util;
 
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 

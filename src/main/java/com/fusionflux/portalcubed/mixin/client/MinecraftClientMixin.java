@@ -4,8 +4,6 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -14,6 +12,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,7 +43,7 @@ public abstract class MinecraftClientMixin {
      * @author Platymemo
      */
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
-    private void onHandleBlockBreaking(boolean isKeyPressed, CallbackInfo ci) {
+    private void portalCubed$onHandleBlockBreaking(boolean isKeyPressed, CallbackInfo ci) {
         assert this.player != null;
         if (this.player.isHolding(PortalCubedItems.PORTAL_GUN)) {
             ci.cancel();
@@ -57,7 +57,7 @@ public abstract class MinecraftClientMixin {
      * @author Platymemo
      */
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
-    private void onDoAttack(CallbackInfoReturnable<Boolean> cir) {
+    private void portalCubed$onDoAttack(CallbackInfoReturnable<Boolean> cir) {
         if (this.player != null) {
             Item mainHand = this.player.getMainHandStack().getItem();
             Item offHand = this.player.getOffHandStack().getItem();

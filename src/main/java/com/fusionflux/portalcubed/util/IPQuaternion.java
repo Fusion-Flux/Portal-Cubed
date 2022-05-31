@@ -7,7 +7,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.Objects;
 
-
+//This is from https://github.com/qouteall/ImmersivePortalsMod/blob/1.18/q_misc_util/src/main/java/qouteall/q_misc_util/my_util/DQuaternion.java,
 public class IPQuaternion {
     public final double x;
     public final double y;

@@ -2,20 +2,22 @@ package com.fusionflux.portalcubed.client.key;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
+import com.mojang.blaze3d.platform.InputUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+
+
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.option.KeyBind;
 import org.lwjgl.glfw.GLFW;
+import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 @Environment(EnvType.CLIENT)
 public class GrabKeyBinding {
     public static void register() {
-        KeyBinding key = new KeyBinding(
+        KeyBind key = new KeyBind(
                 "key." + PortalCubed.MODID + ".grab",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_G,
@@ -23,7 +25,7 @@ public class GrabKeyBinding {
         );
 
         KeyBindingHelper.registerKeyBinding(key);
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvents.END.register(client -> {
             if (client.player != null && key.wasPressed()) {
                 ClientPlayNetworking.send(PortalCubedServerPackets.GRAB_KEY_PRESSED, PacketByteBufs.create());
             }

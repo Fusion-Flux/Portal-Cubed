@@ -1,22 +1,16 @@
 package com.fusionflux.portalcubed.items;
 
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 
 import com.fusionflux.portalcubed.util.IPQuaternion;
-import com.fusionflux.portalcubed.util.PortalCubedComponents;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
@@ -121,7 +115,7 @@ public class PortalGun extends Item implements DyeableItem {
             Vec3i right;
             BlockPos blockPos;
 
-           //= HitResult hitResult = user.raycast(128.0D, 0.0F, false);
+            //= HitResult hitResult = user.raycast(128.0D, 0.0F, false);
             HitResult hitResult = customRaycast(user,128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 //Block.isFaceFullSquare(world.getBlockState(((BlockHitResult) hitResult).getBlockPos()).getCollisionShape(world,((BlockHitResult) hitResult).getBlockPos()),((BlockHitResult) hitResult).getSide().getOpposite());
@@ -138,54 +132,57 @@ public class PortalGun extends Item implements DyeableItem {
 
                 Vec3d portalPos1 = calcPos(blockPos, up, normal, right, false);
                 Vec3d placeholderPos1 = calcPos(blockPos, up, normal, right, true);
-if(!validPos(world,up,right,portalPos1)) {
-    for (int i = 1; i < 9; i++) {
-        Vec3d shiftedPortalPos = portalPos1;
-        Vec3d shiftedPortalPlaceholder = placeholderPos1;
-        switch (i) {
-            case 1 -> {
-                shiftedPortalPos = portalPos1.add(Vec3d.of(up).multiply(-1.0));
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up).multiply(-1.0));
-            }
-            case 2 -> {
-                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0));
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).multiply(-1.0));
-            }
-            case 3 -> {
-                shiftedPortalPos = portalPos1.add(Vec3d.of(up));
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up));
-            }
-            case 4 -> {
-                shiftedPortalPos = portalPos1.add(Vec3d.of(right));
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right));
-            }
-            case 5 -> {
-                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up).multiply(-1.0));
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up).multiply(-1.0));
-            }
-            case 6 -> {
-                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up));
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up));
-            }
-            case 7 -> {
-                shiftedPortalPos = portalPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
-            }
-            case 8 -> {
-                shiftedPortalPos = portalPos1.add(Vec3d.of(right)).add(Vec3d.of(up).multiply(-1.0));
-                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right)).add(Vec3d.of(up).multiply(-1.0));
-            }
-        }
-        if (validPos(world, up, right, shiftedPortalPos)) {
-            portalPos1 = shiftedPortalPos;
-            placeholderPos1 = shiftedPortalPlaceholder;
-            break;
-        }
-        if (i == 8) {
-            return TypedActionResult.pass(stack);
-        }
-    }
-}
+
+                if(!validPos(world,up,right,portalPos1)) {
+                    for (int i = 1; i < 9; i++) {
+                        Vec3d shiftedPortalPos = portalPos1;
+                        Vec3d shiftedPortalPlaceholder = placeholderPos1;
+                        switch (i) {
+                            case 1 -> {
+                                shiftedPortalPos = portalPos1.add(Vec3d.of(up).multiply(-1.0));
+                                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up).multiply(-1.0));
+                            }
+                            case 2 -> {
+                                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0));
+                                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).multiply(-1.0));
+                            }
+                            case 3 -> {
+                                shiftedPortalPos = portalPos1.add(Vec3d.of(up));
+                                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up));
+                            }
+                            case 4 -> {
+                                shiftedPortalPos = portalPos1.add(Vec3d.of(right));
+                                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right));
+                            }
+                            case 5 -> {
+                                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up).multiply(-1.0));
+                                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up).multiply(-1.0));
+                            }
+                            case 6 -> {
+                                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up));
+                                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up));
+                            }
+                            case 7 -> {
+                                shiftedPortalPos = portalPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
+                                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
+                            }
+                            case 8 -> {
+                                shiftedPortalPos = portalPos1.add(Vec3d.of(right)).add(Vec3d.of(up).multiply(-1.0));
+                                shiftedPortalPlaceholder = placeholderPos1.add(Vec3d.of(right)).add(Vec3d.of(up).multiply(-1.0));
+                            }
+                        }
+
+                        if (validPos(world, up, right, shiftedPortalPos)) {
+                            portalPos1 = shiftedPortalPos;
+                            placeholderPos1 = shiftedPortalPlaceholder;
+                            break;
+                        }
+
+                        if (i == 8) {
+                            return TypedActionResult.pass(stack);
+                        }
+                    }
+                }
 
                 world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.FIRE_EVENT_PRIMARY, SoundCategory.NEUTRAL, .3F, 1F);
                 if (portalholder != null && portalholder.isAlive()) {
@@ -211,10 +208,10 @@ if(!validPos(world,up,right,portalPos1)) {
                 CalledValues.setDestination(portalholder,portalPos1);
                 //portalholder.setDestination(portalPos1);
                 CalledValues.setOrientation(portalholder,Vec3d.of(right),Vec3d.of(up).multiply(-1));
-               // portalholder.setOrientationAndSize(
-               //         Vec3d.of(right), //axisW
-               //         Vec3d.of(up).multiply(-1)
-               // );
+                // portalholder.setOrientationAndSize(
+                //         Vec3d.of(right), //axisW
+                //         Vec3d.of(up).multiply(-1)
+                // );
                 //PortalCubedComponents.PORTAL_DATA.sync(portalholder);
                 portalholder.setOutline(portalOutline.getUuidAsString());
                 portalOutline.axisH = CalledValues.getAxisH(portalholder);
@@ -306,15 +303,12 @@ if(!validPos(world,up,right,portalPos1)) {
             bottomValidBlock=true;
         }
 
-        if ((!world.getBlockState(topBehind).isSideSolidFullSquare(world, topBehind, portalFacing)) ||
-                (!world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) ||
-                        !topValidBlock ||
-                        !bottomValidBlock)||
-                ((!world.getBlockState(new BlockPos(portalPos1)).isAir())&& !world.getBlockState(new BlockPos(portalPos1)).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN) )|| (!world.getBlockState(bottom).isAir() && !world.getBlockState(bottom).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN))) {
-            //System.out.println("portalInvalid");
-            return false;
-        }
-        return true;
+        //System.out.println("portalInvalid");
+        return (world.getBlockState(topBehind).isSideSolidFullSquare(world, topBehind, portalFacing)) &&
+                (world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) &&
+                        topValidBlock &&
+                        bottomValidBlock) &&
+                ((world.getBlockState(new BlockPos(portalPos1)).isAir()) || world.getBlockState(new BlockPos(portalPos1)).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN)) && (world.getBlockState(bottom).isAir() || world.getBlockState(bottom).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN));
     }
 
     /**

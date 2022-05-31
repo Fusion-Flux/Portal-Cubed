@@ -11,108 +11,63 @@ import com.fusionflux.portalcubed.client.render.model.entity.StorageCubeModel;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.DyeableItem;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
+import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
 
 @Environment(EnvType.CLIENT)
 public class PortalCubedClient implements ClientModInitializer {
-
+    @Override
+    public void onInitializeClient(ModContainer mod) {
+        registerEntityRenderers();
+        registerItemRenderLayers();
+        registerBlockRenderLayers();
+        PortalCubedClientPackets.registerPackets();
+        GrabKeyBinding.register();
+        
+        HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
+        HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
+    }
+    
     public static void registerBlockRenderLayers() {
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.HLB_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.HLB_EMITTER_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.NEUROTOXIN_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.EXCURSION_FUNNEL, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMITTER, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.NEUROTOXIN_EMITTER, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.CONVERSION_GEL, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.PROPULSION_GEL, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.REPULSION_GEL, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(PortalCubedBlocks.ADHESION_GEL, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.HLB_BLOCK);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.HLB_EMITTER_BLOCK);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.NEUROTOXIN_BLOCK);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.EXCURSION_FUNNEL);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMITTER);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.NEUROTOXIN_EMITTER);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.CONVERSION_GEL);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.PROPULSION_GEL);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.REPULSION_GEL);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.ADHESION_GEL);
     }
 
     public static void registerItemRenderLayers() {
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem) stack.getItem()).getColor(stack), PortalCubedItems.PORTAL_GUN);
     }
 
-    @Override
-    public void onInitializeClient() {
-        registerEntityRenderers();
-        registerItemRenderLayers();
-        registerBlockRenderLayers();
-        PortalCubedClientPackets.registerPackets();
-        GrabKeyBinding.register();
-
-   //     PortalGun.registerAlternateModels();
-
-
-        HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
-        HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
-
-
-
-        //setupFluidRendering(PortalCubedBlocks.STILL_TOXIC_GOO, PortalCubedBlocks.FLOWING_TOXIC_GOO, new Identifier("portalcubed", "acid"), 0x2D1B00);
-        //BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), PortalCubedBlocks.STILL_TOXIC_GOO, PortalCubedBlocks.FLOWING_TOXIC_GOO);
-    }
-
     private void registerEntityRenderers() {
         EntityModelLayerRegistry.registerModelLayer(PortalPlaceholderModel.MAIN_LAYER, PortalPlaceholderModel::getTexturedModelData);
-        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.PORTAL_PLACEHOLDER, PortalPlaceholderRenderer::new);
+        EntityRendererRegistry.register(PortalCubedEntities.PORTAL_PLACEHOLDER, PortalPlaceholderRenderer::new);
+
         EntityModelLayerRegistry.registerModelLayer(ExperimentalPortalModel.MAIN_LAYER, ExperimentalPortalModel::getTexturedModelData);
-        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.EXPERIMENTAL_PORTAL, ExperimentalPortalRenderer::new);
+        EntityRendererRegistry.register(PortalCubedEntities.EXPERIMENTAL_PORTAL, ExperimentalPortalRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER, StorageCubeModel::getTexturedModelData);
-        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.STORAGE_CUBE, StorageCubeRenderer::new);
+        EntityRendererRegistry.register(PortalCubedEntities.STORAGE_CUBE, StorageCubeRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(CompanionCubeModel.COMPANION_CUBE_MAIN_LAYER, CompanionCubeModel::getTexturedModelData);
-        EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.COMPANION_CUBE, CompanionCubeRenderer::new);
-        //EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer<GelOrbEntity>(dispatcher, context.getItemRenderer()));
-       // EntityRendererRegistry.INSTANCE.register(PortalCubedEntities.REPULSION_GEL_ORB, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
+        EntityRendererRegistry.register(PortalCubedEntities.COMPANION_CUBE, CompanionCubeRenderer::new);
     }
-
-    /*public static void setupFluidRendering(final Fluid still, final Fluid flowing, final Identifier textureFluidId, final int color) {
-        final Identifier stillSpriteId = new Identifier(textureFluidId.getNamespace(), "block/" + textureFluidId.getPath() + "_still");
-        final Identifier flowingSpriteId = new Identifier(textureFluidId.getNamespace(), "block/" + textureFluidId.getPath() + "_flow");
-
-        // If they're not already present, add the sprites to the block atlas
-        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) -> {
-            registry.register(stillSpriteId);
-            registry.register(flowingSpriteId);
-        });
-
-        final Identifier fluidId = Registry.FLUID.getId(still);
-        final Identifier listenerId = new Identifier(fluidId.getNamespace(), fluidId.getPath() + "_reload_listener");
-
-        final Sprite[] fluidSprites = { null, null };
-
-
-
-        // The FluidRenderer gets the sprites and color from a FluidRenderHandler during rendering
-        final FluidRenderHandler renderHandler = new FluidRenderHandler()
-        {
-            @Override
-            public Sprite[] getFluidSprites(BlockRenderView view, BlockPos pos, FluidState state) {
-                return fluidSprites;
-            }
-
-            @Override
-            public int getFluidColor(BlockRenderView view, BlockPos pos, FluidState state) {
-                return color;
-            }
-        };
-
-        FluidRenderHandlerRegistry.INSTANCE.register(still, renderHandler);
-        FluidRenderHandlerRegistry.INSTANCE.register(flowing, renderHandler);
-    }*/
-
 }

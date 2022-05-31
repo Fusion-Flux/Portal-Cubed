@@ -10,15 +10,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class PortalCubedEntities {
-
-
-
-
     public static final EntityType<PortalPlaceholderEntity> PORTAL_PLACEHOLDER = FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, PortalPlaceholderEntity::new)
             .dimensions(EntityDimensions.changing(0F, 0F))
             .build();
-
-
 
     public static final EntityType<ExperimentalPortal> EXPERIMENTAL_PORTAL = FabricEntityTypeBuilder.create(SpawnGroup.MISC, ExperimentalPortal::new)
             .dimensions(EntityDimensions.changing(1F, 1F))

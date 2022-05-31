@@ -4,19 +4,13 @@ import com.google.common.collect.Iterables;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelSet;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.CollisionView;
 import net.minecraft.world.border.WorldBorder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 public interface CustomCollisionView extends CollisionView {
 
@@ -46,7 +40,8 @@ public interface CustomCollisionView extends CollisionView {
     @Nullable
     private VoxelShape getWorldBorderCollisions(Entity entity, Box box) {
         WorldBorder worldBorder = this.getWorldBorder();
-        return worldBorder.canCollide(entity, box) ? worldBorder.asVoxelShape() : null;
+        // HEY QM PEOPLE! MAP THIS PLEASE
+        return worldBorder.method_39459(entity, box) ? worldBorder.asVoxelShape() : null;
     }
 
     default boolean isPortalSpaceEmpty(Box box,VoxelShape portalBox) {

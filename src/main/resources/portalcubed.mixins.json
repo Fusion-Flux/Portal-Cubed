@@ -2,16 +2,13 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.fusionflux.portalcubed.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ArmorItemMixin",
     "ClientPlayerEntityMixin",
-    "CollisionViewMixin",
     "EntityMixin",
     "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
-    "WorldMixin",
-    "WorldViewMixin"
+    "WorldMixin"
   ],
   "client": [
     "client.MinecraftClientMixin",

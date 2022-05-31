@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.packet;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 //Because of some Mixin+JVM weird implementation detail bs -
 //gotta have the `ClientPlayNetworking` call in a separate class
