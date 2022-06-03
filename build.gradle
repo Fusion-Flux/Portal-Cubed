@@ -44,7 +44,7 @@ dependencies {
 	}
 
 	//Gravity Changer - UPDATE TO NEWEST VERSION WHEN ITS RELEASED ON MODRINTH
-	modImplementation ('com.github.Fusion-Flux:GravityChanger:v0.7.7') {
+	modImplementation include ("maven.modrinth:fusions-gravity-api:0.7.7+fabric"){
 		exclude group: "net.fabricmc.fabric-api"
 		exclude group: "net.fabricmc"
 		exclude group: "dev.onyxstudios.cardinal-components-api"
@@ -56,7 +56,7 @@ dependencies {
 //
 
 	// Replace modImplementation with modApi if you expose components in your own API
-	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4") {
+	modImplementation include ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4") {
 		exclude group: "net.fabricmc.fabric-api"
 		exclude group: "net.fabricmc"
 	}
@@ -64,7 +64,7 @@ dependencies {
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
 	//include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4"
 
-	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4") {
+	modImplementation include ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4") {
 		exclude group: "net.fabricmc.fabric-api"
 		exclude group: "net.fabricmc"
 	}

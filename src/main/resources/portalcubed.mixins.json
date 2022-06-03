@@ -8,11 +8,12 @@
     "EntityMixin",
     "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
-    "WorldMixin"
+    "WorldMixin",
+    "WorldViewMixin"
   ],
   "client": [
-    "client.MinecraftClientMixin",
-    "client.InGameOverlayRendererMixin"
+    "client.InGameOverlayRendererMixin",
+    "client.MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
