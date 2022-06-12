@@ -64,10 +64,16 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     private Vec3d lastVel = Vec3d.ZERO;
 
     @Unique
+    private Vec3d lastPos = Vec3d.ZERO;
+
+    @Unique
     private Vec3d serverPos = Vec3d.ZERO;
 
     @Unique
     private int gelTransferTimer = 0;
+
+    @Unique
+    private int gelTransferChangeTimer = 0;
 
     @Unique
     private boolean IS_BOUNCED = false;
@@ -462,9 +468,13 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
 
 
-
-        if(this.gelTransferTimer != 0){
-            this.gelTransferTimer -= 1;
+        if(!world.isClient) {
+            if (this.gelTransferTimer != 0) {
+                this.gelTransferTimer -= 1;
+            }
+            if (this.gelTransferChangeTimer != 0) {
+                this.gelTransferChangeTimer -= 1;
+            }
         }
 
         //if (!world.isClient) {
@@ -509,6 +519,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
 
         this.lastVel = this.getVelocity();
+
+        this.lastPos = this.getPos();
 
         if (world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.REPULSION_GEL && this.isBounced()){
             this.setBounced(false);
@@ -586,6 +598,11 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         return this.lastVel;
     }
 
+    @Override
+    public Vec3d getLastPos() {
+        return this.lastPos;
+    }
+
 
     @Override
     public void setServerVel(Vec3d fall) {
@@ -619,8 +636,17 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Override
     public int getGelTimer() {
-
         return this.gelTransferTimer;
+    }
+
+    @Override
+    public void setGelChangeTimer(int funnelTimer) {
+        this.gelTransferChangeTimer = funnelTimer;
+    }
+
+    @Override
+    public int getGelChangeTimer() {
+        return this.gelTransferChangeTimer;
     }
 
 

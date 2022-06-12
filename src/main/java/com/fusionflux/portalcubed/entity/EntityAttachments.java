@@ -33,7 +33,13 @@ public interface EntityAttachments {
 
     void setGelTimer(int funnelTimer);
 
+    int getGelChangeTimer();
+
+    void setGelChangeTimer(int funnelTimer);
+
     Vec3d getLastVel();
+
+    Vec3d getLastPos();
 
     void setMaxFallHeight(double maxFallHeight);
 

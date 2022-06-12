@@ -44,20 +44,18 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
+    public Vec3d getPosition() {
+        return null;
+    }
+
+    @Override
+    public void setPosition(Vec3d velocity) {
+
+    }
+
+    @Override
     public void teleport(Vec3d teleportTo, Direction dira,Direction dirb) {
 
-    }
-
-    @Override
-    public Vec3d getVelocity() {
-        return this.velocity;
-    }
-
-    @Override
-    public void setVelocity(Vec3d velocity) {
-        //System.out.println("i was set");
-        this.velocity =velocity;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
     @Override
