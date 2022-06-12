@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
 import me.andrew.gravitychanger.util.Gravity;
@@ -62,21 +63,25 @@ public class StorageCubeEntity extends PathAwareEntity  {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (this.isInvulnerableTo(source) && !(source.getAttacker() instanceof PlayerEntity)) {
-            return false;
-        } else if (!this.world.isClient && !this.isRemoved()) {
+        if (!this.world.isClient && !this.isRemoved()) {
             boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
-            if (source.getAttacker() instanceof PlayerEntity) {
-                if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                    this.dropItem(PortalCubedItems.STORAGE_CUBE);
+            if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
+                if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
+                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
+                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+                    }
+                    this.discard();
                 }
-                this.discard();
+                if(!(source.getAttacker() instanceof PlayerEntity)) {
+                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
+                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+                    }
+                    this.discard();
+                }
             }
 
-            return true;
-        } else {
-            return true;
         }
+        return false;
     }
 
     @Override
@@ -159,7 +164,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         canUsePortals = !getUUIDPresent();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offset, GravityChangerAPI.getGravityDirection(this));
         if(!world.isClient) {
-            this.setNoDrag(!this.isOnGround());
+            this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
             if (getUUIDPresent()) {
                 PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
                 if (player != null && player.isAlive()) {

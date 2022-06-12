@@ -51,12 +51,12 @@ public abstract class CalledValues {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setPortalCutout(setValue));
     }
 
-    public static Vec3d getVelocity(Entity entity) {
-        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getVelocity).orElse(Vec3d.ZERO);
+    public static Vec3d getPosition(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPosition).orElse(Vec3d.ZERO);
     }
 
-    public static void setVelocity(Entity entity, Vec3d setValue) {
-        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setVelocity(setValue));
+    public static void setPosition(Entity entity, Vec3d setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setPosition(setValue));
     }
 
     public static void teleportSync(Entity entity, Vec3d TeleportTo, Direction dira, Direction dirb) {

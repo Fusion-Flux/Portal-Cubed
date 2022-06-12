@@ -1,16 +1,16 @@
 {
+	"gelrun": {
+		"subtitle": "subtitles.portalcubed.gelrun",
+		"sounds": [
+			"portalcubed:gelrun"
+		]
+	},
 	"gelbounce": {
 		"subtitle": "subtitles.portalcubed.gelbounce",
 		"sounds": [
 			"portalcubed:gelbounce",
 			"portalcubed:gelbounce2",
 			"portalcubed:gelbounce3"
-		]
-	},
-	"gelrun": {
-		"subtitle": "subtitles.portalcubed.gelrun",
-		"sounds": [
-			"portalcubed:gelrun"
 		]
 	},
 	"portalgunprimary": {

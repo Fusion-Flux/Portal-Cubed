@@ -199,7 +199,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                 double zoffset = (entityCenter.getZ() - pos.getZ()-.5);
                 Vec3d direction = getPushDirection(state);
 
-                direction = direction.multiply(.05);
+                direction = direction.multiply(.125);
 
 
                 Vec3d preDirection = direction;
@@ -241,7 +241,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                 double yoffset = ((entity.getPos().getY()+entity.getHeight()/2) - pos.getY()) - .5;
                 double zoffset = (entity.getPos().getZ() - pos.getZ()) - .5;
                 Vec3d direction = getPushDirection(state);
-                direction = direction.multiply(.05);
+                direction = direction.multiply(.125);
 
                 entity.setNoGravity(true);
 

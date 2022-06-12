@@ -18,22 +18,26 @@ public class CompanionCubeEntity extends StorageCubeEntity  {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (this.isInvulnerableTo(source) && !(source.getAttacker() instanceof PlayerEntity)) {
-            return false;
-        } else if (!this.world.isClient && !this.isRemoved()) {
+        if (!this.world.isClient && !this.isRemoved()) {
             boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
-            if (source.getAttacker() instanceof PlayerEntity) {
-                if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                    this.dropItem(PortalCubedItems.COMPANION_CUBE);
+            if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
+                if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
+                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
+                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+                    }
+                    this.discard();
                 }
-                this.discard();
+                if(!(source.getAttacker() instanceof PlayerEntity)) {
+                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
+                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+                    }
+                    this.discard();
+                }
             }
-            return true;
-        } else {
-            return true;
-        }
-    }
 
+        }
+        return false;
+    }
 
     @Override
     public void tick() {

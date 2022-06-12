@@ -118,7 +118,7 @@ public class RepulsionGel extends GelFlat {
         //}
         boolean canBounce = !(entity instanceof PlayerEntity) || world.isClient;
 
-        if (!entity.isSneaking() && canBounce) {
+        if (!entity.isSneaking()) {
             if (entity.verticalCollision) {
                 if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.getY() < 0 || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6)) {
                     double fall = ((EntityAttachments) entity).getMaxFallHeight();
@@ -145,16 +145,16 @@ public class RepulsionGel extends GelFlat {
                         entity.setOnGround(false);
                         entity.setVelocity(vec3d.x, velocity, vec3d.z);
                         ((EntityAttachments) entity).setMaxFallHeight(rotatedPos.y);
-                        if (!world.isClient) {
-                            world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                        }
+                        //if (!world.isClient) {
+                            world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                        //}
                     }
                 }
                 if (direction.y == 1 || Math.abs(direction.y) == 2 && vec3dLast.getY() > 0) {
                     entity.setVelocity(vec3d.x, -vec3dLast.y, vec3d.z);
-                    if (!world.isClient) {
-                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                    }
+                    //if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    //}
                 }
             }
 
@@ -183,9 +183,9 @@ public class RepulsionGel extends GelFlat {
                         ///entity.setVelocity(vec3d.z, -vec3dLast.y, vec3d.z);
                     }
 
-                    if (!world.isClient) {
-                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                    }
+                    //if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    //}
                 }
                 if (direction.z == 1 || Math.abs(direction.z) == 2 && vec3dLast.getZ() > 0) {
                     if (Math.abs(vec3dLast.z) < defaultVelocity) {
@@ -208,9 +208,9 @@ public class RepulsionGel extends GelFlat {
                         }
                         ///entity.setVelocity(vec3d.z, -vec3dLast.y, vec3d.z);
                     }
-                    if (!world.isClient) {
-                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                    }
+                    //if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    //}
                 }
                 if (direction.x == 1 || Math.abs(direction.x) == 2 && vec3dLast.getX() > 0) {
 
@@ -234,9 +234,9 @@ public class RepulsionGel extends GelFlat {
                         }
                         ///entity.setVelocity(vec3d.z, -vec3dLast.y, vec3d.z);
                     }
-                    if (!world.isClient) {
-                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                    }
+                    //if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    //}
                 }
                 if (direction.x == -1 || Math.abs(direction.x) == 2 && vec3dLast.getX() < 0) {
                     if (Math.abs(vec3dLast.x) < defaultVelocity) {
@@ -259,9 +259,9 @@ public class RepulsionGel extends GelFlat {
                         }
                         ///entity.setVelocity(vec3d.z, -vec3dLast.y, vec3d.z);
                     }
-                    if (!world.isClient) {
-                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                    }
+                   // if (!world.isClient) {
+                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    //}
                 }
             }
         }
