@@ -1,7 +1,9 @@
 package com.fusionflux.portalcubed.blocks;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.entity.BlockCollisionLimiter;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
+import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import me.andrew.gravitychanger.api.GravityChangerAPI;
@@ -11,13 +13,16 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
 public class AdhesionGel extends GelFlat {
 
@@ -40,7 +45,6 @@ public class AdhesionGel extends GelFlat {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if(!world.isClient)
         this.addCollisionEffects(world, entity, pos,state);
     }
 
@@ -89,63 +93,14 @@ public class AdhesionGel extends GelFlat {
             result = result.add(2, 0, 0);
         }
 
-//        if (state.get(Properties.UP) && state.get(Properties.DOWN)) { this probably shouldn't be here, if you're being squeezed you shouldn't fly up, todo, check this for me
-//            result = result.add(0, 2, 0);
-//        }
+       if (state.get(Properties.UP) && state.get(Properties.DOWN)) {
+           result = result.add(0, 2, 0);
+       }
 
         return result;
     }
 
     private void addCollisionEffects(World world, Entity entity, BlockPos pos, BlockState state) {
-        Vec3d vec3dLast = RotationUtil.vecWorldToPlayer(entity.getPos().subtract(((EntityAttachments) entity).getLastPos()), GravityChangerAPI.getGravityDirection(entity));
-
-        Vec3d direction = getGravityFromState(state);
-
-        Vec3d preChange;
-
-        direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection(entity));
-
-        if (((EntityAttachments) entity).getGelTimer() == 0) {
-           // if (entity.verticalCollision) {
-            if (direction.y == -1) {
-                //    preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, -1, 0), GravityChangerAPI.getGravityDirection(entity));
-                GravityChangerAPI.addGravity(entity, new Gravity(GravityChangerAPI.getGravityDirection(entity), 10, 2, "adhesion_gel"));
-            }
-            if (((EntityAttachments) entity).getGelChangeTimer() == 0) {
-                if (direction.y == 1 && vec3dLast.getY() > 0) {
-                    ((EntityAttachments) entity).setGelTimer(1);
-                    ((EntityAttachments) entity).setGelChangeTimer(10);
-                    preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, 1, 0), GravityChangerAPI.getGravityDirection(entity));
-                    GravityChangerAPI.addGravity(entity, new Gravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z), 10, 2, "adhesion_gel"));
-                }
-            //}
-            //if (entity.horizontalCollision) {
-                if (direction.z == -1 && vec3dLast.getZ() < 0) {
-                    ((EntityAttachments) entity).setGelTimer(1);
-                    ((EntityAttachments) entity).setGelChangeTimer(10);
-                    preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, 0, -1), GravityChangerAPI.getGravityDirection(entity));
-                    GravityChangerAPI.addGravity(entity, new Gravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z), 10, 2, "adhesion_gel"));
-                }
-                if (direction.z == 1 && vec3dLast.getZ() > 0) {
-                    ((EntityAttachments) entity).setGelTimer(1);
-                    ((EntityAttachments) entity).setGelChangeTimer(10);
-                    preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, 0, 1), GravityChangerAPI.getGravityDirection(entity));
-                    GravityChangerAPI.addGravity(entity, new Gravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z), 10, 2, "adhesion_gel"));
-                }
-                if (direction.x == 1 && vec3dLast.getX() > 0) {
-                    ((EntityAttachments) entity).setGelTimer(1);
-                    ((EntityAttachments) entity).setGelChangeTimer(10);
-                    preChange = RotationUtil.vecPlayerToWorld(new Vec3d(1, 0, 0), GravityChangerAPI.getGravityDirection(entity));
-                    GravityChangerAPI.addGravity(entity, new Gravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z), 10, 2, "adhesion_gel"));
-                }
-                if (direction.x == -1 && vec3dLast.getX() < 0) {
-                    ((EntityAttachments) entity).setGelTimer(1);
-                    ((EntityAttachments) entity).setGelChangeTimer(10);
-                    preChange = RotationUtil.vecPlayerToWorld(new Vec3d(-1, 0, 0), GravityChangerAPI.getGravityDirection(entity));
-                    GravityChangerAPI.addGravity(entity, new Gravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z), 10, 2, "adhesion_gel"));
-                }
-            }
-        }
 
     }
 

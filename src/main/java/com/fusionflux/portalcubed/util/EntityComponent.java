@@ -13,7 +13,8 @@ import java.util.UUID;
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
     boolean gravityState = false;
     VoxelShape portalCutout = VoxelShapes.empty();
-    Vec3d velocity = Vec3d.ZERO;
+    //Vec3d velocity = Vec3d.ZERO;
+    boolean hasTeleportationHappened = false;
     UUID cubeUUID = null;
     private final Entity entity;
 
@@ -44,13 +45,14 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public Vec3d getPosition() {
-        return null;
+    public boolean getHasTeleportationHappened() {
+        return hasTeleportationHappened;
     }
 
     @Override
-    public void setPosition(Vec3d velocity) {
-
+    public void setHasTeleportationHappened(boolean hasHappened) {
+        hasTeleportationHappened=hasHappened;
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
     @Override
@@ -71,11 +73,13 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        velocity = IPHelperDuplicate.getVec3d(tag, "ccaVelocity");
+        //velocity = IPHelperDuplicate.getVec3d(tag, "ccaVelocity");
+        hasTeleportationHappened = tag.getBoolean("hasTpHappened");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-        IPHelperDuplicate.putVec3d(tag, "ccaVelocity", velocity);
+        //IPHelperDuplicate.putVec3d(tag, "ccaVelocity", velocity);
+        tag.putBoolean("hasTpHappened",hasTeleportationHappened);
     }
 }

@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.MidnightConfig;
@@ -9,10 +10,13 @@ import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import me.andrew.gravitychanger.api.GravityChangerAPI;
+import me.andrew.gravitychanger.util.Gravity;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
@@ -39,12 +43,22 @@ public class PortalCubed implements ModInitializer {
             double x =  buf.readDouble();
             double y =  buf.readDouble();
             double z =  buf.readDouble();
-            boolean tp =  buf.readBoolean();
+            float yawSet =  buf.readFloat();
             server.execute(() -> {
-                ((EntityAttachments)(player)).setServerVel(new Vec3d(x,y,z));
-                ((EntityAttachments)(player)).setShouldTeleport(tp);
+                player.setYaw(yawSet);
+                player.requestTeleport(x,y,z);
+                CalledValues.setHasTeleportationHappened(player,true);
+                //((EntityAttachments)(player)).setServerVel(new Vec3d(x,y,z));
+                //((EntityAttachments)(player)).setShouldTeleport(tp);
             });
         });
+
+        ServerPlayNetworking.registerGlobalReceiver(id("clientteleportupdate"), (server, player, handler, buf, responseSender) -> {
+            server.execute(() -> {
+                CalledValues.setHasTeleportationHappened(player,false);
+            });
+        });
+
         QuaternionHandler.QUATERNION_HANDLER.getClass();
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
         PortalCubedBlocks.registerBlocks();

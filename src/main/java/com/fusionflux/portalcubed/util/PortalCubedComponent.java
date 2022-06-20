@@ -20,9 +20,9 @@ public interface PortalCubedComponent extends Component {
 
     void setPortalCutout(VoxelShape portalCutout);
 
-    Vec3d getPosition();
+    boolean getHasTeleportationHappened();
 
-    void setPosition(Vec3d velocity);
+    void setHasTeleportationHappened(boolean hasHappened);
 
     void teleport(Vec3d teleportTo, Direction dira, Direction dirb);
 
