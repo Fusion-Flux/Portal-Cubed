@@ -6,8 +6,8 @@ package com.fusionflux.portalcubed.client.render.model.entity;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.StorageCubeEntity;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -40,7 +40,7 @@ public class StorageCubeModel extends EntityModel<StorageCubeEntity> {
 		//previously the render function, render code was moved to a method below
 	}
 	@Override
-	public void render(MatrixStack matrixStack, VertexConsumer	buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+	public void render(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
 
 		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
 	}

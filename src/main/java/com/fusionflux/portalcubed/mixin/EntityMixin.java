@@ -1,5 +1,7 @@
 package com.fusionflux.portalcubed.mixin;
 
+import com.fusionflux.fusions_gravity_api.api.GravityChangerAPI;
+import com.fusionflux.fusions_gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -12,8 +14,6 @@ import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.google.common.collect.Lists;
-import me.andrew.gravitychanger.api.GravityChangerAPI;
-import me.andrew.gravitychanger.util.RotationUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
@@ -343,6 +343,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                     this.setYaw(yawValue);
+                                    GravityChangerAPI.clearGravity(thisentity);
                                 }
                             }
                         }
@@ -364,6 +365,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                     this.setYaw(yawValue);
+                                    GravityChangerAPI.clearGravity(thisentity);
                                 }
                             }
                         }
@@ -385,6 +387,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                     this.setYaw(yawValue);
+                                    GravityChangerAPI.clearGravity(thisentity);
                                 }
                             }
                         }
@@ -408,6 +411,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                     this.setYaw(yawValue);
+                                    GravityChangerAPI.clearGravity(thisentity);
                                 }
                             }
                         }
@@ -429,6 +433,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                     this.setYaw(yawValue);
+                                    GravityChangerAPI.clearGravity(thisentity);
                                 }
                             }
                         }
@@ -450,6 +455,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                     this.setYaw(yawValue);
+                                    GravityChangerAPI.clearGravity(thisentity);
                                 }
                             }
                         }

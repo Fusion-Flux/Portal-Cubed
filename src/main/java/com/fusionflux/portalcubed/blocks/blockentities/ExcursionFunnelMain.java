@@ -1,10 +1,10 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.fusions_gravity_api.api.GravityChangerAPI;
+import com.fusionflux.fusions_gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.util.CustomProperties;
-import me.andrew.gravitychanger.api.GravityChangerAPI;
-import me.andrew.gravitychanger.util.RotationUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;

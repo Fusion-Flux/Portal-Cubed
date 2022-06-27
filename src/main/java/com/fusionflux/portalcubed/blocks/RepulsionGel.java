@@ -1,10 +1,10 @@
 package com.fusionflux.portalcubed.blocks;
 
+import com.fusionflux.fusions_gravity_api.api.GravityChangerAPI;
+import com.fusionflux.fusions_gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.entity.BlockCollisionLimiter;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import me.andrew.gravitychanger.api.GravityChangerAPI;
-import me.andrew.gravitychanger.util.RotationUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;

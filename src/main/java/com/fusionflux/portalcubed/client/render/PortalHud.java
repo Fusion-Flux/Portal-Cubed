@@ -4,6 +4,10 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tessellator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormats;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -125,13 +129,13 @@ public class PortalHud {
 
     public static void texture(int x, int y, int z, int width, int height, float u, float v, float uw, float vh, float r, float g, float b, float a) {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
         RenderSystem.enableTexture();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-        bufferBuilder.vertex(x, y + height, z).texture(u, v + vh).color(r, g, b, a).next();
-        bufferBuilder.vertex(x + width, y + height, z).texture(u + uw, v + vh).color(r, g, b, a).next();
-        bufferBuilder.vertex(x + width, y, z).texture(u + uw, v).color(r, g, b, a).next();
-        bufferBuilder.vertex(x, y, z).texture(u, v).color(r, g, b, a).next();
+        bufferBuilder.vertex(x, y + height, z).uv(u, v + vh).color(r, g, b, a).next();
+        bufferBuilder.vertex(x + width, y + height, z).uv(u + uw, v + vh).color(r, g, b, a).next();
+        bufferBuilder.vertex(x + width, y, z).uv(u + uw, v).color(r, g, b, a).next();
+        bufferBuilder.vertex(x, y, z).uv(u, v).color(r, g, b, a).next();
         tessellator.draw();
     }
 }

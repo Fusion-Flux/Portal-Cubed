@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -29,7 +30,7 @@ public class NeurotoxinBlock extends BlockWithEntity {
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
         if (state.isOf(this)) {
             if (random.nextInt(10) == 0) {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);

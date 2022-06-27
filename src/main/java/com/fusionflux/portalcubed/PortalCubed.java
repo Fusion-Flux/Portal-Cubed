@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed;
 
+import com.fusionflux.fusions_gravity_api.api.GravityChangerAPI;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -10,8 +11,6 @@ import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import me.andrew.gravitychanger.api.GravityChangerAPI;
-import me.andrew.gravitychanger.util.Gravity;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -48,6 +47,7 @@ public class PortalCubed implements ModInitializer {
                 player.setYaw(yawSet);
                 player.requestTeleport(x,y,z);
                 CalledValues.setHasTeleportationHappened(player,true);
+                GravityChangerAPI.clearGravity(player);
                 //((EntityAttachments)(player)).setServerVel(new Vec3d(x,y,z));
                 //((EntityAttachments)(player)).setShouldTeleport(tp);
             });

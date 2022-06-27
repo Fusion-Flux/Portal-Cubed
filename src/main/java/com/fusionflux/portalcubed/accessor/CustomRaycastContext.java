@@ -67,28 +67,7 @@ public class CustomRaycastContext {
         }
     }
 
-    public static enum FluidHandling {
-        NONE((state) -> {
-            return false;
-        }),
-        SOURCE_ONLY(FluidState::isStill),
-        ANY((state) -> {
-            return !state.isEmpty();
-        }),
-        WATER((state) -> {
-            return state.isIn(FluidTags.WATER);
-        });
 
-        private final Predicate<FluidState> predicate;
-
-        private FluidHandling(Predicate<FluidState> predicate) {
-            this.predicate = predicate;
-        }
-
-        public boolean handled(FluidState state) {
-            return this.predicate.test(state);
-        }
-    }
 
     public interface ShapeProvider {
         VoxelShape get(BlockState state, BlockView world, BlockPos pos, ShapeContext context);

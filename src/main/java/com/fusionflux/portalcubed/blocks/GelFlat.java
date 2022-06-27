@@ -10,6 +10,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -248,7 +249,7 @@ public class GelFlat extends Block {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
         if (world.hasRain(pos.up())) {
             world.setBlockState(pos,Blocks.AIR.getDefaultState());
         }

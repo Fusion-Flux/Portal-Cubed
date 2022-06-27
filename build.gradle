@@ -36,15 +36,15 @@ dependencies {
 	})
 
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
-	modImplementation ("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${qsl_version}+${qfapi_version}")
+	modImplementation "org.quiltmc.quilted-fabric-api:quilted-fabric-api:${project.quilted_version}-${minecraft_version}"
 
-	modImplementation ("com.terraformersmc:modmenu:3.1.1") {
+	modImplementation ("com.terraformersmc:modmenu:${project.mod_menu_version}"){
 		exclude group: "net.fabricmc.fabric-api"
 		exclude group: "net.fabricmc"
 	}
 
 	//Gravity Changer - UPDATE TO NEWEST VERSION WHEN ITS RELEASED ON MODRINTH
-	modImplementation include ("maven.modrinth:fusions-gravity-api:0.7.7+fabric"){
+	modImplementation include ("maven.modrinth:gravity-api:${project.fusions_gravity_api_version}"){
 		exclude group: "net.fabricmc.fabric-api"
 		exclude group: "net.fabricmc"
 		exclude group: "dev.onyxstudios.cardinal-components-api"
@@ -52,13 +52,14 @@ dependencies {
 
 	//include ('com.github.Fusion-Flux:GravityChanger:v0.7.6')
 
-	modApi include("maven.modrinth:stonecutter_recipe_tags:3.0.1")
+	//modApi include("maven.modrinth:stonecutter_recipe_tags:3.0.1")
 //
 
 	// Replace modImplementation with modApi if you expose components in your own API
-	modImplementation include ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.4") {
+	modImplementation include ("maven.modrinth:gravity-api:${project.fusions_gravity_api_version}"){
 		exclude group: "net.fabricmc.fabric-api"
 		exclude group: "net.fabricmc"
+		exclude group: "dev.onyxstudios.cardinal-components-api"
 	}
 
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
