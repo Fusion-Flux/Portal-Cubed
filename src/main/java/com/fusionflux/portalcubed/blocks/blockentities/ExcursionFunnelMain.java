@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import com.fusionflux.fusions_gravity_api.api.GravityChangerAPI;
-import com.fusionflux.fusions_gravity_api.util.RotationUtil;
+import com.fusionflux.gravity_api.api.GravityChangerAPI;
+import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.util.CustomProperties;
