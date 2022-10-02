@@ -38,7 +38,7 @@ public class PortalCubedClientPackets {
         client.execute(() -> {
             if (entity != null) {
                 entity.updatePosition(x, y, z);
-                entity.method_43391(x, y, z);
+                entity.refreshPositionAfterTeleport(x, y, z);
                 entity.setPitch(pitch);
                 entity.setYaw(yaw);
                 entity.setId(entityID);

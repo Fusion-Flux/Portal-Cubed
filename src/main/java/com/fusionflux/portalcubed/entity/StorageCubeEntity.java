@@ -106,7 +106,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         double f = packet.getZ();
         float g = packet.method_11168();
         float h = packet.method_11171();
-        this.method_43391(d, e, f);
+        this.syncPacketPositionCodec(d, e, f);
         this.bodyYaw = 0;
         this.headYaw = 0;
         this.prevBodyYaw = this.bodyYaw;
