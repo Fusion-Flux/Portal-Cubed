@@ -1,9 +1,12 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -49,6 +52,14 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
                                 funnel.emitters.add(pos);
                             }
                             funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
+
+                            Box portalCheckBox = new Box(translatedPos).expand(1);
+
+                            List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+
+                            if(!list.isEmpty()){
+                                System.out.println("AAAAAAA");
+                            }
                         } else {
                             blockEntity.funnels = modfunnels;
                             break;
