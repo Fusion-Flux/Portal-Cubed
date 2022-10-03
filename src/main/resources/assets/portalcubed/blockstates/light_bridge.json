@@ -35,8 +35,93 @@
         "model": "portalcubed:block/light_bridge",
         "y": 270
       }
+    },
+    {
+      "when": {
+        "up": "true",
+        "hfacingup": "north"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "hfacingup": "south"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 180,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "hfacingup": "east"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 90,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "hfacingup": "west"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 270,
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "hfacingdown": "north"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 180,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "hfacingdown": "south"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "hfacingdown": "east"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 270,
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "hfacingdown": "west"
+      },
+      "apply": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 90,
+        "x": 90
+      }
     }
-
 
   ]
 }
