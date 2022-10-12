@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.GravityChannel;
+import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -50,8 +51,6 @@ public class PortalCubed implements ModInitializer {
                 player.requestTeleport(x,y,z);
                 CalledValues.setHasTeleportationHappened(player,true);
                 GravityChangerAPI.clearGravity(player);
-                //((EntityAttachments)(player)).setServerVel(new Vec3d(x,y,z));
-                //((EntityAttachments)(player)).setShouldTeleport(tp);
             });
         });
 
