@@ -23,6 +23,7 @@ public class PortalCubedItems {
     //public static final PaintGun PAINT_GUN = new PaintGun(new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(1).fireproof());
     public static final SpawnEggItem STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64));
     public static final SpawnEggItem COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.COMPANION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64));
+    public static final SpawnEggItem REDIRECTION_CUBE = new SpawnEggItem(PortalCubedEntities.REDIRECTION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64));
 
     public static void registerItems() {
         if (PortalCubedConfig.enableLongFallBoots)
@@ -34,6 +35,7 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "mini_blackhole"), MINI_BLACKHOLE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "storage_cube"), STORAGE_CUBE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "companion_cube"), COMPANION_CUBE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "redirection_cube"), REDIRECTION_CUBE);
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "paint_gun"), PAINT_GUN);
     }
 }

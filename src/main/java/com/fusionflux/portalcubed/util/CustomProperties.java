@@ -13,6 +13,7 @@ public class CustomProperties {
     public static final BooleanProperty RSOUTH;
     public static final BooleanProperty RWEST;
     public static final BooleanProperty REVERSED;
+    public static final BooleanProperty REFLECT;
     public static final DirectionProperty HFACINGUP;
     public static final DirectionProperty HFACINGDOWN;
 
@@ -24,6 +25,7 @@ public class CustomProperties {
         RSOUTH = BooleanProperty.of("rsouth");
         RWEST = BooleanProperty.of("rwest");
         REVERSED = BooleanProperty.of("reversed");
+        REFLECT = BooleanProperty.of("reflect");
         HFACINGUP = DirectionProperty.of("hfacingup", Direction.Type.HORIZONTAL);
         HFACINGDOWN = DirectionProperty.of("hfacingdown", Direction.Type.HORIZONTAL);
     }

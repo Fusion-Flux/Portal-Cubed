@@ -15,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -33,12 +34,14 @@ public class LaserBlock extends BlockWithEntity {
     public static final BooleanProperty WEST;
     public static final BooleanProperty UP;
     public static final BooleanProperty DOWN;
+    public static final DirectionProperty REFLECT_DIRECT;
+    public static final BooleanProperty CUBE_REFLECT;
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 
     public LaserBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(REFLECT_DIRECT,Direction.NORTH).with(CUBE_REFLECT,false));
     }
 
     @Override
@@ -59,12 +62,14 @@ public class LaserBlock extends BlockWithEntity {
         WEST = Properties.WEST;
         UP = Properties.UP;
         DOWN = Properties.DOWN;
+        REFLECT_DIRECT = Properties.FACING;
+        CUBE_REFLECT = CustomProperties.REFLECT;
     }
 
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN);
+        builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN,REFLECT_DIRECT,CUBE_REFLECT);
     }
 
 

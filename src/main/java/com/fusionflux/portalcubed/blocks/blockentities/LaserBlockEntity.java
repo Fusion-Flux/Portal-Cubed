@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,7 +29,7 @@ public class LaserBlockEntity extends BlockEntity {
     public List<Direction> facing;
 
     public LaserBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.EXCURSION_FUNNEL_ENTITY, pos, state);
+        super(PortalCubedBlocks.LASER_ENTITY, pos, state);
         this.emitters = new ArrayList<>();
         this.portalEmitters = new ArrayList<>();
         this.facing = new ArrayList<>();
@@ -43,6 +44,8 @@ public class LaserBlockEntity extends BlockEntity {
                 boolean MWest = false;
                 boolean MUp = false;
                 boolean MDown = false;
+                Direction Reflect_Direct = Direction.NORTH;
+                boolean CubeReflect = false;
 
 
                 for (Direction facing : bridge.facing) {
@@ -52,6 +55,7 @@ public class LaserBlockEntity extends BlockEntity {
 
                     List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
 
+
                     boolean portalPresent = false;
                     for (ExperimentalPortal portal : list) {
                         if (portal.getFacingDirection().equals(facing)) {
@@ -60,7 +64,18 @@ public class LaserBlockEntity extends BlockEntity {
                             }
                         }
                     }
-                    if(emitter.getBlock() == PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER || portalPresent) {
+
+                    List<RedirectionCubeEntity> reflectCubes = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
+                    for (RedirectionCubeEntity cubes : reflectCubes) {
+                        if(cubes != null){
+                            CubeReflect=true;
+                            Reflect_Direct = Direction.fromRotation((double)cubes.getYaw());
+                            break;
+                        }
+                    }
+
+                    //Direction.fromRotation((double)this.getYaw())
+                    if(emitter.getBlock() == PortalCubedBlocks.LASER_EMITTER || portalPresent) {
                             if (facing.equals(Direction.NORTH)) {
                                 MNorth = true;
                             }
@@ -83,7 +98,8 @@ public class LaserBlockEntity extends BlockEntity {
                     }
                 }
 
-                state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown);
+                state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
+                        .with(Properties.FACING,Reflect_Direct).with(CustomProperties.REFLECT,CubeReflect);
             }
 
         world.setBlockState(pos,state,3);
@@ -216,17 +232,17 @@ public class LaserBlockEntity extends BlockEntity {
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof HardLightBridgeEmitterBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
+                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof LaserEmitterEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    } else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).bridges.contains(blockEntity.pos.mutableCopy())) {
+                    } else if (!((LaserEmitterEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.pos.mutableCopy())) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalBridges.contains(blockEntity.pos.mutableCopy())) {
+                    }else if (!((LaserEmitterEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
                         if(portalPresent) {
                             blockEntity.emitters.remove(i);
                             blockEntity.portalEmitters.remove(i);

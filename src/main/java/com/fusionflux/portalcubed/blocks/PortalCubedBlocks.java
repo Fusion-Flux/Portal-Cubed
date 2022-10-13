@@ -114,7 +114,7 @@ public class PortalCubedBlocks {
     public static final LaserBlock LASER = new LaserBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision().luminance(10));
     public static BlockEntityType<LaserBlockEntity> LASER_ENTITY;
 
-    public static final LaserEmitter LASER_EMITTER = new LaserEmitter(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision().luminance(10));
+    public static final LaserEmitter LASER_EMITTER = new LaserEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<LaserEmitterEntity> LASER_EMITTER_ENTITY;
 
     public static FlowableFluid STILL_TOXIC_GOO;

@@ -4,6 +4,8 @@ import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
+import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -66,10 +68,10 @@ public class LaserEmitterEntity extends BlockEntity {
                         } else{
                             teleported = false;
                         }
-                        if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
-                            world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
+                        if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.LASER)) {
+                            world.setBlockState(translatedPos, PortalCubedBlocks.LASER.getDefaultState());
 
-                            ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
+                            LaserBlockEntity funnel = ((LaserBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
                             modfunnels.add(funnel.getPos());
                             blockEntity.funnels.add(funnel.getPos());
@@ -97,9 +99,19 @@ public class LaserEmitterEntity extends BlockEntity {
 
                             Box portalCheckBox = new Box(translatedPos);
 
+                            List<RedirectionCubeEntity> reflectCubes = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
+                            boolean iscube= false;
+                            for (RedirectionCubeEntity cubes : reflectCubes) {
+                                if(cubes != null){
+                                    storedDirection = Direction.fromRotation((double)cubes.getRotYaw());
+                                    iscube=true;
+                                    break;
+                                }
+                            }
+
                             List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
 
-
+                            if(!iscube)
                             for (ExperimentalPortal portal : list) {
                                 if(portal.getFacingDirection().getOpposite().equals(storedDirection)){
                                     if(portal.getActive()) {
@@ -129,7 +141,10 @@ public class LaserEmitterEntity extends BlockEntity {
                                     }
                                 }
                             }
-                        } else {
+                        } else if(world.getBlockState(translatedPos).getBlock() instanceof AbstractGlassBlock) {
+                            blockEntity.funnels = modfunnels;
+                            blockEntity.portalFunnels=portalfunnels;
+                        }else{
                             blockEntity.funnels = modfunnels;
                             blockEntity.portalFunnels=portalfunnels;
                             break;

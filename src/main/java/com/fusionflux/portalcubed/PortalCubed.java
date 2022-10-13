@@ -71,10 +71,12 @@ public class PortalCubed implements ModInitializer {
             double lastx =  buf.readDouble();
             double lasty =  buf.readDouble();
             double lastz =  buf.readDouble();
+            float rotyaw = buf.readFloat();
             UUID cubeuuid =  buf.readUuid();
             server.execute(() -> {
                 StorageCubeEntity cube = ((StorageCubeEntity)player.getWorld().getEntity(cubeuuid));
                 cube.setHolderUUID(null);
+                cube.setRotYaw(rotyaw);
                 Vec3d cubePos = new Vec3d(x,y,z);
                 Vec3d lastcubePos = new Vec3d(lastx,lasty,lastz);
                 cube.setPosition(cubePos);

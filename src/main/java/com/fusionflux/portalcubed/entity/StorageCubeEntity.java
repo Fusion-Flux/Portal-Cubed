@@ -19,6 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
@@ -40,6 +41,8 @@ public class StorageCubeEntity extends PathAwareEntity  {
     private boolean canUsePortals = true;
 
     public Vec3d lastPos = this.getPos();
+
+    private float rotation_yaw = 0;
 
     private final Vec3d offset = new Vec3d(0,this.getWidth()/2,0);
 
@@ -138,7 +141,13 @@ public class StorageCubeEntity extends PathAwareEntity  {
         }
         return null;
     }
+    public void setRotYaw(float yaw) {
+        rotation_yaw = yaw;
+    }
 
+    public float getRotYaw(){
+        return  rotation_yaw;
+    }
 
     public void setHolderUUID(UUID uuid) {
         if(uuid != null) {
@@ -167,14 +176,15 @@ public class StorageCubeEntity extends PathAwareEntity  {
         bytebuf.writeDouble(this.lastPos.x);
         bytebuf.writeDouble(this.lastPos.y);
         bytebuf.writeDouble(this.lastPos.z);
+        bytebuf.writeFloat(this.rotation_yaw);
         bytebuf.writeUuid(this.getUuid());
         NetworkingSafetyWrapper.sendFromClient("cubeposupdate", bytebuf);
     }
 
     public void tick() {
         super.tick();
-        this.bodyYaw = 0;
-        this.headYaw = 0;
+        this.bodyYaw = rotation_yaw;
+        this.headYaw = rotation_yaw;
         canUsePortals = !getUUIDPresent();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offset, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.getPos();
@@ -190,6 +200,18 @@ public class StorageCubeEntity extends PathAwareEntity  {
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,1,"player_interaction"));
                     this.fallDistance = 0;
+                    if(player.getHorizontalFacing().equals(Direction.SOUTH)){
+                        rotation_yaw=0;
+                    }
+                    if(player.getHorizontalFacing().equals(Direction.WEST)){
+                        rotation_yaw=90;
+                    }
+                    if(player.getHorizontalFacing().equals(Direction.NORTH)){
+                        rotation_yaw=180;
+                    }
+                    if(player.getHorizontalFacing().equals(Direction.EAST)){
+                        rotation_yaw=270;
+                    }
                     this.setPosition(vec3d3);
                     //this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)).multiply(.5));
                     //this.velocityModified = true;
@@ -207,6 +229,19 @@ public class StorageCubeEntity extends PathAwareEntity  {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
                     Vec3d vec3d2 = player.getRotationVec(1.0F);
+                    if(player.getHorizontalFacing().equals(Direction.SOUTH)){
+                        rotation_yaw=0;
+                    }
+                    if(player.getHorizontalFacing().equals(Direction.WEST)){
+                        rotation_yaw=90;
+                    }
+                    if(player.getHorizontalFacing().equals(Direction.NORTH)){
+                        rotation_yaw=180;
+                    }
+                    if(player.getHorizontalFacing().equals(Direction.EAST)){
+                        rotation_yaw=270;
+                    }
+
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     this.setPosition(vec3d3);
                 }
