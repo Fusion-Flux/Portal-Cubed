@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "portalcubed:block/laser",
+		"particle": "portalcubed:block/laser"
+	},
+	"elements": [
+		{
+			"from": [7, 7, 0],
+			"to": [9, 9, 16],
+			"faces": {
+				"north": {"uv": [3, 3, 4, 4], "texture": "#0"},
+				"east": {"uv": [0, 0, 8, 1], "texture": "#0"},
+				"south": {"uv": [3, 4.5, 4, 5.5], "texture": "#0"},
+				"west": {"uv": [0, 1.5, 8, 2.5], "texture": "#0"},
+				"up": {"uv": [1, 11, 0, 3], "texture": "#0"},
+				"down": {"uv": [2.5, 3, 1.5, 11], "texture": "#0"}
+			}
+		}
+	]
+}

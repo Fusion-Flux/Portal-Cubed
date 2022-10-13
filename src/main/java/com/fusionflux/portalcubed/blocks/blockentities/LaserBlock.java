@@ -62,7 +62,7 @@ public class LaserBlock extends BlockWithEntity {
         WEST = Properties.WEST;
         UP = Properties.UP;
         DOWN = Properties.DOWN;
-        REFLECT_DIRECT = Properties.FACING;
+        REFLECT_DIRECT = Properties.HORIZONTAL_FACING;
         CUBE_REFLECT = CustomProperties.REFLECT;
     }
 

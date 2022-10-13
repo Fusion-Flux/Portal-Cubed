@@ -51,7 +51,7 @@ public class LaserBlockEntity extends BlockEntity {
                 for (Direction facing : bridge.facing) {
                     BlockState emitter = world.getBlockState(bridge.emitters.get(bridge.facing.indexOf(facing)));
 
-                    Box portalCheckBox = new Box(bridge.portalEmitters.get(bridge.facing.indexOf(facing)));
+                    Box portalCheckBox = new Box(pos);
 
                     List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
 
@@ -68,8 +68,9 @@ public class LaserBlockEntity extends BlockEntity {
                     List<RedirectionCubeEntity> reflectCubes = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
                     for (RedirectionCubeEntity cubes : reflectCubes) {
                         if(cubes != null){
+                            //System.out.println("AAA");
                             CubeReflect=true;
-                            Reflect_Direct = Direction.fromRotation((double)cubes.getYaw());
+                            Reflect_Direct = Direction.fromRotation(cubes.getRotYaw());
                             break;
                         }
                     }
@@ -99,7 +100,7 @@ public class LaserBlockEntity extends BlockEntity {
                 }
 
                 state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
-                        .with(Properties.FACING,Reflect_Direct).with(CustomProperties.REFLECT,CubeReflect);
+                        .with(Properties.HORIZONTAL_FACING,Reflect_Direct).with(CustomProperties.REFLECT,CubeReflect);
             }
 
         world.setBlockState(pos,state,3);
