@@ -8,6 +8,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
@@ -74,12 +75,24 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     @Override
     public void readFromNbt(NbtCompound tag) {
         //velocity = IPHelperDuplicate.getVec3d(tag, "ccaVelocity");
+        String cubeString = tag.getString("cubeUUID");
+        if(!Objects.equals(cubeString, "null")) {
+            cubeUUID = UUID.fromString(tag.getString("cubeUUID"));
+        }else{
+            cubeUUID = null;
+        }
         hasTeleportationHappened = tag.getBoolean("hasTpHappened");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
         //IPHelperDuplicate.putVec3d(tag, "ccaVelocity", velocity);
+        if(cubeUUID != null) {
+            tag.putString("cubeUUID", cubeUUID.toString());
+        }else{
+            tag.putString("cubeUUID", "null");
+        }
+        //tag.putUuid("cubeUUID",cubeUUID);
         tag.putBoolean("hasTpHappened",hasTeleportationHappened);
     }
 }

@@ -21,12 +21,15 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -41,7 +44,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, EntityPortalsAccess {
@@ -169,6 +174,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract void requestTeleport(double destX, double destY, double destZ);
 
+    @Shadow public abstract float getHeight();
+
+    @Shadow public abstract float getWidth();
+
     private Vec3d teleportVelocity = Vec3d.ZERO;
     private boolean shouldTeleport = false;
     private boolean shouldTeleportClient = false;
@@ -185,6 +194,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     }
 
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
+
 
 
     @Inject(method = "tick", at = @At("HEAD"))
@@ -218,7 +228,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         VoxelShape ommitedDirections = VoxelShapes.empty();
         for (ExperimentalPortal portal : list) {
             //if (portal.calculateIntersectionBox() != nullBox && portal.getIntersectionBoundingBox().intersects(this.getBoundingBox())){
-
                 if (portal.calculateCuttoutBox() != nullBox) {
                     if (portal.getActive())
                         ommitedDirections = VoxelShapes.union(ommitedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));

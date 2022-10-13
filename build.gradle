@@ -69,6 +69,7 @@ dependencies {
 		exclude group: "net.fabricmc.fabric-api"
 		exclude group: "net.fabricmc"
 	}
+
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
 	//include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.4"
 

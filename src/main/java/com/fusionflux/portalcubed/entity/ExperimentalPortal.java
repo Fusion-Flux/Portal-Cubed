@@ -268,16 +268,16 @@ return true;
         double h = 1.9;
         Box portalBox = new Box(
                 getIntersectionPointInPlane(w / 2, h / 2)
-                        .add(getNormal().multiply(5.2)),
+                        .add(getNormal().multiply(.2)),
                 getIntersectionPointInPlane(-w / 2, -h / 2)
-                        .add(getNormal().multiply(-5.2))
+                        .add(getNormal().multiply(-.2))
         ).union(new Box(
                 getIntersectionPointInPlane(-w / 2, h / 2)
-                        .add(getNormal().multiply(5.2)),
+                        .add(getNormal().multiply(.2)),
                 getIntersectionPointInPlane(w / 2, -h / 2)
-                        .add(getNormal().multiply(-5.2))
+                        .add(getNormal().multiply(-.2))
         ));
-        setIntersectionBoundingBox(portalBox);
+        setIntersectionBoundingBox(portalBox.offset(getFacingDirection().getOffsetX()*.3,getFacingDirection().getOffsetY()*.3,getFacingDirection().getOffsetZ()*.3));
         return portalBox;
     }
 
@@ -285,8 +285,8 @@ return true;
         return this.cutoutBoundingBox;
     }
 
-    public final Box getIntersectionBoundingBox() {
-        return this.intersectionBoundingBox;
+    public final Box getIntersectionBoundingBox(double width) {
+        return this.getBoundingBox().offset(getFacingDirection().getOffsetX()*width,getFacingDirection().getOffsetY()*width,getFacingDirection().getOffsetZ()*width);
     }
 
     public final void setCutoutBoundingBox(Box boundingBox) {

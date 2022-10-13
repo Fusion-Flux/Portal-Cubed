@@ -111,6 +111,12 @@ public class PortalCubedBlocks {
     public static BlockEntityType<DuelExcursionFunnelEmitterEntity> DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY;
     public static BlockEntityType<ExcursionFunnelEntityMain> EXCURSION_FUNNEL_ENTITY;
 
+    public static final LaserBlock LASER = new LaserBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision().luminance(10));
+    public static BlockEntityType<LaserBlockEntity> LASER_ENTITY;
+
+    public static final LaserEmitter LASER_EMITTER = new LaserEmitter(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision().luminance(10));
+    public static BlockEntityType<LaserEmitterEntity> LASER_EMITTER_ENTITY;
+
     public static FlowableFluid STILL_TOXIC_GOO;
     public static FlowableFluid FLOWING_TOXIC_GOO;
     public static Item TOXIC_GOO_BUCKET;
@@ -276,6 +282,13 @@ public class PortalCubedBlocks {
             DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("duel_excursion_funnel_emitter_entity"), FabricBlockEntityTypeBuilder.create(DuelExcursionFunnelEmitterEntity::new, DUEL_EXCURSION_FUNNEL_EMITTER).build(null));
             Registry.register(Registry.BLOCK, id("duel_excursion_funnel_emitter"), DUEL_EXCURSION_FUNNEL_EMITTER);
             Registry.register(Registry.ITEM, id("duel_excursion_funnel_emitter"), new BlockItem(DUEL_EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
+
+            LASER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_entity"), FabricBlockEntityTypeBuilder.create(LaserBlockEntity::new, LASER).build(null));
+            Registry.register(Registry.BLOCK, id("laser"), LASER);
+
+            LASER_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), FabricBlockEntityTypeBuilder.create(LaserEmitterEntity::new, LASER_EMITTER).build(null));
+            Registry.register(Registry.BLOCK, id("laser_emitter"), LASER_EMITTER);
+            Registry.register(Registry.ITEM, id("laser_emitter"), new BlockItem(LASER_EMITTER, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
 
 
             //STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());

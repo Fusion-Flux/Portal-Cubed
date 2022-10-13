@@ -11,6 +11,7 @@ import com.fusionflux.portalcubed.config.MidnightConfig;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -24,6 +25,8 @@ import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
+
+import java.util.UUID;
 
 public class PortalCubed implements ModInitializer {
     public static final PortalCubedConfig CONFIG = new PortalCubedConfig();
@@ -57,6 +60,25 @@ public class PortalCubed implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(id("clientteleportupdate"), (server, player, handler, buf, responseSender) -> {
             server.execute(() -> {
                 CalledValues.setHasTeleportationHappened(player,false);
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(id("cubeposupdate"), (server, player, handler, buf, responseSender) -> {
+            // read the velocity from the bytebuf
+            double x =  buf.readDouble();
+            double y =  buf.readDouble();
+            double z =  buf.readDouble();
+            double lastx =  buf.readDouble();
+            double lasty =  buf.readDouble();
+            double lastz =  buf.readDouble();
+            UUID cubeuuid =  buf.readUuid();
+            server.execute(() -> {
+                StorageCubeEntity cube = ((StorageCubeEntity)player.getWorld().getEntity(cubeuuid));
+                cube.setHolderUUID(null);
+                Vec3d cubePos = new Vec3d(x,y,z);
+                Vec3d lastcubePos = new Vec3d(lastx,lasty,lastz);
+                cube.setPosition(cubePos);
+                cube.setVelocity(RotationUtil.vecWorldToPlayer(cubePos.subtract(lastcubePos), GravityChangerAPI.getGravityDirection(cube)).multiply(.5));
             });
         });
 

@@ -1,6 +1,10 @@
 package com.fusionflux.portalcubed.client.key;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.accessor.Accessors;
+import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.mojang.blaze3d.platform.InputUtil;
 import net.fabricmc.api.EnvType;
@@ -27,6 +31,10 @@ public class GrabKeyBinding {
         KeyBindingHelper.registerKeyBinding(key);
         ClientTickEvents.END.register(client -> {
             if (client.player != null && key.wasPressed()) {
+                StorageCubeEntity playercube = (StorageCubeEntity) ((Accessors)client.player.world).getEntity(CalledValues.getCubeUUID(client.player));
+                if (playercube != null) {
+                    playercube.dropCube();
+                }
                 ClientPlayNetworking.send(PortalCubedServerPackets.GRAB_KEY_PRESSED, PacketByteBufs.create());
             }
         });

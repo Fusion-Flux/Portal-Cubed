@@ -7,6 +7,7 @@ import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -23,6 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +39,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
 
     private boolean canUsePortals = true;
 
-    private Vec3d lastPos = this.getPos();
+    public Vec3d lastPos = this.getPos();
 
     private final Vec3d offset = new Vec3d(0,this.getWidth()/2,0);
 
@@ -121,7 +123,6 @@ public class StorageCubeEntity extends PathAwareEntity  {
 
     public static final TrackedData<Optional<UUID>> HOLDERUUID = DataTracker.registerData(StorageCubeEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
-
     protected void initDataTracker() {
         super.initDataTracker();
         this.getDataTracker().startTracking(HOLDERUUID, Optional.empty());
@@ -157,12 +158,26 @@ public class StorageCubeEntity extends PathAwareEntity  {
         return canUsePortals;
     }
 
+    public void dropCube(){
+        setHolderUUID(null);
+        var bytebuf = PacketByteBufs.create();
+        bytebuf.writeDouble(this.getPos().x);
+        bytebuf.writeDouble(this.getPos().y);
+        bytebuf.writeDouble(this.getPos().z);
+        bytebuf.writeDouble(this.lastPos.x);
+        bytebuf.writeDouble(this.lastPos.y);
+        bytebuf.writeDouble(this.lastPos.z);
+        bytebuf.writeUuid(this.getUuid());
+        NetworkingSafetyWrapper.sendFromClient("cubeposupdate", bytebuf);
+    }
+
     public void tick() {
         super.tick();
         this.bodyYaw = 0;
         this.headYaw = 0;
         canUsePortals = !getUUIDPresent();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offset, GravityChangerAPI.getGravityDirection(this));
+        this.lastPos = this.getPos();
         if(!world.isClient) {
             this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
             if (getUUIDPresent()) {
@@ -176,7 +191,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
                     GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,1,"player_interaction"));
                     this.fallDistance = 0;
                     this.setPosition(vec3d3);
-                    this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)));
+                    //this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)).multiply(.5));
                     //this.velocityModified = true;
                 }else{
                     if(player != null ){
@@ -200,7 +215,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
         if(this.getVelocity().y < -3.92){
             this.setVelocity(this.getVelocity().add(0,.81d,0));
         }
-        this.lastPos = this.getPos();
+
     }
 
     protected final Vec3d getPlayerRotationVector(float pitch, float yaw) {
