@@ -20,6 +20,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -56,7 +57,7 @@ public abstract class TallButtonVarient extends WallMountedBlock {
     }
 
     private int getPressTicks() {
-        return this.wooden ? 30 : 20;
+        return  20;
     }
 
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -135,7 +136,7 @@ public abstract class TallButtonVarient extends WallMountedBlock {
         return true;
     }
 
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
         if ((Boolean)state.get(POWERED)) {
             if (this.wooden) {
                 this.tryPowerWithProjectiles(state, world, pos);
@@ -181,21 +182,21 @@ public abstract class TallButtonVarient extends WallMountedBlock {
 
     static {
         POWERED = Properties.POWERED;
-        CEILING_X_SHAPE = Block.createCuboidShape(5.5D, 1.0D, 5.5D, 10.5D, 16.0D, 10.5D);
-        CEILING_Z_SHAPE = Block.createCuboidShape(5.5D, 1.0D, 5.5D, 10.5D, 16.0D, 10.5D);
-        FLOOR_X_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 15.0D, 10.5D);
-        FLOOR_Z_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 15.0D, 10.5D);
-        NORTH_SHAPE = Block.createCuboidShape(5.5D, 5.5D, 1.0D, 10.5D, 10.5D, 16.0D);
-        SOUTH_SHAPE = Block.createCuboidShape(5.5D, 5.5D, 0.0D, 10.5D, 10.5D, 15.0D);
-        WEST_SHAPE = Block.createCuboidShape(1.0D, 5.5D, 5.5D, 16.0D, 10.5D, 10.5D);
-        EAST_SHAPE = Block.createCuboidShape(0.0D, 5.5D, 5.5D, 15.0D, 10.5D, 10.5D);
-        CEILING_X_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 1.0D, 5.5D, 10.5D, 16.0D, 10.5D);
-        CEILING_Z_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 1.0D, 5.5D, 10.5D, 16.0D, 10.5D);
-        FLOOR_X_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 15.0D, 10.5D);
-        FLOOR_Z_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 15.0D, 10.5D);
-        NORTH_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 5.5D, 1.0D, 10.5D, 10.5D, 16.0D);
-        SOUTH_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 5.5D, 0.0D, 10.5D, 10.5D, 15.0D);
-        WEST_PRESSED_SHAPE = Block.createCuboidShape(1.0D, 5.5D, 5.5D, 16.0D, 10.5D, 10.5D);
-        EAST_PRESSED_SHAPE = Block.createCuboidShape(0.0D, 5.5D, 5.5D, 15.0D, 10.5D, 10.5D);
+        CEILING_X_SHAPE = Block.createCuboidShape(5.5D, -4.0D, 5.5D, 10.5D, 16.0D, 10.5D);
+        CEILING_Z_SHAPE = Block.createCuboidShape(5.5D, -4.0D, 5.5D, 10.5D, 16.0D, 10.5D);
+        FLOOR_X_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 20.0D, 10.5D);
+        FLOOR_Z_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 20.0D, 10.5D);
+        NORTH_SHAPE = Block.createCuboidShape(5.5D, 5.5D, -4.0D, 10.5D, 10.5D, 16.0D);
+        SOUTH_SHAPE = Block.createCuboidShape(5.5D, 5.5D, 0.0D, 10.5D, 10.5D, 20.0D);
+        WEST_SHAPE = Block.createCuboidShape(-4.0D, 5.5D, 5.5D, 16.0D, 10.5D, 10.5D);
+        EAST_SHAPE = Block.createCuboidShape(0.0D, 5.5D, 5.5D, 20.0D, 10.5D, 10.5D);
+        CEILING_X_PRESSED_SHAPE = Block.createCuboidShape(5.5D, -4.0D, 5.5D, 10.5D, 16.0D, 10.5D);
+        CEILING_Z_PRESSED_SHAPE = Block.createCuboidShape(5.5D, -4.0D, 5.5D, 10.5D, 16.0D, 10.5D);
+        FLOOR_X_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 20.0D, 10.5D);
+        FLOOR_Z_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 20.0D, 10.5D);
+        NORTH_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 5.5D, -4.0D, 10.5D, 10.5D, 16.0D);
+        SOUTH_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 5.5D, 0.0D, 10.5D, 10.5D, 20.0D);
+        WEST_PRESSED_SHAPE = Block.createCuboidShape(-4.0D, 5.5D, 5.5D, 16.0D, 10.5D, 10.5D);
+        EAST_PRESSED_SHAPE = Block.createCuboidShape(0.0D, 5.5D, 5.5D, 20.0D, 10.5D, 10.5D);
     }
 }

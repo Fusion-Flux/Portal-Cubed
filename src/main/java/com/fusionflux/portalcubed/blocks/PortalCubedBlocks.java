@@ -293,7 +293,7 @@ public class PortalCubedBlocks {
             Registry.register(Registry.BLOCK, id("laser_emitter"), LASER_EMITTER);
             Registry.register(Registry.ITEM, id("laser_emitter"), new BlockItem(LASER_EMITTER, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
 
-            LASER_CATCHER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), FabricBlockEntityTypeBuilder.create(LaserCatcherEntity::new, LASER_CATCHER).build(null));
+            LASER_CATCHER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_catcher_entity"), FabricBlockEntityTypeBuilder.create(LaserCatcherEntity::new, LASER_CATCHER).build(null));
             Registry.register(Registry.BLOCK, id("laser_catcher"), LASER_CATCHER);
             Registry.register(Registry.ITEM, id("laser_catcher"), new BlockItem(LASER_CATCHER, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
 
@@ -303,8 +303,8 @@ public class PortalCubedBlocks {
             //TOXIC_GOO_BUCKET = Registry.register(Registry.ITEM, id("toxic_goo_bucket"), new BucketItem(STILL_TOXIC_GOO, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(PortalCubed.PortalCubedGroup)));
             //TOXIC_GOO = Registry.register(Registry.BLOCK, id("toxic_goo"), new CustomFluidBlock(STILL_TOXIC_GOO, QuiltBlockSettings.copy(Blocks.WATER)){});
 
-            Registry.register(Registry.BLOCK, id("tall_button"), TALL_BUTTON);
-            Registry.register(Registry.ITEM, id("tall_button"), new BlockItem(TALL_BUTTON, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
+            Registry.register(Registry.BLOCK, id("pedestal_button"), TALL_BUTTON);
+            Registry.register(Registry.ITEM, id("pedestal_button"), new BlockItem(TALL_BUTTON, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
 
 
         }

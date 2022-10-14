@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench by Cart3r.  ",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "laser_emitter",
-		"particle": "laser_emitter"
+		"0": "portalcubed:block/laser_emitter",
+		"particle": "portalcubed:block/laser_emitter"
 	},
 	"elements": [
 		{

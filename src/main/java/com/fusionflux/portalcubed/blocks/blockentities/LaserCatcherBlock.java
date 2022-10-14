@@ -37,6 +37,19 @@ public class LaserCatcherBlock extends BlockWithEntity {
     }
 
     @Override
+    public boolean emitsRedstonePower(BlockState state) {
+        return state.get(Properties.ENABLED);
+    }
+
+    @Override
+    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
+        if(state.get(Properties.ENABLED)){
+            return 15;
+        }
+        return 0;
+    }
+
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
@@ -71,7 +84,7 @@ public class LaserCatcherBlock extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.LASER_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
+        return PortalCubedBlocks.LASER_CATCHER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 
     @Override
@@ -81,7 +94,7 @@ public class LaserCatcherBlock extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new LaserEmitterEntity(pos,state);
+        return new LaserCatcherEntity(pos,state);
     }
 
     @Override
