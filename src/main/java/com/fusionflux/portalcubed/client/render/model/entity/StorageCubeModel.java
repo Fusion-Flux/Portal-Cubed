@@ -22,15 +22,6 @@ public class StorageCubeModel extends EntityModel<StorageCubeEntity> {
 		this.bb_main = root.getChild("bb_main");
 	}
 
-	public static ModelData getModelData(){
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-
-		modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.0F, 24.0F, 0.0F, 0.0F, 0.0F, 0.0F));
-		return modelData;
-	}
-
-
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -47,11 +38,6 @@ public class StorageCubeModel extends EntityModel<StorageCubeEntity> {
 	public void render(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
 
 		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
-	}
-	public void setRotationAngle(ModelPart bone, float x, float y, float z) {
-		bone.pitch = x;
-		bone.yaw = y;
-		bone.roll = z;
 	}
 	
 }

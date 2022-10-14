@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
+import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -103,10 +105,26 @@ public class LaserEmitterEntity extends BlockEntity {
                             boolean iscube= false;
                             for (RedirectionCubeEntity cubes : reflectCubes) {
                                 if(cubes != null){
+                                    savedPos = translatedPos;
                                     storedDirection = Direction.fromRotation((double)cubes.getRotYaw());
                                     iscube=true;
                                     break;
                                 }
+                            }
+
+                            List<StorageCubeEntity> blockCube = world.getNonSpectatingEntities(StorageCubeEntity.class, portalCheckBox);
+                            boolean blocked= false;
+                            for (StorageCubeEntity cubes : blockCube) {
+                                if(!(cubes instanceof RedirectionCubeEntity)){
+                                    blocked=true;
+                                    break;
+                                }
+                            }
+
+                            if(blocked){
+                                blockEntity.funnels = modfunnels;
+                                blockEntity.portalFunnels=portalfunnels;
+                                break;
                             }
 
                             List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
@@ -168,6 +186,7 @@ public class LaserEmitterEntity extends BlockEntity {
     public void playSound(SoundEvent soundEvent) {
         this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
+
 
     @Override
     public void writeNbt(NbtCompound tag) {

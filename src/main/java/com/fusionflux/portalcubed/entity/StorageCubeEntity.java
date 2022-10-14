@@ -42,7 +42,7 @@ public class StorageCubeEntity extends PathAwareEntity  {
 
     public Vec3d lastPos = this.getPos();
 
-    private float rotation_yaw = 0;
+    private float rotation_yaw = this.bodyYaw;
 
     private final Vec3d offset = new Vec3d(0,this.getWidth()/2,0);
 

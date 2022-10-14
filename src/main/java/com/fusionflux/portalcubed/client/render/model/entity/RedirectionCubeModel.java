@@ -8,6 +8,7 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -19,20 +20,18 @@ public class RedirectionCubeModel extends EntityModel<RedirectionCubeEntity> {
 
 	public RedirectionCubeModel(ModelPart root) {
 		//  TODO: add bone fields here!
+		super(RenderLayer::getEntityTranslucent);
 		this.bb_main = root.getChild("bb_main");
-	}
-
-	public static ModelData getModelData(){
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-
-		modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.0F, 24.0F, 0.0F, 0.0F, 0.0F, 0.0F));
-		return modelData;
 	}
 
 
 	public static TexturedModelData getTexturedModelData() {
-		return TexturedModelData.of(getModelData(), 64, 64);
+		ModelData modelData = new ModelData();
+		ModelPartData modelPartData = modelData.getRoot();
+		ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
+				.uv(0, 20).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.3F))
+				.uv(0, 40).cuboid(-3.0F, -8.0F, -3.0F, 6.0F, 6.0F, 6.0F, new Dilation(0.5F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+		return TexturedModelData.of(modelData, 64, 64);
 	}
 
 	@Override
@@ -43,11 +42,6 @@ public class RedirectionCubeModel extends EntityModel<RedirectionCubeEntity> {
 	public void render(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
 
 		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
-	}
-	public void setRotationAngle(ModelPart bone, float x, float y, float z) {
-		bone.pitch = x;
-		bone.yaw = y;
-		bone.roll = z;
 	}
 	
 }

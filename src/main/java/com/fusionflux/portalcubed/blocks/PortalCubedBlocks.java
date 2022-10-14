@@ -117,6 +117,9 @@ public class PortalCubedBlocks {
     public static final LaserEmitter LASER_EMITTER = new LaserEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<LaserEmitterEntity> LASER_EMITTER_ENTITY;
 
+    public static final LaserCatcherBlock LASER_CATCHER = new LaserCatcherBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
+    public static BlockEntityType<LaserCatcherEntity> LASER_CATCHER_ENTITY;
+
     public static FlowableFluid STILL_TOXIC_GOO;
     public static FlowableFluid FLOWING_TOXIC_GOO;
     public static Item TOXIC_GOO_BUCKET;
@@ -289,6 +292,10 @@ public class PortalCubedBlocks {
             LASER_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), FabricBlockEntityTypeBuilder.create(LaserEmitterEntity::new, LASER_EMITTER).build(null));
             Registry.register(Registry.BLOCK, id("laser_emitter"), LASER_EMITTER);
             Registry.register(Registry.ITEM, id("laser_emitter"), new BlockItem(LASER_EMITTER, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
+
+            LASER_CATCHER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), FabricBlockEntityTypeBuilder.create(LaserCatcherEntity::new, LASER_CATCHER).build(null));
+            Registry.register(Registry.BLOCK, id("laser_catcher"), LASER_CATCHER);
+            Registry.register(Registry.ITEM, id("laser_catcher"), new BlockItem(LASER_CATCHER, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
 
 
             //STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());
