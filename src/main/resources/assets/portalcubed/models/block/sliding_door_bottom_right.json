@@ -9,8 +9,8 @@
 	},
 	"elements": [
 		{
-			"from": [2, 0, 13],
-			"to": [5, 16, 29],
+			"from": [2, 0, 0],
+			"to": [5, 16, 16],
 			"faces": {
 				"north": {"uv": [4.25, 0, 5, 4], "texture": "#1"},
 				"east": {"uv": [0, 0, 4, 4], "texture": "#1"},
@@ -72,14 +72,17 @@
 			}
 		}
 	],
-	"groups": [0,
+	"groups": [
+		0,
 		{
 			"name": "slidingdoorframetemplate",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [
 				{
 					"name": "frame",
 					"origin": [0, 0, 0],
+					"color": 0,
 					"children": [1, 2, 3, 4]
 				}
 			]

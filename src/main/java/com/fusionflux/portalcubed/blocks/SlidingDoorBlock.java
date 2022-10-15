@@ -56,18 +56,18 @@ public class SlidingDoorBlock extends Block {
         HINGE = Properties.DOOR_HINGE;
         POWERED = Properties.POWERED;
         HALF = Properties.DOUBLE_BLOCK_HALF;
-        NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 2.0D, 16.0D, 16.0D, 5.0D);
-        NORTH_EAST_SHAPE = Block.createCuboidShape(13.0D, 0.0D, 2.0D, 16.0D, 16.0D, 5.0D);
-        NORTH_WEST_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 2.0D, 3.0D, 16.0D, 5.0D);
-        SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 14.0D);
-        SOUTH_EAST_SHAPE = Block.createCuboidShape(13.0D, 0.0D, 11.0D, 16.0D, 16.0D, 14.0D);
-        SOUTH_WEST_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 11.0D, 3.0D, 16.0D, 14.0D);
-        EAST_SHAPE = Block.createCuboidShape(11.0D, 0.0D, 0.0D, 14.0D, 16.0D, 16.0D);
-        EAST_SOUTH_SHAPE = Block.createCuboidShape(11.0D, 0.0D, 13.0D, 14.0D, 16.0D, 16.0D);
-        EAST_NORTH_SHAPE = Block.createCuboidShape(11.0D, 0.0D, 0.0D, 14.0D, 16.0D, 3.0D);
-        WEST_SHAPE = Block.createCuboidShape(2.0D, 0.0D, 0.0D, 5.0D, 16.0D, 16.0D);
-        WEST_NORTH_SHAPE = Block.createCuboidShape(2.0D, 0.0D, 0.0D, 5.0D, 16.0D, 3.0D);
-        WEST_SOUTH_SHAPE = Block.createCuboidShape(2.0D, 0.0D, 13.0D, 5.0D, 16.0D, 16.0D);
+        NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 1.0D, 16.0D, 16.0D, 5.0D);
+        NORTH_EAST_SHAPE = Block.createCuboidShape(13.0D, 0.0D, 1.0D, 16.0D, 16.0D, 5.0D);
+        NORTH_WEST_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 1.0D, 3.0D, 16.0D, 5.0D);
+        SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 15.0D);
+        SOUTH_EAST_SHAPE = Block.createCuboidShape(13.0D, 0.0D, 11.0D, 16.0D, 16.0D, 15.0D);
+        SOUTH_WEST_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 11.0D, 3.0D, 16.0D, 15.0D);
+        EAST_SHAPE = Block.createCuboidShape(11.0D, 0.0D, 0.0D, 15.0D, 16.0D, 16.0D);
+        EAST_SOUTH_SHAPE = Block.createCuboidShape(11.0D, 0.0D, 13.0D, 15.0D, 16.0D, 16.0D);
+        EAST_NORTH_SHAPE = Block.createCuboidShape(11.0D, 0.0D, 0.0D, 15.0D, 16.0D, 3.0D);
+        WEST_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 0.0D, 5.0D, 16.0D, 16.0D);
+        WEST_NORTH_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 0.0D, 5.0D, 16.0D, 3.0D);
+        WEST_SOUTH_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 13.0D, 5.0D, 16.0D, 16.0D);
     }
 
     protected SlidingDoorBlock(Settings settings) {

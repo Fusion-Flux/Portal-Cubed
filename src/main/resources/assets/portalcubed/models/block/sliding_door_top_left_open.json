@@ -76,10 +76,12 @@
 		{
 			"name": "slidingdoorframetemplate",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [
 				{
 					"name": "frame",
 					"origin": [0, 0, 0],
+					"color": 0,
 					"children": [0, 1, 2, 3]
 				}
 			]
@@ -87,6 +89,7 @@
 		{
 			"name": "sliding_door_top",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [4]
 		}
 	]

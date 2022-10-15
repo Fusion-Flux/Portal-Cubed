@@ -100,7 +100,8 @@ public class PortalCubedBlocks {
 
     public static final TallButton TALL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
-    public static final SlidingDoorBlock SLIDINGDOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final SlidingDoorBlock PORTAL2DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final SlidingDoorBlock PORTAL1DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
     public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
     public static BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY;
@@ -119,6 +120,9 @@ public class PortalCubedBlocks {
 
     public static final LaserCatcherBlock LASER_CATCHER = new LaserCatcherBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<LaserCatcherEntity> LASER_CATCHER_ENTITY;
+
+    public static final LaserRelayBlock LASER_RELAY = new LaserRelayBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
+    public static BlockEntityType<LaserRelayEntity> LASER_RELAY_ENTITY;
 
     public static FlowableFluid STILL_TOXIC_GOO;
     public static FlowableFluid FLOWING_TOXIC_GOO;
@@ -148,8 +152,11 @@ public class PortalCubedBlocks {
         }
 
         if (PortalCubedConfig.enablePortal2Blocks) {
-            Registry.register(Registry.BLOCK, id("sliding_door"), SLIDINGDOOR);
-            Registry.register(Registry.ITEM, id("sliding_door"), new BlockItem(SLIDINGDOOR, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
+            Registry.register(Registry.BLOCK, id("portal_2_door"), PORTAL2DOOR);
+            Registry.register(Registry.ITEM, id("portal_2_door"), new BlockItem(PORTAL2DOOR, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
+
+            Registry.register(Registry.BLOCK, id("portal_1_door"), PORTAL1DOOR);
+            Registry.register(Registry.ITEM, id("portal_1_door"), new BlockItem(PORTAL1DOOR, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
 
             Registry.register(Registry.BLOCK, id("white_panel"), WHITE_PANEL);
             Registry.register(Registry.ITEM, id("white_panel"), new BlockItem(WHITE_PANEL, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
@@ -296,6 +303,10 @@ public class PortalCubedBlocks {
             LASER_CATCHER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_catcher_entity"), FabricBlockEntityTypeBuilder.create(LaserCatcherEntity::new, LASER_CATCHER).build(null));
             Registry.register(Registry.BLOCK, id("laser_catcher"), LASER_CATCHER);
             Registry.register(Registry.ITEM, id("laser_catcher"), new BlockItem(LASER_CATCHER, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
+
+            LASER_RELAY_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_relay_entity"), FabricBlockEntityTypeBuilder.create(LaserRelayEntity::new, LASER_RELAY).build(null));
+            Registry.register(Registry.BLOCK, id("laser_relay"), LASER_RELAY);
+            Registry.register(Registry.ITEM, id("laser_relay"), new BlockItem(LASER_RELAY, new Item.Settings().group(PortalCubed.PortalCubedGroup)));
 
 
             //STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());
