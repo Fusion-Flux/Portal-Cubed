@@ -1,5 +1,5 @@
 {
-	"credit": "Made with Blockbench",
+	"credit": "Made with Blockbench by Cart3r.  ",
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "portalcubed:block/laser_emitter",
@@ -163,8 +163,7 @@
 		},
 		"gui": {
 			"rotation": [30, 135, 0],
-			"translation": [0.75, -0.25, 0],
-			"scale": [0.625, 0.625, 0.625]
+			"scale": [0.58398, 0.58398, 0.58398]
 		},
 		"head": {
 			"rotation": [180, -86.75, 180],

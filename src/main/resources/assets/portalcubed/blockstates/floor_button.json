@@ -1,0 +1,56 @@
+{
+  "variants": {
+    "facing=east,enabled=true": {
+      "model": "portalcubed:block/floor_button_active",
+      "y": -90,
+      "x": -90
+    },
+    "facing=north,enabled=true": {
+      "model": "portalcubed:block/floor_button_active",
+      "y": -180,
+      "x": -90
+    },
+    "facing=south,enabled=true": {
+      "model": "portalcubed:block/floor_button_active",
+      "x": -90
+    },
+    "facing=west,enabled=true": {
+      "model": "portalcubed:block/floor_button_active",
+      "y": -270,
+      "x": -90
+    },
+    "facing=up,enabled=true": {
+      "model": "portalcubed:block/floor_button_active"
+    },
+    "facing=down,enabled=true": {
+      "model": "portalcubed:block/floor_button_active",
+      "x": 180
+    },
+    "facing=east,enabled=false": {
+      "model": "portalcubed:block/floor_button",
+      "y": -90,
+      "x": -90
+    },
+    "facing=north,enabled=false": {
+      "model": "portalcubed:block/floor_button",
+      "y": -180,
+      "x": -90
+    },
+    "facing=south,enabled=false": {
+      "model": "portalcubed:block/floor_button",
+      "x": -90
+    },
+    "facing=west,enabled=false": {
+      "model": "portalcubed:block/floor_button",
+      "y": -270,
+      "x": -90
+    },
+    "facing=up,enabled=false": {
+      "model": "portalcubed:block/floor_button"
+    },
+    "facing=down,enabled=false": {
+      "model": "portalcubed:block/floor_button",
+      "x": 180
+    }
+  }
+}

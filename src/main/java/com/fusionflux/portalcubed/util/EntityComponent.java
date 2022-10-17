@@ -3,13 +3,14 @@ package com.fusionflux.portalcubed.util;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
     boolean gravityState = false;
@@ -17,6 +18,7 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     //Vec3d velocity = Vec3d.ZERO;
     boolean hasTeleportationHappened = false;
     UUID cubeUUID = null;
+    public List<UUID> portals = new ArrayList<>();
     private final Entity entity;
 
 
@@ -73,6 +75,33 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
+    public List<UUID> getPortals() {
+        return portals;
+    }
+
+    @Override
+    public void setPortals(List<UUID> portalUUIDs) {
+        portals = portalUUIDs;
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+    }
+
+    @Override
+    public void addPortals(UUID portalUUID) {
+        if(!portals.contains(portalUUID))
+        portals.add(portalUUID);
+        //portals = portalUUIDs;
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+    }
+
+    @Override
+    public void removePortals(UUID portalUUID) {
+        //portals = portalUUIDs;
+        if(!portals.contains(portalUUID))
+        portals.remove(portalUUID);
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+    }
+
+    @Override
     public void readFromNbt(NbtCompound tag) {
         //velocity = IPHelperDuplicate.getVec3d(tag, "ccaVelocity");
         String cubeString = tag.getString("cubeUUID");
@@ -81,6 +110,16 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         }else{
             cubeUUID = null;
         }
+
+        int size = tag.getInt("size");
+
+        if(!portals.isEmpty())
+            portals.clear();
+
+        for (int i = 0; i < size; i++) {
+            portals.add(tag.getUuid("portals"+i));
+        }
+
         hasTeleportationHappened = tag.getBoolean("hasTpHappened");
     }
 
@@ -92,6 +131,13 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         }else{
             tag.putString("cubeUUID", "null");
         }
+
+        int number = 0;
+        for(UUID portal : portals) {
+            tag.putUuid("portals" + number,portal);
+            number++;
+        }
+        tag.putInt("size", portals.size());
         //tag.putUuid("cubeUUID",cubeUUID);
         tag.putBoolean("hasTpHappened",hasTeleportationHappened);
     }

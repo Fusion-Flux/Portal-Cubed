@@ -226,6 +226,10 @@ public class PortalGun extends Item implements DyeableItem {
                     portalholder.setString("null");
                     world.spawnEntity(portalholder);
                     ((EntityPortalsAccess) user).addPortalToList(portalholder);
+
+                    CalledValues.setPlayer(portalholder,user.getUuid());
+
+                    CalledValues.addPortals(user,portalholder.getUuid());
                 }
                 if (otherPortal != null) {
                     CalledValues.setDestination(portalholder,otherPortal.getOriginPos().add(otherPortal.getFacingDirection().getUnitVector().getX()*.1,otherPortal.getFacingDirection().getUnitVector().getY()*.1,otherPortal.getFacingDirection().getUnitVector().getZ()*.1));
@@ -241,6 +245,12 @@ public class PortalGun extends Item implements DyeableItem {
                     otherPortal.setActive(true);
                     portalholder.setString(otherPortal.getUuidAsString());
                     otherPortal.setString(portalholder.getUuidAsString());
+
+                    CalledValues.setPlayer(portalholder,user.getUuid());
+                    CalledValues.setPlayer(otherPortal,user.getUuid());
+
+                    CalledValues.addPortals(user,portalholder.getUuid());
+                    CalledValues.addPortals(user,otherPortal.getUuid());
 
                     //PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
 

@@ -22,6 +22,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.UUID;
@@ -124,6 +125,21 @@ return true;
         return Direction.fromVector((int) this.getNormalB().getX(), (int) this.getNormalB().getY(), (int) this.getNormalB().getZ());
     }
 
+    @Override
+    public void kill() {
+        PortalPlaceholderEntity portalOutline;
+        portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
+        assert portalOutline != null;
+        if (portalOutline != null) {
+            portalOutline.kill();
+        }
+
+        Entity player = ((ServerWorld) world).getEntity(CalledValues.getPlayer(this));
+        if(CalledValues.getPortals(player).contains(this.getUuid())) {
+            CalledValues.removePortals(player, this.getUuid());
+        }
+        super.kill();
+    }
 
     @Override
     public void tick() {

@@ -15,6 +15,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -71,6 +73,21 @@ public abstract class CalledValues {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setCubeUUID(setValue));
     }
 
+    public static List<UUID> getPortals(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortals).orElse(new ArrayList<>());
+    }
+
+    public static void setPortals(Entity entity, List<UUID> setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setPortals(setValue));
+    }
+
+    public static void addPortals(Entity entity, UUID setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.addPortals(setValue));
+    }
+    public static void removePortals(Entity entity, UUID setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.removePortals(setValue));
+    }
+
     public static final ComponentKey<CustomPortalDataComponent> PORTAL_DATA =
             ComponentRegistry.getOrCreate(new Identifier("portalcubed", "portal_data"), CustomPortalDataComponent.class);
 
@@ -110,6 +127,13 @@ public abstract class CalledValues {
         return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getOtherFacing).orElse(Vec3d.ZERO);
     }
 
+    public static void setPlayer(ExperimentalPortal entity, UUID playerUUID) {
+        maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.setPlayer(playerUUID));
+    }
+
+    public static UUID getPlayer(Entity entity) {
+        return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getPlayer).orElse(null);
+    }
 
     public static void teleportEntity(ExperimentalPortal entity, Vec3d TeleportTo,Entity TeleportedEntity,ExperimentalPortal OtherPortal) {
         maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.teleportEntity(TeleportTo,TeleportedEntity,OtherPortal));

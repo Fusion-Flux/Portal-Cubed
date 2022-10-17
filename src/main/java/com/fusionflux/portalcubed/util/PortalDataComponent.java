@@ -7,12 +7,16 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.Objects;
+import java.util.UUID;
+
 public class PortalDataComponent implements CustomPortalDataComponent, AutoSyncedComponent {
     Vec3d axisW = null;
     Vec3d axisH = null;
     Vec3d axisOH=Vec3d.ZERO;
     Vec3d destination = null;
     Vec3d facing=Vec3d.ZERO;
+    UUID player = null;
     private final ExperimentalPortal entity;
 
     public PortalDataComponent(ExperimentalPortal entity) {
@@ -60,6 +64,17 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
     @Override
     public void setOtherFacing(Vec3d Facing) {
         facing = Facing;
+        PortalCubedComponents.PORTAL_DATA.sync(entity);
+    }
+
+    @Override
+    public UUID getPlayer() {
+        return player;
+    }
+
+    @Override
+    public void setPlayer(UUID savedPlayer) {
+        player = savedPlayer;
         PortalCubedComponents.PORTAL_DATA.sync(entity);
     }
 
@@ -112,6 +127,12 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
         this.setOtherAxisH(IPHelperDuplicate.getVec3d(tag, "axisOH").normalize());
         this.setDestination(IPHelperDuplicate.getVec3d(tag, "destination"));
         this.setOtherFacing(IPHelperDuplicate.getVec3d(tag, "facing"));
+        String playerString = tag.getString("playerUUID");
+        if(!Objects.equals(playerString, "null")) {
+            player = UUID.fromString(tag.getString("playerUUID"));
+        }else{
+            player = null;
+        }
     }
 
     @Override
@@ -121,5 +142,10 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
         IPHelperDuplicate.putVec3d(tag, "axisOH", this.getOtherAxisH());
         IPHelperDuplicate.putVec3d(tag, "destination", this.getDestination());
         IPHelperDuplicate.putVec3d(tag, "facing", this.getOtherFacing());
+        if(player != null) {
+            tag.putString("playerUUID", player.toString());
+        }else{
+            tag.putString("playerUUID", "null");
+        }
     }
 }

@@ -12,6 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -105,7 +106,12 @@ public class LaserBlock extends BlockWithEntity {
 
 
     private void addCollisionEffects(World world, Entity entity, BlockPos pos,BlockState state) {
-
+        if(entity instanceof PlayerEntity player){
+            if(!player.getAbilities().creativeMode) {
+                player.setOnFire(true);
+                player.damage(DamageSource.LAVA, 1f);
+            }
+        }
     }
 
     @Override

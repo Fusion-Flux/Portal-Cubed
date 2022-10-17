@@ -142,6 +142,8 @@ public class PortalCubedBlocks {
     public static final OldApFloorButtonBlock OLD_AP_FLOOR_BUTTON = new OldApFloorButtonBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<OldApFloorButtonBlockEntity> OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY;
 
+    public static final GrilTest GRILTEST = new GrilTest(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
+
     public static FlowableFluid STILL_TOXIC_GOO;
     public static FlowableFluid FLOWING_TOXIC_GOO;
     public static Item TOXIC_GOO_BUCKET;
@@ -364,6 +366,9 @@ public class PortalCubedBlocks {
 
             Registry.register(Registry.BLOCK, id("old_ap_pedestal_button"), OLD_AP_PEDESTAL_BUTTON);
             Registry.register(Registry.ITEM, id("old_ap_pedestal_button"), new BlockItem(OLD_AP_PEDESTAL_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+            Registry.register(Registry.BLOCK, id("griltest"), GRILTEST);
+            Registry.register(Registry.ITEM, id("griltest"), new BlockItem(GRILTEST, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
         }
