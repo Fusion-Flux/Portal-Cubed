@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "particle": "portalcubed:block/portal_1_gray_2x2_panel_bottom_right",
+    "north": "portalcubed:block/portal_1_gray_2x2_panel_bottom_left",
+    "south": "portalcubed:block/portal_1_gray_2x2_panel_bottom_right",
+    "east": "portalcubed:block/portal_1_gray_2x2_panel_bottom_left",
+    "west": "portalcubed:block/portal_1_gray_2x2_panel_bottom_left",
+    "up": "portalcubed:block/portal_1_gray_2x2_panel_bottom_right",
+    "down": "portalcubed:block/portal_1_gray_2x2_panel_top_right"
+  }
+}

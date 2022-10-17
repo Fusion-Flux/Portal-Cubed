@@ -85,5 +85,10 @@
 		"sounds": [
 			"portalcubed:companioncubeambiance"
 		]
+	},
+	"radio": {
+		"sounds": [
+			"portalcubed:radio"
+		]
 	}
 }

@@ -212,6 +212,10 @@ public class StorageCubeEntity extends PathAwareEntity  {
                     if(player.getHorizontalFacing().equals(Direction.EAST)){
                         rotation_yaw=270;
                     }
+                    //if(this instanceof RadioEntity){
+                    //    rotation_yaw -= 90;
+                    //}
+
                     this.setPosition(vec3d3);
                     //this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)).multiply(.5));
                     //this.velocityModified = true;
@@ -241,7 +245,9 @@ public class StorageCubeEntity extends PathAwareEntity  {
                     if(player.getHorizontalFacing().equals(Direction.EAST)){
                         rotation_yaw=270;
                     }
-
+                    //if(this instanceof RadioEntity){
+                    //    rotation_yaw -= 90;
+                    //}
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     this.setPosition(vec3d3);
                 }

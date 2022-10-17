@@ -28,6 +28,13 @@ public class PortalCubedEntities {
     public static final EntityType<RedirectionCubeEntity> REDIRECTION_CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RedirectionCubeEntity::new)
             .dimensions(EntityDimensions.changing(0.625F, 0.625F))
             .build();
+    public static final EntityType<RadioEntity> RADIO = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RadioEntity::new)
+            .dimensions(EntityDimensions.changing(0.625F, 0.625F))
+            .build();
+
+    public static final EntityType<OldApCubeEntity> OLDAPCUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, OldApCubeEntity::new)
+            .dimensions(EntityDimensions.changing(0.625F, 0.625F))
+            .build();
 
 
     public static void registerEntities() {
@@ -35,10 +42,14 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "experimental_portal"), EXPERIMENTAL_PORTAL);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "storage_cube"), STORAGE_CUBE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "companion_cube"), COMPANION_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "radio"), RADIO);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "redirection_cube"), REDIRECTION_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "old_ap_cube"), OLDAPCUBE);
         FabricDefaultAttributeRegistry.register(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(RADIO, RadioEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(REDIRECTION_CUBE, RedirectionCubeEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(OLDAPCUBE, OldApCubeEntity.createMobAttributes());
     }
 
 

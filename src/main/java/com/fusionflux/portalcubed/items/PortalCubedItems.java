@@ -14,16 +14,18 @@ import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 public class PortalCubedItems {
     public static final ArmorMaterial PortalArmor = new PortalArmor();
-    //public static final GelOrb GEL_ORB = new GelOrb(new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64));
-    public static final Item LONG_FALL_BOOTS = new ArmorItem(PortalArmor, EquipmentSlot.FEET, new Item.Settings().group(PortalCubed.PortalCubedGroup).fireproof());
-    public static final PortalGun PORTAL_GUN = new PortalGun(new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(1).fireproof());
-    public static final Item PORTAL_GUN_FRAME = new Item(new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(1).fireproof());
-    public static final Item PORTAL_GUN_CASING = new Item(new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(1).fireproof());
-    public static final Item MINI_BLACKHOLE = new Item(new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(1).fireproof());
-    //public static final PaintGun PAINT_GUN = new PaintGun(new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(1).fireproof());
-    public static final SpawnEggItem STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64));
-    public static final SpawnEggItem COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.COMPANION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64));
-    public static final SpawnEggItem REDIRECTION_CUBE = new SpawnEggItem(PortalCubedEntities.REDIRECTION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.PortalCubedGroup).maxCount(64));
+    //public static final GelOrb GEL_ORB = new GelOrb(new QuiltItemSettings().group(PortalCubed.Portal2Group).maxCount(64));
+    public static final Item LONG_FALL_BOOTS = new ArmorItem(PortalArmor, EquipmentSlot.FEET, new Item.Settings().group(PortalCubed.TestingElementsGroup).fireproof());
+    public static final PortalGun PORTAL_GUN = new PortalGun(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
+    public static final Item PORTAL_GUN_FRAME = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
+    public static final Item PORTAL_GUN_CASING = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
+    public static final Item MINI_BLACKHOLE = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
+    //public static final PaintGun PAINT_GUN = new PaintGun(new QuiltItemSettings().group(PortalCubed.Portal2Group).maxCount(1).fireproof());
+    public static final SpawnEggItem STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.COMPANION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem RADIO = new SpawnEggItem(PortalCubedEntities.RADIO, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem REDIRECTION_CUBE = new SpawnEggItem(PortalCubedEntities.REDIRECTION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem OLD_AP_CUBE = new SpawnEggItem(PortalCubedEntities.OLDAPCUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
 
     public static void registerItems() {
         if (PortalCubedConfig.enableLongFallBoots)
@@ -36,6 +38,8 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "storage_cube"), STORAGE_CUBE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "companion_cube"), COMPANION_CUBE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "redirection_cube"), REDIRECTION_CUBE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "old_ap_cube"), OLD_AP_CUBE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "radio"), RADIO);
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "paint_gun"), PAINT_GUN);
     }
 }

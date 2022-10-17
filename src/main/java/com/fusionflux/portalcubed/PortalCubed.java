@@ -33,9 +33,13 @@ public class PortalCubed implements ModInitializer {
 
     public static final String MODID = "portalcubed";
 
-    public static final ItemGroup PortalCubedGroup = QuiltItemGroup.createWithIcon(
-            id("general"),
+    public static final ItemGroup TestingElementsGroup = QuiltItemGroup.createWithIcon(
+            id("testing_elements"),
             () -> new ItemStack(PortalCubedItems.PORTAL_GUN));
+
+    public static final ItemGroup PortalBlocksGroup = QuiltItemGroup.createWithIcon(
+            id("portal_blocks"),
+            () -> new ItemStack(PortalCubedItems.COMPANION_CUBE));
 
     public static Identifier id(String path) {
         return new Identifier(MODID, path);

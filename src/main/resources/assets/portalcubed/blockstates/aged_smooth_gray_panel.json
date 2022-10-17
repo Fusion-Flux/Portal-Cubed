@@ -1,6 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/aged_smooth_gray_panel" }
+    "":[ { "model": "portalcubed:block/aged_smooth_gray_panel" },
+
+      { "model": "portalcubed:block/aged_smooth_gray_panel3" }
+
 
 
     ]

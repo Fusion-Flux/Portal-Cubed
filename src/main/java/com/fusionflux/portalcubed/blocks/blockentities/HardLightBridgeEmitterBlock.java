@@ -27,13 +27,7 @@ import java.util.stream.Collectors;
 
 public class HardLightBridgeEmitterBlock extends BlockWithEntity {
 
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(2.0D, 1.0D, 0.0D, 14.0D, 2.0D, 16.0D);
-    protected static final VoxelShape SHAPEROTATED = Block.createCuboidShape(0.0D, 1.0D, 2.0D, 16.0D, 2.0D, 14.0D);
-
-    protected static final VoxelShape MAINNORTH = Block.createCuboidShape(0.0D, -1.5D, 13.25D, 16.0D, 4.5D, 16.0D);
-    protected static final VoxelShape MAINSOUTH = Block.createCuboidShape(0.0D, -1.5D, 0D, 16.0D, 4.5D, 2.75D);
-    protected static final VoxelShape MAINEAST = Block.createCuboidShape(0D, -1.5D, 0D, 2.75D, 4.5D, 16.0D);
-    protected static final VoxelShape MAINWEST = Block.createCuboidShape(13.25D, -1.5D, 0D, 16.0D, 4.5D, 16.0D);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
     private final Map<BlockState, VoxelShape> field_26659;
@@ -47,35 +41,7 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
 
     private static VoxelShape method_31018(BlockState blockState) {
         VoxelShape voxelShape = VoxelShapes.empty();
-
-
-        if (blockState.get(Properties.FACING)==Direction.NORTH) {
-            voxelShape =MAINNORTH;
-            if (blockState.get(Properties.POWERED)) {
-                voxelShape =VoxelShapes.union(voxelShape, SHAPE);
-            }
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.SOUTH) {
-            voxelShape = MAINSOUTH;
-            if (blockState.get(Properties.POWERED)) {
-                voxelShape =VoxelShapes.union(voxelShape, SHAPE);
-            }
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.EAST) {
-            voxelShape = MAINEAST;
-            if (blockState.get(Properties.POWERED)) {
-                voxelShape =VoxelShapes.union(voxelShape, SHAPEROTATED);
-            }
-        }
-
-        if (blockState.get(Properties.FACING)==Direction.WEST) {
-            voxelShape = MAINWEST;
-            if (blockState.get(Properties.POWERED)) {
-                voxelShape =VoxelShapes.union(voxelShape, SHAPEROTATED);
-            }
-        }
+        voxelShape =VoxelShapes.union(voxelShape, SHAPE);
 
         return voxelShape;
     }
