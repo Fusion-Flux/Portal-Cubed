@@ -110,6 +110,7 @@ public class PortalCubedBlocks {
     public static final LightBlock LIGHT_CUBE = new LightBlock(QuiltBlockSettings.of(Material.AIR).luminance(15).noCollision().air().strength(3.5f,3.5f).requiresTool());
 
     public static final TallButton TALL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final TallButton OLD_AP_PEDESTAL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
     public static final SlidingDoorBlock PORTAL2DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final SlidingDoorBlock PORTAL1DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
@@ -134,6 +135,12 @@ public class PortalCubedBlocks {
 
     public static final LaserRelayBlock LASER_RELAY = new LaserRelayBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<LaserRelayEntity> LASER_RELAY_ENTITY;
+
+    public static final FloorButtonBlock FLOOR_BUTTON = new FloorButtonBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
+    public static BlockEntityType<FloorButtonBlockEntity> FLOOR_BUTTON_BLOCK_ENTITY;
+
+    public static final OldApFloorButtonBlock OLD_AP_FLOOR_BUTTON = new OldApFloorButtonBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
+    public static BlockEntityType<OldApFloorButtonBlockEntity> OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY;
 
     public static FlowableFluid STILL_TOXIC_GOO;
     public static FlowableFluid FLOWING_TOXIC_GOO;
@@ -338,6 +345,14 @@ public class PortalCubedBlocks {
             Registry.register(Registry.BLOCK, id("laser_relay"), LASER_RELAY);
             Registry.register(Registry.ITEM, id("laser_relay"), new BlockItem(LASER_RELAY, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
+            FLOOR_BUTTON_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("floor_button_block_entity"), FabricBlockEntityTypeBuilder.create(FloorButtonBlockEntity::new, FLOOR_BUTTON).build(null));
+            Registry.register(Registry.BLOCK, id("floor_button"), FLOOR_BUTTON);
+            Registry.register(Registry.ITEM, id("floor_button"), new BlockItem(FLOOR_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+            OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("old_ap_floor_button_block_entity"), FabricBlockEntityTypeBuilder.create(OldApFloorButtonBlockEntity::new, OLD_AP_FLOOR_BUTTON).build(null));
+            Registry.register(Registry.BLOCK, id("old_ap_floor_button"), OLD_AP_FLOOR_BUTTON);
+            Registry.register(Registry.ITEM, id("old_ap_floor_button"), new BlockItem(OLD_AP_FLOOR_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
 
             //STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());
             //FLOWING_TOXIC_GOO = Registry.register(Registry.FLUID, id("flowing_toxic_goo"), new ToxicGooFluid.Flowing());
@@ -346,6 +361,9 @@ public class PortalCubedBlocks {
 
             Registry.register(Registry.BLOCK, id("pedestal_button"), TALL_BUTTON);
             Registry.register(Registry.ITEM, id("pedestal_button"), new BlockItem(TALL_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+            Registry.register(Registry.BLOCK, id("old_ap_pedestal_button"), OLD_AP_PEDESTAL_BUTTON);
+            Registry.register(Registry.ITEM, id("old_ap_pedestal_button"), new BlockItem(OLD_AP_PEDESTAL_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
         }
