@@ -256,7 +256,6 @@ public class StorageCubeEntity extends PathAwareEntity  {
         if(this.getVelocity().y < -3.92){
             this.setVelocity(this.getVelocity().add(0,.81d,0));
         }
-
     }
 
     protected final Vec3d getPlayerRotationVector(float pitch, float yaw) {

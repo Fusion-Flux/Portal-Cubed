@@ -26,6 +26,14 @@ public class PortalCubedItems {
     public static final SpawnEggItem RADIO = new SpawnEggItem(PortalCubedEntities.RADIO, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem REDIRECTION_CUBE = new SpawnEggItem(PortalCubedEntities.REDIRECTION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem OLD_AP_CUBE = new SpawnEggItem(PortalCubedEntities.OLDAPCUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem PORTAL_1_COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.PORTAL_1_COMPANION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem PORTAL_1_STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.PORTAL_1_STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+
+
+    public static final SpawnEggItem BEANS = new SpawnEggItem(PortalCubedEntities.BEANS, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem MUG = new SpawnEggItem(PortalCubedEntities.MUG, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem JUG = new SpawnEggItem(PortalCubedEntities.JUG, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+
 
     public static void registerItems() {
         if (PortalCubedConfig.enableLongFallBoots)
@@ -39,7 +47,13 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "companion_cube"), COMPANION_CUBE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "redirection_cube"), REDIRECTION_CUBE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "old_ap_cube"), OLD_AP_CUBE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_1_companion_cube"), PORTAL_1_COMPANION_CUBE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_1_storage_cube"), PORTAL_1_STORAGE_CUBE);
+
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "radio"), RADIO);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "beans"), BEANS);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "mug"), MUG);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "jug"), JUG);
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "paint_gun"), PAINT_GUN);
     }
 }

@@ -1,0 +1,74 @@
+{
+	"credit": "Made with Blockbench by Cart3r.  ",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "portalcubed:entity/water_jug"
+	},
+	"elements": [
+		{
+			"from": [5, 0, 5],
+			"to": [11, 8, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [3, 3, 6, 7], "texture": "#0"},
+				"east": {"uv": [0, 3, 3, 7], "texture": "#0"},
+				"south": {"uv": [9, 3, 12, 7], "texture": "#0"},
+				"west": {"uv": [6, 3, 9, 7], "texture": "#0"},
+				"up": {"uv": [6, 3, 3, 0], "texture": "#0"},
+				"down": {"uv": [9, 0, 6, 3], "texture": "#0"}
+			}
+		},
+		{
+			"from": [7, 8, 7],
+			"to": [9, 9, 9],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8.5, 8]},
+			"faces": {
+				"north": {"uv": [1, 8, 2, 8.5], "texture": "#0"},
+				"east": {"uv": [0, 8, 1, 8.5], "texture": "#0"},
+				"south": {"uv": [3, 8, 4, 8.5], "texture": "#0"},
+				"west": {"uv": [2, 8, 3, 8.5], "texture": "#0"},
+				"up": {"uv": [2, 8, 1, 7], "texture": "#0"},
+				"down": {"uv": [3, 7, 2, 8], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 2.5],
+			"scale": [0.55664, 0.55664, 0.55664]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 2.5],
+			"scale": [0.55664, 0.55664, 0.55664]
+		},
+		"firstperson_righthand": {
+			"rotation": [-180, 72, -180],
+			"translation": [0.75, 5, 0],
+			"scale": [0.59141, 0.59141, 0.59141]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-180, 72, -180],
+			"translation": [0.75, 5, 0],
+			"scale": [0.59141, 0.59141, 0.59141]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.59961, 0.59961, 0.59961]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"translation": [0, 3.25, 0],
+			"scale": [1.12891, 1.12891, 1.12891]
+		},
+		"head": {
+			"translation": [0, 8, 0],
+			"scale": [2.22852, 2.22852, 2.22852]
+		},
+		"fixed": {
+			"translation": [0, 3, 0],
+			"scale": [0.9043, 0.9043, 0.9043]
+		}
+	}
+}

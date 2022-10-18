@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "portalcubed:block/old_ap_blue_2x2_panel_bottom_right_2",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "portalcubed:block/old_ap_blue_2x2_panel_bottom_right_2",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "portalcubed:block/old_ap_blue_2x2_panel_bottom_right"
+    },
+    "facing=west": {
+      "model": "portalcubed:block/old_ap_blue_2x2_panel_bottom_right",
+      "y": 90
+    }
+  }
+}

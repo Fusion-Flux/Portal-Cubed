@@ -25,6 +25,10 @@
       {
         "id": "minecraft",
         "versions": ">=1.18.2"
+      },
+      {
+        "id": "gravity_api",
+        "versions": ">=0.7.20"
       }
     ],
 

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "particle": "portalcubed:block/2x2_double_crossbar_bottom_right",
+    "north": "portalcubed:block/2x2_double_crossbar_bottom_left",
+    "south": "portalcubed:block/2x2_double_crossbar_bottom_right",
+    "east": "portalcubed:block/2x2_double_crossbar_bottom_left",
+    "west": "portalcubed:block/2x2_double_crossbar_bottom_left",
+    "up": "portalcubed:block/2x2_double_crossbar_top_left_2",
+    "down": "portalcubed:block/2x2_double_crossbar_bottom_left_2"
+  }
+}

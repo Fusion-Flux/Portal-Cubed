@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "portalcubed:block/old_ap_blue_panel",
+    "side": "portalcubed:block/old_ap_blue_2x1_panel_bottom"
+  }
+}
