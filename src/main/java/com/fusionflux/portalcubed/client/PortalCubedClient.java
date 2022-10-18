@@ -102,5 +102,11 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(JugModel.JUG_LAYER, JugModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.JUG, JugRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(ComputerModel.COMPUTER_LAYER, ComputerModel::getTexturedModelData);
+        EntityRendererRegistry.register(PortalCubedEntities.COMPUTER, ComputerRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(ChairModel.CHAIR_LAYER, ChairModel::getTexturedModelData);
+        EntityRendererRegistry.register(PortalCubedEntities.CHAIR, ChairRenderer::new);
     }
 }

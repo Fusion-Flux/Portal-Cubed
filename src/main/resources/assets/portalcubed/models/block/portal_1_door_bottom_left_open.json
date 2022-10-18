@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench by Cart3r.  ",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "portal_1_door",
-		"particle": "portal_1_door"
+		"0": "portalcubed:block/portal_1_door",
+		"particle": "portalcubed:block/portal_1_door"
 	},
 	"elements": [
 		{

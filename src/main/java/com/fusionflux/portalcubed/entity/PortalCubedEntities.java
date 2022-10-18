@@ -56,6 +56,14 @@ public class PortalCubedEntities {
             .dimensions(EntityDimensions.changing(0.375F, 0.5F))
             .build();
 
+    public static final EntityType<ComputerEntity> COMPUTER = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ComputerEntity::new)
+            .dimensions(EntityDimensions.changing(0.5F, 0.1875F))
+            .build();
+
+    public static final EntityType<ChairEntity> CHAIR = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ChairEntity::new)
+            .dimensions(EntityDimensions.changing(0.4375F, 0.46875F))
+            .build();
+
 
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "portal_placeholder"), PORTAL_PLACEHOLDER);
@@ -70,6 +78,8 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "beans"), BEANS);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "mug"), MUG);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "jug"), JUG);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "computer"), COMPUTER);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "chair"), CHAIR);
         FabricDefaultAttributeRegistry.register(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(RADIO, RadioEntity.createMobAttributes());
@@ -80,6 +90,8 @@ public class PortalCubedEntities {
         FabricDefaultAttributeRegistry.register(BEANS, BeansEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(MUG, MugEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(JUG, JugEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(COMPUTER, ComputerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(CHAIR, ChairEntity.createMobAttributes());
     }
 
 

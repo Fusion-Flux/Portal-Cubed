@@ -4,7 +4,7 @@
 	"textures": {
 		"0": "portalcubed:block/portal_gun",
 		"1": "portalcubed:block/portal_gun_dyeable",
-		"particle": "portal_gun"
+		"particle": "portalcubed:block/portal_gun"
 	},
 	"elements": [
 		{

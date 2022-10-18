@@ -42,6 +42,12 @@ public class PortalCubedBlocks {
     public static final DirectionalBlock WHITE_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final DirectionalBlock WHITE_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
+    public static final Block OLD_AP_WHITE_CHECKERED_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock OLD_AP_WHITE_2X2_PANEL_TOP_LEFT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock OLD_AP_WHITE_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock OLD_AP_WHITE_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final DirectionalBlock OLD_AP_WHITE_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+
     public static final Block AGED_WHITE_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final Block AGED_WHITE_HALF_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final PillarBlock AGED_WHITE_2X1_PANEL_TOP = new PillarBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
@@ -218,6 +224,18 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("white_2x2_panel_top_right"), new BlockItem(WHITE_2X2_PANEL_TOP_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
             Registry.register(Registry.BLOCK, id("white_checkered_panel"), WHITE_CHECKERED_PANEL);
             Registry.register(Registry.ITEM, id("white_checkered_panel"), new BlockItem(WHITE_CHECKERED_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+
+            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_bottom_left"), OLD_AP_WHITE_2X2_PANEL_BOTTOM_LEFT);
+            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_bottom_left"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_BOTTOM_LEFT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_bottom_right"), OLD_AP_WHITE_2X2_PANEL_BOTTOM_RIGHT);
+            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_bottom_right"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_BOTTOM_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_top_left"), OLD_AP_WHITE_2X2_PANEL_TOP_LEFT);
+            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_top_left"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_TOP_LEFT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_top_right"), OLD_AP_WHITE_2X2_PANEL_TOP_RIGHT);
+            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_top_right"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_TOP_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("old_ap_white_checkered_panel"), OLD_AP_WHITE_CHECKERED_PANEL);
+            Registry.register(Registry.ITEM, id("old_ap_white_checkered_panel"), new BlockItem(OLD_AP_WHITE_CHECKERED_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+
 
             Registry.register(Registry.BLOCK, id("aged_white_panel"), AGED_WHITE_PANEL);
             Registry.register(Registry.ITEM, id("aged_white_panel"), new BlockItem(AGED_WHITE_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));

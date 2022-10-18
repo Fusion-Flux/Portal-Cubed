@@ -33,6 +33,8 @@ public class PortalCubedItems {
     public static final SpawnEggItem BEANS = new SpawnEggItem(PortalCubedEntities.BEANS, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem MUG = new SpawnEggItem(PortalCubedEntities.MUG, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem JUG = new SpawnEggItem(PortalCubedEntities.JUG, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem COMPUTER = new SpawnEggItem(PortalCubedEntities.COMPUTER, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem CHAIR = new SpawnEggItem(PortalCubedEntities.CHAIR, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
 
 
     public static void registerItems() {
@@ -54,6 +56,8 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "beans"), BEANS);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "mug"), MUG);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "jug"), JUG);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "computer"), COMPUTER);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "chair"), CHAIR);
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "paint_gun"), PAINT_GUN);
     }
 }
