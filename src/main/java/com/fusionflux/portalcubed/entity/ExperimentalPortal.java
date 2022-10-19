@@ -128,12 +128,13 @@ return true;
     @Override
     public void kill() {
         PortalPlaceholderEntity portalOutline;
-        portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
-        assert portalOutline != null;
-        if (portalOutline != null) {
-            portalOutline.kill();
+        if(!this.getOutline().equals("null")) {
+            portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
+            assert portalOutline != null;
+            if (portalOutline != null) {
+                portalOutline.kill();
+            }
         }
-
         Entity player = ((ServerWorld) world).getEntity(CalledValues.getPlayer(this));
         if(CalledValues.getPortals(player).contains(this.getUuid())) {
             CalledValues.removePortals(player, this.getUuid());

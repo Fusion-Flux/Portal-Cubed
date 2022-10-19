@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#SS",
+    "S#S",
+    "SS#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:scaffolding"
+    },
+    "S": {
+      "tag": "portalcubed:stones"
+    }
+  },
+  "result": {"item": "portalcubed:1x1_single_crossbar"}
+}

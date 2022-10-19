@@ -10,7 +10,7 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class BeansEntity extends StorageCubeEntity  {
+public class BeansEntity extends CorePhysicsEntity  {
     public BeansEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }

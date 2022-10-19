@@ -9,7 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class CompanionCubeEntity extends StorageCubeEntity  {
+public class CompanionCubeEntity extends CorePhysicsEntity  {
     public CompanionCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }

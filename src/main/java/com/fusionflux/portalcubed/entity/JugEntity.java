@@ -8,7 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class JugEntity extends StorageCubeEntity  {
+public class JugEntity extends CorePhysicsEntity  {
     public JugEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }

@@ -1,22 +1,20 @@
 {
   "replace": false,
   "values" : [
-    "portalcubed:aged_smooth_gray_2x1_panel_bottom",
-    "portalcubed:aged_smooth_gray_2x1_panel_top",
-    "portalcubed:aged_smooth_gray_2x2_panel_top_left",
-    "portalcubed:aged_smooth_gray_2x2_panel_top_right",
-    "portalcubed:aged_smooth_gray_2x2_panel_bottom_left",
-    "portalcubed:aged_smooth_gray_2x2_panel_bottom_right",
-    "portalcubed:aged_smooth_gray_half_panel",
-    "portalcubed:aged_smooth_gray_panel",
+    "portalcubed:smooth_gray_2x1_panel_bottom",
+    "portalcubed:smooth_gray_2x1_panel_top",
+    "portalcubed:smooth_gray_2x2_panel_top_left",
+    "portalcubed:smooth_gray_2x2_panel_top_right",
+    "portalcubed:smooth_gray_2x2_panel_bottom_left",
+    "portalcubed:smooth_gray_2x2_panel_bottom_right",
+    "portalcubed:smooth_gray_half_panel",
+    "portalcubed:smooth_gray_panel",
 
-    "portalcubed:aged_padded_gray_2x1_panel_bottom",
-    "portalcubed:aged_padded_gray_2x1_panel_top",
-    "portalcubed:aged_padded_gray_2x2_panel_top_left",
-    "portalcubed:aged_padded_gray_2x2_panel_top_right",
-    "portalcubed:aged_padded_gray_2x2_panel_bottom_left",
-    "portalcubed:aged_padded_gray_2x2_panel_bottom_right",
-    "portalcubed:aged_padded_gray_half_panel",
-    "portalcubed:aged_padded_gray_panel"
+    "portalcubed:1x1_single_crossbar",
+    "portalcubed:1x1_double_crossbar",
+    "portalcubed:2x2_double_crossbar_top_left",
+    "portalcubed:2x2_double_crossbar_top_right",
+    "portalcubed:2x2_double_crossbar_bottom_left",
+    "portalcubed:2x2_double_crossbar_bottom_right"
   ]
 }

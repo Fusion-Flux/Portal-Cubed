@@ -3,13 +3,12 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
-import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -19,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -112,9 +110,9 @@ public class LaserEmitterEntity extends BlockEntity {
                                 }
                             }
 
-                            List<StorageCubeEntity> blockCube = world.getNonSpectatingEntities(StorageCubeEntity.class, portalCheckBox);
+                            List<CorePhysicsEntity> blockCube = world.getNonSpectatingEntities(CorePhysicsEntity.class, portalCheckBox);
                             boolean blocked= false;
-                            for (StorageCubeEntity cubes : blockCube) {
+                            for (CorePhysicsEntity cubes : blockCube) {
                                 if(!(cubes instanceof RedirectionCubeEntity)){
                                     blocked=true;
                                     break;

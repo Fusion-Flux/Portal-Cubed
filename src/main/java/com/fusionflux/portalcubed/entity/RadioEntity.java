@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class RadioEntity extends StorageCubeEntity  {
+public class RadioEntity extends CorePhysicsEntity  {
     public RadioEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }

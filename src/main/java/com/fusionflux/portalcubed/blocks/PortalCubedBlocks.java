@@ -42,6 +42,7 @@ public class PortalCubedBlocks {
     public static final DirectionalBlock WHITE_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final DirectionalBlock WHITE_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
+    public static final Block OLD_AP_WHITE_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final Block OLD_AP_WHITE_CHECKERED_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final DirectionalBlock OLD_AP_WHITE_2X2_PANEL_TOP_LEFT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final DirectionalBlock OLD_AP_WHITE_2X2_PANEL_BOTTOM_LEFT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
@@ -320,6 +321,8 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_top_right"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_TOP_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
             Registry.register(Registry.BLOCK, id("old_ap_white_checkered_panel"), OLD_AP_WHITE_CHECKERED_PANEL);
             Registry.register(Registry.ITEM, id("old_ap_white_checkered_panel"), new BlockItem(OLD_AP_WHITE_CHECKERED_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("old_ap_white_panel"), OLD_AP_WHITE_PANEL);
+            Registry.register(Registry.ITEM, id("old_ap_white_panel"), new BlockItem(OLD_AP_WHITE_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
 
             Registry.register(Registry.BLOCK, id("old_ap_green_panel"), OLD_AP_GREEN_PANEL);
             Registry.register(Registry.ITEM, id("old_ap_green_panel"), new BlockItem(OLD_AP_GREEN_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));

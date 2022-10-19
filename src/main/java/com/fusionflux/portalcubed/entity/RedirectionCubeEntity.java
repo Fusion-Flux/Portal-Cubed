@@ -9,7 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class RedirectionCubeEntity extends StorageCubeEntity  {
+public class RedirectionCubeEntity extends CorePhysicsEntity  {
     public RedirectionCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }

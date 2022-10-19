@@ -9,12 +9,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class Portal1CompanionCubeEntity extends StorageCubeEntity  {
+public class Portal1CompanionCubeEntity extends CorePhysicsEntity  {
     public Portal1CompanionCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
 
-    private int t = 1500;
 
     @Override
     public boolean damage(DamageSource source, float amount) {
@@ -39,19 +38,5 @@ public class Portal1CompanionCubeEntity extends StorageCubeEntity  {
         return false;
     }
 
-    @Override
-    public void tick() {
-        if (!this.world.isClient) {
-            if (t == 1500) {
-                world.playSoundFromEntity(null,this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT,this.getSoundCategory(),1f,1f);
-            }
-            t--;
-            if (t == 0) {
-                t = 1500;
-            }
-
-        }
-        super.tick();
-    }
 
 }

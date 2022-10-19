@@ -9,9 +9,8 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
 import com.fusionflux.portalcubed.config.MidnightConfig;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
-import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -19,7 +18,6 @@ import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
@@ -78,7 +76,7 @@ public class PortalCubed implements ModInitializer {
             float rotyaw = buf.readFloat();
             UUID cubeuuid =  buf.readUuid();
             server.execute(() -> {
-                StorageCubeEntity cube = ((StorageCubeEntity)player.getWorld().getEntity(cubeuuid));
+                CorePhysicsEntity cube = ((CorePhysicsEntity)player.getWorld().getEntity(cubeuuid));
                 cube.setHolderUUID(null);
                 cube.setRotYaw(rotyaw);
                 Vec3d cubePos = new Vec3d(x,y,z);

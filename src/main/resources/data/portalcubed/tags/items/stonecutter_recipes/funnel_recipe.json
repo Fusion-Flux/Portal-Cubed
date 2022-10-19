@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values" : [
-    "portalcubed:excursion_funnel_emitter",
-    "portalcubed:reversed_excursion_funnel_emitter",
-    "portalcubed:duel_excursion_funnel_emitter"
-  ]
-}

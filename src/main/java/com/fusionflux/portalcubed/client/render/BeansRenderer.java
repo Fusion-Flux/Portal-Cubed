@@ -2,9 +2,7 @@ package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.client.render.model.entity.BeansModel;
-import com.fusionflux.portalcubed.client.render.model.entity.StorageCubeModel;
 import com.fusionflux.portalcubed.entity.BeansEntity;
-import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;

@@ -9,7 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class Portal1StorageCubeEntity extends StorageCubeEntity  {
+public class Portal1StorageCubeEntity extends CorePhysicsEntity  {
     public Portal1StorageCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
