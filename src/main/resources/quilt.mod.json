@@ -29,6 +29,10 @@
       {
         "id": "gravity_api",
         "versions": ">=0.7.20"
+      },
+      {
+        "id": "stonecutter_recipe_tags ",
+        "versions": ">=4.0.0"
       }
     ],
 

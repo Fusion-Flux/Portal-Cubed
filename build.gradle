@@ -48,7 +48,7 @@ dependencies {
 
 	//include ('com.github.Fusion-Flux:GravityChanger:v0.7.6')
 
-	//modApi include("maven.modrinth:stonecutter_recipe_tags:3.0.1")
+	modApi include("maven.modrinth:stonecutter_recipe_tags:4.0.0-fabric")
 //
 
 	// Replace modImplementation with modApi if you expose components in your own API

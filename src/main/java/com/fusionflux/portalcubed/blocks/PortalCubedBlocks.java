@@ -225,18 +225,6 @@ public class PortalCubedBlocks {
             Registry.register(Registry.BLOCK, id("white_checkered_panel"), WHITE_CHECKERED_PANEL);
             Registry.register(Registry.ITEM, id("white_checkered_panel"), new BlockItem(WHITE_CHECKERED_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
 
-            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_bottom_left"), OLD_AP_WHITE_2X2_PANEL_BOTTOM_LEFT);
-            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_bottom_left"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_BOTTOM_LEFT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
-            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_bottom_right"), OLD_AP_WHITE_2X2_PANEL_BOTTOM_RIGHT);
-            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_bottom_right"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_BOTTOM_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
-            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_top_left"), OLD_AP_WHITE_2X2_PANEL_TOP_LEFT);
-            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_top_left"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_TOP_LEFT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
-            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_top_right"), OLD_AP_WHITE_2X2_PANEL_TOP_RIGHT);
-            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_top_right"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_TOP_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
-            Registry.register(Registry.BLOCK, id("old_ap_white_checkered_panel"), OLD_AP_WHITE_CHECKERED_PANEL);
-            Registry.register(Registry.ITEM, id("old_ap_white_checkered_panel"), new BlockItem(OLD_AP_WHITE_CHECKERED_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
-
-
             Registry.register(Registry.BLOCK, id("aged_white_panel"), AGED_WHITE_PANEL);
             Registry.register(Registry.ITEM, id("aged_white_panel"), new BlockItem(AGED_WHITE_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
             Registry.register(Registry.BLOCK, id("aged_white_half_panel"), AGED_WHITE_HALF_PANEL);
@@ -321,6 +309,17 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("aged_smooth_gray_2x2_panel_top_left"), new BlockItem(AGED_SMOOTH_GRAY_2X2_PANEL_TOP_LEFT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
             Registry.register(Registry.BLOCK, id("aged_smooth_gray_2x2_panel_top_right"), AGED_SMOOTH_GRAY_2X2_PANEL_TOP_RIGHT);
             Registry.register(Registry.ITEM, id("aged_smooth_gray_2x2_panel_top_right"), new BlockItem(AGED_SMOOTH_GRAY_2X2_PANEL_TOP_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+
+            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_bottom_left"), OLD_AP_WHITE_2X2_PANEL_BOTTOM_LEFT);
+            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_bottom_left"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_BOTTOM_LEFT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_bottom_right"), OLD_AP_WHITE_2X2_PANEL_BOTTOM_RIGHT);
+            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_bottom_right"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_BOTTOM_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_top_left"), OLD_AP_WHITE_2X2_PANEL_TOP_LEFT);
+            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_top_left"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_TOP_LEFT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("old_ap_white_2x2_panel_top_right"), OLD_AP_WHITE_2X2_PANEL_TOP_RIGHT);
+            Registry.register(Registry.ITEM, id("old_ap_white_2x2_panel_top_right"), new BlockItem(OLD_AP_WHITE_2X2_PANEL_TOP_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("old_ap_white_checkered_panel"), OLD_AP_WHITE_CHECKERED_PANEL);
+            Registry.register(Registry.ITEM, id("old_ap_white_checkered_panel"), new BlockItem(OLD_AP_WHITE_CHECKERED_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
 
             Registry.register(Registry.BLOCK, id("old_ap_green_panel"), OLD_AP_GREEN_PANEL);
             Registry.register(Registry.ITEM, id("old_ap_green_panel"), new BlockItem(OLD_AP_GREEN_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
@@ -448,7 +447,7 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("old_ap_pedestal_button"), new BlockItem(OLD_AP_PEDESTAL_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
             Registry.register(Registry.BLOCK, id("griltest"), GRILTEST);
-            Registry.register(Registry.ITEM, id("griltest"), new BlockItem(GRILTEST, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+            //Registry.register(Registry.ITEM, id("griltest"), new BlockItem(GRILTEST, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
         }

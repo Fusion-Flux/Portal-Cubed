@@ -1,5 +1,6 @@
 {
-  "itemGroup.portalcubed.general": "Portal Cubed",
+  "itemGroup.portalcubed.testing_elements": "Testing Elements",
+  "itemGroup.portalcubed.portal_blocks": "Portal Blocks",
 
   "subtitles.portalcubed.gelbounce": "Repulsion Gel Bounce",
   "subtitles.portalcubed.gelrun": "Propulsion Gel Run",
@@ -11,7 +12,19 @@
 
   "item.portalcubed.long_fall_boots": "Long Fall Boots",
   "item.portalcubed.storage_cube": "Weighted Storage Cube",
+  "item.portalcubed.portal_1_storage_cube": "Portal 1 Weighted Storage Cube",
   "item.portalcubed.companion_cube": "Companion Cube",
+  "item.portalcubed.portal_1_companion_cube": "Portal 1 Companion Cube",
+  "item.portalcubed.redirection_cube": "Redirection Cube",
+  "item.portalcubed.old_ap_cube": "Old Aperture Cube",
+
+  "item.portalcubed.radio": "Radio",
+  "item.portalcubed.beans": "Beans",
+  "item.portalcubed.jug": "Jug",
+  "item.portalcubed.computer": "Computer",
+  "item.portalcubed.chair": "Chair",
+  "item.portalcubed.mug": "Mug",
+
   "item.portalcubed.gel_orb": "Gel Orb",
   "item.portalcubed.portal_gun": "Portal Gun",
   "item.portalcubed.portal_gun_frame": "Portal Gun Frame",
@@ -81,12 +94,63 @@
   "block.portalcubed.white_half_panel": "White Half Panel",
   "block.portalcubed.white_panel": "White Panel",
 
+  "block.portalcubed.old_ap_green_2x1_panel_bottom": "Old Aperture Green 2x1 Panel Bottom",
+  "block.portalcubed.old_ap_green_2x1_panel_top": "Old Aperture Green 2x1 Panel Top",
+  "block.portalcubed.old_ap_green_2x2_panel_top_left": "Old Aperture Green 2x2 Panel Top Left",
+  "block.portalcubed.old_ap_green_2x2_panel_top_right": "Old Aperture Green 2x2 Panel Top Right",
+  "block.portalcubed.old_ap_green_2x2_panel_bottom_left": "Old Aperture Green 2x2 Panel Bottom Left",
+  "block.portalcubed.old_ap_green_2x2_panel_bottom_right": "Old Aperture Green 2x2 Panel Bottom Right",
+  "block.portalcubed.old_ap_green_half_panel": "Old Aperture Green Half Panel",
+  "block.portalcubed.old_ap_green_panel": "Old Aperture Green Panel",
+
+  "block.portalcubed.old_ap_blue_2x1_panel_bottom": "Old Aperture Blue 2x1 Panel Bottom",
+  "block.portalcubed.old_ap_blue_2x1_panel_top": "Old Aperture Blue 2x1 Panel Top",
+  "block.portalcubed.old_ap_blue_2x2_panel_top_left": "Old Aperture Blue 2x2 Panel Top Left",
+  "block.portalcubed.old_ap_blue_2x2_panel_top_right": "Old Aperture Blue 2x2 Panel Top Right",
+  "block.portalcubed.old_ap_blue_2x2_panel_bottom_left": "Old Aperture Blue 2x2 Panel Bottom Left",
+  "block.portalcubed.old_ap_blue_2x2_panel_bottom_right": "Old Aperture Blue 2x2 Panel Bottom Right",
+  "block.portalcubed.old_ap_blue_half_panel": "Old Aperture Blue Half Panel",
+  "block.portalcubed.old_ap_blue_panel": "Old Aperture Blue Panel",
+
+  "block.portalcubed.old_ap_white_2x2_panel_top_left": "Old Aperture White 2x2 Panel Top Left",
+  "block.portalcubed.old_ap_white_2x2_panel_top_right": "Old Aperture White 2x2 Panel Top Right",
+  "block.portalcubed.old_ap_white_2x2_panel_bottom_left": "Old Aperture White 2x2 Panel Bottom Left",
+  "block.portalcubed.old_ap_white_2x2_panel_bottom_right": "Old Aperture White 2x2 Panel Bottom Right",
+  "block.portalcubed.old_ap_white_checkered_panel": "Old Aperture White Half Panel",
+  "block.portalcubed.old_ap_white_panel": "Old Aperture White Panel",
+
+  "block.portalcubed.2x2_double_crossbar_top_left": "2x2 Double Crossbar Top Left",
+  "block.portalcubed.2x2_double_crossbar_top_right": "2x2 Double Crossbar Top Right",
+  "block.portalcubed.2x2_double_crossbar_bottom_left": "2x2 Double Crossbar Bottom Left",
+  "block.portalcubed.2x2_double_crossbar_bottom_right": "2x2 Double Crossbar Bottom Right",
+  "block.portalcubed.1x1_single_crossbar": "1x1 Single Crossbar",
+  "block.portalcubed.1x1_double_crossbar": "1x1 Double Crossbar",
+
+  "block.portalcubed.portal_1_smooth_gray_2x1_panel_bottom": "Portal 1 Smooth Gray 2x1 Panel Bottom",
+  "block.portalcubed.portal_1_smooth_gray_2x1_panel_top": "Portal 1 Smooth Gray 2x1 Panel Top",
+  "block.portalcubed.portal_1_smooth_gray_2x2_panel_top_left": "Portal 1 Smooth Gray 2x2 Panel Top Left",
+  "block.portalcubed.portal_1_smooth_gray_2x2_panel_top_right": "Portal 1 Smooth Gray 2x2 Panel Top Right",
+  "block.portalcubed.portal_1_smooth_gray_2x2_panel_bottom_left": "Portal 1 Smooth Gray 2x2 Panel Bottom Left",
+  "block.portalcubed.portal_1_smooth_gray_2x2_panel_bottom_right": "Portal 1 Smooth Gray 2x2 Panel Bottom Right",
+  "block.portalcubed.portal_1_smooth_gray_half_panel": "Portal 1 Smooth Gray Half Panel",
+  "block.portalcubed.portal_1_smooth_gray_panel": "Portal 1 Smooth Gray Panel",
+
   "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",
   "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",
   "block.portalcubed.reversed_excursion_funnel_emitter": "Reversed Excursion Funnel Emitter",
   "block.portalcubed.duel_excursion_funnel_emitter": "Dual Excursion Funnel Emitter",
-  "block.portalcubed.sliding_door": "Sliding Door",
-  "block.portalcubed.tall_button": "Tall Button",
+  "block.portalcubed.portal_1_door": "Portal 1 Door",
+  "block.portalcubed.portal_2_door": "Portal 2 Door",
+
+  "block.portalcubed.pedestal_button": "Pedestal Button",
+  "block.portalcubed.old_ap_pedestal_button": "Old Aperture Pedestal Button",
+
+  "block.portalcubed.floor_button": "Floor Button",
+  "block.portalcubed.old_ap_floor_button": "Old Aperture Floor Button",
+
+  "block.portalcubed.laser_relay": "Laser Relay",
+  "block.portalcubed.laser_emitter": "Laser Emitter",
+  "block.portalcubed.laser_catcher": "Laser Catcher",
 
 
   "block.portalcubed.light_bridge_emitter": "Hardlight Bridge Emitter",

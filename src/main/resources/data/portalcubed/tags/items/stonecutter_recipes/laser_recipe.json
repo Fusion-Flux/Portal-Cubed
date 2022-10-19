@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values" : [
+    "portalcubed:laser_relay",
+    "portalcubed:laser_emitter",
+    "portalcubed:laser_catcher"
+  ]
+}
