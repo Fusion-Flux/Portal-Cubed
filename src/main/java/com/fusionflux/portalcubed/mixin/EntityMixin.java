@@ -173,6 +173,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract float getWidth();
 
+    @Shadow public abstract EntityPose getPose();
+
     private Vec3d teleportVelocity = Vec3d.ZERO;
     private boolean shouldTeleport = false;
     private boolean shouldTeleportClient = false;
@@ -228,6 +230,33 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                         ommitedDirections = VoxelShapes.union(ommitedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
                 }
 
+                double portalOffsetX = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).x;
+            double portalOffsetY = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).y;
+            double portalOffsetZ = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).z;
+
+            if(portalOffsetX ==0){
+                portalOffsetX =.1;
+            }
+            if(portalOffsetY ==0){
+                portalOffsetY =.1;
+            }
+            if(portalOffsetZ ==0){
+                portalOffsetZ =.1;
+            }
+
+            Vec3d gotVelocity = this.getVelocity();
+
+                if(portal.getFacingDirection().getOffsetX() == 0){
+                    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d((-(portalOffsetX / Math.abs(portalOffsetX)) * .004)* getVelocity().getX(), 0, 0), GravityChangerAPI.getGravityDirection((thisentity))));
+                }
+            if(portal.getFacingDirection().getOffsetY() == 0){
+                gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(portalOffsetY / Math.abs(portalOffsetY)) * .004)* getVelocity().getY(), 0), GravityChangerAPI.getGravityDirection(thisentity)));
+            }
+            if(portal.getFacingDirection().getOffsetZ() == 0){
+                gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(portalOffsetZ / Math.abs(portalOffsetZ)) * .004)*getVelocity().getZ()), GravityChangerAPI.getGravityDirection( thisentity)));
+            }
+            if(!gotVelocity.equals(Vec3d.ZERO))
+                thisentity.setVelocity(gotVelocity);
 
             if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive()) {
                 Direction portalFacing = portal.getFacingDirection();

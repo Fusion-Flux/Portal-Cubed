@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.fabricmc.api.EnvType;
@@ -112,7 +113,7 @@ public class LaserBlock extends BlockWithEntity {
                 player.setOnFire(true);
                 player.damage(DamageSource.ON_FIRE, 1f);
             }
-        }else if(!(entity instanceof ItemEntity)){
+        }else if(!(entity instanceof ItemEntity)&&!(entity instanceof CorePhysicsEntity)){
            entity.setOnFire(true);
            entity.setFireTicks(1);
            entity.damage(DamageSource.ON_FIRE, 1f);

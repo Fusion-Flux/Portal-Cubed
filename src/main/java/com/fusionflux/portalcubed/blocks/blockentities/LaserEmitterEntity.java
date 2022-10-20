@@ -8,6 +8,8 @@ import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.TintedGlassBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
@@ -68,7 +70,7 @@ public class LaserEmitterEntity extends BlockEntity {
                         } else{
                             teleported = false;
                         }
-                        if (world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.LASER)) {
+                        if ((world.isAir(translatedPos) || world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.LASER)) && !world.getBlockState(translatedPos).getBlock().equals(Blocks.BARRIER)) {
                             world.setBlockState(translatedPos, PortalCubedBlocks.LASER.getDefaultState());
 
                             LaserBlockEntity funnel = ((LaserBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
@@ -157,7 +159,7 @@ public class LaserEmitterEntity extends BlockEntity {
                                     }
                                 }
                             }
-                        } else if(world.getBlockState(translatedPos).getBlock() instanceof AbstractGlassBlock) {
+                        } else if(world.getBlockState(translatedPos).getBlock() instanceof AbstractGlassBlock && !(world.getBlockState(translatedPos).getBlock() instanceof TintedGlassBlock)) {
                             blockEntity.funnels = modfunnels;
                             blockEntity.portalFunnels=portalfunnels;
                         }else{

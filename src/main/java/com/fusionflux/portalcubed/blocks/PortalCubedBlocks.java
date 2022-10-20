@@ -142,6 +142,7 @@ public class PortalCubedBlocks {
     public static final TallButton OLD_AP_PEDESTAL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
     public static final SlidingDoorBlock PORTAL2DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final SlidingDoorBlock OLDAPDOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final SlidingDoorBlock PORTAL1DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
     public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
@@ -203,6 +204,9 @@ public class PortalCubedBlocks {
         if (PortalCubedConfig.enablePortal2Blocks) {
             Registry.register(Registry.BLOCK, id("portal_2_door"), PORTAL2DOOR);
             Registry.register(Registry.ITEM, id("portal_2_door"), new BlockItem(PORTAL2DOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+            Registry.register(Registry.BLOCK, id("old_ap_door"), OLDAPDOOR);
+            Registry.register(Registry.ITEM, id("old_ap_door"), new BlockItem(OLDAPDOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
             Registry.register(Registry.BLOCK, id("portal_1_door"), PORTAL1DOOR);
             Registry.register(Registry.ITEM, id("portal_1_door"), new BlockItem(PORTAL1DOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));

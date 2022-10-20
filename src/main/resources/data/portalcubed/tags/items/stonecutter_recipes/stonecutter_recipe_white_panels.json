@@ -1,14 +1,14 @@
 {
   "replace": false,
   "values" : [
+    "portalcubed:white_panel",
+    "portalcubed:white_half_panel",
     "portalcubed:white_2x1_panel_bottom",
     "portalcubed:white_2x1_panel_top",
-    "portalcubed:white_2x2_panel_top_left",
-    "portalcubed:white_2x2_panel_top_right",
     "portalcubed:white_2x2_panel_bottom_left",
     "portalcubed:white_2x2_panel_bottom_right",
-    "portalcubed:white_half_panel",
-    "portalcubed:white_panel",
+    "portalcubed:white_2x2_panel_top_left",
+    "portalcubed:white_2x2_panel_top_right",
 
     "portalcubed:1x1_single_crossbar",
     "portalcubed:1x1_double_crossbar",

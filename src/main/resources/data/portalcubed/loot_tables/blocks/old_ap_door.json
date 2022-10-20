@@ -13,14 +13,14 @@
      "type": "minecraft:item",
      "conditions": [
       {
-       "block": "portalcubed:portal_1_door",
+       "block": "portalcubed:old_ap_door",
        "condition": "minecraft:block_state_property",
        "properties": {
         "half": "lower"
        }
       }
      ],
-     "name": "portalcubed:portal_1_door"
+     "name": "portalcubed:old_ap_door"
     }
    ],
    "rolls": 1.0
