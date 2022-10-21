@@ -28,6 +28,7 @@ public class PortalCubedItems {
     public static final SpawnEggItem OLD_AP_CUBE = new SpawnEggItem(PortalCubedEntities.OLDAPCUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem PORTAL_1_COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.PORTAL_1_COMPANION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem PORTAL_1_STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.PORTAL_1_STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem LIL_PINEAPPLE = new SpawnEggItem(PortalCubedEntities.LIL_PINEAPPLE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
 
 
     public static final SpawnEggItem BEANS = new SpawnEggItem(PortalCubedEntities.BEANS, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
@@ -51,6 +52,7 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "old_ap_cube"), OLD_AP_CUBE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_1_companion_cube"), PORTAL_1_COMPANION_CUBE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_1_storage_cube"), PORTAL_1_STORAGE_CUBE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "lil_pineapple"), LIL_PINEAPPLE);
 
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "radio"), RADIO);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "beans"), BEANS);

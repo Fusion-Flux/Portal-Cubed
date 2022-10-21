@@ -64,6 +64,10 @@ public class PortalCubedEntities {
             .dimensions(EntityDimensions.changing(0.4375F, 0.46875F))
             .build();
 
+    public static final EntityType<LilPineappleEntity> LIL_PINEAPPLE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, LilPineappleEntity::new)
+            .dimensions(EntityDimensions.changing(0.5625F, 0.5F))
+            .build();
+
 
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "portal_placeholder"), PORTAL_PLACEHOLDER);
@@ -80,6 +84,7 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "jug"), JUG);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "computer"), COMPUTER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "chair"), CHAIR);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "lil_pineapple"), LIL_PINEAPPLE);
         FabricDefaultAttributeRegistry.register(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(RADIO, RadioEntity.createMobAttributes());
@@ -92,6 +97,7 @@ public class PortalCubedEntities {
         FabricDefaultAttributeRegistry.register(JUG, JugEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(COMPUTER, ComputerEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(CHAIR, ChairEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(LIL_PINEAPPLE, LilPineappleEntity.createMobAttributes());
     }
 
 

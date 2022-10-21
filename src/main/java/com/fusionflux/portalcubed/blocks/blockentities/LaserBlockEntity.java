@@ -51,7 +51,7 @@ public class LaserBlockEntity extends BlockEntity {
                 for (Direction facing : bridge.facing) {
                     BlockState emitter = world.getBlockState(bridge.emitters.get(bridge.facing.indexOf(facing)));
 
-                    Box portalCheckBox = new Box(pos);
+                    Box portalCheckBox = new Box(pos).contract(.25);
 
                     List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
 
@@ -228,7 +228,7 @@ public class LaserBlockEntity extends BlockEntity {
                         }
                     }
 
-                    List<RedirectionCubeEntity> list2 = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
+                    List<RedirectionCubeEntity> list2 = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox.contract(.1).contract(.25));
 
                     for (RedirectionCubeEntity portal : list2) {
                         if(portal != null)

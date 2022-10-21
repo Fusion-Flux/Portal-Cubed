@@ -96,11 +96,11 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     public boolean isCustomNameVisible() {
         return false;
     }
+    
 
     @Override
-    @Nullable
-    public Text getCustomName() {
-        return null;
+    public boolean hasCustomName() {
+        return false;
     }
 
     @Override

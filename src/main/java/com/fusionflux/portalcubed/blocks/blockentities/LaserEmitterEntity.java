@@ -6,6 +6,7 @@ import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
+import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -99,7 +100,7 @@ public class LaserEmitterEntity extends BlockEntity {
 
                             funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
 
-                            Box portalCheckBox = new Box(translatedPos);
+                            Box portalCheckBox = new Box(translatedPos).contract(.25);
 
                             List<RedirectionCubeEntity> reflectCubes = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
                             boolean iscube= false;
@@ -108,6 +109,7 @@ public class LaserEmitterEntity extends BlockEntity {
                                     savedPos = translatedPos;
                                     storedDirection = Direction.fromRotation((double)cubes.getRotYaw());
                                     iscube=true;
+                                    cubes.setButtonTimer(1);
                                     break;
                                 }
                             }

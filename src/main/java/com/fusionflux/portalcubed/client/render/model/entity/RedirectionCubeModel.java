@@ -28,9 +28,15 @@ public class RedirectionCubeModel extends EntityModel<RedirectionCubeEntity> {
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
-				.uv(0, 20).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.3F))
-				.uv(0, 40).cuboid(-3.0F, -8.0F, -3.0F, 6.0F, 6.0F, 6.0F, new Dilation(0.5F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+		ModelPartData bone = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-13.01F, -10.01F, 2.99F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
+				.uv(0, 20).cuboid(-13.3F, -10.3F, 2.7F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
+				.uv(0, 40).cuboid(-11.0F, -8.0F, 5.0F, 6.0F, 6.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(8.0F, 24.0F, -8.0F));
+
+		ModelPartData cube_r1 = bone.addChild("cube_r1", ModelPartBuilder.create().uv(47, 0).mirrored().cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-8.0F, -4.5F, 8.0F, 0.7854F, 0.0F, -1.5708F));
+
+		ModelPartData cube_r2 = bone.addChild("cube_r2", ModelPartBuilder.create().uv(47, 0).mirrored().cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-8.0F, -4.5F, 8.0F, 0.0F, -0.7854F, 0.0F));
+
+		ModelPartData cube_r3 = bone.addChild("cube_r3", ModelPartBuilder.create().uv(47, 0).cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(-8.0F, -4.5F, 8.0F, 0.0F, 0.8727F, 0.0F));
 		return TexturedModelData.of(modelData, 64, 64);
 	}
 

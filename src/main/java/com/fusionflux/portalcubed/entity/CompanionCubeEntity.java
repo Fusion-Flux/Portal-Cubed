@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.EntityType;
@@ -39,8 +40,24 @@ public class CompanionCubeEntity extends CorePhysicsEntity  {
         return false;
     }
 
+    private int buttonTimer = 0;
+
+    public void setButtonTimer(int time){
+        buttonTimer = time;
+    }
+
+
     @Override
     public void tick() {
+        if(!world.isClient) {
+            if (buttonTimer <= 0) {
+                CalledValues.setOnButton(this, false);
+            } else {
+                CalledValues.setOnButton(this, true);
+                buttonTimer -= 1;
+            }
+        }
+
         if (!this.world.isClient) {
             if (t == 1500) {
                 world.playSoundFromEntity(null,this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT,this.getSoundCategory(),1f,1f);

@@ -1,6 +1,8 @@
 package com.fusionflux.portalcubed.accessor;
 
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.util.ButtonComponent;
 import com.fusionflux.portalcubed.util.CustomPortalDataComponent;
 import com.fusionflux.portalcubed.util.PortalCubedComponent;
 import dev.onyxstudios.cca.api.v3.component.Component;
@@ -137,6 +139,18 @@ public abstract class CalledValues {
 
     public static void teleportEntity(ExperimentalPortal entity, Vec3d TeleportTo,Entity TeleportedEntity,ExperimentalPortal OtherPortal) {
         maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.teleportEntity(TeleportTo,TeleportedEntity,OtherPortal));
+    }
+
+    public static final ComponentKey<ButtonComponent> CUBE_DATA =
+            ComponentRegistry.getOrCreate(new Identifier("portalcubed", "cube_component"), ButtonComponent.class);
+
+
+    public static boolean getOnButton(CorePhysicsEntity entity) {
+        return maybeGetSafe(CUBE_DATA, entity).map(ButtonComponent::getOnButton).orElse(false);
+    }
+
+    public static void setOnButton(CorePhysicsEntity entity, boolean setValue) {
+        maybeGetSafe(CUBE_DATA, entity).ifPresent(gc -> gc.setOnButton(setValue));
     }
 
 }

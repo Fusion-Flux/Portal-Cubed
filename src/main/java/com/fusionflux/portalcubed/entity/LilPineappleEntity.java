@@ -1,8 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -10,8 +8,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class RedirectionCubeEntity extends CorePhysicsEntity  {
-    public RedirectionCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
+public class LilPineappleEntity extends CorePhysicsEntity  {
+    public LilPineappleEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
 
@@ -23,13 +21,13 @@ public class RedirectionCubeEntity extends CorePhysicsEntity  {
             if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
                 if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.REDIRECTION_CUBE);
+                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
                     }
                     this.discard();
                 }
                 if(!(source.getAttacker() instanceof PlayerEntity)) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.REDIRECTION_CUBE);
+                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
                     }
                     this.discard();
                 }
@@ -38,22 +36,6 @@ public class RedirectionCubeEntity extends CorePhysicsEntity  {
         }
         return false;
     }
-    private int buttonTimer = 0;
 
-    public void setButtonTimer(int time){
-        buttonTimer = time;
-    }
-
-    public void tick() {
-        super.tick();
-        if(!world.isClient) {
-            if (buttonTimer <= 0) {
-                CalledValues.setOnButton(this, false);
-            } else {
-                CalledValues.setOnButton(this, true);
-                buttonTimer -= 1;
-            }
-        }
-    }
 
 }

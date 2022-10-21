@@ -66,7 +66,8 @@
   ],
   "cardinal-components": [
     "portalcubed:entity_component",
-    "portalcubed:portal_data"
+    "portalcubed:portal_data",
+    "portalcubed:cube_component"
   ],
   "lithium:options": {
     "mixin.entity.collisions": false,
