@@ -67,7 +67,7 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "chair"), CHAIR);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "hoopy"), HOOPY);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "anger_core"), ANGERCORE);
-        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "cake_core"), CAKECORE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "intelligence_core"), CAKECORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "curiosity_core"), CURIOSITYCORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "morality_core"), MORALITYCORE);
 

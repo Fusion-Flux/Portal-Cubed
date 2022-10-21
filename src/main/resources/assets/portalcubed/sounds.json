@@ -91,9 +91,13 @@
 			"portalcubed:radio"
 		]
 	},
-	"exile_vilify": {
+	"curiosity_core": {
 		"sounds": [
-			"portalcubed:exile_vilify"
+			"portalcubed:curiosity_01",
+			"portalcubed:curiosity_02",
+			"portalcubed:curiosity_03",
+			"portalcubed:curiosity_04",
+			"portalcubed:curiosity_05"
 		]
 	}
 }

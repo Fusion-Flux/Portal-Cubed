@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -49,15 +50,16 @@ public class FloorButtonBlockEntity extends BlockEntity {
 
             boolean isPowered = false;
             for (LivingEntity living : entities) {
-                if(living != null){
-                    isPowered = true;
-                }
-
-                if(living instanceof StorageCubeEntity cube){
-                    cube.setButtonTimer(1);
-                }
-                if(living instanceof CompanionCubeEntity cube){
-                    cube.setButtonTimer(1);
+                if(living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof CompanionCubeEntity) {
+                        isPowered = true;
+                    if(state.getBlock().equals(PortalCubedBlocks.FLOOR_BUTTON)) {
+                        if (living instanceof StorageCubeEntity cube) {
+                            cube.setButtonTimer(1);
+                        }
+                        if (living instanceof CompanionCubeEntity cube) {
+                            cube.setButtonTimer(1);
+                        }
+                    }
                 }
             }
 

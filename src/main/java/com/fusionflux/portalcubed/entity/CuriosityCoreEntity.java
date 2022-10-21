@@ -1,6 +1,8 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -8,11 +10,17 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 public class CuriosityCoreEntity extends CorePhysicsEntity  {
 
     public CuriosityCoreEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
+
+    Random ran = new Random();
+
+    private int t = ran.nextInt(10)+35;
 
     @Override
     public boolean damage(DamageSource source, float amount) {
@@ -35,5 +43,17 @@ public class CuriosityCoreEntity extends CorePhysicsEntity  {
 
         }
         return false;
+    }
+
+    @Override
+    public void tick() {
+        if (!this.world.isClient) {
+            if (t == 0) {
+                world.playSoundFromEntity(null,this, PortalCubedSounds.CURIOSITY_CORE_EVENT,this.getSoundCategory(),1f,1f);
+                t = ran.nextInt(10)+35;
+            }
+            t--;
+        }
+        super.tick();
     }
 }

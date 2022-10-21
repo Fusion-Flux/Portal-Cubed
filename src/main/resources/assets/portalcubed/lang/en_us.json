@@ -25,7 +25,10 @@
   "item.portalcubed.chair": "Chair",
   "item.portalcubed.mug": "Mug",
   "item.portalcubed.lil_pineapple": "Lil Pineapple",
-
+  "item.portalcubed.anger_core": "Anger Core",
+  "item.portalcubed.intelligence_core": "Intelligence Core",
+  "item.portalcubed.curiosity_core": "Curiosity Core",
+  "item.portalcubed.morality_core": "Morality Core",
   "item.portalcubed.gel_orb": "Gel Orb",
   "item.portalcubed.portal_gun": "Portal Gun",
   "item.portalcubed.portal_gun_frame": "Portal Gun Frame",

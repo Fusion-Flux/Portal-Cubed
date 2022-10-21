@@ -102,7 +102,7 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "lil_pineapple"), LIL_PINEAPPLE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "hoopy"), HOOPY);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "anger_core"), ANGER_CORE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "cake_core"), CAKE_CORE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "intelligence_core"), CAKE_CORE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "curiosity_core"), CURIOSITY_CORE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "morality_core"), MORALITY_CORE);
         FabricDefaultAttributeRegistry.register(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
