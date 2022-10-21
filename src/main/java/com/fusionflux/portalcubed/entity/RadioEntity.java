@@ -21,7 +21,7 @@ public class RadioEntity extends CorePhysicsEntity  {
         super(type, world);
     }
 
-    private int t = 6600;
+    private int t = 60;
 
     @Override
     public boolean damage(DamageSource source, float amount) {
@@ -61,6 +61,7 @@ public class RadioEntity extends CorePhysicsEntity  {
         if (!this.world.isClient) {
             if (this.getCustomName() != null) {
                 if (!Objects.equals(this.getCustomName().getString().toLowerCase(Locale.ROOT), "exile")) {
+                    System.out.println("AAAAAAAAAAAA");
                     if (t == 5390 || t == 6600) {
                         world.playSoundFromEntity(null, this, PortalCubedSounds.EXILE_MUSIC_EVENT, this.getSoundCategory(), 1f, 1f);
                     }
@@ -80,5 +81,11 @@ public class RadioEntity extends CorePhysicsEntity  {
             }
             super.tick();
         }
+    }
+
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        t = 60;
+        super.onSpawnPacket(packet);
     }
 }
