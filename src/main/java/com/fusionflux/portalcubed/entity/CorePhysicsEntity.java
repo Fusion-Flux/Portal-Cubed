@@ -44,6 +44,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     private float rotation_yaw = this.bodyYaw;
 
     private final Vec3d offset = new Vec3d(0,this.getWidth()/2,0);
+    private final Vec3d offsetHeight = new Vec3d(0,this.getHeight()/2,0);
 
     @Override
     public boolean collides() {
@@ -185,7 +186,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         this.bodyYaw = rotation_yaw;
         this.headYaw = rotation_yaw;
         canUsePortals = !getUUIDPresent();
-        Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offset, GravityChangerAPI.getGravityDirection(this));
+        Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.getPos();
         if(!world.isClient) {
             this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));

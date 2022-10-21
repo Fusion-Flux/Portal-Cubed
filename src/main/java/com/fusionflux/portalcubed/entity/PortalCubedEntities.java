@@ -68,6 +68,21 @@ public class PortalCubedEntities {
             .dimensions(EntityDimensions.changing(0.5625F, 0.5F))
             .build();
 
+    public static final EntityType<HoopyEntity> HOOPY = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, HoopyEntity::new)
+            .dimensions(EntityDimensions.changing(1.625F, 0.0625F))
+            .build();
+    public static final EntityType<AngerCoreEntity> ANGER_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, AngerCoreEntity::new)
+            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+    public static final EntityType<MoralityCoreEntity> MORALITY_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MoralityCoreEntity::new)
+            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+    public static final EntityType<CakeCoreEntity> CAKE_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CakeCoreEntity::new)
+            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+    public static final EntityType<CuriosityCoreEntity> CURIOSITY_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CuriosityCoreEntity::new)
+            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
 
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "portal_placeholder"), PORTAL_PLACEHOLDER);
@@ -85,6 +100,11 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "computer"), COMPUTER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "chair"), CHAIR);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "lil_pineapple"), LIL_PINEAPPLE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "hoopy"), HOOPY);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "anger_core"), ANGER_CORE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "cake_core"), CAKE_CORE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "curiosity_core"), CURIOSITY_CORE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "morality_core"), MORALITY_CORE);
         FabricDefaultAttributeRegistry.register(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(RADIO, RadioEntity.createMobAttributes());
@@ -98,6 +118,11 @@ public class PortalCubedEntities {
         FabricDefaultAttributeRegistry.register(COMPUTER, ComputerEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(CHAIR, ChairEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(LIL_PINEAPPLE, LilPineappleEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(HOOPY, HoopyEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(ANGER_CORE, HoopyEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(CAKE_CORE, HoopyEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(CURIOSITY_CORE, HoopyEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(MORALITY_CORE, HoopyEntity.createMobAttributes());
     }
 
 

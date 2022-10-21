@@ -128,7 +128,7 @@ public class LaserEmitterEntity extends BlockEntity {
                                 blockEntity.portalFunnels=portalfunnels;
                                 break;
                             }
-
+                            portalCheckBox = new Box(translatedPos);
                             List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
 
                             if(!iscube)

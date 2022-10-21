@@ -20,6 +20,7 @@ public class PortalCubedSounds {
     public static final Identifier CUBE_SCRAPE = new Identifier("portalcubed:cubescrape");
     public static final Identifier COMPANION_CUBE_AMBIANCE = new Identifier("portalcubed:companioncubeambiance");
     public static final Identifier RADIO_MUSIC = new Identifier("portalcubed:radio");
+    public static final Identifier EXILE_SONG = new Identifier("portalcubed:exile_vilify");
     public static final SoundEvent GEL_BOUNCE_EVENT = new SoundEvent(GEL_BOUNCE);
     public static final SoundEvent GEL_RUN_EVENT = new SoundEvent(GEL_RUN);
     public static final SoundEvent PORTAL_AMBIANT_EVENT = new SoundEvent(PORTAL_AMBIANCE);
@@ -35,6 +36,7 @@ public class PortalCubedSounds {
     public static final SoundEvent CUBE_SCRAPE_EVENT = new SoundEvent(CUBE_SCRAPE);
     public static final SoundEvent COMPANION_CUBE_AMBIANCE_EVENT = new SoundEvent(COMPANION_CUBE_AMBIANCE);
     public static final SoundEvent RADIO_MUSIC_EVENT = new SoundEvent(RADIO_MUSIC);
+    public static final SoundEvent EXILE_MUSIC_EVENT = new SoundEvent(EXILE_SONG);
 
     public static void registerSounds() {
         Registry.register(Registry.SOUND_EVENT, GEL_BOUNCE, GEL_BOUNCE_EVENT);

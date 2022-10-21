@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "portalcubed:block/aged_padded_gray_panel_5"
+  }
+}

@@ -36,6 +36,11 @@ public class PortalCubedItems {
     public static final SpawnEggItem JUG = new SpawnEggItem(PortalCubedEntities.JUG, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem COMPUTER = new SpawnEggItem(PortalCubedEntities.COMPUTER, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem CHAIR = new SpawnEggItem(PortalCubedEntities.CHAIR, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem HOOPY = new SpawnEggItem(PortalCubedEntities.HOOPY, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem ANGERCORE = new SpawnEggItem(PortalCubedEntities.ANGER_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem MORALITYCORE = new SpawnEggItem(PortalCubedEntities.MORALITY_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem CAKECORE = new SpawnEggItem(PortalCubedEntities.CAKE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem CURIOSITYCORE = new SpawnEggItem(PortalCubedEntities.CURIOSITY_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
 
 
     public static void registerItems() {
@@ -60,6 +65,12 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "jug"), JUG);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "computer"), COMPUTER);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "chair"), CHAIR);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "hoopy"), HOOPY);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "anger_core"), ANGERCORE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "cake_core"), CAKECORE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "curiosity_core"), CURIOSITYCORE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "morality_core"), MORALITYCORE);
+
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "paint_gun"), PAINT_GUN);
     }
 }

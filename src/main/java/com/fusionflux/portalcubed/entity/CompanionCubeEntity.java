@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
@@ -70,5 +71,9 @@ public class CompanionCubeEntity extends CorePhysicsEntity  {
         }
         super.tick();
     }
-
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        t = 40;
+        super.onSpawnPacket(packet);
+    }
 }

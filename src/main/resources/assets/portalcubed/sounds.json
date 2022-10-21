@@ -90,5 +90,10 @@
 		"sounds": [
 			"portalcubed:radio"
 		]
+	},
+	"exile_vilify": {
+		"sounds": [
+			"portalcubed:exile_vilify"
+		]
 	}
 }

@@ -7,17 +7,21 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+
+import java.util.Locale;
+import java.util.Objects;
 
 public class RadioEntity extends CorePhysicsEntity  {
     public RadioEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
 
-    private int t = 3084;
+    private int t = 6600;
 
     @Override
     public boolean damage(DamageSource source, float amount) {
@@ -55,16 +59,26 @@ public class RadioEntity extends CorePhysicsEntity  {
     @Override
     public void tick() {
         if (!this.world.isClient) {
-            if (t == 3084) {
-                world.playSoundFromEntity(null,this, PortalCubedSounds.RADIO_MUSIC_EVENT,this.getSoundCategory(),1f,1f);
+            if (this.getCustomName() != null) {
+                if (!Objects.equals(this.getCustomName().getString().toLowerCase(Locale.ROOT), "exile")) {
+                    if (t == 5390 || t == 6600) {
+                        world.playSoundFromEntity(null, this, PortalCubedSounds.EXILE_MUSIC_EVENT, this.getSoundCategory(), 1f, 1f);
+                    }
+                    t--;
+                    if (t <= 0) {
+                        t = 5390;
+                    }
+                }
+            } else {
+                if (t == 6600) {
+                    world.playSoundFromEntity(null, this, PortalCubedSounds.RADIO_MUSIC_EVENT, this.getSoundCategory(), 1f, 1f);
+                }
+                t--;
+                if (t <= 0) {
+                    t = 6600;
+                }
             }
-            t--;
-            if (t == 0) {
-                t = 3084;
-            }
-
+            super.tick();
         }
-        super.tick();
     }
-
 }

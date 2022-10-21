@@ -21,13 +21,13 @@ public class LilPineappleEntity extends CorePhysicsEntity  {
             if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
                 if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+                        this.dropItem(PortalCubedItems.LIL_PINEAPPLE);
                     }
                     this.discard();
                 }
                 if(!(source.getAttacker() instanceof PlayerEntity)) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+                        this.dropItem(PortalCubedItems.LIL_PINEAPPLE);
                     }
                     this.discard();
                 }

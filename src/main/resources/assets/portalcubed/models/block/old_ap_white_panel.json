@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "portalcubed:block/old_ap_white_panel"
+    "all": "portalcubed:block/old_aperture_white_panel_1"
   }
 }
