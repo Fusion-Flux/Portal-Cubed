@@ -91,13 +91,25 @@
 			"portalcubed:radio"
 		]
 	},
+	"exile_vilify": {
+		"sounds": [
+			"portalcubed:exile_vilify"
+		]
+	},
 	"curiosity_core": {
 		"sounds": [
-			"portalcubed:curiosity_01",
-			"portalcubed:curiosity_02",
-			"portalcubed:curiosity_03",
-			"portalcubed:curiosity_04",
-			"portalcubed:curiosity_05"
+			"portalcubed:curiosity"
+		]
+	},
+	"anger_core": {
+		"sounds": [
+			"portalcubed:anger"
+		]
+	},
+
+	"cake_core": {
+		"sounds": [
+			"portalcubed:cakemix"
 		]
 	}
 }

@@ -22,6 +22,8 @@ public class PortalCubedSounds {
     public static final Identifier RADIO_MUSIC = new Identifier("portalcubed:radio");
     public static final Identifier EXILE_SONG = new Identifier("portalcubed:exile_vilify");
     public static final Identifier CURIOSITY_CORE_SOUND = new Identifier("portalcubed:curiosity_core");
+    public static final Identifier ANGER_CORE_SOUND = new Identifier("portalcubed:anger_core");
+    public static final Identifier CAKE_CORE_SOUND = new Identifier("portalcubed:cake_core");
     public static final SoundEvent GEL_BOUNCE_EVENT = new SoundEvent(GEL_BOUNCE);
     public static final SoundEvent GEL_RUN_EVENT = new SoundEvent(GEL_RUN);
     public static final SoundEvent PORTAL_AMBIANT_EVENT = new SoundEvent(PORTAL_AMBIANCE);
@@ -39,6 +41,8 @@ public class PortalCubedSounds {
     public static final SoundEvent RADIO_MUSIC_EVENT = new SoundEvent(RADIO_MUSIC);
     public static final SoundEvent EXILE_MUSIC_EVENT = new SoundEvent(EXILE_SONG);
     public static final SoundEvent CURIOSITY_CORE_EVENT = new SoundEvent(CURIOSITY_CORE_SOUND);
+    public static final SoundEvent ANGER_CORE_EVENT = new SoundEvent(ANGER_CORE_SOUND);
+    public static final SoundEvent CAKE_CORE_EVENT = new SoundEvent(CAKE_CORE_SOUND);
 
     public static void registerSounds() {
         Registry.register(Registry.SOUND_EVENT, GEL_BOUNCE, GEL_BOUNCE_EVENT);
@@ -57,5 +61,7 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, COMPANION_CUBE_AMBIANCE, COMPANION_CUBE_AMBIANCE_EVENT);
         Registry.register(Registry.SOUND_EVENT, RADIO_MUSIC, RADIO_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, CURIOSITY_CORE_SOUND, CURIOSITY_CORE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, ANGER_CORE_SOUND, ANGER_CORE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, CAKE_CORE_SOUND, CAKE_CORE_EVENT);
     }
 }

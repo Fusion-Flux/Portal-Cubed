@@ -18,6 +18,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -246,18 +247,18 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
             Vec3d gotVelocity = this.getVelocity();
 
-            //    if(portal.getFacingDirection().getOffsetX() == 0){
-            //        gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d((-(portalOffsetX / Math.abs(portalOffsetX)) * .004)* getVelocity().getX(), 0, 0), GravityChangerAPI.getGravityDirection((thisentity))));
-            //    }
-            //if(portal.getFacingDirection().getOffsetY() == 0){
-            //    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(portalOffsetY / Math.abs(portalOffsetY)) * .004)* getVelocity().getY(), 0), GravityChangerAPI.getGravityDirection(thisentity)));
-            //}
-            //if(portal.getFacingDirection().getOffsetZ() == 0){
-            //    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(portalOffsetZ / Math.abs(portalOffsetZ)) * .004)*getVelocity().getZ()), GravityChangerAPI.getGravityDirection( thisentity)));
-            //}
-            //if(!gotVelocity.equals(Vec3d.ZERO))
-            //    thisentity.setVelocity(gotVelocity);
-//
+                if(portal.getFacingDirection().getOffsetX() == 0){
+                    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d((-(portalOffsetX / Math.abs(portalOffsetX)) * .004)* getVelocity().getX(), 0, 0), GravityChangerAPI.getGravityDirection((thisentity))));
+                }
+            if(portal.getFacingDirection().getOffsetY() == 0){
+                gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(portalOffsetY / Math.abs(portalOffsetY)) * .004)* getVelocity().getY(), 0), GravityChangerAPI.getGravityDirection(thisentity)));
+            }
+            if(portal.getFacingDirection().getOffsetZ() == 0){
+                gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(portalOffsetZ / Math.abs(portalOffsetZ)) * .004)*getVelocity().getZ()), GravityChangerAPI.getGravityDirection( thisentity)));
+            }
+            if(!gotVelocity.equals(Vec3d.ZERO))
+                thisentity.setVelocity(gotVelocity);
+
             if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive()) {
                 Direction portalFacing = portal.getFacingDirection();
                 Direction portalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
@@ -461,8 +462,45 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                     this.setYaw(yawValue);
                                     serverPos = new Vec3d(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     shouldTeleportClient = true;
+                                    //COMEHERE
+                                    if(!(otherDirec.getUnitVector().getY() < 0)) {
+                                        double velocity = 0;
+                                        double fall = ((EntityAttachments) this).getMaxFallHeight();
+                                        fall = fall - portal.getPos().y;
+                                        if (fall < 5) {
+                                            velocity = entityVelocity.y;
+                                        } else {
+                                            if(((Entity)(Object)this) instanceof LivingEntity living) {
+                                                if(living.hasNoDrag()) {
+                                                    velocity = -Math.sqrt(2 * .08 * (fall)) + .0402;
+                                                }else{
+                                                    velocity = (-Math.sqrt(2 * .08 * (fall)) + .0402)/.98;
+                                                }
+                                            }
+                                        }
+                                        entityVelocity = new Vec3d(entityVelocity.x, velocity, entityVelocity.z);
+                                    }
                                     teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
                                 } else if(!(thisentity instanceof PlayerEntity)) {
+                                    //COMEHERE
+                                    if(!(otherDirec.getUnitVector().getY() < 0)) {
+                                        double velocity = 0;
+                                        double fall = ((EntityAttachments) this).getMaxFallHeight();
+                                        fall = fall - portal.getPos().y;
+                                        if (fall < 5) {
+                                            velocity = entityVelocity.y;
+                                        } else {
+                                            if(((Entity)(Object)this) instanceof LivingEntity living) {
+                                                if(living.hasNoDrag()) {
+                                                    velocity = -Math.sqrt(2 * .08 * (fall)) + .0402;
+                                                }else{
+                                                    velocity = (-Math.sqrt(2 * (.08/.98) * (fall)) + .0402);
+                                                }
+                                            }
+                                        }
+                                        entityVelocity = new Vec3d(entityVelocity.x, velocity, entityVelocity.z);
+                                    }
+
                                     this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                                     this.setYaw(yawValue);

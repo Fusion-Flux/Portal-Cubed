@@ -20,7 +20,7 @@ public class CuriosityCoreEntity extends CorePhysicsEntity  {
 
     Random ran = new Random();
 
-    private int t = ran.nextInt(10)+35;
+    private int t = 0;
 
     @Override
     public boolean damage(DamageSource source, float amount) {
@@ -50,7 +50,7 @@ public class CuriosityCoreEntity extends CorePhysicsEntity  {
         if (!this.world.isClient) {
             if (t == 0) {
                 world.playSoundFromEntity(null,this, PortalCubedSounds.CURIOSITY_CORE_EVENT,this.getSoundCategory(),1f,1f);
-                t = ran.nextInt(10)+35;
+                t = 346;
             }
             t--;
         }

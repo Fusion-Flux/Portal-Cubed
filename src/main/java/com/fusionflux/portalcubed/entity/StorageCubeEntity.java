@@ -2,14 +2,17 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.core.appender.SyslogAppender;
@@ -43,6 +46,9 @@ public class StorageCubeEntity extends CorePhysicsEntity  {
         return false;
     }
 
+    public LivingEntity.FallSounds getFallSounds() {
+        return new LivingEntity.FallSounds(PortalCubedSounds.CUBE_LOW_HIT_EVENT, PortalCubedSounds.CUBE_HIGH_HIT_EVENT);
+    }
 
     private int buttonTimer = 0;
 

@@ -24,7 +24,7 @@ public class RadioEntity extends CorePhysicsEntity  {
         super(type, world);
     }
 
-    private int t = 10;
+    private int t = 0;
 
     @Override
     public boolean damage(DamageSource source, float amount) {
@@ -63,29 +63,24 @@ public class RadioEntity extends CorePhysicsEntity  {
     public void tick() {
         if (!this.world.isClient) {
             if (this.getCustomName() != null) {
-                if (Objects.equals(this.getCustomName().getString().toLowerCase(Locale.ROOT), "exile")) {
-                    if (t == 5390 || t == 6600) {
-                        world.playSoundFromEntity(null, this, PortalCubedSounds.EXILE_MUSIC_EVENT, this.getSoundCategory(), 1f, 1f);
-                    }
+                if (Objects.equals(this.getCustomName().getString().toLowerCase(Locale.ROOT), "exile")||Objects.equals(this.getCustomName().getString().toLowerCase(Locale.ROOT), "vilify")||Objects.equals(this.getCustomName().getString().toLowerCase(Locale.ROOT), "exile vilify")) {
                     t--;
                     if (t <= 0) {
+                        world.playSoundFromEntity(null, this, PortalCubedSounds.EXILE_MUSIC_EVENT, this.getSoundCategory(), .5f, 1f);
                         t = 5390;
                     }
                 }else{
-                    if (t == 6600) {
-                        world.playSoundFromEntity(null, this, PortalCubedSounds.RADIO_MUSIC_EVENT, this.getSoundCategory(), 1f, 1f);
-                    }
                     t--;
                     if (t <= 0) {
+                        world.playSoundFromEntity(null, this, PortalCubedSounds.RADIO_MUSIC_EVENT, this.getSoundCategory(), 1f, 1f);
+
                         t = 6600;
                     }
                 }
             } else {
-                if (t == 6600) {
-                    world.playSoundFromEntity(null, this, PortalCubedSounds.RADIO_MUSIC_EVENT, this.getSoundCategory(), 1f, 1f);
-                }
                 t--;
                 if (t <= 0) {
+                    world.playSoundFromEntity(null, this, PortalCubedSounds.RADIO_MUSIC_EVENT, this.getSoundCategory(), 1f, 1f);
                     t = 6600;
                 }
             }
@@ -95,7 +90,7 @@ public class RadioEntity extends CorePhysicsEntity  {
 
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        t = 10;
         super.onSpawnPacket(packet);
+        t = 0;
     }
 }
