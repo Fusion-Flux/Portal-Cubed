@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.checkerframework.checker.units.qual.A;
 
 public class PortalCubedEntities {
     public static final EntityType<PortalPlaceholderEntity> PORTAL_PLACEHOLDER = FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, PortalPlaceholderEntity::new)
@@ -84,6 +85,16 @@ public class PortalCubedEntities {
             .dimensions(EntityDimensions.changing(0.375F, 0.375F))
             .build();
 
+    public static final EntityType<SpaceCoreEntity> SPACE_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, SpaceCoreEntity::new)
+            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+    public static final EntityType<FactCoreEntity> FACT_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, FactCoreEntity::new)
+            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+    public static final EntityType<AdventureCoreEntity> ADVENTURE_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, AdventureCoreEntity::new)
+            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "portal_placeholder"), PORTAL_PLACEHOLDER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "experimental_portal"), EXPERIMENTAL_PORTAL);
@@ -105,6 +116,11 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "intelligence_core"), CAKE_CORE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "curiosity_core"), CURIOSITY_CORE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "morality_core"), MORALITY_CORE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "space_core"), SPACE_CORE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "adventure_core"), ADVENTURE_CORE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "fact_core"), FACT_CORE);
+
+
         FabricDefaultAttributeRegistry.register(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(RADIO, RadioEntity.createMobAttributes());
@@ -123,6 +139,10 @@ public class PortalCubedEntities {
         FabricDefaultAttributeRegistry.register(CAKE_CORE, HoopyEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(CURIOSITY_CORE, HoopyEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(MORALITY_CORE, HoopyEntity.createMobAttributes());
+
+        FabricDefaultAttributeRegistry.register(SPACE_CORE, HoopyEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(ADVENTURE_CORE, HoopyEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(FACT_CORE, HoopyEntity.createMobAttributes());
     }
 
 

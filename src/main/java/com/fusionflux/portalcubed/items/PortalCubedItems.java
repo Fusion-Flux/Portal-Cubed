@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.checkerframework.checker.units.qual.A;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 public class PortalCubedItems {
@@ -42,6 +43,10 @@ public class PortalCubedItems {
     public static final SpawnEggItem CAKECORE = new SpawnEggItem(PortalCubedEntities.CAKE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem CURIOSITYCORE = new SpawnEggItem(PortalCubedEntities.CURIOSITY_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
 
+    public static final SpawnEggItem SPACE_CORE = new SpawnEggItem(PortalCubedEntities.SPACE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem FACT_CORE = new SpawnEggItem(PortalCubedEntities.FACT_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+    public static final SpawnEggItem ADVENTURE_CORE = new SpawnEggItem(PortalCubedEntities.ADVENTURE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+
 
     public static void registerItems() {
         if (PortalCubedConfig.enableLongFallBoots)
@@ -70,6 +75,10 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "intelligence_core"), CAKECORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "curiosity_core"), CURIOSITYCORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "morality_core"), MORALITYCORE);
+
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "space_core"), SPACE_CORE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "fact_core"), FACT_CORE);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "adventure_core"), ADVENTURE_CORE);
 
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "paint_gun"), PAINT_GUN);
     }
