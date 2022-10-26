@@ -111,5 +111,21 @@
 		"sounds": [
 			"portalcubed:cakemix"
 		]
+	},
+	"space_core": {
+		"sounds": [
+			"portalcubed:space_core"
+		]
+	},
+
+	"adventure_core": {
+		"sounds": [
+			"portalcubed:adventure_core"
+		]
+	},
+	"fact_core": {
+		"sounds": [
+			"portalcubed:fact_core"
+		]
 	}
 }

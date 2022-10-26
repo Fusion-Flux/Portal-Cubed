@@ -53,8 +53,8 @@ public class SpaceCoreEntity extends CorePhysicsEntity  {
             }
 
             if (t == 0) {
-                world.playSoundFromEntity(null,this, PortalCubedSounds.ANGER_CORE_EVENT,this.getSoundCategory(),1f,1f);
-                t = 401;
+                world.playSoundFromEntity(null,this, PortalCubedSounds.SPACE_CORE_EVENT,this.getSoundCategory(),1f,1f);
+                t = 2765;
             }
             t--;
         }
