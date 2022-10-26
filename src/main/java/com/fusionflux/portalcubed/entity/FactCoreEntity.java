@@ -48,8 +48,8 @@ public class FactCoreEntity extends CorePhysicsEntity  {
     public void tick() {
         if (!this.world.isClient) {
             if (t == 0) {
-                world.playSoundFromEntity(null,this, PortalCubedSounds.ANGER_CORE_EVENT,this.getSoundCategory(),1f,1f);
-                t = 401;
+                world.playSoundFromEntity(null,this, PortalCubedSounds.FACT_CORE_EVENT,this.getSoundCategory(),1f,1f);
+                t = 5500;
             }
             t--;
         }

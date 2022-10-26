@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FloorButtonBlock extends BlockWithEntity {
     public static final BooleanProperty ENABLE;
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 15.0D, 16.0D, 15.0D);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
     protected static final VoxelShape SHAPEUP = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 18.0D, 15.0D);
 
