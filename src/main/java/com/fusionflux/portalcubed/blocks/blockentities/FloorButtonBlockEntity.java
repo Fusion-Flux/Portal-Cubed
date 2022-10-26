@@ -2,9 +2,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import com.fusionflux.portalcubed.entity.CompanionCubeEntity;
-import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
-import com.fusionflux.portalcubed.entity.StorageCubeEntity;
+import com.fusionflux.portalcubed.entity.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -50,7 +48,7 @@ public class FloorButtonBlockEntity extends BlockEntity {
 
             boolean isPowered = false;
             for (LivingEntity living : entities) {
-                if(living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof CompanionCubeEntity) {
+                if(living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof CompanionCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity || living instanceof RedirectionCubeEntity) {
                         isPowered = true;
                     if(state.getBlock().equals(PortalCubedBlocks.FLOOR_BUTTON)) {
                         if (living instanceof StorageCubeEntity cube) {
