@@ -113,12 +113,12 @@ public class PortalCubedBlocks {
     public static final DirectionalBlock OLD_AP_BLUE_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final DirectionalBlock OLD_AP_BLUE_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
-    public static final Block _1x1_SINGLE_CROSSBAR = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
-    public static final Block _1x1_DOUBLE_CROSSBAR = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
-    public static final DirectionalBlock _2X2_DOUBLE_CROSSBAR_TOP_LEFT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
-    public static final DirectionalBlock _2X2_DOUBLE_CROSSBAR_BOTTOM_LEFT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
-    public static final DirectionalBlock _2X2_DOUBLE_CROSSBAR_TOP_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
-    public static final DirectionalBlock _2X2_DOUBLE_CROSSBAR_BOTTOM_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
+    public static final OldApBlock _1x1_SINGLE_CROSSBAR = new OldApBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
+    public static final OldApBlock _1x1_DOUBLE_CROSSBAR = new OldApBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
+    public static final OldApDirectionalBlock _2X2_DOUBLE_CROSSBAR_TOP_LEFT = new OldApDirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
+    public static final OldApDirectionalBlock _2X2_DOUBLE_CROSSBAR_BOTTOM_LEFT = new OldApDirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
+    public static final OldApDirectionalBlock _2X2_DOUBLE_CROSSBAR_TOP_RIGHT = new OldApDirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
+    public static final OldApDirectionalBlock _2X2_DOUBLE_CROSSBAR_BOTTOM_RIGHT = new OldApDirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque());
 
     public static final Block PORTAL_1_SMOOTH_GRAY_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final Block PORTAL_1_SMOOTH_GRAY_HALF_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
