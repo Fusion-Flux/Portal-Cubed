@@ -1,17 +1,21 @@
+
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "#S#",
-    "S#S",
-    "#S#"
+    "###",
+    "#i#",
+    "###"
   ],
   "key": {
     "#": {
       "item": "minecraft:scaffolding"
     },
-    "S": {
-      "tag": "portalcubed:stones"
+    "i": {
+      "item": "minecraft:iron_ingot"
     }
   },
-  "result": {"item": "portalcubed:1x1_double_crossbar"}
+  "result": {
+    "item": "portalcubed:1x1_double_crossbar",
+    "count": 16
+  }
 }

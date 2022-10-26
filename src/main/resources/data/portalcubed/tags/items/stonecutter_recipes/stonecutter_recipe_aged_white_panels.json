@@ -8,13 +8,6 @@
     "portalcubed:aged_white_2x2_panel_bottom_left",
     "portalcubed:aged_white_2x2_panel_bottom_right",
     "portalcubed:aged_white_2x2_panel_top_left",
-    "portalcubed:aged_white_2x2_panel_top_right",
-
-    "portalcubed:1x1_single_crossbar",
-    "portalcubed:1x1_double_crossbar",
-    "portalcubed:2x2_double_crossbar_top_left",
-    "portalcubed:2x2_double_crossbar_top_right",
-    "portalcubed:2x2_double_crossbar_bottom_left",
-    "portalcubed:2x2_double_crossbar_bottom_right"
+    "portalcubed:aged_white_2x2_panel_top_right"
   ]
 }

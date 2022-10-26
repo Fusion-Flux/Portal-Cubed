@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "portalcubed:plantcraft"
+    },
+    {
+      "item": "portalcubed:white_2x1_panel_top"
+    }
+  ],
+  "result": {"item": "portalcubed:aged_white_2x1_panel_top"}
+}

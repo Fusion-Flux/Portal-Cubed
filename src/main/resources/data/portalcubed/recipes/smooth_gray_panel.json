@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#G",
+    "G#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:blackstone"
+    },
+    "G": {
+      "item": "minecraft:deepslate"
+    }
+  },
+  "result": {"item": "portalcubed:smooth_gray_panel",
+    "count": 4}
+}
