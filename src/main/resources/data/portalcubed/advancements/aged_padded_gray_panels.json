@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+
+      "portalcubed:aged_padded_gray_2x2_panel_bottom_left_crafting",
+      "portalcubed:aged_padded_gray_2x2_panel_bottom_right_crafting",
+      "portalcubed:aged_padded_gray_2x2_panel_top_left_crafting",
+      "portalcubed:aged_padded_gray_2x2_panel_top_right_crafting",
+      "portalcubed:aged_padded_gray_2x1_panel_top_crafting",
+      "portalcubed:aged_padded_gray_2x1_panel_bottom_crafting",
+      "portalcubed:aged_padded_gray_half_panel_crafting",
+      "portalcubed:aged_padded_gray_2x2_panel_bottom_left_crafting_from_plants",
+      "portalcubed:aged_padded_gray_2x2_panel_bottom_right_crafting_from_plants",
+      "portalcubed:aged_padded_gray_2x2_panel_top_left_crafting_from_plants",
+      "portalcubed:aged_padded_gray_2x2_panel_top_right_crafting_from_plants",
+      "portalcubed:aged_padded_gray_2x1_panel_top_crafting_from_plants",
+      "portalcubed:aged_padded_gray_2x1_panel_bottom_crafting_from_plants",
+      "portalcubed:aged_padded_gray_panel_crafting_from_plants",
+      "portalcubed:aged_padded_gray_half_panel_crafting_from_plants"
+
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+"portalcubed:padded_gray_panel"
+]
+          }
+        ]
+      }
+    }
+  }
+}

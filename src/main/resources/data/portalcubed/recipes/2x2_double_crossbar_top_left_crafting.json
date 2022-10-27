@@ -1,8 +1,8 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        " X",
-        "XX"
+        "XX",
+        "X "
     ],
     "key": {
         "X": {
@@ -10,7 +10,7 @@
         }
     },
     "result": {
-        "item": "portalcubed:2x2_double_crossbar_bottom_right",
+        "item": "portalcubed:2x2_double_crossbar_top_left",
         "count": 3
     }
 }

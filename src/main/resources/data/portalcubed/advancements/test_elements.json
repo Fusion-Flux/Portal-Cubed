@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+
+      "portalcubed:dual_excursion_funnel_crafting",
+      "portalcubed:dual_excursion_funnel_crafting_alternate",
+      "portalcubed:dual_excursion_funnel_from_normal",
+      "portalcubed:dual_excursion_funnel_from_reverse",
+      "portalcubed:reversed_excursion_funnel_crafting",
+      "portalcubed:laser_emitter_crafting",
+      "portalcubed:laser_catcher_crafting",
+      "portalcubed:laser_relay_crafting",
+      "portalcubed:light_bridge_emitter_crafting",
+      "portalcubed:floor_button_crafting",
+      "portalcubed:old_aperture_floor_button_crafting",
+      "portalcubed:pedestal_button_crafting",
+      "portalcubed:old_aperture_pedestal_button_crafting",
+      "portalcubed:portal_1_door_crafting",
+      "portalcubed:portal_2_door_crafting",
+      "portalcubed:old_aperture_door_crafting"
+
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+"minecraft:end_rod",
+"portalcubed:smooth_gray_panel",
+"portalcubed:padded_gray_panel",
+"portalcubed:portal_1_smooth_gray_panel"
+
+]
+          }
+        ]
+      }
+    }
+  }
+}
