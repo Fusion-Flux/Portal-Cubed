@@ -1,0 +1,30 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+
+      "portalcubed:portal_gun_crafting",
+      "portalcubed:portal_gun_casing_crafting",
+      "portalcubed:portal_gun_frame_crafting",
+      "portalcubed:mini_blackhole",
+      "portalcubed:long_fall_boots_crafting"
+
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+"minecraft:iron_ingot",
+"minecraft:obsidian"
+
+]
+          }
+        ]
+      }
+    }
+  }
+}
