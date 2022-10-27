@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "X ",
+        "XX"
+    ],
+    "key": {
+        "X": {
+            "item": "portalcubed:1x1_double_crossbar"
+        }
+    },
+    "result": {
+        "item": "portalcubed:2x2_double_crossbar_bottom_left",
+        "count": 3
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YX",
+        "XY"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:copper_ingot"
+        },
+        "Y": {
+            "item": "minecraft:deepslate"
+        }
+    },
+    "result": {
+        "item": "portalcubed:portal_1_smooth_gray_panel",
+        "count": 16
+    }
+}

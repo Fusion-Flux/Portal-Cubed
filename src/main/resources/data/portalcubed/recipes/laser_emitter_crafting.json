@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XXX",
+        "YZA",
+        "XXX"
+    ],
+    "key": {
+        "X": {
+            "tag": "portalcubed:portal_2_clean_gray_panels"
+        },
+        "Y": {
+            "item": "minecraft:redstone"
+        },
+        "Z": {
+            "item": "minecraft:end_rod"
+        },
+        "A": {
+            "item": "minecraft:red_stained_glass"
+        }
+    },
+    "result": {
+        "item": "portalcubed:laser_emitter",
+        "count": 1
+    }
+}

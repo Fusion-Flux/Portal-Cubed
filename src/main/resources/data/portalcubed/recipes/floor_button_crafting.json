@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XYX",
+        "ZAZ",
+        "ZBZ"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:iron_nugget"
+        },
+        "Y": {
+            "tag": "minecraft:wooden_pressure_plates"
+        },
+        "Z": {
+            "tag": "portalcubed:portal_2_clean_gray_panels"
+        },
+        "A": {
+            "item": "minecraft:redstone_lamp"
+        },
+        "B": {
+            "item": "minecraft:redstone"
+        }
+    },
+    "result": {
+        "item": "portalcubed:floor_button",
+        "count": 1
+    }
+}

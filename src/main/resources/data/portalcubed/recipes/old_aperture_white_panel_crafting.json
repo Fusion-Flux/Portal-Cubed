@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YX",
+        "XY"
+    ],
+    "key": {
+        "X": {
+            "tag": "minecraft:logs"
+        },
+        "Y": {
+            "item": "minecraft:white_dye"
+        }
+    },
+    "result": {
+        "item": "portalcubed:old_ap_white_panel",
+        "count": 16
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " Y ",
+        "ZZZ",
+        "ZBZ"
+    ],
+    "key": {
+        "Y": {
+            "tag": "minecraft:wooden_pressure_plates"
+        },
+        "Z": {
+            "tag": "portalcubed:portal_2_aged_gray_panels"
+        },
+        "B": {
+            "item": "minecraft:redstone"
+        }
+    },
+    "result": {
+        "item": "portalcubed:old_ap_floor_button",
+        "count": 1
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XX",
+        "XX"
+    ],
+    "key": {
+        "X": {
+            "item": "portalcubed:old_ap_white_panel"
+        }
+    },
+    "result": {
+        "item": "portalcubed:old_ap_white_checkered_panel",
+        "count": 4
+    }
+}

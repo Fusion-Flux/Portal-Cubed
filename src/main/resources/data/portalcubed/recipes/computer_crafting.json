@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XYX",
+        "XXX"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:iron_nugget"
+        },
+        "Y": {
+            "item": "minecraft:orange_dye"
+        }
+    },
+    "result": {
+        "item": "portalcubed:computer",
+        "count": 4
+    }
+}
