@@ -28,22 +28,22 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         matrices.push();
         matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getYaw()));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(entity.getPitch()));
-        //matrices.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(entity.getRoll()));
+        matrices.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(entity.getRoll()));
 
 
-        //int color = entity.getColor() * -1;
-        //if (color == -16383998) {
-        //    color = 1908001;
-        //}
-        //if (color == 16383998) {
-        //    color = -1908001;
-        //}
-//System//.out.println(color);
-        //int r = (color & 0xFF0000) >> 16;
-        //int g = (color & 0xFF00) >> 8;
-        //int b = color & 0xFF;
+        int color = entity.getColor() * -1;
+        if (color == -16383998) {
+            color = 1908001;
+        }
+        if (color == 16383998) {
+            color = -1908001;
+        }
+//System.out.println(color);
+        int r = (color & 0xFF0000) >> 16;
+        int g = (color & 0xFF00) >> 8;
+        int b = color & 0xFF;
 
-        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1F);
+        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
         matrices.pop();
     }
 

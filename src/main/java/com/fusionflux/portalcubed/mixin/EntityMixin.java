@@ -8,10 +8,8 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.accessor.CustomCollisionView;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
-import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.google.common.collect.Lists;
 import net.minecraft.block.BlockState;
@@ -20,8 +18,6 @@ import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -42,7 +38,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, EntityPortalsAccess {
@@ -268,6 +263,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
         VoxelShape ommitedDirections = VoxelShapes.empty();
         for (ExperimentalPortal portal : list) {
+
             //if (portal.calculateIntersectionBox() != nullBox && portal.getIntersectionBoundingBox().intersects(this.getBoundingBox())){
                 if (portal.calculateCuttoutBox() != nullBox) {
                     if (portal.getActive())
@@ -484,7 +480,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                         double velocity = 0;
                                         double fall = ((EntityAttachments) this).getMaxFallHeight();
                                         fall = fall - portal.getPos().y;
-                                        if (fall < 5) {
+                                        if (fall < 0) {
                                             velocity = entityVelocity.y;
                                         } else {
                                             if(((Entity)(Object)this) instanceof LivingEntity living) {
@@ -643,25 +639,17 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
     }
 
-    @Inject(method = "remove", at = @At("HEAD"))
-    public void remove(CallbackInfo ci) {
-        if (!world.isClient) {
-            for (ExperimentalPortal checkedportal : portalList) {
-                if (checkedportal != null) {
-                    if (!checkedportal.getOutline().equals("null")) {
-                        PortalPlaceholderEntity portalOutline;
-                        portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(checkedportal.getOutline()));
-                        assert portalOutline != null;
-                        if (portalOutline != null) {
-                            portalOutline.kill();
-                        }
-                    }
-                    world.playSound(null, checkedportal.getPos().getX(), checkedportal.getPos().getY(), checkedportal.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
-                    checkedportal.kill();
-                }
-            }
-        }
-    }
+    //@Inject(method = "remove", at = @At("HEAD"))
+    //public void remove(CallbackInfo ci) {
+    //    if (!world.isClient) {
+    //        for (ExperimentalPortal checkedportal : portalList) {
+    //            if (checkedportal != null) {
+    //                world.playSound(null, checkedportal.getPos().getX(), checkedportal.getPos().getY(), checkedportal.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
+    //                checkedportal.kill();
+    //            }
+    //        }
+    //    }
+    //}
 
 
     @Override

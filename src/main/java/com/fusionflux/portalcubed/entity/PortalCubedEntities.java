@@ -11,9 +11,6 @@ import net.minecraft.util.registry.Registry;
 import org.checkerframework.checker.units.qual.A;
 
 public class PortalCubedEntities {
-    public static final EntityType<PortalPlaceholderEntity> PORTAL_PLACEHOLDER = FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, PortalPlaceholderEntity::new)
-            .dimensions(EntityDimensions.changing(0F, 0F))
-            .build();
 
     public static final EntityType<ExperimentalPortal> EXPERIMENTAL_PORTAL = FabricEntityTypeBuilder.create(SpawnGroup.MISC, ExperimentalPortal::new)
             .dimensions(EntityDimensions.changing(1F, 1F))
@@ -96,7 +93,6 @@ public class PortalCubedEntities {
             .build();
 
     public static void registerEntities() {
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "portal_placeholder"), PORTAL_PLACEHOLDER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "experimental_portal"), EXPERIMENTAL_PORTAL);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "storage_cube"), STORAGE_CUBE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "companion_cube"), COMPANION_CUBE);

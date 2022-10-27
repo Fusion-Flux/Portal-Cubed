@@ -4,7 +4,6 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -127,19 +126,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                 portalholder = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Portal"));
                 if (portalholder != null) {
                     portalholder.kill();
-                }
-            }
-            PortalPlaceholderEntity portalOutline;
-            if (portalsTag.contains(("Left") + "Background")) {
-                portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Left") + "Background"));
-                if (portalOutline != null) {
-                    portalOutline.kill();
-                }
-            }
-            if (portalsTag.contains(("Right") + "Background")) {
-                portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Background"));
-                if (portalOutline != null) {
-                    portalOutline.kill();
                 }
             }
         }
