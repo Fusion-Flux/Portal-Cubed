@@ -13,12 +13,12 @@
       "portalcubed:laser_relay_crafting",
       "portalcubed:light_bridge_emitter_crafting",
       "portalcubed:floor_button_crafting",
-      "portalcubed:old_ap_floor_button_crafting",
+      "portalcubed:old_aperture_floor_button_crafting",
       "portalcubed:pedestal_button_crafting",
-      "portalcubed:old_ap_pedestal_button_crafting",
+      "portalcubed:old_aperture_pedestal_button_crafting",
       "portalcubed:portal_1_door_crafting",
       "portalcubed:portal_2_door_crafting",
-      "portalcubed:old_ap_door_crafting"
+      "portalcubed:old_aperture_door_crafting"
 
     ]
   },
