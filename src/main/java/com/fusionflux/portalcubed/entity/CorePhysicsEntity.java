@@ -8,6 +8,7 @@ import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -18,10 +19,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -195,6 +202,15 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
+                    //HitResult hitResult = customRaycast(player,3, 0.0F, false);
+                    //if (hitResult.getType() == HitResult.Type.BLOCK) {
+                    //    Vec3d resultPos = player.getEyePos().subtract(hitResult.getPos());
+                    //    d = Math.sqrt((resultPos.x * resultPos.x) +(resultPos.y * resultPos.y) +(resultPos.z * resultPos.z));
+                    //    d -= this.getWidth();
+                    //}
+                    //if(d>2){
+                    //    d=2;
+                    //}
                     canUsePortals = false;
                     Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(),player.getYaw());
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
@@ -232,6 +248,15 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
+                   // HitResult hitResult = customRaycast(player,3, 0.0F, false);
+                   // if (hitResult.getType() == HitResult.Type.BLOCK) {
+                   //     Vec3d resultPos = player.getEyePos().subtract(hitResult.getPos());
+                   //     d = Math.sqrt((resultPos.x * resultPos.x) +(resultPos.y * resultPos.y) +(resultPos.z * resultPos.z));
+                   //     d -= this.getWidth();
+                   // }
+                   // if(d>2){
+                   //     d=2;
+                   // }
                     Vec3d vec3d2 = player.getRotationVec(1.0F);
                     if(player.getHorizontalFacing().equals(Direction.SOUTH)){
                         rotation_yaw=0;
@@ -306,5 +331,20 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         super.onDeath(source);
     }
 
+    public HitResult customRaycast(Entity user, double maxDistance, float tickDelta, boolean includeFluids) {
+        Vec3d vec3d = user.getCameraPosVec(tickDelta);
+        Vec3d vec3d2 = user.getRotationVec(tickDelta);
+        Vec3d vec3d3 = vec3d.add(vec3d2.x * maxDistance, vec3d2.y * maxDistance, vec3d2.z * maxDistance);
+        return user.world
+                .raycast(
+                        new RaycastContext(
+                                vec3d,
+                                vec3d3,
+                                RaycastContext.ShapeType.COLLIDER,
+                                includeFluids ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE,
+                                user
+                        )
+                );
+    }
 
 }
