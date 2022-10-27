@@ -3,13 +3,13 @@
   "rewards": {
     "recipes": [
 
-      "portalcubed:old_ap_blue_2x2_panel_bottom_left_crafting",
-      "portalcubed:old_ap_blue_2x2_panel_bottom_right_crafting",
-      "portalcubed:old_ap_blue_2x2_panel_top_left_crafting",
-      "portalcubed:old_ap_blue_2x2_panel_top_right_crafting",
-      "portalcubed:old_ap_blue_2x1_panel_top_crafting",
-      "portalcubed:old_ap_blue_2x1_panel_bottom_crafting",
-      "portalcubed:old_ap_blue_panel_crafting"
+      "portalcubed:old_aperture_blue_2x2_panel_bottom_left_crafting",
+      "portalcubed:old_aperture_blue_2x2_panel_bottom_right_crafting",
+      "portalcubed:old_aperture_blue_2x2_panel_top_left_crafting",
+      "portalcubed:old_aperture_blue_2x2_panel_top_right_crafting",
+      "portalcubed:old_aperture_blue_2x1_panel_top_crafting",
+      "portalcubed:old_aperture_blue_2x1_panel_bottom_crafting",
+      "portalcubed:old_aperture_blue_panel_crafting"
 
     ]
   },
