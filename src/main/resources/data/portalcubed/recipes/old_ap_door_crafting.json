@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XX",
+        "XY",
+        "XZ"
+    ],
+    "key": {
+        "X": {
+            "tag": "minecraft:logs"
+        },
+        "Y": {
+            "item": "minecraft:lime_dye"
+        },
+        "Z": {
+            "item": "minecraft:iron_nugget"
+        }
+    },
+    "result": {
+        "item": "portalcubed:old_ap_door",
+        "count": 4
+    }
+}

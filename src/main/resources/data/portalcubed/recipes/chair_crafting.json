@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "  Y",
+        "XYX",
+        "X X"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:iron_nugget"
+        },
+        "Y": {
+            "tag": "minecraft:wool"
+        }
+    },
+    "result": {
+        "item": "portalcubed:chair",
+        "count": 4
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "X X",
+        "X X",
+        "XXX"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:dried_kelp"
+        }
+    },
+    "result": {
+        "item": "portalcubed:jug",
+        "count": 4
+    }
+}

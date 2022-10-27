@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "portalcubed:excursion_funnel_emitter"
+        },
+        {
+            "item": "minecraft:orange_dye"
+        }
+    ],
+    "result": {
+        "item": "portalcubed:duel_excursion_funnel_emitter",
+        "count": 1
+    }
+}

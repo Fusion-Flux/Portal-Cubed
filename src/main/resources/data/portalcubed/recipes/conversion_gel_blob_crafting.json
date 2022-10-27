@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "portalcubed:base_gel"
+        },
+        {
+            "item": "minecraft:white_dye"
+        },
+        {
+            "item": "minecraft:end_stone"
+        }
+    ],
+    "result": {
+        "item": "portalcubed:adhesion_gel",
+        "count": 2
+    }
+}

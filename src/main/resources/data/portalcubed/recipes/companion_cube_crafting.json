@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "ZYZ",
+        "YXY",
+        "ZYZ"
+    ],
+    "key": {
+        "Z": {
+            "item": "minecraft:iron_nugget"
+        },
+        "X": {
+            "item": "minecraft:redstone_lamp"
+        },
+        "Y": {
+            "item": "minecraft:pink_dye"
+        }
+    },
+    "result": {
+        "item": "portalcubed:companion_cube",
+        "count": 1
+    }
+}

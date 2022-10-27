@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "Y",
+        "X",
+        "X"
+    ],
+    "key": {
+        "X": {
+            "tag": "minecraft:logs"
+        },
+        "Y": {
+            "tag": "minecraft:wooden_buttons"
+        }
+    },
+    "result": {
+        "item": "portalcubed:old_ap_pedestal_button",
+        "count": 1
+    }
+}
