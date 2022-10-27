@@ -61,6 +61,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Unique
     private double maxFallHeight = -99999999;
 
+    private Direction prevGravDirec = GravityChangerAPI.getGravityDirection(((Entity)(Object)this));
+
     @Unique
     private Vec3d lastVel = Vec3d.ZERO;
 
@@ -597,6 +599,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         //if((Object)this instanceof PlayerEntity){
             rotatedPos = RotationUtil.vecWorldToPlayer(this.pos, GravityChangerAPI.getGravityDirection((Entity)(Object)this));
         //}
+        if(prevGravDirec != GravityChangerAPI.getGravityDirection(((Entity)(Object)this))){
+            this.maxFallHeight = rotatedPos.y;
+        }
+
         if(!this.isOnGround()) {
             if (rotatedPos.y > this.maxFallHeight) {
                 this.maxFallHeight = rotatedPos.y;
@@ -613,7 +619,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             this.setBounced(false);
         }
 
-
+        prevGravDirec = GravityChangerAPI.getGravityDirection(((Entity)(Object)this));
     }
     @Inject(method = "pushAwayFrom", at = @At("HEAD") , cancellable = true)
     public void pushAwayFrom(Entity entity, CallbackInfo ci) {
