@@ -1,15 +1,16 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "ingredients": [
-        {
-            "item": "portalcubed:white_2x1_panel_bottom"
-        },
-        {
-            "tag": "portalcubed:plantcraft"
-        }
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "X X",
+        "XXX"
     ],
+    "key": {
+        "X": {
+            "item": "portalcubed:aged_white_panel"
+        }
+    },
     "result": {
         "item": "portalcubed:aged_white_2x1_panel_bottom",
-        "count": 1
+        "count": 5
     }
 }
