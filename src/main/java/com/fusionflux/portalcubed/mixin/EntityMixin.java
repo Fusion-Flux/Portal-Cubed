@@ -216,24 +216,19 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         Vec3d entityVelocity = this.getVelocity();
 
-        Box portalCheckBox = getBoundingBox();
+        Box funnelCheckBox = getBoundingBox();
         boolean canTeleport = false;
         if (thisentity instanceof PlayerEntity && !this.world.isClient) {
-            portalCheckBox = portalCheckBox.expand(10);
+            funnelCheckBox = funnelCheckBox.expand(10);
         } else {
-            portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0,.08,0));
-            canTeleport = !shouldTeleportClient;
+            funnelCheckBox = funnelCheckBox.stretch(entityVelocity.add(0,.08,0).multiply(10));
         }
-        List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
-        VoxelShape ommitedDirections = VoxelShapes.empty();
-        for (ExperimentalPortal portal : list) {
-            //if (portal.calculateIntersectionBox() != nullBox && portal.getIntersectionBoundingBox().intersects(this.getBoundingBox())){
-                if (portal.calculateCuttoutBox() != nullBox) {
-                    if (portal.getActive())
-                        ommitedDirections = VoxelShapes.union(ommitedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
-                }
 
-                double portalOffsetX = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).x;
+        List<ExperimentalPortal> funnelList = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, funnelCheckBox);
+        //VoxelShape ommitedDirections = VoxelShapes.empty();
+        for (ExperimentalPortal portal : funnelList) {
+
+            double portalOffsetX = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).x;
             double portalOffsetY = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).y;
             double portalOffsetZ = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).z;
 
@@ -249,17 +244,37 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
             Vec3d gotVelocity = this.getVelocity();
 
-                if(portal.getFacingDirection().getOffsetX() == 0){
-                    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d((-(portalOffsetX / Math.abs(portalOffsetX)) * .1)* getVelocity().getY(), 0, 0), GravityChangerAPI.getGravityDirection((thisentity))));
-                }
-            if(portal.getFacingDirection().getOffsetY() == 0){
-                gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(portalOffsetY / Math.abs(portalOffsetY)) * .1)* getVelocity().getY(), 0), GravityChangerAPI.getGravityDirection(thisentity)));
+            if(portal.getFacingDirection().getOffsetX() == 0){
+                gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d((-(portalOffsetX / Math.abs(portalOffsetX)) * .1)* .1, 0, 0), GravityChangerAPI.getGravityDirection((thisentity))));
             }
+            //if(portal.getFacingDirection().getOffsetY() == 0 && portal.getFacingDirection() != Direction.DOWN && portal.getFacingDirection() != Direction.UP){
+            //    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(portalOffsetY / Math.abs(portalOffsetY)) * .1)* .1, 0), GravityChangerAPI.getGravityDirection(thisentity)));
+            //}
             if(portal.getFacingDirection().getOffsetZ() == 0){
-                gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(portalOffsetZ / Math.abs(portalOffsetZ)) * .1)*getVelocity().getY()), GravityChangerAPI.getGravityDirection( thisentity)));
+                gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(portalOffsetZ / Math.abs(portalOffsetZ)) * .1)*.1), GravityChangerAPI.getGravityDirection( thisentity)));
             }
             if(!gotVelocity.equals(Vec3d.ZERO))
                 thisentity.setVelocity(gotVelocity);
+        }
+
+        Box portalCheckBox = getBoundingBox();
+       // boolean canTeleport = false;
+        if (thisentity instanceof PlayerEntity && !this.world.isClient) {
+            portalCheckBox = portalCheckBox.expand(10);
+        } else {
+            portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0,.08,0));
+            canTeleport = !shouldTeleportClient;
+        }
+        List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+        VoxelShape ommitedDirections = VoxelShapes.empty();
+        for (ExperimentalPortal portal : list) {
+            //if (portal.calculateIntersectionBox() != nullBox && portal.getIntersectionBoundingBox().intersects(this.getBoundingBox())){
+                if (portal.calculateCuttoutBox() != nullBox) {
+                    if (portal.getActive())
+                        ommitedDirections = VoxelShapes.union(ommitedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
+                }
+
+
 
             if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive()) {
                 Direction portalFacing = portal.getFacingDirection();
