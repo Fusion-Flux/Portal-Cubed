@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XX",
+        "XX"
+    ],
+    "key": {
+        "X": {
+            "item": "portalcubed:portal_1_smooth_gray_panel"
+        }
+    },
+    "result": {
+        "item": "portalcubed:portal_1_smooth_gray_half_panel",
+        "count": 4
+    }
+}

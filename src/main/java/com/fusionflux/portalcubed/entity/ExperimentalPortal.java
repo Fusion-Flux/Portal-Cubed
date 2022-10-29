@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.IPHelperDuplicate;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,6 +42,8 @@ public class ExperimentalPortal extends Entity {
     public static final TrackedData<String> STOREDSTRING = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
     public static final TrackedData<Boolean> ISACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final TrackedData<String> STOREDOUTLINE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
+    public static final TrackedData<Float> ROLL = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.FLOAT);
+    public static final TrackedData<Integer> COLOR = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.INTEGER);
 
 
     public Vec3d getNormal() {
@@ -55,15 +58,44 @@ public class ExperimentalPortal extends Entity {
         super(entityType, world);
     }
 
-
     @Override
-    protected void writeCustomDataToNbt(NbtCompound compoundTag) {
+    protected void initDataTracker() {
+        this.getDataTracker().startTracking(STOREDSTRING, "null");
+        this.getDataTracker().startTracking(STOREDOUTLINE, "null");
+        this.getDataTracker().startTracking(ISACTIVE, false);
+        this.getDataTracker().startTracking(ROLL, 0f);
+        this.getDataTracker().startTracking(COLOR, 0);
     }
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound compoundTag) {
+        this.setColor(compoundTag.getInt("color"));
+        this.setRoll(compoundTag.getFloat("roll"));
     }
 
+    @Override
+    protected void writeCustomDataToNbt(NbtCompound compoundTag) {
+        compoundTag.putFloat("color", this.getColor());
+        compoundTag.putFloat("roll", this.getRoll());
+    }
+
+    public Float getRoll() {
+        return getDataTracker().get(ROLL);
+    }
+
+    public void setRoll(Float roll) {
+        this.getDataTracker().set(ROLL, roll);
+    }
+
+
+    public Integer getColor() {
+        return getDataTracker().get(COLOR);
+    }
+
+    public void setColor(Integer color) {
+        this.getDataTracker().set(COLOR, color);
+
+    }
 
     @Override
     public Packet<?> createSpawnPacket() {
@@ -86,12 +118,6 @@ public class ExperimentalPortal extends Entity {
 return true;
     }
 
-    @Override
-    protected void initDataTracker() {
-        this.getDataTracker().startTracking(STOREDSTRING, "null");
-        this.getDataTracker().startTracking(STOREDOUTLINE, "null");
-        this.getDataTracker().startTracking(ISACTIVE, false);
-    }
 
     public String getString() {
         return getDataTracker().get(STOREDSTRING);
@@ -127,14 +153,6 @@ return true;
 
     @Override
     public void kill() {
-        PortalPlaceholderEntity portalOutline;
-        if(!this.getOutline().equals("null")) {
-            portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
-            assert portalOutline != null;
-            if (portalOutline != null) {
-                portalOutline.kill();
-            }
-        }
         Entity player = ((ServerWorld) world).getEntity(CalledValues.getPlayer(this));
         if(CalledValues.getPortals(player).contains(this.getUuid())) {
             CalledValues.removePortals(player, this.getUuid());
@@ -155,6 +173,13 @@ return true;
         //if(this.getIntersectionBoundingBox() == nullBox){
         //    this.calculateIntersectionBox();
         //}
+
+        if(!world.isClient){
+            Entity player = ((ServerWorld) world).getEntity(CalledValues.getPlayer(this));
+            if(player == null){
+                this.kill();
+            }
+        }
 
         if (!this.world.isClient && CalledValues.getAxisW(this) != null) {
             BlockPos topBehind = new BlockPos(
@@ -193,14 +218,6 @@ return true;
                             !topValidBlock ||
                             !bottomValidBlock)||
                     ((!this.world.getBlockState(this.getBlockPos()).isAir())&& !this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN) )|| (!this.world.getBlockState(bottom).isAir() && !this.world.getBlockState(bottom).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN))) {
-                if (!this.getOutline().equals("null")) {
-                    PortalPlaceholderEntity portalOutline;
-                    portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(UUID.fromString(this.getOutline()));
-                    assert portalOutline != null;
-                    if (portalOutline != null) {
-                        portalOutline.kill();
-                    }
-                }
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
                 if (!this.getString().equals("null")) {

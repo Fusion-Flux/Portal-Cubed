@@ -16,6 +16,7 @@ import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -26,6 +27,7 @@ import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class PortalCubed implements ModInitializer {
     public static final PortalCubedConfig CONFIG = new PortalCubedConfig();
@@ -38,7 +40,7 @@ public class PortalCubed implements ModInitializer {
 
     public static final ItemGroup PortalBlocksGroup = QuiltItemGroup.createWithIcon(
             id("portal_blocks"),
-            () -> new ItemStack(PortalCubedItems.COMPANION_CUBE));
+            () -> new ItemStack(PortalCubedItems.BLOCK_ITEM_ICON));
 
     public static Identifier id(String path) {
         return new Identifier(MODID, path);

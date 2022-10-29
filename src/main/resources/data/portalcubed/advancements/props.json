@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+
+      "portalcubed:bean_can_crafting",
+      "portalcubed:storage_cube_crafting",
+      "portalcubed:companion_cube_crafting",
+      "portalcubed:portal_1_storage_cube_crafting",
+      "portalcubed:portal_1_companion_cube_crafting",
+      "portalcubed:redirection_cube_crafting",
+      "portalcubed:old_aperture_cube_crafting",
+      "portalcubed:radio_crafting",
+      "portalcubed:mug_crafting",
+      "portalcubed:chair_crafting",
+      "portalcubed:jug_crafting",
+      "portalcubed:hoopy_crafting",
+      "portalcubed:computer_crafting"
+
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+"minecraft:iron_nugget",
+"minecraft:iron_ingot"
+
+]
+          }
+        ]
+      }
+    }
+  }
+}

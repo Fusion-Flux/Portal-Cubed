@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YXY",
+        "XXX",
+        "YXY"
+    ],
+    "key": {
+        "Y": {
+            "item": "minecraft:dried_kelp"
+        },
+        "X": {
+            "tag": "minecraft:logs"
+        }
+    },
+    "result": {
+        "item": "portalcubed:old_ap_cube",
+        "count": 1
+    }
+}

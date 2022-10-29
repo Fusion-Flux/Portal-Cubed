@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YX",
+        "XY"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:calcite"
+        },
+        "Y": {
+            "item": "minecraft:end_stone"
+        }
+    },
+    "result": {
+        "item": "portalcubed:white_panel",
+        "count": 16
+    }
+}

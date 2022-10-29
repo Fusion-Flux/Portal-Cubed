@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "X ",
+        "XX"
+    ],
+    "key": {
+        "X": {
+            "item": "portalcubed:aged_padded_gray_panel"
+        }
+    },
+    "result": {
+        "item": "portalcubed:aged_padded_gray_2x2_panel_bottom_left",
+        "count": 3
+    }
+}

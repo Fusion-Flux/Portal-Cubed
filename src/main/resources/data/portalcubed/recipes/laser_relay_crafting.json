@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " X ",
+        "XYX",
+        "ZAZ"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:iron_nugget"
+        },
+        "Y": {
+            "item": "minecraft:red_stained_glass"
+        },
+        "Z": {
+            "tag": "portalcubed:portal_2_clean_gray_panels"
+        },
+        "A": {
+            "item": "minecraft:observer"
+        }
+    },
+    "result": {
+        "item": "portalcubed:laser_relay",
+        "count": 1
+    }
+}

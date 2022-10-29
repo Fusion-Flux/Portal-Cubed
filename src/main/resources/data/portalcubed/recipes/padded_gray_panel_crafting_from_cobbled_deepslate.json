@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YX",
+        "XY"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:basalt"
+        },
+        "Y": {
+            "item": "minecraft:cobbled_deepslate"
+        }
+    },
+    "result": {
+        "item": "portalcubed:padded_gray_panel",
+        "count": 16
+    }
+}

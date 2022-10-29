@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YYY",
+        "YXY",
+        "YYY"
+    ],
+    "key": {
+        "Y": {
+            "item": "minecraft:iron_nugget"
+        },
+        "X": {
+            "item": "minecraft:pink_dye"
+        }
+    },
+    "result": {
+        "item": "portalcubed:portal_1_companion_cube",
+        "count": 1
+    }
+}

@@ -215,6 +215,8 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("white_panel"), new BlockItem(WHITE_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
             Registry.register(Registry.BLOCK, id("white_half_panel"), WHITE_HALF_PANEL);
             Registry.register(Registry.ITEM, id("white_half_panel"), new BlockItem(WHITE_HALF_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.BLOCK, id("white_checkered_panel"), WHITE_CHECKERED_PANEL);
+            Registry.register(Registry.ITEM, id("white_checkered_panel"), new BlockItem(WHITE_CHECKERED_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
             Registry.register(Registry.BLOCK, id("white_2x1_panel_bottom"), WHITE_2X1_PANEL_BOTTOM);
             Registry.register(Registry.ITEM, id("white_2x1_panel_bottom"), new BlockItem(WHITE_2X1_PANEL_BOTTOM, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
             Registry.register(Registry.BLOCK, id("white_2x1_panel_top"), WHITE_2X1_PANEL_TOP);
@@ -227,8 +229,6 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("white_2x2_panel_top_left"), new BlockItem(WHITE_2X2_PANEL_TOP_LEFT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
             Registry.register(Registry.BLOCK, id("white_2x2_panel_top_right"), WHITE_2X2_PANEL_TOP_RIGHT);
             Registry.register(Registry.ITEM, id("white_2x2_panel_top_right"), new BlockItem(WHITE_2X2_PANEL_TOP_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
-            Registry.register(Registry.BLOCK, id("white_checkered_panel"), WHITE_CHECKERED_PANEL);
-            Registry.register(Registry.ITEM, id("white_checkered_panel"), new BlockItem(WHITE_CHECKERED_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
 
             Registry.register(Registry.BLOCK, id("aged_white_panel"), AGED_WHITE_PANEL);
             Registry.register(Registry.ITEM, id("aged_white_panel"), new BlockItem(AGED_WHITE_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));

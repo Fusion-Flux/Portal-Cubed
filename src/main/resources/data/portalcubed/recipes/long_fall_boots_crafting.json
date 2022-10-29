@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "X X",
+        "XZX",
+        "Y Y"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:iron_ingot"
+        },
+        "Y": {
+            "item": "minecraft:iron_nugget"
+        },
+        "Z": {
+            "item": "minecraft:netherite_boots"
+        }
+    },
+    "result": {
+        "item": "portalcubed:long_fall_boots",
+        "count": 1
+    }
+}

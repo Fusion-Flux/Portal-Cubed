@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YXY",
+        "XXX",
+        "YXY"
+    ],
+    "key": {
+        "Y": {
+            "item": "minecraft:iron_nugget"
+        },
+        "X": {
+            "tag": "minecraft:glass"
+        }
+    },
+    "result": {
+        "item": "portalcubed:redirection_cube",
+        "count": 1
+    }
+}

@@ -6,7 +6,6 @@ import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import com.fusionflux.portalcubed.entity.PortalPlaceholderEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 
@@ -74,22 +73,22 @@ public class PortalGun extends Item implements DyeableItem {
         if (!world.isClient) {
             NbtCompound tag = stack.getOrCreateNbt();
 
-            PortalPlaceholderEntity portalOutline;
+            //PortalPlaceholderEntity portalOutline;
             ExperimentalPortal portalholder;
             NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());
 
-            boolean outlineExists = false;
-            if (portalsTag.contains((leftClick ? "Left" : "Right") + "Background")) {
-                portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Background"));
-
-                if (portalOutline == null) {
-                    portalOutline = PortalCubedEntities.PORTAL_PLACEHOLDER.create(world);
-                } else {
-                    outlineExists = true;
-                }
-            } else {
-                portalOutline = PortalCubedEntities.PORTAL_PLACEHOLDER.create(world);
-            }
+            //boolean outlineExists = false;
+            //if (portalsTag.contains((leftClick ? "Left" : "Right") + "Background")) {
+            //    portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Background"));
+//
+            //    if (portalOutline == null) {
+            //        portalOutline = PortalCubedEntities.PORTAL_PLACEHOLDER.create(world);
+            //    } else {
+            //        outlineExists = true;
+            //    }
+            //} else {
+            //    portalOutline = PortalCubedEntities.PORTAL_PLACEHOLDER.create(world);
+            //}
 
             boolean portalExists = false;
             if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
@@ -190,22 +189,30 @@ public class PortalGun extends Item implements DyeableItem {
                 }
 
 
-                Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
-                assert portalOutline != null;
-                portalOutline.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
-                portalOutline.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
-                portalOutline.setPitch(rotAngles.getRight().floatValue());
-                portalOutline.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
-                portalOutline.setColor(this.getColor(stack));
-                portalOutline.noClip = true;
-                if (!outlineExists) {
-                    world.spawnEntity(portalOutline);
-                }
+                //Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
+                //assert portalOutline != null;
+                //portalOutline.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
+                //portalOutline.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
+                //portalOutline.setPitch(rotAngles.getRight().floatValue());
+                //portalOutline.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
+                //portalOutline.setColor(this.getColor(stack));
+                //portalOutline.noClip = true;
+                //if (!outlineExists) {
+                //    world.spawnEntity(portalOutline);
+                //}
 
 
                 assert portalholder != null;
                 portalholder.setOriginPos(portalPos1);
                 CalledValues.setDestination(portalholder,portalPos1);
+
+                Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
+                //portalholder.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
+                portalholder.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
+                portalholder.setPitch(rotAngles.getRight().floatValue());
+                portalholder.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
+                portalholder.setColor(this.getColor(stack));
+
                 //portalholder.setDestination(portalPos1);
                 CalledValues.setOrientation(portalholder,Vec3d.of(right),Vec3d.of(up).multiply(-1));
                 // portalholder.setOrientationAndSize(
@@ -213,9 +220,9 @@ public class PortalGun extends Item implements DyeableItem {
                 //         Vec3d.of(up).multiply(-1)
                 // );
                 //PortalCubedComponents.PORTAL_DATA.sync(portalholder);
-                portalholder.setOutline(portalOutline.getUuidAsString());
-                portalOutline.axisH = CalledValues.getAxisH(portalholder);
-                portalOutline.axisW = CalledValues.getAxisW(portalholder);
+                //portalholder.setOutline(portalOutline.getUuidAsString());
+                //portalOutline.axisH = CalledValues.getAxisH(portalholder);
+                //portalOutline.axisW = CalledValues.getAxisW(portalholder);
 
                 if (portalExists && otherPortal == null) {
                     //PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(portalholder), portalholder);
@@ -265,8 +272,8 @@ public class PortalGun extends Item implements DyeableItem {
 
             assert portalholder != null;
             portalsTag.putUuid((leftClick ? "Left" : "Right") + "Portal", portalholder.getUuid());
-            assert portalOutline != null;
-            portalsTag.putUuid((leftClick ? "Left" : "Right") + "Background", portalOutline.getUuid());
+            //assert portalOutline != null;
+            //portalsTag.putUuid((leftClick ? "Left" : "Right") + "Background", portalOutline.getUuid());
 
             tag.put(world.getRegistryKey().toString(), portalsTag);
 

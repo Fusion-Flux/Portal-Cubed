@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "  X",
+        "XXX"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:obsidian"
+        }
+    },
+    "result": {
+        "item": "portalcubed:portal_gun_frame",
+        "count": 1
+    }
+}

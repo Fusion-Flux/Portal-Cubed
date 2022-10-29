@@ -20,6 +20,7 @@ public class PortalCubedItems {
     public static final Item PORTAL_GUN_FRAME = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
     public static final Item PORTAL_GUN_CASING = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
     public static final Item MINI_BLACKHOLE = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
+    public static final Item BLOCK_ITEM_ICON = new Item(new QuiltItemSettings().maxCount(1).fireproof());
     //public static final PaintGun PAINT_GUN = new PaintGun(new QuiltItemSettings().group(PortalCubed.Portal2Group).maxCount(1).fireproof());
     public static final SpawnEggItem STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.COMPANION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
@@ -78,6 +79,9 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "space_core"), SPACE_CORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "fact_core"), FACT_CORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "adventure_core"), ADVENTURE_CORE);
+
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "block_item_icon"), BLOCK_ITEM_ICON);
+
 
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "paint_gun"), PAINT_GUN);
     }

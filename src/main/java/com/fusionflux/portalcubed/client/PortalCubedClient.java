@@ -85,9 +85,6 @@ public class PortalCubedClient implements ClientModInitializer {
     }
 
     private void registerEntityRenderers() {
-        EntityModelLayerRegistry.registerModelLayer(PortalPlaceholderModel.MAIN_LAYER, PortalPlaceholderModel::getTexturedModelData);
-        EntityRendererRegistry.register(PortalCubedEntities.PORTAL_PLACEHOLDER, PortalPlaceholderRenderer::new);
-
         EntityModelLayerRegistry.registerModelLayer(ExperimentalPortalModel.MAIN_LAYER, ExperimentalPortalModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.EXPERIMENTAL_PORTAL, ExperimentalPortalRenderer::new);
 
