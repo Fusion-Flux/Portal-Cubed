@@ -180,6 +180,10 @@
   "text.autoconfig.portalcubed.option.enabled.enablePortal2Blocks": "Enable Portal Pannels",
   "text.autoconfig.portalcubed.option.enabled.enableHLB": "Enable Hardlight Bridges",
 
+
+  "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
+
+
   "key.portalcubed.category" : "Portal³",
   "key.portalcubed.grab" : "Grab"
 }

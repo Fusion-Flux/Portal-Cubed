@@ -6,20 +6,28 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.*;
 import com.fusionflux.portalcubed.client.render.model.entity.*;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.DyeableItem;
+import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.util.Identifier;
+
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 @Environment(EnvType.CLIENT)
 public class PortalCubedClient implements ClientModInitializer {
@@ -30,9 +38,18 @@ public class PortalCubedClient implements ClientModInitializer {
         registerBlockRenderLayers();
         PortalCubedClientPackets.registerPackets();
         GrabKeyBinding.register();
-        
+
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
+
+        final Identifier toxicGooStillSpriteId = id("block/toxic_goo_still");
+        final Identifier toxicGooFlowSpriteId = id("block/toxic_goo_flow");
+        FluidRenderHandlerRegistry.INSTANCE.register(PortalCubedFluids.TOXIC_GOO.still, PortalCubedFluids.TOXIC_GOO.flowing, new SimpleFluidRenderHandler(toxicGooStillSpriteId, toxicGooFlowSpriteId));
+
+        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) -> {
+            registry.register(toxicGooStillSpriteId);
+            registry.register(toxicGooFlowSpriteId);
+        });
     }
     
     public static void registerBlockRenderLayers() {

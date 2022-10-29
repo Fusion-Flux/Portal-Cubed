@@ -11,6 +11,7 @@ import com.fusionflux.portalcubed.config.MidnightConfig;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -89,6 +90,7 @@ public class PortalCubed implements ModInitializer {
         QuaternionHandler.QUATERNION_HANDLER.getClass();
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
         PortalCubedBlocks.registerBlocks();
+        PortalCubedFluids.registerFluids();
         PortalCubedItems.registerItems();
         PortalCubedEntities.registerEntities();
         PortalCubedServerPackets.registerPackets();

@@ -13,7 +13,9 @@
   ],
   "client": [
     "client.InGameOverlayRendererMixin",
-    "client.MinecraftClientMixin"
+    "client.MinecraftClientMixin",
+    "client.BackgroundRendererMixin",
+    "client.CameraMixin"
   ],
   "injectors": {
     "defaultRequire": 1
