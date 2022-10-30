@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.items;
 
 
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.GelFlat;
@@ -10,6 +11,9 @@ import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
@@ -35,16 +39,16 @@ public class PortalGun extends Item implements DyeableItem {
         super(settings);
     }
 
-    /*@Environment(EnvType.CLIENT)
-    public static void registerAlternateModels() {
-        FabricModelPredicateProviderRegistry.register(PortalCubedItems.PORTAL_GUN, portalcubed.id("variant"), (stack, world, livingEntity) -> {
-            if (livingEntity == null) {
-                return 0;
-            }
-            // Defaults to 0
-            return stack.getOrCreateTag().getInt("variant");
-        });
-    }*/
+  // @Environment(EnvType.CLIENT)
+  // public static void registerAlternateModels() {
+  //     FabricModelPredicateProviderRegistry.register(PortalCubedItems.PORTAL_GUN, PortalCubed.id("variant"), (stack, world, livingEntity, provider) -> {
+  //         if (livingEntity == null) {
+  //             return 0;
+  //         }
+  //         // Defaults to 0
+  //         return stack.getOrCreateNbt().getInt("variant");
+  //     });
+  // }
 
     @Override
     public int getColor(ItemStack stack) {
@@ -333,7 +337,7 @@ public class PortalGun extends Item implements DyeableItem {
      * @param upright      the upright axial vector of the portal based on placement context.
      * @param facing       the facing axial vector of the portal based on placement context.
      * @param cross        the cross product of upright x facing.
-     * @param isBackground whether or not this is positioning for a {@link PortalPlaceholderEntity}
+     * @param isBackground whether or not this is positioning for a {@link }
      * @return a vector position specifying the portal's final position in the world.
      */
     private Vec3d calcPos(BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross, boolean isBackground) {

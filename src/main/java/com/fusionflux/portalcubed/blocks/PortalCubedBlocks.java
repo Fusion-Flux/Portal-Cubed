@@ -185,7 +185,6 @@ public class PortalCubedBlocks {
     public static TagKey<Block> ALLOW_PORTAL_IN = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "allowinside"));
     public static TagKey<Block> IMMOVABLE_BLOCKS = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "immovable_blocks"));
     public static void registerBlocks() {
-        if (PortalCubedConfig.enableGels) {
 
             Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "base_gel"), BASE_GEL);
 
@@ -199,9 +198,7 @@ public class PortalCubedBlocks {
 
             Registry.register(Registry.BLOCK, id("conversion_gel"), CONVERSION_GEL);
             Registry.register(Registry.ITEM, id("conversion_gel"), new BlockItem(CONVERSION_GEL, new Item.Settings().group(PortalCubed.TestingElementsGroup).maxCount(64)));
-        }
 
-        if (PortalCubedConfig.enablePortal2Blocks) {
             Registry.register(Registry.BLOCK, id("portal_2_door"), PORTAL2DOOR);
             Registry.register(Registry.ITEM, id("portal_2_door"), new BlockItem(PORTAL2DOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
@@ -456,8 +453,6 @@ public class PortalCubedBlocks {
             //Registry.register(Registry.BLOCK, id("griltest"), GRILTEST);
             //Registry.register(Registry.ITEM, id("griltest"), new BlockItem(GRILTEST, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-
-        }
     }
 
 
