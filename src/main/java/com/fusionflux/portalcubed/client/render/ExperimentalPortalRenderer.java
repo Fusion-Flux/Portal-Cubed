@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.client.render.model.entity.ExperimentalPortalModel;
+import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
@@ -15,7 +16,8 @@ import net.minecraft.util.math.Vec3f;
 
 public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPortal> {
 
-    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_placeholder.png");
+    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_square_outline_closed.png");
+    private static final Identifier ROUND_TEXTURE  = new Identifier(PortalCubed.MODID, "textures/entity/portal_oval_outline_closed.png");
     protected final ExperimentalPortalModel model = new ExperimentalPortalModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ExperimentalPortalModel.MAIN_LAYER));
 
     public ExperimentalPortalRenderer(EntityRendererFactory.Context dispatcher) {
@@ -43,12 +45,16 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         int g = (color & 0xFF00) >> 8;
         int b = color & 0xFF;
 
-        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
         matrices.pop();
     }
 
     @Override
     public Identifier getTexture(ExperimentalPortal entity) {
-        return BASE_TEXTURE;
+        if (PortalCubedConfig.enableRoundPortals) {
+            return ROUND_TEXTURE;
+        }else{
+            return SQUARE_TEXTURE;
+        }
     }
 }

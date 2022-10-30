@@ -175,11 +175,9 @@
   "text.autoconfig.portalcubed.category.numbersblock": "Block Config",
   "text.autoconfig.portalcubed.option.numbersblock.maxBridgeLength": "Hardlight Bridge Max Length",
 
-  "text.autoconfig.portalcubed.category.enabled": "Enabled Features",
-  "text.autoconfig.portalcubed.option.enabled.enableGels": "Enable Gels",
-  "text.autoconfig.portalcubed.option.enabled.enableLongFallBoots": "Enable Long Fall Boots",
-  "text.autoconfig.portalcubed.option.enabled.enablePortal2Blocks": "Enable Portal Pannels",
-  "text.autoconfig.portalcubed.option.enabled.enableHLB": "Enable Hardlight Bridges",
+  "portalcubed.midnightconfig.title": "Portal Cubed Config",
+  "portalcubed.midnightconfig.maxBridgeLength": "Max Emitter Range",
+  "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
 
   "key.portalcubed.category" : "Portal³",
   "key.portalcubed.grab" : "Grab"

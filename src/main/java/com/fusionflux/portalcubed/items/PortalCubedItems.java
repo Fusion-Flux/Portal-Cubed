@@ -50,8 +50,7 @@ public class PortalCubedItems {
 
 
     public static void registerItems() {
-        if (PortalCubedConfig.enableLongFallBoots)
-            Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "long_fall_boots"), LONG_FALL_BOOTS);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "long_fall_boots"), LONG_FALL_BOOTS);
         // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "gel_orb"), GEL_ORB);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_gun"), PORTAL_GUN);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_gun_frame"), PORTAL_GUN_FRAME);

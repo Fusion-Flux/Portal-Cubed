@@ -162,12 +162,12 @@ return true;
 
     @Override
     public void tick() {
-        if(this.getBoundingBox() == nullBox){
+        //if(this.getBoundingBox() == nullBox){
             this.calculateBoundingBox();
-        }
-        if(this.getCutoutBoundingBox() == nullBox){
+        //}
+        //if(this.getCutoutBoundingBox() == nullBox){
             this.calculateCuttoutBox();
-        }
+        //}
         if(!this.world.isClient)
             ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x,getChunkPos().z,true);
         //if(this.getIntersectionBoundingBox() == nullBox){
