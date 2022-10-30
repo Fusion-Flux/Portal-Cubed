@@ -179,6 +179,10 @@
   "portalcubed.midnightconfig.maxBridgeLength": "Max Emitter Range",
   "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
 
+
+  "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
+
+
   "key.portalcubed.category" : "Portal³",
   "key.portalcubed.grab" : "Grab"
 }
