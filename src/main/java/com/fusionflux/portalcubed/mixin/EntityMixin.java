@@ -173,6 +173,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract EntityPose getPose();
 
+    @Shadow protected boolean onGround;
     private Vec3d teleportVelocity = Vec3d.ZERO;
     private boolean shouldTeleport = false;
     private boolean shouldTeleportClient = false;
@@ -248,7 +249,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             if(portal.getFacingDirection().getOffsetZ() == 0){
                 gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(portalOffsetZ / Math.abs(portalOffsetZ)) * .1)*.1), GravityChangerAPI.getGravityDirection( thisentity)));
             }
-            if(!gotVelocity.equals(Vec3d.ZERO))
+            if(!gotVelocity.equals(Vec3d.ZERO) && !this.onGround)
                 thisentity.setVelocity(gotVelocity);
         }
 

@@ -85,7 +85,7 @@ public class AdhesionGel extends GelFlat {
         Vec3d preChange;
 
         direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection(entity));
-        if (entity instanceof ClientPlayerEntity) {
+        if (world.isClient && entity instanceof ClientPlayerEntity) {
             GravityChangerAPI.addGravityClient((ClientPlayerEntity)entity, AdhesionGravityVerifier.newFieldGravity(GravityChangerAPI.getGravityDirection(entity)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
         } else {
             if(!(entity instanceof PlayerEntity))
@@ -96,7 +96,7 @@ public class AdhesionGel extends GelFlat {
             if (entity.verticalCollision) {
                 if (direction.y == 1 || Math.abs(direction.y) == 2 && vec3dLast.getY() > 0) {
                     preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, 1, 0), GravityChangerAPI.getGravityDirection(entity));
-                    if (entity instanceof ClientPlayerEntity) {
+                    if (world.isClient && entity instanceof ClientPlayerEntity) {
                         ((EntityAttachments) entity).setGelTimer(10);
                         GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
                     } else {
@@ -110,7 +110,7 @@ public class AdhesionGel extends GelFlat {
             if (entity.horizontalCollision) {
                 if (direction.z == -1 || Math.abs(direction.z) == 2 && vec3dLast.getZ() < 0) {
                     preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, 0, -1), GravityChangerAPI.getGravityDirection(entity));
-                    if (entity instanceof ClientPlayerEntity) {
+                    if (world.isClient && entity instanceof ClientPlayerEntity) {
                         ((EntityAttachments) entity).setGelTimer(10);
                         GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
                     } else {
@@ -122,7 +122,7 @@ public class AdhesionGel extends GelFlat {
                 }
                 if (direction.z == 1 || Math.abs(direction.z) == 2 && vec3dLast.getZ() > 0) {
                     preChange = RotationUtil.vecPlayerToWorld(new Vec3d(0, 0, 1), GravityChangerAPI.getGravityDirection(entity));
-                    if (entity instanceof ClientPlayerEntity) {
+                    if (world.isClient && entity instanceof ClientPlayerEntity) {
                         ((EntityAttachments) entity).setGelTimer(10);
                         GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
                     } else {
@@ -134,7 +134,7 @@ public class AdhesionGel extends GelFlat {
                 }
                 if (direction.x == 1 || Math.abs(direction.x) == 2 && vec3dLast.getX() > 0) {
                     preChange = RotationUtil.vecPlayerToWorld(new Vec3d(1, 0, 0), GravityChangerAPI.getGravityDirection(entity));
-                    if (entity instanceof ClientPlayerEntity) {
+                    if (world.isClient && entity instanceof ClientPlayerEntity) {
                         ((EntityAttachments) entity).setGelTimer(10);
                         GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
                     } else {
@@ -146,7 +146,7 @@ public class AdhesionGel extends GelFlat {
                 }
                 if (direction.x == -1 || Math.abs(direction.x) == 2 && vec3dLast.getX() < 0) {
                     preChange = RotationUtil.vecPlayerToWorld(new Vec3d(-1, 0, 0), GravityChangerAPI.getGravityDirection(entity));
-                    if (entity instanceof ClientPlayerEntity) {
+                    if (world.isClient && entity instanceof ClientPlayerEntity) {
                         ((EntityAttachments) entity).setGelTimer(10);
                         GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(Direction.fromVector((int) preChange.x, (int) preChange.y, (int) preChange.z)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
                     } else {
