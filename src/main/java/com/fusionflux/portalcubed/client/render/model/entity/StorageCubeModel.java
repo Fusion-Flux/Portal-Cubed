@@ -14,6 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class StorageCubeModel extends EntityModel<StorageCubeEntity> {
+
 	public static final EntityModelLayer STORAGE_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"storage_cube"), "main");
 	private final ModelPart bb_main;
 
@@ -39,5 +40,5 @@ public class StorageCubeModel extends EntityModel<StorageCubeEntity> {
 
 		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
 	}
-	
+
 }
