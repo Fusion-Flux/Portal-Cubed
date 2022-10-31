@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -18,13 +19,18 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 public class PortalHud {
-    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/gui/activeportalindicator.png");
+    private static final Identifier ROUND_TEXTURE = new Identifier(PortalCubed.MODID, "textures/gui/activeportalindicator.png");
+    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/gui/activeportalindicator_square.png");
 
     public static void renderPortalLeft(MatrixStack matrices, float tickDelta) {
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0,BASE_TEXTURE);
+        if(PortalCubedConfig.enableRoundPortals) {
+            RenderSystem.setShaderTexture(0, ROUND_TEXTURE);
+        }else{
+            RenderSystem.setShaderTexture(0, SQUARE_TEXTURE);
+        }
         assert MinecraftClient.getInstance().player != null;
 
         if (MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN)) {
@@ -76,7 +82,11 @@ public class PortalHud {
 
     public static void renderPortalRight(MatrixStack matrices, float tickDelta) {
         RenderSystem.enableBlend();
-        RenderSystem.setShaderTexture(0,BASE_TEXTURE);
+        if(PortalCubedConfig.enableRoundPortals) {
+            RenderSystem.setShaderTexture(0, ROUND_TEXTURE);
+        }else{
+            RenderSystem.setShaderTexture(0, SQUARE_TEXTURE);
+        }
         assert MinecraftClient.getInstance().player != null;
 
         if (MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN)) {
