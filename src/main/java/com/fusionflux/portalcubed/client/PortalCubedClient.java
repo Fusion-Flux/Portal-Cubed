@@ -87,6 +87,8 @@ public class PortalCubedClient implements ClientModInitializer {
         // Misc
 
         EmissiveModelRegistry.register(id("block/laser"), id("block/laser_beam"));
+        EmissiveModelRegistry.register(id("block/laser_ref_main"), id("block/laser_beam"));
+        EmissiveModelRegistry.register(id("block/laser_ref_prev"), id("block/laser_beam"));
         EmissiveModelRegistry.register(id("block/light_bridge"), id("block/light_bridge"));
 
         // Emitters
