@@ -14,6 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class CompanionCubeModel extends EntityModel<CompanionCubeEntity> {
+
 	public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"companion_cube"), "main");
 	private final ModelPart bb_main;
 
@@ -51,5 +52,5 @@ public class CompanionCubeModel extends EntityModel<CompanionCubeEntity> {
 
 		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
 	}
-	
+
 }

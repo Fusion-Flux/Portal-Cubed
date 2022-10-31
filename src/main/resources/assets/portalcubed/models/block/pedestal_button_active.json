@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
-	"texture_size": [32, 32],
 	"textures": {
 		"0": "portalcubed:block/pedestal_button",
+		"1": "portalcubed:block/pedestal_button_e",
 		"particle": "portalcubed:block/pedestal_button"
 	},
 	"elements": [
@@ -98,6 +98,20 @@
 			}
 		},
 		{
+			"name": "emission",
+			"from": [5.5, 1.85, 5.5],
+			"to": [10.5, 17.85, 10.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0.85, 0]},
+			"faces": {
+				"north": {"uv": [5.008, 0, 7.492, 7.984], "texture": "#1"},
+				"east": {"uv": [5.016, 0.008, 7.484, 7.976], "texture": "#1"},
+				"south": {"uv": [7.516, 0.008, 9.984, 7.976], "texture": "#1"},
+				"west": {"uv": [5.016, 0.008, 7.468, 7.96], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#1"}
+			}
+		},
+		{
 			"from": [5.5, 17.85, 5.5],
 			"to": [10.5, 18.85, 7.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0.85, 0]},
@@ -111,6 +125,20 @@
 			}
 		},
 		{
+			"name": "emission2",
+			"from": [5.5, 17.85, 5.5],
+			"to": [10.5, 18.85, 7.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0.85, 0]},
+			"faces": {
+				"north": {"uv": [5.008, 7.008, 7.492, 7.492], "texture": "#1"},
+				"east": {"uv": [2.516, 0.016, 3.484, 0.484], "texture": "#1"},
+				"south": {"uv": [9.516, 7.016, 9.984, 7.484], "texture": "#1"},
+				"west": {"uv": [2.516, 0.016, 3.484, 0.484], "texture": "#1"},
+				"up": {"uv": [9.516, 7.016, 9.984, 7.484], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [9.516, 7.016, 9.984, 7.484], "rotation": 270, "texture": "#1"}
+			}
+		},
+		{
 			"from": [5.5, 17.85, 7.5],
 			"to": [10.5, 18.1, 8.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0.85, 0]},
@@ -121,6 +149,20 @@
 				"west": {"uv": [8.516, 0.516, 8.984, 0.984], "texture": "#0"},
 				"up": {"uv": [9.516, 7.016, 9.984, 7.484], "rotation": 90, "texture": "#0"},
 				"down": {"uv": [9.516, 7.016, 9.984, 7.484], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"name": "emission3",
+			"from": [5.5, 17.85, 7.5],
+			"to": [10.5, 18.1, 8.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0.85, 0]},
+			"faces": {
+				"north": {"uv": [7.516, 7.016, 9.984, 7.484], "texture": "#1"},
+				"east": {"uv": [8.516, 0.516, 8.984, 0.984], "texture": "#1"},
+				"south": {"uv": [9.516, 7.016, 9.984, 7.484], "texture": "#1"},
+				"west": {"uv": [8.516, 0.516, 8.984, 0.984], "texture": "#1"},
+				"up": {"uv": [9.516, 7.016, 9.984, 7.484], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [9.516, 7.016, 9.984, 7.484], "rotation": 270, "texture": "#1"}
 			}
 		},
 		{
@@ -186,5 +228,13 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	}
+	},
+	"groups": [
+		{
+			"name": "pedestal_button_active",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+		}
+	]
 }
