@@ -42,6 +42,13 @@ public class PortalCubedBlocks {
     public static final DirectionalBlock WHITE_2X2_PANEL_TOP_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final DirectionalBlock WHITE_2X2_PANEL_BOTTOM_RIGHT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
+    public static final Block PORTAL_1_WHITE_CHECKERED_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final Block PORTAL_1_WHITE_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final Block PORTAL_1_WHITE_HALF_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock PORTAL_1_WHITE_2X1_PANEL_TOP = new PillarBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final PillarBlock PORTAL_1_WHITE_2X1_PANEL_BOTTOM = new PillarBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+
+
     public static final Block OLD_AP_WHITE_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final Block OLD_AP_WHITE_CHECKERED_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final DirectionalBlock OLD_AP_WHITE_2X2_PANEL_TOP_LEFT = new DirectionalBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
@@ -367,7 +374,19 @@ public class PortalCubedBlocks {
             Registry.register(Registry.BLOCK, id("2x2_double_crossbar_top_right"), _2X2_DOUBLE_CROSSBAR_TOP_RIGHT);
             Registry.register(Registry.ITEM, id("2x2_double_crossbar_top_right"), new BlockItem(_2X2_DOUBLE_CROSSBAR_TOP_RIGHT, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
 
-            Registry.register(Registry.BLOCK, id("portal_1_smooth_gray_panel"), PORTAL_1_SMOOTH_GRAY_PANEL);
+
+        Registry.register(Registry.BLOCK, id("portal_1_white_panel"), PORTAL_1_WHITE_PANEL);
+        Registry.register(Registry.ITEM, id("portal_1_white_panel"), new BlockItem(PORTAL_1_WHITE_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+        Registry.register(Registry.BLOCK, id("portal_1_white_half_panel"), PORTAL_1_WHITE_HALF_PANEL);
+        Registry.register(Registry.ITEM, id("portal_1_white_half_panel"), new BlockItem(PORTAL_1_WHITE_HALF_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+        Registry.register(Registry.BLOCK, id("portal_1_white_checkered_panel"), PORTAL_1_WHITE_CHECKERED_PANEL);
+        Registry.register(Registry.ITEM, id("portal_1_white_checkered_panel"), new BlockItem(PORTAL_1_WHITE_CHECKERED_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+        Registry.register(Registry.BLOCK, id("portal_1_white_2x1_panel_bottom"), PORTAL_1_WHITE_2X1_PANEL_BOTTOM);
+        Registry.register(Registry.ITEM, id("portal_1_white_2x1_panel_bottom"), new BlockItem(PORTAL_1_WHITE_2X1_PANEL_BOTTOM, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+        Registry.register(Registry.BLOCK, id("portal_1_white_2x1_panel_top"), PORTAL_1_WHITE_2X1_PANEL_TOP);
+        Registry.register(Registry.ITEM, id("portal_1_white_2x1_panel_top"), new BlockItem(PORTAL_1_WHITE_2X1_PANEL_TOP, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+
+        Registry.register(Registry.BLOCK, id("portal_1_smooth_gray_panel"), PORTAL_1_SMOOTH_GRAY_PANEL);
             Registry.register(Registry.ITEM, id("portal_1_smooth_gray_panel"), new BlockItem(PORTAL_1_SMOOTH_GRAY_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
             Registry.register(Registry.BLOCK, id("portal_1_smooth_gray_half_panel"), PORTAL_1_SMOOTH_GRAY_HALF_PANEL);
             Registry.register(Registry.ITEM, id("portal_1_smooth_gray_half_panel"), new BlockItem(PORTAL_1_SMOOTH_GRAY_HALF_PANEL, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
