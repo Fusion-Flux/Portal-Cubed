@@ -43,7 +43,7 @@ public class FloorButtonBlockEntity extends BlockEntity {
 
             Box portalCheckBox = new Box(transPos);
 
-            portalCheckBox = portalCheckBox.contract(Math.abs(storedDirecOpp.getOffsetX())*.75,Math.abs(storedDirecOpp.getOffsetY())*.75,Math.abs(storedDirecOpp.getOffsetZ())*.75).offset(storedDirecOpp.getOffsetX()*.5,storedDirecOpp.getOffsetY()*.5,storedDirecOpp.getOffsetZ()*.5);
+            portalCheckBox = portalCheckBox.contract(Math.abs(storedDirecOpp.getOffsetX())*1,Math.abs(storedDirecOpp.getOffsetY())*1,Math.abs(storedDirecOpp.getOffsetZ())*1).offset(storedDirecOpp.getOffsetX()*.8125,storedDirecOpp.getOffsetY()*.8125,storedDirecOpp.getOffsetZ()*.8125);
             List<LivingEntity> entities = world.getNonSpectatingEntities(LivingEntity.class, portalCheckBox);
 
             boolean isPowered = false;

@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.fabricmc.api.EnvType;
@@ -190,13 +191,13 @@ public class ExcursionFunnelMain extends BlockWithEntity {
 
 
     private void addCollisionEffects(World world, Entity entity, BlockPos pos,BlockState state) {
-        if(entity instanceof PlayerEntity) {
+        if (entity instanceof PlayerEntity) {
             if (world.isClient()) {
                 //RotationUtil.boxWorldToPlayer(entity.getBoundingBox(),GravityChangerAPI.getGravityDirection((PlayerEntity) entity))
-                Vec3d entityCenter =entity.getBoundingBox().getCenter();
-                double xoffset = (entityCenter.getX() - pos.getX()-.5);
-                double yoffset = (entityCenter.getY() - pos.getY()-.5);
-                double zoffset = (entityCenter.getZ() - pos.getZ()-.5);
+                Vec3d entityCenter = entity.getBoundingBox().getCenter();
+                double xoffset = (entityCenter.getX() - pos.getX() - .5);
+                double yoffset = (entityCenter.getY() - pos.getY() - .5);
+                double zoffset = (entityCenter.getZ() - pos.getZ() - .5);
                 Vec3d direction = getPushDirection(state);
 
                 direction = direction.multiply(.125);
@@ -207,48 +208,47 @@ public class ExcursionFunnelMain extends BlockWithEntity {
 
                 entity.setNoGravity(true);
 
-                    if (!((EntityAttachments) entity).isInFunnel()) {
-                        ((EntityAttachments) entity).setInFunnel(true);
-                        entity.setVelocity(0, 0, 0);
-                    }
+                if (!((EntityAttachments) entity).isInFunnel()) {
+                    ((EntityAttachments) entity).setInFunnel(true);
+                    entity.setVelocity(0, 0, 0);
+                }
 
-                    ((EntityAttachments) entity).setFunnelTimer(2);
+                ((EntityAttachments) entity).setFunnelTimer(2);
 
                 Vec3d gotVelocity = entity.getVelocity();
 
                 if (direction.x != 0) {
                     gotVelocity = new Vec3d(direction.getX(), gotVelocity.y, gotVelocity.z);
-                }else{
-                    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d((-(xoffset / Math.abs(xoffset)) * .004), 0, 0), GravityChangerAPI.getGravityDirection((PlayerEntity) entity)));
+                } else {
+                    gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d((-(xoffset / Math.abs(xoffset)) * .004), 0, 0), GravityChangerAPI.getGravityDirection((PlayerEntity) entity)));
                 }
                 if (direction.y != 0) {
-                    gotVelocity = new Vec3d (gotVelocity.x, direction.getY(), gotVelocity.z);
-                }else{
-                    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(yoffset / Math.abs(yoffset)) * .004), 0), GravityChangerAPI.getGravityDirection((PlayerEntity) entity)));
+                    gotVelocity = new Vec3d(gotVelocity.x, direction.getY(), gotVelocity.z);
+                } else {
+                    gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(yoffset / Math.abs(yoffset)) * .004), 0), GravityChangerAPI.getGravityDirection((PlayerEntity) entity)));
                 }
                 if (direction.z != 0) {
                     gotVelocity = new Vec3d(gotVelocity.x, gotVelocity.y, direction.getZ());
-                }
-                else{
-                    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(zoffset / Math.abs(zoffset)) * .004)), GravityChangerAPI.getGravityDirection((PlayerEntity) entity)));
+                } else {
+                    gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(zoffset / Math.abs(zoffset)) * .004)), GravityChangerAPI.getGravityDirection((PlayerEntity) entity)));
                 }
                 entity.setVelocity(gotVelocity);
                 //entity.velocityModified = true;
             }
-        }else{
+        } else {
             if (!world.isClient()) {
                 double xoffset = (entity.getPos().getX() - pos.getX()) - .5;
-                double yoffset = ((entity.getPos().getY()+entity.getHeight()/2) - pos.getY()) - .5;
+                double yoffset = ((entity.getPos().getY() + entity.getHeight() / 2) - pos.getY()) - .5;
                 double zoffset = (entity.getPos().getZ() - pos.getZ()) - .5;
 
-                if(xoffset ==0){
-                    xoffset =.1;
+                if (xoffset == 0) {
+                    xoffset = .1;
                 }
-                if(yoffset ==0){
-                    yoffset =.1;
+                if (yoffset == 0) {
+                    yoffset = .1;
                 }
-                if(zoffset ==0){
-                    zoffset =.1;
+                if (zoffset == 0) {
+                    zoffset = .1;
                 }
 
                 Vec3d direction = getPushDirection(state);
@@ -286,22 +286,33 @@ public class ExcursionFunnelMain extends BlockWithEntity {
 
                 if (direction.x != 0) {
                     gotVelocity = new Vec3d(direction.getX(), gotVelocity.y, gotVelocity.z);
-                }else{
-                    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d((-(xoffset / Math.abs(xoffset)) * .004), 0, 0), GravityChangerAPI.getGravityDirection( entity)));
+                } else {
+                    if (entity instanceof CorePhysicsEntity) {
+                        gotVelocity = new Vec3d(-xoffset/4,gotVelocity.y,gotVelocity.z);
+                    } else {
+                        gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d((-(xoffset / Math.abs(xoffset)) * .004), 0, 0), GravityChangerAPI.getGravityDirection(entity)));
+                    }
                 }
                 if (direction.y != 0) {
-                    gotVelocity = new Vec3d (gotVelocity.x, direction.getY(), gotVelocity.z);
-                }else{
-                    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(yoffset / Math.abs(yoffset)) * .004), 0), GravityChangerAPI.getGravityDirection(entity)));
+                    gotVelocity = new Vec3d(gotVelocity.x, direction.getY(), gotVelocity.z);
+                } else {
+                    if (entity instanceof CorePhysicsEntity) {
+                        gotVelocity = new Vec3d(gotVelocity.x,-yoffset/4,gotVelocity.z);
+                    } else {
+                        gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(yoffset / Math.abs(yoffset)) * .004), 0), GravityChangerAPI.getGravityDirection(entity)));
+                    }
                 }
                 if (direction.z != 0) {
                     gotVelocity = new Vec3d(gotVelocity.x, gotVelocity.y, direction.getZ());
+                } else {
+                    if (entity instanceof CorePhysicsEntity) {
+                        gotVelocity = new Vec3d(gotVelocity.x,gotVelocity.y,-zoffset/4);
+                    } else {
+                        gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(zoffset / Math.abs(zoffset)) * .004)), GravityChangerAPI.getGravityDirection(entity)));
+                    }
                 }
-                else{
-                    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(zoffset / Math.abs(zoffset)) * .004)), GravityChangerAPI.getGravityDirection( entity)));
-                }
-                if(!gotVelocity.equals(Vec3d.ZERO))
-                entity.setVelocity(gotVelocity);
+                if (!gotVelocity.equals(Vec3d.ZERO))
+                    entity.setVelocity(gotVelocity);
 
                 //entity.velocityModified = true;
             }
