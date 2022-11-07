@@ -164,6 +164,13 @@ public class PortalCubedBlocks {
     public static BlockEntityType<DuelExcursionFunnelEmitterEntity> DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY;
     public static BlockEntityType<ExcursionFunnelEntityMain> EXCURSION_FUNNEL_ENTITY;
 
+    public static final GrillBlock GRILL = new GrillBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
+    public static BlockEntityType<GrillBlockEntity> GRILL_ENTITY;
+
+    public static final GrillEmitter GRILL_EMITTER = new GrillEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
+    public static BlockEntityType<GrillEmitterEntity> GRILL_EMITTER_ENTITY;
+
+
     public static final LaserBlock LASER = new LaserBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
     public static BlockEntityType<LaserBlockEntity> LASER_ENTITY;
 
@@ -465,7 +472,15 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("old_ap_floor_button"), new BlockItem(OLD_AP_FLOOR_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
-            //STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());
+        GRILL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("grill_entity"), FabricBlockEntityTypeBuilder.create(GrillBlockEntity::new, GRILL).build(null));
+        Registry.register(Registry.BLOCK, id("grill"), GRILL);
+
+        GRILL_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("grill_emitter_entity"), FabricBlockEntityTypeBuilder.create(GrillEmitterEntity::new, GRILL_EMITTER).build(null));
+        Registry.register(Registry.BLOCK, id("grill_emitter"), GRILL_EMITTER);
+        Registry.register(Registry.ITEM, id("grill_emitter"), new BlockItem(GRILL_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+
+        //STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());
             //FLOWING_TOXIC_GOO = Registry.register(Registry.FLUID, id("flowing_toxic_goo"), new ToxicGooFluid.Flowing());
             //TOXIC_GOO_BUCKET = Registry.register(Registry.ITEM, id("toxic_goo_bucket"), new BucketItem(STILL_TOXIC_GOO, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(PortalCubed.PortalBlocksGroup)));
             //TOXIC_GOO = Registry.register(Registry.BLOCK, id("toxic_goo"), new CustomFluidBlock(STILL_TOXIC_GOO, QuiltBlockSettings.copy(Blocks.WATER)){});
