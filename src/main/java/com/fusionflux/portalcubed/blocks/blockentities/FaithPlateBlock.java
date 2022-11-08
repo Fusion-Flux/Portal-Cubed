@@ -94,7 +94,7 @@ public class FaithPlateBlock extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.FLOOR_BUTTON.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
+        return PortalCubedBlocks.FAITH_PLATE.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 
     @Override
