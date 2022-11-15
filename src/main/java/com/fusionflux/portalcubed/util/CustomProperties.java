@@ -16,6 +16,7 @@ public class CustomProperties {
     public static final BooleanProperty REFLECT;
     public static final DirectionProperty HFACINGUP;
     public static final DirectionProperty HFACINGDOWN;
+    public static final DirectionProperty HORIZIONTALFACING;
 
     static {
         RUP = BooleanProperty.of("rup");
@@ -28,6 +29,7 @@ public class CustomProperties {
         REFLECT = BooleanProperty.of("reflect");
         HFACINGUP = DirectionProperty.of("hfacingup", Direction.Type.HORIZONTAL);
         HFACINGDOWN = DirectionProperty.of("hfacingdown", Direction.Type.HORIZONTAL);
+        HORIZIONTALFACING = DirectionProperty.of("horizontalffacing", Direction.Type.HORIZONTAL);
     }
 
 }

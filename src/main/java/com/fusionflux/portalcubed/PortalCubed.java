@@ -6,6 +6,7 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
 import com.fusionflux.portalcubed.config.MidnightConfig;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
@@ -15,11 +16,17 @@ import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
@@ -45,6 +52,11 @@ public class PortalCubed implements ModInitializer {
     public static Identifier id(String path) {
         return new Identifier(MODID, path);
     }
+    public static ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new);
+    static {
+       // FAITH_PLATE_SCREEN_HANDLER = Registry.register(Registry.SCREEN_HANDLER, new Identifier("mymod", "box"), BOX);
+        FAITH_PLATE_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(id("faith_plate_screen"), FaithPlateScreenHandler::new);
+    }
 
     @Override
     public void onInitialize(ModContainer mod) {
@@ -59,6 +71,22 @@ public class PortalCubed implements ModInitializer {
                 player.requestTeleport(x,y,z);
                 CalledValues.setHasTeleportationHappened(player,true);
                 GravityChangerAPI.clearGravity(player);
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(id("faithplatepacket"), (server, player, handler, buf, responseSender) -> {
+            // read the velocity from the bytebuf
+            BlockPos target = buf.readBlockPos();
+            double x =  buf.readDouble();
+            double y =  buf.readDouble();
+            double z =  buf.readDouble();
+            server.execute(() -> {
+                BlockEntity entity = player.world.getBlockEntity(target);
+                if(entity instanceof FaithPlateBlockEntity plate){
+                    plate.setVelX(x);
+                    plate.setVelY(y);
+                    plate.setVelZ(z);
+                }
             });
         });
 

@@ -1,17 +1,23 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.util.CustomProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -22,30 +28,28 @@ import org.jetbrains.annotations.Nullable;
 
 
 public class FaithPlateBlock extends BlockWithEntity {
-    public static final BooleanProperty ENABLE;
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
     public FaithPlateBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE,false));
+        this.setDefaultState(this.stateManager.getDefaultState());
     }
 
-    static {
-        ENABLE = Properties.ENABLED;
-    }
 
     @Override
-    public boolean emitsRedstonePower(BlockState state) {
-        return state.get(Properties.ENABLED);
-    }
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!world.isClient) {
+            //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity casted to
+            //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
+            NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 
-    @Override
-    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        if(state.get(Properties.ENABLED)){
-            return 15;
+            if (screenHandlerFactory != null) {
+                //With this call the server will request the client to open the appropriate Screenhandler
+                player.openHandledScreen(screenHandlerFactory);
+            }
         }
-        return 0;
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -89,11 +93,14 @@ public class FaithPlateBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING,Properties.ENABLED);
+        builder.add(Properties.FACING, CustomProperties.HORIZIONTALFACING);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
+        if(ctx.getPlayerLookDirection()==Direction.DOWN || ctx.getPlayerLookDirection()==Direction.UP ){
+            return PortalCubedBlocks.FAITH_PLATE.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(CustomProperties.HORIZIONTALFACING, ctx.getPlayerFacing().getOpposite());
+        }
         return PortalCubedBlocks.FAITH_PLATE.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 

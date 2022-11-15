@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.client;
 
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.key.GrabKeyBinding;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
@@ -10,6 +11,7 @@ import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 
+import com.fusionflux.portalcubed.util.FaithPlateScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
@@ -18,6 +20,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.DyeableItem;
@@ -35,6 +38,9 @@ public class PortalCubedClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient(ModContainer mod) {
+
+        ScreenRegistry.register(PortalCubed.FAITH_PLATE_SCREEN_HANDLER, FaithPlateScreen::new);
+
         registerEntityRenderers();
         registerColorProviders();
         setRenderLayers();
