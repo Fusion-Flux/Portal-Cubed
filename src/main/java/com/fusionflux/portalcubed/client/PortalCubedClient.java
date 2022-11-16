@@ -78,6 +78,10 @@ public class PortalCubedClient implements ClientModInitializer {
         BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.PROPULSION_GEL);
         BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.REPULSION_GEL);
         BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.ADHESION_GEL);
+
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.BETA_FAITH_PLATE);
+        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.FAITH_PLATE);
+
         BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.PORTAL1DOOR);
         BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.PORTAL2DOOR);
         BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.OLDAPDOOR);
