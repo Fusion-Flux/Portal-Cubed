@@ -2,13 +2,12 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import com.fusionflux.portalcubed.entity.*;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
@@ -23,7 +22,6 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +33,7 @@ import java.util.List;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
+public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
 
     public final int MAX_RANGE = PortalCubedConfig.maxBridgeLength;
 
@@ -46,12 +44,12 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
     private  double timer = 0;
     private  double animationtimer = 0;
 
-    public FaithPlateBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.FAITH_PLATE_ENTITY,pos,state);
+    public BetaFaithPlateBlockEntity(BlockPos pos, BlockState state) {
+        super(PortalCubedBlocks.BETA_FAITH_PLATE_ENTITY,pos,state);
 
     }
 
-    public static void tick1(World world, BlockPos pos, BlockState state, FaithPlateBlockEntity blockEntity) {
+    public static void tick1(World world, BlockPos pos, BlockState state, BetaFaithPlateBlockEntity blockEntity) {
         //if(!world.isClient)
         //blockEntity.toUpdatePacket();
         Box checkBox = new Box(pos).offset(state.get(Properties.FACING).getOffsetX(),state.get(Properties.FACING).getOffsetY(),state.get(Properties.FACING).getOffsetZ());

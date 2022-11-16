@@ -157,6 +157,9 @@ public class PortalCubedBlocks {
     public static final FaithPlateBlock FAITH_PLATE = new FaithPlateBlock(QuiltBlockSettings.of(Material.STONE).hardness(999999f).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)));
     public static BlockEntityType<FaithPlateBlockEntity> FAITH_PLATE_ENTITY;
 
+    public static final BetaFaithPlateBlock BETA_FAITH_PLATE = new BetaFaithPlateBlock(QuiltBlockSettings.of(Material.STONE).hardness(999999f).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)));
+    public static BlockEntityType<BetaFaithPlateBlockEntity> BETA_FAITH_PLATE_ENTITY;
+
     public static BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY;
     public static BlockEntityType<NeurotoxinEmitterBlockEntity> NEUROTOXIN_EMITTER_ENTITY;
     public static BlockEntityType<ExcursionFunnelEmitterEntity> EXCURSION_FUNNEL_EMMITER_ENTITY;
@@ -442,6 +445,10 @@ public class PortalCubedBlocks {
         FAITH_PLATE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("faith_plate_entity"), FabricBlockEntityTypeBuilder.create(FaithPlateBlockEntity::new, FAITH_PLATE).build(null));
         Registry.register(Registry.BLOCK, id("faith_plate"), FAITH_PLATE);
         Registry.register(Registry.ITEM, id("faith_plate"), new BlockItem(FAITH_PLATE, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+        BETA_FAITH_PLATE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("beta_faith_plate_entity"), FabricBlockEntityTypeBuilder.create(BetaFaithPlateBlockEntity::new, BETA_FAITH_PLATE).build(null));
+        Registry.register(Registry.BLOCK, id("beta_faith_plate"), BETA_FAITH_PLATE);
+        Registry.register(Registry.ITEM, id("beta_faith_plate"), new BlockItem(BETA_FAITH_PLATE, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
         DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("duel_excursion_funnel_emitter_entity"), FabricBlockEntityTypeBuilder.create(DuelExcursionFunnelEmitterEntity::new, DUEL_EXCURSION_FUNNEL_EMITTER).build(null));

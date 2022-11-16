@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.util;
 
+import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -154,6 +155,11 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
             if(world != null){
                 BlockEntity entity = world.getBlockEntity(pos);
                 if(entity instanceof FaithPlateBlockEntity faith){
+                    faith.setVelX(sndx);
+                    faith.setVelY(sndy);
+                    faith.setVelZ(sndz);
+                }
+                if(entity instanceof BetaFaithPlateBlockEntity faith){
                     faith.setVelX(sndx);
                     faith.setVelY(sndy);
                     faith.setVelZ(sndz);

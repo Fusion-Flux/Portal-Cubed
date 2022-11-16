@@ -6,6 +6,7 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
 import com.fusionflux.portalcubed.config.MidnightConfig;
@@ -83,6 +84,11 @@ public class PortalCubed implements ModInitializer {
             server.execute(() -> {
                 BlockEntity entity = player.world.getBlockEntity(target);
                 if(entity instanceof FaithPlateBlockEntity plate){
+                    plate.setVelX(x);
+                    plate.setVelY(y);
+                    plate.setVelZ(z);
+                }
+                if(entity instanceof BetaFaithPlateBlockEntity plate){
                     plate.setVelX(x);
                     plate.setVelY(y);
                     plate.setVelZ(z);
