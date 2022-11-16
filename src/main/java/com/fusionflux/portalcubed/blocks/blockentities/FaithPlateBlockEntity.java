@@ -44,6 +44,7 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
     private double velZ=0;
 
     private  double timer = 0;
+    private  double animationtimer = 0;
 
     public FaithPlateBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.FAITH_PLATE_ENTITY,pos,state);
@@ -59,22 +60,27 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
         //System.out.println(blockEntity.velX);
 
         for(Entity liver : list){
-            if(liver.isOnGround() && blockEntity.timer <= 0)
-            liver.setVelocity(blockEntity.velX,blockEntity.velY,blockEntity.velZ);
-            blockEntity.timer = 10;
+            if(liver.isOnGround() && blockEntity.timer <= 0) {
+                liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
+                blockEntity.timer = 10;
+                blockEntity.animationtimer = 20;
+            }
         }
         if(blockEntity.timer>0)
-        blockEntity.timer -= 1;
+            blockEntity.timer -= 1;
+
+        if(blockEntity.animationtimer>0) {
+            blockEntity.animationtimer -= 1;
+            world.setBlockState(pos,state.with(Properties.ENABLED,true),3);
+        }else{
+            world.setBlockState(pos,state.with(Properties.ENABLED,false),3);
+        }
     }
 
     public void playSound(SoundEvent soundEvent) {
         this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 
-    public void updateState(BlockState state, boolean toggle) {
-        if(world != null)
-        world.setBlockState(pos,state.with(Properties.ENABLED,toggle),3);
-    }
 
     public void setVelX(double velX) {
         this.velX = velX;

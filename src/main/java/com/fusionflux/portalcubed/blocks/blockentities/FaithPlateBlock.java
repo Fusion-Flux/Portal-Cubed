@@ -28,14 +28,18 @@ import org.jetbrains.annotations.Nullable;
 
 
 public class FaithPlateBlock extends BlockWithEntity {
+    public static final BooleanProperty ENABLE;
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
     public FaithPlateBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState());
+        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE,false));
     }
 
+    static {
+        ENABLE = Properties.ENABLED;
+    }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -93,7 +97,7 @@ public class FaithPlateBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, CustomProperties.HORIZIONTALFACING);
+        builder.add(Properties.FACING, CustomProperties.HORIZIONTALFACING,Properties.ENABLED);
     }
 
     @Override
