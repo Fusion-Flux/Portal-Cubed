@@ -59,22 +59,24 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
         List<Entity> list = world.getNonSpectatingEntities(Entity.class, checkBox);
         //System.out.println(blockEntity.velX);
 
-        for(Entity liver : list){
-            if(liver.isOnGround() && blockEntity.timer <= 0) {
-                liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
-                blockEntity.timer = 10;
-                blockEntity.animationtimer = 20;
-            }
-        }
-        if(blockEntity.timer>0)
-            blockEntity.timer -= 1;
-
         if(blockEntity.animationtimer>0) {
             blockEntity.animationtimer -= 1;
             world.setBlockState(pos,state.with(Properties.ENABLED,true),3);
         }else{
             world.setBlockState(pos,state.with(Properties.ENABLED,false),3);
         }
+
+        for(Entity liver : list){
+            if(blockEntity.timer <= 0) {
+                liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
+                blockEntity.timer = 5;
+                blockEntity.animationtimer = 7;
+                world.setBlockState(pos,state.with(Properties.ENABLED,false),3);
+            }
+        }
+        if(blockEntity.timer>0)
+            blockEntity.timer -= 1;
+
     }
 
     public void playSound(SoundEvent soundEvent) {

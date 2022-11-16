@@ -29,7 +29,7 @@ public class CustomProperties {
         REFLECT = BooleanProperty.of("reflect");
         HFACINGUP = DirectionProperty.of("hfacingup", Direction.Type.HORIZONTAL);
         HFACINGDOWN = DirectionProperty.of("hfacingdown", Direction.Type.HORIZONTAL);
-        HORIZIONTALFACING = DirectionProperty.of("horizontalffacing", Direction.Type.HORIZONTAL);
+        HORIZIONTALFACING = DirectionProperty.of("horifacing", Direction.Type.HORIZONTAL);
     }
 
 }

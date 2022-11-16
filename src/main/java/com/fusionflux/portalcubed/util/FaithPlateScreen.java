@@ -119,10 +119,25 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
             PacketByteBuf buf = PacketByteBufs.create();
 
             buf.writeBlockPos(pos);
+
             //String modifiedX = field1.getText().replaceAll("[^\\d.]", "").replaceFirst(".","d").replaceAll("\\.", "").replaceAll("d", ".");
-            double sndx = Double.parseDouble(field1.getText().replaceAll("[^\\d.]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", "."));
-            double sndy = Double.parseDouble(field2.getText().replaceAll("[^\\d.]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", "."));
-            double sndz = Double.parseDouble(field3.getText().replaceAll("[^\\d.]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", "."));
+            String xString = field1.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", ".").replaceFirst("[-]","m").replaceAll("[-]", "").replaceAll("[m]", "-");
+            String yString = field2.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", ".").replaceFirst("[-]","m").replaceAll("[-]", "").replaceAll("[m]", "-");
+            String zString = field3.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", ".").replaceFirst("[-]","m").replaceAll("[-]", "").replaceAll("[m]", "-");
+
+            double sndx = 0;
+            double sndy = 0;
+            double sndz = 0;
+
+            if(!xString.equals("")){
+                sndx = Double.parseDouble(xString);
+            }
+            if(!yString.equals("")){
+                sndy = Double.parseDouble(yString);
+            }
+            if(!zString.equals("")){
+                sndz = Double.parseDouble(zString);
+            }
 
             if(sndx >4){
                 sndx = 4;
