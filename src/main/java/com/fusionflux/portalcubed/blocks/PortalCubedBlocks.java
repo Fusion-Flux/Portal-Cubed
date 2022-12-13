@@ -442,6 +442,11 @@ public class PortalCubedBlocks {
             Registry.register(Registry.BLOCK, id("reversed_excursion_funnel_emitter"), REVERSED_EXCURSION_FUNNEL_EMITTER);
             Registry.register(Registry.ITEM, id("reversed_excursion_funnel_emitter"), new BlockItem(REVERSED_EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
+
+        DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("duel_excursion_funnel_emitter_entity"), FabricBlockEntityTypeBuilder.create(DuelExcursionFunnelEmitterEntity::new, DUEL_EXCURSION_FUNNEL_EMITTER).build(null));
+            Registry.register(Registry.BLOCK, id("duel_excursion_funnel_emitter"), DUEL_EXCURSION_FUNNEL_EMITTER);
+            Registry.register(Registry.ITEM, id("duel_excursion_funnel_emitter"), new BlockItem(DUEL_EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
         FAITH_PLATE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("faith_plate_entity"), FabricBlockEntityTypeBuilder.create(FaithPlateBlockEntity::new, FAITH_PLATE).build(null));
         Registry.register(Registry.BLOCK, id("faith_plate"), FAITH_PLATE);
         Registry.register(Registry.ITEM, id("faith_plate"), new BlockItem(FAITH_PLATE, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
@@ -451,11 +456,7 @@ public class PortalCubedBlocks {
         Registry.register(Registry.ITEM, id("beta_faith_plate"), new BlockItem(BETA_FAITH_PLATE, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
-        DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("duel_excursion_funnel_emitter_entity"), FabricBlockEntityTypeBuilder.create(DuelExcursionFunnelEmitterEntity::new, DUEL_EXCURSION_FUNNEL_EMITTER).build(null));
-            Registry.register(Registry.BLOCK, id("duel_excursion_funnel_emitter"), DUEL_EXCURSION_FUNNEL_EMITTER);
-            Registry.register(Registry.ITEM, id("duel_excursion_funnel_emitter"), new BlockItem(DUEL_EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
-
-            LASER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_entity"), FabricBlockEntityTypeBuilder.create(LaserBlockEntity::new, LASER).build(null));
+        LASER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_entity"), FabricBlockEntityTypeBuilder.create(LaserBlockEntity::new, LASER).build(null));
             Registry.register(Registry.BLOCK, id("laser"), LASER);
 
             LASER_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), FabricBlockEntityTypeBuilder.create(LaserEmitterEntity::new, LASER_EMITTER).build(null));

@@ -18,8 +18,6 @@ import net.minecraft.world.World;
 
 public class RepulsionGel extends GelFlat {
 
-    private final BlockCollisionLimiter limiter = new BlockCollisionLimiter();
-
     public RepulsionGel(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
@@ -30,38 +28,6 @@ public class RepulsionGel extends GelFlat {
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         this.addCollisionEffects(world, entity, pos);
     }
-
-  /*  @Override
-    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
-        //if (entity.bypassesLandingEffects()) {
-        //    super.onLandedUpon(world, state, pos, entity, fallDistance);
-        //} else {
-            entity.handleFallDamage(fallDistance, 0.0F, DamageSource.FALL);
-        //}
-
-    }
-
-    @Override
-    public void onEntityLand(BlockView world, Entity entity) {
-        //if (entity.bypassesLandingEffects()) {
-        //    super.onEntityLand(world, entity);
-        //} else {
-            this.bounce(entity);
-       // }
-
-    }
-
-    private void bounce(Entity entity) {
-        Vec3d vec3d = entity.getVelocity();
-       // if (vec3d.y < 0.0) {
-        double fall = 11+(11*.1);
-        double velocity = Math.sqrt(2*.08*fall);
-        entity.setVelocity(vec3d.x,velocity , vec3d.z);
-        //entity.setVelocity(vec3d.x, ((-vec3d.y)+.12)/.98, vec3d.z);
-       // }
-
-    }
-*/
 
     public Vec3d getDirections(BlockState state){
         Vec3d result = Vec3d.ZERO;

@@ -28,7 +28,7 @@
       },
       {
         "id": "gravity_api",
-        "versions": ">=0.7.20"
+        "versions": ">=0.7.21"
       }
     ],
 
