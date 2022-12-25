@@ -74,7 +74,7 @@ public class AdhesionGel extends GelFlat {
                     if (direc != current) {
                         Box gravbox = getGravityEffectBox(pos, direc, delta);
                         if (gravbox.intersects(entity.getBoundingBox())) {
-                            if (entity instanceof ClientPlayerEntity) {
+                            if (world.isClient && entity instanceof PlayerEntity) {
                                 GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(direc), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
                                 ((EntityAttachments) entity).setGelTimer(10);
                                 break;
@@ -90,7 +90,7 @@ public class AdhesionGel extends GelFlat {
                 }
             }
         }
-        if (entity instanceof ClientPlayerEntity) {
+        if (world.isClient && entity instanceof PlayerEntity) {
             GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(GravityChangerAPI.getGravityDirection(entity)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
         } else {
             if (!(entity instanceof PlayerEntity))
