@@ -16,7 +16,7 @@ jobs:
     
     - name: Get short SHA
       id: short_sha
-      run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+      run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-7)"
 
     - name: Set up JDK 17
       uses: actions/setup-java@v1
