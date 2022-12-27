@@ -78,7 +78,7 @@ public class GrillEmitterEntity extends BlockEntity {
                     if (isValid)
                         for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
                             translatedPos = translatedPos.offset(storedDirection);
-                            if ((world.isAir(translatedPos) || (world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F && world.getBlockState(translatedPos).getHardness(world, translatedPos) != -1F) || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.GRILL)) && !world.getBlockState(translatedPos).getBlock().equals(Blocks.BARRIER)) {
+                            if (translatedPos.getY() < world.getTopY() && translatedPos.getY() > world.getBottomY() && (world.isAir(translatedPos) || (world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F && world.getBlockState(translatedPos).getHardness(world, translatedPos) != -1F) || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.GRILL)) && !world.getBlockState(translatedPos).getBlock().equals(Blocks.BARRIER)) {
                                 world.setBlockState(translatedPos, PortalCubedBlocks.GRILL.getDefaultState());
 
                                 GrillBlockEntity funnel = ((GrillBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
