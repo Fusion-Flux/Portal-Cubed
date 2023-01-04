@@ -184,6 +184,7 @@
   "portalcubed.midnightconfig.title": "Portal Cubed Config",
   "portalcubed.midnightconfig.maxBridgeLength": "Max Emitter Range",
   "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
+  "portalcubed.midnightconfig.enableAccurateMovement": "Enable Accurate Movement",
 
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
