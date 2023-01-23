@@ -24,8 +24,10 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import org.apache.commons.lang3.StringUtils;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class ExperimentalPortal extends Entity {
@@ -71,12 +73,14 @@ public class ExperimentalPortal extends Entity {
     protected void readCustomDataFromNbt(NbtCompound compoundTag) {
         this.setColor(compoundTag.getInt("color"));
         this.setRoll(compoundTag.getFloat("roll"));
+        this.setString(StringUtils.defaultIfEmpty(compoundTag.getString("string"), "null"));
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound compoundTag) {
         compoundTag.putFloat("color", this.getColor());
         compoundTag.putFloat("roll", this.getRoll());
+        compoundTag.putString("string", this.getString());
     }
 
     public Float getRoll() {
@@ -139,7 +143,7 @@ return true;
         return getDataTracker().get(ISACTIVE);
     }
 
-    public void setActive(Boolean active) {
+    private void setActive(Boolean active) {
         this.getDataTracker().set(ISACTIVE, active);
     }
 
@@ -182,6 +186,14 @@ return true;
         }
 
         if (!this.world.isClient && CalledValues.getAxisW(this) != null) {
+            ExperimentalPortal otherPortal =
+                !this.getString().equals("null")
+                    ? (ExperimentalPortal)((ServerWorld)world).getEntity(UUID.fromString(this.getString()))
+                    : null;
+
+            setActive(otherPortal != null);
+            CalledValues.setDestination(this, Objects.requireNonNullElse(otherPortal, this).getOriginPos());
+
             BlockPos topBehind = new BlockPos(
                     this.getPos().getX() - CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).getX(),
                     this.getPos().getY() - CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).getY(),
@@ -220,15 +232,6 @@ return true;
                     ((!this.world.getBlockState(this.getBlockPos()).isAir())&& !this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN) )|| (!this.world.getBlockState(bottom).isAir() && !this.world.getBlockState(bottom).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN))) {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
-                if (!this.getString().equals("null")) {
-                    ExperimentalPortal otherPortal;
-                    otherPortal = (ExperimentalPortal) ((ServerWorld) world).getEntity(UUID.fromString(this.getString()));
-                    assert otherPortal != null;
-                    if (otherPortal != null) {
-                        CalledValues.setDestination(otherPortal,otherPortal.getOriginPos());
-                        otherPortal.setActive(false);
-                    }
-                }
             }
         }
         super.tick();

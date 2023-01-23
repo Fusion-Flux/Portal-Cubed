@@ -252,8 +252,6 @@ public class PortalGun extends Item implements DyeableItem {
                     //CalledValues.setOtherAxisH();
                     //portalholder.setDestination(otherPortal.getOriginPos());
                     //otherPortal.setDestination(portalholder.getOriginPos());
-                    portalholder.setActive(true);
-                    otherPortal.setActive(true);
                     portalholder.setString(otherPortal.getUuidAsString());
                     otherPortal.setString(portalholder.getUuidAsString());
 
