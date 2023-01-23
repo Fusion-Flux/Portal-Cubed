@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.items;
 
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.GelFlat;
@@ -9,11 +8,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-
 import com.fusionflux.portalcubed.util.IPQuaternion;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
@@ -28,7 +23,10 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
@@ -234,7 +232,7 @@ public class PortalGun extends Item implements DyeableItem {
 
                 }
                 if (!portalExists) {
-                    portalholder.setString("null");
+                    portalholder.setLinkedPortalUuid("null");
                     world.spawnEntity(portalholder);
                     ((EntityPortalsAccess) user).addPortalToList(portalholder);
 
@@ -252,8 +250,8 @@ public class PortalGun extends Item implements DyeableItem {
                     //CalledValues.setOtherAxisH();
                     //portalholder.setDestination(otherPortal.getOriginPos());
                     //otherPortal.setDestination(portalholder.getOriginPos());
-                    portalholder.setString(otherPortal.getUuidAsString());
-                    otherPortal.setString(portalholder.getUuidAsString());
+                    portalholder.setLinkedPortalUuid(otherPortal.getUuidAsString());
+                    otherPortal.setLinkedPortalUuid(portalholder.getUuidAsString());
 
                     CalledValues.setPlayer(portalholder,user.getUuid());
                     CalledValues.setPlayer(otherPortal,user.getUuid());

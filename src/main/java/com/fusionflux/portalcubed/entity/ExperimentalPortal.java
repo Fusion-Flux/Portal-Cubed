@@ -5,7 +5,6 @@ import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.IPHelperDuplicate;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,7 +22,6 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
@@ -41,7 +39,7 @@ public class ExperimentalPortal extends Entity {
      * They should be normalized and should be perpendicular to each other
      */
 
-    public static final TrackedData<String> STOREDSTRING = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
+    public static final TrackedData<String> LINKED_PORTAL_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
     public static final TrackedData<Boolean> ISACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final TrackedData<String> STOREDOUTLINE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
     public static final TrackedData<Float> ROLL = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.FLOAT);
@@ -62,7 +60,7 @@ public class ExperimentalPortal extends Entity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(STOREDSTRING, "null");
+        this.getDataTracker().startTracking(LINKED_PORTAL_UUID, "null");
         this.getDataTracker().startTracking(STOREDOUTLINE, "null");
         this.getDataTracker().startTracking(ISACTIVE, false);
         this.getDataTracker().startTracking(ROLL, 0f);
@@ -73,14 +71,14 @@ public class ExperimentalPortal extends Entity {
     protected void readCustomDataFromNbt(NbtCompound compoundTag) {
         this.setColor(compoundTag.getInt("color"));
         this.setRoll(compoundTag.getFloat("roll"));
-        this.setString(StringUtils.defaultIfEmpty(compoundTag.getString("string"), "null"));
+        this.setLinkedPortalUuid(StringUtils.defaultIfEmpty(compoundTag.getString("linkedPortalUuid"), "null"));
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound compoundTag) {
         compoundTag.putFloat("color", this.getColor());
         compoundTag.putFloat("roll", this.getRoll());
-        compoundTag.putString("string", this.getString());
+        compoundTag.putString("linkedPortalUuid", this.getLinkedPortalUuid());
     }
 
     public Float getRoll() {
@@ -123,12 +121,12 @@ return true;
     }
 
 
-    public String getString() {
-        return getDataTracker().get(STOREDSTRING);
+    public String getLinkedPortalUuid() {
+        return getDataTracker().get(LINKED_PORTAL_UUID);
     }
 
-    public void setString(String string) {
-        this.getDataTracker().set(STOREDSTRING, string);
+    public void setLinkedPortalUuid(String string) {
+        this.getDataTracker().set(LINKED_PORTAL_UUID, string);
     }
 
     public String getOutline() {
@@ -187,8 +185,8 @@ return true;
 
         if (!this.world.isClient && CalledValues.getAxisW(this) != null) {
             ExperimentalPortal otherPortal =
-                !this.getString().equals("null")
-                    ? (ExperimentalPortal)((ServerWorld)world).getEntity(UUID.fromString(this.getString()))
+                !this.getLinkedPortalUuid().equals("null")
+                    ? (ExperimentalPortal)((ServerWorld)world).getEntity(UUID.fromString(this.getLinkedPortalUuid()))
                     : null;
 
             setActive(otherPortal != null);
