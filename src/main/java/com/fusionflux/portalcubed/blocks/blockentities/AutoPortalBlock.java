@@ -1,12 +1,15 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.SlidingDoorBlock;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -14,6 +17,8 @@ import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeItem;
+import net.minecraft.item.DyeableItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -22,9 +27,9 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Pair;
+import net.minecraft.text.Text;
+import net.minecraft.util.*;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -40,6 +45,7 @@ public class AutoPortalBlock extends BlockWithEntity {
     public static final DirectionProperty FACING = Properties.FACING;
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
     public static final BooleanProperty POWERED = Properties.POWERED;
+    public static final EnumProperty<PortalType> TYPE = EnumProperty.of("type", PortalType.class);
 
     private static final VoxelShape PILLAR_SHAPE = createCuboidShape(0, 0, 0, 1, 15, 1);
     public static final VoxelShape TOP_SOUTH_SHAPE = VoxelShapes.union(PILLAR_SHAPE, PILLAR_SHAPE.offset(15 / 16.0, 0, 0));
@@ -156,7 +162,7 @@ public class AutoPortalBlock extends BlockWithEntity {
 
     private static void openOrClosePortal(World world, BlockPos lower, Direction facing, boolean forceClose) {
         if (world.isClient) return;
-        final int color = 0x1d86db; // TODO: Replace with block entity usage
+        final int color = getColor(world, lower);
         final BlockPos upper = lower.up();
         final List<ExperimentalPortal> portals = world.getEntitiesByType(
             PortalCubedEntities.EXPERIMENTAL_PORTAL,
@@ -194,8 +200,55 @@ public class AutoPortalBlock extends BlockWithEntity {
             .ifPresent(other -> PortalGun.linkPortals(portal, other, 0.9f));
     }
 
-    private static int getComplementary(int color) {
-        return 0xffffff - color + 1;
+    @Override
+    @SuppressWarnings("deprecation")
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        final boolean upper = state.get(HALF) == DoubleBlockHalf.UPPER;
+        final BlockPos otherPos = upper ? pos.down() : pos.up();
+        final BlockPos lowerPos = upper ? otherPos : pos;
+        final BlockState otherState = world.getBlockState(otherPos);
+        final ItemStack item = player.getStackInHand(hand);
+        if (item.isEmpty()) {
+            openOrClosePortal(world, lowerPos, state.get(FACING), true);
+            final BlockState newState = state.cycle(TYPE);
+            world.setBlockState(pos, newState);
+            world.setBlockState(otherPos, otherState.cycle(TYPE));
+            player.sendMessage(
+                Text.translatable(
+                    "portalcubed.auto_portal.set_portal_type",
+                    Text.translatable("portalcubed.portal_type." + newState.get(TYPE).asString())
+                ).styled(s -> s.withColor(getColor(world, pos))),
+                true
+            );
+            return ActionResult.success(world.isClient);
+        }
+        if (item.getItem() instanceof DyeItem dye) {
+            openOrClosePortal(world, lowerPos, state.get(FACING), true);
+            final int dyeColor = PortalCubedItems.PORTAL_GUN.getColor(DyeableItem.blendAndSetColor(
+                new ItemStack(PortalCubedItems.PORTAL_GUN), List.of(dye)
+            ));
+            for (BlockPos usePos = pos; usePos != null; usePos = usePos == pos ? otherPos : null) {
+                world.getBlockEntity(usePos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
+                    .ifPresent(entity -> entity.setColor(dyeColor));
+            }
+            player.sendMessage(
+                Text.translatable(
+                    "portalcubed.auto_portal.set_portal_color",
+                    Text.translatable("color.minecraft." + dye.getColor().asString())
+                ).styled(s -> s.withColor(getColor(world, pos))),
+                true
+            );
+            return ActionResult.CONSUME;
+        }
+        return ActionResult.PASS;
+    }
+
+    public static int getColor(World world, BlockPos pos) {
+        return world.getBlockState(pos).get(TYPE).colorTransformer.applyAsInt(
+            world.getBlockEntity(pos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
+                .map(AutoPortalBlockEntity::getColor)
+                .orElse(0x1d86db)
+        );
     }
 
     @Override
@@ -218,11 +271,29 @@ public class AutoPortalBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, HALF, POWERED);
+        builder.add(FACING, HALF, POWERED, TYPE);
     }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    public enum PortalType implements StringIdentifiable {
+        PRIMARY("primary", Int2IntFunction.identity()),
+        SECONDARY("secondary", c -> 0xffffff - c + 1);
+
+        private final String id;
+        public final Int2IntFunction colorTransformer;
+
+        PortalType(String id, Int2IntFunction colorTransformer) {
+            this.id = id;
+            this.colorTransformer = colorTransformer;
+        }
+
+        @Override
+        public String asString() {
+            return id;
+        }
     }
 }
