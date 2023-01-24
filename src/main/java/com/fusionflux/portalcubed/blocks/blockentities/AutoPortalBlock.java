@@ -215,7 +215,11 @@ public class AutoPortalBlock extends BlockWithEntity {
                     world.getBlockEntity(usePos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
                         .ifPresent(entity -> entity.setColor(0x1d86db));
                 }
-                player.sendMessage(Text.translatable("portalcubed.auto_portal.set_portal_color.default"), true);
+                player.sendMessage(
+                    Text.translatable("portalcubed.auto_portal.set_portal_color.default")
+                        .styled(s -> s.withColor(getColor(world, pos))),
+                    true
+                );
                 return ActionResult.success(world.isClient);
             }
             final BlockState newState = state.cycle(TYPE);
