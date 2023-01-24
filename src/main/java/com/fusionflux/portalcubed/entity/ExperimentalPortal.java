@@ -177,9 +177,12 @@ return true;
         //}
 
         if(!world.isClient){
-            Entity player = ((ServerWorld) world).getEntity(CalledValues.getPlayer(this));
-            if(player == null){
-                this.kill();
+            final UUID playerUuid = CalledValues.getPlayer(this);
+            if (playerUuid != null) {
+                Entity player = ((ServerWorld) world).getEntity(playerUuid);
+                if(player == null){
+                    this.kill();
+                }
             }
         }
 

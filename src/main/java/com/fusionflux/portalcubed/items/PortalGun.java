@@ -23,12 +23,13 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Comparator;
+import java.util.Optional;
 
 
 public class PortalGun extends Item implements DyeableItem {
@@ -240,18 +241,12 @@ public class PortalGun extends Item implements DyeableItem {
 
                     CalledValues.addPortals(user,portalholder.getUuid());
                 }
+                if (otherPortal == null) {
+                    otherPortal = getPotentialOpposite(world, portalPos1, portalholder, portalholder.getColor(), false)
+                        .orElse(null);
+                }
                 if (otherPortal != null) {
-                    CalledValues.setDestination(portalholder,otherPortal.getOriginPos().add(otherPortal.getFacingDirection().getUnitVector().getX()*.1,otherPortal.getFacingDirection().getUnitVector().getY()*.1,otherPortal.getFacingDirection().getUnitVector().getZ()*.1));
-                    CalledValues.setOtherFacing(portalholder,new Vec3d(otherPortal.getFacingDirection().getUnitVector().getX(),otherPortal.getFacingDirection().getUnitVector().getY(),otherPortal.getFacingDirection().getUnitVector().getZ()));
-                    CalledValues.setOtherAxisH(portalholder,CalledValues.getAxisH(otherPortal));
-                    CalledValues.setDestination(otherPortal,portalholder.getOriginPos().add(portalholder.getFacingDirection().getUnitVector().getX()*.1,portalholder.getFacingDirection().getUnitVector().getY()*.1,portalholder.getFacingDirection().getUnitVector().getZ()*.1));
-                    CalledValues.setOtherFacing(otherPortal,new Vec3d(portalholder.getFacingDirection().getUnitVector().getX(),portalholder.getFacingDirection().getUnitVector().getY(),portalholder.getFacingDirection().getUnitVector().getZ()));
-                    CalledValues.setOtherAxisH(otherPortal,CalledValues.getAxisH(portalholder));
-                    //CalledValues.setOtherAxisH();
-                    //portalholder.setDestination(otherPortal.getOriginPos());
-                    //otherPortal.setDestination(portalholder.getOriginPos());
-                    portalholder.setLinkedPortalUuid(otherPortal.getUuidAsString());
-                    otherPortal.setLinkedPortalUuid(portalholder.getUuidAsString());
+                    linkPortals(portalholder, otherPortal);
 
                     CalledValues.setPlayer(portalholder,user.getUuid());
                     CalledValues.setPlayer(otherPortal,user.getUuid());
@@ -263,8 +258,6 @@ public class PortalGun extends Item implements DyeableItem {
 
                     //otherPortal.reloadAndSyncToClient();
                     //portalholder.reloadAndSyncToClient();
-
-                    world.playSound(null, portalholder.getPos().getX(), portalholder.getPos().getY(), portalholder.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
                 }
             } else {
                 world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
@@ -280,6 +273,34 @@ public class PortalGun extends Item implements DyeableItem {
 
         }
         return TypedActionResult.pass(stack);
+    }
+
+    public static Optional<ExperimentalPortal> getPotentialOpposite(World world, Vec3d portalPos, @Nullable ExperimentalPortal ignore, int color, boolean includePlayerPortals) {
+        return world.getEntitiesByType(
+            PortalCubedEntities.EXPERIMENTAL_PORTAL,
+            Box.of(portalPos, 256, 256, 256),
+            p ->
+                p != ignore &&
+                    p.getColor() == 0xffffff - color + 1 &&
+                    (includePlayerPortals || CalledValues.getPlayer(p) == null) &&
+                    !p.getActive()
+        ).stream().min(Comparator.comparingDouble(p -> p.getOriginPos().squaredDistanceTo(portalPos)));
+    }
+
+    public static void linkPortals(ExperimentalPortal portal1, ExperimentalPortal portal2) {
+        CalledValues.setDestination(portal1,portal2.getOriginPos().add(portal2.getFacingDirection().getUnitVector().getX()*.1,portal2.getFacingDirection().getUnitVector().getY()*.1,portal2.getFacingDirection().getUnitVector().getZ()*.1));
+        CalledValues.setOtherFacing(portal1,new Vec3d(portal2.getFacingDirection().getUnitVector().getX(),portal2.getFacingDirection().getUnitVector().getY(),portal2.getFacingDirection().getUnitVector().getZ()));
+        CalledValues.setOtherAxisH(portal1,CalledValues.getAxisH(portal2));
+        CalledValues.setDestination(portal2,portal1.getOriginPos().add(portal1.getFacingDirection().getUnitVector().getX()*.1,portal1.getFacingDirection().getUnitVector().getY()*.1,portal1.getFacingDirection().getUnitVector().getZ()*.1));
+        CalledValues.setOtherFacing(portal2,new Vec3d(portal1.getFacingDirection().getUnitVector().getX(),portal1.getFacingDirection().getUnitVector().getY(),portal1.getFacingDirection().getUnitVector().getZ()));
+        CalledValues.setOtherAxisH(portal2,CalledValues.getAxisH(portal1));
+        //CalledValues.setOtherAxisH();
+        //portal1.setDestination(portal2.getOriginPos());
+        //portal2.setDestination(portal1.getOriginPos());
+        portal1.setLinkedPortalUuid(portal2.getUuidAsString());
+        portal2.setLinkedPortalUuid(portal1.getUuidAsString());
+
+        portal1.getWorld().playSound(null, portal1.getPos().getX(), portal1.getPos().getY(), portal1.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
     }
 
     private boolean validPos(World world, Vec3i up, Vec3i right, Vec3d portalPos1){
