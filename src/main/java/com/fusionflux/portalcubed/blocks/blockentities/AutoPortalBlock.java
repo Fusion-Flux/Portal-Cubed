@@ -72,7 +72,6 @@ public class AutoPortalBlock extends BlockWithEntity {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-//        if (true) return VoxelShapes.fullCube();
         return switch (state.get(FACING)) {
             default -> NORTH_SHAPE; // and NORTH
             case SOUTH -> SOUTH_SHAPE;
@@ -153,7 +152,12 @@ public class AutoPortalBlock extends BlockWithEntity {
         if (!world.getBlockState(onPos).isSideSolidFullSquare(world, onPos, facing)) {
             return false;
         }
-        return state.get(HALF) != DoubleBlockHalf.UPPER || world.getBlockState(pos.down()).isOf(this);
+        final BlockPos otherPos = state.get(HALF) == DoubleBlockHalf.UPPER ? pos.down() : pos.up();
+        final BlockPos otherOnPos = otherPos.offset(facing.getOpposite());
+        if (!world.getBlockState(otherOnPos).isSideSolidFullSquare(world, otherOnPos, facing)) {
+            return false;
+        }
+        return state.get(HALF) == DoubleBlockHalf.LOWER || world.getBlockState(otherPos).isOf(this);
     }
 
     private static void openOrClosePortal(World world, BlockPos lower, Direction facing, boolean forceClose) {
