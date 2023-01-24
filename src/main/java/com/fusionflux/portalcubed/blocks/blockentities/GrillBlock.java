@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.util.CustomProperties;
@@ -10,9 +11,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -23,6 +22,9 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.UUID;
 
 
 public class GrillBlock extends BlockWithEntity {
@@ -104,15 +106,18 @@ public class GrillBlock extends BlockWithEntity {
 
 
     private void addCollisionEffects(World world, Entity entity, BlockPos pos,BlockState state) {
-        if(entity instanceof PlayerEntity player){
-            if(!player.getAbilities().creativeMode) {
-                player.setOnFire(true);
-                player.damage(DamageSource.ON_FIRE, 1f);
+        if(!world.isClient) {
+            List<UUID> portals = CalledValues.getPortals(entity);
+            for (UUID portal : portals) {
+                Entity checkPortal = ((ServerWorld) world).getEntity(portal);
+                if(checkPortal != null) {
+                    checkPortal.kill();
+                }
             }
-        }else if(!(entity instanceof ItemEntity)&&!(entity instanceof CorePhysicsEntity)){
-           entity.setOnFire(true);
-           entity.setFireTicks(1);
-           entity.damage(DamageSource.ON_FIRE, 1f);
+
+            if(entity instanceof CorePhysicsEntity){
+                entity.remove(Entity.RemovalReason.KILLED);
+            }
         }
     }
 
