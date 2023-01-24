@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.blocks.SlidingDoorBlock;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalGun;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -15,6 +16,7 @@ import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -38,7 +40,6 @@ public class AutoPortalBlock extends BlockWithEntity {
     public static final DirectionProperty FACING = Properties.FACING;
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
     public static final BooleanProperty POWERED = Properties.POWERED;
-    public static final BooleanProperty OPEN = Properties.OPEN;
 
     private static final VoxelShape PILLAR_SHAPE = createCuboidShape(0, 0, 0, 1, 15, 1);
     public static final VoxelShape TOP_SOUTH_SHAPE = VoxelShapes.union(PILLAR_SHAPE, PILLAR_SHAPE.offset(15 / 16.0, 0, 0));
@@ -57,7 +58,6 @@ public class AutoPortalBlock extends BlockWithEntity {
                 .with(FACING, Direction.NORTH)
                 .with(HALF, DoubleBlockHalf.LOWER)
                 .with(POWERED, false)
-                .with(OPEN, false)
         );
     }
 
@@ -121,17 +121,13 @@ public class AutoPortalBlock extends BlockWithEntity {
         return getDefaultState()
             .with(FACING, ctx.getPlayerFacing().getOpposite())
             .with(HALF, DoubleBlockHalf.LOWER)
-            .with(POWERED, powered)
-            .with(OPEN, powered);
+            .with(POWERED, powered);
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), Block.NOTIFY_ALL);
-        openOrClosePortal(world, pos, state.get(FACING), false);
-        if (state.get(OPEN)) {
-            openOrClosePortal(world, pos, state.get(FACING), true);
-        }
+        openOrClosePortal(world, pos, state.get(FACING), true);
     }
 
     @Override
@@ -140,13 +136,10 @@ public class AutoPortalBlock extends BlockWithEntity {
         final boolean poweredNow = world.isReceivingRedstonePower(pos) ||
             world.isReceivingRedstonePower(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
         if (!getDefaultState().isOf(block) && poweredNow != state.get(POWERED)) {
-            BlockState newState = state.with(POWERED, poweredNow);
             if (poweredNow) {
-                final boolean shouldBeOpen = !state.get(OPEN);
-                openOrClosePortal(world, state.get(HALF) == DoubleBlockHalf.LOWER ? pos : pos.down(), state.get(FACING), shouldBeOpen);
-                newState = newState.with(OPEN, shouldBeOpen);
+                openOrClosePortal(world, state.get(HALF) == DoubleBlockHalf.LOWER ? pos : pos.down(), state.get(FACING), false);
             }
-            world.setBlockState(pos, newState);
+            world.setBlockState(pos, state.with(POWERED, poweredNow));
         }
     }
 
@@ -161,44 +154,44 @@ public class AutoPortalBlock extends BlockWithEntity {
         return state.get(HALF) != DoubleBlockHalf.UPPER || world.getBlockState(pos.down()).isOf(this);
     }
 
-    private static void openOrClosePortal(World world, BlockPos lower, Direction facing, boolean open) {
+    private static void openOrClosePortal(World world, BlockPos lower, Direction facing, boolean forceClose) {
         if (world.isClient) return;
         final int color = 0x1d86db; // TODO: Replace with block entity usage
         final BlockPos upper = lower.up();
-        if (open) {
-            final Direction facingOpposite = facing.getOpposite();
-            final BlockPos placeOn = upper.offset(facingOpposite);
-            final ExperimentalPortal portal = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
-            assert portal != null;
-            final Vec3d portalPos = new Vec3d(
-                placeOn.getX() + 0.5 - 0.510 * facingOpposite.getOffsetX(),
-                placeOn.getY(),
-                placeOn.getZ() + 0.5 - 0.510 * facingOpposite.getOffsetZ()
-            );
-            portal.setOriginPos(portalPos);
-            CalledValues.setDestination(portal, portalPos);
-            final Vec3i right = new Vec3i(0, 1, 0).crossProduct(facingOpposite.getVector());
-            final Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(
-                PortalGun.getPortalOrientationQuaternion(Vec3d.of(right), new Vec3d(0, 1, 0))
-            );
-            portal.setYaw(rotAngles.getLeft().floatValue());
-            portal.setPitch(rotAngles.getRight().floatValue());
-            portal.setColor(color);
-            CalledValues.setOrientation(portal, Vec3d.of(right), new Vec3d(0, -1, 0));
-            portal.setLinkedPortalUuid("null");
-            world.spawnEntity(portal);
-            PortalGun.getPotentialOpposite(world, portalPos, portal, color, true)
-                .ifPresent(other -> PortalGun.linkPortals(portal, other));
-        } else {
-            final List<ExperimentalPortal> portals = world.getEntitiesByType(
-                PortalCubedEntities.EXPERIMENTAL_PORTAL,
-                Box.from(BlockBox.create(lower, upper)),
-                p -> p.getColor() == color
-            );
-            if (!portals.isEmpty()) {
-                portals.forEach(ExperimentalPortal::kill);
-            }
+        final List<ExperimentalPortal> portals = world.getEntitiesByType(
+            PortalCubedEntities.EXPERIMENTAL_PORTAL,
+            Box.from(BlockBox.create(lower, upper)),
+            p -> p.getColor() == color
+        );
+        if (!portals.isEmpty()) {
+            portals.forEach(ExperimentalPortal::kill);
+            world.playSound(null, lower.getX(), lower.getY(), lower.getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
+            return;
         }
+        if (forceClose) return;
+        final Direction facingOpposite = facing.getOpposite();
+        final BlockPos placeOn = upper.offset(facingOpposite);
+        final ExperimentalPortal portal = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
+        assert portal != null;
+        final Vec3d portalPos = new Vec3d(
+            placeOn.getX() + 0.5 - 0.510 * facingOpposite.getOffsetX(),
+            placeOn.getY(),
+            placeOn.getZ() + 0.5 - 0.510 * facingOpposite.getOffsetZ()
+        );
+        portal.setOriginPos(portalPos);
+        CalledValues.setDestination(portal, portalPos);
+        final Vec3i right = new Vec3i(0, 1, 0).crossProduct(facingOpposite.getVector());
+        final Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(
+            PortalGun.getPortalOrientationQuaternion(Vec3d.of(right), new Vec3d(0, 1, 0))
+        );
+        portal.setYaw(rotAngles.getLeft().floatValue());
+        portal.setPitch(rotAngles.getRight().floatValue());
+        portal.setColor(color);
+        CalledValues.setOrientation(portal, Vec3d.of(right), new Vec3d(0, -1, 0));
+        portal.setLinkedPortalUuid("null");
+        world.spawnEntity(portal);
+        PortalGun.getPotentialOpposite(world, portalPos, portal, color, true)
+            .ifPresent(other -> PortalGun.linkPortals(portal, other, 0.9f));
     }
 
     private static int getComplementary(int color) {
@@ -225,7 +218,7 @@ public class AutoPortalBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, HALF, POWERED, OPEN);
+        builder.add(FACING, HALF, POWERED);
     }
 
     @Override

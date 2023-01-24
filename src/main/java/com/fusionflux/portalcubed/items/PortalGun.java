@@ -181,6 +181,7 @@ public class PortalGun extends Item implements DyeableItem {
                         }
 
                         if (i == 8) {
+                            world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
                             return TypedActionResult.pass(stack);
                         }
                     }
@@ -246,7 +247,7 @@ public class PortalGun extends Item implements DyeableItem {
                         .orElse(null);
                 }
                 if (otherPortal != null) {
-                    linkPortals(portalholder, otherPortal);
+                    linkPortals(portalholder, otherPortal, 0.1f);
 
                     CalledValues.setPlayer(portalholder,user.getUuid());
                     CalledValues.setPlayer(otherPortal,user.getUuid());
@@ -287,7 +288,7 @@ public class PortalGun extends Item implements DyeableItem {
         ).stream().min(Comparator.comparingDouble(p -> p.getOriginPos().squaredDistanceTo(portalPos)));
     }
 
-    public static void linkPortals(ExperimentalPortal portal1, ExperimentalPortal portal2) {
+    public static void linkPortals(ExperimentalPortal portal1, ExperimentalPortal portal2, float volume) {
         CalledValues.setDestination(portal1,portal2.getOriginPos().add(portal2.getFacingDirection().getUnitVector().getX()*.1,portal2.getFacingDirection().getUnitVector().getY()*.1,portal2.getFacingDirection().getUnitVector().getZ()*.1));
         CalledValues.setOtherFacing(portal1,new Vec3d(portal2.getFacingDirection().getUnitVector().getX(),portal2.getFacingDirection().getUnitVector().getY(),portal2.getFacingDirection().getUnitVector().getZ()));
         CalledValues.setOtherAxisH(portal1,CalledValues.getAxisH(portal2));
@@ -300,7 +301,7 @@ public class PortalGun extends Item implements DyeableItem {
         portal1.setLinkedPortalUuid(portal2.getUuidAsString());
         portal2.setLinkedPortalUuid(portal1.getUuidAsString());
 
-        portal1.getWorld().playSound(null, portal1.getPos().getX(), portal1.getPos().getY(), portal1.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, .1F, 1F);
+        portal1.getWorld().playSound(null, portal1.getPos().getX(), portal1.getPos().getY(), portal1.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, volume, 1F);
     }
 
     private boolean validPos(World world, Vec3i up, Vec3i right, Vec3d portalPos1){
