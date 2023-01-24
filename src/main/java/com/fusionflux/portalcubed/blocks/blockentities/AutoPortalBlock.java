@@ -47,15 +47,12 @@ public class AutoPortalBlock extends BlockWithEntity {
     public static final BooleanProperty POWERED = Properties.POWERED;
     public static final EnumProperty<PortalType> TYPE = EnumProperty.of("type", PortalType.class);
 
-    private static final VoxelShape PILLAR_SHAPE = createCuboidShape(0, 0, 0, 1, 15, 1);
-    public static final VoxelShape TOP_SOUTH_SHAPE = VoxelShapes.union(PILLAR_SHAPE, PILLAR_SHAPE.offset(15 / 16.0, 0, 0));
-    public static final VoxelShape TOP_NORTH_SHAPE = TOP_SOUTH_SHAPE.offset(0, 0, 15 / 16.0);
-    public static final VoxelShape TOP_EAST_SHAPE = VoxelShapes.union(PILLAR_SHAPE, PILLAR_SHAPE.offset(0, 0, 15 / 16.0));
-    public static final VoxelShape TOP_WEST_SHAPE = TOP_EAST_SHAPE.offset(15 / 16.0, 0, 0);
-    public static final VoxelShape BOTTOM_NORTH_SHAPE = TOP_NORTH_SHAPE.offset(0, 1 / 16.0, 0);
-    public static final VoxelShape BOTTOM_SOUTH_SHAPE = TOP_SOUTH_SHAPE.offset(0, 1 / 16.0, 0);
-    public static final VoxelShape BOTTOM_WEST_SHAPE = TOP_WEST_SHAPE.offset(0, 1 / 16.0, 0);
-    public static final VoxelShape BOTTOM_EAST_SHAPE = TOP_EAST_SHAPE.offset(0, 1 / 16.0, 0);
+    private static final VoxelShape PILLAR_SHAPE_NS = createCuboidShape(-2, 0, 0, 1, 16, 2);
+    private static final VoxelShape PILLAR_SHAPE_EW = createCuboidShape(0, 0, -2, 2, 16, 1);
+    public static final VoxelShape SOUTH_SHAPE = VoxelShapes.union(PILLAR_SHAPE_NS, PILLAR_SHAPE_NS.offset(17 / 16.0, 0, 0));
+    public static final VoxelShape NORTH_SHAPE = SOUTH_SHAPE.offset(0, 0, 14 / 16.0);
+    public static final VoxelShape EAST_SHAPE = VoxelShapes.union(PILLAR_SHAPE_EW, PILLAR_SHAPE_EW.offset(0, 0, 17 / 16.0));
+    public static final VoxelShape WEST_SHAPE = EAST_SHAPE.offset(14 / 16.0, 0, 0);
 
     public AutoPortalBlock(Settings settings) {
         super(settings);
@@ -76,12 +73,11 @@ public class AutoPortalBlock extends BlockWithEntity {
     @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 //        if (true) return VoxelShapes.fullCube();
-        final boolean top = state.get(HALF) == DoubleBlockHalf.UPPER;
         return switch (state.get(FACING)) {
-            default -> top ? TOP_NORTH_SHAPE : BOTTOM_NORTH_SHAPE; // and NORTH
-            case SOUTH -> top ? TOP_SOUTH_SHAPE : BOTTOM_SOUTH_SHAPE;
-            case WEST -> top ? TOP_WEST_SHAPE : BOTTOM_WEST_SHAPE;
-            case EAST -> top ? TOP_EAST_SHAPE : BOTTOM_EAST_SHAPE;
+            default -> NORTH_SHAPE; // and NORTH
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            case EAST -> EAST_SHAPE;
         };
     }
 

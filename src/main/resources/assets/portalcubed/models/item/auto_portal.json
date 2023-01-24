@@ -1,3 +1,6 @@
 {
-  "parent": "portalcubed:block/auto_portal_upper"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "portalcubed:item/auto_portal"
+  }
 }
