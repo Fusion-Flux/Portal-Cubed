@@ -2,10 +2,11 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.blockentities.*;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.MapColor;
+import net.minecraft.block.Material;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.item.BlockItem;
@@ -15,6 +16,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.block.extensions.api.QuiltMaterialBuilder;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
@@ -31,6 +33,10 @@ public class PortalCubedBlocks {
 
     public static final HardLightBridgeEmitterBlock HLB_EMITTER_BLOCK = new HardLightBridgeEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(QuiltBlockSettings.of(Material.AIR).hardness(999999f).nonOpaque().resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)));
+
+    public static final AutoPortalBlock AUTO_PORTAL_BLOCK = new AutoPortalBlock(
+        QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE)
+    );
 
     public static final Block WHITE_CHECKERED_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final Block WHITE_PANEL = new Block(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
@@ -153,6 +159,8 @@ public class PortalCubedBlocks {
 
     public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
     public static BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY;
+
+    public static BlockEntityType<AutoPortalBlockEntity> AUTO_PORTAL_BLOCK_ENTITY;
 
     public static final FaithPlateBlock FAITH_PLATE = new FaithPlateBlock(QuiltBlockSettings.of(Material.STONE).hardness(999999f).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)));
     public static BlockEntityType<FaithPlateBlockEntity> FAITH_PLATE_ENTITY;
@@ -431,6 +439,10 @@ public class PortalCubedBlocks {
             NEUROTOXIN_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("neurotoxin_emitter_entity"), FabricBlockEntityTypeBuilder.create(NeurotoxinEmitterBlockEntity::new, NEUROTOXIN_EMITTER).build(null));
             Registry.register(Registry.BLOCK, id("neurotoxin_emitter"), NEUROTOXIN_EMITTER);
             Registry.register(Registry.ITEM, id("neurotoxin_emitter"), new BlockItem(NEUROTOXIN_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+            AUTO_PORTAL_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("auto_portal_entity"), QuiltBlockEntityTypeBuilder.create(AutoPortalBlockEntity::new, AUTO_PORTAL_BLOCK).build());
+            Registry.register(Registry.BLOCK, id("auto_portal"), AUTO_PORTAL_BLOCK);
+            Registry.register(Registry.ITEM, id("auto_portal"), new BlockItem(AUTO_PORTAL_BLOCK, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
             EXCURSION_FUNNEL_EMMITER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_emitter_entity"), FabricBlockEntityTypeBuilder.create(ExcursionFunnelEmitterEntity::new, EXCURSION_FUNNEL_EMITTER).build(null));
             Registry.register(Registry.BLOCK, id("excursion_funnel_emitter"), EXCURSION_FUNNEL_EMITTER);

@@ -6,6 +6,7 @@
   "subtitles.portalcubed.gelrun": "Propulsion Gel Run",
   "subtitles.portalcubed.portalgunsecondaryfire": "Portal Gun Secondary Fire",
   "subtitles.portalcubed.portalgunprimaryfire": "Portal Gun Primary Fire",
+  "subtitles.portalcubed.portal_invalid_surface": "Portal Gun Failed",
 
   "subtitles.portalcubed.portal_open": "Portal Opens",
   "subtitles.portalcubed.portal_close": "Portal Closes",
@@ -49,6 +50,8 @@
   "block.portalcubed.repulsion_gel": "Repulsion Gel Glob",
   "block.portalcubed.adhesion_gel": "Adhesion Gel Glob",
   "block.portalcubed.conversion_gel": "Conversion Gel Glob",
+
+  "block.portalcubed.auto_portal": "Auto Portal",
 
   "block.portalcubed.aged_padded_gray_2x1_panel_bottom": "Aged Padded Gray 2x1 Panel Bottom",
   "block.portalcubed.aged_padded_gray_2x1_panel_top": "Aged Padded Gray 2x1 Panel Top",
@@ -191,5 +194,11 @@
 
 
   "key.portalcubed.category" : "Portal³",
-  "key.portalcubed.grab" : "Grab"
+  "key.portalcubed.grab" : "Grab",
+
+  "portalcubed.auto_portal.set_portal_type": "Set portal type to %s",
+  "portalcubed.portal_type.primary": "Primary",
+  "portalcubed.portal_type.secondary": "Secondary",
+  "portalcubed.auto_portal.set_portal_color": "Set portal color to %s",
+  "portalcubed.auto_portal.set_portal_color.default": "Reset portal color"
 }

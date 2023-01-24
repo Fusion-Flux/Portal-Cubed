@@ -8,6 +8,7 @@
     "portalcubed:conversion_gel",
     "portalcubed:propulsion_gel",
     "portalcubed:repulsion_gel",
-    "portalcubed:adhesion_gel"
+    "portalcubed:adhesion_gel",
+    "portalcubed:auto_portal"
   ]
 }

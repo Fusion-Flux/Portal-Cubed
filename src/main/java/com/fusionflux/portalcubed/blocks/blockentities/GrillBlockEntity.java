@@ -1,16 +1,12 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
-import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
@@ -149,14 +145,6 @@ public class GrillBlockEntity extends BlockEntity {
         for (int i = 0; i < size; i++) {
             facing.add(Direction.fromVector(direcXList.get(i), direcYList.get(i), direcZList.get(i)));
         }
-
-        List<Integer> portalXList;
-        List<Integer> portalYList;
-        List<Integer> portalZList;
-
-        portalXList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalxList")));
-        portalYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalyList")));
-        portalZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalzList")));
 
     }
 

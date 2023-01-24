@@ -2,27 +2,33 @@ package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.items.PortalGun;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tessellator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormats;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.GameMode;
 
 public class PortalHud {
     private static final Identifier ROUND_TEXTURE = new Identifier(PortalCubed.MODID, "textures/gui/activeportalindicator.png");
     private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/gui/activeportalindicator_square.png");
 
     public static void renderPortalLeft(MatrixStack matrices, float tickDelta) {
+        //noinspection DataFlowIssue
+        if (
+            !MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
+                MinecraftClient.getInstance().interactionManager.getCurrentGameMode() == GameMode.SPECTATOR
+        ) return;
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -138,6 +144,11 @@ public class PortalHud {
     }
 
     public static void texture(int x, int y, int z, int width, int height, float u, float v, float uw, float vh, float r, float g, float b, float a) {
+        //noinspection DataFlowIssue
+        if (
+            !MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
+                MinecraftClient.getInstance().interactionManager.getCurrentGameMode() == GameMode.SPECTATOR
+        ) return;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
         RenderSystem.enableTexture();

@@ -225,7 +225,7 @@ public class SlidingDoorBlock extends Block {
         super.onBreak(world, pos, state, player);
     }
 
-    protected static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         DoubleBlockHalf doubleBlockHalf = state.get(HALF);
         if (doubleBlockHalf == DoubleBlockHalf.UPPER) {
             BlockPos blockPos = pos.down();
