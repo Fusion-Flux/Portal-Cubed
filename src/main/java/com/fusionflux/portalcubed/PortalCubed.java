@@ -135,11 +135,27 @@ public class PortalCubed implements ModInitializer {
             float rotyaw = buf.readFloat();
             UUID cubeuuid =  buf.readUuid();
             server.execute(() -> {
-                CorePhysicsEntity cube = ((CorePhysicsEntity)player.getWorld().getEntity(cubeuuid));
+                if (!(player.getWorld().getEntity(cubeuuid) instanceof CorePhysicsEntity cube)) {
+                    LOGGER.warn("{} tried to drop nonexistent physics object", player);
+                    return;
+                }
+                if (!cube.getHolderUUID().equals(player.getUuid())) {
+                    LOGGER.warn("{} tried to drop another player's physics object", player);
+                    return;
+                }
                 cube.setHolderUUID(null);
                 cube.setRotYaw(rotyaw);
                 Vec3d cubePos = new Vec3d(x,y,z);
                 Vec3d lastcubePos = new Vec3d(lastx,lasty,lastz);
+                if (cubePos.squaredDistanceTo(lastcubePos) > 10 * 10) {
+                    LOGGER.warn("{} tried to throw a physics object really fast ({})", player, cubePos.distanceTo(lastcubePos));
+                    return;
+                }
+
+                if (cubePos.squaredDistanceTo(player.getPos()) > 10 * 10) {
+                    LOGGER.warn("{} tried to drop physics object far away ({})", player, cubePos.distanceTo(player.getPos()));
+                    return;
+                }
                 cube.setPosition(cubePos);
                 cube.setVelocity(RotationUtil.vecWorldToPlayer(cubePos.subtract(lastcubePos), GravityChangerAPI.getGravityDirection(cube)).multiply(.5));
             });
