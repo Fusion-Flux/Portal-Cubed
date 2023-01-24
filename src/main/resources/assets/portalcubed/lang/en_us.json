@@ -194,5 +194,11 @@
 
 
   "key.portalcubed.category" : "Portal³",
-  "key.portalcubed.grab" : "Grab"
+  "key.portalcubed.grab" : "Grab",
+
+  "portalcubed.auto_portal.set_portal_type": "Set portal type to %s",
+  "portalcubed.portal_type.primary": "Primary",
+  "portalcubed.portal_type.secondary": "Secondary",
+  "portalcubed.auto_portal.set_portal_color": "Set portal color to %s",
+  "portalcubed.auto_portal.set_portal_color.default": "Reset portal color"
 }

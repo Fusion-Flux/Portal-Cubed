@@ -302,6 +302,7 @@ public class PortalGun extends Item implements DyeableItem {
         portal2.setLinkedPortalUuid(portal1.getUuidAsString());
 
         portal1.getWorld().playSound(null, portal1.getPos().getX(), portal1.getPos().getY(), portal1.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, volume, 1F);
+        portal2.getWorld().playSound(null, portal2.getPos().getX(), portal2.getPos().getY(), portal2.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, volume, 1F);
     }
 
     private boolean validPos(World world, Vec3i up, Vec3i right, Vec3d portalPos1){

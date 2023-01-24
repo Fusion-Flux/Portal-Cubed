@@ -207,9 +207,17 @@ public class AutoPortalBlock extends BlockWithEntity {
         final BlockPos otherPos = upper ? pos.down() : pos.up();
         final BlockPos lowerPos = upper ? otherPos : pos;
         final BlockState otherState = world.getBlockState(otherPos);
-        final ItemStack item = player.getStackInHand(hand);
-        if (item.isEmpty()) {
+        final ItemStack stack = player.getStackInHand(hand);
+        if (stack.isEmpty()) {
             openOrClosePortal(world, lowerPos, state.get(FACING), true);
+            if (player.isSneaking()) {
+                for (BlockPos usePos = pos; usePos != null; usePos = usePos == pos ? otherPos : null) {
+                    world.getBlockEntity(usePos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
+                        .ifPresent(entity -> entity.setColor(0x1d86db));
+                }
+                player.sendMessage(Text.translatable("portalcubed.auto_portal.set_portal_color.default"), true);
+                return ActionResult.success(world.isClient);
+            }
             final BlockState newState = state.cycle(TYPE);
             world.setBlockState(pos, newState);
             world.setBlockState(otherPos, otherState.cycle(TYPE));
@@ -222,7 +230,7 @@ public class AutoPortalBlock extends BlockWithEntity {
             );
             return ActionResult.success(world.isClient);
         }
-        if (item.getItem() instanceof DyeItem dye) {
+        if (stack.getItem() instanceof DyeItem dye) {
             openOrClosePortal(world, lowerPos, state.get(FACING), true);
             final int dyeColor = PortalCubedItems.PORTAL_GUN.getColor(DyeableItem.blendAndSetColor(
                 new ItemStack(PortalCubedItems.PORTAL_GUN), List.of(dye)
@@ -234,11 +242,14 @@ public class AutoPortalBlock extends BlockWithEntity {
             player.sendMessage(
                 Text.translatable(
                     "portalcubed.auto_portal.set_portal_color",
-                    Text.translatable("color.minecraft." + dye.getColor().asString())
+                    Text.translatable("color.minecraft." + dye.getColor().getName())
                 ).styled(s -> s.withColor(getColor(world, pos))),
                 true
             );
-            return ActionResult.CONSUME;
+            if (!player.getAbilities().creativeMode) {
+                stack.decrement(1);
+            }
+            return ActionResult.success(world.isClient);
         }
         return ActionResult.PASS;
     }
