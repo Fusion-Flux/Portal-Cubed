@@ -6,8 +6,10 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -17,9 +19,12 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -28,6 +33,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -61,10 +67,6 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     @Override
     public void onStoppedTrackingBy(ServerPlayerEntity player) {
         tracking.remove(player);
-    }
-
-    public Set<ServerPlayerEntity> getTracking() {
-        return tracking;
     }
 
     @Override
@@ -307,8 +309,20 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         }
     }
 
-    public void startFizzling() {
+    public void startFizzlingProgress() {
         fizzling = true;
+    }
+
+    public void fizzle() {
+        world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
+        setNoGravity(true);
+        fizzling = true;
+        final PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVarInt(getId());
+        final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);
+        for (final ServerPlayerEntity player : tracking) {
+            player.networkHandler.sendPacket(packet);
+        }
     }
 
     public float getFizzleProgress() {

@@ -65,7 +65,7 @@ public class PortalCubedClientPackets {
                 if (client.player.getUuid().equals(physicsEntity.getHolderUUID())) {
                     physicsEntity.dropCube();
                 }
-                physicsEntity.startFizzling();
+                physicsEntity.startFizzlingProgress();
             }
         });
     }
