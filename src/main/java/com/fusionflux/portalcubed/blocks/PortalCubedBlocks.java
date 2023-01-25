@@ -175,11 +175,9 @@ public class PortalCubedBlocks {
     public static BlockEntityType<DuelExcursionFunnelEmitterEntity> DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY;
     public static BlockEntityType<ExcursionFunnelEntityMain> EXCURSION_FUNNEL_ENTITY;
 
-    public static final GrillBlock GRILL = new GrillBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
-    public static BlockEntityType<GrillBlockEntity> GRILL_ENTITY;
+    public static final GrillBlock GRILL = new GrillBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision().strength(-1, 3600000));
 
-    public static final GrillEmitter GRILL_EMITTER = new GrillEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
-    public static BlockEntityType<GrillEmitterEntity> GRILL_EMITTER_ENTITY;
+    public static final GrillEmitter GRILL_EMITTER = new GrillEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
 
 
     public static final LaserBlock LASER = new LaserBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
@@ -492,10 +490,8 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("old_ap_floor_button"), new BlockItem(OLD_AP_FLOOR_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
-        GRILL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("grill_entity"), FabricBlockEntityTypeBuilder.create(GrillBlockEntity::new, GRILL).build(null));
         Registry.register(Registry.BLOCK, id("grill"), GRILL);
 
-        GRILL_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("grill_emitter_entity"), FabricBlockEntityTypeBuilder.create(GrillEmitterEntity::new, GRILL_EMITTER).build(null));
         Registry.register(Registry.BLOCK, id("grill_emitter"), GRILL_EMITTER);
         Registry.register(Registry.ITEM, id("grill_emitter"), new BlockItem(GRILL_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
