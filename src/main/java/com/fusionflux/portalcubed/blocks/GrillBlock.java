@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.blocks.blockentities;
+package com.fusionflux.portalcubed.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
