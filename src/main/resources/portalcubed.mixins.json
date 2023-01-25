@@ -6,16 +6,17 @@
   "mixins": [
     "ClientPlayerEntityMixin",
     "EntityMixin",
+    "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "WorldMixin",
     "WorldViewMixin"
   ],
   "client": [
-    "client.InGameOverlayRendererMixin",
-    "client.MinecraftClientMixin",
     "client.BackgroundRendererMixin",
     "client.CameraMixin",
+    "client.InGameOverlayRendererMixin",
+    "client.MinecraftClientMixin",
     "client.ModelLoaderMixin"
   ],
   "injectors": {
