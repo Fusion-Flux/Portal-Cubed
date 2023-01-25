@@ -4,6 +4,7 @@
 	"textures": {
 		"0": "portalcubed:block/light_bridge_emitter",
 		"1": "portalcubed:block/padded_gray_panel",
+		"2": "portalcubed:block/light_bridge_emitter_e",
 		"particle": "portalcubed:block/light_bridge_emitter"
 	},
 	"elements": [
@@ -69,6 +70,52 @@
 				"down": {"uv": [15.984, 8.016, 10.016, 8.484], "texture": "#0"}
 			}
 		},
+
+
+		{
+			"name": "emission",
+			"from": [2, 0, -1.45],
+			"to": [14, 4, -1.45],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [10.5, 1.5, -1.7]},
+			"faces": {
+				"north": {"uv": [10.016, 6.016, 15.984, 7.984], "texture": "#2"}
+			}
+		},
+		{
+			"name": "emission",
+			"from": [2, 0, -1.45],
+			"to": [14, 4, -1.45],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [10.5, 2.5, -1.7]},
+			"faces": {
+				"north": {"uv": [10.016, 6.016, 15.984, 7.984], "texture": "#2"}
+			}
+		},
+		{
+			"name": "emission",
+			"from": [2, 1.5, -2.8],
+			"to": [14, 2.5, -1.8],
+			"rotation": {"angle": 45, "axis": "x", "origin": [2.5, 2, -2.3]},
+			"faces": {
+				"north": {"uv": [10.016, 8.016, 15.984, 8.484], "texture": "#2"},
+				"south": {"uv": [10.016, 8.016, 15.984, 8.484], "texture": "#2"},
+				"up": {"uv": [10.016, 8.016, 15.984, 8.484], "texture": "#2"},
+				"down": {"uv": [10.016, 8.016, 15.984, 8.484], "texture": "#2"}
+			}
+		},
+		{
+			"name": "emission",
+			"from": [2, 2.9, -3.775],
+			"to": [14, 1.65, -2.525],
+			"rotation": {"angle": 45, "axis": "x", "origin": [2.5, 1.15, -3.025]},
+			"faces": {
+				"north": {"uv": [15.984, 8.016, 10.016, 8.484], "texture": "#2"},
+				"south": {"uv": [15.984, 8.016, 10.016, 8.484], "texture": "#2"},
+				"up": {"uv": [15.984, 8.016, 10.016, 8.484], "texture": "#2"},
+				"down": {"uv": [15.984, 8.016, 10.016, 8.484], "texture": "#2"}
+			}
+		},
+
+
 		{
 			"from": [-0.01, -0.01, -0.01],
 			"to": [16.01, 16.01, 16.01],

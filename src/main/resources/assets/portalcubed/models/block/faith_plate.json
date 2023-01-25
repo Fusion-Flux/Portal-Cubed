@@ -5,6 +5,7 @@
 		"0": "portalcubed:block/smooth_gray_panel",
 		"1": "portalcubed:block/padded_gray_panel",
 		"2": "portalcubed:block/faith_plate",
+		"3": "portalcubed:block/faith_plate_e",
 		"particle": "portalcubed:block/smooth_gray_panel"
 	},
 	"elements": [
@@ -44,6 +45,21 @@
 				"down": {"uv": [2.008, 3.492, 3.992, 0.008], "texture": "#2"}
 			}
 		},
+
+		{
+			"from": [4, 17, 1],
+			"to": [12, 18, 15],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9.5206, 14.34672]},
+			"faces": {
+				"north": {"uv": [5.008, 1.758, 6.992, 1.992], "texture": "#3"},
+				"east": {"uv": [4.758, 4.258, 8.242, 4.492], "texture": "#3"},
+				"south": {"uv": [5.008, 2.008, 6.992, 2.242], "texture": "#3"},
+				"west": {"uv": [4.758, 4.008, 8.242, 4.242], "texture": "#3"},
+				"up": {"uv": [0.008, 0.008, 1.992, 3.492], "texture": "#3"},
+				"down": {"uv": [2.008, 3.492, 3.992, 0.008], "texture": "#3"}
+			}
+		},
+
 		{
 			"from": [6, 10.73254, 7.65538],
 			"to": [10, 16.73254, 13.65538],

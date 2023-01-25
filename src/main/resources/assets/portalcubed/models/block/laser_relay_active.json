@@ -3,6 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "portalcubed:block/laser_emitter",
+		"1": "portalcubed:block/laser_emitter_e",
 		"particle": "portalcubed:block/laser_emitter"
 	},
 	"elements": [
@@ -84,6 +85,27 @@
 				"down": {"uv": [8.258, 0.008, 9.992, 1.742], "rotation": 270, "texture": "#0"}
 			}
 		},
+
+		{
+			"from": [4.5, 8, 19],
+			"to": [11.5, 8, 26],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 20.5]},
+			"faces": {
+				"up": {"uv": [8.258, 0.008, 9.992, 1.742], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [8.258, 0.008, 9.992, 1.742], "rotation": 270, "texture": "#1"}
+			}
+		},
+		{
+			"from": [4.5, 8, 19],
+			"to": [11.5, 8, 26],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, 22.5]},
+			"faces": {
+				"west": {"uv": [8.258, 0.008, 9.992, 1.742], "texture": "#1"},
+				"up": {"uv": [8.258, 0.008, 9.992, 1.742], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [8.258, 0.008, 9.992, 1.742], "rotation": 270, "texture": "#1"}
+			}
+		},
+
 		{
 			"from": [4.5, 4.5, 18.25],
 			"to": [11.5, 11.5, 26.25],

@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.mixin.client;
 import java.util.Map;
 import java.util.Set;
 
+import com.fusionflux.portalcubed.client.render.model.block.EmissiveBakedModel;
 import org.apache.commons.lang3.tuple.Triple;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,6 +22,7 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.AffineTransformation;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ModelLoader.class)
 public abstract class ModelLoaderMixin {
@@ -29,20 +31,16 @@ public abstract class ModelLoaderMixin {
     @Final
     private Map<Triple<Identifier, AffineTransformation, Boolean>, BakedModel> bakedModelCache;
 
-    @Unique
-    private Set<Identifier> wrappedModels = Sets.newHashSet();
-
-    @Inject(method = "bake", at = @At("RETURN"), cancellable = true)
-    private void portalcubed$injectEmissiveModels(Identifier id, ModelBakeSettings settings, CallbackInfoReturnable<BakedModel> cir) {
-        if (wrappedModels.contains(id) || !id.getNamespace().equals(PortalCubed.MODID)) return;
+    @Inject(method = "bake", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    private void portalcubed$injectEmissiveModels(Identifier id, ModelBakeSettings settings, CallbackInfoReturnable<BakedModel> cir, Triple<Identifier, AffineTransformation, Boolean> triple) {
+        if (bakedModelCache.get(triple) instanceof EmissiveBakedModel || !id.getNamespace().equals(PortalCubed.MODID)) return;
 
         final BakedModel modelToWrap = cir.getReturnValue();
-        final BakedModel emissiveModel = EmissiveModelRegistry.wrapModel(id, modelToWrap).orElseGet(() -> modelToWrap);
-        if (emissiveModel == null || emissiveModel == modelToWrap) return;
+        final BakedModel customModel = EmissiveModelRegistry.wrapModel(id, modelToWrap).orElseGet(() -> modelToWrap);
+        if (customModel == null || customModel == modelToWrap) return;
 
-        final Triple<Identifier, AffineTransformation, Boolean> triple = Triple.of(id, settings.getRotation(), settings.isUvLocked());
-        bakedModelCache.put(triple, emissiveModel);
-        cir.setReturnValue(emissiveModel);
+        bakedModelCache.replace(triple, customModel);
+        cir.setReturnValue(customModel);
     }
 
 }

@@ -95,17 +95,48 @@ public class PortalCubedClient implements ClientModInitializer {
 
     private void registerEmissiveModels() {
         // Misc
+        EmissiveModelRegistry.register(id("block/excursion_funnel"), id("block/excursion_funnel_beam"));
+        EmissiveModelRegistry.register(id("block/excursion_funnel_reversed"), id("block/reverse_excursion_funnel_beam"));
+
+        EmissiveModelRegistry.register(id("block/faith_plate"), id("block/faith_plate_e"));
+        EmissiveModelRegistry.register(id("block/faith_plate_active"), id("block/faith_plate_e"));
 
         EmissiveModelRegistry.register(id("block/laser"), id("block/laser_beam"));
         EmissiveModelRegistry.register(id("block/laser_ref_main"), id("block/laser_beam"));
         EmissiveModelRegistry.register(id("block/laser_ref_prev"), id("block/laser_beam"));
         EmissiveModelRegistry.register(id("block/light_bridge"), id("block/light_bridge"));
 
+
+        EmissiveModelRegistry.register(id("block/portal_1_door_bottom_left"), id("block/portal_1_door_e"));
+        EmissiveModelRegistry.register(id("block/portal_1_door_bottom_left_open"), id("block/portal_1_door_e"));
+        EmissiveModelRegistry.register(id("block/portal_1_door_bottom_right"), id("block/portal_1_door_e"));
+        EmissiveModelRegistry.register(id("block/portal_1_door_bottom_right_open"), id("block/portal_1_door_e"));
+
+        EmissiveModelRegistry.register(id("block/portal_2_door_bottom_right"), id("block/portal_2_door_e"));
+        EmissiveModelRegistry.register(id("block/portal_2_door_bottom_right_open"), id("block/portal_2_door_e"));
+        EmissiveModelRegistry.register(id("block/portal_2_door_top_right"), id("block/portal_2_door_e"));
+        EmissiveModelRegistry.register(id("block/portal_2_door_top_right_open"), id("block/portal_2_door_e"));
+
         // Emitters
 
-        EmissiveModelRegistry.register(id("block/laser_emitter"), id("block/laser_emitter_e"));
-        EmissiveModelRegistry.register(id("block/light_bridge_emitter_on"), id("block/light_bridge"));
+        EmissiveModelRegistry.register(id("block/light_bridge_emitter"), id("block/light_bridge_emitter_e"));
+
+        EmissiveModelRegistry.register(id("block/excursion_funnel_emitter_off"), id("block/funnel_wings_e"));
+        EmissiveModelRegistry.register(id("block/excursion_funnel_emitter"), id("block/funnel_wings_active_e"));
+        EmissiveModelRegistry.register(id("block/excursion_funnel_emitter_reversed"), id("block/funnel_wings_active_reverse_e"));
+
         EmissiveModelRegistry.register(id("block/laser_emitter_active"), id("block/laser_emitter_e"));
+        EmissiveModelRegistry.register(id("block/laser_emitter_active_downward"), id("block/laser_emitter_e"));
+        EmissiveModelRegistry.register(id("block/laser_emitter_active_upward"), id("block/laser_emitter_e"));
+
+        EmissiveModelRegistry.register(id("block/laser_relay_active"), id("block/laser_emitter_e"));
+
+        EmissiveModelRegistry.register(id("block/laser_catcher_active"), id("block/laser_emitter_e"));
+        EmissiveModelRegistry.register(id("block/laser_catcher_active_downward"), id("block/laser_emitter_e"));
+        EmissiveModelRegistry.register(id("block/laser_catcher_active_upward"), id("block/laser_emitter_e"));
+        EmissiveModelRegistry.register(id("block/laser_catcher"), id("block/laser_emitter_e"));
+        EmissiveModelRegistry.register(id("block/laser_catcher_downward"), id("block/laser_emitter_e"));
+        EmissiveModelRegistry.register(id("block/laser_catcher_upward"), id("block/laser_emitter_e"));
 
         // Buttons
 
