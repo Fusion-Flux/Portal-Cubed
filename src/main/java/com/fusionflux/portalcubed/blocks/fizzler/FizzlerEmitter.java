@@ -65,8 +65,7 @@ public class FizzlerEmitter extends HorizontalFacingBlock {
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (state.get(POWERED)) {
             updateGrill(world, pos.toImmutable(), state, false);
-            final BlockPos otherPos = state.get(HALF) == DoubleBlockHalf.UPPER ? pos.down() : pos.up();
-            updateGrill(world, otherPos, world.getBlockState(otherPos), false);
+            updateGrill(world, state.get(HALF) == DoubleBlockHalf.UPPER ? pos.down() : pos.up(), state.cycle(HALF), false);
         }
         if (!world.isClient && player.isCreative()) {
             onBreakInCreative(world, pos, state, player);
@@ -122,7 +121,7 @@ public class FizzlerEmitter extends HorizontalFacingBlock {
         final boolean powered = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(otherPos);
         if (!getDefaultState().isOf(block) && powered != state.get(POWERED)) {
             updateGrill(world, pos, state, powered);
-            updateGrill(world, otherPos, world.getBlockState(otherPos), powered);
+            updateGrill(world, otherPos, state.cycle(HALF), powered);
             world.setBlockState(pos, state.with(POWERED, powered), Block.NOTIFY_LISTENERS);
         }
     }
