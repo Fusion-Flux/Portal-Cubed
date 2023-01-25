@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.blocks;
+package com.fusionflux.portalcubed.blocks.fizzler;
 
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import net.minecraft.block.Block;
@@ -20,19 +20,25 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-
-public class GrillEmitter extends HorizontalFacingBlock {
+public class FizzlerEmitter extends HorizontalFacingBlock {
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
     public static final BooleanProperty POWERED = Properties.POWERED;
 
-    public GrillEmitter(Settings settings) {
+    private final AbstractFizzlerBlock fizzlerBlock;
+
+    public FizzlerEmitter(Settings settings, AbstractFizzlerBlock fizzlerBlock) {
         super(settings);
+        this.fizzlerBlock = fizzlerBlock;
         setDefaultState(
             getStateManager().getDefaultState()
                 .with(FACING, Direction.NORTH)
                 .with(HALF, DoubleBlockHalf.LOWER)
                 .with(POWERED, false)
         );
+    }
+
+    public AbstractFizzlerBlock getFizzlerBlock() {
+        return fizzlerBlock;
     }
 
     @Override
@@ -57,13 +63,13 @@ public class GrillEmitter extends HorizontalFacingBlock {
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient && player.isCreative()) {
-            onBreakInCreative(world, pos, state, player);
-        }
         if (state.get(POWERED)) {
             updateGrill(world, pos.toImmutable(), state, false);
             final BlockPos otherPos = state.get(HALF) == DoubleBlockHalf.UPPER ? pos.down() : pos.up();
             updateGrill(world, otherPos, world.getBlockState(otherPos), false);
+        }
+        if (!world.isClient && player.isCreative()) {
+            onBreakInCreative(world, pos, state, player);
         }
 
         super.onBreak(world, pos, state, player);
@@ -124,22 +130,22 @@ public class GrillEmitter extends HorizontalFacingBlock {
     private void updateGrill(World world, BlockPos pos, BlockState state, boolean placed) {
         if (world.isClient) return;
         final Direction searchDir = state.get(FACING);
-        final BooleanProperty grillAxis = GrillBlock.getStateForAxis(searchDir.getAxis());
+        final BooleanProperty grillAxis = AbstractFizzlerBlock.getStateForAxis(searchDir.getAxis());
         final BlockState targetState = state.with(FACING, searchDir.getOpposite()).with(POWERED, placed);
         BlockPos searchPos = pos.offset(searchDir);
         int i;
         for (i = 0; i < PortalCubedConfig.maxBridgeLength; i++) {
             final BlockState checkState = world.getBlockState(searchPos);
             if (checkState.equals(targetState)) break;
-            if (placed && !checkState.isAir() && !checkState.isOf(PortalCubedBlocks.GRILL)) return;
-            if (!placed && checkState.isOf(PortalCubedBlocks.GRILL)) {
+            if (placed && !checkState.isAir() && !checkState.isOf(fizzlerBlock)) return;
+            if (!placed && checkState.isOf(fizzlerBlock)) {
                 final BlockState newState = checkState.with(grillAxis, false);
-                world.setBlockState(searchPos, GrillBlock.isEmpty(newState) ? Blocks.AIR.getDefaultState() : newState);
+                world.setBlockState(searchPos, AbstractFizzlerBlock.isEmpty(newState) ? Blocks.AIR.getDefaultState() : newState);
             }
             searchPos = searchPos.offset(searchDir);
         }
         if (!placed || i == PortalCubedConfig.maxBridgeLength) return;
-        final BlockState placedState = PortalCubedBlocks.GRILL.getDefaultState().with(grillAxis, true);
+        final BlockState placedState = fizzlerBlock.getDefaultState().with(grillAxis, true);
         searchPos = pos.offset(searchDir);
         for (i = 0; i < PortalCubedConfig.maxBridgeLength; i++) {
             final BlockState checkState = world.getBlockState(searchPos);

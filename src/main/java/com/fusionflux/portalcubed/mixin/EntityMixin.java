@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
+import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.CustomCollisionView;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
@@ -33,11 +34,14 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, EntityPortalsAccess {
@@ -190,6 +194,11 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     }
 
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
+
+    @Unique
+    private final Map<BlockState, BlockPos> collidingBlocks = new HashMap<>();
+    @Unique
+    private final Map<BlockState, BlockPos> leftBlocks = new HashMap<>();
 
 
 
@@ -736,6 +745,40 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         this.prevX = pos.getX();
         this.prevY = pos.getY();
         this.prevZ = pos.getZ();
+    }
+
+    @Inject(method = "checkBlockCollision", at = @At("HEAD"))
+    private void beginBlockCheck(CallbackInfo ci) {
+        leftBlocks.putAll(collidingBlocks);
+    }
+
+    @Redirect(
+        method = "checkBlockCollision",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/block/BlockState;onEntityCollision(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/Entity;)V"
+        )
+    )
+    private void midBlockCheck(BlockState instance, World world, BlockPos pos, Entity entity) {
+        instance.onEntityCollision(world, pos, entity);
+        if (instance.getBlock() instanceof BlockCollisionTrigger trigger) {
+            final BlockPos immutable = pos.toImmutable();
+            if (collidingBlocks.put(instance, immutable) == null) {
+                trigger.onEntityEnter(instance, world, immutable, entity);
+            }
+            leftBlocks.remove(instance);
+        }
+    }
+
+    @Inject(method = "checkBlockCollision", at = @At("TAIL"))
+    private void endBlockCheck(CallbackInfo ci) {
+        for (final var entry : leftBlocks.entrySet()) {
+            if (entry.getKey().getBlock() instanceof BlockCollisionTrigger trigger) {
+                trigger.onEntityLeave(entry.getKey(), world, entry.getValue(), (Entity)(Object)this);
+            }
+            collidingBlocks.remove(entry.getKey());
+        }
+        leftBlocks.clear();
     }
 
 }

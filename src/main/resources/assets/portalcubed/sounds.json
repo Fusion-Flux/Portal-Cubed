@@ -53,6 +53,12 @@
 			"portalcubed:portal_close2"
 		]
 	},
+	"portal_fizzle": {
+		"subtitle": "subtitles.portalcubed.portal_fizzle",
+		"sounds": [
+			"portalcubed:portal_fizzle2"
+		]
+	},
 	"portal_invalid_surface": {
 		"subtitle": "subtitles.portalcubed.portal_invalid_surface",
 		"sounds": [
@@ -84,6 +90,11 @@
 	"companioncubeambiance": {
 		"sounds": [
 			"portalcubed:companioncubeambiance"
+		]
+	},
+	"material_emancipation": {
+		"sounds": [
+			"portalcubed:material_emancipation_01"
 		]
 	},
 	"radio": {

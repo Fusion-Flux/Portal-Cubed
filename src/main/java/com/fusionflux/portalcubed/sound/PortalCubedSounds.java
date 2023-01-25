@@ -15,10 +15,12 @@ public class PortalCubedSounds {
     public static final Identifier PORTAL_EXIT = new Identifier("portalcubed:portalexit");
     public static final Identifier PORTAL_OPEN = new Identifier("portalcubed:portal_open");
     public static final Identifier PORTAL_CLOSE = new Identifier("portalcubed:portal_close");
+    public static final Identifier PORTAL_FIZZLE = new Identifier("portalcubed:portal_fizzle");
     public static final Identifier CUBE_HIT_HIGH = new Identifier("portalcubed:cubehithigh");
     public static final Identifier CUBE_HIT_LOW = new Identifier("portalcubed:cubehitlow");
     public static final Identifier CUBE_SCRAPE = new Identifier("portalcubed:cubescrape");
     public static final Identifier COMPANION_CUBE_AMBIANCE = new Identifier("portalcubed:companioncubeambiance");
+    public static final Identifier MATERIAL_EMANCIPATION = new Identifier("portalcubed:material_emancipation");
     public static final Identifier RADIO_MUSIC = new Identifier("portalcubed:radio");
     public static final Identifier EXILE_SONG = new Identifier("portalcubed:exile_vilify");
     public static final Identifier CURIOSITY_CORE_SOUND = new Identifier("portalcubed:curiosity_core");
@@ -39,10 +41,12 @@ public class PortalCubedSounds {
     public static final SoundEvent ENTITY_EXIT_PORTAL = new SoundEvent(PORTAL_EXIT);
     public static final SoundEvent ENTITY_PORTAL_OPEN = new SoundEvent(PORTAL_OPEN);
     public static final SoundEvent ENTITY_PORTAL_CLOSE = new SoundEvent(PORTAL_CLOSE);
+    public static final SoundEvent ENTITY_PORTAL_FIZZLE = new SoundEvent(PORTAL_FIZZLE);
     public static final SoundEvent CUBE_HIGH_HIT_EVENT = new SoundEvent(CUBE_HIT_HIGH);
     public static final SoundEvent CUBE_LOW_HIT_EVENT = new SoundEvent(CUBE_HIT_LOW);
     public static final SoundEvent CUBE_SCRAPE_EVENT = new SoundEvent(CUBE_SCRAPE);
     public static final SoundEvent COMPANION_CUBE_AMBIANCE_EVENT = new SoundEvent(COMPANION_CUBE_AMBIANCE);
+    public static final SoundEvent MATERIAL_EMANCIPATION_EVENT = new SoundEvent(MATERIAL_EMANCIPATION);
     public static final SoundEvent RADIO_MUSIC_EVENT = new SoundEvent(RADIO_MUSIC);
     public static final SoundEvent EXILE_MUSIC_EVENT = new SoundEvent(EXILE_SONG);
     public static final SoundEvent CURIOSITY_CORE_EVENT = new SoundEvent(CURIOSITY_CORE_SOUND);
@@ -63,12 +67,14 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, PORTAL_EXIT, ENTITY_EXIT_PORTAL);
         Registry.register(Registry.SOUND_EVENT, PORTAL_OPEN, ENTITY_PORTAL_OPEN);
         Registry.register(Registry.SOUND_EVENT, PORTAL_CLOSE, ENTITY_PORTAL_CLOSE);
+        Registry.register(Registry.SOUND_EVENT, PORTAL_FIZZLE, ENTITY_PORTAL_FIZZLE);
         Registry.register(Registry.SOUND_EVENT, CUBE_HIT_HIGH, CUBE_HIGH_HIT_EVENT);
         Registry.register(Registry.SOUND_EVENT, CUBE_HIT_LOW, CUBE_LOW_HIT_EVENT);
         Registry.register(Registry.SOUND_EVENT, CUBE_SCRAPE, CUBE_SCRAPE_EVENT);
         Registry.register(Registry.SOUND_EVENT, EXILE_SONG, EXILE_MUSIC_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, COMPANION_CUBE_AMBIANCE, COMPANION_CUBE_AMBIANCE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, MATERIAL_EMANCIPATION, MATERIAL_EMANCIPATION_EVENT);
         Registry.register(Registry.SOUND_EVENT, RADIO_MUSIC, RADIO_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, CURIOSITY_CORE_SOUND, CURIOSITY_CORE_EVENT);
         Registry.register(Registry.SOUND_EVENT, ANGER_CORE_SOUND, ANGER_CORE_EVENT);
