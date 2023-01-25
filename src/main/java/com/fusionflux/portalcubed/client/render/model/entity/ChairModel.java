@@ -8,12 +8,11 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.ChairEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public class ChairModel extends EntityModel<ChairEntity> {
+public class ChairModel extends FizzleableModel<ChairEntity> {
 	public static final EntityModelLayer CHAIR_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"chair"), "main");
 	private final ModelPart bb_main;
 
@@ -43,13 +42,9 @@ public class ChairModel extends EntityModel<ChairEntity> {
 	}
 
 	@Override
-	public void setAngles(ChairEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-		//previously the render function, render code was moved to a method below
-	}
-	@Override
-	public void render(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+	public void renderFizzled(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
 
-		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
+		bb_main.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
-	
+
 }

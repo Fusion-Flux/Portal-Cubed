@@ -6,15 +6,13 @@ package com.fusionflux.portalcubed.client.render.model.entity;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.OldApCubeEntity;
-import com.fusionflux.portalcubed.entity.RadioEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public class OldApModel extends EntityModel<OldApCubeEntity> {
+public class OldApModel extends FizzleableModel<OldApCubeEntity> {
 	public static final EntityModelLayer OLD_AP_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"old_ap_cube"), "main");
 	private final ModelPart bb_main;
 
@@ -32,13 +30,9 @@ public class OldApModel extends EntityModel<OldApCubeEntity> {
 	}
 
 	@Override
-	public void setAngles(OldApCubeEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-		//previously the render function, render code was moved to a method below
-	}
-	@Override
-	public void render(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+	public void renderFizzled(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
 
-		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
+		bb_main.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
-	
+
 }

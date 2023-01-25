@@ -8,6 +8,7 @@ import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
@@ -17,28 +18,27 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class CorePhysicsEntity extends PathAwareEntity  {
 
-
+    private float fizzleProgress = 0f;
+    private boolean fizzling = false;
+    private final Set<ServerPlayerEntity> tracking = new HashSet<>();
 
     public CorePhysicsEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
@@ -52,6 +52,20 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     private final Vec3d offset = new Vec3d(0,this.getWidth()/2,0);
     private final Vec3d offsetHeight = new Vec3d(0,this.getHeight()/2,0);
+
+    @Override
+    public void onStartedTrackingBy(ServerPlayerEntity player) {
+        tracking.add(player);
+    }
+
+    @Override
+    public void onStoppedTrackingBy(ServerPlayerEntity player) {
+        tracking.remove(player);
+    }
+
+    public Set<ServerPlayerEntity> getTracking() {
+        return tracking;
+    }
 
     @Override
     public boolean collides() {
@@ -104,7 +118,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     public boolean isCustomNameVisible() {
         return false;
     }
-    
+
 
     @Override
     public boolean hasCustomName() {
@@ -281,6 +295,24 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         if(this.getVelocity().y < -3.92){
             this.setVelocity(this.getVelocity().add(0,.81d,0));
         }
+        if (fizzling) {
+            if (world.isClient) {
+                fizzleProgress += MinecraftClient.getInstance().getTickDelta();
+            } else {
+                fizzleProgress += 0.05f;
+                if (fizzleProgress >= 1f) {
+                    remove(RemovalReason.KILLED);
+                }
+            }
+        }
+    }
+
+    public void startFizzling() {
+        fizzling = true;
+    }
+
+    public float getFizzleProgress() {
+        return fizzleProgress;
     }
 
     protected final Vec3d getPlayerRotationVector(float pitch, float yaw) {

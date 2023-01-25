@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.client.render;
 
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -23,8 +23,12 @@ public abstract class EmissiveFeatureRenderer<T extends Entity, M extends Entity
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity,
             float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw,
             float headPitch) {
+        float brightness = 1f;
+        if (entity instanceof CorePhysicsEntity physicsEntity) {
+            brightness -= Math.min(physicsEntity.getFizzleProgress(), 1f);
+        }
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEyes(this.getEmissiveTexture(entity)));
-        this.getContextModel().render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.getContextModel().render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, brightness, brightness, brightness, brightness);
     }
 
     public abstract Identifier getEmissiveTexture(T entity);

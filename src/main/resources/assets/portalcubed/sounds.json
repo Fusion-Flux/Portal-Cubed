@@ -95,7 +95,8 @@
 	"material_emancipation": {
 		"sounds": [
 			"portalcubed:material_emancipation_01"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.material_emancipation"
 	},
 	"radio": {
 		"sounds": [

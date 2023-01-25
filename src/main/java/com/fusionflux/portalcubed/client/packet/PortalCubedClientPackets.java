@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.client.packet;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -19,9 +20,11 @@ import java.util.UUID;
 
 public class PortalCubedClientPackets {
     public static final Identifier SPAWN_PACKET = new Identifier(PortalCubed.MODID, "spawn_packet");
+    public static final Identifier FIZZLE_PACKET = new Identifier(PortalCubed.MODID, "fizzle");
     @Environment(EnvType.CLIENT)
     public static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(SPAWN_PACKET, PortalCubedClientPackets::onEntitySpawn);
+        ClientPlayNetworking.registerGlobalReceiver(FIZZLE_PACKET, PortalCubedClientPackets::onFizzle);
     }
 
 
@@ -48,6 +51,21 @@ public class PortalCubedClientPackets {
                 assert world != null;
                 if(world != null)
                 world.addEntity(entityID, entity);
+            }
+        });
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void onFizzle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        final int entityId = buf.readVarInt();
+        client.execute(() -> {
+            assert client.world != null;
+            if (client.world.getEntityById(entityId) instanceof CorePhysicsEntity physicsEntity) {
+                assert client.player != null;
+                if (client.player.getUuid().equals(physicsEntity.getHolderUUID())) {
+                    physicsEntity.dropCube();
+                }
+                physicsEntity.startFizzling();
             }
         });
     }
