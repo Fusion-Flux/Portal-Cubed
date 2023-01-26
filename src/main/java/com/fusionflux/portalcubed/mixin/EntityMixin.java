@@ -14,6 +14,7 @@ import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.google.common.collect.Lists;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -761,7 +762,13 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     )
     private void midBlockCheck(BlockState instance, World world, BlockPos pos, Entity entity) {
         instance.onEntityCollision(world, pos, entity);
-        if (instance.getBlock() instanceof BlockCollisionTrigger trigger) {
+        if (
+            instance.getBlock() instanceof BlockCollisionTrigger trigger &&
+                intersects(
+                    entity.getBoundingBox().offset(pos.multiply(-1)),
+                    trigger.getTriggerShape(instance, world, pos, ShapeContext.of(entity))
+                )
+        ) {
             final BlockPos immutable = pos.toImmutable();
             if (collidingBlocks.put(instance, immutable) == null) {
                 trigger.onEntityEnter(instance, world, immutable, entity);
@@ -779,6 +786,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             collidingBlocks.remove(entry.getKey());
         }
         leftBlocks.clear();
+    }
+
+    private boolean intersects(Box box, VoxelShape shape) {
+        return shape.getBoundingBoxes().stream().anyMatch(box::intersects);
     }
 
 }

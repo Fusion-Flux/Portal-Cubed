@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.fizzler;
 
+import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
@@ -25,13 +26,13 @@ import net.minecraft.world.BlockView;
 
 import java.util.UUID;
 
-public abstract class AbstractFizzlerBlock extends Block {
+public abstract class AbstractFizzlerBlock extends Block implements BlockCollisionTrigger {
     public static final BooleanProperty NS = BooleanProperty.of("ns");
     public static final BooleanProperty EW = BooleanProperty.of("ew");
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
 
-    private static final VoxelShape NS_SHAPE = createCuboidShape(7.5, 0, 0, 8.5, 15, 15);
-    private static final VoxelShape EW_SHAPE = createCuboidShape(0, 0, 7.5, 15, 15, 8.5);
+    private static final VoxelShape NS_SHAPE = createCuboidShape(7.5, 0, 0, 8.5, 16, 16);
+    private static final VoxelShape EW_SHAPE = createCuboidShape(0, 0, 7.5, 16, 16, 8.5);
     private static final VoxelShape BOTH_SHAPE = VoxelShapes.union(NS_SHAPE, EW_SHAPE);
 
     public AbstractFizzlerBlock(Settings settings) {
@@ -65,6 +66,11 @@ public abstract class AbstractFizzlerBlock extends Block {
             return EW_SHAPE;
         }
         return VoxelShapes.empty();
+    }
+
+    @Override
+    public VoxelShape getTriggerShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return getOutlineShape(state, world, pos, context);
     }
 
     @Override
