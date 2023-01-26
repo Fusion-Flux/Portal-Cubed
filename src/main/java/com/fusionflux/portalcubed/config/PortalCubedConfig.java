@@ -1,7 +1,5 @@
 package com.fusionflux.portalcubed.config;
 
-import com.fusionflux.portalcubed.PortalCubed;
-
 public class PortalCubedConfig extends MidnightConfig {
 
     //@Entry public static boolean enableLongFallBoots = true;
@@ -10,5 +8,6 @@ public class PortalCubedConfig extends MidnightConfig {
     @Entry public static boolean enableRoundPortals = false;
     @Entry public static boolean enableAccurateMovement = true;
     @Entry public static int maxBridgeLength = 127;
+    @Entry public static float fizzlerDamage = 35;
 }
 

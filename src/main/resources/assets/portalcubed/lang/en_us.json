@@ -54,7 +54,11 @@
   "block.portalcubed.conversion_gel": "Conversion Gel Glob",
 
   "block.portalcubed.auto_portal": "Auto Portal",
+
+  "block.portalcubed.absolute_fizzler": "Absolute Fizzler",
   "block.portalcubed.absolute_fizzler_emitter": "Absolute Fizzler Emitter",
+  "block.portalcubed.death_fizzler": "Death Fizzler",
+  "block.portalcubed.death_fizzler_emitter": "Death Fizzler Emitter",
 
   "block.portalcubed.aged_padded_gray_2x1_panel_bottom": "Aged Padded Gray 2x1 Panel Bottom",
   "block.portalcubed.aged_padded_gray_2x1_panel_top": "Aged Padded Gray 2x1 Panel Top",
@@ -176,24 +180,15 @@
   "block.portalcubed.laser_emitter": "Laser Emitter",
   "block.portalcubed.laser_catcher": "Laser Catcher",
 
-
-  "block.portalcubed.light_bridge_emitter": "Hardlight Bridge Emitter",
-
-  "text.autoconfig.portalcubed.title": "Portal Cubed Config",
-
-  "text.autoconfig.portalcubed.category.numbers": "Item Config",
-
-
-  "text.autoconfig.portalcubed.category.numbersblock": "Block Config",
-  "text.autoconfig.portalcubed.option.numbersblock.maxBridgeLength": "Hardlight Bridge Max Length",
-
   "portalcubed.midnightconfig.title": "Portal Cubed Config",
   "portalcubed.midnightconfig.maxBridgeLength": "Max Emitter Range",
   "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
   "portalcubed.midnightconfig.enableAccurateMovement": "Enable Accurate Movement",
+  "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
 
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
+  "death.attack.portalcubed.fizzle": "%s got fizzled",
 
 
   "key.portalcubed.category" : "Portal³",

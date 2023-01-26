@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.fluids;
 
-import com.fusionflux.portalcubed.mechanics.AcidDamageSource;
-
+import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
@@ -117,7 +116,7 @@ public abstract class ToxicGooFluid extends FlowableFluid {
         @Override
         public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
             if (!entity.isAlive()) return;
-            entity.damage(AcidDamageSource.INSTANCE, world.getRandom().range(7, 10));
+            entity.damage(PortalCubedDamageSources.ACID, world.getRandom().range(7, 10));
         }
     }
 }

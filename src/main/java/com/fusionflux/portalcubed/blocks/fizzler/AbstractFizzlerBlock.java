@@ -1,7 +1,9 @@
 package com.fusionflux.portalcubed.blocks.fizzler;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -73,10 +75,17 @@ public abstract class AbstractFizzlerBlock extends Block {
         }
     }
 
-    protected final void maybeFizzleEntity(Entity entity) {
+    protected final void fizzlePhysicsEntity(Entity entity) {
         if (entity.world.isClient) return;
         if (entity instanceof CorePhysicsEntity physicsEntity) {
             physicsEntity.fizzle();
+        }
+    }
+
+    protected final void fizzlePlayer(Entity entity) {
+        if (entity.world.isClient) return;
+        if (entity instanceof PlayerEntity) {
+            entity.damage(PortalCubedDamageSources.FIZZLE, PortalCubedConfig.fizzlerDamage);
         }
     }
 }

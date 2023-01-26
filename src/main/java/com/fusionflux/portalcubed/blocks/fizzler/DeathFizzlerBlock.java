@@ -6,14 +6,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class AbsoluteFizzlerBlock extends AbstractFizzlerBlock implements BlockCollisionTrigger {
-    public AbsoluteFizzlerBlock(Settings settings) {
+public class DeathFizzlerBlock extends AbstractFizzlerBlock implements BlockCollisionTrigger {
+    public DeathFizzlerBlock(Settings settings) {
         super(settings);
     }
 
     @Override
     public void onEntityEnter(BlockState state, World world, BlockPos pos, Entity entity) {
-        removePortals(entity);
         fizzlePhysicsEntity(entity);
+        fizzlePlayer(entity);
     }
 }

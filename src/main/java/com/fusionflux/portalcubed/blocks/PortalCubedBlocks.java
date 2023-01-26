@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.blockentities.*;
 import com.fusionflux.portalcubed.blocks.fizzler.AbsoluteFizzlerBlock;
+import com.fusionflux.portalcubed.blocks.fizzler.DeathFizzlerBlock;
 import com.fusionflux.portalcubed.blocks.fizzler.FizzlerEmitter;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
@@ -179,6 +180,8 @@ public class PortalCubedBlocks {
 
     public static final AbsoluteFizzlerBlock ABSOLUTE_FIZZLER = new AbsoluteFizzlerBlock(QuiltBlockSettings.of(Material.PORTAL).noCollision().strength(-1, 3600000));
     public static final FizzlerEmitter ABSOLUTE_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE), ABSOLUTE_FIZZLER);
+    public static final DeathFizzlerBlock DEATH_FIZZLER = new DeathFizzlerBlock(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER));
+    public static final FizzlerEmitter DEATH_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER_EMITTER), DEATH_FIZZLER);
 
     public static final LaserBlock LASER = new LaserBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
     public static BlockEntityType<LaserBlockEntity> LASER_ENTITY;
@@ -491,9 +494,12 @@ public class PortalCubedBlocks {
 
 
         Registry.register(Registry.BLOCK, id("absolute_fizzler"), ABSOLUTE_FIZZLER);
-
         Registry.register(Registry.BLOCK, id("absolute_fizzler_emitter"), ABSOLUTE_FIZZLER_EMITTER);
         Registry.register(Registry.ITEM, id("absolute_fizzler_emitter"), new BlockItem(ABSOLUTE_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("death_fizzler"), DEATH_FIZZLER);
+        Registry.register(Registry.BLOCK, id("death_fizzler_emitter"), DEATH_FIZZLER_EMITTER);
+        Registry.register(Registry.ITEM, id("death_fizzler_emitter"), new BlockItem(DEATH_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
         //STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());
