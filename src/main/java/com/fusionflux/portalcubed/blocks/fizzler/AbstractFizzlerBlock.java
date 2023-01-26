@@ -101,7 +101,9 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
 
     protected final void removePortals(Entity entity) {
         if (entity.world.isClient) return;
-        for (final UUID portal : CalledValues.getPortals(entity)) {
+        final var portals = CalledValues.getPortals(entity);
+        if (portals.isEmpty()) return;
+        for (final UUID portal : portals) {
             final Entity checkPortal = ((ServerWorld)entity.world).getEntity(portal);
             if (checkPortal != null) {
                 checkPortal.kill();
