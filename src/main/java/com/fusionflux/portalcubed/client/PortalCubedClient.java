@@ -33,6 +33,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 @Environment(EnvType.CLIENT)
 public class PortalCubedClient implements ClientModInitializer {
+    public static long shakeStart;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
