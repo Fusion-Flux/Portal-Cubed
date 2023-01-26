@@ -58,7 +58,11 @@ public class PortalCubedClient implements ClientModInitializer {
             registry.register(toxicGooFlowSpriteId);
         });
 
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.ABSOLUTE_FIZZLER);
+        BlockRenderLayerMap.put(
+            RenderLayer.getTranslucent(),
+            PortalCubedBlocks.ABSOLUTE_FIZZLER,
+            PortalCubedBlocks.LASER_FIZZLER
+        );
     }
 
     private void setRenderLayers() {
