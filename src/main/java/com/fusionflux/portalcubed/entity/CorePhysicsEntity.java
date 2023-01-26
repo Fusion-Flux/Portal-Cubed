@@ -13,6 +13,7 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -248,7 +249,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     //    rotation_yaw -= 90;
                     //}
 
-                    this.setPosition(vec3d3);
+                    move(MovementType.PLAYER, vec3d3.subtract(getPos()));
                     //this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)).multiply(.5));
                     //this.velocityModified = true;
                 }else{
@@ -290,7 +291,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     //    rotation_yaw -= 90;
                     //}
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
-                    this.setPosition(vec3d3);
+                    move(MovementType.PLAYER, vec3d3.subtract(getPos()));
                 }
             }
         }
