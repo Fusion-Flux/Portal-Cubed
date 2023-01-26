@@ -133,7 +133,7 @@ public class RadioEntity extends CorePhysicsEntity  {
         private final SoundEvent song;
 
         public RadioSoundInstance(SoundEvent song) {
-            super(song, SoundCategory.NEUTRAL, SoundInstance.method_43221());
+            super(song, SoundCategory.RECORDS, SoundInstance.method_43221());
             this.song = song;
             volume = 1f;
             pitch = 1f;
