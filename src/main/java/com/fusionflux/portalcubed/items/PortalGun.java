@@ -242,7 +242,8 @@ public class PortalGun extends Item implements DyeableItem {
 
                     CalledValues.addPortals(user,portalholder.getUuid());
                 }
-                if (otherPortal == null) {
+                final boolean isOtherAuto = otherPortal == null;
+                if (isOtherAuto) {
                     otherPortal = getPotentialOpposite(world, portalPos1, portalholder, portalholder.getColor(), false)
                         .orElse(null);
                 }
@@ -250,10 +251,14 @@ public class PortalGun extends Item implements DyeableItem {
                     linkPortals(portalholder, otherPortal, 0.1f);
 
                     CalledValues.setPlayer(portalholder,user.getUuid());
-                    CalledValues.setPlayer(otherPortal,user.getUuid());
+                    if (!isOtherAuto) {
+                        CalledValues.setPlayer(otherPortal,user.getUuid());
+                    }
 
                     CalledValues.addPortals(user,portalholder.getUuid());
-                    CalledValues.addPortals(user,otherPortal.getUuid());
+                    if (!isOtherAuto) {
+                        CalledValues.addPortals(user,otherPortal.getUuid());
+                    }
 
                     //PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
 
