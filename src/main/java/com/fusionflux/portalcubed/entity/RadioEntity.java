@@ -9,8 +9,12 @@ import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -22,8 +26,19 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 public class RadioEntity extends CorePhysicsEntity  {
+    private static final TrackedData<Boolean> NOT_PLAYING = DataTracker.registerData(RadioEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+    private SoundEvent song = PortalCubedSounds.RADIO_MUSIC_EVENT;
+    private SoundEvent lastSong = song;
+
     public RadioEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        dataTracker.startTracking(NOT_PLAYING, false);
     }
 
     @Override
@@ -59,33 +74,68 @@ public class RadioEntity extends CorePhysicsEntity  {
         }
     }
 
+    public boolean isNotPlaying() {
+        return dataTracker.get(NOT_PLAYING);
+    }
+
+    public void setNotPlaying(boolean notPlaying) {
+        dataTracker.set(NOT_PLAYING, notPlaying);
+    }
+
+    private void performPlay() {
+        MinecraftClient.getInstance().getSoundManager().play(new RadioSoundInstance(song));
+    }
+
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         super.onSpawnPacket(packet);
-        if (getCustomName() != null) {
-            if (getCustomName().getString().equalsIgnoreCase("exile") || this.getCustomName().getString().equalsIgnoreCase("vilify") || this.getCustomName().getString().equalsIgnoreCase("exile vilify")) {
-                MinecraftClient.getInstance().getSoundManager().play(new RadioSoundInstance(PortalCubedSounds.EXILE_MUSIC_EVENT, 0.5f));
-            }
-        } else {
-            MinecraftClient.getInstance().getSoundManager().play(new RadioSoundInstance(PortalCubedSounds.RADIO_MUSIC_EVENT, 0.5f));
-        }
+        performPlay();
     }
 
     @Override
     public void setHolderUUID(UUID uuid) {
         super.setHolderUUID(uuid);
         if (uuid != null) {
-            setSilent(!isSilent());
+            setNotPlaying(!isNotPlaying());
         }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (getCustomName() != null) {
+            if (getCustomName().getString().equalsIgnoreCase("exile") || this.getCustomName().getString().equalsIgnoreCase("vilify") || this.getCustomName().getString().equalsIgnoreCase("exile vilify")) {
+                song = PortalCubedSounds.EXILE_MUSIC_EVENT;
+            }
+        } else {
+            song = PortalCubedSounds.RADIO_MUSIC_EVENT;
+        }
+        if (song != lastSong) {
+            lastSong = song;
+            performPlay();
+        }
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putBoolean("NotPlaying", isNotPlaying());
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        setNotPlaying(nbt.getBoolean("NotPlaying"));
     }
 
     @Environment(EnvType.CLIENT)
     private class RadioSoundInstance extends MovingSoundInstance {
-        private final float defaultVolume;
+        private final SoundEvent song;
 
-        public RadioSoundInstance(SoundEvent event, float volume) {
-            super(event, SoundCategory.NEUTRAL, SoundInstance.method_43221());
-            this.volume = defaultVolume = volume;
+        public RadioSoundInstance(SoundEvent song) {
+            super(song, SoundCategory.NEUTRAL, SoundInstance.method_43221());
+            this.song = song;
+            volume = 1f;
             pitch = 1f;
             repeat = true;
             x = RadioEntity.this.getX();
@@ -95,11 +145,11 @@ public class RadioEntity extends CorePhysicsEntity  {
 
         @Override
         public void tick() {
-            if (isRemoved()) {
+            if (isRemoved() || song != RadioEntity.this.song) {
                 setDone();
                 return;
             }
-            volume = isSilent() ? 0f : defaultVolume;
+            volume = isNotPlaying() ? 0f : 1f;
             x = RadioEntity.this.getX();
             y = RadioEntity.this.getY();
             z = RadioEntity.this.getZ();
