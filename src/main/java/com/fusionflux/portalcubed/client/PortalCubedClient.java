@@ -10,7 +10,6 @@ import com.fusionflux.portalcubed.client.render.model.entity.*;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-
 import com.fusionflux.portalcubed.util.FaithPlateScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +25,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
-
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
@@ -35,6 +33,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 @Environment(EnvType.CLIENT)
 public class PortalCubedClient implements ClientModInitializer {
+    public static long shakeStart;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -59,6 +58,13 @@ public class PortalCubedClient implements ClientModInitializer {
             registry.register(toxicGooStillSpriteId);
             registry.register(toxicGooFlowSpriteId);
         });
+
+        BlockRenderLayerMap.put(
+            RenderLayer.getTranslucent(),
+            PortalCubedBlocks.ABSOLUTE_FIZZLER,
+            PortalCubedBlocks.DEATH_FIZZLER,
+            PortalCubedBlocks.LASER_FIZZLER
+        );
     }
 
     private void setRenderLayers() {

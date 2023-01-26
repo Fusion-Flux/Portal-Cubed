@@ -17,7 +17,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -76,7 +75,7 @@ public abstract class CalledValues {
     }
 
     public static List<UUID> getPortals(Entity entity) {
-        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortals).orElse(new ArrayList<>());
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortals).orElse(List.of());
     }
 
     public static void setPortals(Entity entity, List<UUID> setValue) {

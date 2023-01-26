@@ -8,12 +8,11 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public class StorageCubeModel extends EntityModel<StorageCubeEntity> {
+public class StorageCubeModel extends FizzleableModel<StorageCubeEntity> {
 
 	public static final EntityModelLayer STORAGE_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"storage_cube"), "main");
 	private final ModelPart bb_main;
@@ -32,13 +31,9 @@ public class StorageCubeModel extends EntityModel<StorageCubeEntity> {
 	}
 
 	@Override
-	public void setAngles(StorageCubeEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-		//previously the render function, render code was moved to a method below
-	}
-	@Override
-	public void render(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+	public void renderFizzled(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
 
-		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
+		bb_main.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
 }

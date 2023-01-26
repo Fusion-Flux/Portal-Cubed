@@ -2,7 +2,7 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
-import com.fusionflux.portalcubed.entity.BlockCollisionLimiter;
+import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockRenderType;
@@ -85,8 +85,9 @@ public class RepulsionGel extends GelFlat {
         boolean canBounce = !(entity instanceof PlayerEntity) || world.isClient;
 
         if (!entity.isSneaking()) {
-            if (entity.verticalCollision) {
-                if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.getY() < 0 || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6)) {
+            final boolean jumping = entity instanceof LivingEntityAccessor living && living.isJumping();
+            if (entity.verticalCollision || jumping) {
+                if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.getY() < 0 || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6 || jumping)) {
                     double fall = ((EntityAttachments) entity).getMaxFallHeight();
                     if (fall != rotatedPos.y || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6) {
 

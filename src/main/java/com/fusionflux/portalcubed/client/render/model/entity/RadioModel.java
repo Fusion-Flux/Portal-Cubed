@@ -5,16 +5,14 @@
 package com.fusionflux.portalcubed.client.render.model.entity;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.entity.CompanionCubeEntity;
 import com.fusionflux.portalcubed.entity.RadioEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public class RadioModel extends EntityModel<RadioEntity> {
+public class RadioModel extends FizzleableModel<RadioEntity> {
 	public static final EntityModelLayer RADIO_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"radio"), "main");
 	private final ModelPart bb_main;
 
@@ -36,13 +34,9 @@ public class RadioModel extends EntityModel<RadioEntity> {
 	}
 
 	@Override
-	public void setAngles(RadioEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-		//previously the render function, render code was moved to a method below
-	}
-	@Override
-	public void render(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+	public void renderFizzled(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
 
-		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
+		bb_main.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
-	
+
 }

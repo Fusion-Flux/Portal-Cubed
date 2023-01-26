@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.blockentities.*;
+import com.fusionflux.portalcubed.blocks.fizzler.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
@@ -175,12 +176,16 @@ public class PortalCubedBlocks {
     public static BlockEntityType<DuelExcursionFunnelEmitterEntity> DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY;
     public static BlockEntityType<ExcursionFunnelEntityMain> EXCURSION_FUNNEL_ENTITY;
 
-    public static final GrillBlock GRILL = new GrillBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
-    public static BlockEntityType<GrillBlockEntity> GRILL_ENTITY;
-
-    public static final GrillEmitter GRILL_EMITTER = new GrillEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE));
-    public static BlockEntityType<GrillEmitterEntity> GRILL_EMITTER_ENTITY;
-
+    public static final AbsoluteFizzlerBlock ABSOLUTE_FIZZLER = new AbsoluteFizzlerBlock(QuiltBlockSettings.of(Material.PORTAL).noCollision().strength(-1, 3600000));
+    public static final FizzlerEmitter ABSOLUTE_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE), ABSOLUTE_FIZZLER);
+    public static final DeathFizzlerBlock DEATH_FIZZLER = new DeathFizzlerBlock(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER));
+    public static final FizzlerEmitter DEATH_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER_EMITTER), DEATH_FIZZLER);
+    public static final LaserFizzlerBlock LASER_FIZZLER = new LaserFizzlerBlock(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER));
+    public static final FizzlerEmitter LASER_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER_EMITTER), LASER_FIZZLER);
+    public static final MatterInquisitionField MATTER_INQUISITION_FIELD = new MatterInquisitionField(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER));
+    public static final FizzlerEmitter MATTER_INQUISITION_FIELD_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER_EMITTER), MATTER_INQUISITION_FIELD);
+    public static final PhysicsRepulsionField PHYSICS_REPULSION_FIELD = new PhysicsRepulsionField(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER));
+    public static final FizzlerEmitter PHYSICS_REPULSION_FIELD_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER_EMITTER), PHYSICS_REPULSION_FIELD);
 
     public static final LaserBlock LASER = new LaserBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
     public static BlockEntityType<LaserBlockEntity> LASER_ENTITY;
@@ -492,12 +497,25 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, id("old_ap_floor_button"), new BlockItem(OLD_AP_FLOOR_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
-        GRILL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("grill_entity"), FabricBlockEntityTypeBuilder.create(GrillBlockEntity::new, GRILL).build(null));
-        Registry.register(Registry.BLOCK, id("grill"), GRILL);
+        Registry.register(Registry.BLOCK, id("absolute_fizzler"), ABSOLUTE_FIZZLER);
+        Registry.register(Registry.BLOCK, id("absolute_fizzler_emitter"), ABSOLUTE_FIZZLER_EMITTER);
+        Registry.register(Registry.ITEM, id("absolute_fizzler_emitter"), new BlockItem(ABSOLUTE_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        GRILL_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("grill_emitter_entity"), FabricBlockEntityTypeBuilder.create(GrillEmitterEntity::new, GRILL_EMITTER).build(null));
-        Registry.register(Registry.BLOCK, id("grill_emitter"), GRILL_EMITTER);
-        Registry.register(Registry.ITEM, id("grill_emitter"), new BlockItem(GRILL_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+        Registry.register(Registry.BLOCK, id("death_fizzler"), DEATH_FIZZLER);
+        Registry.register(Registry.BLOCK, id("death_fizzler_emitter"), DEATH_FIZZLER_EMITTER);
+        Registry.register(Registry.ITEM, id("death_fizzler_emitter"), new BlockItem(DEATH_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("laser_fizzler"), LASER_FIZZLER);
+        Registry.register(Registry.BLOCK, id("laser_fizzler_emitter"), LASER_FIZZLER_EMITTER);
+        Registry.register(Registry.ITEM, id("laser_fizzler_emitter"), new BlockItem(LASER_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("matter_inquisition_field"), MATTER_INQUISITION_FIELD);
+        Registry.register(Registry.BLOCK, id("matter_inquisition_field_emitter"), MATTER_INQUISITION_FIELD_EMITTER);
+        Registry.register(Registry.ITEM, id("matter_inquisition_field_emitter"), new BlockItem(MATTER_INQUISITION_FIELD_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("physics_repulsion_field"), PHYSICS_REPULSION_FIELD);
+        Registry.register(Registry.BLOCK, id("physics_repulsion_field_emitter"), PHYSICS_REPULSION_FIELD_EMITTER);
+        Registry.register(Registry.ITEM, id("physics_repulsion_field_emitter"), new BlockItem(PHYSICS_REPULSION_FIELD_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
 
         //STILL_TOXIC_GOO = Registry.register(Registry.FLUID, id("toxic_goo"), new ToxicGooFluid.Still());

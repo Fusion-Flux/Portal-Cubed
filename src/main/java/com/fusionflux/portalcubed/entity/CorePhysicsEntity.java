@@ -6,45 +6,55 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class CorePhysicsEntity extends PathAwareEntity  {
 
-
+    private float fizzleProgress = 0f;
+    private boolean fizzling = false;
+    private final Set<ServerPlayerEntity> tracking = new HashSet<>();
 
     public CorePhysicsEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
 
     private boolean canUsePortals = true;
+    private boolean hasCollided;
+    private int timeSinceLastSound;
 
     public Vec3d lastPos = this.getPos();
 
@@ -52,6 +62,16 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     private final Vec3d offset = new Vec3d(0,this.getWidth()/2,0);
     private final Vec3d offsetHeight = new Vec3d(0,this.getHeight()/2,0);
+
+    @Override
+    public void onStartedTrackingBy(ServerPlayerEntity player) {
+        tracking.add(player);
+    }
+
+    @Override
+    public void onStoppedTrackingBy(ServerPlayerEntity player) {
+        tracking.remove(player);
+    }
 
     @Override
     public boolean collides() {
@@ -104,7 +124,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     public boolean isCustomNameVisible() {
         return false;
     }
-    
+
 
     @Override
     public boolean hasCustomName() {
@@ -190,6 +210,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     public void tick() {
         super.tick();
+        timeSinceLastSound++;
         this.bodyYaw = rotation_yaw;
         this.headYaw = rotation_yaw;
         canUsePortals = !getUUIDPresent();
@@ -232,7 +253,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     //    rotation_yaw -= 90;
                     //}
 
-                    this.setPosition(vec3d3);
+                    move(MovementType.PLAYER, vec3d3.subtract(getPos()));
                     //this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)).multiply(.5));
                     //this.velocityModified = true;
                 }else{
@@ -274,13 +295,43 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     //    rotation_yaw -= 90;
                     //}
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
-                    this.setPosition(vec3d3);
+                    move(MovementType.PLAYER, vec3d3.subtract(getPos()));
                 }
             }
         }
         if(this.getVelocity().y < -3.92){
             this.setVelocity(this.getVelocity().add(0,.81d,0));
         }
+        if (fizzling) {
+            if (world.isClient) {
+                fizzleProgress += MinecraftClient.getInstance().getTickDelta();
+            } else {
+                fizzleProgress += 0.05f;
+                if (fizzleProgress >= 1f) {
+                    remove(RemovalReason.KILLED);
+                }
+            }
+        }
+    }
+
+    public void startFizzlingProgress() {
+        fizzling = true;
+    }
+
+    public void fizzle() {
+        world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
+        setNoGravity(true);
+        fizzling = true;
+        final PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVarInt(getId());
+        final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);
+        for (final ServerPlayerEntity player : tracking) {
+            player.networkHandler.sendPacket(packet);
+        }
+    }
+
+    public float getFizzleProgress() {
+        return fizzleProgress;
     }
 
     protected final Vec3d getPlayerRotationVector(float pitch, float yaw) {
@@ -291,6 +342,26 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         float j = MathHelper.cos(f);
         float k = MathHelper.sin(f);
         return RotationUtil.vecPlayerToWorld(new Vec3d((double)(i * j), (double)(-k), (double)(h * j)), GravityChangerAPI.getGravityDirection(this));
+    }
+
+    @Override
+    public void move(MovementType movementType, Vec3d movement) {
+        super.move(movementType, movement);
+        if (horizontalCollision) {
+            if (!hasCollided) {
+                hasCollided = true;
+                if (!world.isClient && timeSinceLastSound >= 20) {
+                    world.playSoundFromEntity(null, this, getCollisionSound(), SoundCategory.NEUTRAL, 1f, 1f);
+                    timeSinceLastSound = 0;
+                }
+            }
+        } else {
+            hasCollided = false;
+        }
+    }
+
+    protected SoundEvent getCollisionSound() {
+        return PortalCubedSounds.CUBE_LOW_HIT_EVENT; // TODO: implement for other physics objects (this requires a lot of assets)
     }
 
     public void onRemoved() {

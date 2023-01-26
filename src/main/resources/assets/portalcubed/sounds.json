@@ -53,8 +53,19 @@
 			"portalcubed:portal_close2"
 		]
 	},
+	"portal_fizzle": {
+		"subtitle": "subtitles.portalcubed.portal_fizzle",
+		"sounds": [
+			"portalcubed:portal_fizzle2"
+		]
+	},
 	"portal_invalid_surface": {
 		"subtitle": "subtitles.portalcubed.portal_invalid_surface",
+		"sounds": [
+			"portalcubed:portal_invalid_surface"
+		]
+	},
+	"nothing_to_grab": {
 		"sounds": [
 			"portalcubed:portal_invalid_surface"
 		]
@@ -86,46 +97,76 @@
 			"portalcubed:companioncubeambiance"
 		]
 	},
+	"material_emancipation": {
+		"sounds": [
+			"portalcubed:material_emancipation_01"
+		],
+		"subtitle": "subtitles.portalcubed.material_emancipation"
+	},
 	"radio": {
 		"sounds": [
-			"portalcubed:radio"
+			{
+				"name": "portalcubed:radio",
+				"stream": true
+			}
 		]
 	},
 	"exile_vilify": {
 		"sounds": [
-			"portalcubed:exile_vilify"
+			{
+				"name": "portalcubed:exile_vilify",
+				"stream": true
+			}
 		]
 	},
 	"curiosity_core": {
 		"sounds": [
-			"portalcubed:curiosity"
+			{
+				"name": "portalcubed:curiosity",
+				"stream": true
+			}
 		]
 	},
 	"anger_core": {
 		"sounds": [
-			"portalcubed:anger"
+			{
+				"name": "portalcubed:anger",
+				"stream": true
+			}
 		]
 	},
 
 	"cake_core": {
 		"sounds": [
-			"portalcubed:cakemix"
+			{
+				"name": "portalcubed:cakemix",
+				"stream": true
+			}
 		]
 	},
 	"space_core": {
 		"sounds": [
-			"portalcubed:space_core"
+			{
+				"name": "portalcubed:space_core",
+				"stream": true
+			}
 		]
 	},
 
 	"adventure_core": {
 		"sounds": [
-			"portalcubed:adventure_core"
+			{
+				"name": "portalcubed:adventure_core",
+				"stream": true
+			}
 		]
 	},
 	"fact_core": {
 		"sounds": [
-			"portalcubed:fact_core"
+			{
+				"name": "portalcubed:fact_core",
+				"stream": true
+			}
 		]
 	}
 }
