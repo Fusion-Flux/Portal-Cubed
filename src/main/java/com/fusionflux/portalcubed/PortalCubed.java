@@ -139,8 +139,8 @@ public class PortalCubed implements ModInitializer {
                     LOGGER.warn("{} tried to drop nonexistent physics object", player);
                     return;
                 }
-                if (!cube.getHolderUUID().equals(player.getUuid())) {
-                    LOGGER.warn("{} tried to drop another player's physics object", player);
+                if (!player.getUuid().equals(cube.getHolderUUID())) {
+                    LOGGER.warn("{} tried to drop another player's physics object (held by {})", player, cube.getHolderUUID());
                     return;
                 }
                 cube.setHolderUUID(null);

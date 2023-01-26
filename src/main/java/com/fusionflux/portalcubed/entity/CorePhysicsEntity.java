@@ -26,6 +26,7 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -52,6 +53,8 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     }
 
     private boolean canUsePortals = true;
+    private boolean hasCollided;
+    private int timeSinceLastSound;
 
     public Vec3d lastPos = this.getPos();
 
@@ -207,6 +210,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     public void tick() {
         super.tick();
+        timeSinceLastSound++;
         this.bodyYaw = rotation_yaw;
         this.headYaw = rotation_yaw;
         canUsePortals = !getUUIDPresent();
@@ -338,6 +342,26 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         float j = MathHelper.cos(f);
         float k = MathHelper.sin(f);
         return RotationUtil.vecPlayerToWorld(new Vec3d((double)(i * j), (double)(-k), (double)(h * j)), GravityChangerAPI.getGravityDirection(this));
+    }
+
+    @Override
+    public void move(MovementType movementType, Vec3d movement) {
+        super.move(movementType, movement);
+        if (horizontalCollision) {
+            if (!hasCollided) {
+                hasCollided = true;
+                if (!world.isClient && timeSinceLastSound >= 20) {
+                    world.playSoundFromEntity(null, this, getCollisionSound(), SoundCategory.NEUTRAL, 1f, 1f);
+                    timeSinceLastSound = 0;
+                }
+            }
+        } else {
+            hasCollided = false;
+        }
+    }
+
+    protected SoundEvent getCollisionSound() {
+        return PortalCubedSounds.CUBE_LOW_HIT_EVENT; // TODO: implement for other physics objects (this requires a lot of assets)
     }
 
     public void onRemoved() {
