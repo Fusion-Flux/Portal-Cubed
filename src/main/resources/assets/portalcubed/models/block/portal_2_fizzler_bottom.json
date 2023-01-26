@@ -6,8 +6,8 @@
 	},
 	"elements": [
 		{
-			"from": [8, 0, 0],
-			"to": [8.25, 16, 16],
+			"from": [7.9, 0, 0],
+			"to": [8.15, 16, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [7.5, 0, 0]},
 			"faces": {
 				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
