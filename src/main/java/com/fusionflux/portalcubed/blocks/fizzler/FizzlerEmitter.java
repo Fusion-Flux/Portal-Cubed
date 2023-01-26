@@ -144,7 +144,9 @@ public class FizzlerEmitter extends HorizontalFacingBlock {
             searchPos = searchPos.offset(searchDir);
         }
         if (!placed || i == PortalCubedConfig.maxBridgeLength) return;
-        final BlockState placedState = fizzlerBlock.getDefaultState().with(grillAxis, true);
+        final BlockState placedState = fizzlerBlock.getDefaultState()
+            .with(grillAxis, true)
+            .with(HALF, state.get(HALF));
         searchPos = pos.offset(searchDir);
         for (i = 0; i < PortalCubedConfig.maxBridgeLength; i++) {
             final BlockState checkState = world.getBlockState(searchPos);

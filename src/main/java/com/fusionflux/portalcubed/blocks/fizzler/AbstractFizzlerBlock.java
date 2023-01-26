@@ -7,14 +7,20 @@ import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 import java.util.UUID;
@@ -22,6 +28,11 @@ import java.util.UUID;
 public abstract class AbstractFizzlerBlock extends Block {
     public static final BooleanProperty NS = BooleanProperty.of("ns");
     public static final BooleanProperty EW = BooleanProperty.of("ew");
+    public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
+
+    private static final VoxelShape NS_SHAPE = createCuboidShape(7.5, 0, 0, 8.5, 15, 15);
+    private static final VoxelShape EW_SHAPE = createCuboidShape(0, 0, 7.5, 15, 15, 8.5);
+    private static final VoxelShape BOTH_SHAPE = VoxelShapes.union(NS_SHAPE, EW_SHAPE);
 
     public AbstractFizzlerBlock(Settings settings) {
         super(settings);
@@ -29,6 +40,7 @@ public abstract class AbstractFizzlerBlock extends Block {
             getStateManager().getDefaultState()
                 .with(NS, false)
                 .with(EW, false)
+                .with(HALF, DoubleBlockHalf.LOWER)
         );
     }
 
@@ -38,6 +50,21 @@ public abstract class AbstractFizzlerBlock extends Block {
 
     public static boolean isEmpty(BlockState state) {
         return !state.get(NS) && !state.get(EW);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        if (state.get(NS) && state.get(EW)) {
+            return BOTH_SHAPE;
+        }
+        if (state.get(NS)) {
+            return NS_SHAPE;
+        }
+        if (state.get(EW)) {
+            return EW_SHAPE;
+        }
+        return VoxelShapes.empty();
     }
 
     @Override
@@ -59,7 +86,7 @@ public abstract class AbstractFizzlerBlock extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(NS, EW);
+        builder.add(NS, EW, HALF);
     }
 
     protected final void removePortals(Entity entity) {
