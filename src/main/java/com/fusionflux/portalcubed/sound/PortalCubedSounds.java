@@ -10,6 +10,7 @@ public class PortalCubedSounds {
     public static final Identifier PORTAL_GUN_PRIMARY = new Identifier("portalcubed:portalgunprimary");
     public static final Identifier PORTAL_GUN_SECONDARY = new Identifier("portalcubed:portalgunsecondary");
     public static final Identifier PORTAL_INVALID_SURFACE = new Identifier("portalcubed:portal_invalid_surface");
+    public static final Identifier NOTHING_TO_GRAB = new Identifier("portalcubed:nothing_to_grab");
     public static final Identifier PORTAL_AMBIANCE = new Identifier("portalcubed:portalambiance");
     public static final Identifier PORTAL_ENTER = new Identifier("portalcubed:portalenter");
     public static final Identifier PORTAL_EXIT = new Identifier("portalcubed:portalexit");
@@ -37,6 +38,7 @@ public class PortalCubedSounds {
     public static final SoundEvent FIRE_EVENT_PRIMARY = new SoundEvent(PORTAL_GUN_PRIMARY);
     public static final SoundEvent FIRE_EVENT_SECONDARY = new SoundEvent(PORTAL_GUN_SECONDARY);
     public static final SoundEvent INVALID_PORTAL_EVENT = new SoundEvent(PORTAL_INVALID_SURFACE);
+    public static final SoundEvent NOTHING_TO_GRAB_EVENT = new SoundEvent(NOTHING_TO_GRAB);
     public static final SoundEvent ENTITY_ENTER_PORTAL = new SoundEvent(PORTAL_ENTER);
     public static final SoundEvent ENTITY_EXIT_PORTAL = new SoundEvent(PORTAL_EXIT);
     public static final SoundEvent ENTITY_PORTAL_OPEN = new SoundEvent(PORTAL_OPEN);
@@ -63,6 +65,7 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, PORTAL_GUN_PRIMARY, FIRE_EVENT_PRIMARY);
         Registry.register(Registry.SOUND_EVENT, PORTAL_GUN_SECONDARY, FIRE_EVENT_SECONDARY);
         Registry.register(Registry.SOUND_EVENT, PORTAL_INVALID_SURFACE, INVALID_PORTAL_EVENT);
+        Registry.register(Registry.SOUND_EVENT, NOTHING_TO_GRAB, NOTHING_TO_GRAB_EVENT);
         Registry.register(Registry.SOUND_EVENT, PORTAL_ENTER, ENTITY_ENTER_PORTAL);
         Registry.register(Registry.SOUND_EVENT, PORTAL_EXIT, ENTITY_EXIT_PORTAL);
         Registry.register(Registry.SOUND_EVENT, PORTAL_OPEN, ENTITY_PORTAL_OPEN);

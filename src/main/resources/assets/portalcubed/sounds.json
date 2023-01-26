@@ -65,6 +65,11 @@
 			"portalcubed:portal_invalid_surface"
 		]
 	},
+	"nothing_to_grab": {
+		"sounds": [
+			"portalcubed:portal_invalid_surface"
+		]
+	},
 	"portalambiance": {
 		"sounds": [
 			"portalcubed:portal_ambient_loop"

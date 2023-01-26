@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalGun;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -11,6 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
@@ -65,6 +67,8 @@ public class PortalCubedServerPackets {
                 CorePhysicsEntity playercube = (CorePhysicsEntity) ((ServerWorld) player.world).getEntity(CalledValues.getCubeUUID(player));
                 if (playercube != null) {
                     playercube.setHolderUUID(null);
+                } else {
+                    player.playSound(PortalCubedSounds.NOTHING_TO_GRAB_EVENT, SoundCategory.NEUTRAL, 0.3f, 1f);
                 }
                 CalledValues.setCubeUUID(player,null);
             }
