@@ -1,12 +1,21 @@
 package com.fusionflux.portalcubed.blocks.fizzler;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+
+import java.util.UUID;
 
 public abstract class AbstractFizzlerBlock extends Block {
     public static final BooleanProperty NS = BooleanProperty.of("ns");
@@ -49,5 +58,25 @@ public abstract class AbstractFizzlerBlock extends Block {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(NS, EW);
+    }
+
+    protected final void removePortals(Entity entity) {
+        if (entity.world.isClient) return;
+        for (final UUID portal : CalledValues.getPortals(entity)) {
+            final Entity checkPortal = ((ServerWorld)entity.world).getEntity(portal);
+            if (checkPortal != null) {
+                checkPortal.kill();
+            }
+        }
+        if (entity instanceof PlayerEntity player) {
+            player.playSound(PortalCubedSounds.ENTITY_PORTAL_FIZZLE, SoundCategory.NEUTRAL, 0.5f, 1f);
+        }
+    }
+
+    protected final void maybeFizzleEntity(Entity entity) {
+        if (entity.world.isClient) return;
+        if (entity instanceof CorePhysicsEntity physicsEntity) {
+            physicsEntity.fizzle();
+        }
     }
 }
