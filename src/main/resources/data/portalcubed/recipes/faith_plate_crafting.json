@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "E#E",
+    "ENE",
+    "ERE"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:gray_stained_glass_pane"
+    },
+    "E": {
+      "tag": "portalcubed:portal_2_clean_gray_panels"
+    },
+    "N": {
+      "item": "minecraft:piston"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "portalcubed:faith_plate",
+    "count": 1
+  }
+}
