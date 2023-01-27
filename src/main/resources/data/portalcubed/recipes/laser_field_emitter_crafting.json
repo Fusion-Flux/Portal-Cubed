@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EE#",
+    "ER#",
+    "EE#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:red_stained_glass_pane"
+    },
+    "E": {
+      "tag": "portalcubed:portal_2_clean_gray_panels"
+    },
+
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "portalcubed:laser_fizzler_emitter",
+    "count": 2
+  }
+}
