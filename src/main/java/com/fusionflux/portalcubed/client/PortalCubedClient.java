@@ -21,8 +21,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.DyeableItem;
+import net.minecraft.item.Items;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.ModContainer;
@@ -65,6 +68,14 @@ public class PortalCubedClient implements ClientModInitializer {
             PortalCubedBlocks.PORTAL_1_FIZZLER,
             PortalCubedBlocks.DEATH_FIZZLER,
             PortalCubedBlocks.LASER_FIZZLER
+        );
+
+        ModelPredicateProviderRegistry.register(
+            PortalCubedBlocks.POWER_BLOCK.asItem(),
+            new Identifier("level"),
+            (UnclampedModelPredicateProvider)ModelPredicateProviderRegistry.get(
+                Items.LIGHT, new Identifier("level")
+            )
         );
     }
 
