@@ -253,7 +253,10 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     //    rotation_yaw -= 90;
                     //}
 
-                    move(MovementType.PLAYER, vec3d3.subtract(getPos()));
+                    move(
+                        MovementType.PLAYER,
+                        RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
+                    );
                     //this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)).multiply(.5));
                     //this.velocityModified = true;
                 }else{
@@ -295,7 +298,10 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     //    rotation_yaw -= 90;
                     //}
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
-                    move(MovementType.PLAYER, vec3d3.subtract(getPos()));
+                    move(
+                        MovementType.PLAYER,
+                        RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
+                    );
                 }
             }
         }
