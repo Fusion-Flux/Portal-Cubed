@@ -65,6 +65,7 @@ public class PortalCubedClient implements ClientModInitializer {
         BlockRenderLayerMap.put(
             RenderLayer.getCutout(),
             PortalCubedBlocks.FIZZLER_EMITTER,
+            PortalCubedBlocks.PORTAL_1_FIZZLER_EMITTER,
             PortalCubedBlocks.DEATH_FIZZLER_EMITTER,
             PortalCubedBlocks.LASER_FIZZLER_EMITTER
         );
@@ -73,7 +74,8 @@ public class PortalCubedClient implements ClientModInitializer {
             RenderLayer.getTranslucent(),
             PortalCubedBlocks.FIZZLER,
             PortalCubedBlocks.PORTAL_1_FIZZLER,
-            PortalCubedBlocks.PORTAL_1_FIZZLER_EMITTER,
+            PortalCubedBlocks.OLD_APERTURE_FIZZLER,
+            PortalCubedBlocks.OLD_APERTURE_FIZZLER_EMITTER,
             PortalCubedBlocks.DEATH_FIZZLER,
             PortalCubedBlocks.LASER_FIZZLER
         );
