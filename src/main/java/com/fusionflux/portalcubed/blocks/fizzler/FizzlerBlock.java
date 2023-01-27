@@ -5,8 +5,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class AbsoluteFizzlerBlock extends AbstractFizzlerBlock {
-    public AbsoluteFizzlerBlock(Settings settings) {
+public class FizzlerBlock extends AbstractFizzlerBlock {
+    public FizzlerBlock(Settings settings) {
         super(settings);
     }
 

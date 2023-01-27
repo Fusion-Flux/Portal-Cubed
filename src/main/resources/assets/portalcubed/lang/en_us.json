@@ -57,8 +57,8 @@
 
   "block.portalcubed.auto_portal": "Auto Portal",
 
-  "block.portalcubed.absolute_fizzler": "Fizzler",
-  "block.portalcubed.absolute_fizzler_emitter": "Fizzler Emitter",
+  "block.portalcubed.fizzler": "Fizzler",
+  "block.portalcubed.fizzler_emitter": "Fizzler Emitter",
   "block.portalcubed.portal_1_fizzler": "Portal 1 Fizzler",
   "block.portalcubed.portal_1_fizzler_emitter": "Portal 1 Fizzler Emitter",
   "block.portalcubed.death_fizzler": "Death Fizzler",
