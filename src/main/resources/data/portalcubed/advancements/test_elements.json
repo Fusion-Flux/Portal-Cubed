@@ -23,7 +23,8 @@
       "portalcubed:laser_fizzler_emitter_crafting",
       "portalcubed:death_fizzler_emitter_crafting",
       "portalcubed:faith_plate_crafting",
-      "portalcubed:beta_faith_plate_crafting"
+      "portalcubed:beta_faith_plate_crafting",
+      "portalcubed:auto_portal_crafting"
 
     ]
   },
