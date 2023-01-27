@@ -38,12 +38,10 @@
   "item.portalcubed.space_core": "Space Core",
   "item.portalcubed.adventure_core": "Adventure Core",
 
-  "item.portalcubed.gel_orb": "Gel Orb",
   "item.portalcubed.portal_gun": "Portal Gun",
   "item.portalcubed.portal_gun_frame": "Portal Gun Frame",
   "item.portalcubed.portal_gun_casing": "Portal Gun Casing",
   "item.portalcubed.mini_blackhole": "Miniature Black hole",
-  "item.portalcubed.paint_gun": "Paint Gun",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
 
   "item.portalcubed.base_gel": "Base Gel Glob",
@@ -53,10 +51,10 @@
   "block.portalcubed.adhesion_gel": "Adhesion Gel Glob",
   "block.portalcubed.conversion_gel": "Conversion Gel Glob",
 
-  "block.portalcubed.auto_portal": "Auto Portal",
+  "block.portalcubed.auto_portal": "Autoportal",
 
-  "block.portalcubed.absolute_fizzler": "Absolute Fizzler",
-  "block.portalcubed.absolute_fizzler_emitter": "Absolute Fizzler Emitter",
+  "block.portalcubed.absolute_fizzler": "Fizzler",
+  "block.portalcubed.absolute_fizzler_emitter": "Fizzler Emitter",
   "block.portalcubed.death_fizzler": "Death Fizzler",
   "block.portalcubed.death_fizzler_emitter": "Death Fizzler Emitter",
   "block.portalcubed.laser_fizzler": "Laser Fizzler",
@@ -153,6 +151,13 @@
   "block.portalcubed.1x1_single_crossbar": "1x1 Single Crossbar",
   "block.portalcubed.1x1_double_crossbar": "1x1 Double Crossbar",
 
+  "block.portalcubed.old_ap_mesh": "Old Aperture Mesh",
+
+  "block.portalcubed.office_concrete": "Office Concrete + Office Tiling",
+  "block.portalcubed.blue_office_concrete": "Blue Office Concrete + Tread Plating",
+
+  "block.portalcubed.insulation": "Insulation",
+
   "block.portalcubed.portal_1_white_2x1_panel_bottom": "Portal 1 White 2x1 Panel Bottom",
   "block.portalcubed.portal_1_white_2x1_panel_top": "Portal 1 White 2x1 Panel Top",
   "block.portalcubed.portal_1_white_half_panel": "Portal 1 White Half Panel",
@@ -174,6 +179,7 @@
   "block.portalcubed.duel_excursion_funnel_emitter": "Dual Excursion Funnel Emitter",
   "block.portalcubed.portal_1_door": "Portal 1 Door",
   "block.portalcubed.portal_2_door": "Portal 2 Door",
+  "block.portalcubed.octopus_door": "Octopus Door",
   "block.portalcubed.old_ap_door": "Old Aperture Door",
 
   "block.portalcubed.pedestal_button": "Pedestal Button",
@@ -185,6 +191,11 @@
   "block.portalcubed.laser_relay": "Laser Relay",
   "block.portalcubed.laser_emitter": "Laser Emitter",
   "block.portalcubed.laser_catcher": "Laser Catcher",
+
+  "block.portalcubed.faith_plate": "Aerial Faith Plate",
+  "block.portalcubed.beta_faith_plate": "Beta Aerial Faith Plate",
+
+  "block.portalcubed.light_bridge_emitter": "Hard Light Bridge Emitter",
 
   "portalcubed.midnightconfig.title": "Portal Cubed Config",
   "portalcubed.midnightconfig.maxBridgeLength": "Max Emitter Range",

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EE",
+    "##",
+    "NN"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:white_concrete"
+    },
+    "E": {
+      "item": "minecraft:iron_ingot"
+    },
+    "N": {
+      "item": "minecraft:cyan_concrete"
+    }
+  },
+  "result": {
+    "item": "portalcubed:blue_office_concrete",
+    "count": 16
+  }
+}

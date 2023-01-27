@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "portalcubed:block/blue_office_concrete",
+    "side": "portalcubed:block/tread_plating"
+  }
+}
