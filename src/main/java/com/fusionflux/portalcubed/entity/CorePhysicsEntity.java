@@ -237,18 +237,19 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,1,"player_interaction"));
                     this.fallDistance = 0;
-                    if(player.getHorizontalFacing().equals(Direction.SOUTH)){
-                        rotation_yaw=0;
-                    }
-                    if(player.getHorizontalFacing().equals(Direction.WEST)){
-                        rotation_yaw=90;
-                    }
-                    if(player.getHorizontalFacing().equals(Direction.NORTH)){
-                        rotation_yaw=180;
-                    }
-                    if(player.getHorizontalFacing().equals(Direction.EAST)){
-                        rotation_yaw=270;
-                    }
+                    //if(player.getHorizontalFacing().equals(Direction.SOUTH)){
+                    //    rotation_yaw=0;
+                    //}
+                    //if(player.getHorizontalFacing().equals(Direction.WEST)){
+                    //    rotation_yaw=90;
+                    //}
+                    //if(player.getHorizontalFacing().equals(Direction.NORTH)){
+                    //    rotation_yaw=180;
+                    //}
+                    //if(player.getHorizontalFacing().equals(Direction.EAST)){
+                    //    rotation_yaw=270;
+                    //}
+                    rotation_yaw = player.headYaw;
                     //if(this instanceof RadioEntity){
                     //    rotation_yaw -= 90;
                     //}
@@ -282,18 +283,19 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                    //     d=2;
                    // }
                     Vec3d vec3d2 = player.getRotationVec(1.0F);
-                    if(player.getHorizontalFacing().equals(Direction.SOUTH)){
-                        rotation_yaw=0;
-                    }
-                    if(player.getHorizontalFacing().equals(Direction.WEST)){
-                        rotation_yaw=90;
-                    }
-                    if(player.getHorizontalFacing().equals(Direction.NORTH)){
-                        rotation_yaw=180;
-                    }
-                    if(player.getHorizontalFacing().equals(Direction.EAST)){
-                        rotation_yaw=270;
-                    }
+                    //if(player.getHorizontalFacing().equals(Direction.SOUTH)){
+                    //    rotation_yaw=0;
+                    //}
+                    //if(player.getHorizontalFacing().equals(Direction.WEST)){
+                    //    rotation_yaw=90;
+                    //}
+                    //if(player.getHorizontalFacing().equals(Direction.NORTH)){
+                    //    rotation_yaw=180;
+                    //}
+                    //if(player.getHorizontalFacing().equals(Direction.EAST)){
+                    //    rotation_yaw=270;
+                    //}
+                    rotation_yaw = player.headYaw;
                     //if(this instanceof RadioEntity){
                     //    rotation_yaw -= 90;
                     //}
