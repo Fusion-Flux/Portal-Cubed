@@ -178,6 +178,8 @@ public class PortalCubedBlocks {
 
     public static final AbsoluteFizzlerBlock ABSOLUTE_FIZZLER = new AbsoluteFizzlerBlock(QuiltBlockSettings.of(Material.PORTAL).noCollision().strength(-1, 3600000));
     public static final FizzlerEmitter ABSOLUTE_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE), ABSOLUTE_FIZZLER);
+    public static final AbsoluteFizzlerBlock PORTAL_1_FIZZLER = new AbsoluteFizzlerBlock(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER));
+    public static final FizzlerEmitter PORTAL_1_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER_EMITTER), PORTAL_1_FIZZLER);
     public static final DeathFizzlerBlock DEATH_FIZZLER = new DeathFizzlerBlock(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER));
     public static final FizzlerEmitter DEATH_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER_EMITTER), DEATH_FIZZLER);
     public static final LaserFizzlerBlock LASER_FIZZLER = new LaserFizzlerBlock(QuiltBlockSettings.copyOf(ABSOLUTE_FIZZLER));
@@ -500,6 +502,10 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("absolute_fizzler"), ABSOLUTE_FIZZLER);
         Registry.register(Registry.BLOCK, id("absolute_fizzler_emitter"), ABSOLUTE_FIZZLER_EMITTER);
         Registry.register(Registry.ITEM, id("absolute_fizzler_emitter"), new BlockItem(ABSOLUTE_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("portal_1_fizzler"), PORTAL_1_FIZZLER);
+        Registry.register(Registry.BLOCK, id("portal_1_fizzler_emitter"), PORTAL_1_FIZZLER_EMITTER);
+        Registry.register(Registry.ITEM, id("portal_1_fizzler_emitter"), new BlockItem(PORTAL_1_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
         Registry.register(Registry.BLOCK, id("death_fizzler"), DEATH_FIZZLER);
         Registry.register(Registry.BLOCK, id("death_fizzler_emitter"), DEATH_FIZZLER_EMITTER);

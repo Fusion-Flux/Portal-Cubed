@@ -57,6 +57,8 @@
 
   "block.portalcubed.absolute_fizzler": "Fizzler",
   "block.portalcubed.absolute_fizzler_emitter": "Fizzler Emitter",
+  "block.portalcubed.portal_1_fizzler": "Portal 1 Fizzler",
+  "block.portalcubed.portal_1_fizzler_emitter": "Portal 1 Fizzler Emitter",
   "block.portalcubed.death_fizzler": "Death Fizzler",
   "block.portalcubed.death_fizzler_emitter": "Death Fizzler Emitter",
   "block.portalcubed.laser_fizzler": "Laser Fizzler",

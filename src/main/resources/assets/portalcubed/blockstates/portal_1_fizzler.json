@@ -1,0 +1,21 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "ns": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/portal_1_fizzler"
+      }
+    },
+    {
+      "when": {
+        "ew": "true"
+      },
+      "apply": {
+        "model": "portalcubed:block/portal_1_fizzler",
+        "y": 90
+      }
+    }
+  ]
+}

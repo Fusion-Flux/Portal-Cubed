@@ -1,0 +1,35 @@
+{
+  "variants": {
+    "facing=north,half=lower": {
+      "model": "portalcubed:block/portal_1_fizzler_emitter_bottom"
+    },
+    "facing=south,half=lower": {
+      "model": "portalcubed:block/portal_1_fizzler_emitter_bottom",
+      "y": 180
+    },
+    "facing=west,half=lower": {
+      "model": "portalcubed:block/portal_1_fizzler_emitter_bottom",
+      "y": -90
+    },
+    "facing=east,half=lower": {
+      "model": "portalcubed:block/portal_1_fizzler_emitter_bottom",
+      "y": 90
+    },
+
+    "facing=north,half=upper": {
+      "model": "portalcubed:block/portal_1_fizzler_emitter_top"
+    },
+    "facing=south,half=upper": {
+      "model": "portalcubed:block/portal_1_fizzler_emitter_top",
+      "y": 180
+    },
+    "facing=west,half=upper": {
+      "model": "portalcubed:block/portal_1_fizzler_emitter_top",
+      "y": -90
+    },
+    "facing=east,half=upper": {
+      "model": "portalcubed:block/portal_1_fizzler_emitter_top",
+      "y": 90
+    }
+  }
+}
