@@ -101,15 +101,15 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
 
     protected final void removePortals(Entity entity) {
         if (entity.world.isClient) return;
-        final var portals = CalledValues.getPortals(entity);
-        if (portals.isEmpty()) return;
-        for (final UUID portal : portals) {
+        boolean foundPortal = false;
+        for (final UUID portal : CalledValues.getPortals(entity)) {
             final Entity checkPortal = ((ServerWorld)entity.world).getEntity(portal);
             if (checkPortal != null) {
+                foundPortal = true;
                 checkPortal.kill();
             }
         }
-        if (entity instanceof ServerPlayerEntity player) {
+        if (foundPortal && entity instanceof ServerPlayerEntity player) {
             player.playSound(PortalCubedSounds.ENTITY_PORTAL_FIZZLE, SoundCategory.NEUTRAL, 0.5f, 1f);
             ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
         }
