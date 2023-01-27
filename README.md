@@ -1,22 +1,33 @@
-# Thinking With Portatos
+# Portal Cubed
 
-This is a minecraft mod that requires
-Fabric API: https://www.curseforge.com/minecraft/mc-mods/fabric-api
-Rayon: https://www.curseforge.com/minecraft/mc-mods/rayon
-Cloth Config: https://www.curseforge.com/minecraft/mc-mods/cloth-config
+<p align="center">
+  <img title="modicon" height="384" src="docs/logo.png">
+</p>
 
-This is a Minecraft Mod That adds in things from the Portal Franchise
+<p align="center">
+  <a href="https://quiltmc.org/" target="_blank">
+    <img alt="quilt-standard-libraries" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/quilt-standard-libraries_vector.svg">
 
-The Trailer for this mod can be found here: https://youtu.be/ULiKizjwhSc
+  </a>
+  <br>
+  <a href="https://modrinth.com/mod/portal-cubed" target="_blank">
+    <img alt="modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg">
+  </a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/portal-cubed" target="_blank">
+    <img alt="curseforge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg">
+  </a>
+</p>
 
-Aditional images for this mod can be found on
-Curseforge: https://www.curseforge.com/minecraft/mc-mods/thinking-with-portatos
-Modrinth: https://modrinth.com/mod/thinking-with-portatos
+Portal Cubed is a Minecraft mod for Quilt that adds mechanics from Valve's Portal series.
 
-Massive thanks to
+## Implemented Features
 
-Quoteall (Immersive Portals)
-BlueVista (Rayon)
-InnateBit (Rayon)
+- All panels from Portal 1, Portal 2 [Old Aperture and New Aperture]
+- Physics props like cubes, the radio, a can of beans, chairs, and more!
+- Floor buttons and pedestal buttons
+- Gels from Portal 2 including the cut Adhesion Gel
+- Hard Light Bridges, Lasers, Excursion Funnels
+- Portal Gun
 
-Without their API's and assistance this mod wouldn't be possible.
+## License
+This project is licensed under the [MIT License](LICENSE)
