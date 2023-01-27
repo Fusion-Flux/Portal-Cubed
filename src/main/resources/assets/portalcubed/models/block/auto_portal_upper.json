@@ -2,6 +2,7 @@
 	"credit": "Made by Cart3r using Blockbench.",
 	"textures": {
 		"0": "portalcubed:block/auto_portal",
+		"1": "portalcubed:block/auto_portal_e",
 		"particle": "portalcubed:block/auto_portal"
 	},
 	"elements": [
@@ -25,6 +26,29 @@
 				"south": {"uv": [13.032, 0.032, 15.968, 15.968], "texture": "#0"},
 				"west": {"uv": [6.032, 0.032, 7.968, 15.968], "texture": "#0"},
 				"up": {"uv": [10.032, 2.032, 12.968, 3.968], "texture": "#0"}
+			}
+		},
+
+		{
+			"from": [15, 0, 13.925],
+			"to": [18, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 2.936, 15.936], "texture": "#1"},
+				"east": {"uv": [7.968, 0.032, 6.032, 15.968], "texture": "#1"},
+				"south": {"uv": [13.032, 0.032, 15.968, 15.968], "texture": "#1"},
+				"west": {"uv": [6.032, 0.032, 7.968, 15.968], "texture": "#1"},
+				"up": {"uv": [10.032, 2.032, 12.968, 3.968], "texture": "#1"}
+			}
+		},
+		{
+			"from": [-2, 0, 14],
+			"to": [1, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 2.936, 15.936], "texture": "#1"},
+				"east": {"uv": [7.968, 0.032, 6.032, 15.968], "texture": "#1"},
+				"south": {"uv": [13.032, 0.032, 15.968, 15.968], "texture": "#1"},
+				"west": {"uv": [6.032, 0.032, 7.968, 15.968], "texture": "#1"},
+				"up": {"uv": [10.032, 2.032, 12.968, 3.968], "texture": "#1"}
 			}
 		}
 	],
