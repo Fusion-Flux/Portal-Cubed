@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YXY",
+        "XYX",
+        "YXY"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:yellow_wool"
+        },
+        "Y": {
+            "item": "minecraft:iron_nugget"
+        }
+    },
+    "result": {
+        "item": "portalcubed:insulation",
+        "count": 16
+    }
+}

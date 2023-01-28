@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "Z Z",
+        "ZXZ",
+        "Z Z"
+    ],
+    "key": {
+        "Z": {
+            "item": "minecraft:iron_ingot"
+        },
+        "X": {
+            "item": "portalcubed:mini_blackhole"
+        }
+    },
+    "result": {
+        "item": "portalcubed:auto_portal",
+        "count": 2
+    }
+}
