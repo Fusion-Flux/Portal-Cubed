@@ -1,115 +1,129 @@
 package com.fusionflux.portalcubed.client.render.model.block;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
-import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
 
 public final class EmissiveBakedModel extends ForwardingBakedModel {
 
-    private static final RenderMaterial[] EMISSIVE_MATERIALS = new RenderMaterial[BlendMode.values().length]; {
-        MaterialFinder materialFinder = RendererAccess.INSTANCE.getRenderer().materialFinder();
-        for (BlendMode blendMode : BlendMode.values()) {
-            EMISSIVE_MATERIALS[blendMode.ordinal()] = materialFinder
-                .emissive(0, true)
-                .disableDiffuse(0, true)
-                .disableAo(0, true)
-                .blendMode(0, blendMode)
-                .find();
-        }
-    }
+	private static final Map<Identifier, Function<BakedModel, EmissiveBakedModel>> wrappers = new Object2ObjectOpenHashMap<>();
 
-    private final Identifier emissiveSpriteId;
-    private boolean didEmit = false;
+	public static void register(Identifier modelId) {
+		wrappers.put(modelId, bakedModel -> new EmissiveBakedModel(bakedModel));
+	}
 
-    public EmissiveBakedModel(BakedModel wrapped, Identifier emissiveSpriteId) {
-        this.wrapped = wrapped;
-        this.emissiveSpriteId = emissiveSpriteId;
-    }
+	public static Optional<BakedModel> wrap(Identifier modelId, BakedModel model) {
+		final Function<BakedModel, EmissiveBakedModel> wrapper = wrappers.get(new Identifier(modelId.getNamespace(), modelId.getPath()));
+		if (wrapper != null) return Optional.of(wrapper.apply(model));
+		return Optional.empty();
+	}
 
-    @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
-        final MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
-        final QuadEmitter emitter = meshBuilder.getEmitter();
+	private static final MaterialFinder MATERIAL_FINDER = RendererAccess.INSTANCE.getRenderer().materialFinder();
 
-        context.pushTransform(quad -> {
-            SpriteFinder spriteFinder = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
+	private Pair<BlockState, Mesh> cachedMesh = Pair.of(null, null);
 
-            Sprite sprite = spriteFinder.find(quad, 0);
-            if (emissiveSpriteId.equals(sprite.getId())) {
-                BlendMode blendMode = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(state));
-                final BlendMode finalBlendMode = switch (blendMode) {
-                    case SOLID -> BlendMode.CUTOUT_MIPPED;
-                    default -> blendMode;
-                };
+	EmissiveBakedModel(BakedModel model) {
+		this.wrapped = model;
+	}
 
-                quad.copyTo(emitter);
-                emitter.material(EMISSIVE_MATERIALS[finalBlendMode.ordinal()]);
-                emitter.emit();
-                didEmit = true;
+	@Override
+	public boolean isVanillaAdapter() {
+		return false;
+	}
 
-                return false;
-            }
+	@Override
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
+		final ModelObjects objects = ModelObjects.get();
+		objects.cullingCache.prepare(pos, state);
+		buildMesh(objects, state, randomSupplier);
+		context.pushTransform(quad -> {
+			return !objects.cullingCache.shouldCull(quad, blockView);
+		});
+		context.meshConsumer().accept(cachedMesh.getValue());
+		context.popTransform();
+	}
 
-            return true;
-        });
-        super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-        context.popTransform();
+	@Override
+	public void emitItemQuads(ItemStack stack, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
+		final ModelObjects objects = ModelObjects.get();
+		buildMesh(objects, null, randomSupplier);
+		context.meshConsumer().accept(cachedMesh.getValue());
+	}
 
-        if (didEmit) context.meshConsumer().accept(meshBuilder.build());
-        didEmit = false;
-    }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void emitItemQuads(ItemStack stack, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
-        final MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
-        final QuadEmitter emitter = meshBuilder.getEmitter();
+	private void buildMesh(ModelObjects objects, @Nullable BlockState state, Supplier<RandomGenerator> randomSupplier) {
+		boolean shouldBuild = true;
+		if (state != null) shouldBuild = cachedMesh.getKey() != state;
+		if (!shouldBuild) return;
 
-        context.pushTransform(quad -> {
-            SpriteFinder spriteFinder = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
+		final QuadEmitter emitter = objects.meshBuilder.getEmitter();
 
-            Sprite sprite = spriteFinder.find(quad, 0);
-            if (emissiveSpriteId.equals(sprite.getId())) {
-                quad.copyTo(emitter);
-                emitter.material(EMISSIVE_MATERIALS[BlendMode.DEFAULT.ordinal()]);
-                emitter.emit();
-                didEmit = true;
+		for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++) {
+			final Direction cullFace = ModelHelper.faceFromIndex(i);
+			final List<BakedQuad> quads = wrapped.getQuads(state, cullFace, randomSupplier.get());
 
-                return false;
-            }
+			for (BakedQuad quad : quads) {
+				boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().getId());
+				MATERIAL_FINDER.emissive(0, isQuadEmissive);
+				MATERIAL_FINDER.disableDiffuse(0, isQuadEmissive);
+				MATERIAL_FINDER.disableAo(0, isQuadEmissive);
 
-            return true;
-        });
-        super.emitItemQuads(stack, randomSupplier, context);
-        context.popTransform();
+				BlendMode blendMode = BlendMode.DEFAULT;
+				if (state != null) {
+					blendMode = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(state));
+					if (blendMode == BlendMode.SOLID) blendMode = BlendMode.CUTOUT_MIPPED;
+				}
+				MATERIAL_FINDER.blendMode(0, blendMode);
 
-        if (didEmit) context.meshConsumer().accept(meshBuilder.build());
-        didEmit = false;
-    }
+				emitter.fromVanilla(quad, MATERIAL_FINDER.find(), cullFace);
+				emitter.cullFace(cullFace);
+				emitter.emit();
+			}
+		}
+
+		cachedMesh = Pair.of(state, objects.meshBuilder.build());
+	}
+
+
+	private static class ModelObjects {
+
+		private static final ThreadLocal<ModelObjects> INSTANCE = ThreadLocal.withInitial(ModelObjects::new);
+
+		private final CullingCache cullingCache = new CullingCache();
+
+		private final MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
+
+		private static ModelObjects get() {
+			return INSTANCE.get();
+		}
+
+	}
 
 }

@@ -5,7 +5,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.key.GrabKeyBinding;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.*;
-import com.fusionflux.portalcubed.client.render.model.block.EmissiveModelRegistry;
+import com.fusionflux.portalcubed.client.render.model.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.model.entity.*;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
@@ -19,8 +19,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -38,7 +38,7 @@ public class PortalCubedClient implements ClientModInitializer {
     @Override
     public void onInitializeClient(ModContainer mod) {
 
-        ScreenRegistry.register(PortalCubed.FAITH_PLATE_SCREEN_HANDLER, FaithPlateScreen::new);
+        HandledScreens.register(PortalCubed.FAITH_PLATE_SCREEN_HANDLER, FaithPlateScreen::new);
 
         registerEntityRenderers();
         registerColorProviders();
@@ -101,55 +101,55 @@ public class PortalCubedClient implements ClientModInitializer {
 
     private void registerEmissiveModels() {
         // Misc
-        EmissiveModelRegistry.register(id("block/excursion_funnel"), id("block/excursion_funnel_beam"));
-        EmissiveModelRegistry.register(id("block/excursion_funnel_reversed"), id("block/reverse_excursion_funnel_beam"));
+        EmissiveSpriteRegistry.register(id("block/excursion_funnel"), id("block/excursion_funnel_beam"));
+        EmissiveSpriteRegistry.register(id("block/excursion_funnel_reversed"), id("block/reverse_excursion_funnel_beam"));
 
-        EmissiveModelRegistry.register(id("block/faith_plate"), id("block/faith_plate_e"));
-        EmissiveModelRegistry.register(id("block/faith_plate_active"), id("block/faith_plate_e"));
+        EmissiveSpriteRegistry.register(id("block/faith_plate"), id("block/faith_plate_e"));
+        EmissiveSpriteRegistry.register(id("block/faith_plate_active"), id("block/faith_plate_e"));
 
-        EmissiveModelRegistry.register(id("block/laser"), id("block/laser_beam"));
-        EmissiveModelRegistry.register(id("block/laser_ref_main"), id("block/laser_beam"));
-        EmissiveModelRegistry.register(id("block/laser_ref_prev"), id("block/laser_beam"));
-        EmissiveModelRegistry.register(id("block/light_bridge"), id("block/light_bridge"));
+        EmissiveSpriteRegistry.register(id("block/laser"), id("block/laser_beam"));
+        EmissiveSpriteRegistry.register(id("block/laser_ref_main"), id("block/laser_beam"));
+        EmissiveSpriteRegistry.register(id("block/laser_ref_prev"), id("block/laser_beam"));
+        EmissiveSpriteRegistry.register(id("block/light_bridge"), id("block/light_bridge"));
 
 
-        EmissiveModelRegistry.register(id("block/portal_1_door_bottom_left"), id("block/portal_1_door_e"));
-        EmissiveModelRegistry.register(id("block/portal_1_door_bottom_left_open"), id("block/portal_1_door_e"));
-        EmissiveModelRegistry.register(id("block/portal_1_door_bottom_right"), id("block/portal_1_door_e"));
-        EmissiveModelRegistry.register(id("block/portal_1_door_bottom_right_open"), id("block/portal_1_door_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_1_door_bottom_left"), id("block/portal_1_door_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_1_door_bottom_left_open"), id("block/portal_1_door_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_1_door_bottom_right"), id("block/portal_1_door_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_1_door_bottom_right_open"), id("block/portal_1_door_e"));
 
-        EmissiveModelRegistry.register(id("block/portal_2_door_bottom_right"), id("block/portal_2_door_e"));
-        EmissiveModelRegistry.register(id("block/portal_2_door_bottom_right_open"), id("block/portal_2_door_e"));
-        EmissiveModelRegistry.register(id("block/portal_2_door_top_right"), id("block/portal_2_door_e"));
-        EmissiveModelRegistry.register(id("block/portal_2_door_top_right_open"), id("block/portal_2_door_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_door_bottom_right"), id("block/portal_2_door_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_door_bottom_right_open"), id("block/portal_2_door_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_door_top_right"), id("block/portal_2_door_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_door_top_right_open"), id("block/portal_2_door_e"));
 
         // Emitters
 
-        EmissiveModelRegistry.register(id("block/light_bridge_emitter"), id("block/light_bridge_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/light_bridge_emitter"), id("block/light_bridge_emitter_e"));
 
-        EmissiveModelRegistry.register(id("block/excursion_funnel_emitter_off"), id("block/funnel_wings_e"));
-        EmissiveModelRegistry.register(id("block/excursion_funnel_emitter"), id("block/funnel_wings_active_e"));
-        EmissiveModelRegistry.register(id("block/excursion_funnel_emitter_reversed"), id("block/funnel_wings_active_reverse_e"));
+        EmissiveSpriteRegistry.register(id("block/excursion_funnel_emitter_off"), id("block/funnel_wings_e"));
+        EmissiveSpriteRegistry.register(id("block/excursion_funnel_emitter"), id("block/funnel_wings_active_e"));
+        EmissiveSpriteRegistry.register(id("block/excursion_funnel_emitter_reversed"), id("block/funnel_wings_active_reverse_e"));
 
-        EmissiveModelRegistry.register(id("block/laser_emitter_active"), id("block/laser_emitter_e"));
-        EmissiveModelRegistry.register(id("block/laser_emitter_active_downward"), id("block/laser_emitter_e"));
-        EmissiveModelRegistry.register(id("block/laser_emitter_active_upward"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_emitter_active"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_emitter_active_downward"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_emitter_active_upward"), id("block/laser_emitter_e"));
 
-        EmissiveModelRegistry.register(id("block/laser_relay_active"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_relay_active"), id("block/laser_emitter_e"));
 
-        EmissiveModelRegistry.register(id("block/laser_catcher_active"), id("block/laser_emitter_e"));
-        EmissiveModelRegistry.register(id("block/laser_catcher_active_downward"), id("block/laser_emitter_e"));
-        EmissiveModelRegistry.register(id("block/laser_catcher_active_upward"), id("block/laser_emitter_e"));
-        EmissiveModelRegistry.register(id("block/laser_catcher"), id("block/laser_emitter_e"));
-        EmissiveModelRegistry.register(id("block/laser_catcher_downward"), id("block/laser_emitter_e"));
-        EmissiveModelRegistry.register(id("block/laser_catcher_upward"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_catcher_active"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_catcher_active_downward"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_catcher_active_upward"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_catcher"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_catcher_downward"), id("block/laser_emitter_e"));
+        EmissiveSpriteRegistry.register(id("block/laser_catcher_upward"), id("block/laser_emitter_e"));
 
         // Buttons
 
-        EmissiveModelRegistry.register(id("block/floor_button"), id("block/floor_button_e"));
-        EmissiveModelRegistry.register(id("block/pedestal_button"), id("block/pedestal_button_e"));
-        EmissiveModelRegistry.register(id("block/floor_button_active"), id("block/floor_button_e"));
-        EmissiveModelRegistry.register(id("block/pedestal_button_active"), id("block/pedestal_button_e"));
+        EmissiveSpriteRegistry.register(id("block/floor_button"), id("block/floor_button_e"));
+        EmissiveSpriteRegistry.register(id("block/pedestal_button"), id("block/pedestal_button_e"));
+        EmissiveSpriteRegistry.register(id("block/floor_button_active"), id("block/floor_button_e"));
+        EmissiveSpriteRegistry.register(id("block/pedestal_button_active"), id("block/pedestal_button_e"));
     }
 
     private void registerColorProviders() {
