@@ -3,6 +3,8 @@ package com.fusionflux.portalcubed.blocks;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.blockentities.*;
 import com.fusionflux.portalcubed.blocks.fizzler.*;
+import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.items.GelBlobItem;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
@@ -231,15 +233,15 @@ public class PortalCubedBlocks {
             Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "base_gel"), BASE_GEL);
 
             Registry.register(Registry.BLOCK, id("propulsion_gel"), PROPULSION_GEL);
-            Registry.register(Registry.ITEM, id("propulsion_gel"), new BlockItem(PROPULSION_GEL, new Item.Settings().group(PortalCubed.TestingElementsGroup).maxCount(64)));
+            Registry.register(Registry.ITEM, id("propulsion_gel"), new GelBlobItem(PROPULSION_GEL, PortalCubedEntities.PROPULSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TestingElementsGroup).maxCount(64)));
             Registry.register(Registry.BLOCK, id("repulsion_gel"), REPULSION_GEL);
-            Registry.register(Registry.ITEM, id("repulsion_gel"), new BlockItem(REPULSION_GEL, new Item.Settings().group(PortalCubed.TestingElementsGroup).maxCount(64)));
+            Registry.register(Registry.ITEM, id("repulsion_gel"), new GelBlobItem(REPULSION_GEL, PortalCubedEntities.REPULSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TestingElementsGroup).maxCount(64)));
 
             Registry.register(Registry.BLOCK, id("adhesion_gel"), ADHESION_GEL);
-            Registry.register(Registry.ITEM, id("adhesion_gel"), new BlockItem(ADHESION_GEL, new Item.Settings().group(PortalCubed.TestingElementsGroup).maxCount(64)));
+            Registry.register(Registry.ITEM, id("adhesion_gel"), new GelBlobItem(ADHESION_GEL, PortalCubedEntities.ADHESION_GEL_BLOB, new Item.Settings().group(PortalCubed.TestingElementsGroup).maxCount(64)));
 
             Registry.register(Registry.BLOCK, id("conversion_gel"), CONVERSION_GEL);
-            Registry.register(Registry.ITEM, id("conversion_gel"), new BlockItem(CONVERSION_GEL, new Item.Settings().group(PortalCubed.TestingElementsGroup).maxCount(64)));
+            Registry.register(Registry.ITEM, id("conversion_gel"), new GelBlobItem(CONVERSION_GEL, PortalCubedEntities.CONVERSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TestingElementsGroup).maxCount(64)));
 
             Registry.register(Registry.BLOCK, id("portal_2_door"), PORTAL2DOOR);
             Registry.register(Registry.ITEM, id("portal_2_door"), new BlockItem(PORTAL2DOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));

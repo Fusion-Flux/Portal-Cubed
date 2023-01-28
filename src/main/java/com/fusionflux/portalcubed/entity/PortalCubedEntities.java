@@ -1,6 +1,8 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.blocks.GelFlat;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -8,7 +10,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.checkerframework.checker.units.qual.A;
 
 public class PortalCubedEntities {
 
@@ -92,6 +93,23 @@ public class PortalCubedEntities {
             .dimensions(EntityDimensions.changing(0.375F, 0.375F))
             .build();
 
+    public static final EntityType<? extends GelBlobEntity> PROPULSION_GEL_BLOB = createGelBlob(
+        PortalCubedBlocks.PROPULSION_GEL,
+        new Identifier("portalcubed:textures/block/propulsion_gel.png")
+    );
+    public static final EntityType<? extends GelBlobEntity> REPULSION_GEL_BLOB = createGelBlob(
+        PortalCubedBlocks.REPULSION_GEL,
+        new Identifier("portalcubed:textures/block/repulsion_gel.png")
+    );
+    public static final EntityType<? extends GelBlobEntity> CONVERSION_GEL_BLOB = createGelBlob(
+        PortalCubedBlocks.CONVERSION_GEL,
+        new Identifier("portalcubed:textures/block/gel.png")
+    );
+    public static final EntityType<? extends GelBlobEntity> ADHESION_GEL_BLOB = createGelBlob(
+        PortalCubedBlocks.ADHESION_GEL,
+        new Identifier("portalcubed:textures/block/adhesion_gel.png")
+    );
+
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "experimental_portal"), EXPERIMENTAL_PORTAL);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "storage_cube"), STORAGE_CUBE);
@@ -116,6 +134,10 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "adventure_core"), ADVENTURE_CORE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "fact_core"), FACT_CORE);
 
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "propulsion_gel_blob"), PROPULSION_GEL_BLOB);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "repulsion_gel_blob"), REPULSION_GEL_BLOB);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "conversion_gel_blob"), CONVERSION_GEL_BLOB);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MODID, "adhesion_gel_blob"), ADHESION_GEL_BLOB);
 
         FabricDefaultAttributeRegistry.register(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
@@ -141,5 +163,20 @@ public class PortalCubedEntities {
         FabricDefaultAttributeRegistry.register(FACT_CORE, HoopyEntity.createMobAttributes());
     }
 
+    public static EntityType<? extends GelBlobEntity> createGelBlob(GelFlat gel, Identifier texture) {
+        return FabricEntityTypeBuilder.create()
+            .<GelBlobEntity>entityFactory((type, world) -> new GelBlobEntity(type, world) {
+                @Override
+                public Identifier getTexture() {
+                    return texture;
+                }
 
+                @Override
+                public GelFlat getGel() {
+                    return gel;
+                }
+            })
+            .dimensions(EntityDimensions.changing(1, 1))
+            .build();
+    }
 }

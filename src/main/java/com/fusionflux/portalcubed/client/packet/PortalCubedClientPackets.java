@@ -14,6 +14,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
@@ -24,12 +25,14 @@ public class PortalCubedClientPackets {
     public static final Identifier SPAWN_PACKET = new Identifier(PortalCubed.MODID, "spawn_packet");
     public static final Identifier FIZZLE_PACKET = new Identifier(PortalCubed.MODID, "fizzle");
     public static final Identifier HAND_SHAKE_PACKET = new Identifier(PortalCubed.MODID, "hand_shake");
+    public static final Identifier GEL_OVERLAY_PACKET = new Identifier(PortalCubed.MODID, "gel_overlay");
 
     @Environment(EnvType.CLIENT)
     public static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(SPAWN_PACKET, PortalCubedClientPackets::onEntitySpawn);
         ClientPlayNetworking.registerGlobalReceiver(FIZZLE_PACKET, PortalCubedClientPackets::onFizzle);
         ClientPlayNetworking.registerGlobalReceiver(HAND_SHAKE_PACKET, PortalCubedClientPackets::onHandShake);
+        ClientPlayNetworking.registerGlobalReceiver(GEL_OVERLAY_PACKET, PortalCubedClientPackets::onGelOverlay);
     }
 
     @Environment(EnvType.CLIENT)
@@ -77,6 +80,12 @@ public class PortalCubedClientPackets {
     @Environment(EnvType.CLIENT)
     public static void onHandShake(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         PortalCubedClient.shakeStart = Util.getMeasuringTimeMs();
+    }
+
+    @ClientOnly
+    public static void onGelOverlay(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        // TODO: Implement
+        PortalCubed.LOGGER.info("Gel overlay");
     }
 
 }

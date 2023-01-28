@@ -10,6 +10,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.google.common.collect.Lists;
@@ -561,7 +562,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     }
     @Inject(method = "pushAwayFrom", at = @At("HEAD") , cancellable = true)
     public void pushAwayFrom(Entity entity, CallbackInfo ci) {
-        if(entity instanceof CorePhysicsEntity){
+        if(entity instanceof CorePhysicsEntity || entity instanceof GelBlobEntity){
             ci.cancel();
         }
     }
