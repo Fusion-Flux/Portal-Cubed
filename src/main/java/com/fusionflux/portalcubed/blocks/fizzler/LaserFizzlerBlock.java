@@ -12,6 +12,6 @@ public class LaserFizzlerBlock extends AbstractFizzlerBlock {
 
     @Override
     public void onEntityEnter(BlockState state, World world, BlockPos pos, Entity entity) {
-        fizzlePlayer(entity);
+        fizzleLiving(entity);
     }
 }

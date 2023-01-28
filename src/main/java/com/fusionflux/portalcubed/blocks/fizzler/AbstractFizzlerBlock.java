@@ -12,7 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -122,9 +122,9 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
         }
     }
 
-    protected final void fizzlePlayer(Entity entity) {
+    protected final void fizzleLiving(Entity entity) {
         if (entity.world.isClient) return;
-        if (entity instanceof PlayerEntity) {
+        if (entity instanceof LivingEntity && !(entity instanceof CorePhysicsEntity)) {
             entity.damage(PortalCubedDamageSources.FIZZLE, PortalCubedConfig.fizzlerDamage);
         }
     }
