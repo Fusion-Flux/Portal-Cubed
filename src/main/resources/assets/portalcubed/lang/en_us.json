@@ -65,6 +65,8 @@
   "block.portalcubed.death_fizzler_emitter": "Death Fizzler Emitter",
   "block.portalcubed.laser_fizzler": "Laser Field",
   "block.portalcubed.laser_fizzler_emitter": "Laser Field Emitter",
+  "block.portalcubed.old_aperture_laser_field": "Old Aperture Laser Field",
+  "block.portalcubed.old_aperture_laser_field_emitter": "Old Aperture Laser Field Emitter",
   "block.portalcubed.matter_inquisition_field": "Matter Inquisition Field",
   "block.portalcubed.matter_inquisition_field_emitter": "Matter Inquisition Field Emitter",
   "block.portalcubed.physics_repulsion_field": "Physics Repulsion Field",
