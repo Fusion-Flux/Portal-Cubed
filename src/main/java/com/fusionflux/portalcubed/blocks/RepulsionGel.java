@@ -8,6 +8,7 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
@@ -84,7 +85,7 @@ public class RepulsionGel extends GelFlat {
         //}
         boolean canBounce = !(entity instanceof PlayerEntity) || world.isClient;
 
-        if (!entity.isSneaking()) {
+        if (!entity.bypassesLandingEffects()) {
             final boolean jumping = entity instanceof LivingEntityAccessor living && living.isJumping();
             if (entity.verticalCollision || jumping) {
                 if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.getY() < 0 || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6 || jumping)) {
@@ -231,6 +232,15 @@ public class RepulsionGel extends GelFlat {
                     //}
                 }
             }
+        }
+    }
+
+    @Override
+    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
+        if (entity.bypassesLandingEffects()) {
+            super.onLandedUpon(world, state, pos, entity, fallDistance);
+        } else {
+            entity.handleFallDamage(fallDistance, 0.0F, DamageSource.FALL);
         }
     }
 
