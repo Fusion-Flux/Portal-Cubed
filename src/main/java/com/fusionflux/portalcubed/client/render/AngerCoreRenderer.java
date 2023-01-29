@@ -9,13 +9,13 @@ import net.minecraft.util.Identifier;
 
 public class AngerCoreRenderer extends MobEntityRenderer<AngerCoreEntity, AngerCoreModel> {
 
-    private static final Identifier TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_1_cores.png");
+    private static final Identifier TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_1_cores.png");
 
     public AngerCoreRenderer(EntityRendererFactory.Context context) {
         super(context, new AngerCoreModel(context.getPart(AngerCoreModel.ANGER_CORE_LAYER)), 0.5f);
-        this.addFeature(new EmissiveFeatureRenderer<AngerCoreEntity, AngerCoreModel>(this) {
+        this.addFeature(new EmissiveFeatureRenderer<>(this) {
 
-            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_1_cores_e.png");
+            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_1_cores_e.png");
 
             @Override
             public Identifier getEmissiveTexture(AngerCoreEntity entity) {

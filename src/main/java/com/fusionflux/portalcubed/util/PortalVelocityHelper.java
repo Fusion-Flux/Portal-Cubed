@@ -113,8 +113,6 @@ public class PortalVelocityHelper {
 
 
     public static float yawAddition(Direction EntryDirection, Direction ExitDirection) {
-        //System.out.println("ENTRY" + EntryDirection);
-        //System.out.println("EXIT" + ExitDirection);
         if(EntryDirection == Direction.NORTH){
             if(ExitDirection == Direction.NORTH){
                 return 180;

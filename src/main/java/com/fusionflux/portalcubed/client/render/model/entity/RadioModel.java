@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class RadioModel extends FizzleableModel<RadioEntity> {
-	public static final EntityModelLayer RADIO_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"radio"), "main");
+	public static final EntityModelLayer RADIO_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "radio"), "main");
 	private final ModelPart bb_main;
 
 	public RadioModel(ModelPart root) {
@@ -27,9 +27,9 @@ public class RadioModel extends FizzleableModel<RadioEntity> {
 		ModelPartData bone = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 4).mirrored().cuboid(-12.0F, -1.0F, 6.0F, 8.0F, 1.0F, 4.0F, new Dilation(0.0F)).mirrored(false)
 				.uv(0, 13).mirrored().cuboid(-11.5F, -5.0F, 6.5F, 7.0F, 4.0F, 3.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(8.0F, 24.0F, -8.0F));
 
-		ModelPartData cube_r1 = bone.addChild("cube_r1", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, -2.0F, -0.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-6.5F, -7.0F, 8.0F, 0.0F, 0.7854F, 0.0F));
+		bone.addChild("cube_r1", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, -2.0F, -0.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-6.5F, -7.0F, 8.0F, 0.0F, 0.7854F, 0.0F));
 
-		ModelPartData cube_r2 = bone.addChild("cube_r2", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, -2.0F, -0.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-6.5F, -7.0F, 8.0F, 0.0F, -0.7854F, 0.0F));
+		bone.addChild("cube_r2", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, -2.0F, -0.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-6.5F, -7.0F, 8.0F, 0.0F, -0.7854F, 0.0F));
 		return TexturedModelData.of(modelData, 32, 32);
 	}
 

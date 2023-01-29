@@ -2,8 +2,6 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
@@ -22,6 +20,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.UUID;
 
@@ -128,7 +127,7 @@ public class RadioEntity extends CorePhysicsEntity  {
         setNotPlaying(nbt.getBoolean("NotPlaying"));
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     private class RadioSoundInstance extends MovingSoundInstance {
         private final SoundEvent song;
 

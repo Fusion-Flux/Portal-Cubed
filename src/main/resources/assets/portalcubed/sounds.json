@@ -13,6 +13,22 @@
 			"portalcubed:gelbounce3"
 		]
 	},
+	"gel_splat": {
+		"sounds": [
+			"portalcubed:paint_blob_splat_01",
+			"portalcubed:paint_blob_splat_02",
+			"portalcubed:paint_blob_splat_03",
+			"portalcubed:paint_blob_splat_04",
+			"portalcubed:paint_blob_splat_05",
+			"portalcubed:paint_blob_splat_06",
+			"portalcubed:paint_blob_splat_07",
+			"portalcubed:paint_blob_splat_08",
+			"portalcubed:paint_blob_splat_09",
+			"portalcubed:paint_blob_splat_10",
+			"portalcubed:paint_blob_splat_11",
+			"portalcubed:paint_blob_splat_12"
+		]
+	},
 	"portalgunprimary": {
 		"subtitle": "subtitles.portalcubed.portalgunprimaryfire",
 		"sounds": [

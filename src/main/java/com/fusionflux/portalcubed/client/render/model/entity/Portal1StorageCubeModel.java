@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class Portal1StorageCubeModel extends FizzleableModel<Portal1StorageCubeEntity> {
-	public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"portal_1_storage_cube"), "main");
+	public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "portal_1_storage_cube"), "main");
 	private final ModelPart bb_main;
 
 	public Portal1StorageCubeModel(ModelPart root) {
@@ -24,8 +24,8 @@ public class Portal1StorageCubeModel extends FizzleableModel<Portal1StorageCubeE
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData bone = modelPartData.addChild("bone", ModelPartBuilder.create().uv(0, 0).cuboid(-5.5F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
-				.uv(0, 20).cuboid(-5.5F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.5F)), ModelTransform.pivot(0.5F, 24.0F, 0.0F));
+		modelPartData.addChild("bone", ModelPartBuilder.create().uv(0, 0).cuboid(-5.5F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
+			.uv(0, 20).cuboid(-5.5F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.5F)), ModelTransform.pivot(0.5F, 24.0F, 0.0F));
 		return TexturedModelData.of(modelData, 64, 64);
 	}
 

@@ -1,13 +1,8 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import com.fusionflux.gravity_api.api.GravityChangerAPI;
-import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.util.CustomProperties;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -22,11 +17,11 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
 public class LaserBlock extends BlockWithEntity {
@@ -48,11 +43,13 @@ public class LaserBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
@@ -77,7 +74,8 @@ public class LaserBlock extends BlockWithEntity {
 
 
     @Override
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
+    @SuppressWarnings("deprecation")
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1.0F;
     }
@@ -96,18 +94,20 @@ public class LaserBlock extends BlockWithEntity {
 
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
         return stateFrom.isOf(this) || super.isSideInvisible(state, stateFrom, direction);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        this.addCollisionEffects(world, entity, pos ,state);
+        this.addCollisionEffects(entity);
     }
 
 
 
-    private void addCollisionEffects(World world, Entity entity, BlockPos pos,BlockState state) {
+    private void addCollisionEffects(Entity entity) {
         if(entity instanceof PlayerEntity player){
             if(!player.getAbilities().creativeMode) {
                 player.setOnFire(true);

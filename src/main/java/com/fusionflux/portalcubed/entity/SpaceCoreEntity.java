@@ -10,15 +10,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class SpaceCoreEntity extends CorePhysicsEntity  {
 
     public SpaceCoreEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
-
-    Random ran = new Random();
 
     private int t = 0;
 

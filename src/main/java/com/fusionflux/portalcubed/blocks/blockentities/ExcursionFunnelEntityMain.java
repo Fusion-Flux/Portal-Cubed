@@ -114,7 +114,7 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                 }
 
                 state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
-                        .with(CustomProperties.RNORTH, MRNorth).with(CustomProperties.REAST, MREast).with(CustomProperties.RSOUTH, MRSouth).with(CustomProperties.RWEST, MRWest).with(CustomProperties.RUP, MRUp).with(CustomProperties.RDOWN, MRDown);
+                        .with(CustomProperties.R_NORTH, MRNorth).with(CustomProperties.R_EAST, MREast).with(CustomProperties.R_SOUTH, MRSouth).with(CustomProperties.R_WEST, MRWest).with(CustomProperties.RUP, MRUp).with(CustomProperties.R_DOWN, MRDown);
             }
 
         world.setBlockState(pos,state,3);
@@ -268,38 +268,6 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                             blockEntity.updateState(state, world, pos, blockEntity);
                         }
                     }
-
-                    //if(!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){
-                    //    blockEntity.emitters.remove(i);
-                    //    blockEntity.portalEmitters.remove(i);
-                    //    blockEntity.facing.remove(i);
-                    //    blockEntity.updateState(state, world, pos, blockEntity);
-                    //}else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof ExcursionFunnelEmitterEntityAbstract)) {
-                    //    blockEntity.emitters.remove(i);
-                    //    blockEntity.portalEmitters.remove(i);
-                    //    blockEntity.facing.remove(i);
-                    //    blockEntity.updateState(state,world,pos,blockEntity);
-                    //} else if (!(((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.pos.mutableCopy()))) {
-                    //    blockEntity.emitters.remove(i);
-                    //    blockEntity.portalEmitters.remove(i);
-                    //    blockEntity.facing.remove(i);
-                    //    blockEntity.updateState(state,world,pos,blockEntity);
-                    //}else if (!((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
-                    //    if(portalPresent) {
-                    //        blockEntity.emitters.remove(i);
-                    //        blockEntity.portalEmitters.remove(i);
-                    //        blockEntity.facing.remove(i);
-                    //        blockEntity.updateState(state, world, pos, blockEntity);
-                    //    }
-                    //} else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof DuelExcursionFunnelEmitterEntity) && !(world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
-//
-                    //   // if ((world.getBlockEntity(blockEntity.emitters.get(i)) instanceof ExcursionFunnelEmitterEntityAbstract) && !world.isReceivingRedstonePower(blockEntity.emitters.get(i))) {
-                    //        blockEntity.emitters.remove(i);
-                    //        blockEntity.portalEmitters.remove(i);
-                    //        blockEntity.facing.remove(i);
-                    //        blockEntity.updateState(state, world, pos, blockEntity);
-                    //   // }
-                    //}
                 }
             }else{
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());

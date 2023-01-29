@@ -5,6 +5,7 @@ import com.fusionflux.gravity_api.util.GravityChannel;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
+import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
@@ -22,6 +23,7 @@ import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
@@ -30,7 +32,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
-
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
@@ -42,9 +43,8 @@ import org.slf4j.Logger;
 import java.util.UUID;
 
 public class PortalCubed implements ModInitializer {
-    public static final PortalCubedConfig CONFIG = new PortalCubedConfig();
 
-    public static final String MODID = "portalcubed";
+    public static final String MOD_ID = "portalcubed";
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -57,17 +57,14 @@ public class PortalCubed implements ModInitializer {
             () -> new ItemStack(PortalCubedItems.BLOCK_ITEM_ICON));
 
     public static Identifier id(String path) {
-        return new Identifier(MODID, path);
+        return new Identifier(MOD_ID, path);
     }
-    public static ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new);
-    static {
-        FAITH_PLATE_SCREEN_HANDLER = Registry.register(Registry.SCREEN_HANDLER, id("faith_plate_screen"), FAITH_PLATE_SCREEN_HANDLER);
-    }
+    public static final ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = Registry.register(Registry.SCREEN_HANDLER, id("faith_plate_screen"), new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new));
 
     @Override
     public void onInitialize(ModContainer mod) {
         ServerPlayNetworking.registerGlobalReceiver(id("portalpacket"), (server, player, handler, buf, responseSender) -> {
-            // read the velocity from the bytebuf
+            // read the velocity from the byte buf
             final int targetEntityId = buf.readVarInt();
             final Vec3d offset = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
             float yawSet = buf.readFloat();
@@ -99,7 +96,7 @@ public class PortalCubed implements ModInitializer {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(id("faithplatepacket"), (server, player, handler, buf, responseSender) -> {
-            // read the velocity from the bytebuf
+            // read the velocity from the byte buf
             BlockPos target = buf.readBlockPos();
             double x =  buf.readDouble();
             double y =  buf.readDouble();
@@ -119,21 +116,19 @@ public class PortalCubed implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(id("clientteleportupdate"), (server, player, handler, buf, responseSender) -> {
-            server.execute(() -> {
-                CalledValues.setHasTeleportationHappened(player,false);
-            });
-        });
+        ServerPlayNetworking.registerGlobalReceiver(id("clientteleportupdate"), (server, player, handler, buf, responseSender) ->
+            server.execute(() -> CalledValues.setHasTeleportationHappened(player, false))
+        );
 
         ServerPlayNetworking.registerGlobalReceiver(id("cubeposupdate"), (server, player, handler, buf, responseSender) -> {
-            // read the velocity from the bytebuf
+            // read the velocity from the byte buf
             double x =  buf.readDouble();
             double y =  buf.readDouble();
             double z =  buf.readDouble();
-            double lastx =  buf.readDouble();
-            double lasty =  buf.readDouble();
-            double lastz =  buf.readDouble();
-            float rotyaw = buf.readFloat();
+            double lastX =  buf.readDouble();
+            double lastY =  buf.readDouble();
+            double lastZ =  buf.readDouble();
+            float rotYaw = buf.readFloat();
             UUID cubeuuid =  buf.readUuid();
             server.execute(() -> {
                 if (!(player.getWorld().getEntity(cubeuuid) instanceof CorePhysicsEntity cube)) {
@@ -145,11 +140,11 @@ public class PortalCubed implements ModInitializer {
                     return;
                 }
                 cube.setHolderUUID(null);
-                cube.setRotYaw(rotyaw);
+                cube.setRotYaw(rotYaw);
                 Vec3d cubePos = new Vec3d(x,y,z);
-                Vec3d lastcubePos = new Vec3d(lastx,lasty,lastz);
-                if (cubePos.squaredDistanceTo(lastcubePos) > 10 * 10) {
-                    LOGGER.warn("{} tried to throw a physics object really fast ({})", player, cubePos.distanceTo(lastcubePos));
+                Vec3d lastCubePos = new Vec3d(lastX,lastY,lastZ);
+                if (cubePos.squaredDistanceTo(lastCubePos) > 10 * 10) {
+                    LOGGER.warn("{} tried to throw a physics object really fast ({})", player, cubePos.distanceTo(lastCubePos));
                     return;
                 }
 
@@ -158,12 +153,13 @@ public class PortalCubed implements ModInitializer {
                     return;
                 }
                 cube.setPosition(cubePos);
-                cube.setVelocity(RotationUtil.vecWorldToPlayer(cubePos.subtract(lastcubePos), GravityChangerAPI.getGravityDirection(cube)).multiply(.5));
+                cube.setVelocity(RotationUtil.vecWorldToPlayer(cubePos.subtract(lastCubePos), GravityChangerAPI.getGravityDirection(cube)).multiply(.5));
             });
         });
 
-        QuaternionHandler.QUATERNION_HANDLER.getClass();
+        TrackedDataHandlerRegistry.register(QuaternionHandler.QUATERNION_HANDLER);
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
+        PortalBlocksLoader.init(mod);
         PortalCubedBlocks.registerBlocks();
         PortalCubedFluids.registerFluids();
         PortalCubedItems.registerItems();

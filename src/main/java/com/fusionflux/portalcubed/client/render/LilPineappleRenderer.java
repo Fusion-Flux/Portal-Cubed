@@ -12,17 +12,17 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class LilPineappleRenderer extends MobEntityRenderer<LilPineappleEntity, LilPineappleModel> {
-    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_pineapple.png");
-    private static final Identifier PROUD_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_proud.png");
-    private static final Identifier ACE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_ace.png");
-    private static final Identifier AGENDER_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_agender.png");
-    private static final Identifier ARO_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_aro.png");
-    private static final Identifier BI_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_bi.png");
-    private static final Identifier GENDERFLUID_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_genderfluid.png");
-    private static final Identifier LESBIAN_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_lesbian.png");
-    private static final Identifier NONBINARY_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_nonbinary.png");
-    private static final Identifier PAN_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_pan.png");
-    private static final Identifier TRANS_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/lil_prideapple_trans.png");
+    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_pineapple.png");
+    private static final Identifier PROUD_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_proud.png");
+    private static final Identifier ACE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_ace.png");
+    private static final Identifier AGENDER_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_agender.png");
+    private static final Identifier ARO_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_aro.png");
+    private static final Identifier BI_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_bi.png");
+    private static final Identifier GENDERFLUID_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_genderfluid.png");
+    private static final Identifier LESBIAN_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_lesbian.png");
+    private static final Identifier NONBINARY_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_nonbinary.png");
+    private static final Identifier PAN_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_pan.png");
+    private static final Identifier TRANS_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_trans.png");
 
     protected final LilPineappleModel model = new LilPineappleModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(LilPineappleModel.LIL_PINEAPPLE));
 

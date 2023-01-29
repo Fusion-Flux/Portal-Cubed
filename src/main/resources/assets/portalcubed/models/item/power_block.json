@@ -1,0 +1,24 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "portalcubed:item/power_block"
+  },
+  "overrides": [
+    { "predicate": { "level": 0.0000 }, "model": "portalcubed:item/power_block_00" },
+    { "predicate": { "level": 0.0625 }, "model": "portalcubed:item/power_block_01" },
+    { "predicate": { "level": 0.1250 }, "model": "portalcubed:item/power_block_02" },
+    { "predicate": { "level": 0.1875 }, "model": "portalcubed:item/power_block_03" },
+    { "predicate": { "level": 0.2500 }, "model": "portalcubed:item/power_block_04" },
+    { "predicate": { "level": 0.3125 }, "model": "portalcubed:item/power_block_05" },
+    { "predicate": { "level": 0.3750 }, "model": "portalcubed:item/power_block_06" },
+    { "predicate": { "level": 0.4375 }, "model": "portalcubed:item/power_block_07" },
+    { "predicate": { "level": 0.5000 }, "model": "portalcubed:item/power_block_08" },
+    { "predicate": { "level": 0.5625 }, "model": "portalcubed:item/power_block_09" },
+    { "predicate": { "level": 0.6250 }, "model": "portalcubed:item/power_block_10" },
+    { "predicate": { "level": 0.6875 }, "model": "portalcubed:item/power_block_11" },
+    { "predicate": { "level": 0.7500 }, "model": "portalcubed:item/power_block_12" },
+    { "predicate": { "level": 0.8125 }, "model": "portalcubed:item/power_block_13" },
+    { "predicate": { "level": 0.8750 }, "model": "portalcubed:item/power_block_14" },
+    { "predicate": { "level": 0.9375 }, "model": "portalcubed:item/power_block_15" }
+  ]
+}

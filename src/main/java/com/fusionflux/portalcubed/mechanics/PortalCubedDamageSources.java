@@ -9,7 +9,7 @@ public class PortalCubedDamageSources {
     public static final DamageSource FIZZLE = source("fizzle").setBypassesArmor();
 
     private static DamageSource source(String id) {
-        return new DamageSource(PortalCubed.MODID + '.' + id);
+        return new DamageSource(PortalCubed.MOD_ID + '.' + id);
     }
 
 }

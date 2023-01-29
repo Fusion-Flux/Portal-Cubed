@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "level=0": {
+      "model": "portalcubed:block/power_block_00"
+    },
+    "level=1": {
+      "model": "portalcubed:block/power_block_01"
+    },
+    "level=10": {
+      "model": "portalcubed:block/power_block_10"
+    },
+    "level=11": {
+      "model": "portalcubed:block/power_block_11"
+    },
+    "level=12": {
+      "model": "portalcubed:block/power_block_12"
+    },
+    "level=13": {
+      "model": "portalcubed:block/power_block_13"
+    },
+    "level=14": {
+      "model": "portalcubed:block/power_block_14"
+    },
+    "level=15": {
+      "model": "portalcubed:block/power_block_15"
+    },
+    "level=2": {
+      "model": "portalcubed:block/power_block_02"
+    },
+    "level=3": {
+      "model": "portalcubed:block/power_block_03"
+    },
+    "level=4": {
+      "model": "portalcubed:block/power_block_04"
+    },
+    "level=5": {
+      "model": "portalcubed:block/power_block_05"
+    },
+    "level=6": {
+      "model": "portalcubed:block/power_block_06"
+    },
+    "level=7": {
+      "model": "portalcubed:block/power_block_07"
+    },
+    "level=8": {
+      "model": "portalcubed:block/power_block_08"
+    },
+    "level=9": {
+      "model": "portalcubed:block/power_block_09"
+    }
+  }
+}

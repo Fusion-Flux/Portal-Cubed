@@ -11,7 +11,6 @@ import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
@@ -27,12 +26,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -60,7 +56,6 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     private float rotation_yaw = this.bodyYaw;
 
-    private final Vec3d offset = new Vec3d(0,this.getWidth()/2,0);
     private final Vec3d offsetHeight = new Vec3d(0,this.getHeight()/2,0);
 
     @Override
@@ -147,24 +142,25 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         this.setId(packet.getId());
         this.setUuid(packet.getUuid());
         this.updatePositionAndAngles(d, e, f, g, h);
-        this.setVelocity((double)((float)packet.getVelocityX() ), (double)((float)packet.getVelocityY() ), (double)((float)packet.getVelocityZ() ));
+        this.setVelocity((float)packet.getVelocityX(), (float)packet.getVelocityY(), (float)packet.getVelocityZ());
     }
 
 
-    public static final TrackedData<Optional<UUID>> HOLDERUUID = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    public static final TrackedData<Optional<UUID>> HOLDER_UUID = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
+    @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.getDataTracker().startTracking(HOLDERUUID, Optional.empty());
+        this.getDataTracker().startTracking(HOLDER_UUID, Optional.empty());
     }
 
     public Boolean getUUIDPresent() {
-        return getDataTracker().get(HOLDERUUID).isPresent();
+        return getDataTracker().get(HOLDER_UUID).isPresent();
     }
 
     public UUID getHolderUUID() {
-        if (getDataTracker().get(HOLDERUUID).isPresent()) {
-            return getDataTracker().get(HOLDERUUID).get();
+        if (getDataTracker().get(HOLDER_UUID).isPresent()) {
+            return getDataTracker().get(HOLDER_UUID).get();
         }
         return null;
     }
@@ -178,14 +174,15 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     public void setHolderUUID(UUID uuid) {
         if(uuid != null) {
-            if (getDataTracker().get(HOLDERUUID).isPresent()) {
+            if (getDataTracker().get(HOLDER_UUID).isPresent()) {
                 PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-                if(player != null)
-                CalledValues.setCubeUUID(player,null);
+                if(player != null) {
+                    CalledValues.setCubeUUID(player,null);
+                }
             }
-            this.getDataTracker().set(HOLDERUUID, Optional.of(uuid));
+            this.getDataTracker().set(HOLDER_UUID, Optional.of(uuid));
         }else {
-            this.getDataTracker().set(HOLDERUUID, Optional.empty());
+            this.getDataTracker().set(HOLDER_UUID, Optional.empty());
         }
     }
 
@@ -196,18 +193,19 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     public void dropCube(){
         setHolderUUID(null);
-        var bytebuf = PacketByteBufs.create();
-        bytebuf.writeDouble(this.getPos().x);
-        bytebuf.writeDouble(this.getPos().y);
-        bytebuf.writeDouble(this.getPos().z);
-        bytebuf.writeDouble(this.lastPos.x);
-        bytebuf.writeDouble(this.lastPos.y);
-        bytebuf.writeDouble(this.lastPos.z);
-        bytebuf.writeFloat(this.rotation_yaw);
-        bytebuf.writeUuid(this.getUuid());
-        NetworkingSafetyWrapper.sendFromClient("cubeposupdate", bytebuf);
+        var byteBuf = PacketByteBufs.create();
+        byteBuf.writeDouble(this.getPos().x);
+        byteBuf.writeDouble(this.getPos().y);
+        byteBuf.writeDouble(this.getPos().z);
+        byteBuf.writeDouble(this.lastPos.x);
+        byteBuf.writeDouble(this.lastPos.y);
+        byteBuf.writeDouble(this.lastPos.z);
+        byteBuf.writeFloat(this.rotation_yaw);
+        byteBuf.writeUuid(this.getUuid());
+        NetworkingSafetyWrapper.sendFromClient("cubeposupdate", byteBuf);
     }
 
+    @Override
     public void tick() {
         super.tick();
         timeSinceLastSound++;
@@ -223,40 +221,17 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
-                    //HitResult hitResult = customRaycast(player,3, 0.0F, false);
-                    //if (hitResult.getType() == HitResult.Type.BLOCK) {
-                    //    Vec3d resultPos = player.getEyePos().subtract(hitResult.getPos());
-                    //    d = Math.sqrt((resultPos.x * resultPos.x) +(resultPos.y * resultPos.y) +(resultPos.z * resultPos.z));
-                    //    d -= this.getWidth();
-                    //}
-                    //if(d>2){
-                    //    d=2;
-                    //}
                     canUsePortals = false;
                     Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(),player.getYaw());
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,1,"player_interaction"));
                     this.fallDistance = 0;
-                    //if(player.getHorizontalFacing().equals(Direction.SOUTH)){
-                    //    rotation_yaw=0;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.WEST)){
-                    //    rotation_yaw=90;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.NORTH)){
-                    //    rotation_yaw=180;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.EAST)){
-                    //    rotation_yaw=270;
-                    //}
                     rotation_yaw = player.headYaw;
-                    //if(this instanceof RadioEntity){
-                    //    rotation_yaw -= 90;
-                    //}
 
-                    move(MovementType.PLAYER, vec3d3.subtract(getPos()));
-                    //this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)).multiply(.5));
-                    //this.velocityModified = true;
+                    move(
+                        MovementType.PLAYER,
+                        RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
+                    );
                 }else{
                     if(player != null ){
                         setHolderUUID(null);
@@ -270,34 +245,13 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
-                   // HitResult hitResult = customRaycast(player,3, 0.0F, false);
-                   // if (hitResult.getType() == HitResult.Type.BLOCK) {
-                   //     Vec3d resultPos = player.getEyePos().subtract(hitResult.getPos());
-                   //     d = Math.sqrt((resultPos.x * resultPos.x) +(resultPos.y * resultPos.y) +(resultPos.z * resultPos.z));
-                   //     d -= this.getWidth();
-                   // }
-                   // if(d>2){
-                   //     d=2;
-                   // }
                     Vec3d vec3d2 = player.getRotationVec(1.0F);
-                    //if(player.getHorizontalFacing().equals(Direction.SOUTH)){
-                    //    rotation_yaw=0;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.WEST)){
-                    //    rotation_yaw=90;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.NORTH)){
-                    //    rotation_yaw=180;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.EAST)){
-                    //    rotation_yaw=270;
-                    //}
                     rotation_yaw = player.headYaw;
-                    //if(this instanceof RadioEntity){
-                    //    rotation_yaw -= 90;
-                    //}
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
-                    move(MovementType.PLAYER, vec3d3.subtract(getPos()));
+                    move(
+                        MovementType.PLAYER,
+                        RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
+                    );
                 }
             }
         }
@@ -343,7 +297,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         float i = MathHelper.sin(g);
         float j = MathHelper.cos(f);
         float k = MathHelper.sin(f);
-        return RotationUtil.vecPlayerToWorld(new Vec3d((double)(i * j), (double)(-k), (double)(h * j)), GravityChangerAPI.getGravityDirection(this));
+        return RotationUtil.vecPlayerToWorld(new Vec3d(i * j, -k, h * j), GravityChangerAPI.getGravityDirection(this));
     }
 
     @Override
@@ -366,6 +320,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         return PortalCubedSounds.CUBE_LOW_HIT_EVENT; // TODO: implement for other physics objects (this requires a lot of assets)
     }
 
+    @Override
     public void onRemoved() {
         if(!world.isClient) {
             PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
@@ -375,15 +330,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         }
     }
 
-   // public void onKilledOther(ServerWorld world, LivingEntity other) {
-   //     if(!world.isClient) {
-   //         PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-   //         if (player != null) {
-   //             CalledValues.setCubeUUID(player,null);
-   //         }
-   //     }
-   // }
-
+    @Override
     protected void updatePostDeath() {
         if(!world.isClient) {
             PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
@@ -394,6 +341,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         super.updatePostDeath();
     }
 
+    @Override
     public void onDeath(DamageSource source) {
         if(!world.isClient) {
             PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
@@ -402,22 +350,6 @@ public class CorePhysicsEntity extends PathAwareEntity  {
             }
         }
         super.onDeath(source);
-    }
-
-    public HitResult customRaycast(Entity user, double maxDistance, float tickDelta, boolean includeFluids) {
-        Vec3d vec3d = user.getCameraPosVec(tickDelta);
-        Vec3d vec3d2 = user.getRotationVec(tickDelta);
-        Vec3d vec3d3 = vec3d.add(vec3d2.x * maxDistance, vec3d2.y * maxDistance, vec3d2.z * maxDistance);
-        return user.world
-                .raycast(
-                        new RaycastContext(
-                                vec3d,
-                                vec3d3,
-                                RaycastContext.ShapeType.COLLIDER,
-                                includeFluids ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE,
-                                user
-                        )
-                );
     }
 
 }

@@ -9,7 +9,7 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 public class Portal1StorageCubeRenderer extends MobEntityRenderer<Portal1StorageCubeEntity, Portal1StorageCubeModel> {
-    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_1_storage_cube.png");
+    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_1_storage_cube.png");
     protected final Portal1StorageCubeModel model = new Portal1StorageCubeModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(Portal1StorageCubeModel.COMPANION_CUBE_MAIN_LAYER));
 
     public Portal1StorageCubeRenderer(EntityRendererFactory.Context context) {

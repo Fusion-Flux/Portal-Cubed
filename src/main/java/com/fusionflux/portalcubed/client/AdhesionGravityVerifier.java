@@ -4,8 +4,6 @@ import com.fusionflux.gravity_api.api.RotationParameters;
 import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.gravity_api.util.packet.UpdateGravityPacket;
 import com.fusionflux.portalcubed.PortalCubed;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -15,7 +13,7 @@ import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
 public class AdhesionGravityVerifier {
-    public static Identifier FIELD_GRAVITY_SOURCE = new Identifier(PortalCubed.MODID, "adhesion_gel");
+    public static Identifier FIELD_GRAVITY_SOURCE = new Identifier(PortalCubed.MOD_ID, "adhesion_gel");
     public static int FIELD_GRAVITY_PRIORITY = 10;
     public static int FIELD_GRAVITY_MAX_DURATION = 2;
 
@@ -32,13 +30,10 @@ public class AdhesionGravityVerifier {
         if(!packet.gravity.source().equals(FIELD_GRAVITY_SOURCE.toString())) return false;
 
         if(packet.gravity.direction() == null) return false;
-        BlockPos blockPos = info.readBlockPos();
+        info.readBlockPos();
         World world = player.getWorld();
-        if(world == null) return false;
-        BlockEntity blockEntity = world.getBlockEntity(blockPos);
-        BlockState blockState = world.getBlockState(blockPos);
         /*Return true if the block is a field generator or plating and could have triggered the gravity change.*/
-        return true;
+        return world != null;
     }
 
     public static PacketByteBuf packInfo(BlockPos block){

@@ -46,6 +46,8 @@
 
   "item.portalcubed.base_gel": "Base Gel Glob",
 
+  "block.portalcubed.power_block": "Power Block",
+
   "block.portalcubed.propulsion_gel": "Propulsion Gel Glob",
   "block.portalcubed.repulsion_gel": "Repulsion Gel Glob",
   "block.portalcubed.adhesion_gel": "Adhesion Gel Glob",
@@ -53,12 +55,18 @@
 
   "block.portalcubed.auto_portal": "Autoportal",
 
-  "block.portalcubed.absolute_fizzler": "Fizzler",
-  "block.portalcubed.absolute_fizzler_emitter": "Fizzler Emitter",
+  "block.portalcubed.fizzler": "Fizzler",
+  "block.portalcubed.fizzler_emitter": "Fizzler Emitter",
+  "block.portalcubed.portal_1_fizzler": "Portal 1 Fizzler",
+  "block.portalcubed.portal_1_fizzler_emitter": "Portal 1 Fizzler Emitter",
+  "block.portalcubed.old_aperture_fizzler": "Old Aperture Fizzler",
+  "block.portalcubed.old_aperture_fizzler_emitter": "Old Aperture Fizzler Emitter",
   "block.portalcubed.death_fizzler": "Death Fizzler",
   "block.portalcubed.death_fizzler_emitter": "Death Fizzler Emitter",
-  "block.portalcubed.laser_fizzler": "Laser Fizzler",
-  "block.portalcubed.laser_fizzler_emitter": "Laser Fizzler Emitter",
+  "block.portalcubed.laser_fizzler": "Laser Field",
+  "block.portalcubed.laser_fizzler_emitter": "Laser Field Emitter",
+  "block.portalcubed.old_aperture_laser_field": "Old Aperture Laser Field",
+  "block.portalcubed.old_aperture_laser_field_emitter": "Old Aperture Laser Field Emitter",
   "block.portalcubed.matter_inquisition_field": "Matter Inquisition Field",
   "block.portalcubed.matter_inquisition_field_emitter": "Matter Inquisition Field Emitter",
   "block.portalcubed.physics_repulsion_field": "Physics Repulsion Field",

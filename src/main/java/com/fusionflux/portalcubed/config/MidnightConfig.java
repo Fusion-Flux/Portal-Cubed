@@ -25,7 +25,7 @@ import net.minecraft.util.Formatting;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 
-import java.awt.Color;
+import java.awt.*;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,8 +34,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;

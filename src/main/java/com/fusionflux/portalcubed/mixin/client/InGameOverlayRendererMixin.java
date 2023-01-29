@@ -14,12 +14,11 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(InGameOverlayRenderer.class)
 public class InGameOverlayRendererMixin {
 
-    //private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
-
     @WrapWithCondition(
             method = "renderOverlays",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameOverlayRenderer;renderInWallOverlay(Lnet/minecraft/client/texture/Sprite;Lnet/minecraft/client/util/math/MatrixStack;)V")
     )
+    @SuppressWarnings("unused")
     private static boolean renderOverlays(Sprite sprite, MatrixStack matrices) {
         VoxelShape portalBox = CalledValues.getPortalCutout(MinecraftClient.getInstance().player);
         return portalBox == VoxelShapes.empty();

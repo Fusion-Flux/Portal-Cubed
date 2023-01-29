@@ -2,13 +2,12 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import com.fusionflux.portalcubed.entity.*;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
@@ -23,7 +22,6 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +42,7 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
     private double velZ=0;
 
     private  double timer = 0;
-    private  double animationtimer = 0;
+    private  double animationTimer = 0;
 
     public FaithPlateBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.FAITH_PLATE_ENTITY,pos,state);
@@ -52,15 +50,12 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     public static void tick1(World world, BlockPos pos, BlockState state, FaithPlateBlockEntity blockEntity) {
-        //if(!world.isClient)
-        //blockEntity.toUpdatePacket();
         Box checkBox = new Box(pos).offset(state.get(Properties.FACING).getOffsetX(),state.get(Properties.FACING).getOffsetY(),state.get(Properties.FACING).getOffsetZ());
 
         List<Entity> list = world.getNonSpectatingEntities(Entity.class, checkBox);
-        //System.out.println(blockEntity.velX);
 
-        if(blockEntity.animationtimer>0) {
-            blockEntity.animationtimer -= 1;
+        if(blockEntity.animationTimer >0) {
+            blockEntity.animationTimer -= 1;
             world.setBlockState(pos,state.with(Properties.ENABLED,true),3);
         }else{
             world.setBlockState(pos,state.with(Properties.ENABLED,false),3);
@@ -72,13 +67,13 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
                     if(!physEn.getUUIDPresent()) {
                         liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
                         blockEntity.timer = 5;
-                        blockEntity.animationtimer = 7;
+                        blockEntity.animationTimer = 7;
                         world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
                     }
                 }else{
                     liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
                     blockEntity.timer = 5;
-                    blockEntity.animationtimer = 7;
+                    blockEntity.animationTimer = 7;
                     world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
                 }
             }
@@ -89,6 +84,7 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     public void playSound(SoundEvent soundEvent) {
+        assert this.world != null;
         this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 
@@ -142,6 +138,6 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
     @Nullable
     @Override
     public ScreenHandler createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new FaithPlateScreenHandler(i,playerInventory);
+        return new FaithPlateScreenHandler(i);
     }
 }

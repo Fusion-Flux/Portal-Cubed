@@ -6,8 +6,6 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -23,6 +21,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.Objects;
@@ -33,25 +32,20 @@ public class ExperimentalPortal extends Entity {
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
 
     private Box cutoutBoundingBox = nullBox;
-    private Box intersectionBoundingBox = nullBox;
     /**
      * axisW and axisH define the orientation of the portal
      * They should be normalized and should be perpendicular to each other
      */
 
     public static final TrackedData<String> LINKED_PORTAL_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
-    public static final TrackedData<Boolean> ISACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public static final TrackedData<String> STOREDOUTLINE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
+    public static final TrackedData<Boolean> IS_ACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
+    public static final TrackedData<String> STORED_OUTLINE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
     public static final TrackedData<Float> ROLL = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.FLOAT);
     public static final TrackedData<Integer> COLOR = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.INTEGER);
 
 
     public Vec3d getNormal() {
         return CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).normalize();
-    }
-
-    public Vec3d getNormalB() {
-        return CalledValues.getAxisH(this).crossProduct(CalledValues.getAxisW(this)).normalize();
     }
 
     public ExperimentalPortal(EntityType<?> entityType, World world) {
@@ -61,8 +55,8 @@ public class ExperimentalPortal extends Entity {
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(LINKED_PORTAL_UUID, "null");
-        this.getDataTracker().startTracking(STOREDOUTLINE, "null");
-        this.getDataTracker().startTracking(ISACTIVE, false);
+        this.getDataTracker().startTracking(STORED_OUTLINE, "null");
+        this.getDataTracker().startTracking(IS_ACTIVE, false);
         this.getDataTracker().startTracking(ROLL, 0f);
         this.getDataTracker().startTracking(COLOR, 0);
     }
@@ -115,7 +109,7 @@ public class ExperimentalPortal extends Entity {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public boolean shouldRender(double distance) {
 return true;
     }
@@ -129,28 +123,16 @@ return true;
         this.getDataTracker().set(LINKED_PORTAL_UUID, string);
     }
 
-    public String getOutline() {
-        return getDataTracker().get(STOREDOUTLINE);
-    }
-
-    public void setOutline(String outline) {
-        this.getDataTracker().set(STOREDOUTLINE, outline);
-    }
-
     public Boolean getActive() {
-        return getDataTracker().get(ISACTIVE);
+        return getDataTracker().get(IS_ACTIVE);
     }
 
     private void setActive(Boolean active) {
-        this.getDataTracker().set(ISACTIVE, active);
+        this.getDataTracker().set(IS_ACTIVE, active);
     }
 
     public Direction getFacingDirection(){
         return Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
-    }
-
-    public Direction getFacingDirectionB(){
-        return Direction.fromVector((int) this.getNormalB().getX(), (int) this.getNormalB().getY(), (int) this.getNormalB().getZ());
     }
 
     @Override
@@ -164,23 +146,16 @@ return true;
 
     @Override
     public void tick() {
-        //if(this.getBoundingBox() == nullBox){
             this.calculateBoundingBox();
-        //}
-        //if(this.getCutoutBoundingBox() == nullBox){
             this.calculateCuttoutBox();
-        //}
         if(!this.world.isClient)
             ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x,getChunkPos().z,true);
-        //if(this.getIntersectionBoundingBox() == nullBox){
-        //    this.calculateIntersectionBox();
-        //}
 
         if(!world.isClient){
             final UUID playerUuid = CalledValues.getPlayer(this);
             if (playerUuid != null) {
                 Entity player = ((ServerWorld) world).getEntity(playerUuid);
-                if(player == null){
+                if(player == null || !player.isAlive()){
                     this.kill();
                 }
             }
@@ -211,7 +186,8 @@ return true;
 
             Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
             boolean topValidBlock=false;
-            if(this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.GELCHECKTAG)&&this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+            if(this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.GEL_CHECK_TAG)&&this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+                assert portalFacing != null;
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
 
                 topValidBlock = this.world.getBlockState(this.getBlockPos()).get(booleanProperty);
@@ -219,7 +195,8 @@ return true;
                 topValidBlock=true;
             }
             boolean bottomValidBlock=false;
-            if(this.world.getBlockState(bottom).isIn(PortalCubedBlocks.GELCHECKTAG)&&this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+            if(this.world.getBlockState(bottom).isIn(PortalCubedBlocks.GEL_CHECK_TAG)&&this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+                assert portalFacing != null;
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
                 bottomValidBlock = this.world.getBlockState(bottom).get(booleanProperty);
             }else if (!this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
@@ -241,10 +218,8 @@ return true;
     public void syncRotations(){
         this.setBoundingBox(nullBox);
         this.setCutoutBoundingBox(nullBox);
-        //this.setIntersectionBoundingBox(nullBox);
         this.calculateBoundingBox();
         this.calculateCuttoutBox();
-        //this.calculateIntersectionBox();
     }
 
     @Override
@@ -258,7 +233,6 @@ return true;
             double h = 1.9;
 
 
-            //setBoundingBox(nullBox);
             Box portalBox = new Box(
                     getPointInPlane(w / 2, h / 2)
                             .add(getNormal().multiply(.2)),
@@ -297,51 +271,17 @@ return true;
         return portalBox;
     }
 
-    public Box calculateIntersectionBox() {
-        if (CalledValues.getAxisW(this) == null) {
-            setIntersectionBoundingBox(nullBox);
-            return nullBox;
-        }
-        double w = .9;
-        double h = 1.9;
-        Box portalBox = new Box(
-                getIntersectionPointInPlane(w / 2, h / 2)
-                        .add(getNormal().multiply(.2)),
-                getIntersectionPointInPlane(-w / 2, -h / 2)
-                        .add(getNormal().multiply(-.2))
-        ).union(new Box(
-                getIntersectionPointInPlane(-w / 2, h / 2)
-                        .add(getNormal().multiply(.2)),
-                getIntersectionPointInPlane(w / 2, -h / 2)
-                        .add(getNormal().multiply(-.2))
-        ));
-        setIntersectionBoundingBox(portalBox.offset(getFacingDirection().getOffsetX()*.3,getFacingDirection().getOffsetY()*.3,getFacingDirection().getOffsetZ()*.3));
-        return portalBox;
-    }
-
     public final Box getCutoutBoundingBox() {
         return this.cutoutBoundingBox;
-    }
-
-    public final Box getIntersectionBoundingBox(double width) {
-        return this.getBoundingBox().offset(getFacingDirection().getOffsetX()*width,getFacingDirection().getOffsetY()*width,getFacingDirection().getOffsetZ()*width);
     }
 
     public final void setCutoutBoundingBox(Box boundingBox) {
         this.cutoutBoundingBox = boundingBox;
     }
 
-    public final void setIntersectionBoundingBox(Box boundingBox) {
-        this.intersectionBoundingBox = boundingBox;
-    }
-
 
     public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
         return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*-5,getFacingDirection().getUnitVector().getY()*-5,getFacingDirection().getUnitVector().getZ()*-5);
-    }
-
-    public Vec3d getIntersectionPointInPlane(double xInPlane, double yInPlane) {
-        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*5,getFacingDirection().getUnitVector().getY()*5,getFacingDirection().getUnitVector().getZ()*5);
     }
 
     public Vec3d getPointInPlane(double xInPlane, double yInPlane) {

@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 
 public class StorageCubeModel extends FizzleableModel<StorageCubeEntity> {
 
-	public static final EntityModelLayer STORAGE_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"storage_cube"), "main");
+	public static final EntityModelLayer STORAGE_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "storage_cube"), "main");
 	private final ModelPart bb_main;
 
 	public StorageCubeModel(ModelPart root) {
@@ -25,8 +25,8 @@ public class StorageCubeModel extends FizzleableModel<StorageCubeEntity> {
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
-				.uv(0, 20).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.5F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+		modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
+			.uv(0, 20).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.5F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 		return TexturedModelData.of(modelData, 64, 64);
 	}
 

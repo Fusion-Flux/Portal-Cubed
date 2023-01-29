@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -57,14 +56,13 @@ public class GelFlat extends Block {
         propertyMap.put(Direction.UP, Properties.UP);
         propertyMap.put(Direction.DOWN, Properties.DOWN);
     }
-    //protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16D, 1.0D, 16);
 
     private final Map<BlockState, VoxelShape> field_26659;
 
     public GelFlat(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
-        this.field_26659 = ImmutableMap.copyOf((Map) this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), GelFlat::method_31018)));
+        this.field_26659 = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), GelFlat::method_31018)));
     }
 
     private static VoxelShape method_31018(BlockState blockState) {
@@ -122,27 +120,27 @@ public class GelFlat extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return VoxelShapes.empty();
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return this.field_26659.get(state);
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public PistonBehavior getPistonBehavior(BlockState state) {
         return PistonBehavior.DESTROY;
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN);
     }
-
-    protected boolean canConnect(WorldAccess world, BlockPos neighborPos) {
-        return world.getBlockState(neighborPos).getBlock().getDefaultState().isSolidBlock(world, neighborPos);
-    }
-
 
 
     @Override
@@ -151,11 +149,8 @@ public class GelFlat extends Block {
         boolean bl = blockState.isOf(this);
         BlockState blockState2 = bl ? blockState : this.getDefaultState();
         Direction[] var5 = ctx.getPlacementDirections();
-        int var6 = var5.length;
 
-        for (int var7 = 0; var7 < var6; ++var7) {
-            Direction direction = var5[var7];
-
+        for (Direction direction : var5) {
             BooleanProperty booleanProperty = getFacingProperty(direction);
             boolean bl2 = bl && blockState.get(booleanProperty);
             if (!bl2 && this.shouldHaveSide(ctx.getWorld(), ctx.getBlockPos(), direction)) {
@@ -167,6 +162,8 @@ public class GelFlat extends Block {
         return bl ? blockState2 : null;
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return this.hasAdjacentBlocks(this.getPlacementShape(state, world, pos));
     }
@@ -183,7 +180,7 @@ public class GelFlat extends Block {
 
     private BlockState getPlacementShape(BlockState state, BlockView world, BlockPos pos) {
         BlockState blockState = null;
-        Iterator var6 = Direction.Type.HORIZONTAL.iterator();
+        Iterator<Direction> var6 = Direction.Type.HORIZONTAL.iterator();
 
         while (true) {
             Direction direction;
@@ -193,7 +190,7 @@ public class GelFlat extends Block {
                     return state;
                 }
 
-                direction = (Direction) var6.next();
+                direction = var6.next();
                 booleanProperty = getFacingProperty(direction);
             } while (!(Boolean) state.get(booleanProperty));
 
@@ -211,6 +208,7 @@ public class GelFlat extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         BlockState blockState = context.getWorld().getBlockState(context.getBlockPos());
         if (blockState.isOf(this)) {
@@ -220,6 +218,8 @@ public class GelFlat extends Block {
         }
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public BlockState getStateForNeighborUpdate(
             BlockState state,
             Direction facing,
@@ -244,11 +244,13 @@ public class GelFlat extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
         if (world.hasRain(pos.up())) {
             world.setBlockState(pos,Blocks.AIR.getDefaultState());

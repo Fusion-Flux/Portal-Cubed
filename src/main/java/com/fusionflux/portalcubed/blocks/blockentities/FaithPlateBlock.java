@@ -2,8 +2,6 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.util.CustomProperties;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -25,6 +23,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
 public class FaithPlateBlock extends BlockWithEntity {
@@ -42,14 +41,15 @@ public class FaithPlateBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
-            //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity casted to
+            //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity cast to
             //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 
             if (screenHandlerFactory != null) {
-                //With this call the server will request the client to open the appropriate Screenhandler
+                //With this call the server will request the client to open the appropriate ScreenHandler
                 player.openHandledScreen(screenHandlerFactory);
             }
         }
@@ -57,8 +57,8 @@ public class FaithPlateBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction facing = state.get(Properties.FACING);
 
         VoxelShape voxelShape = VoxelShapes.empty();
 
@@ -67,8 +67,8 @@ public class FaithPlateBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction facing = state.get(Properties.FACING);
 
         VoxelShape voxelShape = VoxelShapes.empty();
 
@@ -78,7 +78,8 @@ public class FaithPlateBlock extends BlockWithEntity {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
+    @SuppressWarnings("deprecation")
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1.0F;
     }
@@ -97,18 +98,19 @@ public class FaithPlateBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, CustomProperties.HORIZIONTALFACING,Properties.ENABLED);
+        builder.add(Properties.FACING, CustomProperties.HORIZONTAL_FACING, Properties.ENABLED);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         if(ctx.getPlayerLookDirection()==Direction.DOWN || ctx.getPlayerLookDirection()==Direction.UP ){
-            return PortalCubedBlocks.FAITH_PLATE.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(CustomProperties.HORIZIONTALFACING, ctx.getPlayerFacing().getOpposite());
+            return PortalCubedBlocks.FAITH_PLATE.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(CustomProperties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite());
         }
         return PortalCubedBlocks.FAITH_PLATE.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }

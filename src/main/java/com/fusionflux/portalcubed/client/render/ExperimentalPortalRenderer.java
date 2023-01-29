@@ -16,8 +16,8 @@ import net.minecraft.util.math.Vec3f;
 
 public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPortal> {
 
-    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_square_outline_closed.png");
-    private static final Identifier ROUND_TEXTURE  = new Identifier(PortalCubed.MODID, "textures/entity/portal_oval_outline_closed.png");
+    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_square_outline_closed.png");
+    private static final Identifier ROUND_TEXTURE  = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_oval_outline_closed.png");
     protected final ExperimentalPortalModel model = new ExperimentalPortalModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ExperimentalPortalModel.MAIN_LAYER));
 
     public ExperimentalPortalRenderer(EntityRendererFactory.Context dispatcher) {
@@ -40,7 +40,6 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         if (color == 16383998) {
             color = -1908001;
         }
-//System.out.println(color);
         int r = (color & 0xFF0000) >> 16;
         int g = (color & 0xFF00) >> 8;
         int b = color & 0xFF;

@@ -1,8 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -19,40 +17,41 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
 public class FloorButtonBlock extends BlockWithEntity {
     public static final BooleanProperty ENABLE;
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
-    protected static final VoxelShape SHAPEUP = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 18.0D, 15.0D);
+    protected static final VoxelShape SHAPE_UP = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 18.0D, 15.0D);
 
-    protected static final VoxelShape SHAPEUP2 = Block.createCuboidShape(-1.0D, 16.0D, -1.0D, 17.0D, 17.0D, 17.0D);
-
-
-    protected static final VoxelShape SHAPEDOWN = Block.createCuboidShape(1.0D, -2.0D, 1.0D, 15.0D, 15.0D, 15.0D);
-
-    protected static final VoxelShape SHAPEDOWN2 = Block.createCuboidShape(-1.0D, -1.0D, -1.0D, 17.0D, 0.0D, 17.0D);
+    protected static final VoxelShape SHAPE_UP_2 = Block.createCuboidShape(-1.0D, 16.0D, -1.0D, 17.0D, 17.0D, 17.0D);
 
 
-    protected static final VoxelShape SHAPENORTH = Block.createCuboidShape(1.0D, 1.0D, -2.0D, 15.0D, 15.0D, 15.0D);
+    protected static final VoxelShape SHAPE_DOWN = Block.createCuboidShape(1.0D, -2.0D, 1.0D, 15.0D, 15.0D, 15.0D);
 
-    protected static final VoxelShape SHAPENORTH2 = Block.createCuboidShape(-1.0D, -1.0D, -1.0D, 17.0D, 17.0D, 0.0D);
-
-
-    protected static final VoxelShape SHAPESOUTH = Block.createCuboidShape(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 18.0D);
-
-    protected static final VoxelShape SHAPESOUTH2 = Block.createCuboidShape(-1.0D, -1.0D, 16.0D, 17.0D, 17.0D, 17.0D);
+    protected static final VoxelShape SHAPE_DOWN_2 = Block.createCuboidShape(-1.0D, -1.0D, -1.0D, 17.0D, 0.0D, 17.0D);
 
 
-    protected static final VoxelShape SHAPEWEST = Block.createCuboidShape(-2.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D);
+    protected static final VoxelShape SHAPE_NORTH = Block.createCuboidShape(1.0D, 1.0D, -2.0D, 15.0D, 15.0D, 15.0D);
 
-    protected static final VoxelShape SHAPEWEST2 = Block.createCuboidShape(-1.0D, -1.0D, -1.0D, 0.0D, 17.0D, 17.0D);
+    protected static final VoxelShape SHAPE_NORTH_2 = Block.createCuboidShape(-1.0D, -1.0D, -1.0D, 17.0D, 17.0D, 0.0D);
 
 
-    protected static final VoxelShape SHAPEEAST = Block.createCuboidShape(0.0D, 1.0D, 1.0D, 18.0D, 15.0D, 15.0D);
+    protected static final VoxelShape SHAPE_SOUTH = Block.createCuboidShape(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 18.0D);
 
-    protected static final VoxelShape SHAPEEAST2 = Block.createCuboidShape(16.0D, -1.0D, -1.0D, 17.0D, 17.0D, 17.0D);
+    protected static final VoxelShape SHAPE_SOUTH_2 = Block.createCuboidShape(-1.0D, -1.0D, 16.0D, 17.0D, 17.0D, 17.0D);
+
+
+    protected static final VoxelShape SHAPE_WEST = Block.createCuboidShape(-2.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D);
+
+    protected static final VoxelShape SHAPE_WEST_2 = Block.createCuboidShape(-1.0D, -1.0D, -1.0D, 0.0D, 17.0D, 17.0D);
+
+
+    protected static final VoxelShape SHAPE_EAST = Block.createCuboidShape(0.0D, 1.0D, 1.0D, 18.0D, 15.0D, 15.0D);
+
+    protected static final VoxelShape SHAPE_EAST_2 = Block.createCuboidShape(16.0D, -1.0D, -1.0D, 17.0D, 17.0D, 17.0D);
 
 
     public FloorButtonBlock(Settings settings) {
@@ -65,11 +64,13 @@ public class FloorButtonBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean emitsRedstonePower(BlockState state) {
         return state.get(Properties.ENABLED);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
         if(state.get(Properties.ENABLED)){
             return 15;
@@ -78,57 +79,59 @@ public class FloorButtonBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction facing = state.get(Properties.FACING);
 
         VoxelShape voxelShape = VoxelShapes.empty();
 
         if(facing == Direction.UP)
-            voxelShape = VoxelShapes.union(voxelShape,SHAPEUP);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_UP);
         if(facing == Direction.DOWN)
-            voxelShape = VoxelShapes.union(voxelShape,SHAPEDOWN);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_DOWN);
         if(facing == Direction.NORTH)
-            voxelShape = VoxelShapes.union(voxelShape,SHAPENORTH);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_NORTH);
         if(facing == Direction.SOUTH)
-            voxelShape = VoxelShapes.union(voxelShape,SHAPESOUTH);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_SOUTH);
         if(facing == Direction.EAST)
-            voxelShape = VoxelShapes.union(voxelShape,SHAPEEAST);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_EAST);
         if(facing == Direction.WEST)
-            voxelShape = VoxelShapes.union(voxelShape,SHAPEWEST);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_WEST);
 
         voxelShape = VoxelShapes.union(voxelShape,SHAPE);
         return voxelShape;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction facing = state.get(Properties.FACING);
 
         VoxelShape voxelShape = VoxelShapes.empty();
 
         if(facing == Direction.UP) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPEUP);
-            voxelShape = VoxelShapes.union(voxelShape,SHAPEUP2);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_UP);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_UP_2);
         }
         if(facing == Direction.DOWN) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPEDOWN);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPEDOWN2);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_DOWN);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_DOWN_2);
         }
         if(facing == Direction.NORTH) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPENORTH);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPENORTH2);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_NORTH);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_NORTH_2);
         }
         if(facing == Direction.SOUTH) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPESOUTH);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPESOUTH2);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_SOUTH);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_SOUTH_2);
         }
         if(facing == Direction.EAST) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPEEAST);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPEEAST2);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_EAST);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_EAST_2);
         }
         if(facing == Direction.WEST) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPEWEST);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPEWEST2);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_WEST);
+            voxelShape = VoxelShapes.union(voxelShape, SHAPE_WEST_2);
         }
 
         voxelShape = VoxelShapes.union(voxelShape,SHAPE);
@@ -137,7 +140,8 @@ public class FloorButtonBlock extends BlockWithEntity {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
+    @SuppressWarnings("deprecation")
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1.0F;
     }
@@ -165,6 +169,7 @@ public class FloorButtonBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }

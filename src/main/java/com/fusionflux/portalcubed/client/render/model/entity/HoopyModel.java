@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class HoopyModel extends FizzleableModel<HoopyEntity> {
-	public static final EntityModelLayer HOOPY_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"hoopy"), "main");
+	public static final EntityModelLayer HOOPY_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "hoopy"), "main");
 	private final ModelPart bb_main;
 
 	public HoopyModel(ModelPart root) {
@@ -24,8 +24,8 @@ public class HoopyModel extends FizzleableModel<HoopyEntity> {
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-13.0F, -1.0F, -13.0F, 26.0F, 1.0F, 26.0F, new Dilation(0.0F))
-				.uv(0, 27).cuboid(-12.0F, -1.0F, -12.0F, 24.0F, 1.0F, 24.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+		modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-13.0F, -1.0F, -13.0F, 26.0F, 1.0F, 26.0F, new Dilation(0.0F))
+			.uv(0, 27).cuboid(-12.0F, -1.0F, -12.0F, 24.0F, 1.0F, 24.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 		return TexturedModelData.of(modelData, 128, 128);
 	}
 
