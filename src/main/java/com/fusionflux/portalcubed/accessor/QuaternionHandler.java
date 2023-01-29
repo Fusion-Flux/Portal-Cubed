@@ -1,16 +1,11 @@
 package com.fusionflux.portalcubed.accessor;
 
 import net.minecraft.entity.data.TrackedDataHandler;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Quaternion;
 
 public class QuaternionHandler implements TrackedDataHandler<Quaternion> {
     public static final QuaternionHandler QUATERNION_HANDLER = new QuaternionHandler();
-
-    static {
-        TrackedDataHandlerRegistry.register(QUATERNION_HANDLER);
-    }
 
     @Override
     public void write(PacketByteBuf buf, Quaternion quat) {
