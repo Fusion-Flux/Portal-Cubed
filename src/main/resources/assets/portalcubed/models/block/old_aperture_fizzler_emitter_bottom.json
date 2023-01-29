@@ -5,6 +5,7 @@
 		"0": "portalcubed:block/old_ap_green_2x1_panel_bottom",
 		"1": "portalcubed:block/old_ap_green_panel",
 		"2": "portalcubed:block/grill_emitters",
+		"3": "portalcubed:block/grill_emitters_e",
 		"particle": "portalcubed:block/old_ap_green_2x1_panel_bottom"
 	},
 	"elements": [
@@ -75,6 +76,32 @@
 			}
 		},
 		{
+			"from": [7.49, 3.715, -5.26],
+			"to": [9.51, 5.735, -3.24],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 5.225, -5]},
+			"faces": {
+				"north": {"uv": [7.532, 10.484, 8.484, 9.532], "texture": "#3"},
+				"east": {"uv": [7.516, 10.516, 8.484, 11.484], "rotation": 90, "texture": "#3"},
+				"south": {"uv": [7.532, 11.984, 8.484, 11.032], "texture": "#3"},
+				"west": {"uv": [7.516, 10.516, 8.484, 11.484], "rotation": 90, "texture": "#3"},
+				"up": {"uv": [7.516, 10.516, 8.484, 11.484], "texture": "#3"},
+				"down": {"uv": [7.516, 10.516, 8.484, 11.484], "texture": "#3"}
+			}
+		},
+		{
+			"from": [7.49, 13.715, -5.26],
+			"to": [9.51, 15.735, -3.24],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 15.225, -5]},
+			"faces": {
+				"north": {"uv": [7.532, 10.484, 8.484, 9.532], "texture": "#3"},
+				"east": {"uv": [7.516, 10.516, 8.484, 11.484], "rotation": 90, "texture": "#3"},
+				"south": {"uv": [7.532, 11.984, 8.484, 11.032], "texture": "#3"},
+				"west": {"uv": [7.516, 10.516, 8.484, 11.484], "rotation": 90, "texture": "#3"},
+				"up": {"uv": [7.516, 10.516, 8.484, 11.484], "texture": "#3"},
+				"down": {"uv": [7.516, 10.516, 8.484, 11.484], "texture": "#3"}
+			}
+		},
+		{
 			"from": [5.4, 0, -3.075],
 			"to": [10.55, 16, -1],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 16, 0]},
@@ -102,24 +129,6 @@
 			"faces": {
 				"east": {"uv": [8.032, 7.984, 8.484, 0], "texture": "#2"},
 				"west": {"uv": [8.032, 7.984, 8.484, 0], "texture": "#2"}
-			}
-		},
-		{
-			"from": [7.9, 0.5, -9.075],
-			"to": [8.1, 8.5, -5.075],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 6.5, -5.075]},
-			"faces": {
-				"east": {"uv": [5.032, 15.984, 6.984, 12.016], "texture": "#2"},
-				"west": {"uv": [6.984, 15.984, 5.032, 12.016], "texture": "#2"}
-			}
-		},
-		{
-			"from": [7.9, 10.5, -9.075],
-			"to": [8.1, 18.5, -5.075],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 16.5, -5.075]},
-			"faces": {
-				"east": {"uv": [5.032, 15.984, 6.984, 12.016], "texture": "#2"},
-				"west": {"uv": [6.984, 15.984, 5.032, 12.016], "texture": "#2"}
 			}
 		}
 	],

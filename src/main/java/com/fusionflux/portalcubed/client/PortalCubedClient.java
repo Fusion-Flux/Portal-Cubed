@@ -71,46 +71,73 @@ public class PortalCubedClient implements ClientModInitializer {
     }
 
     private void registerEmissiveModels() {
-        // Misc
+        // Beams
         EmissiveSpriteRegistry.register(id("block/excursion_funnel"), id("block/excursion_funnel_beam"));
         EmissiveSpriteRegistry.register(id("block/excursion_funnel_reversed"), id("block/reverse_excursion_funnel_beam"));
-
-        EmissiveSpriteRegistry.register(id("block/faith_plate"), id("block/faith_plate_e"));
-        EmissiveSpriteRegistry.register(id("block/faith_plate_active"), id("block/faith_plate_e"));
 
         EmissiveSpriteRegistry.register(id("block/laser"), id("block/laser_beam"));
         EmissiveSpriteRegistry.register(id("block/laser_ref_main"), id("block/laser_beam"));
         EmissiveSpriteRegistry.register(id("block/laser_ref_prev"), id("block/laser_beam"));
 
+        EmissiveSpriteRegistry.register(id("block/light_bridge"), id("block/light_bridge"));
+
+        // Faith Plates
+        EmissiveSpriteRegistry.register(id("block/faith_plate"), id("block/faith_plate_e"));
+        EmissiveSpriteRegistry.register(id("block/faith_plate_active"), id("block/faith_plate_e"));
+
+        // Fizzlers
         EmissiveSpriteRegistry.register(id("block/portal_2_laser_field_top"), id("block/portal_2_laser_field_top"));
         EmissiveSpriteRegistry.register(id("block/portal_2_laser_field_bottom"), id("block/portal_2_laser_field_bottom"));
-
-        EmissiveSpriteRegistry.register(id("block/portal_2_fizzler_top"), id("block/portal_2_fizzler_top"));
-        EmissiveSpriteRegistry.register(id("block/portal_2_fizzler_bottom"), id("block/portal_2_fizzler_bottom"));
-
-        EmissiveSpriteRegistry.register(id("block/portal_2_death_fizzler_top"), id("block/portal_2_death_fizzler_top"));
-        EmissiveSpriteRegistry.register(id("block/portal_2_death_fizzler_bottom"), id("block/portal_2_death_fizzler_bottom"));
-
-
-        EmissiveSpriteRegistry.register(id("block/portal_2_fizzler_emitter_top"), id("block/grill_emitters_e"));
-        EmissiveSpriteRegistry.register(id("block/portal_2_fizzler_emitter_bottom"), id("block/grill_emitters_e"));
-
         EmissiveSpriteRegistry.register(id("block/portal_2_laser_field_emitter_top"), id("block/grill_emitters_e"));
         EmissiveSpriteRegistry.register(id("block/portal_2_laser_field_emitter_bottom"), id("block/grill_emitters_e"));
         EmissiveSpriteRegistry.register(id("block/portal_2_laser_field_emitter_top_disabled"), id("block/grill_emitters_e"));
         EmissiveSpriteRegistry.register(id("block/portal_2_laser_field_emitter_bottom_disabled"), id("block/grill_emitters_e"));
 
+        EmissiveSpriteRegistry.register(id("block/portal_2_fizzler_top"), id("block/portal_2_fizzler_top"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_fizzler_bottom"), id("block/portal_2_fizzler_bottom"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_fizzler_emitter_top"), id("block/grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_fizzler_emitter_bottom"), id("block/grill_emitters_e"));
+
+        EmissiveSpriteRegistry.register(id("block/portal_1_fizzler"), id("block/portal_1_fizzler"));
+        EmissiveSpriteRegistry.register(id("block/portal_1_fizzler_emitter_top"), id("block/grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_1_fizzler_emitter_bottom"), id("block/grill_emitters_e"));
+
+        EmissiveSpriteRegistry.register(id("block/old_aperture_fizzler_top"), id("block/old_aperture_fizzler_top"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_fizzler_bottom"), id("block/old_aperture_fizzler_bottom"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_fizzler_emitter_top"), id("block/grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_fizzler_emitter_bottom"), id("block/grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_fizzler_emitter_top_deactivated"), id("block/grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_fizzler_emitter_bottom_deactivated"), id("block/grill_emitters_e"));
+
+        EmissiveSpriteRegistry.register(id("block/old_aperture_laser_field_top"), id("block/old_aperture_laser_field_top"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_laser_field_bottom"), id("block/old_aperture_laser_field_bottom"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_laser_field_emitter_top"), id("block/grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_laser_field_emitter_bottom"), id("block/grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_laser_field_emitter_top_deactivated"), id("block/grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/old_aperture_laser_field_emitter_bottom_deactivated"), id("block/grill_emitters_e"));
+
+        EmissiveSpriteRegistry.register(id("block/portal_2_death_fizzler_top"), id("block/portal_2_death_fizzler_top"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_death_fizzler_bottom"), id("block/portal_2_death_fizzler_bottom"));
         EmissiveSpriteRegistry.register(id("block/portal_2_death_fizzler_emitter_top"), id("block/grill_emitters_e"));
         EmissiveSpriteRegistry.register(id("block/portal_2_death_fizzler_emitter_bottom"), id("block/grill_emitters_e"));
         EmissiveSpriteRegistry.register(id("block/portal_2_death_fizzler_emitter_top_disabled"), id("block/grill_emitters_e"));
         EmissiveSpriteRegistry.register(id("block/portal_2_death_fizzler_emitter_bottom_disabled"), id("block/grill_emitters_e"));
 
-        EmissiveSpriteRegistry.register(id("block/light_bridge"), id("block/light_bridge"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_matter_inquisition_field_top"), id("block/portal_2_matter_inquisition_field_top"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_matter_inquisition_field_bottom"), id("block/portal_2_matter_inquisition_field_bottom"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_matter_inquisition_field_emitter_top"), id("block/modded_grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_matter_inquisition_field_emitter_bottom"), id("block/modded_grill_emitters_e"));
 
+        EmissiveSpriteRegistry.register(id("block/portal_2_physics_repulsion_field_top"), id("block/portal_2_physics_repulsion_field_top"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_physics_repulsion_field_bottom"), id("block/portal_2_physics_repulsion_field_bottom"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_physics_repulsion_field_emitter_top"), id("block/modded_grill_emitters_e"));
+        EmissiveSpriteRegistry.register(id("block/portal_2_physics_repulsion_field_emitter_bottom"), id("block/modded_grill_emitters_e"));
+
+        // Autoportal
         EmissiveSpriteRegistry.register(id("block/auto_portal_lower"), id("block/auto_portal_e"));
         EmissiveSpriteRegistry.register(id("block/auto_portal_upper"), id("block/auto_portal_e"));
 
-
+        // Doors
         EmissiveSpriteRegistry.register(id("block/portal_1_door_bottom_left"), id("block/portal_1_door_e"));
         EmissiveSpriteRegistry.register(id("block/portal_1_door_bottom_left_open"), id("block/portal_1_door_e"));
         EmissiveSpriteRegistry.register(id("block/portal_1_door_bottom_right"), id("block/portal_1_door_e"));
@@ -121,8 +148,7 @@ public class PortalCubedClient implements ClientModInitializer {
         EmissiveSpriteRegistry.register(id("block/portal_2_door_top_right"), id("block/portal_2_door_e"));
         EmissiveSpriteRegistry.register(id("block/portal_2_door_top_right_open"), id("block/portal_2_door_e"));
 
-        // Emitters
-
+        // Beam Emitters
         EmissiveSpriteRegistry.register(id("block/light_bridge_emitter"), id("block/light_bridge_emitter_e"));
 
         EmissiveSpriteRegistry.register(id("block/excursion_funnel_emitter_off"), id("block/funnel_wings_e"));
@@ -133,6 +159,7 @@ public class PortalCubedClient implements ClientModInitializer {
         EmissiveSpriteRegistry.register(id("block/laser_emitter_active_downward"), id("block/laser_emitter_e"));
         EmissiveSpriteRegistry.register(id("block/laser_emitter_active_upward"), id("block/laser_emitter_e"));
 
+        // Catchers
         EmissiveSpriteRegistry.register(id("block/laser_relay_active"), id("block/laser_emitter_e"));
 
         EmissiveSpriteRegistry.register(id("block/laser_catcher_active"), id("block/laser_emitter_e"));

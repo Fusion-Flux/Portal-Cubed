@@ -181,6 +181,15 @@
     "type": "directional"
   },
 
+  "old_ap_mesh": {
+    "render_layer": "translucent",
+    "opaque": false
+  },
+  "insulation": {},
+  "office_concrete": {},
+  "blue_office_concrete": {},
+
+
   "1x1_single_crossbar": {
     "type": "old_ap",
     "opaque": false,
@@ -329,6 +338,14 @@
   },
 
   "fizzler": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "matter_inquisition_field": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "physics_repulsion_field": {
     "type": "provided",
     "render_layer": "translucent"
   },

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EE#",
+    "ER#",
+    "EE#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:light_blue_stained_glass_pane"
+    },
+    "E": {
+      "tag": "portalcubed:old_aperture_green_metal_panels"
+    },
+
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "portalcubed:old_aperture_fizzler_emitter",
+    "count": 2
+  }
+}
