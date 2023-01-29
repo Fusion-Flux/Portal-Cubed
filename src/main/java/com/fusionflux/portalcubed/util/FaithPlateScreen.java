@@ -19,9 +19,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
-import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
-
-import java.util.Optional;
 
 public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
 
@@ -121,7 +118,6 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
 
             buf.writeBlockPos(pos);
 
-            //String modifiedX = field1.getText().replaceAll("[^\\d.]", "").replaceFirst(".","d").replaceAll("\\.", "").replaceAll("d", ".");
             String xString = field1.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", ".").replaceFirst("[-]","m").replaceAll("[-]", "").replaceAll("[m]", "-");
             String yString = field2.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", ".").replaceFirst("[-]","m").replaceAll("[-]", "").replaceAll("[m]", "-");
             String zString = field3.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", ".").replaceFirst("[-]","m").replaceAll("[-]", "").replaceAll("[m]", "-");
@@ -176,18 +172,6 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
         // Center the title
         titleX = (backgroundWidth - textRenderer.getWidth(title)) / 2;
     }
-
-
-
-    //private void sendPacket() {
-    //    PacketByteBuf buf = PacketByteBufs.create();
-    //    buf.writeBlockPos(this.pos);
-    //    buf.writeString(this.urlField.getText());
-    //    buf.writeString(this.labelField.getText());
-    //    buf.writeFloat(this.pitch.getValue());
-    //    buf.writeFloat(this.volume.getValue());
-    //    ClientPlayNetworking.send(N3KOC2SPackets.BUTTON_SETTINGS, buf);
-    //}
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {

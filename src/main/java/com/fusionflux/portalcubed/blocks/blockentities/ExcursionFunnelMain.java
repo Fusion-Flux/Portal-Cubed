@@ -193,7 +193,6 @@ public class ExcursionFunnelMain extends BlockWithEntity {
     private void addCollisionEffects(World world, Entity entity, BlockPos pos,BlockState state) {
         if (entity instanceof PlayerEntity) {
             if (world.isClient()) {
-                //RotationUtil.boxWorldToPlayer(entity.getBoundingBox(),GravityChangerAPI.getGravityDirection((PlayerEntity) entity))
                 Vec3d entityCenter = entity.getBoundingBox().getCenter();
                 double xoffset = (entityCenter.getX() - pos.getX() - .5);
                 double yoffset = (entityCenter.getY() - pos.getY() - .5);
@@ -233,7 +232,6 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                     gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(zoffset / Math.abs(zoffset)) * .004)), GravityChangerAPI.getGravityDirection((PlayerEntity) entity)));
                 }
                 entity.setVelocity(gotVelocity);
-                //entity.velocityModified = true;
             }
         } else {
             if (!world.isClient()) {
@@ -264,23 +262,6 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                 entity.fallDistance = 0;
 
                 ((EntityAttachments) entity).setFunnelTimer(2);
-
-                //if (direction.x != 0) {
-                //    entity.setVelocity(direction.getX(), entity.getVelocity().y, entity.getVelocity().z);
-                //}else{
-                //    entity.addVelocity((-(xoffset / Math.abs(xoffset)) * .004), 0, 0);
-                //}
-                //if (direction.y != 0) {
-                //    entity.setVelocity(entity.getVelocity().x, direction.getY(), entity.getVelocity().z);
-                //}else{
-                //    entity.addVelocity(0, (-(yoffset / Math.abs(yoffset)) * .004), 0);
-                //}
-                //if (direction.z != 0) {
-                //    entity.setVelocity(entity.getVelocity().x, entity.getVelocity().y, direction.getZ());
-                //}
-                //else{
-                //    entity.addVelocity(0, 0, (-(zoffset / Math.abs(zoffset)) * .004));
-                //}
 
                 Vec3d gotVelocity = entity.getVelocity();
 
@@ -313,8 +294,6 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                 }
                 if (!gotVelocity.equals(Vec3d.ZERO))
                     entity.setVelocity(gotVelocity);
-
-                //entity.velocityModified = true;
             }
         }
     }

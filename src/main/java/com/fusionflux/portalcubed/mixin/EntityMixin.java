@@ -206,10 +206,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-        //if (shouldTeleportClient && this.getPos().equals(serverPos)) {
-        //    this.setVelocity(teleportVelocity);
-        //    shouldTeleportClient = false;
-        //}
 
         Entity thisentity = ((Entity) (Object) this);
 
@@ -232,7 +228,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
 
         List<ExperimentalPortal> funnelList = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, funnelCheckBox);
-        //VoxelShape ommitedDirections = VoxelShapes.empty();
         for (ExperimentalPortal portal : funnelList) {
 
             double portalOffsetX = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).x;
@@ -254,9 +249,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             if(portal.getFacingDirection().getOffsetX() == 0){
                 gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d((-(portalOffsetX / Math.abs(portalOffsetX)) * .1)* .1, 0, 0), GravityChangerAPI.getGravityDirection((thisentity))));
             }
-            //if(portal.getFacingDirection().getOffsetY() == 0 && portal.getFacingDirection() != Direction.DOWN && portal.getFacingDirection() != Direction.UP){
-            //    gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(portalOffsetY / Math.abs(portalOffsetY)) * .1)* .1, 0), GravityChangerAPI.getGravityDirection(thisentity)));
-            //}
             if(portal.getFacingDirection().getOffsetZ() == 0){
                 gotVelocity = gotVelocity.add( RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(portalOffsetZ / Math.abs(portalOffsetZ)) * .1)*.1), GravityChangerAPI.getGravityDirection( thisentity)));
             }
@@ -265,7 +257,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
 
         Box portalCheckBox = getBoundingBox();
-       // boolean canTeleport = false;
         if (thisentity instanceof PlayerEntity && !this.world.isClient) {
             portalCheckBox = portalCheckBox.expand(10);
         } else {
@@ -276,7 +267,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         VoxelShape ommitedDirections = VoxelShapes.empty();
         for (ExperimentalPortal portal : list) {
 
-            //if (portal.calculateIntersectionBox() != nullBox && portal.getIntersectionBoundingBox().intersects(this.getBoundingBox())){
                 if (portal.calculateCuttoutBox() != nullBox) {
                     if (portal.getActive())
                         ommitedDirections = VoxelShapes.union(ommitedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
@@ -474,15 +464,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                     }
                 }
             }
-        //}
     }
-       // if(thisentity instanceof PlayerEntity && this.world.isClient && ommitedDirections != VoxelShapes.empty()){
-       //     var bytebuf = PacketByteBufs.create();
-       //     bytebuf.writeDouble(this.getVelocity().getX());
-       //     bytebuf.writeDouble(this.getVelocity().getY());
-       //     bytebuf.writeDouble(this.getVelocity().getZ());
-       //     NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
-       // }
             CalledValues.setPortalCutout(((Entity) (Object) this), ommitedDirections);
 
 
@@ -496,34 +478,12 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
 
 
-        //if(!world.isClient) {
-            if (this.gelTransferTimer != 0) {
-                this.gelTransferTimer -= 1;
-            }
-            if (this.gelTransferChangeTimer != 0) {
-                this.gelTransferChangeTimer -= 1;
-            }
-       //}
-
-        //if (!world.isClient) {
-//
-        //    List<ExperimentalPortal> portalSound = this.world.getEntitiesByClass(ExperimentalPortal.class, this.getBoundingBox(), e -> true);
-//
-        //    for (Entity globalportal : portalSound) {
-        //        ExperimentalPortal collidingportal = (ExperimentalPortal) globalportal;
-        //        collidingportal.getActive();
-//
-        //        //if (CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this)) && collidingportal.getActive() && !recentlyTouchedPortal) {
-        //        //    world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-        //        //    recentlyTouchedPortal = true;
-        //        //}
-////
-        //        //if (!CollisionHelper.isCollidingWithAnyPortal(((Entity) (Object) this)) && collidingportal.getActive() && recentlyTouchedPortal) {
-        //        //    world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-        //        //    recentlyTouchedPortal = false;
-        //        //}
-        //    }
-        //}
+        if (this.gelTransferTimer != 0) {
+            this.gelTransferTimer -= 1;
+        }
+        if (this.gelTransferChangeTimer != 0) {
+            this.gelTransferChangeTimer -= 1;
+        }
 
         if (maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == PortalCubedBlocks.PROPULSION_GEL) {
             maxFallSpeed = 10;
@@ -535,9 +495,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
 
         Vec3d rotatedPos = this.pos;
-        //if((Object)this instanceof PlayerEntity){
-            rotatedPos = RotationUtil.vecWorldToPlayer(this.pos, GravityChangerAPI.getGravityDirection((Entity)(Object)this));
-        //}
+        rotatedPos = RotationUtil.vecWorldToPlayer(this.pos, GravityChangerAPI.getGravityDirection((Entity)(Object)this));
         if(prevGravDirec != GravityChangerAPI.getGravityDirection(((Entity)(Object)this))){
             this.maxFallHeight = rotatedPos.y;
         }
@@ -596,18 +554,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             GravityChangerAPI.clearGravity(thisEntity);
         }
     }
-
-    //@Inject(method = "remove", at = @At("HEAD"))
-    //public void remove(CallbackInfo ci) {
-    //    if (!world.isClient) {
-    //        for (ExperimentalPortal checkedportal : portalList) {
-    //            if (checkedportal != null) {
-    //                world.playSound(null, checkedportal.getPos().getX(), checkedportal.getPos().getY(), checkedportal.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
-    //                checkedportal.kill();
-    //            }
-    //        }
-    //    }
-    //}
 
 
     @Override

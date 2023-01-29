@@ -69,18 +69,6 @@ public class ReversedExcursionFunnelEmitterEntity extends ExcursionFunnelEmitter
                                 funnel.portalEmitters.add(funnel.facing.indexOf(storedDirection),savedPos);
                             }
 
-                           // if(!funnel.emitters.contains(pos) ) {
-                           //     funnel.emitters.add(pos);
-                           // }
-                           // if(!funnel.emitters.contains(pos) ) {
-                           //     funnel.emitters.add(pos);
-                           //     funnel.facing.add(funnel.emitters.indexOf(pos),storedDirection);
-                           // }else {
-                           //     if (!funnel.facing.get(funnel.emitters.indexOf(pos)).equals(storedDirection)) {
-                           //         funnel.facing.set(funnel.emitters.indexOf(pos), storedDirection);
-                           //     }
-                           // }
-
                             funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
 
                             Box portalCheckBox = new Box(translatedPos);

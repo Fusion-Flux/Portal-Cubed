@@ -38,17 +38,6 @@ public class PortalGun extends Item implements DyeableItem {
         super(settings);
     }
 
-  // @Environment(EnvType.CLIENT)
-  // public static void registerAlternateModels() {
-  //     FabricModelPredicateProviderRegistry.register(PortalCubedItems.PORTAL_GUN, PortalCubed.id("variant"), (stack, world, livingEntity, provider) -> {
-  //         if (livingEntity == null) {
-  //             return 0;
-  //         }
-  //         // Defaults to 0
-  //         return stack.getOrCreateNbt().getInt("variant");
-  //     });
-  // }
-
     @Override
     public int getColor(ItemStack stack) {
         NbtCompound compoundTag = stack.getOrCreateNbt();
@@ -76,22 +65,8 @@ public class PortalGun extends Item implements DyeableItem {
         if (!world.isClient) {
             NbtCompound tag = stack.getOrCreateNbt();
 
-            //PortalPlaceholderEntity portalOutline;
             ExperimentalPortal portalholder;
             NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());
-
-            //boolean outlineExists = false;
-            //if (portalsTag.contains((leftClick ? "Left" : "Right") + "Background")) {
-            //    portalOutline = (PortalPlaceholderEntity) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Background"));
-//
-            //    if (portalOutline == null) {
-            //        portalOutline = PortalCubedEntities.PORTAL_PLACEHOLDER.create(world);
-            //    } else {
-            //        outlineExists = true;
-            //    }
-            //} else {
-            //    portalOutline = PortalCubedEntities.PORTAL_PLACEHOLDER.create(world);
-            //}
 
             boolean portalExists = false;
             if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
@@ -117,10 +92,8 @@ public class PortalGun extends Item implements DyeableItem {
             Vec3i right;
             BlockPos blockPos;
 
-            //= HitResult hitResult = user.raycast(128.0D, 0.0F, false);
             HitResult hitResult = customRaycast(user,128.0D, 0.0F, false);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                //Block.isFaceFullSquare(world.getBlockState(((BlockHitResult) hitResult).getBlockPos()).getCollisionShape(world,((BlockHitResult) hitResult).getBlockPos()),((BlockHitResult) hitResult).getSide().getOpposite());
                 blockPos = ((BlockHitResult) hitResult).getBlockPos();
                 normal = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
                 if (normal.getY() == 0) {
@@ -193,46 +166,18 @@ public class PortalGun extends Item implements DyeableItem {
                 }
 
 
-                //Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
-                //assert portalOutline != null;
-                //portalOutline.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
-                //portalOutline.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
-                //portalOutline.setPitch(rotAngles.getRight().floatValue());
-                //portalOutline.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
-                //portalOutline.setColor(this.getColor(stack));
-                //portalOutline.noClip = true;
-                //if (!outlineExists) {
-                //    world.spawnEntity(portalOutline);
-                //}
-
-
                 assert portalholder != null;
                 portalholder.setOriginPos(portalPos1);
                 CalledValues.setDestination(portalholder,portalPos1);
 
                 Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
-                //portalholder.setPos(placeholderPos1.x, placeholderPos1.y, placeholderPos1.z);
                 portalholder.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
                 portalholder.setPitch(rotAngles.getRight().floatValue());
                 portalholder.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
                 portalholder.setColor(this.getColor(stack));
 
-                //portalholder.setDestination(portalPos1);
                 CalledValues.setOrientation(portalholder,Vec3d.of(right),Vec3d.of(up).multiply(-1));
-                // portalholder.setOrientationAndSize(
-                //         Vec3d.of(right), //axisW
-                //         Vec3d.of(up).multiply(-1)
-                // );
-                //PortalCubedComponents.PORTAL_DATA.sync(portalholder);
-                //portalholder.setOutline(portalOutline.getUuidAsString());
-                //portalOutline.axisH = CalledValues.getAxisH(portalholder);
-                //portalOutline.axisW = CalledValues.getAxisW(portalholder);
 
-                if (portalExists && otherPortal == null) {
-                    //PortalManipulation.adjustRotationToConnect(PortalAPI.createFlippedPortal(portalholder), portalholder);
-                    //portalholder.reloadAndSyncToClient();
-
-                }
                 if (!portalExists) {
                     portalholder.setLinkedPortalUuid("null");
                     world.spawnEntity(portalholder);
@@ -259,11 +204,6 @@ public class PortalGun extends Item implements DyeableItem {
                     if (!isOtherAuto) {
                         CalledValues.addPortals(user,otherPortal.getUuid());
                     }
-
-                    //PortalManipulation.adjustRotationToConnect(portalholder, otherPortal);
-
-                    //otherPortal.reloadAndSyncToClient();
-                    //portalholder.reloadAndSyncToClient();
                 }
             } else {
                 world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
@@ -271,8 +211,6 @@ public class PortalGun extends Item implements DyeableItem {
 
             assert portalholder != null;
             portalsTag.putUuid((leftClick ? "Left" : "Right") + "Portal", portalholder.getUuid());
-            //assert portalOutline != null;
-            //portalsTag.putUuid((leftClick ? "Left" : "Right") + "Background", portalOutline.getUuid());
 
             tag.put(world.getRegistryKey().toString(), portalsTag);
 
@@ -300,9 +238,6 @@ public class PortalGun extends Item implements DyeableItem {
         CalledValues.setDestination(portal2,portal1.getOriginPos().add(portal1.getFacingDirection().getUnitVector().getX()*.1,portal1.getFacingDirection().getUnitVector().getY()*.1,portal1.getFacingDirection().getUnitVector().getZ()*.1));
         CalledValues.setOtherFacing(portal2,new Vec3d(portal1.getFacingDirection().getUnitVector().getX(),portal1.getFacingDirection().getUnitVector().getY(),portal1.getFacingDirection().getUnitVector().getZ()));
         CalledValues.setOtherAxisH(portal2,CalledValues.getAxisH(portal1));
-        //CalledValues.setOtherAxisH();
-        //portal1.setDestination(portal2.getOriginPos());
-        //portal2.setDestination(portal1.getOriginPos());
         portal1.setLinkedPortalUuid(portal2.getUuidAsString());
         portal2.setLinkedPortalUuid(portal1.getUuidAsString());
 
@@ -348,7 +283,6 @@ public class PortalGun extends Item implements DyeableItem {
             bottomValidBlock=true;
         }
 
-        //System.out.println("portalInvalid");
         return (world.getBlockState(topBehind).isSideSolidFullSquare(world, topBehind, portalFacing)) &&
                 (world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) &&
                         topValidBlock &&
@@ -399,17 +333,5 @@ public class PortalGun extends Item implements DyeableItem {
 
         return IPQuaternion.matrixToQuaternion(axisW, axisH, normal);
     }
-
-    //public static IPQuaternion getPortalOrientationQuaternion(
-    //        Vec3d axisW, Vec3d axisH
-    //) {
-    //    Vec3f normal = new Vec3f((float)axisW.getX(),(float)axisW.getY(),(float)axisW.getZ());
-    //    normal.cross(new Vec3f((float)axisW.getX(),(float)axisW.getY(),(float)axisW.getZ()));
-    //    Vec3d aW = new Vec3d(axisW.getX(),axisW.getY(),axisW.getZ());
-    //    Vec3d aH = new Vec3d(axisH.getX(),axisH.getY(),axisH.getZ());
-    //    Vec3d aN = new Vec3d(normal.getX(),normal.getY(),normal.getZ());
-//
-    //    return IPQuaternion.matrixToQuaternion(aW, aH, aN);
-    //}
 
 }

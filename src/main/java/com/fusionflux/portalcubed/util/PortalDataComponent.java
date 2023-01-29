@@ -80,7 +80,6 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
 
     @Override
     public void teleportEntity(Vec3d TeleportTo, Entity TeleportedEntity, ExperimentalPortal OtherPortal) {
-        //if(entity.getFacingDirection() != Direction.UP && entity.getFacingDirection() != Direction.DOWN) {
         Vec3d TeleportLocation = OtherPortal.getPos();
         //todo: Try using a switch here
         if(OtherPortal.getFacingDirection() == Direction.NORTH) {
@@ -100,12 +99,6 @@ public class PortalDataComponent implements CustomPortalDataComponent, AutoSynce
         }
 
         TeleportedEntity.teleport(TeleportLocation.getX(), TeleportLocation.getY() - 1, TeleportLocation.getZ());
-       // }
-        //if(entity.getFacingDirection() == Direction.UP && entity.getFacingDirection() == Direction.DOWN) {
-        //    TeleportTo.add(OtherPortal.getFacingDirection().getOpposite().getVector().getX(), OtherPortal.getFacingDirection().getOpposite().getVector().getY(),OtherPortal.getFacingDirection().getOpposite().getVector().getZ());
-        //    TeleportedEntity.teleport(TeleportTo.getX(), TeleportTo.getY() - 1, TeleportTo.getZ());
-        //}
-        //entity.teleport();
         PortalCubedComponents.PORTAL_DATA.sync(entity);
     }
 

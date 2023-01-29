@@ -6,7 +6,6 @@ import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
-import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -88,15 +87,6 @@ public class LaserEmitterEntity extends BlockEntity {
                                 funnel.emitters.add(funnel.facing.indexOf(storedDirection),pos);
                                 funnel.portalEmitters.add(funnel.facing.indexOf(storedDirection),savedPos);
                             }
-
-                            ///if(!funnel.emitters.contains(pos) ) {
-                            ///    funnel.emitters.add(pos);
-                            ///    funnel.facing.add(funnel.emitters.indexOf(pos),storedDirection);
-                            ///}else {
-                            ///    if (!funnel.facing.get(funnel.emitters.indexOf(pos)).equals(storedDirection)) {
-                            ///        funnel.facing.set(funnel.emitters.indexOf(pos), storedDirection);
-                            ///    }
-                            ///}
 
                             funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
 

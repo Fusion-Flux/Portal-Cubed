@@ -50,12 +50,9 @@ public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedSc
     }
 
     public static void tick1(World world, BlockPos pos, BlockState state, BetaFaithPlateBlockEntity blockEntity) {
-        //if(!world.isClient)
-        //blockEntity.toUpdatePacket();
         Box checkBox = new Box(pos).offset(state.get(Properties.FACING).getOffsetX(),state.get(Properties.FACING).getOffsetY(),state.get(Properties.FACING).getOffsetZ());
 
         List<Entity> list = world.getNonSpectatingEntities(Entity.class, checkBox);
-        //System.out.println(blockEntity.velX);
 
         if(blockEntity.animationtimer>0) {
             blockEntity.animationtimer -= 1;

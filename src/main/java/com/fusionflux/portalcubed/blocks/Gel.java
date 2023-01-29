@@ -30,8 +30,6 @@ public class Gel extends Block {
     public static final Map<Direction, BooleanProperty> propertyMap;
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
 
-    //protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16D, 1.0D, 16);
-
     static {
         NORTH = Properties.NORTH;
         EAST = Properties.EAST;

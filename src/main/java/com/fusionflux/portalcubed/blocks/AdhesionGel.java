@@ -65,7 +65,6 @@ public class AdhesionGel extends GelFlat {
                         break;
                     }
                 }
-                //}
                 for (Direction direc : getDirections(state)) {
                     if (direc != current) {
                         Box gravbox = getGravityEffectBox(pos, direc, delta);
@@ -111,7 +110,6 @@ public class AdhesionGel extends GelFlat {
         double maxX = blockPos.getX()+1;
         double maxY = blockPos.getY()+1;
         double maxZ = blockPos.getZ()+1;
-        //double delta = -.8;
         switch(direction){
             case DOWN -> maxY+=delta;
             case UP -> minY-=delta;
@@ -130,7 +128,6 @@ public class AdhesionGel extends GelFlat {
         double maxX = playerBox.maxX;
         double maxY = playerBox.maxY;
         double maxZ = playerBox.maxZ;
-        //double delta = -.8;
         switch(direction){
             case DOWN -> maxY+=delta;
             case UP -> minY-=delta;

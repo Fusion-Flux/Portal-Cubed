@@ -268,38 +268,6 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                             blockEntity.updateState(state, world, pos, blockEntity);
                         }
                     }
-
-                    //if(!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){
-                    //    blockEntity.emitters.remove(i);
-                    //    blockEntity.portalEmitters.remove(i);
-                    //    blockEntity.facing.remove(i);
-                    //    blockEntity.updateState(state, world, pos, blockEntity);
-                    //}else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof ExcursionFunnelEmitterEntityAbstract)) {
-                    //    blockEntity.emitters.remove(i);
-                    //    blockEntity.portalEmitters.remove(i);
-                    //    blockEntity.facing.remove(i);
-                    //    blockEntity.updateState(state,world,pos,blockEntity);
-                    //} else if (!(((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.pos.mutableCopy()))) {
-                    //    blockEntity.emitters.remove(i);
-                    //    blockEntity.portalEmitters.remove(i);
-                    //    blockEntity.facing.remove(i);
-                    //    blockEntity.updateState(state,world,pos,blockEntity);
-                    //}else if (!((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
-                    //    if(portalPresent) {
-                    //        blockEntity.emitters.remove(i);
-                    //        blockEntity.portalEmitters.remove(i);
-                    //        blockEntity.facing.remove(i);
-                    //        blockEntity.updateState(state, world, pos, blockEntity);
-                    //    }
-                    //} else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof DuelExcursionFunnelEmitterEntity) && !(world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
-//
-                    //   // if ((world.getBlockEntity(blockEntity.emitters.get(i)) instanceof ExcursionFunnelEmitterEntityAbstract) && !world.isReceivingRedstonePower(blockEntity.emitters.get(i))) {
-                    //        blockEntity.emitters.remove(i);
-                    //        blockEntity.portalEmitters.remove(i);
-                    //        blockEntity.facing.remove(i);
-                    //        blockEntity.updateState(state, world, pos, blockEntity);
-                    //   // }
-                    //}
                 }
             }else{
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());

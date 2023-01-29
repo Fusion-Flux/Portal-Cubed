@@ -5,7 +5,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
@@ -13,13 +12,10 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.RaycastContext;
 
-import java.util.function.Predicate;
-
 public class CustomRaycastContext {
 
     private final Vec3d start;
     private final Vec3d end;
-    //private final RaycastContext.ShapeType shapeType;
     private final RaycastContext.FluidHandling fluid;
     private final ShapeContext entityPosition;
 
@@ -27,7 +23,6 @@ public class CustomRaycastContext {
     public CustomRaycastContext(Vec3d start, Vec3d end, RaycastContext.FluidHandling fluidHandling) {
         this.start = start;
         this.end = end;
-        //this.shapeType = shapeType;
         this.fluid = fluidHandling;
         this.entityPosition = ShapeContext.absent();
     }
@@ -39,10 +34,6 @@ public class CustomRaycastContext {
     public Vec3d getStart() {
         return this.start;
     }
-
-   // public VoxelShape getBlockShape(BlockState state, BlockView world, BlockPos pos) {
-   //     return this.shapeType.get(state, world, pos, this.entityPosition);
-   // }
 
     public VoxelShape getFluidShape(FluidState state, BlockView world, BlockPos pos) {
         return this.fluid.handled(state) ? state.getShape(world, pos) : VoxelShapes.empty();

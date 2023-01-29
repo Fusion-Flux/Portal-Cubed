@@ -5,14 +5,15 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author sailKite
@@ -66,15 +67,6 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
                                 funnel.emitters.add(funnel.facing.indexOf(storedDirection),pos);
                                 funnel.portalEmitters.add(funnel.facing.indexOf(storedDirection),savedPos);
                             }
-
-                            ///if(!funnel.emitters.contains(pos) ) {
-                            ///    funnel.emitters.add(pos);
-                            ///    funnel.facing.add(funnel.emitters.indexOf(pos),storedDirection);
-                            ///}else {
-                            ///    if (!funnel.facing.get(funnel.emitters.indexOf(pos)).equals(storedDirection)) {
-                            ///        funnel.facing.set(funnel.emitters.indexOf(pos), storedDirection);
-                            ///    }
-                            ///}
 
                             funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
 

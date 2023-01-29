@@ -98,21 +98,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                 this.setVelocity(this.getVelocity().add(0,.81d,0));
             }
         }
-        if (!world.isClient) {
-
-            //if (CollisionHelper.isCollidingWithAnyPortal(this) && !recentlyTouchedPortal) {
-            //    //world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_ENTER_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-            //    recentlyTouchedPortal = true;
-            //}
-            //if (!CollisionHelper.isCollidingWithAnyPortal(this) && recentlyTouchedPortal) {
-            //    //world.playSound(null, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), PortalCubedSounds.ENTITY_EXIT_PORTAL, SoundCategory.NEUTRAL, .1F, 1F);
-            //    recentlyTouchedPortal = false;
-            //}
-
-           //if (this.isHolding(PortalCubedItems.PORTAL_GUN)) {
-           //    world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.PORTAL_AMBIANT_EVENT, SoundCategory.NEUTRAL, .001F, 1F);
-           //}
-        }
     }
 
     @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D"), cancellable = true)

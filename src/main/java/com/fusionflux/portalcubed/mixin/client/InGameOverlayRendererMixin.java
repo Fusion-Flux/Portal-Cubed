@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(InGameOverlayRenderer.class)
 public class InGameOverlayRendererMixin {
 
-    //private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
-
     @WrapWithCondition(
             method = "renderOverlays",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameOverlayRenderer;renderInWallOverlay(Lnet/minecraft/client/texture/Sprite;Lnet/minecraft/client/util/math/MatrixStack;)V")

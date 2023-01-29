@@ -164,17 +164,10 @@ return true;
 
     @Override
     public void tick() {
-        //if(this.getBoundingBox() == nullBox){
             this.calculateBoundingBox();
-        //}
-        //if(this.getCutoutBoundingBox() == nullBox){
             this.calculateCuttoutBox();
-        //}
         if(!this.world.isClient)
             ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x,getChunkPos().z,true);
-        //if(this.getIntersectionBoundingBox() == nullBox){
-        //    this.calculateIntersectionBox();
-        //}
 
         if(!world.isClient){
             final UUID playerUuid = CalledValues.getPlayer(this);
@@ -241,10 +234,8 @@ return true;
     public void syncRotations(){
         this.setBoundingBox(nullBox);
         this.setCutoutBoundingBox(nullBox);
-        //this.setIntersectionBoundingBox(nullBox);
         this.calculateBoundingBox();
         this.calculateCuttoutBox();
-        //this.calculateIntersectionBox();
     }
 
     @Override
@@ -258,7 +249,6 @@ return true;
             double h = 1.9;
 
 
-            //setBoundingBox(nullBox);
             Box portalBox = new Box(
                     getPointInPlane(w / 2, h / 2)
                             .add(getNormal().multiply(.2)),

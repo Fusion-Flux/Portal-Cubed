@@ -2,13 +2,12 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import com.fusionflux.portalcubed.entity.*;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
@@ -23,7 +22,6 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,12 +50,9 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     public static void tick1(World world, BlockPos pos, BlockState state, FaithPlateBlockEntity blockEntity) {
-        //if(!world.isClient)
-        //blockEntity.toUpdatePacket();
         Box checkBox = new Box(pos).offset(state.get(Properties.FACING).getOffsetX(),state.get(Properties.FACING).getOffsetY(),state.get(Properties.FACING).getOffsetZ());
 
         List<Entity> list = world.getNonSpectatingEntities(Entity.class, checkBox);
-        //System.out.println(blockEntity.velX);
 
         if(blockEntity.animationtimer>0) {
             blockEntity.animationtimer -= 1;

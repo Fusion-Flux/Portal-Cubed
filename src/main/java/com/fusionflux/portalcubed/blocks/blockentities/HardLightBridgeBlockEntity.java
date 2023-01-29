@@ -54,9 +54,6 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
                         }
                     }
 
-                   // if(blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){
-                   //     portalPresent = true;
-                   // }
                     if(!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
@@ -106,7 +103,6 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
 
             for (Direction facing : bridge.facing) {
                 BlockState emitter = world.getBlockState(bridge.emitters.get(bridge.facing.indexOf(facing)));
-                //Direction facing = bridge.facing.get(bridge.emitters.indexOf(emitterPos));
                 Direction facingVert = bridge.facingVert.get(bridge.facing.indexOf(facing));
 
                 Box portalCheckBox = new Box(bridge.portalEmitters.get(bridge.facing.indexOf(facing)));

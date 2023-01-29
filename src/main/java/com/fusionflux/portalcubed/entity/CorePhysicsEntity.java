@@ -28,7 +28,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
@@ -223,43 +222,17 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
-                    //HitResult hitResult = customRaycast(player,3, 0.0F, false);
-                    //if (hitResult.getType() == HitResult.Type.BLOCK) {
-                    //    Vec3d resultPos = player.getEyePos().subtract(hitResult.getPos());
-                    //    d = Math.sqrt((resultPos.x * resultPos.x) +(resultPos.y * resultPos.y) +(resultPos.z * resultPos.z));
-                    //    d -= this.getWidth();
-                    //}
-                    //if(d>2){
-                    //    d=2;
-                    //}
                     canUsePortals = false;
                     Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(),player.getYaw());
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,1,"player_interaction"));
                     this.fallDistance = 0;
-                    //if(player.getHorizontalFacing().equals(Direction.SOUTH)){
-                    //    rotation_yaw=0;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.WEST)){
-                    //    rotation_yaw=90;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.NORTH)){
-                    //    rotation_yaw=180;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.EAST)){
-                    //    rotation_yaw=270;
-                    //}
                     rotation_yaw = player.headYaw;
-                    //if(this instanceof RadioEntity){
-                    //    rotation_yaw -= 90;
-                    //}
 
                     move(
                         MovementType.PLAYER,
                         RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
                     );
-                    //this.setVelocity(RotationUtil.vecWorldToPlayer(this.getPos().subtract(lastPos), GravityChangerAPI.getGravityDirection(this)).multiply(.5));
-                    //this.velocityModified = true;
                 }else{
                     if(player != null ){
                         setHolderUUID(null);
@@ -273,32 +246,8 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
-                   // HitResult hitResult = customRaycast(player,3, 0.0F, false);
-                   // if (hitResult.getType() == HitResult.Type.BLOCK) {
-                   //     Vec3d resultPos = player.getEyePos().subtract(hitResult.getPos());
-                   //     d = Math.sqrt((resultPos.x * resultPos.x) +(resultPos.y * resultPos.y) +(resultPos.z * resultPos.z));
-                   //     d -= this.getWidth();
-                   // }
-                   // if(d>2){
-                   //     d=2;
-                   // }
                     Vec3d vec3d2 = player.getRotationVec(1.0F);
-                    //if(player.getHorizontalFacing().equals(Direction.SOUTH)){
-                    //    rotation_yaw=0;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.WEST)){
-                    //    rotation_yaw=90;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.NORTH)){
-                    //    rotation_yaw=180;
-                    //}
-                    //if(player.getHorizontalFacing().equals(Direction.EAST)){
-                    //    rotation_yaw=270;
-                    //}
                     rotation_yaw = player.headYaw;
-                    //if(this instanceof RadioEntity){
-                    //    rotation_yaw -= 90;
-                    //}
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     move(
                         MovementType.PLAYER,
@@ -380,15 +329,6 @@ public class CorePhysicsEntity extends PathAwareEntity  {
             }
         }
     }
-
-   // public void onKilledOther(ServerWorld world, LivingEntity other) {
-   //     if(!world.isClient) {
-   //         PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-   //         if (player != null) {
-   //             CalledValues.setCubeUUID(player,null);
-   //         }
-   //     }
-   // }
 
     protected void updatePostDeath() {
         if(!world.isClient) {

@@ -4,7 +4,6 @@ import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.NbtCompound;
@@ -84,17 +83,6 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
                                 bridge.emitters.add(bridge.facing.indexOf(storedDirection),pos);
                                 bridge.portalEmitters.add(bridge.facing.indexOf(storedDirection),savedPos);
                             }
-
-                            //if(!bridge.emitters.contains(savedPos) ) {
-                            //    bridge.emitters.add(pos);
-                            //    bridge.facing.add(bridge.emitters.indexOf(pos),storedDirection);
-                            //    bridge.facingVert.add(bridge.emitters.indexOf(pos),vertDirection);
-                            //}else {
-                            //    if (!bridge.facing.get(bridge.emitters.indexOf(pos)).equals(storedDirection)) {
-                            //        bridge.facing.set(bridge.emitters.indexOf(pos), storedDirection);
-                            //        bridge.facingVert.set(bridge.emitters.indexOf(pos), vertDirection);
-                            //    }
-                            //}
 
                             bridge.updateState(world.getBlockState(translatedPos),world,translatedPos,bridge);
 

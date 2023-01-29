@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.items;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;
@@ -14,14 +13,12 @@ import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 public class PortalCubedItems {
     public static final ArmorMaterial PortalArmor = new PortalArmor();
-    //public static final GelOrb GEL_ORB = new GelOrb(new QuiltItemSettings().group(PortalCubed.Portal2Group).maxCount(64));
     public static final Item LONG_FALL_BOOTS = new ArmorItem(PortalArmor, EquipmentSlot.FEET, new Item.Settings().group(PortalCubed.TestingElementsGroup).fireproof());
     public static final PortalGun PORTAL_GUN = new PortalGun(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
     public static final Item PORTAL_GUN_FRAME = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
     public static final Item PORTAL_GUN_CASING = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
     public static final Item MINI_BLACKHOLE = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
     public static final Item BLOCK_ITEM_ICON = new Item(new QuiltItemSettings().maxCount(1).fireproof());
-    //public static final PaintGun PAINT_GUN = new PaintGun(new QuiltItemSettings().group(PortalCubed.Portal2Group).maxCount(1).fireproof());
     public static final SpawnEggItem STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.COMPANION_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem RADIO = new SpawnEggItem(PortalCubedEntities.RADIO, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
@@ -50,7 +47,6 @@ public class PortalCubedItems {
 
     public static void registerItems() {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "long_fall_boots"), LONG_FALL_BOOTS);
-        // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "gel_orb"), GEL_ORB);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_gun"), PORTAL_GUN);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_gun_frame"), PORTAL_GUN_FRAME);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "portal_gun_casing"), PORTAL_GUN_CASING);
@@ -80,8 +76,5 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "adventure_core"), ADVENTURE_CORE);
 
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "block_item_icon"), BLOCK_ITEM_ICON);
-
-
-        // Registry.register(Registry.ITEM, new Identifier(PortalCubed.MODID, "paint_gun"), PAINT_GUN);
     }
 }

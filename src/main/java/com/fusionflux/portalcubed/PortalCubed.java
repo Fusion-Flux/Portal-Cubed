@@ -60,7 +60,6 @@ public class PortalCubed implements ModInitializer {
     }
     public static ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new);
     static {
-       // FAITH_PLATE_SCREEN_HANDLER = Registry.register(Registry.SCREEN_HANDLER, new Identifier("mymod", "box"), BOX);
         FAITH_PLATE_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(id("faith_plate_screen"), FaithPlateScreenHandler::new);
     }
 

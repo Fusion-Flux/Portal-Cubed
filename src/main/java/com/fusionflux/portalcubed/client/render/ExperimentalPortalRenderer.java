@@ -40,7 +40,6 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         if (color == 16383998) {
             color = -1908001;
         }
-//System.out.println(color);
         int r = (color & 0xFF0000) >> 16;
         int g = (color & 0xFF00) >> 8;
         int b = color & 0xFF;
