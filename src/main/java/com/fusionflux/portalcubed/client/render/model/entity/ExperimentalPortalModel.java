@@ -14,7 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class ExperimentalPortalModel extends EntityModel<ExperimentalPortal> {
-    public static final EntityModelLayer MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"experimental_placeholder"), "main");
+    public static final EntityModelLayer MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "experimental_placeholder"), "main");
     private final ModelPart bb_main;
 
     public ExperimentalPortalModel(ModelPart root) {
@@ -44,11 +44,6 @@ public class ExperimentalPortalModel extends EntityModel<ExperimentalPortal> {
     public void render(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         bb_main.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-    public void setRotationAngle(ModelPart bone, float x, float y, float z) {
-        bone.pitch = x;
-        bone.yaw = y;
-        bone.roll = z;
     }
 
 }

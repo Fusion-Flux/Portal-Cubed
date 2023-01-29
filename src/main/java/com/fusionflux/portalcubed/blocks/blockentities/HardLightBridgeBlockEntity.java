@@ -143,7 +143,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
             }
 
             state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
-                    .with(CustomProperties.HFACINGUP,resultUp).with(CustomProperties.HFACINGDOWN,resultDown);
+                    .with(CustomProperties.H_FACING_UP, resultUp).with(CustomProperties.H_FACING_DOWN, resultDown);
         }
         world.setBlockState(pos,state,3);
     }
@@ -226,7 +226,6 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
 
         int size = tag.getInt("size");
 
-        if(!emitters.isEmpty())
         emitters.clear();
 
         for (int i = 0; i < size; i++) {

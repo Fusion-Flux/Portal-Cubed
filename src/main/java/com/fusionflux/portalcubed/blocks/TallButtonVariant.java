@@ -14,7 +14,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -29,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class TallButtonVarient extends WallMountedBlock {
+public abstract class TallButtonVariant extends WallMountedBlock {
     public static final BooleanProperty POWERED;
     protected static final VoxelShape CEILING_X_SHAPE;
     protected static final VoxelShape CEILING_Z_SHAPE;
@@ -49,9 +48,9 @@ public abstract class TallButtonVarient extends WallMountedBlock {
     protected static final VoxelShape EAST_PRESSED_SHAPE;
     private final boolean wooden;
 
-    protected TallButtonVarient(boolean wooden, Settings settings) {
+    protected TallButtonVariant(boolean wooden, Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH)).with(POWERED, false)).with(FACE, WallMountLocation.WALL));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false).with(FACE, WallMountLocation.WALL));
         this.wooden = wooden;
     }
 
@@ -59,40 +58,40 @@ public abstract class TallButtonVarient extends WallMountedBlock {
         return  20;
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction direction = (Direction)state.get(FACING);
-        boolean bl = (Boolean)state.get(POWERED);
-        switch((WallMountLocation)state.get(FACE)) {
-            case FLOOR:
+        Direction direction = state.get(FACING);
+        boolean bl = state.get(POWERED);
+        switch (state.get(FACE)) {
+            case FLOOR -> {
                 if (direction.getAxis() == Direction.Axis.X) {
                     return bl ? FLOOR_X_PRESSED_SHAPE : FLOOR_X_SHAPE;
                 }
-
                 return bl ? FLOOR_Z_PRESSED_SHAPE : FLOOR_Z_SHAPE;
-            case WALL:
-                switch(direction) {
-                    case EAST:
-                        return bl ? EAST_PRESSED_SHAPE : EAST_SHAPE;
-                    case WEST:
-                        return bl ? WEST_PRESSED_SHAPE : WEST_SHAPE;
-                    case SOUTH:
-                        return bl ? SOUTH_PRESSED_SHAPE : SOUTH_SHAPE;
-                    case NORTH:
-                    default:
-                        return bl ? NORTH_PRESSED_SHAPE : NORTH_SHAPE;
-                }
-            case CEILING:
-            default:
+            }
+            case WALL -> {
+                return switch (direction) {
+                    case EAST -> bl ? EAST_PRESSED_SHAPE : EAST_SHAPE;
+                    case WEST -> bl ? WEST_PRESSED_SHAPE : WEST_SHAPE;
+                    case SOUTH -> bl ? SOUTH_PRESSED_SHAPE : SOUTH_SHAPE;
+                    default -> bl ? NORTH_PRESSED_SHAPE : NORTH_SHAPE;
+                };
+            }
+            default -> {
                 if (direction.getAxis() == Direction.Axis.X) {
                     return bl ? CEILING_X_PRESSED_SHAPE : CEILING_X_SHAPE;
                 } else {
                     return bl ? CEILING_Z_PRESSED_SHAPE : CEILING_Z_SHAPE;
                 }
+            }
         }
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if ((Boolean)state.get(POWERED)) {
+        if (state.get(POWERED)) {
             return ActionResult.CONSUME;
         } else {
             this.powerOn(state, world, pos);
@@ -102,7 +101,7 @@ public abstract class TallButtonVarient extends WallMountedBlock {
     }
 
     public void powerOn(BlockState state, World world, BlockPos pos) {
-        world.setBlockState(pos, (BlockState)state.with(POWERED, true), 3);
+        world.setBlockState(pos, state.with(POWERED, true), 3);
         this.updateNeighbors(state, world, pos);
         world.scheduleBlockTick(pos, this, this.getPressTicks());
     }
@@ -113,41 +112,53 @@ public abstract class TallButtonVarient extends WallMountedBlock {
 
     protected abstract SoundEvent getClickSound(boolean powered);
 
+    @Override
+    @SuppressWarnings("deprecation")
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!moved && !state.isOf(newState.getBlock())) {
-            if ((Boolean)state.get(POWERED)) {
+            if (state.get(POWERED)) {
                 this.updateNeighbors(state, world, pos);
             }
 
-            super.onStateReplaced(state, world, pos, newState, moved);
+            super.onStateReplaced(state, world, pos, newState, false);
         }
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        return (Boolean)state.get(POWERED) ? 15 : 0;
+        return state.get(POWERED) ? 15 : 0;
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public int getStrongRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        return (Boolean)state.get(POWERED) && getDirection(state) == direction ? 15 : 0;
+        return state.get(POWERED) && getDirection(state) == direction ? 15 : 0;
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public boolean emitsRedstonePower(BlockState state) {
         return true;
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
-        if ((Boolean)state.get(POWERED)) {
+        if (state.get(POWERED)) {
             if (this.wooden) {
                 this.tryPowerWithProjectiles(state, world, pos);
             } else {
-                world.setBlockState(pos, (BlockState)state.with(POWERED, false), 3);
+                world.setBlockState(pos, state.with(POWERED, false), 3);
                 this.updateNeighbors(state, world, pos);
-                this.playClickSound((PlayerEntity)null, world, pos, false);
+                this.playClickSound(null, world, pos, false);
             }
 
         }
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         if (!world.isClient && this.wooden && !(Boolean)state.get(POWERED)) {
             this.tryPowerWithProjectiles(state, world, pos);
@@ -157,11 +168,11 @@ public abstract class TallButtonVarient extends WallMountedBlock {
     private void tryPowerWithProjectiles(BlockState state, World world, BlockPos pos) {
         List<? extends Entity> list = world.getNonSpectatingEntities(PersistentProjectileEntity.class, state.getOutlineShape(world, pos).getBoundingBox().offset(pos));
         boolean bl = !list.isEmpty();
-        boolean bl2 = (Boolean)state.get(POWERED);
+        boolean bl2 = state.get(POWERED);
         if (bl != bl2) {
-            world.setBlockState(pos, (BlockState)state.with(POWERED, bl), 3);
+            world.setBlockState(pos, state.with(POWERED, bl), 3);
             this.updateNeighbors(state, world, pos);
-            this.playClickSound((PlayerEntity)null, world, pos, bl);
+            this.playClickSound(null, world, pos, bl);
         }
 
         if (bl) {
@@ -175,8 +186,9 @@ public abstract class TallButtonVarient extends WallMountedBlock {
         world.updateNeighborsAlways(pos.offset(getDirection(state).getOpposite()), this);
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(new Property[]{FACING, POWERED, FACE});
+        builder.add(FACING, POWERED, FACE);
     }
 
     static {

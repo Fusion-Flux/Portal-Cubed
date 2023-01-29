@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class Portal1CompanionCubeModel extends FizzleableModel<Portal1CompanionCubeEntity> {
-	public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"portal_1_companion_cube"), "main");
+	public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "portal_1_companion_cube"), "main");
 	private final ModelPart bb_main;
 
 	public Portal1CompanionCubeModel(ModelPart root) {
@@ -27,17 +27,17 @@ public class Portal1CompanionCubeModel extends FizzleableModel<Portal1CompanionC
 		ModelPartData bone = modelPartData.addChild("bone", ModelPartBuilder.create().uv(0, 0).cuboid(-5.5F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
 				.uv(0, 20).cuboid(-5.5F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.5F)), ModelTransform.pivot(0.5F, 24.0F, 0.0F));
 
-		ModelPartData cube_r1 = bone.addChild("cube_r1", ModelPartBuilder.create().uv(0, 2).mirrored().cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-0.5F, -5.2929F, 0.0F, 2.3562F, 0.0F, -3.1416F));
+		bone.addChild("cube_r1", ModelPartBuilder.create().uv(0, 2).mirrored().cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-0.5F, -5.2929F, 0.0F, 2.3562F, 0.0F, -3.1416F));
 
-		ModelPartData cube_r2 = bone.addChild("cube_r2", ModelPartBuilder.create().uv(0, 2).cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -5.2929F, 0.0F, -0.7854F, 0.0F, 0.0F));
+		bone.addChild("cube_r2", ModelPartBuilder.create().uv(0, 2).cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -5.2929F, 0.0F, -0.7854F, 0.0F, 0.0F));
 
-		ModelPartData cube_r3 = bone.addChild("cube_r3", ModelPartBuilder.create().uv(0, 2).mirrored().cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-0.5F, -4.9929F, 0.0F, -2.3562F, 0.0F, -1.5708F));
+		bone.addChild("cube_r3", ModelPartBuilder.create().uv(0, 2).mirrored().cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-0.5F, -4.9929F, 0.0F, -2.3562F, 0.0F, -1.5708F));
 
-		ModelPartData cube_r4 = bone.addChild("cube_r4", ModelPartBuilder.create().uv(0, 2).cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -4.9929F, 0.0F, -2.3562F, 0.0F, 1.5708F));
+		bone.addChild("cube_r4", ModelPartBuilder.create().uv(0, 2).cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -4.9929F, 0.0F, -2.3562F, 0.0F, 1.5708F));
 
-		ModelPartData cube_r5 = bone.addChild("cube_r5", ModelPartBuilder.create().uv(0, 2).cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -5.2929F, 0.0F, 0.0F, -1.5708F, -0.7854F));
+		bone.addChild("cube_r5", ModelPartBuilder.create().uv(0, 2).cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -5.2929F, 0.0F, 0.0F, -1.5708F, -0.7854F));
 
-		ModelPartData cube_r6 = bone.addChild("cube_r6", ModelPartBuilder.create().uv(0, 2).mirrored().cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-0.5F, -5.2929F, 0.0F, 0.0F, 1.5708F, 0.7854F));
+		bone.addChild("cube_r6", ModelPartBuilder.create().uv(0, 2).mirrored().cuboid(5.25F, -2.0F, -2.0F, 0.0F, 4.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-0.5F, -5.2929F, 0.0F, 0.0F, 1.5708F, 0.7854F));
 		return TexturedModelData.of(modelData, 64, 64);
 	}
 

@@ -11,14 +11,13 @@ import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public abstract class CalledValues {
@@ -28,6 +27,8 @@ public abstract class CalledValues {
 
     // workaround for a CCA bug; maybeGet throws an NPE in internal code if the DataTracker isn't initialized
     // null check the component container to avoid it
+    // TODO: Check if this is still needed
+    @SuppressWarnings({"ConstantValue", "UnstableApiUsage"})
     private static <C extends Component, V> Optional<C> maybeGetSafe(ComponentKey<C> key, @Nullable V provider) {
         if (provider instanceof ComponentProvider p) {
             var cc = p.getComponentContainer();
@@ -36,14 +37,6 @@ public abstract class CalledValues {
             }
         }
         return Optional.empty();
-    }
-
-    public static boolean getSwapTimer(Entity entity) {
-        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getSwapGravity).orElse(false);
-    }
-
-    public static void setSwapTimer(Entity entity, boolean setValue) {
-        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setSwapGravity(setValue));
     }
 
     public static VoxelShape getPortalCutout(Entity entity) {
@@ -62,10 +55,6 @@ public abstract class CalledValues {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setHasTeleportationHappened(setValue));
     }
 
-    public static void teleportSync(Entity entity, Vec3d TeleportTo, Direction dira, Direction dirb) {
-        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.teleport(TeleportTo,dira,dirb));
-    }
-
     public static UUID getCubeUUID(Entity entity) {
         return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getCubeUUID).orElse(null);
     }
@@ -74,17 +63,14 @@ public abstract class CalledValues {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setCubeUUID(setValue));
     }
 
-    public static List<UUID> getPortals(Entity entity) {
-        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortals).orElse(List.of());
-    }
-
-    public static void setPortals(Entity entity, List<UUID> setValue) {
-        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setPortals(setValue));
+    public static Set<UUID> getPortals(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getPortals).orElse(Set.of());
     }
 
     public static void addPortals(Entity entity, UUID setValue) {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.addPortals(setValue));
     }
+
     public static void removePortals(Entity entity, UUID setValue) {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.removePortals(setValue));
     }
@@ -134,10 +120,6 @@ public abstract class CalledValues {
 
     public static UUID getPlayer(Entity entity) {
         return maybeGetSafe(PORTAL_DATA, entity).map(CustomPortalDataComponent::getPlayer).orElse(null);
-    }
-
-    public static void teleportEntity(ExperimentalPortal entity, Vec3d TeleportTo,Entity TeleportedEntity,ExperimentalPortal OtherPortal) {
-        maybeGetSafe(PORTAL_DATA, entity).ifPresent(gc -> gc.teleportEntity(TeleportTo,TeleportedEntity,OtherPortal));
     }
 
     public static final ComponentKey<ButtonComponent> CUBE_DATA =

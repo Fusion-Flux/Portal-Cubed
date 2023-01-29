@@ -40,6 +40,7 @@ public class StorageCubeEntity extends CorePhysicsEntity  {
         return false;
     }
 
+    @Override
     public LivingEntity.FallSounds getFallSounds() {
         return new LivingEntity.FallSounds(PortalCubedSounds.CUBE_LOW_HIT_EVENT, PortalCubedSounds.CUBE_HIGH_HIT_EVENT);
     }
@@ -50,6 +51,7 @@ public class StorageCubeEntity extends CorePhysicsEntity  {
         buttonTimer = time;
     }
 
+    @Override
     public void tick() {
         super.tick();
         if(!world.isClient) {

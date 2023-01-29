@@ -38,7 +38,7 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
         this.bridges = new ArrayList<>();
         this.portalBridges = new ArrayList<>();
     }
-    public static void tick(World world, BlockPos pos, BlockState state, HardLightBridgeEmitterBlockEntity blockEntity) {
+    public static void tick(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, HardLightBridgeEmitterBlockEntity blockEntity) {
         if (!world.isClient) {
             boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 
@@ -51,8 +51,8 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
                 BlockPos translatedPos = pos;
                 BlockPos savedPos = pos;
                 if (blockEntity.bridges != null) {
-                    List<BlockPos> modfunnels = new ArrayList<>();
-                    List<BlockPos> portalfunnels = new ArrayList<>();
+                    List<BlockPos> modFunnels = new ArrayList<>();
+                    List<BlockPos> portalFunnels = new ArrayList<>();
                     boolean teleported = false;
                     Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
                     Direction vertDirection = Direction.NORTH;
@@ -70,10 +70,10 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
 
                             HardLightBridgeBlockEntity bridge = ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modfunnels.add(bridge.getPos());
+                            modFunnels.add(bridge.getPos());
                             blockEntity.bridges.add(bridge.getPos());
                             if(!savedPos.equals(pos)){
-                                portalfunnels.add(bridge.getPos());
+                                portalFunnels.add(bridge.getPos());
                                 blockEntity.portalBridges.add(bridge.getPos());
                             }
 
@@ -98,6 +98,7 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
                                         Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getOtherAxisH(portal).x, CalledValues.getOtherAxisH(portal).y, CalledValues.getOtherAxisH(portal).z));
                                         int offset = (int)(((portal.getBlockPos().getX()-translatedPos.getX()) * Math.abs(CalledValues.getAxisH(portal).x)) + ((portal.getBlockPos().getY()-translatedPos.getY()) * Math.abs(CalledValues.getAxisH(portal).y)) + ((portal.getBlockPos().getZ()-translatedPos.getZ()) * Math.abs(CalledValues.getAxisH(portal).z)));
                                         Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
+                                        assert mainPortalVertFacing != null;
                                         if(mainPortalVertFacing.equals(Direction.SOUTH)){
                                             offset = (Math.abs(offset)-1)*-1;
                                         }
@@ -107,6 +108,7 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
 
                                         translatedPos = new BlockPos(CalledValues.getDestination(portal).x,CalledValues.getDestination(portal).y,CalledValues.getDestination(portal).z).offset(otherPortalVertFacing,offset);
                                         savedPos = translatedPos;
+                                        assert otherPortalVertFacing != null;
                                         if(otherPortalVertFacing.equals(Direction.SOUTH)){
                                             translatedPos = translatedPos.offset(Direction.NORTH,1);
                                         }
@@ -114,20 +116,21 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
                                             translatedPos = translatedPos.offset(Direction.WEST,1);
                                         }
 
+                                        assert otherPortalFacing != null;
                                         if(otherPortalFacing.equals(Direction.UP) || otherPortalFacing.equals(Direction.DOWN)){
                                             vertDirection = otherPortalVertFacing;
                                         }
 
                                         storedDirection = Direction.fromVector((int)CalledValues.getOtherFacing(portal).x,(int)CalledValues.getOtherFacing(portal).y,(int)CalledValues.getOtherFacing(portal).z);
                                         teleported = true;
-                                        blockEntity.bridges = modfunnels;
-                                        blockEntity.portalBridges = portalfunnels;
+                                        blockEntity.bridges = modFunnels;
+                                        blockEntity.portalBridges = portalFunnels;
                                     }
                                 }
                             }
                         } else {
-                            blockEntity.bridges = modfunnels;
-                            blockEntity.portalBridges = portalfunnels;
+                            blockEntity.bridges = modFunnels;
+                            blockEntity.portalBridges = portalFunnels;
                             break;
                         }
                     }
@@ -146,7 +149,9 @@ public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEnt
 
     }
 
+    @Override
     public void playSound(SoundEvent soundEvent) {
+        assert this.world != null;
         this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 

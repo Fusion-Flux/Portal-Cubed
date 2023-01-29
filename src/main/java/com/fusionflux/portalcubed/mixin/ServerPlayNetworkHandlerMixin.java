@@ -23,8 +23,8 @@ public abstract class ServerPlayNetworkHandlerMixin {
     private Iterable<VoxelShape> isPlayerNotCollidingWithBlocks(Iterable<VoxelShape> shapes) {
         VoxelShape portalBox = CalledValues.getPortalCutout(this.getPlayer());
         if(portalBox != VoxelShapes.empty()) {
-            // Would take in the world value from the code but I guess I cant
-            return shapes = (((CustomCollisionView) this.player.getWorld()).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), portalBox));
+            // Would take in the world value from the code, but I guess I cant
+            return (((CustomCollisionView) this.player.getWorld()).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), portalBox));
         }
 
         return shapes;

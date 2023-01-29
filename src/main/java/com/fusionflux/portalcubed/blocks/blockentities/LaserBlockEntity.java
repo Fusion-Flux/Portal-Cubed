@@ -229,8 +229,10 @@ public class LaserBlockEntity extends BlockEntity {
                     List<RedirectionCubeEntity> list2 = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox.contract(.1).contract(.25));
 
                     for (RedirectionCubeEntity portal : list2) {
-                        if(portal != null)
-                                portalPresent = true;
+                        if (portal != null) {
+                            portalPresent = true;
+                            break;
+                        }
                     }
 
                     if(!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){

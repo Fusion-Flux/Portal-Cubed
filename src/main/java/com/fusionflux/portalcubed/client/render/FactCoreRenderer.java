@@ -10,13 +10,13 @@ import net.minecraft.util.Identifier;
 
 public class FactCoreRenderer extends MobEntityRenderer<FactCoreEntity, FactCoreModel> {
 
-    private final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_2_cores.png");
+    private final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_2_cores.png");
 
     public FactCoreRenderer(EntityRendererFactory.Context context) {
         super(context, new FactCoreModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(FactCoreModel.FACT_CORE_LAYER)), 0.5f);
-        this.addFeature(new EmissiveFeatureRenderer<FactCoreEntity, FactCoreModel>(this) {
+        this.addFeature(new EmissiveFeatureRenderer<>(this) {
 
-            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_2_cores_e.png");
+            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_2_cores_e.png");
 
             @Override
             public Identifier getEmissiveTexture(FactCoreEntity entity) {

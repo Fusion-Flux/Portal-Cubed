@@ -20,10 +20,10 @@ import java.util.Objects;
 public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAbstract {
 
     public DuelExcursionFunnelEmitterEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMMITER_ENTITY,pos, state);
+        super(PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER_ENTITY, pos, state);
     }
 
-    public static void tick2(World world, BlockPos pos, BlockState state, DuelExcursionFunnelEmitterEntity blockEntity) {
+    public static void tick2(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, DuelExcursionFunnelEmitterEntity blockEntity) {
         if (!world.isClient) {
             boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 
@@ -37,8 +37,8 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                 BlockPos translatedPos = pos;
                 BlockPos savedPos = pos;
                 if (blockEntity.funnels != null) {
-                    List<BlockPos> modfunnels = new ArrayList<>();
-                    List<BlockPos> portalfunnels = new ArrayList<>();
+                    List<BlockPos> modFunnels = new ArrayList<>();
+                    List<BlockPos> portalFunnels = new ArrayList<>();
                     boolean teleported = false;
                     Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
@@ -54,10 +54,10 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
                             ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modfunnels.add(funnel.getPos());
+                            modFunnels.add(funnel.getPos());
                             blockEntity.funnels.add(funnel.getPos());
                             if(!savedPos.equals(pos)){
-                                portalfunnels.add(funnel.getPos());
+                                portalFunnels.add(funnel.getPos());
                                 blockEntity.portalFunnels.add(funnel.getPos());
                             }
 
@@ -80,6 +80,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                                         Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getOtherAxisH(portal).x, CalledValues.getOtherAxisH(portal).y, CalledValues.getOtherAxisH(portal).z));
                                         int offset = (int)(((portal.getBlockPos().getX()-translatedPos.getX()) * Math.abs(CalledValues.getAxisH(portal).x)) + ((portal.getBlockPos().getY()-translatedPos.getY()) * Math.abs(CalledValues.getAxisH(portal).y)) + ((portal.getBlockPos().getZ()-translatedPos.getZ()) * Math.abs(CalledValues.getAxisH(portal).z)));
                                         Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
+                                        assert mainPortalVertFacing != null;
                                         if(mainPortalVertFacing.equals(Direction.SOUTH)){
                                             offset = (Math.abs(offset)-1)*-1;
                                         }
@@ -89,6 +90,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
                                         translatedPos = new BlockPos(CalledValues.getDestination(portal).x,CalledValues.getDestination(portal).y,CalledValues.getDestination(portal).z).offset(otherPortalVertFacing,offset);
                                         savedPos=translatedPos;
+                                        assert otherPortalVertFacing != null;
                                         if(otherPortalVertFacing.equals(Direction.SOUTH)){
                                             translatedPos = translatedPos.offset(Direction.NORTH,1);
                                         }
@@ -98,14 +100,14 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
                                         storedDirection = Direction.fromVector((int)CalledValues.getOtherFacing(portal).x,(int)CalledValues.getOtherFacing(portal).y,(int)CalledValues.getOtherFacing(portal).z);
                                         teleported = true;
-                                        blockEntity.funnels = modfunnels;
-                                        blockEntity.portalFunnels = portalfunnels;
+                                        blockEntity.funnels = modFunnels;
+                                        blockEntity.portalFunnels = portalFunnels;
                                     }
                                 }
                             }
                         } else {
-                            blockEntity.funnels = modfunnels;
-                            blockEntity.portalFunnels = portalfunnels;
+                            blockEntity.funnels = modFunnels;
+                            blockEntity.portalFunnels = portalFunnels;
                             break;
                         }
                     }
@@ -123,8 +125,8 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                 BlockPos translatedPos = pos;
                 BlockPos savedPos = pos;
                 if (blockEntity.funnels != null) {
-                    List<BlockPos> modfunnels = new ArrayList<>();
-                    List<BlockPos> portalfunnels = new ArrayList<>();
+                    List<BlockPos> modFunnels = new ArrayList<>();
+                    List<BlockPos> portalFunnels = new ArrayList<>();
                     boolean teleported = false;
                     Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
@@ -140,10 +142,10 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
                             ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modfunnels.add(funnel.getPos());
+                            modFunnels.add(funnel.getPos());
                             blockEntity.funnels.add(funnel.getPos());
                             if(!savedPos.equals(pos)){
-                                portalfunnels.add(funnel.getPos());
+                                portalFunnels.add(funnel.getPos());
                                 blockEntity.portalFunnels.add(funnel.getPos());
                             }
                             if(!funnel.facing.contains(storedDirection)){
@@ -165,6 +167,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                                         Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getOtherAxisH(portal).x, CalledValues.getOtherAxisH(portal).y, CalledValues.getOtherAxisH(portal).z));
                                         int offset = (int)(((portal.getBlockPos().getX()-translatedPos.getX()) * Math.abs(CalledValues.getAxisH(portal).x)) + ((portal.getBlockPos().getY()-translatedPos.getY()) * Math.abs(CalledValues.getAxisH(portal).y)) + ((portal.getBlockPos().getZ()-translatedPos.getZ()) * Math.abs(CalledValues.getAxisH(portal).z)));
                                         Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
+                                        assert mainPortalVertFacing != null;
                                         if(mainPortalVertFacing.equals(Direction.SOUTH)){
                                             offset = (Math.abs(offset)-1)*-1;
                                         }
@@ -174,6 +177,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
                                         translatedPos = new BlockPos(CalledValues.getDestination(portal).x,CalledValues.getDestination(portal).y,CalledValues.getDestination(portal).z).offset(otherPortalVertFacing,offset);
                                         savedPos=translatedPos;
+                                        assert otherPortalVertFacing != null;
                                         if(otherPortalVertFacing.equals(Direction.SOUTH)){
                                             translatedPos = translatedPos.offset(Direction.NORTH,1);
                                         }
@@ -183,14 +187,14 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
                                         storedDirection = Direction.fromVector((int)CalledValues.getOtherFacing(portal).x,(int)CalledValues.getOtherFacing(portal).y,(int)CalledValues.getOtherFacing(portal).z);
                                         teleported = true;
-                                        blockEntity.funnels = modfunnels;
-                                        blockEntity.portalFunnels = portalfunnels;
+                                        blockEntity.funnels = modFunnels;
+                                        blockEntity.portalFunnels = portalFunnels;
                                     }
                                 }
                             }
                         } else {
-                            blockEntity.funnels = modfunnels;
-                            blockEntity.portalFunnels = portalfunnels;
+                            blockEntity.funnels = modFunnels;
+                            blockEntity.portalFunnels = portalFunnels;
                             break;
                         }
                     }

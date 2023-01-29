@@ -13,7 +13,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
-public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape> {
+public class CustomBlockCollisionSpliterator extends AbstractIterator<VoxelShape> {
     private final Box box;
     private final VoxelShape portalBox;
     private final ShapeContext context;
@@ -26,11 +26,11 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
     private BlockView chunk;
     private long chunkPos;
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box, VoxelShape portalBox) {
+    public CustomBlockCollisionSpliterator(CustomCollisionView world, @Nullable Entity entity, Box box, VoxelShape portalBox) {
         this(world, entity, box, portalBox,false);
     }
 
-    public CustomBlockCollisionSpliteraror(CustomCollisionView world, @Nullable Entity entity, Box box,VoxelShape portalBox, boolean forEntity) {
+    public CustomBlockCollisionSpliterator(CustomCollisionView world, @Nullable Entity entity, Box box, VoxelShape portalBox, boolean forEntity) {
         this.context = entity == null ? ShapeContext.absent() : ShapeContext.of(entity);
         this.pos = new BlockPos.Mutable();
         this.boxShape = VoxelShapes.cuboid(box);
@@ -62,6 +62,7 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
         }
     }
 
+    @Override
     protected VoxelShape computeNext() {
         while(this.blockIterator.step()) {
             int i = this.blockIterator.getX();
@@ -81,11 +82,11 @@ public class CustomBlockCollisionSpliteraror extends AbstractIterator<VoxelShape
                         voxelShape = VoxelShapes.combine(voxelShape, cutout, BooleanBiFunction.ONLY_FIRST);
 
                         if (voxelShape == VoxelShapes.fullCube()) {
-                            if (this.box.intersects((double)i, (double)j, (double)k, (double)i + 1.0, (double)j + 1.0, (double)k + 1.0)) {
-                                return voxelShape.offset((double)i, (double)j, (double)k);
+                            if (this.box.intersects(i, j, k, (double)i + 1.0, (double)j + 1.0, (double)k + 1.0)) {
+                                return voxelShape.offset(i, j, k);
                             }
                         } else {
-                            VoxelShape voxelShape2 = voxelShape.offset((double)i, (double)j, (double)k);
+                            VoxelShape voxelShape2 = voxelShape.offset(i, j, k);
                             if (VoxelShapes.matchesAnywhere(voxelShape2, this.boxShape, BooleanBiFunction.AND)) {
                                 return voxelShape2;
                             }

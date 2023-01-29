@@ -114,7 +114,7 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                 }
 
                 state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
-                        .with(CustomProperties.RNORTH, MRNorth).with(CustomProperties.REAST, MREast).with(CustomProperties.RSOUTH, MRSouth).with(CustomProperties.RWEST, MRWest).with(CustomProperties.RUP, MRUp).with(CustomProperties.RDOWN, MRDown);
+                        .with(CustomProperties.R_NORTH, MRNorth).with(CustomProperties.R_EAST, MREast).with(CustomProperties.R_SOUTH, MRSouth).with(CustomProperties.R_WEST, MRWest).with(CustomProperties.RUP, MRUp).with(CustomProperties.R_DOWN, MRDown);
             }
 
         world.setBlockState(pos,state,3);

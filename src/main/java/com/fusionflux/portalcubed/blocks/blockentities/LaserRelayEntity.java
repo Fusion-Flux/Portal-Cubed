@@ -42,12 +42,14 @@ public class LaserRelayEntity extends BlockEntity {
     }
 
     public void playSound(SoundEvent soundEvent) {
+        assert this.world != null;
         this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 
     public void updateState(BlockState state, boolean toggle) {
-        if(world != null)
-        world.setBlockState(pos,state.with(Properties.ENABLED,toggle),3);
+        if(world != null) {
+            world.setBlockState(pos,state.with(Properties.ENABLED,toggle),3);
+        }
     }
 
     @Override

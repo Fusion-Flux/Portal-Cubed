@@ -9,7 +9,7 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 public class HoopyRenderer extends MobEntityRenderer<HoopyEntity, HoopyModel> {
-    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/hoopy.png");
+    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/hoopy.png");
     protected final HoopyModel model = new HoopyModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(HoopyModel.HOOPY_LAYER));
 
     public HoopyRenderer(EntityRendererFactory.Context context) {

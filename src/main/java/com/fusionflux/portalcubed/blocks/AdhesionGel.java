@@ -40,6 +40,7 @@ public class AdhesionGel extends GelFlat {
 
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         Box block = new Box(pos);
         Box player = getPlayerBox(entity.getBoundingBox(),GravityChangerAPI.getGravityDirection(entity),-(entity.getHeight()-1));

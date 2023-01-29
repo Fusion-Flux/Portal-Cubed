@@ -47,7 +47,7 @@ public class LaserEmitterEntity extends BlockEntity {
         this.portalFunnels = new ArrayList<>();
     }
 
-    public static void tick1(World world, BlockPos pos, BlockState state, LaserEmitterEntity blockEntity) {
+    public static void tick1(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, LaserEmitterEntity blockEntity) {
         if (!world.isClient) {
             boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 
@@ -60,8 +60,8 @@ public class LaserEmitterEntity extends BlockEntity {
                 BlockPos translatedPos = pos;
                 BlockPos savedPos = pos;
                 if (blockEntity.funnels != null) {
-                    List<BlockPos> modfunnels = new ArrayList<>();
-                    List<BlockPos> portalfunnels = new ArrayList<>();
+                    List<BlockPos> modFunnels = new ArrayList<>();
+                    List<BlockPos> portalFunnels = new ArrayList<>();
                     boolean teleported = false;
                     Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
@@ -75,10 +75,10 @@ public class LaserEmitterEntity extends BlockEntity {
 
                             LaserBlockEntity funnel = ((LaserBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modfunnels.add(funnel.getPos());
+                            modFunnels.add(funnel.getPos());
                             blockEntity.funnels.add(funnel.getPos());
                             if(!savedPos.equals(pos)){
-                                portalfunnels.add(funnel.getPos());
+                                portalFunnels.add(funnel.getPos());
                                 blockEntity.portalFunnels.add(funnel.getPos());
                             }
 
@@ -93,12 +93,12 @@ public class LaserEmitterEntity extends BlockEntity {
                             Box portalCheckBox = new Box(translatedPos).contract(.25);
 
                             List<RedirectionCubeEntity> reflectCubes = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
-                            boolean iscube= false;
+                            boolean isCube= false;
                             for (RedirectionCubeEntity cubes : reflectCubes) {
                                 if(cubes != null){
                                     savedPos = translatedPos;
-                                    storedDirection = Direction.fromRotation((double)cubes.getRotYaw());
-                                    iscube=true;
+                                    storedDirection = Direction.fromRotation(cubes.getRotYaw());
+                                    isCube=true;
                                     cubes.setButtonTimer(1);
                                     break;
                                 }
@@ -114,49 +114,52 @@ public class LaserEmitterEntity extends BlockEntity {
                             }
 
                             if(blocked){
-                                blockEntity.funnels = modfunnels;
-                                blockEntity.portalFunnels=portalfunnels;
+                                blockEntity.funnels = modFunnels;
+                                blockEntity.portalFunnels=portalFunnels;
                                 break;
                             }
                             portalCheckBox = new Box(translatedPos);
                             List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
 
-                            if(!iscube)
-                            for (ExperimentalPortal portal : list) {
-                                if(portal.getFacingDirection().getOpposite().equals(storedDirection)){
-                                    if(portal.getActive()) {
-                                        Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getOtherAxisH(portal).x, CalledValues.getOtherAxisH(portal).y, CalledValues.getOtherAxisH(portal).z));
-                                        int offset = (int)(((portal.getBlockPos().getX()-translatedPos.getX()) * Math.abs(CalledValues.getAxisH(portal).x)) + ((portal.getBlockPos().getY()-translatedPos.getY()) * Math.abs(CalledValues.getAxisH(portal).y)) + ((portal.getBlockPos().getZ()-translatedPos.getZ()) * Math.abs(CalledValues.getAxisH(portal).z)));
-                                        Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
-                                        if(mainPortalVertFacing.equals(Direction.SOUTH)){
-                                            offset = (Math.abs(offset)-1)*-1;
-                                        }
-                                        if(mainPortalVertFacing.equals(Direction.EAST)){
-                                            offset = (Math.abs(offset)-1)*-1;
-                                        }
+                            if(!isCube) {
+                                for (ExperimentalPortal portal : list) {
+                                    if(portal.getFacingDirection().getOpposite().equals(storedDirection)){
+                                        if(portal.getActive()) {
+                                            Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getOtherAxisH(portal).x, CalledValues.getOtherAxisH(portal).y, CalledValues.getOtherAxisH(portal).z));
+                                            int offset = (int)(((portal.getBlockPos().getX()-translatedPos.getX()) * Math.abs(CalledValues.getAxisH(portal).x)) + ((portal.getBlockPos().getY()-translatedPos.getY()) * Math.abs(CalledValues.getAxisH(portal).y)) + ((portal.getBlockPos().getZ()-translatedPos.getZ()) * Math.abs(CalledValues.getAxisH(portal).z)));
+                                            Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
+                                            assert mainPortalVertFacing != null;
+                                            if(mainPortalVertFacing.equals(Direction.SOUTH)){
+                                                offset = (Math.abs(offset)-1)*-1;
+                                            }
+                                            if(mainPortalVertFacing.equals(Direction.EAST)){
+                                                offset = (Math.abs(offset)-1)*-1;
+                                            }
 
-                                        translatedPos = new BlockPos(CalledValues.getDestination(portal).x,CalledValues.getDestination(portal).y,CalledValues.getDestination(portal).z).offset(otherPortalVertFacing,offset);
-                                        savedPos = translatedPos;
-                                        if(otherPortalVertFacing.equals(Direction.SOUTH)){
-                                            translatedPos = translatedPos.offset(Direction.NORTH,1);
-                                        }
-                                        if(otherPortalVertFacing.equals(Direction.EAST)){
-                                            translatedPos = translatedPos.offset(Direction.WEST,1);
-                                        }
+                                            translatedPos = new BlockPos(CalledValues.getDestination(portal).x,CalledValues.getDestination(portal).y,CalledValues.getDestination(portal).z).offset(otherPortalVertFacing,offset);
+                                            savedPos = translatedPos;
+                                            assert otherPortalVertFacing != null;
+                                            if(otherPortalVertFacing.equals(Direction.SOUTH)){
+                                                translatedPos = translatedPos.offset(Direction.NORTH,1);
+                                            }
+                                            if(otherPortalVertFacing.equals(Direction.EAST)){
+                                                translatedPos = translatedPos.offset(Direction.WEST,1);
+                                            }
 
-                                        storedDirection = Direction.fromVector((int)CalledValues.getOtherFacing(portal).x,(int)CalledValues.getOtherFacing(portal).y,(int)CalledValues.getOtherFacing(portal).z);
-                                        teleported = true;
-                                        blockEntity.funnels = modfunnels;
-                                        blockEntity.portalFunnels=portalfunnels;
+                                            storedDirection = Direction.fromVector((int)CalledValues.getOtherFacing(portal).x,(int)CalledValues.getOtherFacing(portal).y,(int)CalledValues.getOtherFacing(portal).z);
+                                            teleported = true;
+                                            blockEntity.funnels = modFunnels;
+                                            blockEntity.portalFunnels=portalFunnels;
+                                        }
                                     }
                                 }
                             }
                         } else if(world.getBlockState(translatedPos).getBlock() instanceof AbstractGlassBlock && !(world.getBlockState(translatedPos).getBlock() instanceof TintedGlassBlock)) {
-                            blockEntity.funnels = modfunnels;
-                            blockEntity.portalFunnels=portalfunnels;
+                            blockEntity.funnels = modFunnels;
+                            blockEntity.portalFunnels=portalFunnels;
                         }else{
-                            blockEntity.funnels = modfunnels;
-                            blockEntity.portalFunnels=portalfunnels;
+                            blockEntity.funnels = modFunnels;
+                            blockEntity.portalFunnels=portalFunnels;
                             break;
                         }
                     }
@@ -176,6 +179,7 @@ public class LaserEmitterEntity extends BlockEntity {
     }
 
     public void playSound(SoundEvent soundEvent) {
+        assert this.world != null;
         this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 

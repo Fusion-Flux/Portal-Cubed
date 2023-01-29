@@ -3,38 +3,25 @@ package com.fusionflux.portalcubed.util;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
-    boolean gravityState = false;
     VoxelShape portalCutout = VoxelShapes.empty();
     boolean hasTeleportationHappened = false;
     UUID cubeUUID = null;
-    public List<UUID> portals = new ArrayList<>();
+    public Set<UUID> portals = new HashSet<>();
     private final Entity entity;
 
 
     public EntityComponent(Entity entity) {
         this.entity = entity;
-    }
-
-    @Override
-    public boolean getSwapGravity() {
-        return gravityState;
-    }
-
-    @Override
-    public void setSwapGravity(boolean gravityState) {
-        this.gravityState = gravityState;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
     @Override
@@ -59,11 +46,6 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public void teleport(Vec3d teleportTo, Direction dira,Direction dirb) {
-
-    }
-
-    @Override
     public UUID getCubeUUID() {
         return cubeUUID;
     }
@@ -75,26 +57,18 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public List<UUID> getPortals() {
+    public Set<UUID> getPortals() {
         return portals;
     }
 
     @Override
-    public void setPortals(List<UUID> portalUUIDs) {
-        portals = portalUUIDs;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
-    }
-
-    @Override
     public void addPortals(UUID portalUUID) {
-        if(!portals.contains(portalUUID))
         portals.add(portalUUID);
         PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
     @Override
     public void removePortals(UUID portalUUID) {
-        if(!portals.contains(portalUUID))
         portals.remove(portalUUID);
         PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
@@ -121,7 +95,7 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(@NotNull NbtCompound tag) {
         if(cubeUUID != null) {
             tag.putString("cubeUUID", cubeUUID.toString());
         }else{

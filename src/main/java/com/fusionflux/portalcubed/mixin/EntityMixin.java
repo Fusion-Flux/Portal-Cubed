@@ -13,7 +13,6 @@ import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.util.PortalVelocityHelper;
-import com.google.common.collect.Lists;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
@@ -54,9 +53,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     private double maxFallSpeed = 0;
 
     @Unique
-    private final List<ExperimentalPortal> portalList = Lists.newArrayList();
-
-    @Unique
     private boolean IN_FUNNEL = false;
 
     @Unique
@@ -66,12 +62,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Unique
     private Vec3d lastVel = Vec3d.ZERO;
-
-    @Unique
-    private Vec3d lastPos = Vec3d.ZERO;
-
-    @Unique
-    private Vec3d serverPos = Vec3d.ZERO;
 
     @Unique
     private int gelTransferTimer = 0;
@@ -132,67 +122,25 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow private Vec3d pos;
 
-    @Shadow protected abstract Box calculateBoundsForPose(EntityPose pos);
-
-    @Shadow public boolean horizontalCollision;
-
     @Shadow public abstract boolean canUsePortals();
 
     @Shadow public abstract Vec3d getEyePos();
 
-    @Shadow public abstract void teleport(double destX, double destY, double destZ);
-
-    @Shadow public abstract void setPosition(Vec3d pos);
-
-    @Shadow public abstract void setPos(double x, double y, double z);
-
     @Shadow public abstract void setVelocity(Vec3d velocity);
-
-    @Shadow public abstract void setVelocity(double x, double y, double z);
 
     @Shadow public abstract void setYaw(float yaw);
 
     @Shadow public abstract float getYaw();
 
-    @Shadow public abstract void setVelocityClient(double x, double y, double z);
-
     @Shadow public abstract void setPosition(double x, double y, double z);
 
-    @Shadow public double lastRenderX;
-
-    @Shadow public double lastRenderY;
-
-    @Shadow public double lastRenderZ;
-
-    @Shadow public double prevX;
-
-    @Shadow public double prevY;
-
-    @Shadow public double prevZ;
-
-
-    @Shadow public abstract void requestTeleport(double destX, double destY, double destZ);
-
-    @Shadow public abstract float getHeight();
-
-    @Shadow public abstract float getWidth();
-
-    @Shadow public abstract EntityPose getPose();
 
     @Shadow protected boolean onGround;
     private Vec3d teleportVelocity = Vec3d.ZERO;
-    private boolean shouldTeleport = false;
     private boolean shouldTeleportClient = false;
-    public double lastZ = 0;
-
-    @Override
-    public List<ExperimentalPortal> getPortalList() {
-        return portalList;
-    }
 
     @Override
     public void addPortalToList(ExperimentalPortal portal) {
-        portalList.add(portal);
     }
 
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
@@ -210,8 +158,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         Entity thisentity = ((Entity) (Object) this);
 
         if(world.isClient && thisentity instanceof PlayerEntity && CalledValues.getHasTeleportationHappened(thisentity)){
-            var bytebuf = PacketByteBufs.create();
-            NetworkingSafetyWrapper.sendFromClient("clientteleportupdate", bytebuf);
+            var byteBuf = PacketByteBufs.create();
+            NetworkingSafetyWrapper.sendFromClient("clientteleportupdate", byteBuf);
             CalledValues.setHasTeleportationHappened(thisentity,false);
             shouldTeleportClient = false;
             this.setVelocity(teleportVelocity);
@@ -231,14 +179,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         for (ExperimentalPortal portal : funnelList) {
 
             double portalOffsetX = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).x;
-            double portalOffsetY = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).y;
             double portalOffsetZ = this.getBoundingBox().getCenter().subtract(portal.getBoundingBox().getCenter()).z;
 
             if(portalOffsetX ==0){
                 portalOffsetX =.1;
-            }
-            if(portalOffsetY ==0){
-                portalOffsetY =.1;
             }
             if(portalOffsetZ ==0){
                 portalOffsetZ =.1;
@@ -264,12 +208,12 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             canTeleport = !shouldTeleportClient;
         }
         List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
-        VoxelShape ommitedDirections = VoxelShapes.empty();
+        VoxelShape omittedDirections = VoxelShapes.empty();
         for (ExperimentalPortal portal : list) {
 
                 if (portal.calculateCuttoutBox() != nullBox) {
                     if (portal.getActive())
-                        ommitedDirections = VoxelShapes.union(ommitedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
+                        omittedDirections = VoxelShapes.union(omittedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
                 }
 
 
@@ -337,17 +281,17 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                         if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                             if (otherPortalVertFacing == Direction.NORTH || otherPortalVertFacing == Direction.SOUTH) {
                                 if (portalVertFacing == Direction.EAST || portalVertFacing == Direction.WEST) {
-                                    double storedx = teleportXOffset;
+                                    double storedX = teleportXOffset;
                                     teleportXOffset = -teleportZOffset;
-                                    teleportZOffset = -storedx;
+                                    teleportZOffset = -storedX;
                                 }
                             }
 
                             if (otherPortalVertFacing == Direction.EAST || otherPortalVertFacing == Direction.WEST) {
                                 if (portalVertFacing == Direction.NORTH || portalVertFacing == Direction.SOUTH) {
-                                    double storedz = teleportZOffset;
+                                    double storedZ = teleportZOffset;
                                     teleportZOffset = -teleportXOffset;
-                                    teleportXOffset = -storedz;
+                                    teleportXOffset = -storedZ;
                                 }
                             }
                             if (portalVertFacing != null)
@@ -400,15 +344,14 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                             if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY()) {
                                 float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
                                 if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
-                                    var bytebuf = PacketByteBufs.create();
-                                    bytebuf.writeVarInt(portal.getId());
-                                    bytebuf.writeDouble(teleportXOffset);
-                                    bytebuf.writeDouble(teleportYOffset);
-                                    bytebuf.writeDouble(teleportZOffset);
-                                    bytebuf.writeFloat(yawValue);
-                                    NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
+                                    var byteBuf = PacketByteBufs.create();
+                                    byteBuf.writeVarInt(portal.getId());
+                                    byteBuf.writeDouble(teleportXOffset);
+                                    byteBuf.writeDouble(teleportYOffset);
+                                    byteBuf.writeDouble(teleportZOffset);
+                                    byteBuf.writeFloat(yawValue);
+                                    NetworkingSafetyWrapper.sendFromClient("portalpacket", byteBuf);
                                     this.setYaw(yawValue);
-                                    serverPos = new Vec3d(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
                                     shouldTeleportClient = true;
                                     //COMEHERE
                                     if(!(otherDirec.getUnitVector().getY() < 0)) {
@@ -465,7 +408,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                 }
             }
     }
-            CalledValues.setPortalCutout(((Entity) (Object) this), ommitedDirections);
+            CalledValues.setPortalCutout(((Entity) (Object) this), omittedDirections);
 
 
             if (this.isInFunnel() && this.getFunnelTimer() != 0) {
@@ -494,7 +437,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
 
 
-        Vec3d rotatedPos = this.pos;
+        Vec3d rotatedPos;
         rotatedPos = RotationUtil.vecWorldToPlayer(this.pos, GravityChangerAPI.getGravityDirection((Entity)(Object)this));
         if(prevGravDirec != GravityChangerAPI.getGravityDirection(((Entity)(Object)this))){
             this.maxFallHeight = rotatedPos.y;
@@ -509,8 +452,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
 
         this.lastVel = this.getVelocity();
-
-        this.lastPos = this.getPos();
 
         if (world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.REPULSION_GEL && this.isBounced()){
             this.setBounced(false);
@@ -536,15 +477,14 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     ) {
         float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDir);
         if (thisEntity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
-            var bytebuf = PacketByteBufs.create();
-            bytebuf.writeVarInt(portal.getId());
-            bytebuf.writeDouble(teleportXOffset);
-            bytebuf.writeDouble(teleportYOffset);
-            bytebuf.writeDouble(teleportZOffset);
-            bytebuf.writeFloat(yawValue);
-            NetworkingSafetyWrapper.sendFromClient("portalpacket", bytebuf);
+            var byteBuf = PacketByteBufs.create();
+            byteBuf.writeVarInt(portal.getId());
+            byteBuf.writeDouble(teleportXOffset);
+            byteBuf.writeDouble(teleportYOffset);
+            byteBuf.writeDouble(teleportZOffset);
+            byteBuf.writeFloat(yawValue);
+            NetworkingSafetyWrapper.sendFromClient("portalpacket", byteBuf);
             this.setYaw(yawValue);
-            serverPos = new Vec3d(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
             shouldTeleportClient = true;
             teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir);
         } else if(!(thisEntity instanceof PlayerEntity)) {
@@ -598,31 +538,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         return this.lastVel;
     }
 
-    @Override
-    public Vec3d getLastPos() {
-        return this.lastPos;
-    }
-
-
-    @Override
-    public void setServerVel(Vec3d fall) {
-        this.serverPos = fall;
-    }
-
-    @Override
-    public Vec3d getServerVel() {
-        return this.serverPos;
-    }
-
-    @Override
-    public void setShouldTeleport(boolean fall) {
-        this.shouldTeleport = fall;
-    }
-
-    @Override
-    public boolean getShouldTeleport() {
-        return this.shouldTeleport;
-    }
 
     @Override
     public void setFunnelTimer(int funnelTimer) {
@@ -637,16 +552,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Override
     public int getGelTimer() {
         return this.gelTransferTimer;
-    }
-
-    @Override
-    public void setGelChangeTimer(int funnelTimer) {
-        this.gelTransferChangeTimer = funnelTimer;
-    }
-
-    @Override
-    public int getGelChangeTimer() {
-        return this.gelTransferChangeTimer;
     }
 
 
@@ -684,15 +589,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         VoxelShape portalBox = CalledValues.getPortalCutout(((Entity)(Object)this));
         if(portalBox != VoxelShapes.empty())
             cir.setReturnValue(false);
-    }
-
-    public final void setLastPosition(Vec3d pos) {
-        this.lastRenderX = pos.getX();
-        this.lastRenderY = pos.getY();
-        this.lastRenderZ = pos.getZ();
-        this.prevX = pos.getX();
-        this.prevY = pos.getY();
-        this.prevZ = pos.getZ();
     }
 
     @Inject(method = "checkBlockCollision", at = @At("HEAD"))

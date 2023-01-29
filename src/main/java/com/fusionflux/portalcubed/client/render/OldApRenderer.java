@@ -9,7 +9,7 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 public class OldApRenderer extends MobEntityRenderer<OldApCubeEntity, OldApModel> {
-    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/old_ap_cube.png");
+    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/old_ap_cube.png");
     protected final OldApModel model = new OldApModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(OldApModel.OLD_AP_CUBE_MAIN_LAYER));
 
     public OldApRenderer(EntityRendererFactory.Context context) {

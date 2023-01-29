@@ -35,22 +35,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
         throw new AssertionError(
-                PortalCubed.MODID + "'s PlayerEntityMixin dummy constructor was called, " +
+                PortalCubed.MOD_ID + "'s PlayerEntityMixin dummy constructor was called, " +
                         "something is very wrong here!"
         );
     }
 
     @Shadow
+    @Override
     public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 
     @Shadow
+    @Override
     public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
     @Shadow
+    @Override
     public abstract boolean isSwimming();
 
     @Shadow @Final private PlayerAbilities abilities;
 
+    @Override
     @Shadow public abstract float getMovementSpeed();
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
@@ -66,19 +70,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
         if (!this.hasNoGravity()) {
             ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
             if (!this.isOnGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
-                double mathval = 1;
-                double horizontalvelocity = Math.abs(this.getVelocity().x) + Math.abs(this.getVelocity().z);
-                if (horizontalvelocity / 0.01783440120041885 > 1) {
-                    mathval = horizontalvelocity / 0.01783440120041885;
+                double mathVal = 1;
+                double horizontalVelocity = Math.abs(this.getVelocity().x) + Math.abs(this.getVelocity().z);
+                if (horizontalVelocity / 0.01783440120041885 > 1) {
+                    mathVal = horizontalVelocity / 0.01783440120041885;
                 }
-                travelVectorOriginal = new Vec3d(travelVectorOriginal.x / mathval, travelVectorOriginal.y, travelVectorOriginal.z / mathval);
+                travelVectorOriginal = new Vec3d(travelVectorOriginal.x / mathVal, travelVectorOriginal.y, travelVectorOriginal.z / mathVal);
                 this.flyingSpeed = .04f;
             }
         }
     return travelVectorOriginal;
     }
 
-    private boolean enableNoDrag2= false;
+    private boolean enableNoDrag2;
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void portalCubed$tick(CallbackInfo ci) {
@@ -100,22 +104,22 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
         }
     }
 
-    @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D"), cancellable = true)
+    @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D"))
     public void portalCubed$dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<@Nullable ItemEntity> cir) {
         if (!this.world.isClient && stack.getItem().equals(PortalCubedItems.PORTAL_GUN)) {
             NbtCompound tag = stack.getOrCreateNbt();
             NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());
-            ExperimentalPortal portalholder;
+            ExperimentalPortal portalHolder;
             if (portalsTag.contains(("Left") + "Portal")) {
-                portalholder = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Left") + "Portal"));
-                if (portalholder != null) {
-                    portalholder.kill();
+                portalHolder = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Left") + "Portal"));
+                if (portalHolder != null) {
+                    portalHolder.kill();
                 }
             }
             if (portalsTag.contains(("Right") + "Portal")) {
-                portalholder = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Portal"));
-                if (portalholder != null) {
-                    portalholder.kill();
+                portalHolder = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid(("Right") + "Portal"));
+                if (portalHolder != null) {
+                    portalHolder.kill();
                 }
             }
         }

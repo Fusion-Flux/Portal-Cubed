@@ -37,6 +37,7 @@ public abstract class ExcursionFunnelEmitterEntityAbstract extends BlockEntity {
 
 
     public void playSound(SoundEvent soundEvent) {
+        assert this.world != null;
         this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 

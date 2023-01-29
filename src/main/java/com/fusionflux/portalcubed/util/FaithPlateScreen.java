@@ -25,9 +25,9 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
     private static final Identifier TEXTURE = new Identifier("portalcubed", "textures/gui/container/faith_plate.png");
 
     private final BlockPos pos;
-    private double x;
-    private double y;
-    private double z;
+    private final double x;
+    private final double y;
+    private final double z;
 
     public FaithPlateScreen(ScreenHandler screenHandler, PlayerInventory playerInventory, Text text) {
         super(screenHandler, playerInventory, text);
@@ -118,32 +118,32 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
 
             buf.writeBlockPos(pos);
 
-            String xString = field1.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", ".").replaceFirst("[-]","m").replaceAll("[-]", "").replaceAll("[m]", "-");
-            String yString = field2.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", ".").replaceFirst("[-]","m").replaceAll("[-]", "").replaceAll("[m]", "-");
-            String zString = field3.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("[d]", ".").replaceFirst("[-]","m").replaceAll("[-]", "").replaceAll("[m]", "-");
+            String xString = field1.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-","m").replaceAll("-", "").replaceAll("m", "-");
+            String yString = field2.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-","m").replaceAll("-", "").replaceAll("m", "-");
+            String zString = field3.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-","m").replaceAll("-", "").replaceAll("m", "-");
 
-            double sndx = 0;
-            double sndy = 0;
-            double sndz = 0;
+            double sendX = 0;
+            double sendY = 0;
+            double sendZ = 0;
 
             if(!xString.equals("")){
-                sndx = Double.parseDouble(xString);
+                sendX = Double.parseDouble(xString);
             }
             if(!yString.equals("")){
-                sndy = Double.parseDouble(yString);
+                sendY = Double.parseDouble(yString);
             }
             if(!zString.equals("")){
-                sndz = Double.parseDouble(zString);
+                sendZ = Double.parseDouble(zString);
             }
 
-            if(sndx >4){
-                sndx = 4;
+            if(sendX >4){
+                sendX = 4;
             }
-            if(sndy >4){
-                sndy = 4;
+            if(sendY >4){
+                sendY = 4;
             }
-            if(sndz >4){
-                sndz = 4;
+            if(sendZ >4){
+                sendZ = 4;
             }
 
             World world = MinecraftClient.getInstance().world;
@@ -151,20 +151,20 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
             if(world != null){
                 BlockEntity entity = world.getBlockEntity(pos);
                 if(entity instanceof FaithPlateBlockEntity faith){
-                    faith.setVelX(sndx);
-                    faith.setVelY(sndy);
-                    faith.setVelZ(sndz);
+                    faith.setVelX(sendX);
+                    faith.setVelY(sendY);
+                    faith.setVelZ(sendZ);
                 }
                 if(entity instanceof BetaFaithPlateBlockEntity faith){
-                    faith.setVelX(sndx);
-                    faith.setVelY(sndy);
-                    faith.setVelZ(sndz);
+                    faith.setVelX(sendX);
+                    faith.setVelY(sendY);
+                    faith.setVelZ(sendZ);
                 }
             }
 
-            buf.writeDouble(sndx);
-            buf.writeDouble(sndy);
-            buf.writeDouble(sndz);
+            buf.writeDouble(sendX);
+            buf.writeDouble(sendY);
+            buf.writeDouble(sendZ);
             NetworkingSafetyWrapper.sendFromClient("faithplatepacket", buf);
             this.closeScreen();
            // ClientPlayNetworking.send("a", buf);

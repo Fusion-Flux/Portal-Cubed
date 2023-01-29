@@ -37,10 +37,6 @@ public class FizzlerEmitter extends HorizontalFacingBlock {
         );
     }
 
-    public AbstractFizzlerBlock getFizzlerBlock() {
-        return fizzlerBlock;
-    }
-
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, HALF, POWERED);

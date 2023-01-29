@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 
 public class CompanionCubeModel extends FizzleableModel<CompanionCubeEntity> {
 
-	public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"companion_cube"), "main");
+	public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "companion_cube"), "main");
 	private final ModelPart bb_main;
 
 	public CompanionCubeModel(ModelPart root) {
@@ -28,17 +28,17 @@ public class CompanionCubeModel extends FizzleableModel<CompanionCubeEntity> {
 		ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
 				.uv(0, 20).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.5F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-		ModelPartData cube_r1 = bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, -2.3562F, 0.0436F, -1.5708F));
+		bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, -2.3562F, 0.0436F, -1.5708F));
 
-		ModelPartData cube_r2 = bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 0.7854F, 0.0F, 1.5708F));
+		bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 0.7854F, 0.0F, 1.5708F));
 
-		ModelPartData cube_r3 = bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, -0.7854F, 0.0F, 0.0F));
+		bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, -0.7854F, 0.0F, 0.0F));
 
-		ModelPartData cube_r4 = bb_main.addChild("cube_r4", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
+		bb_main.addChild("cube_r4", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
 
-		ModelPartData cube_r5 = bb_main.addChild("cube_r5", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 2.3562F, 0.0436F, -3.1416F));
+		bb_main.addChild("cube_r5", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 2.3562F, 0.0436F, -3.1416F));
 
-		ModelPartData cube_r6 = bb_main.addChild("cube_r6", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
+		bb_main.addChild("cube_r6", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
 		return TexturedModelData.of(modelData, 64, 64);
 	}
 

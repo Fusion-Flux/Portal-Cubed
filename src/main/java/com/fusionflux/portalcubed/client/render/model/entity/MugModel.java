@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class MugModel extends FizzleableModel<MugEntity> {
-	public static final EntityModelLayer MUG_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"mug"), "main");
+	public static final EntityModelLayer MUG_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "mug"), "main");
 	private final ModelPart bb_main;
 
 	public MugModel(ModelPart root) {
@@ -27,7 +27,7 @@ public class MugModel extends FizzleableModel<MugEntity> {
 		ModelPartData bone = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-3.0F, -2.0F, -1.25F, 3.0F, 4.0F, 3.0F, new Dilation(0.01F))
 				.uv(2, 2).mirrored().cuboid(1.5F, 2.0F, 0.25F, -3.0F, -4.0F, -3.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.0F, 22.0F, -0.25F, 0.0F, 3.1416F, 0.0F));
 
-		ModelPartData cube_r1 = bone.addChild("cube_r1", ModelPartBuilder.create().uv(0, 7).cuboid(0.5F, -1.5F, 0.0F, 1.0F, 3.0F, 2.0F, new Dilation(0.01F)), ModelTransform.of(0.0F, 0.0F, 1.25F, 0.0F, 1.5708F, 0.0F));
+		bone.addChild("cube_r1", ModelPartBuilder.create().uv(0, 7).cuboid(0.5F, -1.5F, 0.0F, 1.0F, 3.0F, 2.0F, new Dilation(0.01F)), ModelTransform.of(0.0F, 0.0F, 1.25F, 0.0F, 1.5708F, 0.0F));
 		return TexturedModelData.of(modelData, 16, 16);
 	}
 

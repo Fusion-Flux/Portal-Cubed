@@ -9,15 +9,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class CuriosityCoreEntity extends CorePhysicsEntity  {
 
     public CuriosityCoreEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
-
-    Random ran = new Random();
 
     private int t = 0;
 
@@ -28,13 +24,13 @@ public class CuriosityCoreEntity extends CorePhysicsEntity  {
             if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
                 if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.CURIOSITYCORE);
+                        this.dropItem(PortalCubedItems.CURIOSITY_CORE);
                     }
                     this.discard();
                 }
                 if(!(source.getAttacker() instanceof PlayerEntity)) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.CURIOSITYCORE);
+                        this.dropItem(PortalCubedItems.CURIOSITY_CORE);
                     }
                     this.discard();
                 }

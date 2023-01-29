@@ -25,7 +25,8 @@ import java.util.function.Supplier;
 
 public final class EmissiveBakedModel extends ForwardingBakedModel {
 
-    private static final RenderMaterial[] EMISSIVE_MATERIALS = new RenderMaterial[BlendMode.values().length]; {
+    private static final RenderMaterial[] EMISSIVE_MATERIALS = new RenderMaterial[BlendMode.values().length]; static {
+        //noinspection DataFlowIssue
         MaterialFinder materialFinder = RendererAccess.INSTANCE.getRenderer().materialFinder();
         for (BlendMode blendMode : BlendMode.values()) {
             EMISSIVE_MATERIALS[blendMode.ordinal()] = materialFinder
@@ -53,6 +54,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
     @Override
     @SuppressWarnings("deprecation")
     public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
+        //noinspection DataFlowIssue
         final MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
         final QuadEmitter emitter = meshBuilder.getEmitter();
 
@@ -62,10 +64,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
             Sprite sprite = spriteFinder.find(quad, 0);
             if (emissiveSpriteId.equals(sprite.getId())) {
                 BlendMode blendMode = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(state));
-                final BlendMode finalBlendMode = switch (blendMode) {
-                    case SOLID -> BlendMode.CUTOUT_MIPPED;
-                    default -> blendMode;
-                };
+                final BlendMode finalBlendMode = blendMode == BlendMode.SOLID ? BlendMode.CUTOUT_MIPPED : blendMode;
 
                 quad.copyTo(emitter);
                 emitter.material(EMISSIVE_MATERIALS[finalBlendMode.ordinal()]);
@@ -87,6 +86,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
     @Override
     @SuppressWarnings("deprecation")
     public void emitItemQuads(ItemStack stack, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
+        //noinspection DataFlowIssue
         final MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
         final QuadEmitter emitter = meshBuilder.getEmitter();
 

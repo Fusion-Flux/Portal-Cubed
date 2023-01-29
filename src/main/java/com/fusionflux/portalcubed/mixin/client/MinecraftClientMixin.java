@@ -34,7 +34,7 @@ public abstract class MinecraftClientMixin {
     public ClientPlayerEntity player;
 
     public MinecraftClientMixin() {
-        throw new AssertionError(PortalCubed.MODID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
+        throw new AssertionError(PortalCubed.MOD_ID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
     }
 
     /**
@@ -56,7 +56,7 @@ public abstract class MinecraftClientMixin {
      *
      * @author Platymemo
      */
-    @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "doAttack", at = @At("HEAD"))
     private void portalCubed$onDoAttack(CallbackInfoReturnable<Boolean> cir) {
         if (this.player != null) {
             Item mainHand = this.player.getMainHandStack().getItem();

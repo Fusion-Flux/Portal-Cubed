@@ -28,10 +28,10 @@ public abstract class ModelLoaderMixin {
 
     @Inject(method = "bake", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void portalcubed$injectEmissiveModels(Identifier id, ModelBakeSettings settings, CallbackInfoReturnable<BakedModel> cir, Triple<Identifier, AffineTransformation, Boolean> triple) {
-        if (bakedModelCache.get(triple) instanceof EmissiveBakedModel || !id.getNamespace().equals(PortalCubed.MODID)) return;
+        if (bakedModelCache.get(triple) instanceof EmissiveBakedModel || !id.getNamespace().equals(PortalCubed.MOD_ID)) return;
 
         final BakedModel modelToWrap = cir.getReturnValue();
-        final BakedModel customModel = EmissiveModelRegistry.wrapModel(id, modelToWrap).orElseGet(() -> modelToWrap);
+        final BakedModel customModel = EmissiveModelRegistry.wrapModel(id, modelToWrap).orElse(modelToWrap);
         if (customModel == null || customModel == modelToWrap) return;
 
         bakedModelCache.replace(triple, customModel);

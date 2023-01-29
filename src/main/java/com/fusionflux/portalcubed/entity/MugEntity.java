@@ -31,7 +31,7 @@ public class MugEntity extends CorePhysicsEntity  {
     }
 
     public int getMugType(){
-        return getDataTracker().get(MUGTYPE);
+        return getDataTracker().get(MUG_TYPE);
     }
 
     public void genMugType(){
@@ -39,15 +39,15 @@ public class MugEntity extends CorePhysicsEntity  {
     }
 
     public void setMugType(Integer type) {
-        this.getDataTracker().set(MUGTYPE, type);
+        this.getDataTracker().set(MUG_TYPE, type);
     }
 
-    public static final TrackedData<Integer> MUGTYPE = DataTracker.registerData(MugEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    public static final TrackedData<Integer> MUG_TYPE = DataTracker.registerData(MugEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.getDataTracker().startTracking(MUGTYPE, 20);
+        this.getDataTracker().startTracking(MUG_TYPE, 20);
     }
     @Override
     public boolean damage(DamageSource source, float amount) {

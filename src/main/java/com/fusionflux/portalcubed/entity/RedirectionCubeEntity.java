@@ -43,6 +43,7 @@ public class RedirectionCubeEntity extends CorePhysicsEntity  {
         buttonTimer = time;
     }
 
+    @Override
     public void tick() {
         super.tick();
         if(!world.isClient) {

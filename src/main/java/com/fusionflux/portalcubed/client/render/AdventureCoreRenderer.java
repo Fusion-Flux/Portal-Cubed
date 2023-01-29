@@ -10,13 +10,13 @@ import net.minecraft.util.Identifier;
 
 public class AdventureCoreRenderer extends MobEntityRenderer<AdventureCoreEntity, AdventureCoreModel> {
 
-    private final Identifier TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_2_cores.png");
+    private final Identifier TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_2_cores.png");
 
     public AdventureCoreRenderer(EntityRendererFactory.Context context) {
         super(context, new AdventureCoreModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(AdventureCoreModel.ADVENTURE_CORE_LAYER)), 0.5f);
-        this.addFeature(new EmissiveFeatureRenderer<AdventureCoreEntity, AdventureCoreModel>(this) {
+        this.addFeature(new EmissiveFeatureRenderer<>(this) {
 
-            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_2_cores_e.png");
+            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_2_cores_e.png");
 
             @Override
             public Identifier getEmissiveTexture(AdventureCoreEntity entity) {

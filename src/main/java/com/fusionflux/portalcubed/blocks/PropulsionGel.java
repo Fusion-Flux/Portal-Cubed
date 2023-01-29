@@ -23,6 +23,7 @@ public class PropulsionGel extends GelFlat {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         this.addCollisionEffects(world, entity);
     }
