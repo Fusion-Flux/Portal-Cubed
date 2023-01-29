@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "portalcubed:core_frame"
+    },
+    {
+      "item": "minecraft:observer"
+    },
+    {
+      "item": "minecraft:orange_dye"
+    }
+  ],
+  "result": {
+    "item": "portalcubed:curiosity_core",
+    "count": 1
+  }
+}

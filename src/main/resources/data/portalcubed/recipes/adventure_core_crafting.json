@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "portalcubed:core_frame"
+    },
+    {
+      "item": "minecraft:map"
+    },
+    {
+      "item": "minecraft:lime_dye"
+    }
+  ],
+  "result": {
+    "item": "portalcubed:adventure_core",
+    "count": 1
+  }
+}

@@ -63,9 +63,11 @@
     "portalcubed:old_ap_floor_button",
     "portalcubed:faith_plate",
     "portalcubed:beta_faith_plate",
-
+    "portalcubed:fizzler_emitter",
     "portalcubed:laser_fizzler_emitter",
     "portalcubed:death_fizzler_emitter",
+    "portalcubed:physics_repulsion_field_emitter",
+    "portalcubed:matter_inquisition_field_emitter",
     "portalcubed:portal_1_door",
     "portalcubed:portal_2_door",
     "portalcubed:octopus_door",

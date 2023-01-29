@@ -63,7 +63,9 @@ public class PortalCubedClient implements ClientModInitializer {
             RenderLayer.getTranslucent(),
             PortalCubedBlocks.ABSOLUTE_FIZZLER,
             PortalCubedBlocks.DEATH_FIZZLER,
-            PortalCubedBlocks.LASER_FIZZLER
+            PortalCubedBlocks.LASER_FIZZLER,
+            PortalCubedBlocks.MATTER_INQUISITION_FIELD,
+            PortalCubedBlocks.PHYSICS_REPULSION_FIELD
         );
     }
 
@@ -91,6 +93,13 @@ public class PortalCubedClient implements ClientModInitializer {
         BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.PORTAL1DOOR);
         BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.PORTAL2DOOR);
         BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.OLDAPDOOR);
+
+        BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.ABSOLUTE_FIZZLER_EMITTER);
+        BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.LASER_FIZZLER_EMITTER);
+        BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.DEATH_FIZZLER_EMITTER);
+        BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.MATTER_INQUISITION_FIELD_EMITTER);
+        BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.PHYSICS_REPULSION_FIELD_EMITTER);
+
         BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks._1x1_DOUBLE_CROSSBAR);
         BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks._1x1_SINGLE_CROSSBAR);
         BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks._2X2_DOUBLE_CROSSBAR_BOTTOM_LEFT);
@@ -117,9 +126,24 @@ public class PortalCubedClient implements ClientModInitializer {
         EmissiveModelRegistry.register(id("block/portal_2_fizzler_top"), id("block/portal_2_fizzler_top"));
         EmissiveModelRegistry.register(id("block/portal_2_fizzler_bottom"), id("block/portal_2_fizzler_bottom"));
 
+        EmissiveModelRegistry.register(id("block/portal_2_matter_inquisition_field_top"), id("block/portal_2_matter_inquisition_field_top"));
+        EmissiveModelRegistry.register(id("block/portal_2_matter_inquisition_field_bottom"), id("block/portal_2_matter_inquisition_field_bottom"));
+
+        EmissiveModelRegistry.register(id("block/portal_2_physics_repulsion_field_top"), id("block/portal_2_physics_repulsion_field_top"));
+        EmissiveModelRegistry.register(id("block/portal_2_physics_repulsion_field_bottom"), id("block/portal_2_physics_repulsion_field_bottom"));
+
         EmissiveModelRegistry.register(id("block/portal_2_death_fizzler_top"), id("block/portal_2_death_fizzler_top"));
         EmissiveModelRegistry.register(id("block/portal_2_death_fizzler_bottom"), id("block/portal_2_death_fizzler_bottom"));
 
+
+        EmissiveModelRegistry.register(id("block/portal_2_fizzler_emitter_top"), id("block/grill_emitters_e"));
+        EmissiveModelRegistry.register(id("block/portal_2_fizzler_emitter_bottom"), id("block/grill_emitters_e"));
+
+        EmissiveModelRegistry.register(id("block/portal_2_matter_inquisition_field_emitter_top"), id("block/modded_grill_emitters_e"));
+        EmissiveModelRegistry.register(id("block/portal_2_matter_inquisition_field_emitter_bottom"), id("block/modded_grill_emitters_e"));
+
+        EmissiveModelRegistry.register(id("block/portal_2_physics_repulsion_field_emitter_top"), id("block/modded_grill_emitters_e"));
+        EmissiveModelRegistry.register(id("block/portal_2_physics_repulsion_field_emitter_bottom"), id("block/modded_grill_emitters_e"));
 
         EmissiveModelRegistry.register(id("block/portal_2_fizzler_emitter_top"), id("block/grill_emitters_e"));
         EmissiveModelRegistry.register(id("block/portal_2_fizzler_emitter_bottom"), id("block/grill_emitters_e"));

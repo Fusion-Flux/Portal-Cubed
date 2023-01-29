@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "ZYZ",
+        "YXY",
+        "ZYZ"
+    ],
+    "key": {
+        "Z": {
+            "item": "minecraft:iron_nugget"
+        },
+        "X": {
+            "item": "minecraft:iron_ingot"
+        },
+        "Y": {
+            "item": "minecraft:redstone"
+        }
+    },
+    "result": {
+        "item": "portalcubed:core_frame",
+        "count": 1
+    }
+}

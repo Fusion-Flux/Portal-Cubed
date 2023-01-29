@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "portalcubed:core_frame"
+    },
+    {
+      "item": "minecraft:cake"
+    },
+    {
+      "item": "minecraft:blue_dye"
+    }
+  ],
+  "result": {
+    "item": "portalcubed:intelligence_core",
+    "count": 1
+  }
+}

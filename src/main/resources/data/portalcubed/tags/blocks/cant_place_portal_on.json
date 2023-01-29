@@ -66,6 +66,8 @@
     "portalcubed:fizzler_emitter",
     "portalcubed:laser_fizzler_emitter",
     "portalcubed:death_fizzler_emitter",
+    "portalcubed:physics_repulsion_field_emitter",
+    "portalcubed:matter_inquisition_field_emitter",
     "portalcubed:excursion_funnel_emitter",
     "portalcubed:reversed_excursion_funnel_emitter",
     "portalcubed:faith_plate",
