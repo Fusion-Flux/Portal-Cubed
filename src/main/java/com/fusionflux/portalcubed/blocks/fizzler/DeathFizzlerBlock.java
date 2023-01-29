@@ -12,6 +12,7 @@ public class DeathFizzlerBlock extends AbstractFizzlerBlock {
 
     @Override
     public void onEntityEnter(BlockState state, World world, BlockPos pos, Entity entity) {
+        fizzlePortals(entity);
         fizzlePhysicsEntity(entity);
         fizzleLiving(entity);
     }

@@ -99,7 +99,7 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
         builder.add(NS, EW, HALF);
     }
 
-    protected final void removePortals(Entity entity) {
+    protected final void fizzlePortals(Entity entity) {
         if (entity.world.isClient) return;
         boolean foundPortal = false;
         for (final UUID portal : CalledValues.getPortals(entity)) {

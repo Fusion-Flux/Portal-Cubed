@@ -180,7 +180,7 @@ return true;
             final UUID playerUuid = CalledValues.getPlayer(this);
             if (playerUuid != null) {
                 Entity player = ((ServerWorld) world).getEntity(playerUuid);
-                if(player == null){
+                if(player == null || !player.isAlive()){
                     this.kill();
                 }
             }

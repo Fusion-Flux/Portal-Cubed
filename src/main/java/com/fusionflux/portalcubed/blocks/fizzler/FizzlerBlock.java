@@ -12,7 +12,7 @@ public class FizzlerBlock extends AbstractFizzlerBlock {
 
     @Override
     public void onEntityEnter(BlockState state, World world, BlockPos pos, Entity entity) {
-        removePortals(entity);
+        fizzlePortals(entity);
         fizzlePhysicsEntity(entity);
     }
 }
