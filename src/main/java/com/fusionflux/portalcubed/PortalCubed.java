@@ -23,7 +23,6 @@ import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
@@ -36,6 +35,7 @@ import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
+import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.slf4j.Logger;
@@ -157,7 +157,7 @@ public class PortalCubed implements ModInitializer {
             });
         });
 
-        TrackedDataHandlerRegistry.register(QuaternionHandler.QUATERNION_HANDLER);
+        QuiltTrackedDataHandlerRegistry.register(id("quaternion"), QuaternionHandler.QUATERNION_HANDLER);
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
         PortalBlocksLoader.init(mod);
         PortalCubedBlocks.registerBlocks();

@@ -56,7 +56,8 @@ public abstract class MinecraftClientMixin {
      *
      * @author Platymemo
      */
-    @Inject(method = "doAttack", at = @At("HEAD"))
+    @SuppressWarnings("CancellableInjectionUsage")
+    @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
     private void portalCubed$onDoAttack(CallbackInfoReturnable<Boolean> cir) {
         if (this.player != null) {
             Item mainHand = this.player.getMainHandStack().getItem();
