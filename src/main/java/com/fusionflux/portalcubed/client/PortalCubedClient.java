@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.client;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.key.GrabKeyBinding;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
@@ -23,14 +24,12 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Items;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
-import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -45,7 +44,6 @@ public class PortalCubedClient implements ClientModInitializer {
 
         registerEntityRenderers();
         registerColorProviders();
-        setRenderLayers();
         registerEmissiveModels();
         PortalCubedClientPackets.registerPackets();
         GrabKeyBinding.register();
@@ -62,26 +60,6 @@ public class PortalCubedClient implements ClientModInitializer {
             registry.register(toxicGooFlowSpriteId);
         });
 
-        BlockRenderLayerMap.put(
-            RenderLayer.getCutout(),
-            PortalCubedBlocks.PORTAL_1_FIZZLER
-        );
-
-        BlockRenderLayerMap.put(
-            RenderLayer.getTranslucent(),
-            PortalCubedBlocks.FIZZLER,
-            PortalCubedBlocks.FIZZLER_EMITTER,
-            PortalCubedBlocks.PORTAL_1_FIZZLER_EMITTER,
-            PortalCubedBlocks.OLD_APERTURE_FIZZLER,
-            PortalCubedBlocks.OLD_APERTURE_FIZZLER_EMITTER,
-            PortalCubedBlocks.DEATH_FIZZLER,
-            PortalCubedBlocks.DEATH_FIZZLER_EMITTER,
-            PortalCubedBlocks.LASER_FIZZLER,
-            PortalCubedBlocks.LASER_FIZZLER_EMITTER,
-            PortalCubedBlocks.OLD_APERTURE_LASER_FIELD,
-            PortalCubedBlocks.OLD_APERTURE_LASER_FIELD_EMITTER
-        );
-
         ModelPredicateProviderRegistry.register(
             PortalCubedBlocks.POWER_BLOCK.asItem(),
             new Identifier("level"),
@@ -89,38 +67,8 @@ public class PortalCubedClient implements ClientModInitializer {
                 Items.LIGHT, new Identifier("level")
             )
         );
-    }
 
-    private void setRenderLayers() {
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.HLB_BLOCK);
-        BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.HLB_EMITTER_BLOCK);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.NEUROTOXIN_BLOCK);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.EXCURSION_FUNNEL);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMITTER);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.NEUROTOXIN_EMITTER);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.LASER);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.LASER_EMITTER);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.LASER_CATCHER);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.LASER_RELAY);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.CONVERSION_GEL);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.PROPULSION_GEL);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.REPULSION_GEL);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.ADHESION_GEL);
-
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.BETA_FAITH_PLATE);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks.FAITH_PLATE);
-
-        BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.PORTAL1DOOR);
-        BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.PORTAL2DOOR);
-        BlockRenderLayerMap.put(RenderLayer.getCutout(), PortalCubedBlocks.OLDAPDOOR);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks._1x1_DOUBLE_CROSSBAR);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks._1x1_SINGLE_CROSSBAR);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks._2X2_DOUBLE_CROSSBAR_BOTTOM_LEFT);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks._2X2_DOUBLE_CROSSBAR_BOTTOM_RIGHT);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks._2X2_DOUBLE_CROSSBAR_TOP_LEFT);
-        BlockRenderLayerMap.put(RenderLayer.getTranslucent(), PortalCubedBlocks._2X2_DOUBLE_CROSSBAR_TOP_RIGHT);
+        PortalBlocksLoader.initClient();
     }
 
     private void registerEmissiveModels() {

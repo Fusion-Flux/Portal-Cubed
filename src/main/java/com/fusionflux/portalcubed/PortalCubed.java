@@ -5,6 +5,7 @@ import com.fusionflux.gravity_api.util.GravityChannel;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.QuaternionHandler;
+import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
@@ -163,6 +164,7 @@ public class PortalCubed implements ModInitializer {
 
         QuaternionHandler.QUATERNION_HANDLER.getClass();
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
+        PortalBlocksLoader.init(mod);
         PortalCubedBlocks.registerBlocks();
         PortalCubedFluids.registerFluids();
         PortalCubedItems.registerItems();
