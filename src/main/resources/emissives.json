@@ -70,6 +70,7 @@
 
   "block/portal_2_door_bottom_right": "block/portal_2_door_e",
   "block/portal_2_door_bottom_right_open": "block/portal_2_door_e",
+  "block/portal_2_door_bottom_left_open": "block/portal_2_door_e",
   "block/portal_2_door_top_right": "block/portal_2_door_e",
   "block/portal_2_door_top_right_open": "block/portal_2_door_e",
 

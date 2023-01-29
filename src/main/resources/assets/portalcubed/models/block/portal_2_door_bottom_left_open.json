@@ -3,6 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "portalcubed:block/portal_2_door",
+		"1": "portalcubed:block/portal_2_door_e",
 		"particle": "portalcubed:block/portal_2_door"
 	},
 	"elements": [
@@ -15,6 +16,18 @@
 				"south": {"uv": [5, 8, 4, 12], "texture": "#0"},
 				"west": {"uv": [8, 12, 12, 16], "texture": "#0"},
 				"down": {"uv": [7, 12, 8, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0.99, -0.01, -12.01],
+			"to": [5.01, 16.01, 4.01],
+			"faces": {
+				"north": {"uv": [7, 12, 8, 16], "texture": "#1"},
+				"east": {"uv": [12, 4, 8, 8], "texture": "#1"},
+				"south": {"uv": [5, 8, 4, 12], "texture": "#1"},
+				"west": {"uv": [8, 12, 12, 16], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [7, 12, 8, 16], "texture": "#1"}
 			}
 		},
 		{
