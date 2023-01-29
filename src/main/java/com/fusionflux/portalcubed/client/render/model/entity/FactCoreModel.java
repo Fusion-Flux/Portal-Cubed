@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class FactCoreModel extends FizzleableModel<FactCoreEntity> {
-	public static final EntityModelLayer FACT_CORE_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"fact_core"), "main");
+	public static final EntityModelLayer FACT_CORE_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "fact_core"), "main");
 	private final ModelPart bb_main;
 
 	public FactCoreModel(ModelPart root) {
@@ -26,18 +26,18 @@ public class FactCoreModel extends FizzleableModel<FactCoreEntity> {
 		ModelPartData modelPartData = modelData.getRoot();
 		ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-		ModelPartData cube_r1 = bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(0, 22).cuboid(0.0F, -3.0F, -1.5F, 0.0F, 6.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.182F, 3.8536F, 3.1416F, 0.7854F, 1.5708F));
+		bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(0, 22).cuboid(0.0F, -3.0F, -1.5F, 0.0F, 6.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.182F, 3.8536F, 3.1416F, 0.7854F, 1.5708F));
 
-		ModelPartData cube_r2 = bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(7, 27).cuboid(-2.5F, -1.5F, 3.25F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -3.0F, 3.5F, 0.0F, -0.7854F, -1.5708F));
+		bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(7, 27).cuboid(-2.5F, -1.5F, 3.25F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -3.0F, 3.5F, 0.0F, -0.7854F, -1.5708F));
 
-		ModelPartData cube_r3 = bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(7, 27).cuboid(-2.5F, -2.5F, 3.25F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -3.0F, 3.5F, 0.0F, -0.7854F, 1.5708F));
+		bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(7, 27).cuboid(-2.5F, -2.5F, 3.25F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -3.0F, 3.5F, 0.0F, -0.7854F, 1.5708F));
 
-		ModelPartData cube_r4 = bb_main.addChild("cube_r4", ModelPartBuilder.create().uv(24, 6).cuboid(-1.5F, -1.5F, 0.5F, 3.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 3.425F, 0.0F, 3.1416F, 0.0F));
+		bb_main.addChild("cube_r4", ModelPartBuilder.create().uv(24, 6).cuboid(-1.5F, -1.5F, 0.5F, 3.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 3.425F, 0.0F, 3.1416F, 0.0F));
 
-		ModelPartData cube_r5 = bb_main.addChild("cube_r5", ModelPartBuilder.create().uv(0, 22).cuboid(0.0F, -3.0F, -1.5F, 0.0F, 6.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -6.182F, 3.8536F, -3.1416F, 0.7854F, -1.5708F));
+		bb_main.addChild("cube_r5", ModelPartBuilder.create().uv(0, 22).cuboid(0.0F, -3.0F, -1.5F, 0.0F, 6.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -6.182F, 3.8536F, -3.1416F, 0.7854F, -1.5708F));
 
-		ModelPartData cube_r6 = bb_main.addChild("cube_r6", ModelPartBuilder.create().uv(0, 12).cuboid(-3.0F, -3.0F, -3.0F, 6.0F, 6.0F, 6.0F, new Dilation(0.2F))
-				.uv(0, 0).cuboid(-3.0F, -3.0F, -3.0F, 6.0F, 6.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 0.0F, 3.1416F, 0.0F, 0.0F));
+		bb_main.addChild("cube_r6", ModelPartBuilder.create().uv(0, 12).cuboid(-3.0F, -3.0F, -3.0F, 6.0F, 6.0F, 6.0F, new Dilation(0.2F))
+			.uv(0, 0).cuboid(-3.0F, -3.0F, -3.0F, 6.0F, 6.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 0.0F, 3.1416F, 0.0F, 0.0F));
 		return TexturedModelData.of(modelData, 32, 32);
 	}
 

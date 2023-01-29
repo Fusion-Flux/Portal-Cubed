@@ -3,8 +3,6 @@ package com.fusionflux.portalcubed.client.packet;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
@@ -14,6 +12,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
@@ -21,18 +20,20 @@ import java.util.UUID;
 
 
 public class PortalCubedClientPackets {
-    public static final Identifier SPAWN_PACKET = new Identifier(PortalCubed.MODID, "spawn_packet");
-    public static final Identifier FIZZLE_PACKET = new Identifier(PortalCubed.MODID, "fizzle");
-    public static final Identifier HAND_SHAKE_PACKET = new Identifier(PortalCubed.MODID, "hand_shake");
+    public static final Identifier SPAWN_PACKET = new Identifier(PortalCubed.MOD_ID, "spawn_packet");
+    public static final Identifier FIZZLE_PACKET = new Identifier(PortalCubed.MOD_ID, "fizzle");
+    public static final Identifier HAND_SHAKE_PACKET = new Identifier(PortalCubed.MOD_ID, "hand_shake");
+    public static final Identifier GEL_OVERLAY_PACKET = new Identifier(PortalCubed.MOD_ID, "gel_overlay");
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(SPAWN_PACKET, PortalCubedClientPackets::onEntitySpawn);
         ClientPlayNetworking.registerGlobalReceiver(FIZZLE_PACKET, PortalCubedClientPackets::onFizzle);
         ClientPlayNetworking.registerGlobalReceiver(HAND_SHAKE_PACKET, PortalCubedClientPackets::onHandShake);
+        ClientPlayNetworking.registerGlobalReceiver(GEL_OVERLAY_PACKET, PortalCubedClientPackets::onGelOverlay);
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void onEntitySpawn(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         EntityType<?> type = Registry.ENTITY_TYPE.get(buf.readVarInt());
         UUID entityUUID = buf.readUuid();
@@ -53,13 +54,12 @@ public class PortalCubedClientPackets {
                 entity.setId(entityID);
                 entity.setUuid(entityUUID);
                 assert world != null;
-                if(world != null)
                 world.addEntity(entityID, entity);
             }
         });
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void onFizzle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         final int entityId = buf.readVarInt();
         client.execute(() -> {
@@ -74,9 +74,15 @@ public class PortalCubedClientPackets {
         });
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void onHandShake(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         PortalCubedClient.shakeStart = Util.getMeasuringTimeMs();
+    }
+
+    @ClientOnly
+    public static void onGelOverlay(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        // TODO: Implement
+        PortalCubed.LOGGER.info("Gel overlay");
     }
 
 }

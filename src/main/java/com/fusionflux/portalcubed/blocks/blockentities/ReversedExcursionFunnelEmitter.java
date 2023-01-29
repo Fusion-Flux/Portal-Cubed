@@ -2,8 +2,6 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.util.CustomProperties;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -18,6 +16,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
 public class ReversedExcursionFunnelEmitter extends BlockWithEntity {
@@ -31,17 +30,20 @@ public class ReversedExcursionFunnelEmitter extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
+    @SuppressWarnings("deprecation")
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1.0F;
     }
@@ -72,12 +74,14 @@ public class ReversedExcursionFunnelEmitter extends BlockWithEntity {
 
 
     @Override
+    @SuppressWarnings("deprecation")
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
+    @SuppressWarnings("deprecation")
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
         if (stateFrom.isOf(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER)) {
             return stateFrom.get(Properties.POWERED);
@@ -91,7 +95,7 @@ public class ReversedExcursionFunnelEmitter extends BlockWithEntity {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMMITER_ENTITY, ReversedExcursionFunnelEmitterEntity::tick3);
+        return checkType(type, PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY, ReversedExcursionFunnelEmitterEntity::tick3);
     }
 
 }

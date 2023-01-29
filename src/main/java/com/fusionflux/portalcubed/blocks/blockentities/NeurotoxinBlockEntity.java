@@ -15,7 +15,7 @@ public class NeurotoxinBlockEntity extends BlockEntity {
         super(PortalCubedBlocks.NEUROTOXIN_BLOCK_ENTITY,pos,state);
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, NeurotoxinBlockEntity blockEntity) {
+    public static void tick(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, NeurotoxinBlockEntity blockEntity) {
         assert world != null;
 
         if (!world.isClient) {

@@ -16,8 +16,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
-
 public class NeurotoxinBlock extends BlockWithEntity {
 
     public NeurotoxinBlock(Settings settings) {
@@ -25,11 +23,13 @@ public class NeurotoxinBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return VoxelShapes.empty();
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
         if (state.isOf(this)) {
             if (random.nextInt(10) == 0) {
@@ -49,6 +49,7 @@ public class NeurotoxinBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         if (!world.isClient) {
             entity.damage(DamageSource.DROWN, 1);

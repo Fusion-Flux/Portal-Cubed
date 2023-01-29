@@ -8,7 +8,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -57,9 +56,10 @@ public class LaserCatcherEntity extends BlockEntity {
                         isPowered = true;
                     }
                 }else{
-                    if(neighborState.getProperties().contains(Properties.FACING))
-                    if(neighborState.get(Properties.FACING).equals(storedDirec)){
-                        isPowered = true;
+                    if(neighborState.getProperties().contains(Properties.FACING)) {
+                        if(neighborState.get(Properties.FACING).equals(storedDirec)){
+                            isPowered = true;
+                        }
                     }
                 }
             }
@@ -71,12 +71,14 @@ public class LaserCatcherEntity extends BlockEntity {
     }
 
     public void playSound(SoundEvent soundEvent) {
+        assert this.world != null;
         this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 
     public void updateState(BlockState state, boolean toggle) {
-        if(world != null)
-        world.setBlockState(pos,state.with(Properties.ENABLED,toggle),3);
+        if(world != null) {
+            world.setBlockState(pos,state.with(Properties.ENABLED,toggle),3);
+        }
     }
 
     @Override
@@ -89,14 +91,4 @@ public class LaserCatcherEntity extends BlockEntity {
         super.readNbt(tag);
     }
 
-    public void togglePowered(BlockState state) {
-        assert world != null;
-        world.setBlockState(pos, state.cycle(Properties.POWERED));
-        if (world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_ACTIVATE);
-        }
-        if (!world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_DEACTIVATE);
-        }
-    }
 }

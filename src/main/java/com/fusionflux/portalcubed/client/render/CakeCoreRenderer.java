@@ -10,13 +10,13 @@ import net.minecraft.util.Identifier;
 
 public class CakeCoreRenderer extends MobEntityRenderer<CakeCoreEntity, CakeCoreModel> {
 
-    private final Identifier TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_1_cores.png");
+    private final Identifier TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_1_cores.png");
 
     public CakeCoreRenderer(EntityRendererFactory.Context context) {
         super(context, new CakeCoreModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(CakeCoreModel.CAKE_CORE_LAYER)), 0.5f);
-        this.addFeature(new EmissiveFeatureRenderer<CakeCoreEntity, CakeCoreModel>(this) {
+        this.addFeature(new EmissiveFeatureRenderer<>(this) {
 
-            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/portal_1_cores_e.png");
+            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_1_cores_e.png");
 
             @Override
             public Identifier getEmissiveTexture(CakeCoreEntity entity) {

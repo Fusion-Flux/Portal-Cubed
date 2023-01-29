@@ -5,14 +5,15 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author sailKite
@@ -23,10 +24,10 @@ import java.util.*;
 public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAbstract {
 
     public ExcursionFunnelEmitterEntity( BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.EXCURSION_FUNNEL_EMMITER_ENTITY,pos,state);
+        super(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER_ENTITY, pos, state);
     }
 
-    public static void tick1(World world, BlockPos pos, BlockState state, ExcursionFunnelEmitterEntity blockEntity) {
+    public static void tick1(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, ExcursionFunnelEmitterEntity blockEntity) {
         if (!world.isClient) {
             boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 
@@ -39,8 +40,8 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
                 BlockPos translatedPos = pos;
                 BlockPos savedPos = pos;
                 if (blockEntity.funnels != null) {
-                    List<BlockPos> modfunnels = new ArrayList<>();
-                    List<BlockPos> portalfunnels = new ArrayList<>();
+                    List<BlockPos> modFunnels = new ArrayList<>();
+                    List<BlockPos> portalFunnels = new ArrayList<>();
                     boolean teleported = false;
                     Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
                     for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
@@ -54,10 +55,10 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
 
                             ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modfunnels.add(funnel.getPos());
+                            modFunnels.add(funnel.getPos());
                             blockEntity.funnels.add(funnel.getPos());
                             if(!savedPos.equals(pos)){
-                                portalfunnels.add(funnel.getPos());
+                                portalFunnels.add(funnel.getPos());
                                 blockEntity.portalFunnels.add(funnel.getPos());
                             }
 
@@ -66,15 +67,6 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
                                 funnel.emitters.add(funnel.facing.indexOf(storedDirection),pos);
                                 funnel.portalEmitters.add(funnel.facing.indexOf(storedDirection),savedPos);
                             }
-
-                            ///if(!funnel.emitters.contains(pos) ) {
-                            ///    funnel.emitters.add(pos);
-                            ///    funnel.facing.add(funnel.emitters.indexOf(pos),storedDirection);
-                            ///}else {
-                            ///    if (!funnel.facing.get(funnel.emitters.indexOf(pos)).equals(storedDirection)) {
-                            ///        funnel.facing.set(funnel.emitters.indexOf(pos), storedDirection);
-                            ///    }
-                            ///}
 
                             funnel.updateState(world.getBlockState(translatedPos),world,translatedPos,funnel);
 
@@ -89,6 +81,7 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
                                         Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getOtherAxisH(portal).x, CalledValues.getOtherAxisH(portal).y, CalledValues.getOtherAxisH(portal).z));
                                         int offset = (int)(((portal.getBlockPos().getX()-translatedPos.getX()) * Math.abs(CalledValues.getAxisH(portal).x)) + ((portal.getBlockPos().getY()-translatedPos.getY()) * Math.abs(CalledValues.getAxisH(portal).y)) + ((portal.getBlockPos().getZ()-translatedPos.getZ()) * Math.abs(CalledValues.getAxisH(portal).z)));
                                         Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
+                                        assert mainPortalVertFacing != null;
                                         if(mainPortalVertFacing.equals(Direction.SOUTH)){
                                             offset = (Math.abs(offset)-1)*-1;
                                         }
@@ -98,6 +91,7 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
 
                                         translatedPos = new BlockPos(CalledValues.getDestination(portal).x,CalledValues.getDestination(portal).y,CalledValues.getDestination(portal).z).offset(otherPortalVertFacing,offset);
                                         savedPos = translatedPos;
+                                        assert otherPortalVertFacing != null;
                                         if(otherPortalVertFacing.equals(Direction.SOUTH)){
                                             translatedPos = translatedPos.offset(Direction.NORTH,1);
                                         }
@@ -107,14 +101,14 @@ public class ExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAb
 
                                         storedDirection = Direction.fromVector((int)CalledValues.getOtherFacing(portal).x,(int)CalledValues.getOtherFacing(portal).y,(int)CalledValues.getOtherFacing(portal).z);
                                         teleported = true;
-                                        blockEntity.funnels = modfunnels;
-                                        blockEntity.portalFunnels=portalfunnels;
+                                        blockEntity.funnels = modFunnels;
+                                        blockEntity.portalFunnels=portalFunnels;
                                     }
                                 }
                             }
                         } else {
-                            blockEntity.funnels = modfunnels;
-                            blockEntity.portalFunnels=portalfunnels;
+                            blockEntity.funnels = modFunnels;
+                            blockEntity.portalFunnels=portalFunnels;
                             break;
                         }
                     }

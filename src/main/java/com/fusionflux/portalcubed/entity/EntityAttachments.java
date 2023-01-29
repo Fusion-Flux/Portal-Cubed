@@ -3,8 +3,6 @@ package com.fusionflux.portalcubed.entity;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.UUID;
-
 public interface EntityAttachments {
 
     boolean isBounced();
@@ -33,28 +31,9 @@ public interface EntityAttachments {
 
     void setGelTimer(int funnelTimer);
 
-    int getGelChangeTimer();
-
-    void setGelChangeTimer(int funnelTimer);
-
     Vec3d getLastVel();
 
-    Vec3d getLastPos();
-
     void setMaxFallHeight(double maxFallHeight);
-
-    void setServerVel(Vec3d serverVel);
-
-    Vec3d getServerVel();
-
-    void setTeleportUUID(UUID serverVel);
-
-    UUID getTeleportUUID();
-
-    void setShouldTeleport(boolean shouldTeleport);
-
-    boolean getShouldTeleport();
-
 
 
 }

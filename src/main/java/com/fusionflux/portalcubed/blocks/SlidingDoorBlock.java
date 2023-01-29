@@ -1,7 +1,5 @@
 package com.fusionflux.portalcubed.blocks;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoorHinge;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -30,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class SlidingDoorBlock extends Block {
     public static final DirectionProperty FACING;
@@ -75,23 +74,22 @@ public class SlidingDoorBlock extends Block {
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false).with(HINGE, DoorHinge.LEFT).with(POWERED, false).with(HALF, DoubleBlockHalf.LOWER));
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction direction = state.get(FACING);
         boolean bl = !(Boolean) state.get(OPEN);
         boolean bl2 = state.get(HINGE) == DoorHinge.RIGHT;
-        switch (direction) {
-            case EAST:
-            default:
-                return bl ? WEST_SHAPE : (bl2 ? WEST_SOUTH_SHAPE : WEST_NORTH_SHAPE);
-            case SOUTH:
-                return bl ? NORTH_SHAPE : (bl2 ? NORTH_WEST_SHAPE : NORTH_EAST_SHAPE);
-            case WEST:
-                return bl ? EAST_SHAPE : (bl2 ? EAST_NORTH_SHAPE : EAST_SOUTH_SHAPE);
-            case NORTH:
-                return bl ? SOUTH_SHAPE : (bl2 ? SOUTH_EAST_SHAPE : SOUTH_WEST_SHAPE);
-        }
+        return switch (direction) {
+            default -> bl ? WEST_SHAPE : (bl2 ? WEST_SOUTH_SHAPE : WEST_NORTH_SHAPE);
+            case SOUTH -> bl ? NORTH_SHAPE : (bl2 ? NORTH_WEST_SHAPE : NORTH_EAST_SHAPE);
+            case WEST -> bl ? EAST_SHAPE : (bl2 ? EAST_NORTH_SHAPE : EAST_SOUTH_SHAPE);
+            case NORTH -> bl ? SOUTH_SHAPE : (bl2 ? SOUTH_EAST_SHAPE : SOUTH_WEST_SHAPE);
+        };
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
         DoubleBlockHalf doubleBlockHalf = state.get(HALF);
         if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP)) {
@@ -101,27 +99,16 @@ public class SlidingDoorBlock extends Block {
         }
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
-        switch (type) {
-            case LAND:
-                return state.get(OPEN);
-            case WATER:
-                return false;
-            case AIR:
-                return state.get(OPEN);
-            default:
-                return false;
-        }
+        return switch (type) {
+            case LAND, AIR -> state.get(OPEN);
+            case WATER -> false;
+        };
     }
 
-    private int getOpenSoundEventId() {
-        return this.material == Material.METAL ? 1011 : 1012;
-    }
-
-    private int getCloseSoundEventId() {
-        return this.material == Material.METAL ? 1005 : 1006;
-    }
-
+    @Override
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
@@ -134,6 +121,7 @@ public class SlidingDoorBlock extends Block {
         }
     }
 
+    @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), 3);
     }
@@ -157,7 +145,7 @@ public class SlidingDoorBlock extends Block {
         boolean bl = blockState.isOf(this) && blockState.get(HALF) == DoubleBlockHalf.LOWER;
         boolean bl2 = blockState3.isOf(this) && blockState3.get(HALF) == DoubleBlockHalf.LOWER;
         if ((!bl || bl2) && i <= 0) {
-            if ((!bl2 || bl) && i >= 0) {
+            if ((!bl2 || bl) && i == 0) {
                 int j = direction.getOffsetX();
                 int k = direction.getOffsetZ();
                 Vec3d vec3d = ctx.getHitPos();
@@ -172,28 +160,14 @@ public class SlidingDoorBlock extends Block {
         }
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        //if (this.material == Material.METAL) {
-            return ActionResult.PASS;
-        //} else {
-        //    state = state.cycle(OPEN);
-        //    world.setBlockState(pos, state, 10);
-        //    world.syncWorldEvent(player, state.get(OPEN) ? this.getCloseSoundEventId() : this.getOpenSoundEventId(), pos, 0);
-        //    return ActionResult.success(world.isClient);
-        //}
+        return ActionResult.PASS;
     }
 
-    public boolean method_30841(BlockState blockState) {
-        return blockState.get(OPEN);
-    }
-
-    public void setOpen(World world, BlockState blockState, BlockPos blockPos, boolean bl) {
-        if (blockState.isOf(this) && blockState.get(OPEN) != bl) {
-            world.setBlockState(blockPos, blockState.with(OPEN, bl), 10);
-            this.playOpenCloseSound(world, blockPos, bl);
-        }
-    }
-
+    @Override
+    @SuppressWarnings("deprecation")
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         boolean bl = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
         if (block != this && bl != state.get(POWERED)) {
@@ -206,6 +180,8 @@ public class SlidingDoorBlock extends Block {
 
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         BlockPos blockPos = pos.down();
         BlockState blockState = world.getBlockState(blockPos);
@@ -240,23 +216,33 @@ public class SlidingDoorBlock extends Block {
         }
 
     }
+
+    @Override
+    @SuppressWarnings("deprecation")
     public PistonBehavior getPistonBehavior(BlockState state) {
         return PistonBehavior.DESTROY;
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return mirror == BlockMirror.NONE ? state : state.rotate(mirror.getRotation(state.get(FACING))).cycle(HINGE);
     }
 
-    @Environment(EnvType.CLIENT)
+    @Override
+    @ClientOnly
+    @SuppressWarnings("deprecation")
     public long getRenderingSeed(BlockState state, BlockPos pos) {
         return MathHelper.hashCode(pos.getX(), pos.down(state.get(HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(), pos.getZ());
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(HALF, FACING, OPEN, HINGE, POWERED);
     }

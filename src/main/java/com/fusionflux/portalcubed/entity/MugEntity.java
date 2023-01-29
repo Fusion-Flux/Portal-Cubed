@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-import net.minecraft.client.render.entity.CatEntityRenderer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -23,26 +22,16 @@ public class MugEntity extends CorePhysicsEntity  {
     }
     Random rand = new Random();
 
-    //int mugType = 20;
-
     @Override
     public void writeCustomDataToNbt(NbtCompound compoundTag) {
-        //compoundTag.putInt("mugtype",mugType);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound compoundTag) {
-        //mugType = compoundTag.getInt("mugtype");
     }
 
-    //public int getMugType(){
-    //    return mugType;
-    //}
-    //public void genMugType(){
-    //        mugType = rand.nextInt(4);
-    //    }
     public int getMugType(){
-        return getDataTracker().get(MUGTYPE);
+        return getDataTracker().get(MUG_TYPE);
     }
 
     public void genMugType(){
@@ -50,15 +39,15 @@ public class MugEntity extends CorePhysicsEntity  {
     }
 
     public void setMugType(Integer type) {
-        this.getDataTracker().set(MUGTYPE, type);
+        this.getDataTracker().set(MUG_TYPE, type);
     }
 
-    public static final TrackedData<Integer> MUGTYPE = DataTracker.registerData(MugEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    public static final TrackedData<Integer> MUG_TYPE = DataTracker.registerData(MugEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.getDataTracker().startTracking(MUGTYPE, 20);
+        this.getDataTracker().startTracking(MUG_TYPE, 20);
     }
     @Override
     public boolean damage(DamageSource source, float amount) {

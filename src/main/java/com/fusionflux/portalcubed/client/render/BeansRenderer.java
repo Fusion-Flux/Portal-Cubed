@@ -9,7 +9,7 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 public class BeansRenderer extends MobEntityRenderer<BeansEntity, BeansModel> {
-    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/entity/beans.png");
+    private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/beans.png");
     protected final BeansModel model = new BeansModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(BeansModel.BEANS_LAYER));
 
     public BeansRenderer(EntityRendererFactory.Context context) {

@@ -35,19 +35,4 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
         }
     }
 
-
-    //@Inject(method = "tick", at = @At("TAIL"))
-    //public void tick(CallbackInfo ci) {
-//
-    //    //if(!((Entity) (Object) this).world.isClient) {
-    //    List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, this.client.player.getBoundingBox());
-    //    VoxelShape ommitedDirections = VoxelShapes.empty();
-    //    for (ExperimentalPortal entity1 : list) {
-//
-    //        ommitedDirections = VoxelShapes.union(ommitedDirections, VoxelShapes.cuboid(entity1.calculateCuttoutBox()));
-    //    }
-    //    CalledValues.setPortalCutout(((Entity) (Object) this), ommitedDirections);
-//
-    //}
-
 }

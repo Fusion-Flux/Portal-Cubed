@@ -1,10 +1,6 @@
 package com.fusionflux.portalcubed.fluids;
 
-import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
-import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
-
 import com.fusionflux.portalcubed.PortalCubed;
-
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.fluid.FlowableFluid;
@@ -12,10 +8,12 @@ import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.registry.Registry;
-
-import static com.fusionflux.portalcubed.PortalCubed.id;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
+import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import java.util.function.Function;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedFluids {
     public static final FluidRegistryContainer TOXIC_GOO = createFluid(

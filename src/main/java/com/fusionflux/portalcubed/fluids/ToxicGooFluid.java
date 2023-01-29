@@ -114,6 +114,7 @@ public abstract class ToxicGooFluid extends FlowableFluid {
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
             if (!entity.isAlive()) return;
             entity.damage(PortalCubedDamageSources.ACID, world.getRandom().range(7, 10));

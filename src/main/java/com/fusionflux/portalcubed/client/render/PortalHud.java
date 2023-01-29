@@ -20,10 +20,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.GameMode;
 
 public class PortalHud {
-    private static final Identifier ROUND_TEXTURE = new Identifier(PortalCubed.MODID, "textures/gui/activeportalindicator.png");
-    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MODID, "textures/gui/activeportalindicator_square.png");
+    private static final Identifier ROUND_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/gui/activeportalindicator.png");
+    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/gui/activeportalindicator_square.png");
 
-    public static void renderPortalLeft(MatrixStack matrices, float tickDelta) {
+    public static void renderPortalLeft(@SuppressWarnings("unused") MatrixStack matrices, @SuppressWarnings("unused") float tickDelta) {
         //noinspection DataFlowIssue
         if (
             !MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
@@ -68,10 +68,10 @@ public class PortalHud {
             boolean portalActive = false;
             assert MinecraftClient.getInstance().world != null;
 
-            for (Entity globalportal : MinecraftClient.getInstance().world.getEntities()) {
+            for (Entity globalPortal : MinecraftClient.getInstance().world.getEntities()) {
                 if (portalsTag != null) {
                     if (portalsTag.contains("RightBackground")) {
-                        if (globalportal.getUuid().equals(portalsTag.getUuid("RightBackground"))) {
+                        if (globalPortal.getUuid().equals(portalsTag.getUuid("RightBackground"))) {
                             portalActive = true;
                         }
                     }
@@ -86,7 +86,7 @@ public class PortalHud {
         }
     }
 
-    public static void renderPortalRight(MatrixStack matrices, float tickDelta) {
+    public static void renderPortalRight(@SuppressWarnings("unused") MatrixStack matrices, @SuppressWarnings("unused") float tickDelta) {
         RenderSystem.enableBlend();
         if(PortalCubedConfig.enableRoundPortals) {
             RenderSystem.setShaderTexture(0, ROUND_TEXTURE);
@@ -125,10 +125,10 @@ public class PortalHud {
             boolean portalActive = false;
             assert MinecraftClient.getInstance().world != null;
 
-            for (Entity globalportal : MinecraftClient.getInstance().world.getEntities()) {
+            for (Entity globalPortal : MinecraftClient.getInstance().world.getEntities()) {
                 if (portalsTag != null) {
                     if (portalsTag.contains("LeftBackground")) {
-                        if (globalportal.getUuid().equals(portalsTag.getUuid("LeftBackground"))) {
+                        if (globalPortal.getUuid().equals(portalsTag.getUuid("LeftBackground"))) {
                             portalActive = true;
                         }
                     }

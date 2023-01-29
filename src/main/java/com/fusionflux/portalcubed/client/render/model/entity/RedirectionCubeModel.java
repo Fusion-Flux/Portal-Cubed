@@ -14,7 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class RedirectionCubeModel extends FizzleableModel<RedirectionCubeEntity> {
-	public static final EntityModelLayer REDIRECTION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"redirection_cube"), "main");
+	public static final EntityModelLayer REDIRECTION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "redirection_cube"), "main");
 	private final ModelPart bb_main;
 
 	public RedirectionCubeModel(ModelPart root) {
@@ -31,11 +31,11 @@ public class RedirectionCubeModel extends FizzleableModel<RedirectionCubeEntity>
 				.uv(0, 20).cuboid(-4.95F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.4F))
 				.uv(0, 40).cuboid(-3.0F, -8.0F, -3.0F, 6.0F, 6.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-		ModelPartData cube_r1 = bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(47, 0).cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -4.5F, 0.0F, 0.7854F, 0.0F, -1.5708F));
+		bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(47, 0).cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -4.5F, 0.0F, 0.7854F, 0.0F, -1.5708F));
 
-		ModelPartData cube_r2 = bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(47, 0).cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -4.5F, 0.0F, 0.0F, -0.7854F, 0.0F));
+		bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(47, 0).cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -4.5F, 0.0F, 0.0F, -0.7854F, 0.0F));
 
-		ModelPartData cube_r3 = bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(47, 0).cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -4.5F, 0.0F, 0.0F, 0.8727F, 0.0F));
+		bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(47, 0).cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -4.5F, 0.0F, 0.0F, 0.8727F, 0.0F));
 		return TexturedModelData.of(modelData, 64, 64);
 	}
 

@@ -3,17 +3,10 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-
-import java.util.Random;
 
 public class HoopyEntity extends CorePhysicsEntity  {
 

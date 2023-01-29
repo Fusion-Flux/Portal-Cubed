@@ -10,7 +10,7 @@ public class BlockCollisionLimiter {
     private final ThreadLocal<Pair<Long, UUID>> lastCollidingEntity = new ThreadLocal<>();
 
     /**
-     * Writen by chylex and onehalf
+     * Written by chylex and onehalf
      * Prevents handling collision for an entity multiple times if the entity is touching 2 or more blocks.
      * <p>
      * Because onEntityCollision is always called in succession for all blocks colliding with an entity,
@@ -22,7 +22,7 @@ public class BlockCollisionLimiter {
         long currentWorldTime = world.getTime();
         Pair<Long, UUID> last = this.lastCollidingEntity.get();
         if (last == null || last.getLeft() != currentWorldTime || !last.getRight().equals(entity.getUuid())) {
-            this.lastCollidingEntity.set(new Pair(currentWorldTime, entity.getUuid()));
+            this.lastCollidingEntity.set(new Pair<>(currentWorldTime, entity.getUuid()));
             return true;
         }
         return false;

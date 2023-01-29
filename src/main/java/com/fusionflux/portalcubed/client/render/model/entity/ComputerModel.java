@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class ComputerModel extends FizzleableModel<ComputerEntity> {
-	public static final EntityModelLayer COMPUTER_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MODID,"computer"), "main");
+	public static final EntityModelLayer COMPUTER_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "computer"), "main");
 	private final ModelPart bb_main;
 
 	public ComputerModel(ModelPart root) {
@@ -24,7 +24,7 @@ public class ComputerModel extends FizzleableModel<ComputerEntity> {
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -3.0F, -4.0F, 8.0F, 3.0F, 8.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+		modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -3.0F, -4.0F, 8.0F, 3.0F, 8.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 		return TexturedModelData.of(modelData, 32, 32);
 	}
 

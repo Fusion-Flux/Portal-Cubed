@@ -68,14 +68,12 @@ public class LaserBlockEntity extends BlockEntity {
                     List<RedirectionCubeEntity> reflectCubes = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
                     for (RedirectionCubeEntity cubes : reflectCubes) {
                         if(cubes != null){
-                            //System.out.println("AAA");
                             CubeReflect=true;
                             Reflect_Direct = Direction.fromRotation(cubes.getRotYaw());
                             break;
                         }
                     }
 
-                    //Direction.fromRotation((double)this.getYaw())
                     if(emitter.getBlock() == PortalCubedBlocks.LASER_EMITTER || portalPresent) {
                             if (facing.equals(Direction.NORTH)) {
                                 MNorth = true;
@@ -231,8 +229,10 @@ public class LaserBlockEntity extends BlockEntity {
                     List<RedirectionCubeEntity> list2 = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox.contract(.1).contract(.25));
 
                     for (RedirectionCubeEntity portal : list2) {
-                        if(portal != null)
-                                portalPresent = true;
+                        if (portal != null) {
+                            portalPresent = true;
+                            break;
+                        }
                     }
 
                     if(!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){

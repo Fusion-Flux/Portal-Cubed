@@ -2,27 +2,23 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.Gravity;
-import com.fusionflux.gravity_api.util.RotationUtil;
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
-import com.fusionflux.portalcubed.entity.BlockCollisionLimiter;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
-import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
 import java.util.ArrayList;
 
@@ -44,6 +40,7 @@ public class AdhesionGel extends GelFlat {
 
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         Box block = new Box(pos);
         Box player = getPlayerBox(entity.getBoundingBox(),GravityChangerAPI.getGravityDirection(entity),-(entity.getHeight()-1));
@@ -69,7 +66,6 @@ public class AdhesionGel extends GelFlat {
                         break;
                     }
                 }
-                //}
                 for (Direction direc : getDirections(state)) {
                     if (direc != current) {
                         Box gravbox = getGravityEffectBox(pos, direc, delta);
@@ -79,7 +75,7 @@ public class AdhesionGel extends GelFlat {
                                 ((EntityAttachments) entity).setGelTimer(10);
                                 break;
                             } else {
-                                if (!(entity instanceof PlayerEntity)) {
+                                if (!(entity instanceof PlayerEntity) && !world.isClient) {
                                     GravityChangerAPI.addGravity(entity, new Gravity(direc, 10, 2, "adhesion_gel"));
                                     ((EntityAttachments) entity).setGelTimer(10);
                                     break;
@@ -93,7 +89,7 @@ public class AdhesionGel extends GelFlat {
         if (world.isClient && entity instanceof PlayerEntity) {
             GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(GravityChangerAPI.getGravityDirection(entity)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
         } else {
-            if (!(entity instanceof PlayerEntity))
+            if (!(entity instanceof PlayerEntity) && !world.isClient)
                 GravityChangerAPI.addGravity(entity, new Gravity(GravityChangerAPI.getGravityDirection(entity), 10, 2, "adhesion_gel"));
         }
     }
@@ -115,7 +111,6 @@ public class AdhesionGel extends GelFlat {
         double maxX = blockPos.getX()+1;
         double maxY = blockPos.getY()+1;
         double maxZ = blockPos.getZ()+1;
-        //double delta = -.8;
         switch(direction){
             case DOWN -> maxY+=delta;
             case UP -> minY-=delta;
@@ -134,7 +129,6 @@ public class AdhesionGel extends GelFlat {
         double maxX = playerBox.maxX;
         double maxY = playerBox.maxY;
         double maxZ = playerBox.maxZ;
-        //double delta = -.8;
         switch(direction){
             case DOWN -> maxY+=delta;
             case UP -> minY-=delta;

@@ -54,9 +54,6 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
                         }
                     }
 
-                   // if(blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){
-                   //     portalPresent = true;
-                   // }
                     if(!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
@@ -106,7 +103,6 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
 
             for (Direction facing : bridge.facing) {
                 BlockState emitter = world.getBlockState(bridge.emitters.get(bridge.facing.indexOf(facing)));
-                //Direction facing = bridge.facing.get(bridge.emitters.indexOf(emitterPos));
                 Direction facingVert = bridge.facingVert.get(bridge.facing.indexOf(facing));
 
                 Box portalCheckBox = new Box(bridge.portalEmitters.get(bridge.facing.indexOf(facing)));
@@ -147,7 +143,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
             }
 
             state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
-                    .with(CustomProperties.HFACINGUP,resultUp).with(CustomProperties.HFACINGDOWN,resultDown);
+                    .with(CustomProperties.H_FACING_UP, resultUp).with(CustomProperties.H_FACING_DOWN, resultDown);
         }
         world.setBlockState(pos,state,3);
     }
@@ -230,7 +226,6 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
 
         int size = tag.getInt("size");
 
-        if(!emitters.isEmpty())
         emitters.clear();
 
         for (int i = 0; i < size; i++) {

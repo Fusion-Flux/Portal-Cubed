@@ -15,7 +15,6 @@ import net.minecraft.world.World;
  */
 public class NeurotoxinEmitterBlockEntity extends BlockEntity {
 
-    public boolean shouldRepair = false;
     private final BlockPos.Mutable obstructorPos;
 
     public NeurotoxinEmitterBlockEntity(BlockPos pos, BlockState state) {
@@ -25,7 +24,7 @@ public class NeurotoxinEmitterBlockEntity extends BlockEntity {
 
 
 
-    public static void tick(World world, BlockPos pos, BlockState state, NeurotoxinEmitterBlockEntity blockEntity) {
+    public static void tick(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, NeurotoxinEmitterBlockEntity blockEntity) {
         assert world != null;
         if (!world.isClient) {
             boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
