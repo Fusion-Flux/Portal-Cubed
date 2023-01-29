@@ -8,8 +8,6 @@ import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.mojang.blaze3d.platform.InputUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBind;
 import org.lwjgl.glfw.GLFW;

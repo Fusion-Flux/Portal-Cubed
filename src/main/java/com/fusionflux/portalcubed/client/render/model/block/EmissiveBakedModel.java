@@ -1,7 +1,5 @@
 package com.fusionflux.portalcubed.client.render.model.block;
 
-import java.util.function.Supplier;
-
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
@@ -22,6 +20,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
+
+import java.util.function.Supplier;
 
 public final class EmissiveBakedModel extends ForwardingBakedModel {
 

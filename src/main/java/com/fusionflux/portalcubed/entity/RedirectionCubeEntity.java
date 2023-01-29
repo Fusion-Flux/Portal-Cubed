@@ -2,7 +2,6 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;

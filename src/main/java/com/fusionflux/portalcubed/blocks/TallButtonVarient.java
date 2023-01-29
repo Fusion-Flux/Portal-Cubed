@@ -28,7 +28,6 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Random;
 
 public abstract class TallButtonVarient extends WallMountedBlock {
     public static final BooleanProperty POWERED;

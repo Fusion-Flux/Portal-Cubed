@@ -1,12 +1,12 @@
 package com.fusionflux.portalcubed.client.render.model.block;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.util.Identifier;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
 public final class EmissiveModelRegistry {
 

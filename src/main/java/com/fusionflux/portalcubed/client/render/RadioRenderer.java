@@ -1,12 +1,8 @@
 package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.render.model.entity.CompanionCubeModel;
 import com.fusionflux.portalcubed.client.render.model.entity.RadioModel;
-import com.fusionflux.portalcubed.client.render.model.entity.RadioModel;
-import com.fusionflux.portalcubed.entity.CompanionCubeEntity;
-import com.fusionflux.portalcubed.entity.RadioEntity;
 import com.fusionflux.portalcubed.entity.RadioEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;

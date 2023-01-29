@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
