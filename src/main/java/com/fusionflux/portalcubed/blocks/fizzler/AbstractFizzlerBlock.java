@@ -28,6 +28,7 @@ import net.minecraft.world.BlockView;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+import java.util.List;
 import java.util.UUID;
 
 public abstract class AbstractFizzlerBlock extends Block implements BlockCollisionTrigger {
@@ -102,7 +103,7 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
     protected final void fizzlePortals(Entity entity) {
         if (entity.world.isClient) return;
         boolean foundPortal = false;
-        for (final UUID portal : CalledValues.getPortals(entity)) {
+        for (final UUID portal : List.copyOf(CalledValues.getPortals(entity))) {
             final Entity checkPortal = ((ServerWorld)entity.world).getEntity(portal);
             if (checkPortal != null) {
                 foundPortal = true;

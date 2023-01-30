@@ -10,7 +10,9 @@
     "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "WorldMixin",
-    "WorldViewMixin"
+    "WorldViewMixin",
+    "worldgen.DefaultBiomeFeaturesMixin",
+    "worldgen.FlatChunkGeneratorConfigMixin"
   ],
   "client": [
     "client.BackgroundRendererMixin",

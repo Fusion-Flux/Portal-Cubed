@@ -138,9 +138,7 @@ return true;
     @Override
     public void kill() {
         Entity player = ((ServerWorld) world).getEntity(CalledValues.getPlayer(this));
-        if(CalledValues.getPortals(player).contains(this.getUuid())) {
-            CalledValues.removePortals(player, this.getUuid());
-        }
+        CalledValues.removePortals(player, this.getUuid());
         super.kill();
     }
 
