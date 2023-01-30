@@ -110,4 +110,10 @@ public class PowerBlock extends Block implements Waterloggable {
     public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
         return state.get(LEVEL);
     }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean emitsRedstonePower(BlockState state) {
+        return state.get(LEVEL) > 0;
+    }
 }
