@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Get short SHA
       id: short_sha
       run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-7)"
@@ -32,5 +32,5 @@ jobs:
     - name: capture build artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: Artifact-${{steps.short_sha.outputs.sha8}}
+        name: Artifact
         path: build/libs/
