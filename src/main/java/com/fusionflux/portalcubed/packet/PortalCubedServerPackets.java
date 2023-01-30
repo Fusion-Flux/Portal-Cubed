@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.items.PaintGun;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -23,6 +24,8 @@ import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+import java.awt.*;
+
 public class PortalCubedServerPackets {
     public static final Identifier PORTAL_LEFT_CLICK = new Identifier(PortalCubed.MOD_ID, "portal_left_click");
     public static final Identifier GRAB_KEY_PRESSED = new Identifier(PortalCubed.MOD_ID, "grab_key_pressed");
@@ -35,6 +38,10 @@ public class PortalCubedServerPackets {
 
         if (!itemStack.isEmpty() && itemStack.getItem() instanceof PortalGun) {
             server.execute(() -> ((PortalGun) itemStack.getItem()).useLeft(serverWorld, player, hand));
+        }
+
+        if (!itemStack.isEmpty() && itemStack.getItem() instanceof PaintGun) {
+            server.execute(() -> ((PaintGun) itemStack.getItem()).useLeft(serverWorld, player, hand));
         }
     }
 
