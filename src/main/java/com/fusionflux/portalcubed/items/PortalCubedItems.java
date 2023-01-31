@@ -57,6 +57,8 @@ public class PortalCubedItems {
     public static final Item YOURE_NOT_A_GOOD_PERSON = new MusicDiscItem(15, new SoundEvent(id("disc/youre_not_a_good_person")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 85);
     public static final Item YOU_CANT_ESCAPE_YOU_KNOW = new MusicDiscItem(15, new SoundEvent(id("disc/you_cant_escape_you_know")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 385);
     public static final Item STILL_ALIVE = new MusicDiscItem(15, new SoundEvent(id("disc/still_alive")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 177);
+    public static final Item CARA_MIA_ADDIO = new MusicDiscItem(15, new SoundEvent(id("disc/cara_mia_addio")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 154);
+    public static final Item WANT_YOU_GONE = new MusicDiscItem(15, new SoundEvent(id("disc/want_you_gone")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 142);
 
     public static void registerItems() {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "long_fall_boots"), LONG_FALL_BOOTS);
@@ -102,5 +104,7 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, id("music_disc_youre_not_a_good_person"), YOURE_NOT_A_GOOD_PERSON);
         Registry.register(Registry.ITEM, id("music_disc_you_cant_escape_you_know"), YOU_CANT_ESCAPE_YOU_KNOW);
         Registry.register(Registry.ITEM, id("music_disc_still_alive"), STILL_ALIVE);
+        Registry.register(Registry.ITEM, id("music_disc_cara_mia_addio"), CARA_MIA_ADDIO);
+        Registry.register(Registry.ITEM, id("music_disc_want_you_gone"), WANT_YOU_GONE);
     }
 }

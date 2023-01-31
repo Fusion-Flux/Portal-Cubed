@@ -281,5 +281,21 @@
 				"stream": true
 			}
 		]
+	},
+	"disc/cara_mia_addio": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal2-12-cara_mia_addio",
+				"stream": true
+			}
+		]
+	},
+	"disc/want_you_gone": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal2-13-want_you_gone",
+				"stream": true
+			}
+		]
 	}
 }
