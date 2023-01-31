@@ -159,9 +159,16 @@
   "block.portalcubed.1x1_single_crossbar": "1x1 Single Crossbar",
   "block.portalcubed.1x1_double_crossbar": "1x1 Double Crossbar",
 
+  "block.portalcubed.portal_1_2x2_exposed_panel_top_left": "Portal 1 2x2 Exposed Panel Top Left",
+  "block.portalcubed.portal_1_2x2_exposed_panel_top_right": "Portal 1 2x2 Exposed Panel Top Right",
+  "block.portalcubed.portal_1_2x2_exposed_panel_bottom_left": "Portal 1 2x2 Exposed Panel Bottom Left",
+  "block.portalcubed.portal_1_2x2_exposed_panel_bottom_right": "Portal 1 2x2 Exposed Panel Bottom Right",
+  "block.portalcubed.portal_1_rusted_plating": "Portal 1 Rusted Plating",
+
   "block.portalcubed.old_ap_mesh": "Old Aperture Mesh",
 
   "block.portalcubed.office_concrete": "Office Concrete + Office Tiling",
+  "block.portalcubed.solid_office_concrete": "Portal 1 Office Concrete + Office Tiling",
   "block.portalcubed.blue_office_concrete": "Blue Office Concrete + Tread Plating",
 
   "block.portalcubed.insulation": "Insulation",

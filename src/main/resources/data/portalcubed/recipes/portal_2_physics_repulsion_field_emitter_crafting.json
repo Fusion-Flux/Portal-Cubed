@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EE#",
+    "ER#",
+    "EE#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:lime_stained_glass_pane"
+    },
+    "E": {
+      "tag": "portalcubed:portal_2_clean_gray_panels"
+    },
+
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "portalcubed:physics_repulsion_field_emitter",
+    "count": 2
+  }
+}

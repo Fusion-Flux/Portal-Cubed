@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "portalcubed:item/portal_2_matter_inquisition_field_icon"
+  }
+}

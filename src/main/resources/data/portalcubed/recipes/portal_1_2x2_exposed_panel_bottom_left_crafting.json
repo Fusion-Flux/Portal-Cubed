@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "portalcubed:2x2_double_crossbar_bottom_left"
+    },
+    {
+      "item": "portalcubed:portal_1_rusted_plating"
+    }
+  ],
+  "result": {
+    "item": "portalcubed:portal_1_2x2_exposed_panel_bottom_left",
+    "count": 1
+  }
+}

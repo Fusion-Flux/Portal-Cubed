@@ -1,0 +1,67 @@
+{
+  "variants": {
+    "facing=north,powered=false,half=lower": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom_disabled"
+    },
+    "facing=south,powered=false,half=lower": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom_disabled",
+      "y": 180
+    },
+    "facing=west,powered=false,half=lower": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom_disabled",
+      "y": -90
+    },
+    "facing=east,powered=false,half=lower": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom_disabled",
+      "y": 90
+    },
+
+    "facing=north,powered=false,half=upper": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_top_disabled"
+    },
+    "facing=south,powered=false,half=upper": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_top_disabled",
+      "y": 180
+    },
+    "facing=west,powered=false,half=upper": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_top_disabled",
+      "y": -90
+    },
+    "facing=east,powered=false,half=upper": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_top_disabled",
+      "y": 90
+    },
+
+    "facing=north,powered=true,half=lower": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom"
+    },
+    "facing=south,powered=true,half=lower": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom",
+      "y": 180
+    },
+    "facing=west,powered=true,half=lower": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom",
+      "y": -90
+    },
+    "facing=east,powered=true,half=lower": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom",
+      "y": 90
+    },
+
+    "facing=north,powered=true,half=upper": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_top"
+    },
+    "facing=south,powered=true,half=upper": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_top",
+      "y": 180
+    },
+    "facing=west,powered=true,half=upper": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_top",
+      "y": -90
+    },
+    "facing=east,powered=true,half=upper": {
+      "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_top",
+      "y": 90
+    }
+  }
+}

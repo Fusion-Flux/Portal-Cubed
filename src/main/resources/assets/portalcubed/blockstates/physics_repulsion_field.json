@@ -1,0 +1,42 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "ns": "true",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "portalcubed:block/portal_2_physics_repulsion_field_bottom"
+      }
+    },
+    {
+      "when": {
+        "ns": "true",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "portalcubed:block/portal_2_physics_repulsion_field_top"
+      }
+    },
+    {
+      "when": {
+        "ew": "true",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "portalcubed:block/portal_2_physics_repulsion_field_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "ew": "true",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "portalcubed:block/portal_2_physics_repulsion_field_top",
+        "y": 90
+      }
+    }
+  ]
+}

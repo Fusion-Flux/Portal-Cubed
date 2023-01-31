@@ -12,7 +12,12 @@
       "portalcubed:portal_1_smooth_gray_panel_crafting_from_deepslate",
       "portalcubed:portal_1_smooth_gray_panel_crafting_from_cobbled_deepslate",
       "portalcubed:portal_1_smooth_gray_checkered_panel_crafting",
-      "portalcubed:portal_1_smooth_gray_half_panel_crafting"
+      "portalcubed:portal_1_smooth_gray_half_panel_crafting",
+      "portalcubed:portal_1_2x2_exposed_panel_top_left_crafting",
+      "portalcubed:portal_1_2x2_exposed_panel_bottom_right_crafting",
+      "portalcubed:portal_1_2x2_exposed_panel_top_left_crafting",
+      "portalcubed:portal_1_2x2_exposed_panel_top_right_crafting",
+      "portalcubed:portal_1_rusted_plating_crafting"
 
     ]
   },
