@@ -205,7 +205,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             portalCheckBox = portalCheckBox.expand(10);
         } else {
             portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0,.08,0));
-            canTeleport = !shouldTeleportClient;
+            canTeleport = true;
         }
         List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
         VoxelShape omittedDirections = VoxelShapes.empty();

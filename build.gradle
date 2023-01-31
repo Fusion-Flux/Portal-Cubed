@@ -47,6 +47,7 @@ dependencies {
 	//Gravity Changer - UPDATE TO NEWEST VERSION WHEN ITS RELEASED ON MODRINTH
 
 
+
 	//include ('com.github.Fusion-Flux:GravityChanger:v0.7.6')
 
 	modApi include("maven.modrinth:stonecutter_recipe_tags:4.0.0-fabric")
