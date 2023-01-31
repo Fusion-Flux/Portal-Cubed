@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+
+      "portalcubed:portal_1_white_2x1_panel_top_crafting",
+      "portalcubed:portal_1_white_2x1_panel_bottom_crafting",
+      "portalcubed:portal_1_white_panel_crafting_from_diorite",
+      "portalcubed:portal_1_white_panel_crafting_from_end_stone",
+      "portalcubed:portal_1_white_checkered_panel_crafting",
+      "portalcubed:portal_1_white_half_panel_crafting",
+      "portalcubed:solid_office_concrete"
+
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+"minecraft:diorite",
+"minecraft:white_concrete",
+"minecraft:end_stone"
+]
+          }
+        ]
+      }
+    }
+  }
+}

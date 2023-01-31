@@ -6,7 +6,7 @@
     "south": "portalcubed:block/smooth_gray_2x2_panel_top_right",
     "east": "portalcubed:block/smooth_gray_2x2_panel_top_left",
     "west": "portalcubed:block/smooth_gray_2x2_panel_top_left",
-    "up": "portalcubed:block/smooth_gray_2x2_panel_top_left_2",
-    "down": "portalcubed:block/smooth_gray_2x2_panel_bottom_left_2"
+    "up": "portalcubed:block/smooth_gray_2x2_panel_bottom_right",
+    "down": "portalcubed:block/smooth_gray_2x2_panel_top_right"
   }
 }
