@@ -332,6 +332,10 @@
       "type": "provided",
       "render_layer": "cutout"
     },
+  "octopus_door": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
     "old_ap_door": {
       "type": "provided",
       "render_layer": "cutout"
@@ -392,11 +396,11 @@
       "type": "provided",
       "render_layer": "translucent"
     },
-    "old_aperture_laser_field": {
+    "old_aperture_death_fizzler": {
       "type": "provided",
       "render_layer": "translucent"
     },
-    "old_aperture_laser_field_emitter": {
+    "old_aperture_death_fizzler_emitter": {
       "type": "provided",
       "render_layer": "translucent"
     }

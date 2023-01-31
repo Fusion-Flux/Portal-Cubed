@@ -49,6 +49,7 @@ public class PortalCubedBlocks {
     public static final TallButton OLD_AP_PEDESTAL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
     public static final SlidingDoorBlock PORTAL2DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
+    public static final SlidingDoorBlock OCTOPUS_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
     public static final SlidingDoorBlock OLD_AP_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
     public static final SlidingDoorBlock PORTAL1DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
@@ -82,8 +83,8 @@ public class PortalCubedBlocks {
     public static final FizzlerEmitter DEATH_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(FIZZLER_EMITTER), DEATH_FIZZLER);
     public static final LaserFizzlerBlock LASER_FIZZLER = new LaserFizzlerBlock(QuiltBlockSettings.copyOf(FIZZLER));
     public static final FizzlerEmitter LASER_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(FIZZLER_EMITTER), LASER_FIZZLER);
-    public static final LaserFizzlerBlock OLD_APERTURE_LASER_FIELD = new LaserFizzlerBlock(QuiltBlockSettings.copyOf(FIZZLER));
-    public static final FizzlerEmitter OLD_APERTURE_LASER_FIELD_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(FIZZLER_EMITTER), OLD_APERTURE_LASER_FIELD);
+    public static final DeathFizzlerBlock OLD_APERTURE_DEATH_FIZZLER = new DeathFizzlerBlock(QuiltBlockSettings.copyOf(FIZZLER));
+    public static final FizzlerEmitter OLD_APERTURE_DEATH_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(FIZZLER_EMITTER), OLD_APERTURE_DEATH_FIZZLER);
     public static final MatterInquisitionField MATTER_INQUISITION_FIELD = new MatterInquisitionField(QuiltBlockSettings.copyOf(FIZZLER));
     public static final FizzlerEmitter MATTER_INQUISITION_FIELD_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(FIZZLER_EMITTER), MATTER_INQUISITION_FIELD);
     public static final PhysicsRepulsionField PHYSICS_REPULSION_FIELD = new PhysicsRepulsionField(QuiltBlockSettings.copyOf(FIZZLER));
@@ -130,6 +131,9 @@ public class PortalCubedBlocks {
 
         Registry.register(Registry.BLOCK, id("portal_2_door"), PORTAL2DOOR);
         Registry.register(Registry.ITEM, id("portal_2_door"), new BlockItem(PORTAL2DOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("octopus_door"), OCTOPUS_DOOR);
+        Registry.register(Registry.ITEM, id("octopus_door"), new BlockItem(OCTOPUS_DOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
         Registry.register(Registry.BLOCK, id("old_ap_door"), OLD_AP_DOOR);
         Registry.register(Registry.ITEM, id("old_ap_door"), new BlockItem(OLD_AP_DOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
@@ -224,9 +228,9 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("laser_fizzler_emitter"), LASER_FIZZLER_EMITTER);
         Registry.register(Registry.ITEM, id("laser_fizzler_emitter"), new BlockItem(LASER_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        Registry.register(Registry.BLOCK, id("old_aperture_laser_field"), OLD_APERTURE_LASER_FIELD);
-        Registry.register(Registry.BLOCK, id("old_aperture_laser_field_emitter"), OLD_APERTURE_LASER_FIELD_EMITTER);
-        Registry.register(Registry.ITEM, id("old_aperture_laser_field_emitter"), new BlockItem(OLD_APERTURE_LASER_FIELD_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+        Registry.register(Registry.BLOCK, id("old_aperture_death_fizzler"), OLD_APERTURE_DEATH_FIZZLER);
+        Registry.register(Registry.BLOCK, id("old_aperture_death_fizzler_emitter"), OLD_APERTURE_DEATH_FIZZLER_EMITTER);
+        Registry.register(Registry.ITEM, id("old_aperture_death_fizzler_emitter"), new BlockItem(OLD_APERTURE_DEATH_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
         Registry.register(Registry.BLOCK, id("matter_inquisition_field"), MATTER_INQUISITION_FIELD);
         Registry.register(Registry.BLOCK, id("matter_inquisition_field_emitter"), MATTER_INQUISITION_FIELD_EMITTER);

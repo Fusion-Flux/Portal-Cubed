@@ -74,6 +74,12 @@
   "block/portal_2_door_top_right": "block/portal_2_door_e",
   "block/portal_2_door_top_right_open": "block/portal_2_door_e",
 
+  "block/octopus_door_bottom_right": "block/octopus_door_e",
+  "block/octopus_door_bottom_right_open": "block/octopus_door_e",
+  "block/octopus_door_bottom_left_open": "block/octopus_door_e",
+  "block/octopus_door_top_right": "block/octopus_door_e",
+  "block/octopus_door_top_right_open": "block/octopus_door_e",
+
   "block/light_bridge_emitter": "block/light_bridge_emitter_e",
 
   "block/excursion_funnel_emitter_off": "block/funnel_wings_e",
