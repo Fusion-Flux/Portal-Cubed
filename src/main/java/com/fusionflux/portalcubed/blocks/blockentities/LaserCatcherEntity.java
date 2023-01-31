@@ -6,8 +6,6 @@ import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -66,13 +64,6 @@ public class LaserCatcherEntity extends BlockEntity {
             blockEntity.updateState(state,isPowered);
 
         }
-
-
-    }
-
-    public void playSound(SoundEvent soundEvent) {
-        assert this.world != null;
-        this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 
     public void updateState(BlockState state, boolean toggle) {
