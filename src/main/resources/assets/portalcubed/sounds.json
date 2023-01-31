@@ -122,7 +122,7 @@
 	"radio": {
 		"sounds": [
 			{
-				"name": "portalcubed:radio",
+				"name": "portalcubed:radio/radio",
 				"stream": true
 			}
 		]
@@ -130,7 +130,7 @@
 	"exile_vilify": {
 		"sounds": [
 			{
-				"name": "portalcubed:exile_vilify",
+				"name": "portalcubed:radio/exile_vilify",
 				"stream": true
 			}
 		]
@@ -138,7 +138,7 @@
 	"curiosity_core": {
 		"sounds": [
 			{
-				"name": "portalcubed:curiosity",
+				"name": "portalcubed:core/curiosity",
 				"stream": true
 			}
 		]
@@ -146,7 +146,7 @@
 	"anger_core": {
 		"sounds": [
 			{
-				"name": "portalcubed:anger",
+				"name": "portalcubed:core/anger",
 				"stream": true
 			}
 		]
@@ -155,7 +155,7 @@
 	"cake_core": {
 		"sounds": [
 			{
-				"name": "portalcubed:cakemix",
+				"name": "portalcubed:core/cakemix",
 				"stream": true
 			}
 		]
@@ -163,7 +163,7 @@
 	"space_core": {
 		"sounds": [
 			{
-				"name": "portalcubed:space_core",
+				"name": "portalcubed:core/space_core",
 				"stream": true
 			}
 		]
@@ -172,7 +172,7 @@
 	"adventure_core": {
 		"sounds": [
 			{
-				"name": "portalcubed:adventure_core",
+				"name": "portalcubed:core/adventure_core",
 				"stream": true
 			}
 		]
@@ -180,7 +180,120 @@
 	"fact_core": {
 		"sounds": [
 			{
-				"name": "portalcubed:fact_core",
+				"name": "portalcubed:core/fact_core",
+				"stream": true
+			}
+		]
+	},
+
+	"disc/subject_name_here": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_subject_name_here",
+				"stream": true
+			}
+		]
+	},
+	"disc/taste_of_blood": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_taste_of_blood",
+				"stream": true
+			}
+		]
+	},
+	"disc/android_hell": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_android_hell",
+				"stream": true
+			}
+		]
+	},
+	"disc/self_esteem_fund": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_self_esteem_fund",
+				"stream": true
+			}
+		]
+	},
+	"disc/procedural_jiggle_bone": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_procedural_jiggle_bone",
+				"stream": true
+			}
+		]
+	},
+	"disc/no_cake_for_you": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_no_cake_for_you",
+				"stream": true
+			}
+		]
+	},
+	"disc/4000_degrees_kelvin": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_4000_degrees_kelvin",
+				"stream": true
+			}
+		]
+	},
+	"disc/stop_what_you_are_doing": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_stop_what_you_are_doing",
+				"stream": true
+			}
+		]
+	},
+	"disc/party_escort": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_party_escort",
+				"stream": true
+			}
+		]
+	},
+	"disc/youre_not_a_good_person": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_youre_not_a_good_person",
+				"stream": true
+			}
+		]
+	},
+	"disc/you_cant_escape_you_know": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_you_cant_escape_you_know",
+				"stream": true
+			}
+		]
+	},
+	"disc/still_alive": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal_still_alive",
+				"stream": true
+			}
+		]
+	},
+	"disc/cara_mia_addio": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal2-12-cara_mia_addio",
+				"stream": true
+			}
+		]
+	},
+	"disc/want_you_gone": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal2-13-want_you_gone",
 				"stream": true
 			}
 		]
