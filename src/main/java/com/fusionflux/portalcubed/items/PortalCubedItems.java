@@ -17,6 +17,10 @@ public class PortalCubedItems {
     public static final Item LONG_FALL_BOOTS = new ArmorItem(PortalArmor, EquipmentSlot.FEET, new Item.Settings().group(PortalCubed.TestingElementsGroup).fireproof());
     public static final PortalGun PORTAL_GUN = new PortalGun(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
 
+    public static final PortalGunPrimary PORTAL_GUN_PRIMARY = new PortalGunPrimary(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
+
+    public static final PortalGunSecondary PORTAL_GUN_SECONDARY = new PortalGunSecondary(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
+
     public static final PaintGun PAINT_GUN = new PaintGun(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
 
     public static final Item PORTAL_GUN_FRAME = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
@@ -66,6 +70,9 @@ public class PortalCubedItems {
     public static void registerItems() {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "long_fall_boots"), LONG_FALL_BOOTS);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun"), PORTAL_GUN);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun_primary"), PORTAL_GUN_PRIMARY);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun_secondary"), PORTAL_GUN_SECONDARY);
+
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "paint_gun"), PAINT_GUN);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun_frame"), PORTAL_GUN_FRAME);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun_casing"), PORTAL_GUN_CASING);

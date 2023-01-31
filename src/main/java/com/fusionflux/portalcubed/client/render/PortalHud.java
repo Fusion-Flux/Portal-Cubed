@@ -4,6 +4,8 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
+import com.fusionflux.portalcubed.items.PortalGunPrimary;
+import com.fusionflux.portalcubed.items.PortalGunSecondary;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tessellator;
@@ -39,16 +41,24 @@ public class PortalHud {
         }
         assert MinecraftClient.getInstance().player != null;
 
-        if (MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN)) {
+        if (MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN) || MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN_SECONDARY)) {
             ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.MAINHAND);
-            if (!stack.getItem().equals(PortalCubedItems.PORTAL_GUN)) {
+            if (!stack.getItem().equals(PortalCubedItems.PORTAL_GUN) && !stack.getItem().equals(PortalCubedItems.PORTAL_GUN_SECONDARY)) {
                 stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
 
             NbtCompound tag = stack.getOrCreateNbt();
             NbtCompound portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
-            PortalGun gun = (PortalGun) stack.getItem();
-            int color = Math.abs(gun.getColor(stack));
+
+            int color = 0;
+            if(stack.getItem().equals(PortalCubedItems.PORTAL_GUN)){
+                // PortalGun gun = ((PortalGun) stack.getItem());
+                color = Math.abs(((PortalGun) stack.getItem()).getColor(stack));
+            }
+            if(stack.getItem().equals(PortalCubedItems.PORTAL_GUN_SECONDARY)){
+                //PortalGunSecondary gun = ((PortalGunSecondary) stack.getItem());
+                color = Math.abs(((PortalGunSecondary) stack.getItem()).getColor(stack));
+            }
 
             if (Math.abs(color) == 14842149) {
                 color = -color;
@@ -95,17 +105,25 @@ public class PortalHud {
         }
         assert MinecraftClient.getInstance().player != null;
 
-        if (MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN)) {
+        if (MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN) || MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN_PRIMARY)) {
             ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.MAINHAND);
 
-            if (!stack.getItem().equals(PortalCubedItems.PORTAL_GUN)) {
+            if (!stack.getItem().equals(PortalCubedItems.PORTAL_GUN) && !stack.getItem().equals(PortalCubedItems.PORTAL_GUN_PRIMARY)) {
                 stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
 
             NbtCompound tag = stack.getOrCreateNbt();
             NbtCompound portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
-            PortalGun gun = (PortalGun) stack.getItem();
-            int color = Math.abs(gun.getColor(stack)) * -1;
+
+            int color = 0;
+            if(stack.getItem().equals(PortalCubedItems.PORTAL_GUN)){
+               // PortalGun gun = ((PortalGun) stack.getItem());
+                color = Math.abs(((PortalGun) stack.getItem()).getColor(stack)) * -1;
+            }
+            if(stack.getItem().equals(PortalCubedItems.PORTAL_GUN_PRIMARY)){
+                //PortalGunSecondary gun = ((PortalGunSecondary) stack.getItem());
+                color = Math.abs(((PortalGunPrimary) stack.getItem()).getColor(stack)) * -1;
+            }
 
             if (Math.abs(color) == 14842149) {
                 color = -color;

@@ -1,9 +1,7 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.items.PaintGun;
-import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.fusionflux.portalcubed.items.PortalGun;
+import com.fusionflux.portalcubed.items.*;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -46,7 +44,7 @@ public abstract class MinecraftClientMixin {
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
     private void portalCubed$onHandleBlockBreaking(boolean isKeyPressed, CallbackInfo ci) {
         assert this.player != null;
-        if (this.player.isHolding(PortalCubedItems.PORTAL_GUN) ||  this.player.isHolding(PortalCubedItems.PAINT_GUN)) {
+        if (this.player.isHolding(PortalCubedItems.PORTAL_GUN) ||  this.player.isHolding(PortalCubedItems.PAINT_GUN) ||  this.player.isHolding(PortalCubedItems.PORTAL_GUN_PRIMARY) ||  this.player.isHolding(PortalCubedItems.PORTAL_GUN_SECONDARY) ) {
             ci.cancel();
         }
     }
@@ -82,6 +80,28 @@ public abstract class MinecraftClientMixin {
             }
 
             if (mainHand instanceof PortalGun || offHand instanceof PortalGun) {
+                cir.cancel();
+            }
+
+
+            if (mainHand instanceof PortalGunPrimary) {
+                sendLeftClickPacket.accept(Hand.MAIN_HAND, PortalCubedServerPackets.PORTAL_LEFT_CLICK);
+            } else if (offHand instanceof PortalGunPrimary) {
+                sendLeftClickPacket.accept(Hand.OFF_HAND, PortalCubedServerPackets.PORTAL_LEFT_CLICK);
+            }
+
+            if (mainHand instanceof PortalGunPrimary || offHand instanceof PortalGunPrimary) {
+                cir.cancel();
+            }
+
+
+            if (mainHand instanceof PortalGunSecondary) {
+                sendLeftClickPacket.accept(Hand.MAIN_HAND, PortalCubedServerPackets.PORTAL_LEFT_CLICK);
+            } else if (offHand instanceof PortalGunSecondary) {
+                sendLeftClickPacket.accept(Hand.OFF_HAND, PortalCubedServerPackets.PORTAL_LEFT_CLICK);
+            }
+
+            if (mainHand instanceof PortalGunSecondary || offHand instanceof PortalGunSecondary) {
                 cir.cancel();
             }
 
