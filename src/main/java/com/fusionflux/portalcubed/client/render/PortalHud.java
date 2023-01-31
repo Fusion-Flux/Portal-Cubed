@@ -80,8 +80,8 @@ public class PortalHud {
 
             for (Entity globalPortal : MinecraftClient.getInstance().world.getEntities()) {
                 if (portalsTag != null) {
-                    if (portalsTag.contains("RightBackground")) {
-                        if (globalPortal.getUuid().equals(portalsTag.getUuid("RightBackground"))) {
+                    if (portalsTag.contains("RightPortal")) {
+                        if (globalPortal.getUuid().equals(portalsTag.getUuid("RightPortal"))) {
                             portalActive = true;
                         }
                     }
@@ -145,8 +145,8 @@ public class PortalHud {
 
             for (Entity globalPortal : MinecraftClient.getInstance().world.getEntities()) {
                 if (portalsTag != null) {
-                    if (portalsTag.contains("LeftBackground")) {
-                        if (globalPortal.getUuid().equals(portalsTag.getUuid("LeftBackground"))) {
+                    if (portalsTag.contains("LeftPortal")) {
+                        if (globalPortal.getUuid().equals(portalsTag.getUuid("LeftPortal"))) {
                             portalActive = true;
                         }
                     }
