@@ -1,0 +1,4 @@
+{
+  "parent": "item/generated",
+  "textures": { "layer0": "portalcubed:item/self_esteem_fund" }
+}

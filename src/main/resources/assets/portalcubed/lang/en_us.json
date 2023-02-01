@@ -40,10 +40,11 @@
   "item.portalcubed.adventure_core": "Adventure Core",
 
   "item.portalcubed.portal_gun": "Portal Gun",
-  "item.portalcubed.portal_gun_primary": "Portal Gun Primary",
-  "item.portalcubed.portal_gun_secondary": "Portal Gun Secondary",
+  "item.portalcubed.portal_gun_primary": "Primary Portal Gun",
+  "item.portalcubed.portal_gun_secondary": "Secondary Portal Gun",
   "item.portalcubed.portal_gun_frame": "Portal Gun Frame",
   "item.portalcubed.portal_gun_casing": "Portal Gun Casing",
+  "item.portalcubed.paint_gun": "Paint Gun",
   "item.portalcubed.mini_blackhole": "Miniature Black hole",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
 
