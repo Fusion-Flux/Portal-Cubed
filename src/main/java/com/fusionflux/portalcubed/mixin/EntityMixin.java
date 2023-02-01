@@ -211,7 +211,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
 
 
-            if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive() && !shouldTeleportClient) {
+            if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive()) {
                 Direction portalFacing = portal.getFacingDirection();
                 Direction portalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
 
@@ -336,7 +336,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                         if (portalFacing.getUnitVector().getY() > 0) {
                             if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY()) {
                                 float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
-                                if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
+                                if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer() && !CalledValues.getHasTeleportationHappened(thisentity)) {
                                     var byteBuf = PacketByteBufs.create();
                                     byteBuf.writeVarInt(portal.getId());
                                     byteBuf.writeDouble(teleportXOffset);
@@ -365,6 +365,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                         entityVelocity = new Vec3d(entityVelocity.x, velocity, entityVelocity.z);
                                     }
                                     teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
+                                    thisentity.setVelocity(0,0,0);
+                                }else if (thisentity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
+                                    thisentity.setVelocity(0,0,0);
                                 } else if(!(thisentity instanceof PlayerEntity)) {
                                     //COMEHERE
                                     if(!(otherDirec.getUnitVector().getY() < 0)) {
@@ -477,7 +480,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         Vec3d entityVelocity
     ) {
         float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDir);
-        if (thisEntity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
+        if (thisEntity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer() && !CalledValues.getHasTeleportationHappened(thisEntity)) {
             var byteBuf = PacketByteBufs.create();
             byteBuf.writeVarInt(portal.getId());
             byteBuf.writeDouble(teleportXOffset);
@@ -488,7 +491,11 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             this.setYaw(yawValue);
             shouldTeleportClient = true;
             teleportVelocity = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir);
-        } else if(!(thisEntity instanceof PlayerEntity)) {
+            thisEntity.setVelocity(0,0,0);
+        }
+        else if (thisEntity instanceof PlayerEntity bob && this.world.isClient && bob.isMainPlayer()) {
+            thisEntity.setVelocity(0,0,0);
+        }else if(!(thisEntity instanceof PlayerEntity)) {
             this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
             this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir));
             this.setYaw(yawValue);
