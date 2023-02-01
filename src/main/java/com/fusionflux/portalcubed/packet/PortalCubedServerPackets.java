@@ -6,6 +6,8 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PaintGun;
 import com.fusionflux.portalcubed.items.PortalGun;
+import com.fusionflux.portalcubed.items.PortalGunPrimary;
+import com.fusionflux.portalcubed.items.PortalGunSecondary;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
@@ -38,6 +40,14 @@ public class PortalCubedServerPackets {
 
         if (!itemStack.isEmpty() && itemStack.getItem() instanceof PortalGun) {
             server.execute(() -> ((PortalGun) itemStack.getItem()).useLeft(serverWorld, player, hand));
+        }
+
+        if (!itemStack.isEmpty() && itemStack.getItem() instanceof PortalGunPrimary) {
+            server.execute(() -> ((PortalGunPrimary) itemStack.getItem()).useLeft(serverWorld, player, hand));
+        }
+
+        if (!itemStack.isEmpty() && itemStack.getItem() instanceof PortalGunSecondary) {
+            server.execute(() -> ((PortalGunSecondary) itemStack.getItem()).useLeft(serverWorld, player, hand));
         }
 
         if (!itemStack.isEmpty() && itemStack.getItem() instanceof PaintGun) {

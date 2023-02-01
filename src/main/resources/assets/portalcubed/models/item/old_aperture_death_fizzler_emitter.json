@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "portalcubed:item/old_aperture_death_fizzler_icon"
+  }
+}

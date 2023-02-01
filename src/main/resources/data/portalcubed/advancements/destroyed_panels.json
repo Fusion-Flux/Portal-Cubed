@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+
+      "portalcubed:portal_2_panel_frame",
+      "portalcubed:portal_2_partially_exposed_panel",
+      "portalcubed:portal_2_exposed_panel"
+
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+"minecraft:iron_bars"
+]
+          }
+        ]
+      }
+    }
+  }
+}

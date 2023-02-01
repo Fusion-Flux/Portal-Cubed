@@ -6,7 +6,7 @@
         "half": "lower"
       },
       "apply": {
-        "model": "portalcubed:block/old_aperture_laser_field_bottom"
+        "model": "portalcubed:block/old_aperture_death_fizzler_bottom"
       }
     },
     {
@@ -15,7 +15,7 @@
         "half": "upper"
       },
       "apply": {
-        "model": "portalcubed:block/old_aperture_laser_field_top"
+        "model": "portalcubed:block/old_aperture_death_fizzler_top"
       }
     },
     {
@@ -24,7 +24,7 @@
         "half": "lower"
       },
       "apply": {
-        "model": "portalcubed:block/old_aperture_laser_field_bottom",
+        "model": "portalcubed:block/old_aperture_death_fizzler_bottom",
         "y": 90
       }
     },
@@ -34,7 +34,7 @@
         "half": "upper"
       },
       "apply": {
-        "model": "portalcubed:block/old_aperture_laser_field_top",
+        "model": "portalcubed:block/old_aperture_death_fizzler_top",
         "y": 90
       }
     }

@@ -17,6 +17,10 @@ public class PortalCubedItems {
     public static final Item LONG_FALL_BOOTS = new ArmorItem(PortalArmor, EquipmentSlot.FEET, new Item.Settings().group(PortalCubed.TestingElementsGroup).fireproof());
     public static final PortalGun PORTAL_GUN = new PortalGun(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
 
+    public static final PortalGunPrimary PORTAL_GUN_PRIMARY = new PortalGunPrimary(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
+
+    public static final PortalGunSecondary PORTAL_GUN_SECONDARY = new PortalGunSecondary(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
+
     public static final PaintGun PAINT_GUN = new PaintGun(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
 
     public static final Item PORTAL_GUN_FRAME = new Item(new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(1).fireproof());
@@ -39,6 +43,8 @@ public class PortalCubedItems {
     public static final SpawnEggItem COMPUTER = new SpawnEggItem(PortalCubedEntities.COMPUTER, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem CHAIR = new SpawnEggItem(PortalCubedEntities.CHAIR, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem HOOPY = new SpawnEggItem(PortalCubedEntities.HOOPY, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+
+    public static final SpawnEggItem CORE_FRAME = new SpawnEggItem(PortalCubedEntities.CORE_FRAME, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem ANGER_CORE = new SpawnEggItem(PortalCubedEntities.ANGER_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem MORALITY_CORE = new SpawnEggItem(PortalCubedEntities.MORALITY_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem CAKE_CORE = new SpawnEggItem(PortalCubedEntities.CAKE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
@@ -66,6 +72,9 @@ public class PortalCubedItems {
     public static void registerItems() {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "long_fall_boots"), LONG_FALL_BOOTS);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun"), PORTAL_GUN);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun_primary"), PORTAL_GUN_PRIMARY);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun_secondary"), PORTAL_GUN_SECONDARY);
+
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "paint_gun"), PAINT_GUN);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun_frame"), PORTAL_GUN_FRAME);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "portal_gun_casing"), PORTAL_GUN_CASING);
@@ -85,6 +94,7 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "computer"), COMPUTER);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "chair"), CHAIR);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "hoopy"), HOOPY);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "core_frame"), CORE_FRAME);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "anger_core"), ANGER_CORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "intelligence_core"), CAKE_CORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "curiosity_core"), CURIOSITY_CORE);

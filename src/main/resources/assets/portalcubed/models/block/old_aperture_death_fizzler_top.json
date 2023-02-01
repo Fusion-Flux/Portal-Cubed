@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench by Cart3r.  ",
 	"textures": {
-		"0": "portalcubed:block/old_aperture_laser_field_bottom",
-		"particle": "portalcubed:block/old_aperture_laser_field_bottom"
+		"0": "portalcubed:block/old_aperture_death_fizzler_top",
+		"particle": "portalcubed:block/old_aperture_death_fizzler_top"
 	},
 	"elements": [
 		{

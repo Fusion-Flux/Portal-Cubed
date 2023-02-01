@@ -12,6 +12,10 @@ pluginManagement {
             name = 'Cotton'
             url = 'https://server.bbkr.space/artifactory/libs-release/'
         }
+        maven {
+            name = "AlexIIL"
+            url = "https://maven.alexiil.uk/"
+        }
         gradlePluginPortal()
     }
 }

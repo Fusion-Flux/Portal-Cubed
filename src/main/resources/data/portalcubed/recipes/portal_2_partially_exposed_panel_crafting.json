@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "portalcubed:portal_2_exposed_panel"
+    },
+    {
+      "item": "minecraft:leather"
+    },
+    {
+      "item": "minecraft:yellow_dye"
+    }
+  ],
+  "result": {
+    "item": "portalcubed:portal_2_partially_exposed_panel",
+    "count": 1
+  }
+}
