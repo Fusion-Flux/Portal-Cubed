@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
@@ -78,6 +79,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                 travelVectorOriginal = new Vec3d(travelVectorOriginal.x / mathVal, travelVectorOriginal.y, travelVectorOriginal.z / mathVal);
                 this.flyingSpeed = .04f;
             }
+        }
+
+        if(CalledValues.getHasTeleportationHappened(this)){
+            return new Vec3d(0,0,0);
         }
     return travelVectorOriginal;
     }
