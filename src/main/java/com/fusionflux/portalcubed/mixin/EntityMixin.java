@@ -157,19 +157,12 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         Entity thisentity = ((Entity) (Object) this);
 
-        if(world.isClient && thisentity instanceof PlayerEntity && CalledValues.getHasTeleportationHappened(thisentity)){
-            var byteBuf = PacketByteBufs.create();
-            NetworkingSafetyWrapper.sendFromClient("clientteleportupdate", byteBuf);
-            CalledValues.setHasTeleportationHappened(thisentity,false);
-            shouldTeleportClient = false;
-            this.setVelocity(teleportVelocity);
-        }
 
         Vec3d entityVelocity = this.getVelocity();
 
-        Box funnelCheckBox = getBoundingBox();
+        //Box funnelCheckBox = getBoundingBox();
         boolean canTeleport = false;
-        if (thisentity instanceof PlayerEntity && !this.world.isClient) {
+       /* if (thisentity instanceof PlayerEntity && !this.world.isClient) {
             funnelCheckBox = funnelCheckBox.expand(10);
         } else {
             funnelCheckBox = funnelCheckBox.stretch(entityVelocity.add(0,.08,0).multiply(10));
@@ -198,7 +191,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             }
             if(!gotVelocity.equals(Vec3d.ZERO) && !this.onGround)
                 thisentity.setVelocity(gotVelocity);
-        }
+        }*/
 
         Box portalCheckBox = getBoundingBox();
         if (thisentity instanceof PlayerEntity && !this.world.isClient) {
@@ -218,7 +211,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
 
 
-            if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive()) {
+            if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive() && !shouldTeleportClient) {
                 Direction portalFacing = portal.getFacingDirection();
                 Direction portalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
 
@@ -409,6 +402,14 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             }
     }
             CalledValues.setPortalCutout(((Entity) (Object) this), omittedDirections);
+
+        if(world.isClient && thisentity instanceof PlayerEntity && CalledValues.getHasTeleportationHappened(thisentity)){
+            var byteBuf = PacketByteBufs.create();
+            NetworkingSafetyWrapper.sendFromClient("clientteleportupdate", byteBuf);
+            CalledValues.setHasTeleportationHappened(thisentity,false);
+            shouldTeleportClient = false;
+            this.setVelocity(teleportVelocity);
+        }
 
 
             if (this.isInFunnel() && this.getFunnelTimer() != 0) {

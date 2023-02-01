@@ -66,14 +66,16 @@ public class PortalGun extends Item implements DyeableItem {
             NbtCompound tag = stack.getOrCreateNbt();
 
             ExperimentalPortal portalHolder;
+            ExperimentalPortal originalPortal = null;
             NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());
 
             boolean portalExists = false;
             if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
-                portalHolder = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
-                if (portalHolder == null) {
+                originalPortal = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
+                if (originalPortal == null) {
                     portalHolder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
                 } else {
+                    portalHolder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
                     portalExists = true;
                 }
             } else {
@@ -154,6 +156,15 @@ public class PortalGun extends Item implements DyeableItem {
 
                 if (!portalExists) {
                     portalHolder.setLinkedPortalUuid("null");
+                    world.spawnEntity(portalHolder);
+                    ((EntityPortalsAccess) user).addPortalToList(portalHolder);
+
+                    CalledValues.setPlayer(portalHolder,user.getUuid());
+
+                    CalledValues.addPortals(user,portalHolder.getUuid());
+                }else {
+                    CalledValues.removePortals(user,originalPortal.getUuid());
+                    originalPortal.kill();
                     world.spawnEntity(portalHolder);
                     ((EntityPortalsAccess) user).addPortalToList(portalHolder);
 
