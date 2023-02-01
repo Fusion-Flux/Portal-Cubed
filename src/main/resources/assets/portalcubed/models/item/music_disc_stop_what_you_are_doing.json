@@ -1,0 +1,4 @@
+{
+  "parent": "item/generated",
+  "textures": { "layer0": "portalcubed:item/stop_what_you_are_doing" }
+}

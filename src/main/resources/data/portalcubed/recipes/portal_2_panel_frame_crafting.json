@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YYY",
+        "Y Y",
+        "YYY"
+    ],
+    "key": {
+        "Y": {
+            "item": "minecraft:iron_bars"
+        }
+    },
+    "result": {
+        "item": "portalcubed:insulation",
+        "count": 16
+    }
+}
