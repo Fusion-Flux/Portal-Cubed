@@ -43,7 +43,7 @@ public class PortalGun extends Item implements DyeableItem {
         NbtCompound compoundTag = stack.getOrCreateNbt();
         boolean complementary = compoundTag.getBoolean("complementary");
         compoundTag = stack.getSubNbt("display");
-        return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
+        return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? 0xffffff - compoundTag.getInt("color") + 1 : compoundTag.getInt("color") : (complementary ? 14842149 : 0x1d86db);
     }
 
     public void useLeft(World world, PlayerEntity user, Hand hand) {
