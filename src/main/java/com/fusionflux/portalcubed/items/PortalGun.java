@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -192,16 +194,25 @@ public class PortalGun extends Item implements DyeableItem {
                 }
             } else {
                 world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                return TypedActionResult.pass(stack);
             }
 
-            assert portalHolder != null;
             portalsTag.putUuid((leftClick ? "Left" : "Right") + "Portal", portalHolder.getUuid());
 
             tag.put(world.getRegistryKey().toString(), portalsTag);
-
-
+        } else {
+            cancelClientMovement(user);
         }
         return TypedActionResult.pass(stack);
+    }
+
+    @ClientOnly
+    private static void cancelClientMovement(Entity user) {
+        if (user instanceof ClientPlayerEntity clientPlayer) {
+            if (clientPlayer.input.getMovementInput().lengthSquared() < 0.1 && user.getPitch() >= 88.0) {
+                user.setVelocity(0, user.getVelocity().y, 0);
+            }
+        }
     }
 
     public static Optional<ExperimentalPortal> getPotentialOpposite(World world, Vec3d portalPos, @Nullable ExperimentalPortal ignore, int color, boolean includePlayerPortals) {
