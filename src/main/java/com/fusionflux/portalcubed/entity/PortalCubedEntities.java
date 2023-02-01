@@ -70,6 +70,11 @@ public class PortalCubedEntities {
     public static final EntityType<HoopyEntity> HOOPY = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, HoopyEntity::new)
             .dimensions(EntityDimensions.changing(1.625F, 0.0625F))
             .build();
+
+    public static final EntityType<CoreFrameEntity> CORE_FRAME = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CoreFrameEntity::new)
+            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+
     public static final EntityType<AngerCoreEntity> ANGER_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, AngerCoreEntity::new)
             .dimensions(EntityDimensions.changing(0.375F, 0.375F))
             .build();
@@ -126,6 +131,7 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "chair"), CHAIR);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "lil_pineapple"), LIL_PINEAPPLE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "hoopy"), HOOPY);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "core_frame"), CORE_FRAME);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "anger_core"), ANGER_CORE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "intelligence_core"), CAKE_CORE);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "curiosity_core"), CURIOSITY_CORE);
@@ -154,6 +160,8 @@ public class PortalCubedEntities {
         FabricDefaultAttributeRegistry.register(CHAIR, ChairEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(LIL_PINEAPPLE, LilPineappleEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(HOOPY, HoopyEntity.createMobAttributes());
+
+        FabricDefaultAttributeRegistry.register(CORE_FRAME, HoopyEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(ANGER_CORE, HoopyEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(CAKE_CORE, HoopyEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(CURIOSITY_CORE, HoopyEntity.createMobAttributes());

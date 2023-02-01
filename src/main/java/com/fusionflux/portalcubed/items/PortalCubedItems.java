@@ -43,6 +43,8 @@ public class PortalCubedItems {
     public static final SpawnEggItem COMPUTER = new SpawnEggItem(PortalCubedEntities.COMPUTER, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem CHAIR = new SpawnEggItem(PortalCubedEntities.CHAIR, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem HOOPY = new SpawnEggItem(PortalCubedEntities.HOOPY, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+
+    public static final SpawnEggItem CORE_FRAME = new SpawnEggItem(PortalCubedEntities.CORE_FRAME, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem ANGER_CORE = new SpawnEggItem(PortalCubedEntities.ANGER_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem MORALITY_CORE = new SpawnEggItem(PortalCubedEntities.MORALITY_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem CAKE_CORE = new SpawnEggItem(PortalCubedEntities.CAKE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
@@ -92,6 +94,7 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "computer"), COMPUTER);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "chair"), CHAIR);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "hoopy"), HOOPY);
+        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "core_frame"), CORE_FRAME);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "anger_core"), ANGER_CORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "intelligence_core"), CAKE_CORE);
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "curiosity_core"), CURIOSITY_CORE);
