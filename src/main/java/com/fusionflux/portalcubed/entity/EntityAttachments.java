@@ -35,5 +35,7 @@ public interface EntityAttachments {
 
     void setMaxFallHeight(double maxFallHeight);
 
+    Vec3d getTeleportVelocity();
 
+    void setTeleportVelocity(Vec3d teleportVelocity);
 }
