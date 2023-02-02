@@ -2,10 +2,7 @@ package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
-import com.fusionflux.portalcubed.items.PortalGunPrimary;
-import com.fusionflux.portalcubed.items.PortalGunSecondary;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tessellator;
@@ -14,10 +11,8 @@ import com.mojang.blaze3d.vertex.VertexFormats;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameMode;
 
@@ -26,6 +21,45 @@ public class PortalHud {
     private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/gui/activeportalindicator_square.png");
 
     public static void renderPortalLeft(@SuppressWarnings("unused") MatrixStack matrices, @SuppressWarnings("unused") float tickDelta) {
+        //noinspection DataFlowIssue
+        if (
+            !MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
+                MinecraftClient.getInstance().interactionManager.getCurrentGameMode() == GameMode.SPECTATOR
+        ) return;
+        RenderSystem.enableBlend();
+        if(PortalCubedConfig.enableRoundPortals) {
+            RenderSystem.setShaderTexture(0, ROUND_TEXTURE);
+        }else{
+            RenderSystem.setShaderTexture(0, SQUARE_TEXTURE);
+        }
+        assert MinecraftClient.getInstance().player != null;
+
+        if (MinecraftClient.getInstance().player.isHolding(s -> s.getItem() instanceof PortalGun)) {
+            ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.MAINHAND);
+
+            if (!(stack.getItem() instanceof PortalGun)) {
+                stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
+            }
+
+            int color = ((PortalGun) stack.getItem()).getColorForHudHalf(stack, false);
+
+            float r = ((color & 0xFF0000) >>> 16) / 255f;
+            float g = ((color & 0xFF00) >>> 8) / 255f;
+            float b = (color & 0xFF) / 255f;
+            assert MinecraftClient.getInstance().world != null;
+            boolean portalActive = ((PortalGun) stack.getItem()).isSideActive(
+                MinecraftClient.getInstance().world, stack, false
+            );
+
+            if (!portalActive) {
+                texture(MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - 9, MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - 9, -100, 8, 16, 16 / 256f, 0 / 256f, 8 / 256f, 16 / 256f, r, g, b, 1);
+            } else {
+                texture(MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - 9, MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - 9, -100, 8, 16, 24 / 256f, 0 / 256f, 8 / 256f, 16 / 256f, r, g, b, 1);
+            }
+        }
+    }
+
+    public static void renderPortalRight(@SuppressWarnings("unused") MatrixStack matrices, @SuppressWarnings("unused") float tickDelta) {
         //noinspection DataFlowIssue
         if (
             !MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
@@ -41,52 +75,21 @@ public class PortalHud {
         }
         assert MinecraftClient.getInstance().player != null;
 
-        if (MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN) || MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN_SECONDARY)) {
+        if (MinecraftClient.getInstance().player.isHolding(s -> s.getItem() instanceof PortalGun)) {
             ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.MAINHAND);
-            if (!stack.getItem().equals(PortalCubedItems.PORTAL_GUN) && !stack.getItem().equals(PortalCubedItems.PORTAL_GUN_SECONDARY)) {
+            if (!(stack.getItem() instanceof PortalGun)) {
                 stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
 
-            NbtCompound tag = stack.getOrCreateNbt();
-            NbtCompound portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
+            int color = ((PortalGun) stack.getItem()).getColorForHudHalf(stack, true);
 
-            int color = 0;
-            if(stack.getItem().equals(PortalCubedItems.PORTAL_GUN)){
-                // PortalGun gun = ((PortalGun) stack.getItem());
-                color = Math.abs(((PortalGun) stack.getItem()).getColor(stack));
-            }
-            if(stack.getItem().equals(PortalCubedItems.PORTAL_GUN_SECONDARY)){
-                //PortalGunSecondary gun = ((PortalGunSecondary) stack.getItem());
-                color = Math.abs(((PortalGunSecondary) stack.getItem()).getColor(stack));
-            }
-
-            if (Math.abs(color) == 14842149) {
-                color = -color;
-            }
-
-            if (color == -16383998) {
-                color = 1908001;
-            }
-
-            if (color == 16383998) {
-                color = -1908001;
-            }
-
-            int r = (color & 0xFF0000) >> 16;
-            int g = (color & 0xFF00) >> 8;
-            int b = color & 0xFF;
-            boolean portalActive = false;
+            float r = ((color & 0xFF0000) >>> 16) / 255f;
+            float g = ((color & 0xFF00) >>> 8) / 255f;
+            float b = (color & 0xFF) / 255f;
             assert MinecraftClient.getInstance().world != null;
-
-            for (Entity globalPortal : MinecraftClient.getInstance().world.getEntities()) {
-                if (portalsTag != null) {
-                    if (portalsTag.contains("RightPortal")) {
-                        if (globalPortal.getUuid().equals(portalsTag.getUuid("RightPortal"))) {
-                            portalActive = true;
-                        }
-                    }
-                }
-            }
+            boolean portalActive = ((PortalGun) stack.getItem()).isSideActive(
+                MinecraftClient.getInstance().world, stack, true
+            );
 
             if (!portalActive) {
                 texture(MinecraftClient.getInstance().getWindow().getScaledWidth() / 2, MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - 5, -100, 8, 16, 0 / 256f, 0 / 256f, 8 / 256f, 16 / 256f, r, g, b, 1);
@@ -96,77 +99,7 @@ public class PortalHud {
         }
     }
 
-    public static void renderPortalRight(@SuppressWarnings("unused") MatrixStack matrices, @SuppressWarnings("unused") float tickDelta) {
-        RenderSystem.enableBlend();
-        if(PortalCubedConfig.enableRoundPortals) {
-            RenderSystem.setShaderTexture(0, ROUND_TEXTURE);
-        }else{
-            RenderSystem.setShaderTexture(0, SQUARE_TEXTURE);
-        }
-        assert MinecraftClient.getInstance().player != null;
-
-        if (MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN) || MinecraftClient.getInstance().player.isHolding(PortalCubedItems.PORTAL_GUN_PRIMARY)) {
-            ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.MAINHAND);
-
-            if (!stack.getItem().equals(PortalCubedItems.PORTAL_GUN) && !stack.getItem().equals(PortalCubedItems.PORTAL_GUN_PRIMARY)) {
-                stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.OFFHAND);
-            }
-
-            NbtCompound tag = stack.getOrCreateNbt();
-            NbtCompound portalsTag = tag.getCompound(MinecraftClient.getInstance().player.world.getRegistryKey().toString());
-
-            int color = 0;
-            if(stack.getItem().equals(PortalCubedItems.PORTAL_GUN)){
-               // PortalGun gun = ((PortalGun) stack.getItem());
-                color = Math.abs(((PortalGun) stack.getItem()).getColor(stack)) * -1;
-            }
-            if(stack.getItem().equals(PortalCubedItems.PORTAL_GUN_PRIMARY)){
-                //PortalGunSecondary gun = ((PortalGunSecondary) stack.getItem());
-                color = Math.abs(((PortalGunPrimary) stack.getItem()).getColor(stack)) * -1;
-            }
-
-            if (Math.abs(color) == 14842149) {
-                color = -color;
-            }
-
-            if (color == -16383998) {
-                color = 1908001;
-            }
-
-            if (color == 16383998) {
-                color = -1908001;
-            }
-
-            int r = (color & 0xFF0000) >> 16;
-            int g = (color & 0xFF00) >> 8;
-            int b = color & 0xFF;
-            boolean portalActive = false;
-            assert MinecraftClient.getInstance().world != null;
-
-            for (Entity globalPortal : MinecraftClient.getInstance().world.getEntities()) {
-                if (portalsTag != null) {
-                    if (portalsTag.contains("LeftPortal")) {
-                        if (globalPortal.getUuid().equals(portalsTag.getUuid("LeftPortal"))) {
-                            portalActive = true;
-                        }
-                    }
-                }
-            }
-
-            if (!portalActive) {
-                texture(MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - 9, MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - 9, -100, 8, 16, 16 / 256f, 0 / 256f, 8 / 256f, 16 / 256f, r, g, b, 1);
-            } else {
-                texture(MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - 9, MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - 9, -100, 8, 16, 24 / 256f, 0 / 256f, 8 / 256f, 16 / 256f, r, g, b, 1);
-            }
-        }
-    }
-
     public static void texture(int x, int y, int z, int width, int height, float u, float v, float uw, float vh, float r, float g, float b, float a) {
-        //noinspection DataFlowIssue
-        if (
-            !MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
-                MinecraftClient.getInstance().interactionManager.getCurrentGameMode() == GameMode.SPECTATOR
-        ) return;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
         RenderSystem.enableTexture();

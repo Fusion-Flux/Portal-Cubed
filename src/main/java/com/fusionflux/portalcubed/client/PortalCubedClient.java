@@ -11,6 +11,7 @@ import com.fusionflux.portalcubed.client.render.model.entity.*;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.util.FaithPlateScreen;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
@@ -22,7 +23,6 @@ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
-import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Items;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
@@ -53,8 +53,8 @@ public class PortalCubedClient implements ClientModInitializer {
         PortalCubedClientPackets.registerPackets();
         GrabKeyBinding.register();
 
-        HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
+        HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
 
         final Identifier toxicGooStillSpriteId = id("block/toxic_goo_still");
         final Identifier toxicGooFlowSpriteId = id("block/toxic_goo_flow");
@@ -87,9 +87,10 @@ public class PortalCubedClient implements ClientModInitializer {
     }
 
     private void registerColorProviders() {
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem) stack.getItem()).getColor(stack), PortalCubedItems.PORTAL_GUN);
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem) stack.getItem()).getColor(stack), PortalCubedItems.PORTAL_GUN_PRIMARY);
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem) stack.getItem()).getColor(stack), PortalCubedItems.PORTAL_GUN_SECONDARY);
+        ColorProviderRegistry.ITEM.register(
+            (stack, tintIndex) -> tintIndex > 0 ? -1 : ((PortalGun) stack.getItem()).getSidedColor(stack),
+            PortalCubedItems.PORTAL_GUN, PortalCubedItems.PORTAL_GUN_PRIMARY, PortalCubedItems.PORTAL_GUN_SECONDARY
+        );
     }
 
     private void registerEntityRenderers() {

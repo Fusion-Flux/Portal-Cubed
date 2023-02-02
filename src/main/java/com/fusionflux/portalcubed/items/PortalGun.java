@@ -10,6 +10,7 @@ import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
@@ -32,6 +33,7 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.UUID;
 
 
 public class PortalGun extends Item implements DyeableItem {
@@ -42,28 +44,51 @@ public class PortalGun extends Item implements DyeableItem {
 
     @Override
     public int getColor(ItemStack stack) {
-        NbtCompound compoundTag = stack.getOrCreateNbt();
-        boolean complementary = compoundTag.getBoolean("complementary");
-        compoundTag = stack.getSubNbt("display");
-        return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? 0xffffff - compoundTag.getInt("color") + 1 : compoundTag.getInt("color") : (complementary ? 14842149 : 0x1d86db);
+        NbtCompound compoundTag = stack.getSubNbt("display");
+        return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : 0x1d86db;
+    }
+
+    public boolean isComplementary(ItemStack stack) {
+        return stack.getOrCreateNbt().getBoolean("complementary");
+    }
+
+    public int getSidedColor(ItemStack stack) {
+        final int color = getColor(stack);
+        return isComplementary(stack) ? 0xffffff - color + 1 : color;
+    }
+
+    public int getColorForHudHalf(ItemStack stack, boolean rightHalf) {
+        final int color = getColor(stack);
+        return rightHalf ? 0xffffff - color + 1 : color;
+    }
+
+    @ClientOnly
+    public boolean isSideActive(ClientWorld world, ItemStack stack, boolean rightSide) {
+        final NbtCompound portalsTag = stack.getOrCreateNbt().getCompound(world.getRegistryKey().toString());
+        final String key = rightSide ? "RightPortal" : "LeftPortal";
+        if (portalsTag == null || !portalsTag.containsUuid(key)) return false;
+        final UUID uuid = portalsTag.getUuid(key);
+        for (final Entity globalPortal : world.getEntities()) {
+            if (globalPortal.getUuid().equals(uuid)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void useLeft(World world, PlayerEntity user, Hand hand) {
-        if(!user.isSpectator()) {
-            ItemStack stack = user.getStackInHand(hand);
-            stack.getOrCreateNbt().putBoolean("complementary", false);
-            useImpl(world, user, stack, true);
-        }
+        useImpl(world, user, hand, true);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
-        stack.getOrCreateNbt().putBoolean("complementary", true);
-        return useImpl(world, user, stack, false);
+        return useImpl(world, user, hand, false);
     }
 
-    public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, ItemStack stack, boolean leftClick) {
+    public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
+        ItemStack stack = user.getStackInHand(hand);
+        if (user.isSpectator()) return TypedActionResult.pass(stack);
+        stack.getOrCreateNbt().putBoolean("complementary", !leftClick);
         if (!world.isClient) {
             NbtCompound tag = stack.getOrCreateNbt();
 
@@ -152,7 +177,7 @@ public class PortalGun extends Item implements DyeableItem {
                 portalHolder.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
                 portalHolder.setPitch(rotAngles.getRight().floatValue());
                 portalHolder.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
-                portalHolder.setColor(this.getColor(stack));
+                portalHolder.setColor(this.getSidedColor(stack));
 
                 CalledValues.setOrientation(portalHolder,Vec3d.of(right),Vec3d.of(up).multiply(-1));
 
