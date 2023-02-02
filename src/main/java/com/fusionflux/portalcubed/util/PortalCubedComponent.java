@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.util;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 
 import java.util.Set;
@@ -25,5 +26,13 @@ public interface PortalCubedComponent extends Component {
     boolean getHasTeleportationHappened();
 
     void setHasTeleportationHappened(boolean hasHappened);
+
+    boolean getWasInfiniteFalling();
+
+    void setWasInfiniteFalling(boolean infFall);
+
+    Vec3d getVelocityUpdateAfterTeleport();
+
+    void setVelocityUpdateAfterTeleport(Vec3d velocity);
 
 }

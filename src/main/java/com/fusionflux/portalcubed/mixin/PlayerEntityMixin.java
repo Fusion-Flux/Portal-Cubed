@@ -22,6 +22,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -95,8 +97,38 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
     private boolean enableNoDrag2;
 
+    private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickHead(CallbackInfo ci) {
+        PlayerEntity thisentity = ((PlayerEntity) (Object) this);
+
+        if (world.isClient && CalledValues.getHasTeleportationHappened(thisentity)) {
+            var byteBuf = PacketByteBufs.create();
+            NetworkingSafetyWrapper.sendFromClient("clientteleportupdate", byteBuf);
+            CalledValues.setHasTeleportationHappened(thisentity, false);
+            ((EntityAttachments) thisentity).setMaxFallHeight(-99999999);
+            //this.setYaw(storedYaw);
+            this.setVelocity(CalledValues.getVelocityUpdateAfterTeleport(thisentity));
+        }
+
+        Vec3d entityVelocity = this.getVelocity();
+
+        Box portalCheckBox = getBoundingBox();
+        if (!this.world.isClient) {
+            portalCheckBox = portalCheckBox.expand(10);
+        } else {
+            portalCheckBox = portalCheckBox.stretch(entityVelocity).stretch(entityVelocity.multiply(-1));
+        }
+        List<ExperimentalPortal> list = ((PlayerEntity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+        VoxelShape omittedDirections = VoxelShapes.empty();
+
+        for (ExperimentalPortal portal : list) {
+            if (portal.calculateCuttoutBox() != nullBox) {
+                if (portal.getActive())
+                    omittedDirections = VoxelShapes.union(omittedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
+            }
+        }
+        CalledValues.setPortalCutout(((PlayerEntity) (Object) this), omittedDirections);
 
 
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
@@ -127,7 +159,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
         Box portalCheckBox = getBoundingBox();
 
-        portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0, .08, 0));
+        portalCheckBox = portalCheckBox.stretch(entityVelocity).stretch(entityVelocity.multiply(-1));
 
 
         List<ExperimentalPortal> list = ((PlayerEntity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
@@ -256,19 +288,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                     }
                     if (portalFacing.getUnitVector().getY() > 0) {
                         if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY()) {
-                            float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
                             if (this.world.isClient && thisentity.isMainPlayer()) {
                                 var byteBuf = PacketByteBufs.create();
                                 byteBuf.writeVarInt(portal.getId());
                                 byteBuf.writeDouble(teleportXOffset);
                                 byteBuf.writeDouble(teleportYOffset);
                                 byteBuf.writeDouble(teleportZOffset);
-                                byteBuf.writeFloat(yawValue);
-                                NetworkingSafetyWrapper.sendFromClient("portalpacket", byteBuf);
-                                storedYaw = yawValue;
-                                //COMEHERE
+                                byteBuf.writeFloat(this.getYaw());
+                                byteBuf.writeFloat(thisentity.getPitch());
+
                                 if (!(otherDirec.getUnitVector().getY() < 0)) {
-                                    if(!wasInfiniteFall) {
+                                    if(!CalledValues.getWasInfiniteFalling(thisentity)) {
                                         double velocity = 0;
                                         double fall = ((EntityAttachments) this).getMaxFallHeight();
                                         fall = fall - portal.getPos().y;
@@ -284,12 +314,22 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                                         }
                                         entityVelocity = new Vec3d(entityVelocity.x, velocity, entityVelocity.z);
                                     }else{
-                                        wasInfiniteFall = false;
+                                        CalledValues.setWasInfiniteFalling(thisentity,false);
                                     }
                                 }else{
-                                    wasInfiniteFall = true;
+                                    CalledValues.setWasInfiniteFalling(thisentity,true);
                                 }
-                                ((EntityAttachments) thisentity).setTeleportVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
+
+                                byteBuf.writeDouble(entityVelocity.x);
+                                byteBuf.writeDouble(entityVelocity.y);
+                                byteBuf.writeDouble(entityVelocity.z);
+                                byteBuf.writeBoolean(wasInfiniteFall);
+
+                                NetworkingSafetyWrapper.sendFromClient("portalpacket", byteBuf);
+                                //storedYaw = yawValue;
+                                //COMEHERE
+
+                                //((EntityAttachments) thisentity).setTeleportVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                             }
                         }
                     }
@@ -309,7 +349,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             CalledValues.setHasTeleportationHappened(thisentity, false);
             ((EntityAttachments) thisentity).setMaxFallHeight(-99999999);
             //this.setYaw(storedYaw);
-            this.setVelocity(((EntityAttachments) thisentity).getTeleportVelocity());
+            this.setVelocity(CalledValues.getVelocityUpdateAfterTeleport(thisentity));
         }
     }
 
@@ -322,17 +362,22 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             Direction otherDir,
             Vec3d entityVelocity
     ) {
-        float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDir);
         if (this.world.isClient && thisEntity.isMainPlayer()) {
             var byteBuf = PacketByteBufs.create();
             byteBuf.writeVarInt(portal.getId());
             byteBuf.writeDouble(teleportXOffset);
             byteBuf.writeDouble(teleportYOffset);
             byteBuf.writeDouble(teleportZOffset);
-            byteBuf.writeFloat(yawValue);
+            byteBuf.writeFloat(this.getYaw());
+            byteBuf.writeFloat(thisEntity.getPitch());
+            byteBuf.writeDouble(entityVelocity.x);
+            byteBuf.writeDouble(entityVelocity.y);
+            byteBuf.writeDouble(entityVelocity.z);
+            byteBuf.writeBoolean(wasInfiniteFall);
             NetworkingSafetyWrapper.sendFromClient("portalpacket", byteBuf);
-            storedYaw = yawValue;
-            ((EntityAttachments) thisEntity).setTeleportVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir));
+            //storedYaw = yawValue;
+            //((EntityAttachments) thisEntity).setTeleportVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir));
+
         }
     }
 

@@ -55,6 +55,21 @@ public abstract class CalledValues {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setHasTeleportationHappened(setValue));
     }
 
+    public static boolean getWasInfiniteFalling(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getWasInfiniteFalling).orElse(false);
+    }
+    public static void setWasInfiniteFalling(Entity entity, boolean setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setWasInfiniteFalling(setValue));
+    }
+
+    public static Vec3d getVelocityUpdateAfterTeleport(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getVelocityUpdateAfterTeleport).orElse(null);
+    }
+
+    public static void setVelocityUpdateAfterTeleport(Entity entity, Vec3d setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setVelocityUpdateAfterTeleport(setValue));
+    }
+
     public static UUID getCubeUUID(Entity entity) {
         return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getCubeUUID).orElse(null);
     }

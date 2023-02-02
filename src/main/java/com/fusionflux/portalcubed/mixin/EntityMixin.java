@@ -164,23 +164,23 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         Vec3d entityVelocity = this.getVelocity();
 
-        Box portalCheckBox = getBoundingBox();
-        if (thisentity instanceof PlayerEntity && !this.world.isClient) {
-            portalCheckBox = portalCheckBox.expand(10);
-        } else {
-            portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0, .08, 0));
-        }
-        List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
-        VoxelShape omittedDirections = VoxelShapes.empty();
 
-        for (ExperimentalPortal portal : list) {
-            if (portal.calculateCuttoutBox() != nullBox) {
-                if (portal.getActive())
-                    omittedDirections = VoxelShapes.union(omittedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
+        if(!(thisentity instanceof PlayerEntity)) {
+            Box portalCheckBox = getBoundingBox();
+
+                portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0, .08, 0));
+
+            List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+            VoxelShape omittedDirections = VoxelShapes.empty();
+
+            for (ExperimentalPortal portal : list) {
+                if (portal.calculateCuttoutBox() != nullBox) {
+                    if (portal.getActive())
+                        omittedDirections = VoxelShapes.union(omittedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
+                }
             }
+            CalledValues.setPortalCutout(((Entity) (Object) this), omittedDirections);
         }
-        CalledValues.setPortalCutout(((Entity) (Object) this), omittedDirections);
-
 
         if (this.isInFunnel() && this.getFunnelTimer() != 0) {
             this.setFunnelTimer(this.getFunnelTimer() - 1);

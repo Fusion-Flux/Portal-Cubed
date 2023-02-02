@@ -13,22 +13,31 @@ import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
 import com.fusionflux.portalcubed.config.MidnightConfig;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
+import com.fusionflux.portalcubed.util.PortalCubedComponent;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.mojang.logging.LogUtils;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.ModContainer;
@@ -37,6 +46,7 @@ import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
 import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.slf4j.Logger;
 
@@ -61,6 +71,8 @@ public class PortalCubed implements ModInitializer {
     }
     public static final ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = Registry.register(Registry.SCREEN_HANDLER, id("faith_plate_screen"), new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new));
 
+    public static final ComponentKey<PortalCubedComponent> ENTITY_COMPONENT =
+            ComponentRegistry.getOrCreate(new Identifier("portalcubed", "entity_component"), PortalCubedComponent.class);
     @Override
     public void onInitialize(ModContainer mod) {
         ServerPlayNetworking.registerGlobalReceiver(id("portalpacket"), (server, player, handler, buf, responseSender) -> {
@@ -68,6 +80,9 @@ public class PortalCubed implements ModInitializer {
             final int targetEntityId = buf.readVarInt();
             final Vec3d offset = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
             float yawSet = buf.readFloat();
+            float pitchSet = buf.readFloat();
+            final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            final boolean wasInfiniteFall = buf.readBoolean();
             if (Double.isNaN(offset.x) || Double.isNaN(offset.y) || Double.isNaN(offset.z) || !Float.isFinite(yawSet)) {
                 handler.disconnect(Text.translatable("multiplayer.disconnect.invalid_player_movement"));
                 return;
@@ -88,7 +103,23 @@ public class PortalCubed implements ModInitializer {
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
                     return;
                 }
-                player.setYaw(yawSet);
+
+
+
+
+                Direction otherDirec = Direction.fromVector((int) CalledValues.getOtherFacing(portal).getX(), (int) CalledValues.getOtherFacing(portal).getY(), (int) CalledValues.getOtherFacing(portal).getZ());
+
+
+
+                CalledValues.setVelocityUpdateAfterTeleport(player,PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
+
+                if(otherDirec != Direction.DOWN && wasInfiniteFall){
+                    CalledValues.setWasInfiniteFalling(player,false);
+                }
+
+                float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
+                player.setYaw(yawValue);
+                player.setPitch(pitchSet);
                 player.refreshPositionAfterTeleport(CalledValues.getDestination(portal).subtract(offset));
                 CalledValues.setHasTeleportationHappened(player,true);
                 GravityChangerAPI.clearGravity(player);
@@ -169,4 +200,8 @@ public class PortalCubed implements ModInitializer {
         BlockContentRegistries.FLAMMABLE_BLOCK.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
         GravityChannel.UPDATE_GRAVITY.getVerifierRegistry().register(AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, AdhesionGravityVerifier::check);
     }
+
+
+
+
 }

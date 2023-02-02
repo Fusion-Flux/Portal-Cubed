@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.util;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +19,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     UUID cubeUUID = null;
     public Set<UUID> portals = new HashSet<>();
     private final Entity entity;
+
+    boolean wasInfiniteFalling;
+
+    Vec3d teleportVelocity = Vec3d.ZERO;
 
 
     public EntityComponent(Entity entity) {
@@ -42,6 +47,28 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     @Override
     public void setHasTeleportationHappened(boolean hasHappened) {
         hasTeleportationHappened=hasHappened;
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+    }
+
+    @Override
+    public boolean getWasInfiniteFalling() {
+        return wasInfiniteFalling;
+    }
+
+    @Override
+    public void setWasInfiniteFalling(boolean infFall) {
+        wasInfiniteFalling = infFall;
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+    }
+
+    @Override
+    public Vec3d getVelocityUpdateAfterTeleport() {
+        return teleportVelocity;
+    }
+
+    @Override
+    public void setVelocityUpdateAfterTeleport(Vec3d velocity) {
+        teleportVelocity = velocity;
         PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
@@ -92,6 +119,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         }
 
         hasTeleportationHappened = tag.getBoolean("hasTpHappened");
+
+        this.setVelocityUpdateAfterTeleport(IPHelperDuplicate.getVec3d(tag, "velocity"));
+
+        setWasInfiniteFalling(tag.getBoolean("wasInfiniteFalling"));
     }
 
     @Override
@@ -109,5 +140,9 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         }
         tag.putInt("size", portals.size());
         tag.putBoolean("hasTpHappened",hasTeleportationHappened);
+
+        IPHelperDuplicate.putVec3d(tag, "velocity", this.getVelocityUpdateAfterTeleport());
+
+        tag.putBoolean("wasInfiniteFalling",wasInfiniteFalling);
     }
 }
