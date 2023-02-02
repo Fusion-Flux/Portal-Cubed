@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
+import net.fabricmc.api.EnvType;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.PillarBlock;
@@ -15,6 +16,7 @@ import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
+import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
@@ -37,13 +39,24 @@ public final class PortalBlocksLoader {
             .put("old_ap_directional", OldApDirectionalBlock::new)
             .build();
     @ClientOnly
-    private static final Map<String, RenderLayer> RENDER_LAYERS = ImmutableMap.<String, RenderLayer>builder()
+    private static Map<String, RenderLayer> renderLayers;
+    private static final Map<String, BlockData> BLOCK_DATA = new LinkedHashMap<>();
+
+    static {
+        if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT) {
+            clinitClient();
+        }
+    }
+
+    private PortalBlocksLoader() {
+    }
+
+    @ClientOnly
+    private static void clinitClient() {
+        renderLayers = ImmutableMap.<String, RenderLayer>builder()
             .put("cutout", RenderLayer.getCutout())
             .put("translucent", RenderLayer.getTranslucent())
             .build();
-    private static final Map<String, BlockData> BLOCK_DATA = new LinkedHashMap<>();
-
-    private PortalBlocksLoader() {
     }
 
     public static void init(ModContainer mod) {
@@ -68,7 +81,7 @@ public final class PortalBlocksLoader {
         BLOCK_DATA.forEach((key, value) -> {
             final Identifier id = PortalCubed.id(key);
             if (value.renderLayer != null) {
-                final RenderLayer renderLayer = RENDER_LAYERS.get(value.renderLayer);
+                final RenderLayer renderLayer = renderLayers.get(value.renderLayer);
                 if (renderLayer == null) {
                     throw new IllegalArgumentException("Unknown render_layer " + value.renderLayer);
                 }

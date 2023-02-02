@@ -81,6 +81,7 @@ public class RadioEntity extends CorePhysicsEntity  {
         dataTracker.set(NOT_PLAYING, notPlaying);
     }
 
+    @ClientOnly
     private void performPlay() {
         MinecraftClient.getInstance().getSoundManager().play(new RadioSoundInstance(song));
     }

@@ -4,7 +4,6 @@
   "package": "com.fusionflux.portalcubed.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ClientPlayerEntityMixin",
     "EntityMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
@@ -17,6 +16,7 @@
   "client": [
     "client.BackgroundRendererMixin",
     "client.CameraMixin",
+    "client.ClientPlayerEntityMixin",
     "client.ClientWorldMixin",
     "client.HeldItemRendererMixin",
     "client.InGameOverlayRendererMixin",

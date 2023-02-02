@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.mixin;
+package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.mojang.authlib.GameProfile;
