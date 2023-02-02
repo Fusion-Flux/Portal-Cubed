@@ -65,6 +65,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
     float storedYaw = 0;
 
+    boolean wasInfiniteFall = false;
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void portalCubed$letYouFallLonger(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
@@ -96,15 +97,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickHead(CallbackInfo ci) {
-        PlayerEntity thisentity = ((PlayerEntity) (Object) this);
-        if (world.isClient && CalledValues.getHasTeleportationHappened(thisentity)) {
-            var byteBuf = PacketByteBufs.create();
-            NetworkingSafetyWrapper.sendFromClient("clientteleportupdate", byteBuf);
-            CalledValues.setHasTeleportationHappened(thisentity, false);
-            ((EntityAttachments) thisentity).setMaxFallHeight(-99999999);
-            this.setYaw(storedYaw);
-            this.setVelocity(((EntityAttachments) thisentity).getTeleportVelocity());
-        }
+
 
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
         if((!this.isOnGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL))){
@@ -275,20 +268,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                                 storedYaw = yawValue;
                                 //COMEHERE
                                 if (!(otherDirec.getUnitVector().getY() < 0)) {
-                                    double velocity = 0;
-                                    double fall = ((EntityAttachments) this).getMaxFallHeight();
-                                    fall = fall - portal.getPos().y;
-                                    if (fall < 0) {
-                                        velocity = entityVelocity.y;
-                                    } else {
-                                        if (thisentity.hasNoDrag()) {
-                                            velocity = -Math.sqrt(2 * .08 * (fall)) + .0402;
+                                    if(!wasInfiniteFall) {
+                                        double velocity = 0;
+                                        double fall = ((EntityAttachments) this).getMaxFallHeight();
+                                        fall = fall - portal.getPos().y;
+                                        if (fall < 0) {
+                                            velocity = entityVelocity.y;
                                         } else {
-                                            velocity = (-Math.sqrt(2 * .08 * (fall)) + .0402) / .98;
-                                        }
+                                            if (thisentity.hasNoDrag()) {
+                                                velocity = -Math.sqrt(2 * .08 * (fall)) + .0402;
+                                            } else {
+                                                velocity = (-Math.sqrt(2 * .08 * (fall)) + .0402) / .98;
+                                            }
 
+                                        }
+                                        entityVelocity = new Vec3d(entityVelocity.x, velocity, entityVelocity.z);
+                                    }else{
+                                        wasInfiniteFall = false;
                                     }
-                                    entityVelocity = new Vec3d(entityVelocity.x, velocity, entityVelocity.z);
+                                }else{
+                                    wasInfiniteFall = true;
                                 }
                                 ((EntityAttachments) thisentity).setTeleportVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                             }
@@ -309,7 +308,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             NetworkingSafetyWrapper.sendFromClient("clientteleportupdate", byteBuf);
             CalledValues.setHasTeleportationHappened(thisentity, false);
             ((EntityAttachments) thisentity).setMaxFallHeight(-99999999);
-            this.setYaw(storedYaw);
+            //this.setYaw(storedYaw);
             this.setVelocity(((EntityAttachments) thisentity).getTeleportVelocity());
         }
     }
