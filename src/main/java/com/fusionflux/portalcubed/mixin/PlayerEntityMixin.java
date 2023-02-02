@@ -267,16 +267,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                     if (portalFacing.getUnitVector().getX() < 0) {
                         if (entityEyePos.getX() + entityVelocity.getX() > portal.getPos().getX()) {
                             performTeleport(thisentity, portal, teleportXOffset, teleportYOffset, teleportZOffset, otherDirec, entityVelocity);
+                            break;
                         }
                     }
                     if (portalFacing.getUnitVector().getY() < 0) {
                         if (entityEyePos.getY() + entityVelocity.getY() > portal.getPos().getY()) {
                             performTeleport(thisentity, portal, teleportXOffset, teleportYOffset, teleportZOffset, otherDirec, entityVelocity);
+                            break;
                         }
                     }
                     if (portalFacing.getUnitVector().getZ() < 0) {
                         if (entityEyePos.getZ() + entityVelocity.getZ() > portal.getPos().getZ()) {
                             performTeleport(thisentity, portal, teleportXOffset, teleportYOffset, teleportZOffset, otherDirec, entityVelocity);
+                            break;
                         }
                     }
 
@@ -284,6 +287,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                     if (portalFacing.getUnitVector().getX() > 0) {
                         if (entityEyePos.getX() + entityVelocity.getX() < portal.getPos().getX()) {
                             performTeleport(thisentity, portal, teleportXOffset, teleportYOffset, teleportZOffset, otherDirec, entityVelocity);
+                            break;
                         }
                     }
                     if (portalFacing.getUnitVector().getY() > 0) {
@@ -330,16 +334,22 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                                 //COMEHERE
 
                                 //((EntityAttachments) thisentity).setTeleportVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
+                                this.setVelocity(0,0,0);
                             }
+                            break;
                         }
                     }
                     if (portalFacing.getUnitVector().getZ() > 0) {
                         if (entityEyePos.getZ() + entityVelocity.getZ() < portal.getPos().getZ()) {
                             performTeleport(thisentity, portal, teleportXOffset, teleportYOffset, teleportZOffset, otherDirec, entityVelocity);
+                            break;
                         }
                     }
 
                 }
+            }if(this.world.isClient && CalledValues.getHasTeleportationHappened(this)){
+                this.setVelocity(0,0,0);
+                break;
             }
         }
 
@@ -375,6 +385,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             byteBuf.writeDouble(entityVelocity.z);
             byteBuf.writeBoolean(wasInfiniteFall);
             NetworkingSafetyWrapper.sendFromClient("portalpacket", byteBuf);
+            this.setVelocity(0,0,0);
             //storedYaw = yawValue;
             //((EntityAttachments) thisEntity).setTeleportVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir));
 
