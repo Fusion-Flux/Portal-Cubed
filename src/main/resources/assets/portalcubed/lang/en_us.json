@@ -176,6 +176,13 @@
   "block.portalcubed.blue_office_concrete": "Blue Office Concrete + Tread Plating",
 
   "block.portalcubed.insulation": "Insulation",
+  "block.portalcubed.portal_2_panel_frame": "Panel Frame",
+  "block.portalcubed.portal_2_exposed_panel": "Exposed Panel",
+  "block.portalcubed.portal_2_partially_exposed_panel": "Partially Exposed Panel",
+
+  "block.portalcubed.portal_1_elevator_wall_top": "Portal 1 Elevator Wall Top",
+  "block.portalcubed.portal_1_elevator_wall_middle": "Portal 1 Elevator Wall Middle",
+  "block.portalcubed.portal_1_elevator_wall_bottom": "Portal 1 Elevator Wall Bottom",
 
   "block.portalcubed.portal_1_white_2x1_panel_bottom": "Portal 1 White 2x1 Panel Bottom",
   "block.portalcubed.portal_1_white_2x1_panel_top": "Portal 1 White 2x1 Panel Top",

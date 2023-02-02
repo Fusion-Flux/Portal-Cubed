@@ -225,6 +225,10 @@
   "portal_1_white_2x1_panel_top": {
     "type": "pillar"
   },
+  "portal_1_elevator_wall_bottom": {},
+  "portal_1_elevator_wall_middle": {},
+  "portal_1_elevator_wall_top": {},
+
   "portal_1_smooth_gray_panel": {},
   "portal_1_smooth_gray_half_panel": {},
   "portal_1_smooth_gray_2x1_panel_bottom": {

@@ -29,12 +29,6 @@
     "facing=east,half=lower": {
       "model": "portalcubed:block/auto_portal_lower",
       "y": 90
-    },
-    "facing=up": {
-      "model": "portalcubed:block/auto_portal_upper"
-    },
-    "facing=down": {
-      "model": "portalcubed:block/auto_portal_lower"
     }
   }
 }

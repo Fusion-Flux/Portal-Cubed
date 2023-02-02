@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+
+      "portalcubed:portal_1_elevator_wall_top_crafting",
+      "portalcubed:portal_1_elevator_wall_top_middle",
+      "portalcubed:portal_1_elevator_wall_top_bottom"
+
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+"minecraft:iron_nugget"
+
+]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XXX",
+        "XZX",
+        "XYX"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:iron_nugget"
+        },
+        "Y": {
+            "item": "minecraft:cyan_wool"
+        },
+        "Z": {
+            "item": "minecraft:note_block"
+        }
+    },
+    "result": {
+        "item": "portalcubed:portal_1_elevator_wall_top",
+        "count": 4
+    }
+}
