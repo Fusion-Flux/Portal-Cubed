@@ -27,8 +27,16 @@
         "versions": ">=1.18.2"
       },
       {
-        "id": "gravity_api",
+        "id": "cardinal-components-entity",
+        "versions": ">=4.1.4"
+      },
+      {
+        "id": "com.fusionflux:gravity_api",
         "versions": ">=0.7.21"
+      },
+      {
+        "id": "eu.midnightdust:midnightlib",
+        "versions": ">=1.0.0"
       }
     ],
 
