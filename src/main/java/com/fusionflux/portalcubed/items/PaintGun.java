@@ -8,6 +8,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import net.minecraft.entity.Entity;
@@ -28,6 +29,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -48,31 +50,54 @@ public class PaintGun extends Item implements DyeableItem {
     }
 
     public void useLeft(World world, PlayerEntity user, Hand hand) {
-        if(!user.isSpectator()) {
-            ItemStack stack = user.getStackInHand(hand);
+        if(world.isClient && !user.isSpectator() && !CalledValues.getCanFireGel(user)){
+            var byteBuf = PacketByteBufs.create();
+            byteBuf.writeDouble(user.getVelocity().x);
+            byteBuf.writeDouble(user.getVelocity().y);
+            byteBuf.writeDouble(user.getVelocity().z);
+            byteBuf.writeBoolean(true);
+            NetworkingSafetyWrapper.sendFromClient("requestvelocityforgel", byteBuf);
+        }
+        ItemStack stack = user.getStackInHand(hand);
+        if(!world.isClient && !user.isSpectator() && CalledValues.getCanFireGel(user)) {
             final GelBlobEntity entity = PortalCubedEntities.REPULSION_GEL_BLOB.create(world);
             if (entity == null) TypedActionResult.pass(stack);
-            entity.setPosition(user.getX(), user.getEyeY(), user.getZ());
-            entity.setProperties(user, user.getPitch(), user.getYaw(), 0f, 3f, 1f);
+            entity.setPosition(user.getX(), user.getEyeY()-.5, user.getZ());
+            entity.setProperties(user, user.getPitch(), user.getYaw(), 0f, 2f, 1f);
             entity.setOwner(user);
+            entity.setSize(1);
             world.spawnEntity(entity);
-            entity.addVelocity(user.getVelocity().x,user.getVelocity().y,user.getVelocity().z);
-            TypedActionResult.pass(stack);
+            CalledValues.setCanFireGel(user,false);
+            entity.addVelocity(CalledValues.getServerVelForGel(user).x,CalledValues.getServerVelForGel(user).y,CalledValues.getServerVelForGel(user).z);
         }
+        TypedActionResult.pass(stack);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if(world.isClient && !user.isSpectator() && !CalledValues.getCanFireGel(user)){
+            var byteBuf = PacketByteBufs.create();
+            byteBuf.writeDouble(user.getVelocity().x);
+            byteBuf.writeDouble(user.getVelocity().y);
+            byteBuf.writeDouble(user.getVelocity().z);
+            byteBuf.writeBoolean(true);
+            NetworkingSafetyWrapper.sendFromClient("requestvelocityforgel", byteBuf);
+        }
         ItemStack stack = user.getStackInHand(hand);
-        final GelBlobEntity entity = PortalCubedEntities.PROPULSION_GEL_BLOB.create(world);
-        if (entity == null) return TypedActionResult.pass(stack);
-        entity.setPosition(user.getX(), user.getEyeY(), user.getZ());
-        entity.setProperties(user, user.getPitch(), user.getYaw(), 0f, 3f, 1f);
-        entity.setOwner(user);
-        world.spawnEntity(entity);
-        entity.addVelocity(user.getVelocity().x,user.getVelocity().y,user.getVelocity().z);
+        if(!world.isClient && !user.isSpectator() && CalledValues.getCanFireGel(user)) {
+            final GelBlobEntity entity = PortalCubedEntities.PROPULSION_GEL_BLOB.create(world);
+            if (entity == null) return TypedActionResult.pass(stack);
+            entity.setPosition(user.getX(), user.getEyeY()-.5, user.getZ());
+            entity.setProperties(user, user.getPitch(), user.getYaw(), 0f, 2f, 1f);
+            entity.setOwner(user);
+            world.spawnEntity(entity);
+            entity.setSize(1);
+            CalledValues.setCanFireGel(user,false);
+            entity.addVelocity(CalledValues.getServerVelForGel(user).x,CalledValues.getServerVelForGel(user).y,CalledValues.getServerVelForGel(user).z);
+        }
         return TypedActionResult.pass(stack);
     }
+
 
 
 

@@ -87,7 +87,7 @@ public abstract class GelBlobEntity extends ProjectileEntity {
     }
 
     public int getExplosionRadius() {
-        return 3 * getSize();
+        return 2 * getSize();
     }
 
     @Override

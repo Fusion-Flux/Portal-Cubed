@@ -35,4 +35,12 @@ public interface PortalCubedComponent extends Component {
 
     void setVelocityUpdateAfterTeleport(Vec3d velocity);
 
+    boolean getCanFireGel();
+
+    void setCanFireGel(boolean canGel);
+
+    Vec3d getServerVelForGel();
+
+    void setServerVelForGel(Vec3d velocity);
+
 }

@@ -22,8 +22,11 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     boolean wasInfiniteFalling;
 
+    boolean canFireGel;
+
     Vec3d teleportVelocity = Vec3d.ZERO;
 
+    Vec3d serverVelForGel = Vec3d.ZERO;
 
     public EntityComponent(Entity entity) {
         this.entity = entity;
@@ -69,6 +72,30 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     @Override
     public void setVelocityUpdateAfterTeleport(Vec3d velocity) {
         teleportVelocity = velocity;
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+    }
+
+
+
+    @Override
+    public boolean getCanFireGel() {
+        return canFireGel;
+    }
+
+    @Override
+    public void setCanFireGel(boolean canGel) {
+        canFireGel = canGel;
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+    }
+
+    @Override
+    public Vec3d getServerVelForGel() {
+        return serverVelForGel;
+    }
+
+    @Override
+    public void setServerVelForGel(Vec3d velocity) {
+        serverVelForGel = velocity;
         PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
@@ -123,6 +150,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         this.setVelocityUpdateAfterTeleport(IPHelperDuplicate.getVec3d(tag, "velocity"));
 
         setWasInfiniteFalling(tag.getBoolean("wasInfiniteFalling"));
+
+        this.setServerVelForGel(IPHelperDuplicate.getVec3d(tag, "gelVelocity"));
+
+        setCanFireGel(tag.getBoolean("canFireGel"));
     }
 
     @Override
@@ -144,5 +175,9 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         IPHelperDuplicate.putVec3d(tag, "velocity", this.getVelocityUpdateAfterTeleport());
 
         tag.putBoolean("wasInfiniteFalling",wasInfiniteFalling);
+
+        IPHelperDuplicate.putVec3d(tag, "gelVelocity", this.getServerVelForGel());
+
+        tag.putBoolean("canFireGel",canFireGel);
     }
 }

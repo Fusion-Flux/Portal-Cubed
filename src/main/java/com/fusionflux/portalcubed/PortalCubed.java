@@ -151,6 +151,17 @@ public class PortalCubed implements ModInitializer {
             server.execute(() -> CalledValues.setHasTeleportationHappened(player, false))
         );
 
+        ServerPlayNetworking.registerGlobalReceiver(id("requestvelocityforgel"), (server, player, handler, buf, responseSender) ->{
+                    final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+                    final boolean fireGel = buf.readBoolean();
+                server.execute(() -> {
+                    CalledValues.setServerVelForGel(player,entityVelocity);
+                    CalledValues.setCanFireGel(player,fireGel);
+
+                });
+    }
+        );
+
         ServerPlayNetworking.registerGlobalReceiver(id("cubeposupdate"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
             double x =  buf.readDouble();

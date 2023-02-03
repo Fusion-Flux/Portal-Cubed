@@ -70,6 +70,21 @@ public abstract class CalledValues {
         maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setVelocityUpdateAfterTeleport(setValue));
     }
 
+    public static boolean getCanFireGel(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getCanFireGel).orElse(false);
+    }
+    public static void setCanFireGel(Entity entity, boolean setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setCanFireGel(setValue));
+    }
+
+    public static Vec3d getServerVelForGel(Entity entity) {
+        return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getServerVelForGel).orElse(null);
+    }
+
+    public static void setServerVelForGel(Entity entity, Vec3d setValue) {
+        maybeGetSafe(ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setServerVelForGel(setValue));
+    }
+
     public static UUID getCubeUUID(Entity entity) {
         return maybeGetSafe(ENTITY_COMPONENT, entity).map(PortalCubedComponent::getCubeUUID).orElse(null);
     }
