@@ -12,9 +12,9 @@ jobs:
           java-version: 17
       - name: Run Checkstyle
         run: ./gradlew -Pcheckstyle_max_warns=0 checkstyleMain
-        continue-on-error: true
       - name: Upload reports
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: Reports
           path: build/reports/checkstyle/
