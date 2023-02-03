@@ -1,5 +1,8 @@
 package com.fusionflux.portalcubed.config;
 
+import eu.midnightdust.lib.config.MidnightConfig;
+
+@SuppressWarnings("CanBeFinal")
 public class PortalCubedConfig extends MidnightConfig {
 
     @Entry public static boolean enableRoundPortals = false;

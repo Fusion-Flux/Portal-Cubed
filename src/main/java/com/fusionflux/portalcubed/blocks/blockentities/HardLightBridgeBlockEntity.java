@@ -23,10 +23,10 @@ import java.util.Objects;
 
 public class HardLightBridgeBlockEntity extends BlockEntity {
 
-    public List<BlockPos> emitters;
-    public List<BlockPos> portalEmitters;
-    public List<Direction> facing;
-    public List<Direction> facingVert;
+    public final List<BlockPos> emitters;
+    public final List<BlockPos> portalEmitters;
+    public final List<Direction> facing;
+    public final List<Direction> facingVert;
 
     public HardLightBridgeBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.HLB_BLOCK_ENTITY,pos,state);

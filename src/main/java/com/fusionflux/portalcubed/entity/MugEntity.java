@@ -20,7 +20,7 @@ public class MugEntity extends CorePhysicsEntity  {
     public MugEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
-    Random rand = new Random();
+    final Random rand = new Random();
 
     @Override
     public void writeCustomDataToNbt(NbtCompound compoundTag) {

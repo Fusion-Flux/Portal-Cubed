@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -18,8 +17,6 @@ import net.minecraft.world.World;
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
 public class LaserCatcherEntity extends BlockEntity {
-
-    public final int MAX_RANGE = PortalCubedConfig.maxBridgeLength;
 
 
     public LaserCatcherEntity(BlockPos pos, BlockState state) {

@@ -23,9 +23,9 @@ import java.util.Objects;
 
 public class ExcursionFunnelEntityMain extends BlockEntity {
 
-    public List<BlockPos> emitters;
-    public List<BlockPos> portalEmitters;
-    public List<Direction> facing;
+    public final List<BlockPos> emitters;
+    public final List<BlockPos> portalEmitters;
+    public final List<Direction> facing;
 
     public ExcursionFunnelEntityMain(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.EXCURSION_FUNNEL_ENTITY, pos, state);
@@ -114,7 +114,7 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                 }
 
                 state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
-                        .with(CustomProperties.R_NORTH, MRNorth).with(CustomProperties.R_EAST, MREast).with(CustomProperties.R_SOUTH, MRSouth).with(CustomProperties.R_WEST, MRWest).with(CustomProperties.RUP, MRUp).with(CustomProperties.R_DOWN, MRDown);
+                        .with(CustomProperties.R_NORTH, MRNorth).with(CustomProperties.R_EAST, MREast).with(CustomProperties.R_SOUTH, MRSouth).with(CustomProperties.R_WEST, MRWest).with(CustomProperties.R_UP, MRUp).with(CustomProperties.R_DOWN, MRDown);
             }
 
         world.setBlockState(pos,state,3);

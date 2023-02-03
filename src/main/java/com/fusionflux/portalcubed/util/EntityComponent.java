@@ -17,7 +17,7 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     VoxelShape portalCutout = VoxelShapes.empty();
     boolean hasTeleportationHappened = false;
     UUID cubeUUID = null;
-    public Set<UUID> portals = new HashSet<>();
+    public final Set<UUID> portals = new HashSet<>();
     private final Entity entity;
 
     boolean wasInfiniteFalling;

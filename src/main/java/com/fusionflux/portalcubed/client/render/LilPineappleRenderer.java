@@ -24,8 +24,6 @@ public class LilPineappleRenderer extends MobEntityRenderer<LilPineappleEntity, 
     private static final Identifier PAN_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_pan.png");
     private static final Identifier TRANS_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/lil_prideapple_trans.png");
 
-    protected final LilPineappleModel model = new LilPineappleModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(LilPineappleModel.LIL_PINEAPPLE));
-
     public LilPineappleRenderer(EntityRendererFactory.Context context) {
         super(context, new LilPineappleModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(LilPineappleModel.LIL_PINEAPPLE)), 0.5f);
     }

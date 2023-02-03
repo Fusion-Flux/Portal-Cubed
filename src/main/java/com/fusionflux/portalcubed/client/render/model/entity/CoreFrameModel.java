@@ -5,7 +5,6 @@
 package com.fusionflux.portalcubed.client.render.model.entity;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.entity.AngerCoreEntity;
 import com.fusionflux.portalcubed.entity.CoreFrameEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
