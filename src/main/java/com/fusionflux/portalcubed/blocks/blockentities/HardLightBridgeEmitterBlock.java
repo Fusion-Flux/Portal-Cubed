@@ -38,7 +38,7 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
 
     }
 
-    private static VoxelShape method_31018(BlockState blockState) {
+    private static VoxelShape method_31018(BlockState ignoredBlockState) {
         VoxelShape voxelShape = VoxelShapes.empty();
         voxelShape =VoxelShapes.union(voxelShape, SHAPE);
 

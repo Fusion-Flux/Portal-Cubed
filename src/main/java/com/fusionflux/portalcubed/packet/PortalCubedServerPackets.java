@@ -26,13 +26,11 @@ import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
-import java.awt.*;
-
 public class PortalCubedServerPackets {
     public static final Identifier PORTAL_LEFT_CLICK = new Identifier(PortalCubed.MOD_ID, "portal_left_click");
     public static final Identifier GRAB_KEY_PRESSED = new Identifier(PortalCubed.MOD_ID, "grab_key_pressed");
 
-    public static void onPortalLeftClick(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+    public static void onPortalLeftClick(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
         ServerWorld serverWorld = player.getWorld();
         Hand hand = buf.readEnumConstant(Hand.class);
         ItemStack itemStack = player.getStackInHand(hand);
@@ -51,11 +49,11 @@ public class PortalCubedServerPackets {
         }
 
         if (!itemStack.isEmpty() && itemStack.getItem() instanceof PaintGun) {
-            server.execute(() -> ((PaintGun) itemStack.getItem()).useLeft(serverWorld, player, hand));
+            server.execute(() -> ((PaintGun) itemStack.getItem()).useLeft(serverWorld, player));
         }
     }
 
-    public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+    public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
         Vec3d vec3d = player.getCameraPosVec(0);
         double d = 5;

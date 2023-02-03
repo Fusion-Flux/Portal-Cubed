@@ -3,99 +3,101 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.qsl.entity.api.QuiltEntityTypeBuilder;
 
 public class PortalCubedEntities {
 
-    public static final EntityType<ExperimentalPortal> EXPERIMENTAL_PORTAL = FabricEntityTypeBuilder.create(SpawnGroup.MISC, ExperimentalPortal::new)
-            .dimensions(EntityDimensions.changing(1F, 1F))
+    public static final EntityType<ExperimentalPortal> EXPERIMENTAL_PORTAL = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, ExperimentalPortal::new)
+            .setDimensions(EntityDimensions.changing(1F, 1F))
             .build();
 
-    public static final EntityType<StorageCubeEntity> STORAGE_CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, StorageCubeEntity::new)
-            .dimensions(EntityDimensions.changing(0.625F, 0.625F))
+    public static final EntityType<StorageCubeEntity> STORAGE_CUBE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, StorageCubeEntity::new)
+            .setDimensions(EntityDimensions.changing(0.625F, 0.625F))
             .build();
 
-    public static final EntityType<CompanionCubeEntity> COMPANION_CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CompanionCubeEntity::new)
-            .dimensions(EntityDimensions.changing(0.625F, 0.625F))
+    public static final EntityType<CompanionCubeEntity> COMPANION_CUBE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, CompanionCubeEntity::new)
+            .setDimensions(EntityDimensions.changing(0.625F, 0.625F))
             .build();
-    public static final EntityType<RedirectionCubeEntity> REDIRECTION_CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RedirectionCubeEntity::new)
-            .dimensions(EntityDimensions.changing(0.625F, 0.625F))
+    public static final EntityType<RedirectionCubeEntity> REDIRECTION_CUBE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, RedirectionCubeEntity::new)
+            .setDimensions(EntityDimensions.changing(0.625F, 0.625F))
             .build();
-    public static final EntityType<RadioEntity> RADIO = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RadioEntity::new)
-            .dimensions(EntityDimensions.changing(0.625F, 0.3125F))
-            .build();
-
-    public static final EntityType<OldApCubeEntity> OLD_AP_CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, OldApCubeEntity::new)
-            .dimensions(EntityDimensions.changing(0.625F, 0.625F))
+    public static final EntityType<RadioEntity> RADIO = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, RadioEntity::new)
+            .setDimensions(EntityDimensions.changing(0.625F, 0.3125F))
             .build();
 
-    public static final EntityType<Portal1CompanionCubeEntity> PORTAL_1_COMPANION_CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, Portal1CompanionCubeEntity::new)
-            .dimensions(EntityDimensions.changing(0.625F, 0.625F))
+    public static final EntityType<OldApCubeEntity> OLD_AP_CUBE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, OldApCubeEntity::new)
+            .setDimensions(EntityDimensions.changing(0.625F, 0.625F))
             .build();
 
-    public static final EntityType<Portal1StorageCubeEntity> PORTAL_1_STORAGE_CUBE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, Portal1StorageCubeEntity::new)
-            .dimensions(EntityDimensions.changing(0.625F, 0.625F))
+    public static final EntityType<Portal1CompanionCubeEntity> PORTAL_1_COMPANION_CUBE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, Portal1CompanionCubeEntity::new)
+            .setDimensions(EntityDimensions.changing(0.625F, 0.625F))
             .build();
 
-    public static final EntityType<BeansEntity> BEANS = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, BeansEntity::new)
-            .dimensions(EntityDimensions.changing(0.25F, 0.375F))
+    public static final EntityType<Portal1StorageCubeEntity> PORTAL_1_STORAGE_CUBE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, Portal1StorageCubeEntity::new)
+            .setDimensions(EntityDimensions.changing(0.625F, 0.625F))
             .build();
 
-    public static final EntityType<MugEntity> MUG = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MugEntity::new)
-            .dimensions(EntityDimensions.changing(0.1875F, 0.25F))
+    public static final EntityType<BeansEntity> BEANS = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, BeansEntity::new)
+            .setDimensions(EntityDimensions.changing(0.25F, 0.375F))
             .build();
 
-    public static final EntityType<JugEntity> JUG = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, JugEntity::new)
-            .dimensions(EntityDimensions.changing(0.375F, 0.5F))
+    public static final EntityType<MugEntity> MUG = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, MugEntity::new)
+            .setDimensions(EntityDimensions.changing(0.1875F, 0.25F))
             .build();
 
-    public static final EntityType<ComputerEntity> COMPUTER = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ComputerEntity::new)
-            .dimensions(EntityDimensions.changing(0.5F, 0.1875F))
+    public static final EntityType<JugEntity> JUG = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, JugEntity::new)
+            .setDimensions(EntityDimensions.changing(0.375F, 0.5F))
             .build();
 
-    public static final EntityType<ChairEntity> CHAIR = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ChairEntity::new)
-            .dimensions(EntityDimensions.changing(0.4375F, 0.46875F))
+    public static final EntityType<ComputerEntity> COMPUTER = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, ComputerEntity::new)
+            .setDimensions(EntityDimensions.changing(0.5F, 0.1875F))
             .build();
 
-    public static final EntityType<LilPineappleEntity> LIL_PINEAPPLE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, LilPineappleEntity::new)
-            .dimensions(EntityDimensions.changing(0.5625F, 0.5F))
+    public static final EntityType<ChairEntity> CHAIR = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, ChairEntity::new)
+            .setDimensions(EntityDimensions.changing(0.4375F, 0.46875F))
             .build();
 
-    public static final EntityType<HoopyEntity> HOOPY = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, HoopyEntity::new)
-            .dimensions(EntityDimensions.changing(1.625F, 0.0625F))
+    public static final EntityType<LilPineappleEntity> LIL_PINEAPPLE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, LilPineappleEntity::new)
+            .setDimensions(EntityDimensions.changing(0.5625F, 0.5F))
             .build();
 
-    public static final EntityType<CoreFrameEntity> CORE_FRAME = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CoreFrameEntity::new)
-            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+    public static final EntityType<HoopyEntity> HOOPY = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, HoopyEntity::new)
+            .setDimensions(EntityDimensions.changing(1.625F, 0.0625F))
             .build();
 
-    public static final EntityType<AngerCoreEntity> ANGER_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, AngerCoreEntity::new)
-            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
-            .build();
-    public static final EntityType<MoralityCoreEntity> MORALITY_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MoralityCoreEntity::new)
-            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
-            .build();
-    public static final EntityType<CakeCoreEntity> CAKE_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CakeCoreEntity::new)
-            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
-            .build();
-    public static final EntityType<CuriosityCoreEntity> CURIOSITY_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CuriosityCoreEntity::new)
-            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+    public static final EntityType<CoreFrameEntity> CORE_FRAME = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, CoreFrameEntity::new)
+            .setDimensions(EntityDimensions.changing(0.375F, 0.375F))
             .build();
 
-    public static final EntityType<SpaceCoreEntity> SPACE_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, SpaceCoreEntity::new)
-            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+    public static final EntityType<AngerCoreEntity> ANGER_CORE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, AngerCoreEntity::new)
+            .setDimensions(EntityDimensions.changing(0.375F, 0.375F))
             .build();
-    public static final EntityType<FactCoreEntity> FACT_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, FactCoreEntity::new)
-            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+    public static final EntityType<MoralityCoreEntity> MORALITY_CORE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, MoralityCoreEntity::new)
+            .setDimensions(EntityDimensions.changing(0.375F, 0.375F))
             .build();
-    public static final EntityType<AdventureCoreEntity> ADVENTURE_CORE = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, AdventureCoreEntity::new)
-            .dimensions(EntityDimensions.changing(0.375F, 0.375F))
+    public static final EntityType<CakeCoreEntity> CAKE_CORE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, CakeCoreEntity::new)
+            .setDimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+    public static final EntityType<CuriosityCoreEntity> CURIOSITY_CORE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, CuriosityCoreEntity::new)
+            .setDimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+
+    public static final EntityType<SpaceCoreEntity> SPACE_CORE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, SpaceCoreEntity::new)
+            .setDimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+    public static final EntityType<FactCoreEntity> FACT_CORE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, FactCoreEntity::new)
+            .setDimensions(EntityDimensions.changing(0.375F, 0.375F))
+            .build();
+    public static final EntityType<AdventureCoreEntity> ADVENTURE_CORE = QuiltEntityTypeBuilder.create(SpawnGroup.CREATURE, AdventureCoreEntity::new)
+            .setDimensions(EntityDimensions.changing(0.375F, 0.375F))
             .build();
 
     public static final EntityType<? extends GelBlobEntity> PROPULSION_GEL_BLOB = createGelBlob(
@@ -145,35 +147,38 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "conversion_gel_blob"), CONVERSION_GEL_BLOB);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "adhesion_gel_blob"), ADHESION_GEL_BLOB);
 
-        //noinspection DataFlowIssue
-        FabricDefaultAttributeRegistry.register(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(RADIO, RadioEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(REDIRECTION_CUBE, RedirectionCubeEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(OLD_AP_CUBE, OldApCubeEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(PORTAL_1_COMPANION_CUBE, Portal1CompanionCubeEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(PORTAL_1_STORAGE_CUBE, Portal1StorageCubeEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(BEANS, BeansEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(MUG, MugEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(JUG, JugEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(COMPUTER, ComputerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(CHAIR, ChairEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(LIL_PINEAPPLE, LilPineappleEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(HOOPY, HoopyEntity.createMobAttributes());
+        registerDefaultAttributes(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
+        registerDefaultAttributes(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
+        registerDefaultAttributes(RADIO, RadioEntity.createMobAttributes());
+        registerDefaultAttributes(REDIRECTION_CUBE, RedirectionCubeEntity.createMobAttributes());
+        registerDefaultAttributes(OLD_AP_CUBE, OldApCubeEntity.createMobAttributes());
+        registerDefaultAttributes(PORTAL_1_COMPANION_CUBE, Portal1CompanionCubeEntity.createMobAttributes());
+        registerDefaultAttributes(PORTAL_1_STORAGE_CUBE, Portal1StorageCubeEntity.createMobAttributes());
+        registerDefaultAttributes(BEANS, BeansEntity.createMobAttributes());
+        registerDefaultAttributes(MUG, MugEntity.createMobAttributes());
+        registerDefaultAttributes(JUG, JugEntity.createMobAttributes());
+        registerDefaultAttributes(COMPUTER, ComputerEntity.createMobAttributes());
+        registerDefaultAttributes(CHAIR, ChairEntity.createMobAttributes());
+        registerDefaultAttributes(LIL_PINEAPPLE, LilPineappleEntity.createMobAttributes());
+        registerDefaultAttributes(HOOPY, HoopyEntity.createMobAttributes());
 
-        FabricDefaultAttributeRegistry.register(CORE_FRAME, HoopyEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(ANGER_CORE, HoopyEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(CAKE_CORE, HoopyEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(CURIOSITY_CORE, HoopyEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(MORALITY_CORE, HoopyEntity.createMobAttributes());
+        registerDefaultAttributes(CORE_FRAME, HoopyEntity.createMobAttributes());
+        registerDefaultAttributes(ANGER_CORE, HoopyEntity.createMobAttributes());
+        registerDefaultAttributes(CAKE_CORE, HoopyEntity.createMobAttributes());
+        registerDefaultAttributes(CURIOSITY_CORE, HoopyEntity.createMobAttributes());
+        registerDefaultAttributes(MORALITY_CORE, HoopyEntity.createMobAttributes());
 
-        FabricDefaultAttributeRegistry.register(SPACE_CORE, HoopyEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(ADVENTURE_CORE, HoopyEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FACT_CORE, HoopyEntity.createMobAttributes());
+        registerDefaultAttributes(SPACE_CORE, HoopyEntity.createMobAttributes());
+        registerDefaultAttributes(ADVENTURE_CORE, HoopyEntity.createMobAttributes());
+        registerDefaultAttributes(FACT_CORE, HoopyEntity.createMobAttributes());
+    }
+
+    private static void registerDefaultAttributes(EntityType<? extends LivingEntity> entityType, DefaultAttributeContainer.Builder builder) {
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(entityType, builder.build());
     }
 
     public static EntityType<? extends GelBlobEntity> createGelBlob(GelFlat gel, Identifier texture) {
-        return FabricEntityTypeBuilder.create()
+        return QuiltEntityTypeBuilder.create()
             .<GelBlobEntity>entityFactory((type, world) -> new GelBlobEntity(type, world) {
                 @Override
                 public Identifier getTexture() {
@@ -185,7 +190,7 @@ public class PortalCubedEntities {
                     return gel;
                 }
             })
-            .dimensions(EntityDimensions.changing(1, 1))
+            .setDimensions(EntityDimensions.changing(1, 1))
             .build();
     }
 }

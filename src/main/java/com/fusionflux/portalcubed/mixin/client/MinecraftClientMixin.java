@@ -1,11 +1,9 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.items.*;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Item;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
@@ -26,15 +24,8 @@ import java.util.function.BiConsumer;
 public abstract class MinecraftClientMixin {
 
     @Shadow
-    public ClientWorld world;
-
-    @Shadow
     @Nullable
     public ClientPlayerEntity player;
-
-    public MinecraftClientMixin() {
-        throw new AssertionError(PortalCubed.MOD_ID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
-    }
 
     /**
      * Prevents block breaking on player left click while holding a portal gun as left click functionality is replaced.

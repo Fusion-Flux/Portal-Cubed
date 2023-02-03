@@ -1,9 +1,7 @@
 package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.client.render.model.entity.AngerCoreModel;
 import com.fusionflux.portalcubed.client.render.model.entity.CoreFrameModel;
-import com.fusionflux.portalcubed.entity.AngerCoreEntity;
 import com.fusionflux.portalcubed.entity.CoreFrameEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;

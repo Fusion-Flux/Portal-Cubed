@@ -1,14 +1,5 @@
 package com.fusionflux.portalcubed.client.render.model.block;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.Nullable;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
@@ -29,13 +20,21 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public final class EmissiveBakedModel extends ForwardingBakedModel {
 
 	private static final Map<Identifier, Function<BakedModel, EmissiveBakedModel>> wrappers = new Object2ObjectOpenHashMap<>();
 
 	public static void register(Identifier modelId) {
-		wrappers.put(modelId, bakedModel -> new EmissiveBakedModel(bakedModel));
+		wrappers.put(modelId, EmissiveBakedModel::new);
 	}
 
 	public static Optional<BakedModel> wrap(Identifier modelId, BakedModel model) {
@@ -45,6 +44,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
 	}
 
 
+	@SuppressWarnings("DataFlowIssue")
 	private static final MaterialFinder MATERIAL_FINDER = RendererAccess.INSTANCE.getRenderer().materialFinder();
 
 	private Pair<BlockState, Mesh> cachedMesh = Pair.of(null, null);
@@ -63,9 +63,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
 		final ModelObjects objects = ModelObjects.get();
 		objects.cullingCache.prepare(pos, state);
 		buildMesh(objects, state, randomSupplier);
-		context.pushTransform(quad -> {
-			return !objects.cullingCache.shouldCull(quad, blockView);
-		});
+		context.pushTransform(quad -> !objects.cullingCache.shouldCull(quad, blockView));
 		context.meshConsumer().accept(cachedMesh.getValue());
 		context.popTransform();
 	}
@@ -118,6 +116,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
 
 		private final CullingCache cullingCache = new CullingCache();
 
+		@SuppressWarnings("DataFlowIssue")
 		private final MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
 
 		private static ModelObjects get() {

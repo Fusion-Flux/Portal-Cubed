@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.entity;
 
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 public interface EntityAttachments {
@@ -17,10 +16,6 @@ public interface EntityAttachments {
 
     void setFunnelTimer(int funnelTimer);
 
-    Direction getDirection();
-
-    void setDirection(Direction direction);
-
     double getMaxFallSpeed();
 
     void setMaxFallSpeed(double maxFallSpeed);
@@ -35,7 +30,4 @@ public interface EntityAttachments {
 
     void setMaxFallHeight(double maxFallHeight);
 
-    Vec3d getTeleportVelocity();
-
-    void setTeleportVelocity(Vec3d teleportVelocity);
 }

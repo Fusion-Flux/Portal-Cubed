@@ -8,13 +8,11 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
-import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +23,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -95,21 +92,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public abstract boolean equals(Object o);
 
     @Shadow
-    public abstract EntityType<?> getType();
-
-    @Shadow
-    public abstract Vec3d getPos();
-
-    @Shadow
-    public abstract double getX();
-
-    @Shadow
-    public abstract double getY();
-
-    @Shadow
-    public abstract double getZ();
-
-    @Shadow
     public abstract void setNoGravity(boolean noGravity);
 
     @Shadow
@@ -138,16 +120,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow
     public abstract void setPosition(double x, double y, double z);
-
-
-    @Shadow
-    protected boolean onGround;
-    private Vec3d teleportVelocity = Vec3d.ZERO;
-    private boolean shouldTeleportClient = false;
-
-    @Override
-    public void addPortalToList(ExperimentalPortal portal) {
-    }
 
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
 
@@ -372,7 +344,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                     if (portalFacing.getUnitVector().getY() > 0) {
                         if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY()) {
                             float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
-                            //COMEHERE
                             if (!(otherDirec.getUnitVector().getY() < 0)) {
                                 double velocity = 0;
                                 double fall = ((EntityAttachments) this).getMaxFallHeight();
@@ -432,16 +403,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     }
 
     @Override
-    public Vec3d getTeleportVelocity() {
-        return teleportVelocity;
-    }
-
-    @Override
-    public void setTeleportVelocity(Vec3d teleportVel) {
-        this.teleportVelocity = teleportVel;
-    }
-
-    @Override
     public boolean isInFunnel() {
         return this.IN_FUNNEL;
     }
@@ -454,16 +415,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Override
     public boolean isBounced() {
         return this.IS_BOUNCED;
-    }
-
-    @Override
-    public boolean clientEntityTeleporting() {
-        return this.shouldTeleportClient;
-    }
-
-    @Override
-    public void setClientEntityTeleporting(boolean teleport) {
-        this.shouldTeleportClient = teleport;
     }
 
     @Override

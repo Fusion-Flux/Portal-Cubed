@@ -33,7 +33,6 @@ public class GelFlat extends Block {
     public static final BooleanProperty UP;
     public static final BooleanProperty DOWN;
     public static final Map<Direction, BooleanProperty> propertyMap;
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 0.01D, 16.0D);
     private static final VoxelShape UP_SHAPE = Block.createCuboidShape(0.0D, 15.99D, 0.0D, 16.0D, 16D, 16.0D);
     private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0D, 0.00D, 0.0D, 16.0D, 0.01D, 16.0D);
     private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.00D, 0.0D, 0.0D, 0.01D, 16.0D, 16.0D);

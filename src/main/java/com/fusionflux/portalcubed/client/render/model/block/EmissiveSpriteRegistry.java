@@ -1,9 +1,9 @@
 package com.fusionflux.portalcubed.client.render.model.block;
 
-import java.util.List;
-
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
 
 public final class EmissiveSpriteRegistry {
 

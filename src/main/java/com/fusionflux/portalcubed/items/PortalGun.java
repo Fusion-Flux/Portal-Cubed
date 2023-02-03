@@ -2,7 +2,6 @@ package com.fusionflux.portalcubed.items;
 
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -183,22 +182,13 @@ public class PortalGun extends Item implements DyeableItem {
 
                 if (!portalExists) {
                     portalHolder.setLinkedPortalUuid("null");
-                    world.spawnEntity(portalHolder);
-                    ((EntityPortalsAccess) user).addPortalToList(portalHolder);
-
-                    CalledValues.setPlayer(portalHolder,user.getUuid());
-
-                    CalledValues.addPortals(user,portalHolder.getUuid());
-                }else {
+                } else {
                     CalledValues.removePortals(user,originalPortal.getUuid());
                     originalPortal.kill();
-                    world.spawnEntity(portalHolder);
-                    ((EntityPortalsAccess) user).addPortalToList(portalHolder);
-
-                    CalledValues.setPlayer(portalHolder,user.getUuid());
-
-                    CalledValues.addPortals(user,portalHolder.getUuid());
                 }
+                world.spawnEntity(portalHolder);
+                CalledValues.setPlayer(portalHolder, user.getUuid());
+                CalledValues.addPortals(user, portalHolder.getUuid());
                 final boolean isOtherAuto = otherPortal == null;
                 if (isOtherAuto) {
                     otherPortal = getPotentialOpposite(world, portalPos1, portalHolder, portalHolder.getColor(), false)
