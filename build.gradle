@@ -1,5 +1,5 @@
 plugins {
-	id 'org.quiltmc.loom' version '0.12.+'
+	id 'org.quiltmc.loom' version '1.0.+'
 	id 'org.ajoberstar.grgit' version '4.1.0'
 }
 
@@ -32,9 +32,7 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:$project.minecraft_version"
-	mappings(loom.layered {
-		addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${mappings_version}:v2"))
-	})
+	mappings "org.quiltmc:quilt-mappings:${minecraft_version}+build.${mappings_version}:intermediary-v2"
 
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 	modImplementation "org.quiltmc.quilted-fabric-api:quilted-fabric-api:${project.quilted_version}-${minecraft_version}"
