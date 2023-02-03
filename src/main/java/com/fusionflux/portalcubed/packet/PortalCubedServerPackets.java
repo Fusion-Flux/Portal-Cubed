@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.items.PortalGunPrimary;
 import com.fusionflux.portalcubed.items.PortalGunSecondary;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -26,9 +27,13 @@ import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+import java.util.List;
+import java.util.UUID;
+
 public class PortalCubedServerPackets {
     public static final Identifier PORTAL_LEFT_CLICK = new Identifier(PortalCubed.MOD_ID, "portal_left_click");
     public static final Identifier GRAB_KEY_PRESSED = new Identifier(PortalCubed.MOD_ID, "grab_key_pressed");
+    public static final Identifier REMOVE_PORTALS = new Identifier(PortalCubed.MOD_ID, "remove_portals");
 
     public static void onPortalLeftClick(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
         ServerWorld serverWorld = player.getWorld();
@@ -90,8 +95,27 @@ public class PortalCubedServerPackets {
         });
     }
 
+    public static void onRemovePortalKeyPressed(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
+        server.execute(() -> {
+            boolean foundPortal = false;
+            for (final UUID portal : List.copyOf(CalledValues.getPortals(player))) {
+                final Entity checkPortal = ((ServerWorld)player.world).getEntity(portal);
+                if (checkPortal != null) {
+                    foundPortal = true;
+                    checkPortal.kill();
+                }
+            }
+            if (foundPortal) {
+                ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
+                player.playSound(PortalCubedSounds.ENTITY_PORTAL_FIZZLE, SoundCategory.NEUTRAL, 0.5f, 1f);
+                ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
+            }
+        });
+    }
+
     public static void registerPackets() {
         ServerPlayNetworking.registerGlobalReceiver(PORTAL_LEFT_CLICK, PortalCubedServerPackets::onPortalLeftClick);
         ServerPlayNetworking.registerGlobalReceiver(GRAB_KEY_PRESSED, PortalCubedServerPackets::onGrabKeyPressed);
+        ServerPlayNetworking.registerGlobalReceiver(REMOVE_PORTALS, PortalCubedServerPackets::onRemovePortalKeyPressed);
     }
 }
