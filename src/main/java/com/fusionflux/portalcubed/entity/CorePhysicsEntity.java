@@ -131,8 +131,8 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         double d = packet.getX();
         double e = packet.getY();
         double f = packet.getZ();
-        float g = packet.method_11168();
-        float h = packet.method_11171();
+        float g = packet.m_tyquxhdv();
+        float h = packet.m_iypubkgo();
         this.syncPacketPositionCodec(d, e, f);
         this.bodyYaw = 0;
         this.headYaw = 0;
