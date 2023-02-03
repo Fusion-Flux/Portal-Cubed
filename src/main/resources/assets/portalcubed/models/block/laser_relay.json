@@ -3,6 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "portalcubed:block/laser_emitter",
+		"1": "portalcubed:block/padded_gray_panel",
 		"particle": "portalcubed:block/laser_emitter"
 	},
 	"elements": [
@@ -11,12 +12,12 @@
 			"to": [16, 16, 9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 16, 0]},
 			"faces": {
-				"north": {"uv": [0.008, 0.008, 3.992, 3.992], "rotation": 180, "texture": "#0"},
-				"east": {"uv": [0.008, 13.758, 3.992, 15.992], "rotation": 270, "texture": "#0"},
-				"south": {"uv": [0.008, 0.008, 3.992, 3.992], "texture": "#0"},
-				"west": {"uv": [0.008, 13.758, 3.992, 15.992], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [0.008, 13.758, 3.992, 15.992], "rotation": 180, "texture": "#0"},
-				"down": {"uv": [0.008, 13.758, 3.992, 15.992], "texture": "#0"}
+				"north": {"uv": [0.008, 0.008, 3.992, 3.992], "texture": "#0"},
+				"east": {"uv": [7.008, 0.008, 16, 16], "texture": "#1"},
+				"south": {"uv": [0.008, 0.008, 16, 16], "texture": "#1"},
+				"west": {"uv": [0.008, 0.008, 9, 16], "texture": "#1"},
+				"up": {"uv": [16, 0.008, 7, 16], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [9, 0.008, 0, 16], "rotation": 90, "texture": "#1"}
 			}
 		},
 		{

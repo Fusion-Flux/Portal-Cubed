@@ -120,7 +120,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
         if (!this.world.isClient) {
             portalCheckBox = portalCheckBox.expand(10);
         } else {
-            portalCheckBox = portalCheckBox.stretch(entityVelocity).stretch(entityVelocity.multiply(-1));
+            portalCheckBox = portalCheckBox.stretch(entityVelocity);
         }
         List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
         VoxelShape omittedDirections = VoxelShapes.empty();
