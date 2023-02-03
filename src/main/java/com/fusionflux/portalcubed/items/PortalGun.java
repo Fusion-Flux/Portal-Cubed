@@ -84,6 +84,10 @@ public class PortalGun extends Item implements DyeableItem {
         return useImpl(world, user, hand, false);
     }
 
+    protected boolean allowLinkingToOther() {
+        return false;
+    }
+
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
         ItemStack stack = user.getStackInHand(hand);
         if (user.isSpectator()) return TypedActionResult.pass(stack);
@@ -191,8 +195,9 @@ public class PortalGun extends Item implements DyeableItem {
                 CalledValues.addPortals(user, portalHolder.getUuid());
                 final boolean isOtherAuto = otherPortal == null;
                 if (isOtherAuto) {
-                    otherPortal = getPotentialOpposite(world, portalPos1, portalHolder, portalHolder.getColor(), false)
-                        .orElse(null);
+                    otherPortal = getPotentialOpposite(
+                        world, portalPos1, portalHolder, portalHolder.getColor(), allowLinkingToOther()
+                    ).orElse(null);
                 }
                 if (otherPortal != null) {
                     linkPortals(portalHolder, otherPortal, 0.1f);
