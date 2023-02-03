@@ -37,9 +37,6 @@ public abstract class MinecraftClientMixin {
 
     @Shadow private int itemUseCooldown;
 
-    public MinecraftClientMixin() {
-        throw new AssertionError(PortalCubed.MOD_ID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
-    }
 
     /**
      * Prevents block breaking on player left click while holding a portal gun as left click functionality is replaced.
