@@ -1,7 +1,5 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.items.*;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import net.minecraft.client.MinecraftClient;
@@ -14,7 +12,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -90,9 +87,9 @@ public abstract class MinecraftClientMixin {
                     ItemStack itemStack = this.player.getStackInHand(hand);
 
                     if (mainHand instanceof PaintGun) {
-                        ((MinecraftClient)(Object)this).execute(() -> ((PaintGun) itemStack.getItem()).useLeft(this.player.world, this.player, hand));
+                        ((MinecraftClient)(Object)this).execute(() -> ((PaintGun) itemStack.getItem()).useLeft(this.player.world, this.player));
                     } else if (offHand instanceof PaintGun) {
-                        ((MinecraftClient)(Object)this).execute(() -> ((PaintGun) itemStack.getItem()).useLeft(this.player.world, this.player, hand));
+                        ((MinecraftClient)(Object)this).execute(() -> ((PaintGun) itemStack.getItem()).useLeft(this.player.world, this.player));
                     }
                 }
             };

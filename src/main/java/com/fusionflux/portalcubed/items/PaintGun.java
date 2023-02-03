@@ -30,7 +30,7 @@ public class PaintGun extends Item implements DyeableItem {
         return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
     }
 
-    public void useLeft(World world, PlayerEntity user, Hand hand) {
+    public void useLeft(World world, PlayerEntity user) {
         if(world.isClient && !user.isSpectator() && !CalledValues.getCanFireGel(user)){
             var byteBuf = PacketByteBufs.create();
             byteBuf.writeDouble(user.getVelocity().x);

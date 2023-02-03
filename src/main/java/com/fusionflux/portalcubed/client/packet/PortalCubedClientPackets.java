@@ -57,7 +57,7 @@ public class PortalCubedClientPackets {
             //player.updateLastActionTime();
 
             if (!itemStack.isEmpty() && itemStack.getItem() instanceof PaintGun) {
-                client.execute(() -> ((PaintGun) itemStack.getItem()).useLeft(clientWorld, client.player, hand));
+                client.execute(() -> ((PaintGun) itemStack.getItem()).useLeft(clientWorld, client.player));
             }
         }
     }
