@@ -13,9 +13,9 @@ import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
 public class AdhesionGravityVerifier {
-    public static Identifier FIELD_GRAVITY_SOURCE = new Identifier(PortalCubed.MOD_ID, "adhesion_gel");
-    public static int FIELD_GRAVITY_PRIORITY = 10;
-    public static int FIELD_GRAVITY_MAX_DURATION = 2;
+    public static final Identifier FIELD_GRAVITY_SOURCE = new Identifier(PortalCubed.MOD_ID, "adhesion_gel");
+    public static final int FIELD_GRAVITY_PRIORITY = 10;
+    public static final int FIELD_GRAVITY_MAX_DURATION = 2;
 
 
     public static Gravity newFieldGravity(Direction direction){

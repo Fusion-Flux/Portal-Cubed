@@ -146,7 +146,6 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "conversion_gel_blob"), CONVERSION_GEL_BLOB);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "adhesion_gel_blob"), ADHESION_GEL_BLOB);
 
-        //noinspection DataFlowIssue
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(STORAGE_CUBE, StorageCubeEntity.createMobAttributes().build());
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes().build());
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(RADIO, RadioEntity.createMobAttributes().build());

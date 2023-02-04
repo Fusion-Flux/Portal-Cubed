@@ -24,5 +24,4 @@ public class InGameOverlayRendererMixin {
         return portalBox == VoxelShapes.empty();
     }
 
-
 }

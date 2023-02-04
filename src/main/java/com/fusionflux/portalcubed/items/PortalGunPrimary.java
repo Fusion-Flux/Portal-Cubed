@@ -35,4 +35,9 @@ public class PortalGunPrimary extends PortalGun {
     public boolean isSideActive(ClientWorld world, ItemStack stack, boolean rightSide) {
         return super.isSideActive(world, stack, false);
     }
+
+    @Override
+    protected boolean allowLinkingToOther() {
+        return true;
+    }
 }

@@ -1,12 +1,9 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -19,8 +16,6 @@ import net.minecraft.world.World;
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
 public class LaserRelayEntity extends BlockEntity {
-
-    public final int MAX_RANGE = PortalCubedConfig.maxBridgeLength;
 
 
     public LaserRelayEntity(BlockPos pos, BlockState state) {
@@ -39,11 +34,6 @@ public class LaserRelayEntity extends BlockEntity {
         }
 
 
-    }
-
-    public void playSound(SoundEvent soundEvent) {
-        assert this.world != null;
-        this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 
     public void updateState(BlockState state, boolean toggle) {

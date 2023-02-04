@@ -10,7 +10,6 @@ import net.minecraft.util.Identifier;
 
 public class JugRenderer extends MobEntityRenderer<JugEntity, JugModel> {
     private static final Identifier BASE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/water_jug.png");
-    protected final JugModel model = new JugModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(JugModel.JUG_LAYER));
 
     public JugRenderer(EntityRendererFactory.Context context) {
         super(context, new JugModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(JugModel.JUG_LAYER)), 0.5f);

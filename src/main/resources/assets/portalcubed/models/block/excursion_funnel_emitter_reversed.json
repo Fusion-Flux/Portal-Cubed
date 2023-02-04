@@ -5,6 +5,7 @@
 		"0": "portalcubed:block/funnel_base",
 		"1": "portalcubed:block/funnel_wings_active_reverse",
 		"2": "portalcubed:block/funnel_wings_active_reverse_e",
+		"3": "portalcubed:block/padded_gray_panel",
 		"particle": "portalcubed:block/funnel_base"
 	},
 	"elements": [
@@ -14,11 +15,11 @@
 			"rotation": {"angle": 0, "axis": "z", "origin": [8, 1, 9.5]},
 			"faces": {
 				"north": {"uv": [6.984, 7.016, 0.016, 13.984], "rotation": 270, "texture": "#0"},
-				"east": {"uv": [0.016, 0.016, 6.984, 0.016], "rotation": 270, "texture": "#0"},
+				"east": {"uv": [15.984, 0.016, 1, 16], "rotation": 180, "texture": "#3"},
 				"south": {"uv": [6.984, 6.984, 0.016, 0.016], "rotation": 270, "texture": "#0"},
-				"west": {"uv": [0.016, 0.016, 6.984, 0.016], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [0.016, 0.016, 6.984, 0.016], "rotation": 180, "texture": "#0"},
-				"down": {"uv": [0.016, 0.016, 6.984, 0.016], "texture": "#0"}
+				"west": {"uv": [14.984, 0.016, 0, 16], "rotation": 180, "texture": "#3"},
+				"up": {"uv": [0.016, 1.016, 16, 16], "rotation": 180, "texture": "#3"},
+				"down": {"uv": [0.016, 0.016, 16, 15], "rotation": 180, "texture": "#3"}
 			}
 		},
 		{
@@ -119,7 +120,6 @@
 				"down": {"uv": [6.016, 10.016, 11.984, 12.484], "texture": "#1"}
 			}
 		},
-
 		{
 			"from": [2, 2, 15.025],
 			"to": [14, 14, 20.025],
@@ -142,7 +142,6 @@
 				"down": {"uv": [6.016, 10.016, 11.984, 12.484], "texture": "#2"}
 			}
 		},
-
 		{
 			"from": [0, 0, 15.025],
 			"to": [16, 1, 17.025],

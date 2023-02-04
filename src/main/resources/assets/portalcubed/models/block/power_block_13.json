@@ -1,5 +1,6 @@
 {
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "particle": "portalcubed:item/power_block_13"
+    "all": "portalcubed:block/power_block_13"
   }
 }

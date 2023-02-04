@@ -208,7 +208,7 @@ public class AutoPortalBlock extends BlockWithEntity {
         final BlockPos lowerPos = upper ? otherPos : pos;
         final BlockState otherState = world.getBlockState(otherPos);
         final ItemStack stack = player.getStackInHand(hand);
-        if (stack.isEmpty()) {
+        if (stack.isOf(PortalCubedItems.HAMMER)) {
             openOrClosePortal(world, lowerPos, state.get(FACING), true);
             if (player.isSneaking()) {
                 for (BlockPos usePos = pos; usePos != null; usePos = usePos == pos ? otherPos : null) {

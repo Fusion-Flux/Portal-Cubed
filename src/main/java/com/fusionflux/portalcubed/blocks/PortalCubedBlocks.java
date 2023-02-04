@@ -111,9 +111,9 @@ public class PortalCubedBlocks {
 //    public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<RocketTurretBlockEntity> ROCKET_TURRET_BLOCK_ENTITY;
 
-    public static TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "cant_place_portal_on"));
-    public static TagKey<Block> GEL_CHECK_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "gelchecktag"));
-    public static TagKey<Block> ALLOW_PORTAL_IN = TagKey.of(Registry.BLOCK_KEY,new Identifier("portalcubed", "allowinside"));
+    public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "cant_place_portal_on"));
+    public static final TagKey<Block> GEL_CHECK_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "gelchecktag"));
+    public static final TagKey<Block> ALLOW_PORTAL_IN = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "allowinside"));
 
     public static void registerBlocks() {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "base_gel"), BASE_GEL);
@@ -201,6 +201,7 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("old_ap_floor_button"), OLD_AP_FLOOR_BUTTON);
         Registry.register(Registry.ITEM, id("old_ap_floor_button"), new BlockItem(OLD_AP_FLOOR_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
+        // TODO: Implement
 //        ROCKET_TURRET_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("rocket_turret"), QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build(null));
 //        Registry.register(Registry.BLOCK, id("rocket_turret"), ROCKET_TURRET);
 //        Registry.register(Registry.ITEM, id("rocket_turret"), new BlockItem(ROCKET_TURRET, new Item.Settings().group(PortalCubed.TestingElementsGroup)));

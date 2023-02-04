@@ -92,7 +92,7 @@ public class FizzlerEmitter extends HorizontalFacingBlock {
         final World world = ctx.getWorld();
         if (pos.getY() < world.getTopY() - 1 && world.getBlockState(pos.up()).canReplace(ctx)) {
             return getDefaultState()
-                .with(FACING, ctx.getPlayerFacing())
+                .with(FACING, ctx.getPlayerFacing().getOpposite())
                 .with(HALF, DoubleBlockHalf.LOWER)
                 .with(POWERED, world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.up()));
         }

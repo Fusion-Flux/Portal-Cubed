@@ -71,7 +71,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
         R_EAST = CustomProperties.R_EAST;
         R_SOUTH = CustomProperties.R_SOUTH;
         R_WEST = CustomProperties.R_WEST;
-        R_UP = CustomProperties.RUP;
+        R_UP = CustomProperties.R_UP;
         R_DOWN = CustomProperties.R_DOWN;
     }
 
@@ -162,7 +162,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
         if(state.get(CustomProperties.R_EAST)){
             result =result.subtract(1, 0, 0);
         }
-        if(state.get(CustomProperties.RUP)){
+        if(state.get(CustomProperties.R_UP)){
             result =result.subtract(0, 1, 0);
         }
         if(state.get(CustomProperties.R_DOWN)){
@@ -175,7 +175,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
         if(state.get(CustomProperties.R_EAST) && state.get(CustomProperties.R_WEST)){
             modifyX = true;
         }
-        if(state.get(CustomProperties.RUP) && state.get(CustomProperties.R_DOWN)){
+        if(state.get(CustomProperties.R_UP) && state.get(CustomProperties.R_DOWN)){
             modifyY = true;
         }
 

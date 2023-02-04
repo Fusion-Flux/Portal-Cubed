@@ -2,7 +2,6 @@ package com.fusionflux.portalcubed.items;
 
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -83,6 +82,10 @@ public class PortalGun extends Item implements DyeableItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         return useImpl(world, user, hand, false);
+    }
+
+    protected boolean allowLinkingToOther() {
+        return false;
     }
 
     public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
@@ -183,26 +186,18 @@ public class PortalGun extends Item implements DyeableItem {
 
                 if (!portalExists) {
                     portalHolder.setLinkedPortalUUID(Optional.empty());
-                    world.spawnEntity(portalHolder);
-                    ((EntityPortalsAccess) user).addPortalToList(portalHolder);
-
-                    portalHolder.setOwnerUUID(Optional.of(user.getUuid()));
-
-                    CalledValues.addPortals(user,portalHolder.getUuid());
-                }else {
+                } else {
                     CalledValues.removePortals(user,originalPortal.getUuid());
                     originalPortal.kill();
-                    world.spawnEntity(portalHolder);
-                    ((EntityPortalsAccess) user).addPortalToList(portalHolder);
-
-                    portalHolder.setOwnerUUID(Optional.of(user.getUuid()));
-
-                    CalledValues.addPortals(user,portalHolder.getUuid());
                 }
+                world.spawnEntity(portalHolder);
+                portalHolder.setOwnerUUID(Optional.of(user.getUuid()));
+                CalledValues.addPortals(user, portalHolder.getUuid());
                 final boolean isOtherAuto = otherPortal == null;
                 if (isOtherAuto) {
-                    otherPortal = getPotentialOpposite(world, portalPos1, portalHolder, portalHolder.getColor(), false)
-                        .orElse(null);
+                    otherPortal = getPotentialOpposite(
+                        world, portalPos1, portalHolder, portalHolder.getColor(), allowLinkingToOther()
+                    ).orElse(null);
                 }
                 if (otherPortal != null) {
                     linkPortals(portalHolder, otherPortal, 0.1f);

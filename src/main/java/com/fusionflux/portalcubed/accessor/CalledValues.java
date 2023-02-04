@@ -1,15 +1,12 @@
 package com.fusionflux.portalcubed.accessor;
 
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.util.PortalCubedComponent;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -49,6 +46,36 @@ public abstract class CalledValues {
 
     public static void setHasTeleportationHappened(Entity entity, boolean setValue) {
         maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setHasTeleportationHappened(setValue));
+    }
+
+    public static boolean getWasInfiniteFalling(Entity entity) {
+        return maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).map(PortalCubedComponent::getWasInfiniteFalling).orElse(false);
+    }
+    public static void setWasInfiniteFalling(Entity entity, boolean setValue) {
+        maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setWasInfiniteFalling(setValue));
+    }
+
+    public static Vec3d getVelocityUpdateAfterTeleport(Entity entity) {
+        return maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).map(PortalCubedComponent::getVelocityUpdateAfterTeleport).orElse(null);
+    }
+
+    public static void setVelocityUpdateAfterTeleport(Entity entity, Vec3d setValue) {
+        maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setVelocityUpdateAfterTeleport(setValue));
+    }
+
+    public static boolean getCanFireGel(Entity entity) {
+        return maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).map(PortalCubedComponent::getCanFireGel).orElse(false);
+    }
+    public static void setCanFireGel(Entity entity, boolean setValue) {
+        maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setCanFireGel(setValue));
+    }
+
+    public static Vec3d getServerVelForGel(Entity entity) {
+        return maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).map(PortalCubedComponent::getServerVelForGel).orElse(null);
+    }
+
+    public static void setServerVelForGel(Entity entity, Vec3d setValue) {
+        maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setServerVelForGel(setValue));
     }
 
     public static Set<UUID> getPortals(Entity entity) {

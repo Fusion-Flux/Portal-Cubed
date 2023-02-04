@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -16,8 +15,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -34,8 +31,6 @@ import java.util.List;
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
 public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
-
-    public final int MAX_RANGE = PortalCubedConfig.maxBridgeLength;
 
     private double velX=0;
     private double velY=0;
@@ -81,11 +76,6 @@ public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedSc
         if(blockEntity.timer>0)
             blockEntity.timer -= 1;
 
-    }
-
-    public void playSound(SoundEvent soundEvent) {
-        assert this.world != null;
-        this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
     }
 
 

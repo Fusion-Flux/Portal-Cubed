@@ -29,5 +29,19 @@ public class GrabKeyBinding {
                 ClientPlayNetworking.send(PortalCubedServerPackets.GRAB_KEY_PRESSED, PacketByteBufs.create());
             }
         });
+
+        KeyBind portalRemoveKey = new KeyBind(
+                "key." + PortalCubed.MOD_ID + ".removeportals",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_R,
+                "key." + PortalCubed.MOD_ID + ".category"
+        );
+
+        KeyBindingHelper.registerKeyBinding(portalRemoveKey);
+        ClientTickEvents.END.register(client -> {
+            if (client.player != null && portalRemoveKey.wasPressed()) {
+                ClientPlayNetworking.send(PortalCubedServerPackets.REMOVE_PORTALS, PacketByteBufs.create());
+            }
+        });
     }
 }

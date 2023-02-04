@@ -10,6 +10,7 @@ import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
+import static com.fusionflux.portalcubed.PortalCubed.TestingElementsGroup;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedItems {
@@ -53,6 +54,8 @@ public class PortalCubedItems {
     public static final SpawnEggItem SPACE_CORE = new SpawnEggItem(PortalCubedEntities.SPACE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem FACT_CORE = new SpawnEggItem(PortalCubedEntities.FACT_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
     public static final SpawnEggItem ADVENTURE_CORE = new SpawnEggItem(PortalCubedEntities.ADVENTURE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).maxCount(64));
+
+    public static final Item HAMMER = new Item(new QuiltItemSettings().group(TestingElementsGroup).maxCount(1));
 
     public static final Item SUBJECT_NAME_HERE = new MusicDiscItem(15, new SoundEvent(id("disc/subject_name_here")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 105);
     public static final Item TASTE_OF_BLOOD = new MusicDiscItem(15, new SoundEvent(id("disc/taste_of_blood")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 187);
@@ -105,6 +108,8 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "adventure_core"), ADVENTURE_CORE);
 
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "block_item_icon"), BLOCK_ITEM_ICON);
+
+        Registry.register(Registry.ITEM, id("hammer"), HAMMER);
 
         Registry.register(Registry.ITEM, id("music_disc_subject_name_here"), SUBJECT_NAME_HERE);
         Registry.register(Registry.ITEM, id("music_disc_taste_of_blood"), TASTE_OF_BLOOD);

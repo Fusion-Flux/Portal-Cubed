@@ -21,6 +21,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -108,6 +109,25 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     @Override
     public boolean hasCustomName() {
         return false;
+    }
+
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        double d = packet.getX();
+        double e = packet.getY();
+        double f = packet.getZ();
+        float g = packet.m_tyquxhdv();
+        float h = packet.m_iypubkgo();
+        this.syncPacketPositionCodec(d, e, f);
+        this.bodyYaw = 0;
+        this.headYaw = 0;
+        this.prevBodyYaw = this.bodyYaw;
+        this.prevHeadYaw = this.headYaw;
+        this.setNoDrag(true);
+        this.setId(packet.getId());
+        this.setUuid(packet.getUuid());
+        this.updatePositionAndAngles(d, e, f, g, h);
+        this.setVelocity((float)packet.getVelocityX(), (float)packet.getVelocityY(), (float)packet.getVelocityZ());
     }
 
     private static final TrackedData<Optional<UUID>> HOLDER_UUID = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);

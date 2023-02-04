@@ -1,10 +1,5 @@
 name: Gradle build
-
-on:
-  push:
-    branches: [ 1.19.2, 1.19.2-Temp ]
-  pull_request:
-    branches: [ 1.19.2, 1.19.2-Temp ]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:

@@ -6,7 +6,7 @@ import net.minecraft.util.math.Direction;
 
 public class CustomProperties {
 
-    public static final BooleanProperty RUP;
+    public static final BooleanProperty R_UP;
     public static final BooleanProperty R_DOWN;
     public static final BooleanProperty R_NORTH;
     public static final BooleanProperty R_EAST;
@@ -19,7 +19,7 @@ public class CustomProperties {
     public static final DirectionProperty HORIZONTAL_FACING;
 
     static {
-        RUP = BooleanProperty.of("rup");
+        R_UP = BooleanProperty.of("rup");
         R_DOWN = BooleanProperty.of("rdown");
         R_NORTH = BooleanProperty.of("rnorth");
         R_EAST = BooleanProperty.of("reast");

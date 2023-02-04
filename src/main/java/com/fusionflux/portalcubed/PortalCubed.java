@@ -10,7 +10,6 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
-import com.fusionflux.portalcubed.config.MidnightConfig;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -21,7 +20,9 @@ import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
+import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.mojang.logging.LogUtils;
+import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemGroup;
@@ -30,6 +31,7 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.ModContainer;
@@ -69,6 +71,9 @@ public class PortalCubed implements ModInitializer {
             final int targetEntityId = buf.readVarInt();
             final Vec3d offset = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
             float yawSet = buf.readFloat();
+            float pitchSet = buf.readFloat();
+            final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            final boolean wasInfiniteFall = buf.readBoolean();
             if (Double.isNaN(offset.x) || Double.isNaN(offset.y) || Double.isNaN(offset.z) || !Float.isFinite(yawSet)) {
                 handler.disconnect(Text.translatable("multiplayer.disconnect.invalid_player_movement"));
                 return;
@@ -89,7 +94,23 @@ public class PortalCubed implements ModInitializer {
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
                     return;
                 }
-                player.setYaw(yawSet);
+
+
+
+
+                Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
+
+
+
+                CalledValues.setVelocityUpdateAfterTeleport(player,PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
+
+                if(otherDirec != Direction.DOWN && wasInfiniteFall){
+                    CalledValues.setWasInfiniteFalling(player,false);
+                }
+
+                float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
+                player.setYaw(yawValue);
+                player.setPitch(pitchSet);
                 player.refreshPositionAfterTeleport(portal.getDestination().subtract(offset));
                 CalledValues.setHasTeleportationHappened(player,true);
                 GravityChangerAPI.clearGravity(player);
@@ -119,6 +140,17 @@ public class PortalCubed implements ModInitializer {
 
         ServerPlayNetworking.registerGlobalReceiver(id("clientteleportupdate"), (server, player, handler, buf, responseSender) ->
             server.execute(() -> CalledValues.setHasTeleportationHappened(player, false))
+        );
+
+        ServerPlayNetworking.registerGlobalReceiver(id("requestvelocityforgel"), (server, player, handler, buf, responseSender) ->{
+                    final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+                    final boolean fireGel = buf.readBoolean();
+                server.execute(() -> {
+                    CalledValues.setServerVelForGel(player,entityVelocity);
+                    CalledValues.setCanFireGel(player,fireGel);
+
+                });
+    }
         );
 
         ServerPlayNetworking.registerGlobalReceiver(id("cubeposupdate"), (server, player, handler, buf, responseSender) -> {
@@ -170,4 +202,8 @@ public class PortalCubed implements ModInitializer {
         BlockContentRegistries.FLAMMABLE_BLOCK.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
         GravityChannel.UPDATE_GRAVITY.getVerifierRegistry().register(AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, AdhesionGravityVerifier::check);
     }
+
+
+
+
 }

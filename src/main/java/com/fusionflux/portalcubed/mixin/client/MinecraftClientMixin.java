@@ -1,12 +1,12 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.items.*;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -32,9 +32,8 @@ public abstract class MinecraftClientMixin {
     @Nullable
     public ClientPlayerEntity player;
 
-    public MinecraftClientMixin() {
-        throw new AssertionError(PortalCubed.MOD_ID + "'s MinecraftClientMixin dummy constructor was called, something is very wrong here!");
-    }
+    @Shadow private int itemUseCooldown;
+
 
     /**
      * Prevents block breaking on player left click while holding a portal gun as left click functionality is replaced.
@@ -48,6 +47,22 @@ public abstract class MinecraftClientMixin {
             ci.cancel();
         }
     }
+
+    @Inject(method = "doItemUse", at = @At("TAIL"))
+    private void itemUseMixin(CallbackInfo ci) {
+        if (this.player != null) {
+            Item mainHand = this.player.getMainHandStack().getItem();
+            Item offHand = this.player.getOffHandStack().getItem();
+
+
+            if (mainHand instanceof PaintGun) {
+                this.itemUseCooldown = 1;
+            } else if (offHand instanceof PaintGun) {
+                this.itemUseCooldown = 1;
+            }
+
+        }
+        }
 
     /**
      * Prevents block breaking on player left click while holding a portal gun as left click functionality is replaced.
@@ -69,6 +84,13 @@ public abstract class MinecraftClientMixin {
                     PacketByteBuf buf = PacketByteBufs.create();
                     buf.writeEnumConstant(hand);
                     ClientPlayNetworking.send(packetId, buf);
+                    ItemStack itemStack = this.player.getStackInHand(hand);
+
+                    if (mainHand instanceof PaintGun) {
+                        ((MinecraftClient)(Object)this).execute(() -> ((PaintGun) itemStack.getItem()).useLeft(this.player.world, this.player));
+                    } else if (offHand instanceof PaintGun) {
+                        ((MinecraftClient)(Object)this).execute(() -> ((PaintGun) itemStack.getItem()).useLeft(this.player.world, this.player));
+                    }
                 }
             };
 
@@ -104,7 +126,6 @@ public abstract class MinecraftClientMixin {
             if (mainHand instanceof PortalGunSecondary || offHand instanceof PortalGunSecondary) {
                 cir.cancel();
             }
-
 
             if (mainHand instanceof PaintGun) {
                 sendLeftClickPacket.accept(Hand.MAIN_HAND, PortalCubedServerPackets.PORTAL_LEFT_CLICK);
