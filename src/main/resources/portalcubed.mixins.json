@@ -17,7 +17,6 @@
     "client.BackgroundRendererMixin",
     "client.CameraMixin",
     "client.ClientPlayerEntityMixin",
-    "client.ClientWorldMixin",
     "client.HeldItemRendererMixin",
     "client.InGameOverlayRendererMixin",
     "client.MinecraftClientMixin",

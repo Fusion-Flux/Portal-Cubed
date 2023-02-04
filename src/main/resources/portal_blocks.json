@@ -228,7 +228,6 @@
   "portal_1_elevator_wall_bottom": {},
   "portal_1_elevator_wall_middle": {},
   "portal_1_elevator_wall_top": {},
-
   "portal_1_smooth_gray_panel": {},
   "portal_1_smooth_gray_half_panel": {},
   "portal_1_smooth_gray_2x1_panel_bottom": {
@@ -262,98 +261,98 @@
   "portal_1_2x2_exposed_panel_top_right": {
     "type": "directional"
   },
-    "light_bridge": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "light_bridge_emitter": {
-      "type": "provided",
-      "render_layer": "cutout"
-    },
-    "neurotoxin": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "excursion_funnel": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "excursion_funnel_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "duel_excursion_funnel_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "reversed_excursion_funnel_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "neurotoxin_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "laser": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "laser_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "laser_catcher": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "laser_relay": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "conversion_gel": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "propulsion_gel": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "repulsion_gel": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "adhesion_gel": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "beta_faith_plate": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "faith_plate": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "portal_1_door": {
-      "type": "provided",
-      "render_layer": "cutout"
-    },
-    "portal_2_door": {
-      "type": "provided",
-      "render_layer": "cutout"
-    },
+  "light_bridge": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "light_bridge_emitter": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
+  "neurotoxin": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "excursion_funnel": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "excursion_funnel_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "duel_excursion_funnel_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "reversed_excursion_funnel_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "neurotoxin_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "laser": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "laser_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "laser_catcher": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "laser_relay": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "conversion_gel": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "propulsion_gel": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "repulsion_gel": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "adhesion_gel": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "beta_faith_plate": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "faith_plate": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "portal_1_door": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
+  "portal_2_door": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
   "octopus_door": {
     "type": "provided",
     "render_layer": "cutout"
   },
-    "old_ap_door": {
-      "type": "provided",
-      "render_layer": "cutout"
-    },
-    "fizzler": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
+  "old_ap_door": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
+  "fizzler": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
   "matter_inquisition_field": {
     "type": "provided",
     "render_layer": "translucent"
@@ -370,48 +369,52 @@
     "type": "provided",
     "render_layer": "translucent"
   },
-    "fizzler_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "portal_1_fizzler": {
-      "type": "provided",
-      "render_layer": "cutout"
-    },
-    "portal_1_fizzler_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "old_aperture_fizzler": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "old_aperture_fizzler_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "death_fizzler": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "death_fizzler_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "laser_fizzler": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "laser_fizzler_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "old_aperture_death_fizzler": {
-      "type": "provided",
-      "render_layer": "translucent"
-    },
-    "old_aperture_death_fizzler_emitter": {
-      "type": "provided",
-      "render_layer": "translucent"
-    }
+  "fizzler_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "portal_1_fizzler": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
+  "portal_1_fizzler_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "old_aperture_fizzler": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "old_aperture_fizzler_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "death_fizzler": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "death_fizzler_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "laser_fizzler": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "laser_fizzler_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "old_aperture_death_fizzler": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "old_aperture_death_fizzler_emitter": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
+  "power_block": {
+    "type": "provided",
+    "render_layer": "cutout"
   }
+}

@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "portalcubed:item/power_block_00"
-  }
+  "parent": "portalcubed:block/power_block_00"
 }
