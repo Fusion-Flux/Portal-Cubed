@@ -14,6 +14,7 @@ import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.entity.PortalCubedTrackedDataHandlers;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
@@ -97,7 +98,7 @@ public class PortalCubed implements ModInitializer {
 
 
 
-                Direction otherDirec = Direction.fromVector((int) CalledValues.getOtherFacing(portal).getX(), (int) CalledValues.getOtherFacing(portal).getY(), (int) CalledValues.getOtherFacing(portal).getZ());
+                Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
 
 
 
@@ -110,7 +111,7 @@ public class PortalCubed implements ModInitializer {
                 float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
                 player.setYaw(yawValue);
                 player.setPitch(pitchSet);
-                player.refreshPositionAfterTeleport(CalledValues.getDestination(portal).subtract(offset));
+                player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset));
                 CalledValues.setHasTeleportationHappened(player,true);
                 GravityChangerAPI.clearGravity(player);
             });
@@ -167,11 +168,10 @@ public class PortalCubed implements ModInitializer {
                     LOGGER.warn("{} tried to drop nonexistent physics object", player);
                     return;
                 }
-                if (!player.getUuid().equals(cube.getHolderUUID())) {
+                if (!player.getUuid().equals(cube.getHolderUUID().get())) {
                     LOGGER.warn("{} tried to drop another player's physics object (held by {})", player, cube.getHolderUUID());
                     return;
                 }
-                cube.setHolderUUID(null);
                 cube.setRotYaw(rotYaw);
                 Vec3d cubePos = new Vec3d(x,y,z);
                 Vec3d lastCubePos = new Vec3d(lastX,lastY,lastZ);
@@ -196,6 +196,7 @@ public class PortalCubed implements ModInitializer {
         PortalCubedFluids.registerFluids();
         PortalCubedItems.registerItems();
         PortalCubedEntities.registerEntities();
+        PortalCubedTrackedDataHandlers.register();
         PortalCubedServerPackets.registerPackets();
         PortalCubedSounds.registerSounds();
         BlockContentRegistries.FLAMMABLE_BLOCK.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));

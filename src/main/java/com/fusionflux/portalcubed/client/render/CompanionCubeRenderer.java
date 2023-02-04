@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.render.model.entity.CompanionCubeModel;
 import com.fusionflux.portalcubed.entity.CompanionCubeEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -22,7 +21,7 @@ public class CompanionCubeRenderer extends MobEntityRenderer<CompanionCubeEntity
 
             @Override
             public Identifier getEmissiveTexture(CompanionCubeEntity entity) {
-                if (CalledValues.getOnButton(entity)) {
+                if (entity.isOnButton()) {
                     return EMISSIVE_ACTIVE_TEXTURE;
                 }
 
@@ -34,7 +33,7 @@ public class CompanionCubeRenderer extends MobEntityRenderer<CompanionCubeEntity
 
     @Override
     public Identifier getTexture(CompanionCubeEntity entity) {
-        if(CalledValues.getOnButton(entity)){
+        if (entity.isOnButton()) {
             return ACTIVE_TEXTURE;
         }
 

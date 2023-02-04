@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
@@ -9,11 +8,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class RedirectionCubeEntity extends CorePhysicsEntity  {
+public class RedirectionCubeEntity extends StorageCubeEntity {
+
     public RedirectionCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
-
 
     @Override
     public boolean damage(DamageSource source, float amount) {
@@ -36,24 +35,6 @@ public class RedirectionCubeEntity extends CorePhysicsEntity  {
 
         }
         return false;
-    }
-    private int buttonTimer = 0;
-
-    public void setButtonTimer(int time){
-        buttonTimer = time;
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if(!world.isClient) {
-            if (buttonTimer <= 0) {
-                CalledValues.setOnButton(this, false);
-            } else {
-                CalledValues.setOnButton(this, true);
-                buttonTimer -= 1;
-            }
-        }
     }
 
 }

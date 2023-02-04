@@ -222,10 +222,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
             if (!(thisentity instanceof ExperimentalPortal) && this.canUsePortals() && portal.getActive() && !(thisentity instanceof PlayerEntity)) {
                 Direction portalFacing = portal.getFacingDirection();
-                Direction portalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
+                Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
 
-                Direction otherDirec = Direction.fromVector((int) CalledValues.getOtherFacing(portal).getX(), (int) CalledValues.getOtherFacing(portal).getY(), (int) CalledValues.getOtherFacing(portal).getZ());
-                Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getOtherAxisH(portal).x, CalledValues.getOtherAxisH(portal).y, CalledValues.getOtherAxisH(portal).z));
+                Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
+                Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
 
                 if (otherDirec != null) {
                     double teleportYOffset = switch (otherDirec) {
@@ -362,7 +362,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                 entityVelocity = new Vec3d(entityVelocity.x, velocity, entityVelocity.z);
                             }
 
-                            this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
+                            this.setPosition(portal.getDestination().get().getX() - teleportXOffset, portal.getDestination().get().getY() - teleportYOffset, portal.getDestination().get().getZ() - teleportZOffset);
                             this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                             this.setYaw(yawValue);
                             GravityChangerAPI.clearGravity(thisentity);
@@ -395,7 +395,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             Vec3d entityVelocity
     ) {
         float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDir);
-            this.setPosition(CalledValues.getDestination(portal).getX() - teleportXOffset, CalledValues.getDestination(portal).getY() - teleportYOffset, CalledValues.getDestination(portal).getZ() - teleportZOffset);
+            this.setPosition(portal.getDestination().get().getX() - teleportXOffset, portal.getDestination().get().getY() - teleportYOffset, portal.getDestination().get().getZ() - teleportZOffset);
             this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir));
             this.setYaw(yawValue);
             GravityChangerAPI.clearGravity(thisEntity);
@@ -463,7 +463,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @ModifyArgs(
             method = "adjustSingleAxisMovementForCollisions(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Lnet/minecraft/world/World;Ljava/util/List;)Lnet/minecraft/util/math/Vec3d;",
-            at = @At(target = "Lcom/google/common/collect/ImmutableList$Builder;addAll(Ljava/lang/Iterable;)Lcom/google/common/collect/ImmutableList$Builder;", value = "INVOKE", ordinal = 1)
+            at = @At(target = "Lcom/google/common/collect/ImmutableList$Builder;addAll(Ljava/lang/Iterable;)Lcom/google/common/collect/ImmutableList$Builder;", value = "INVOKE", ordinal = 1, remap = false)
     )
     private static void addAllModifyArg(Args args, @Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
         VoxelShape portalBox = CalledValues.getPortalCutout(entity);

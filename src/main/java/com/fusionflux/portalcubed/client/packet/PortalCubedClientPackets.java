@@ -6,6 +6,8 @@ import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PaintGun;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
@@ -93,12 +95,10 @@ public class PortalCubedClientPackets {
     public static void onFizzle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         final int entityId = buf.readVarInt();
         client.execute(() -> {
-            assert client.world != null;
             if (client.world.getEntityById(entityId) instanceof CorePhysicsEntity physicsEntity) {
-                assert client.player != null;
-                if (client.player.getUuid().equals(physicsEntity.getHolderUUID())) {
-                    physicsEntity.dropCube();
-                }
+                physicsEntity.getHolderUUID().ifPresent(value -> {
+                    if (client.player.getUuid().equals(value)) PortalCubedComponents.HOLDER_COMPONENT.get(client.player).stopHolding();
+                });
                 physicsEntity.startFizzlingProgress();
             }
         });

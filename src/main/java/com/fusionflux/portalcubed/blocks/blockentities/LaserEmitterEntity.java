@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
@@ -125,9 +124,9 @@ public class LaserEmitterEntity extends BlockEntity {
                                 for (ExperimentalPortal portal : list) {
                                     if(portal.getFacingDirection().getOpposite().equals(storedDirection)){
                                         if(portal.getActive()) {
-                                            Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getOtherAxisH(portal).x, CalledValues.getOtherAxisH(portal).y, CalledValues.getOtherAxisH(portal).z));
-                                            int offset = (int)(((portal.getBlockPos().getX()-translatedPos.getX()) * Math.abs(CalledValues.getAxisH(portal).x)) + ((portal.getBlockPos().getY()-translatedPos.getY()) * Math.abs(CalledValues.getAxisH(portal).y)) + ((portal.getBlockPos().getZ()-translatedPos.getZ()) * Math.abs(CalledValues.getAxisH(portal).z)));
-                                            Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(CalledValues.getAxisH(portal).x, CalledValues.getAxisH(portal).y, CalledValues.getAxisH(portal).z));
+                                            Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
+                                            int offset = (int)(((portal.getBlockPos().getX()-translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.getBlockPos().getY()-translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.getBlockPos().getZ()-translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
+                                            Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
                                             assert mainPortalVertFacing != null;
                                             if(mainPortalVertFacing.equals(Direction.SOUTH)){
                                                 offset = (Math.abs(offset)-1)*-1;
@@ -136,7 +135,7 @@ public class LaserEmitterEntity extends BlockEntity {
                                                 offset = (Math.abs(offset)-1)*-1;
                                             }
 
-                                            translatedPos = new BlockPos(CalledValues.getDestination(portal).x,CalledValues.getDestination(portal).y,CalledValues.getDestination(portal).z).offset(otherPortalVertFacing,offset);
+                                            translatedPos = new BlockPos(portal.getDestination().get().x,portal.getDestination().get().y,portal.getDestination().get().z).offset(otherPortalVertFacing,offset);
                                             savedPos = translatedPos;
                                             assert otherPortalVertFacing != null;
                                             if(otherPortalVertFacing.equals(Direction.SOUTH)){
@@ -146,7 +145,7 @@ public class LaserEmitterEntity extends BlockEntity {
                                                 translatedPos = translatedPos.offset(Direction.WEST,1);
                                             }
 
-                                            storedDirection = Direction.fromVector((int)CalledValues.getOtherFacing(portal).x,(int)CalledValues.getOtherFacing(portal).y,(int)CalledValues.getOtherFacing(portal).z);
+                                            storedDirection = Direction.fromVector((int)portal.getOtherFacing().x,(int)portal.getOtherFacing().y,(int)portal.getOtherFacing().z);
                                             teleported = true;
                                             blockEntity.funnels = modFunnels;
                                             blockEntity.portalFunnels=portalFunnels;

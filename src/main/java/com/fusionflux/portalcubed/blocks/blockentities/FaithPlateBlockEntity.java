@@ -59,7 +59,7 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
         for(Entity liver : list){
             if(blockEntity.timer <= 0) {
                 if(liver instanceof CorePhysicsEntity physEn) {
-                    if(!physEn.getUUIDPresent()) {
+                    if(!physEn.getHolderUUID().isPresent()) {
                         liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
                         blockEntity.timer = 5;
                         blockEntity.animationTimer = 7;

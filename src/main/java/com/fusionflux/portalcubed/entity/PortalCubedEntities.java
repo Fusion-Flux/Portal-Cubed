@@ -1,17 +1,16 @@
 package com.fusionflux.portalcubed.entity;
 
+import org.quiltmc.qsl.entity.api.QuiltEntityTypeBuilder;
+
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.quiltmc.qsl.entity.api.QuiltEntityTypeBuilder;
 
 public class PortalCubedEntities {
 
@@ -147,34 +146,30 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "conversion_gel_blob"), CONVERSION_GEL_BLOB);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "adhesion_gel_blob"), ADHESION_GEL_BLOB);
 
-        registerDefaultAttributes(STORAGE_CUBE, StorageCubeEntity.createMobAttributes());
-        registerDefaultAttributes(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes());
-        registerDefaultAttributes(RADIO, RadioEntity.createMobAttributes());
-        registerDefaultAttributes(REDIRECTION_CUBE, RedirectionCubeEntity.createMobAttributes());
-        registerDefaultAttributes(OLD_AP_CUBE, OldApCubeEntity.createMobAttributes());
-        registerDefaultAttributes(PORTAL_1_COMPANION_CUBE, Portal1CompanionCubeEntity.createMobAttributes());
-        registerDefaultAttributes(PORTAL_1_STORAGE_CUBE, Portal1StorageCubeEntity.createMobAttributes());
-        registerDefaultAttributes(BEANS, BeansEntity.createMobAttributes());
-        registerDefaultAttributes(MUG, MugEntity.createMobAttributes());
-        registerDefaultAttributes(JUG, JugEntity.createMobAttributes());
-        registerDefaultAttributes(COMPUTER, ComputerEntity.createMobAttributes());
-        registerDefaultAttributes(CHAIR, ChairEntity.createMobAttributes());
-        registerDefaultAttributes(LIL_PINEAPPLE, LilPineappleEntity.createMobAttributes());
-        registerDefaultAttributes(HOOPY, HoopyEntity.createMobAttributes());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(STORAGE_CUBE, StorageCubeEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(RADIO, RadioEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(REDIRECTION_CUBE, RedirectionCubeEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(OLD_AP_CUBE, OldApCubeEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(PORTAL_1_COMPANION_CUBE, Portal1CompanionCubeEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(PORTAL_1_STORAGE_CUBE, Portal1StorageCubeEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(BEANS, BeansEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(MUG, MugEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(JUG, JugEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(COMPUTER, ComputerEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(CHAIR, ChairEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(LIL_PINEAPPLE, LilPineappleEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(HOOPY, HoopyEntity.createMobAttributes().build());
 
-        registerDefaultAttributes(CORE_FRAME, HoopyEntity.createMobAttributes());
-        registerDefaultAttributes(ANGER_CORE, HoopyEntity.createMobAttributes());
-        registerDefaultAttributes(CAKE_CORE, HoopyEntity.createMobAttributes());
-        registerDefaultAttributes(CURIOSITY_CORE, HoopyEntity.createMobAttributes());
-        registerDefaultAttributes(MORALITY_CORE, HoopyEntity.createMobAttributes());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(CORE_FRAME, HoopyEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(ANGER_CORE, HoopyEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(CAKE_CORE, HoopyEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(CURIOSITY_CORE, HoopyEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(MORALITY_CORE, HoopyEntity.createMobAttributes().build());
 
-        registerDefaultAttributes(SPACE_CORE, HoopyEntity.createMobAttributes());
-        registerDefaultAttributes(ADVENTURE_CORE, HoopyEntity.createMobAttributes());
-        registerDefaultAttributes(FACT_CORE, HoopyEntity.createMobAttributes());
-    }
-
-    private static void registerDefaultAttributes(EntityType<? extends LivingEntity> entityType, DefaultAttributeContainer.Builder builder) {
-        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(entityType, builder.build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(SPACE_CORE, HoopyEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(ADVENTURE_CORE, HoopyEntity.createMobAttributes().build());
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(FACT_CORE, HoopyEntity.createMobAttributes().build());
     }
 
     public static EntityType<? extends GelBlobEntity> createGelBlob(GelFlat gel, Identifier texture) {

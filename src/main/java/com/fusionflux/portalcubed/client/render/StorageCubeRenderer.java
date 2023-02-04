@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.render.model.entity.StorageCubeModel;
 import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -22,7 +21,7 @@ public class StorageCubeRenderer extends MobEntityRenderer<StorageCubeEntity, St
 
             @Override
             public Identifier getEmissiveTexture(StorageCubeEntity entity) {
-                if (CalledValues.getOnButton(entity)) {
+                if (entity.isOnButton()) {
                     return EMISSIVE_ACTIVE_TEXTURE;
                 }
 
@@ -34,7 +33,7 @@ public class StorageCubeRenderer extends MobEntityRenderer<StorageCubeEntity, St
 
     @Override
     public Identifier getTexture(StorageCubeEntity entity) {
-        if(CalledValues.getOnButton(entity)){
+        if (entity.isOnButton()) {
             return ACTIVE_TEXTURE;
         }
 

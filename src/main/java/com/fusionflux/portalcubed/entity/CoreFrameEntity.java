@@ -8,7 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class CoreFrameEntity extends CorePhysicsEntity  {
+public class CoreFrameEntity extends CorePhysicsEntity {
 
     public CoreFrameEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);

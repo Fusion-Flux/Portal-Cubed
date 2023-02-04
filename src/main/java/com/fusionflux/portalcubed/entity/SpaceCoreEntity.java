@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.EntityType;
@@ -10,7 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class SpaceCoreEntity extends CorePhysicsEntity  {
+public class SpaceCoreEntity extends CorePhysicsEntity {
 
     public SpaceCoreEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
@@ -44,10 +43,6 @@ public class SpaceCoreEntity extends CorePhysicsEntity  {
     @Override
     public void tick() {
         if (!this.world.isClient) {
-            if(CalledValues.getOnButton(this)){
-                CalledValues.setOnButton(this, true);
-            }
-
             if (t == 0) {
                 world.playSoundFromEntity(null,this, PortalCubedSounds.SPACE_CORE_EVENT,this.getSoundCategory(),1f,1f);
                 t = 2765;

@@ -9,6 +9,8 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.items.PortalGunPrimary;
 import com.fusionflux.portalcubed.items.PortalGunSecondary;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
@@ -71,26 +73,15 @@ public class PortalCubedServerPackets {
             EntityHitResult entityHitResult = ProjectileUtil.raycast(player, vec3d, vec3d3, box, (entity) -> !entity.isSpectator() && entity.collides(), d);
             if (entityHitResult != null) {
                 if (entityHitResult.getEntity() instanceof CorePhysicsEntity entity) {
-                    if (CalledValues.getCubeUUID(player)==null) {
-                        entity.setHolderUUID(player.getUuid());
-                        CalledValues.setCubeUUID(player,entity.getUuid());
-                    } else {
-                        CorePhysicsEntity playerCube = (CorePhysicsEntity) ((ServerWorld) player.world).getEntity(CalledValues.getCubeUUID(player));
-                        if (playerCube != null) {
-                            playerCube.setHolderUUID(null);
-                        }
-                        CalledValues.setCubeUUID(player,null);
+                    if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).hold(entity)) {
+                        PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding();
                     }
                 }
             } else {
-                CorePhysicsEntity playerCube = (CorePhysicsEntity) ((ServerWorld) player.world).getEntity(CalledValues.getCubeUUID(player));
-                if (playerCube != null) {
-                    playerCube.setHolderUUID(null);
-                } else {
+                if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding()) {
                     player.playSound(PortalCubedSounds.NOTHING_TO_GRAB_EVENT, SoundCategory.NEUTRAL, 0.3f, 1f);
                     ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
                 }
-                CalledValues.setCubeUUID(player,null);
             }
         });
     }
