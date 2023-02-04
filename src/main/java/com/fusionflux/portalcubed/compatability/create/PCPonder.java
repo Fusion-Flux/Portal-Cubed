@@ -4,10 +4,9 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.blockentities.AutoPortalBlock;
 import com.fusionflux.portalcubed.blocks.blockentities.AutoPortalBlockEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.simibubi.create.foundation.ponder.PonderRegistrationHelper;
-import com.simibubi.create.foundation.ponder.PonderTag;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.simibubi.create.foundation.ponder.*;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.utility.Pointing;
 import net.minecraft.entity.Entity;
@@ -15,6 +14,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -25,6 +29,8 @@ public class PCPonder {
         .item(PortalCubedItems.BLOCK_ITEM_ICON, true, false)
         .addToIndex();
 
+    private static final boolean GENERATE_TRANSLATIONS = false;
+
     public static void register() {
         HELPER.addStoryBoard(
             id("auto_portal"),
@@ -32,6 +38,17 @@ public class PCPonder {
             PCPonder::autoPortal,
             PORTAL_CUBED
         );
+
+        if (GENERATE_TRANSLATIONS) {
+            PonderLocalization.generateSceneLang();
+            final JsonObject translation = new JsonObject();
+            PonderLocalization.record("portalcubed", translation);
+            try (Writer writer = new FileWriter("create_ponder_portalcubed.json", StandardCharsets.UTF_8)) {
+                new GsonBuilder().setPrettyPrinting().create().toJson(translation, writer);
+            } catch (IOException e) {
+                PortalCubed.LOGGER.error("Failed to save file", e);
+            }
+        }
     }
 
     public static void autoPortal(SceneBuilder scene, SceneBuildingUtil util) {
