@@ -87,7 +87,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                                             offset = (Math.abs(offset)-1)*-1;
                                         }
 
-                                        translatedPos = new BlockPos(portal.getDestination().x,portal.getDestination().y,portal.getDestination().z).offset(otherPortalVertFacing,offset);
+                                        translatedPos = new BlockPos(portal.getDestination().get().x,portal.getDestination().get().y,portal.getDestination().get().z).offset(otherPortalVertFacing,offset);
                                         savedPos=translatedPos;
                                         assert otherPortalVertFacing != null;
                                         if(otherPortalVertFacing.equals(Direction.SOUTH)){
@@ -174,7 +174,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
                                             offset = (Math.abs(offset)-1)*-1;
                                         }
 
-                                        translatedPos = new BlockPos(portal.getDestination().x,portal.getDestination().y,portal.getDestination().z).offset(otherPortalVertFacing,offset);
+                                        translatedPos = new BlockPos(portal.getDestination().get().x,portal.getDestination().get().y,portal.getDestination().get().z).offset(otherPortalVertFacing,offset);
                                         savedPos=translatedPos;
                                         assert otherPortalVertFacing != null;
                                         if(otherPortalVertFacing.equals(Direction.SOUTH)){

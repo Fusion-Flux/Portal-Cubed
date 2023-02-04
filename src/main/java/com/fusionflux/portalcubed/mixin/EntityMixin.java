@@ -362,7 +362,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                                 entityVelocity = new Vec3d(entityVelocity.x, velocity, entityVelocity.z);
                             }
 
-                            this.setPosition(portal.getDestination().getX() - teleportXOffset, portal.getDestination().getY() - teleportYOffset, portal.getDestination().getZ() - teleportZOffset);
+                            this.setPosition(portal.getDestination().get().getX() - teleportXOffset, portal.getDestination().get().getY() - teleportYOffset, portal.getDestination().get().getZ() - teleportZOffset);
                             this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec));
                             this.setYaw(yawValue);
                             GravityChangerAPI.clearGravity(thisentity);
@@ -395,7 +395,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             Vec3d entityVelocity
     ) {
         float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDir);
-            this.setPosition(portal.getDestination().getX() - teleportXOffset, portal.getDestination().getY() - teleportYOffset, portal.getDestination().getZ() - teleportZOffset);
+            this.setPosition(portal.getDestination().get().getX() - teleportXOffset, portal.getDestination().get().getY() - teleportYOffset, portal.getDestination().get().getZ() - teleportZOffset);
             this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir));
             this.setYaw(yawValue);
             GravityChangerAPI.clearGravity(thisEntity);

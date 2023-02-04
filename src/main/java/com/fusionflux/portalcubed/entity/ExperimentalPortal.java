@@ -34,11 +34,6 @@ public class ExperimentalPortal extends Entity {
 
     private Box cutoutBoundingBox = nullBox;
 
-    private Vec3d axisOH = Vec3d.ZERO;
-    private Vec3d destination = null;
-    private Vec3d facing = Vec3d.ZERO;
-    private Optional<UUID> ownerUUID = Optional.empty();
-
     public static final TrackedData<Optional<UUID>> LINKED_PORTAL_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     public static final TrackedData<Boolean> IS_ACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final TrackedData<String> STORED_OUTLINE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
@@ -48,8 +43,12 @@ public class ExperimentalPortal extends Entity {
      * getAxisW() and getAxisH() define the orientation of the portal
      * They should be normalized and should be perpendicular to each other
      */
-    public static final TrackedData<Optional<Vec3d>> AXIS_W = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC_3D);
-    public static final TrackedData<Optional<Vec3d>> AXIS_H = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC_3D);
+    public static final TrackedData<Optional<Vec3d>> AXIS_W = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
+    public static final TrackedData<Optional<Vec3d>> AXIS_H = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
+    public static final TrackedData<Vec3d> AXIS_OH = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
+    public static final TrackedData<Optional<Vec3d>> DESTINATION = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
+    public static final TrackedData<Vec3d> FACING = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
+    public static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
     public Vec3d getNormal() {
         return getAxisW().get().crossProduct(getAxisH().get()).normalize();
@@ -68,6 +67,10 @@ public class ExperimentalPortal extends Entity {
         this.getDataTracker().startTracking(COLOR, 0);
         this.getDataTracker().startTracking(AXIS_W, Optional.empty());
         this.getDataTracker().startTracking(AXIS_H, Optional.empty());
+        this.getDataTracker().startTracking(AXIS_OH, Vec3d.ZERO);
+        this.getDataTracker().startTracking(DESTINATION, Optional.empty());
+        this.getDataTracker().startTracking(FACING, Vec3d.ZERO);
+        this.getDataTracker().startTracking(OWNER_UUID, Optional.empty());
     }
 
     @Override
@@ -77,7 +80,7 @@ public class ExperimentalPortal extends Entity {
         if (compoundTag.containsUuid("linkedPortalUUID")) this.setLinkedPortalUUID(Optional.of(compoundTag.getUuid("linkedPortalUUID")));
         if (compoundTag.contains("axisW")) this.setOrientation(IPHelperDuplicate.getVec3d(compoundTag, "axisW").normalize(), IPHelperDuplicate.getVec3d(compoundTag, "axisH").normalize());
         this.setOtherAxisH(IPHelperDuplicate.getVec3d(compoundTag, "axisOH").normalize());
-        this.setDestination(IPHelperDuplicate.getVec3d(compoundTag, "destination"));
+        if (compoundTag.contains("destination")) this.setDestination(Optional.of(IPHelperDuplicate.getVec3d(compoundTag, "destination")));
         this.setOtherFacing(IPHelperDuplicate.getVec3d(compoundTag, "facing"));
         if (compoundTag.containsUuid("ownerUUID")) this.setOwnerUUID(Optional.of(compoundTag.getUuid("ownerUUID")));
     }
@@ -90,7 +93,7 @@ public class ExperimentalPortal extends Entity {
         this.getAxisW().ifPresent(axisW -> IPHelperDuplicate.putVec3d(compoundTag, "axisW", axisW));
         this.getAxisH().ifPresent(axisH -> IPHelperDuplicate.putVec3d(compoundTag, "axisH", axisH));
         IPHelperDuplicate.putVec3d(compoundTag, "axisOH", this.getOtherAxisH());
-        IPHelperDuplicate.putVec3d(compoundTag, "destination", this.getDestination());
+        this.getDestination().ifPresent(destination -> IPHelperDuplicate.putVec3d(compoundTag, "destination", destination));
         IPHelperDuplicate.putVec3d(compoundTag, "facing", this.getOtherFacing());
         this.getOwnerUUID().ifPresent(uuid -> compoundTag.putUuid("ownerUUID", uuid));
     }
@@ -135,11 +138,11 @@ public class ExperimentalPortal extends Entity {
     }
 
     public Optional<UUID> getOwnerUUID() {
-        return this.ownerUUID;
+        return getDataTracker().get(OWNER_UUID);
     }
 
     public void setOwnerUUID(Optional<UUID> uuid) {
-        this.ownerUUID = uuid;
+        this.getDataTracker().set(OWNER_UUID, uuid);
     }
 
     public boolean getActive() {
@@ -163,27 +166,27 @@ public class ExperimentalPortal extends Entity {
     }
 
     public Vec3d getOtherAxisH() {
-        return axisOH;
+        return getDataTracker().get(AXIS_OH);
     }
 
     public void setOtherAxisH(Vec3d h) {
-        axisOH = h;
+        this.getDataTracker().set(AXIS_OH, h);
     }
 
-    public Vec3d getDestination() {
-        return destination;
+    public Optional<Vec3d> getDestination() {
+        return getDataTracker().get(DESTINATION);
     }
 
-    public void setDestination(Vec3d Destination) {
-        destination = Destination;
+    public void setDestination(Optional<Vec3d> destination) {
+        this.getDataTracker().set(DESTINATION, destination);
     }
 
     public Vec3d getOtherFacing() {
-        return facing;
+        return getDataTracker().get(FACING);
     }
 
-    public void setOtherFacing(Vec3d Facing) {
-        facing = Facing;
+    public void setOtherFacing(Vec3d facing) {
+        this.getDataTracker().set(FACING, facing);
     }
 
     public void setOrientation(Vec3d axisW, Vec3d axisH) {
@@ -194,7 +197,7 @@ public class ExperimentalPortal extends Entity {
 
     @Override
     public void kill() {
-        ownerUUID.ifPresent(uuid -> {
+        getOwnerUUID().ifPresent(uuid -> {
             Entity player = ((ServerWorld) world).getEntity(uuid);
             CalledValues.removePortals(player, this.getUuid());
         });
@@ -209,7 +212,7 @@ public class ExperimentalPortal extends Entity {
             ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x,getChunkPos().z,true);
 
         if(!world.isClient){
-            ownerUUID.ifPresent(uuid -> {
+            getOwnerUUID().ifPresent(uuid -> {
                 Entity player = ((ServerWorld) world).getEntity(uuid);
                 if(player == null || !player.isAlive()){
                     this.kill();
@@ -224,7 +227,7 @@ public class ExperimentalPortal extends Entity {
                     : null;
 
             setActive(otherPortal != null);
-            this.destination = Objects.requireNonNullElse(otherPortal, this).getOriginPos();
+            setDestination(Optional.of(Objects.requireNonNullElse(otherPortal, this).getOriginPos()));
 
             BlockPos topBehind = new BlockPos(
                     this.getPos().getX() - getAxisW().get().crossProduct(getAxisH().get()).getX(),

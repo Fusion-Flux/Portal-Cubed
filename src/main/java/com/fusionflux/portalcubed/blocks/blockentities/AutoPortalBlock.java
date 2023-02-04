@@ -186,7 +186,7 @@ public class AutoPortalBlock extends BlockWithEntity {
             placeOn.getZ() + 0.5 - 0.510 * facingOpposite.getOffsetZ()
         );
         portal.setOriginPos(portalPos);
-        portal.setDestination(portalPos);
+        portal.setDestination(Optional.of(portalPos));
         final Vec3i right = new Vec3i(0, 1, 0).crossProduct(facingOpposite.getVector());
         final Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(
             PortalGun.getPortalOrientationQuaternion(Vec3d.of(right), new Vec3d(0, 1, 0))
