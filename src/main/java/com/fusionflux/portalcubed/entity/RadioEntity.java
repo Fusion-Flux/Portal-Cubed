@@ -22,6 +22,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class RadioEntity extends CorePhysicsEntity  {
@@ -92,7 +93,7 @@ public class RadioEntity extends CorePhysicsEntity  {
     }
 
     @Override
-    public void setHolderUUID(UUID uuid) {
+    public void setHolderUUID(Optional<UUID> uuid) {
         super.setHolderUUID(uuid);
         if (uuid != null) {
             setNotPlaying(!isNotPlaying());
@@ -132,7 +133,7 @@ public class RadioEntity extends CorePhysicsEntity  {
         private final SoundEvent song;
 
         public RadioSoundInstance(SoundEvent song) {
-            super(song, SoundCategory.RECORDS, SoundInstance.method_43221());
+            super(song, SoundCategory.RECORDS, SoundInstance.m_mglvabhn());
             this.song = song;
             volume = 1f;
             pitch = 1f;

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(FlatChunkGeneratorConfig.class)
 public class FlatChunkGeneratorConfigMixin {
     @Inject(
-        method = "method_44225",
+        method = "m_betdxcsl",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/biome/GenerationSettings$Builder;feature(Lnet/minecraft/world/gen/GenerationStep$Feature;Lnet/minecraft/util/Holder;)Lnet/minecraft/world/biome/GenerationSettings$Builder;",

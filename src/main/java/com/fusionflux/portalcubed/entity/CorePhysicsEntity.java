@@ -4,12 +4,12 @@ import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.Accessors;
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -21,8 +21,6 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -31,18 +29,16 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.PlayerLookup;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 public class CorePhysicsEntity extends PathAwareEntity  {
 
     private float fizzleProgress = 0f;
     private boolean fizzling = false;
-    private final Set<ServerPlayerEntity> tracking = new HashSet<>();
 
     public CorePhysicsEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
@@ -54,19 +50,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     public Vec3d lastPos = this.getPos();
 
-    private float rotation_yaw = this.bodyYaw;
-
     private final Vec3d offsetHeight = new Vec3d(0,this.getHeight()/2,0);
-
-    @Override
-    public void onStartedTrackingBy(ServerPlayerEntity player) {
-        tracking.add(player);
-    }
-
-    @Override
-    public void onStoppedTrackingBy(ServerPlayerEntity player) {
-        tracking.remove(player);
-    }
 
     @Override
     public boolean collides() {
@@ -126,64 +110,38 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         return false;
     }
 
-    @Override
-    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        double d = packet.getX();
-        double e = packet.getY();
-        double f = packet.getZ();
-        float g = packet.method_11168();
-        float h = packet.method_11171();
-        this.syncPacketPositionCodec(d, e, f);
-        this.bodyYaw = 0;
-        this.headYaw = 0;
-        this.prevBodyYaw = this.bodyYaw;
-        this.prevHeadYaw = this.headYaw;
-        this.setNoDrag(true);
-        this.setId(packet.getId());
-        this.setUuid(packet.getUuid());
-        this.updatePositionAndAngles(d, e, f, g, h);
-        this.setVelocity((float)packet.getVelocityX(), (float)packet.getVelocityY(), (float)packet.getVelocityZ());
-    }
-
-
-    public static final TrackedData<Optional<UUID>> HOLDER_UUID = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    private static final TrackedData<Optional<UUID>> HOLDER_UUID = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    private static final TrackedData<Boolean> ON_BUTTON = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
         this.getDataTracker().startTracking(HOLDER_UUID, Optional.empty());
+        this.getDataTracker().startTracking(ON_BUTTON, false);
     }
 
-    public Boolean getUUIDPresent() {
-        return getDataTracker().get(HOLDER_UUID).isPresent();
+    public Optional<UUID> getHolderUUID() {
+        return getDataTracker().get(HOLDER_UUID);
     }
 
-    public UUID getHolderUUID() {
-        if (getDataTracker().get(HOLDER_UUID).isPresent()) {
-            return getDataTracker().get(HOLDER_UUID).get();
-        }
-        return null;
+    public void setHolderUUID(Optional<UUID> uuid) {
+        this.getDataTracker().set(HOLDER_UUID, uuid);
     }
+
+    public boolean isOnButton() {
+        return getDataTracker().get(ON_BUTTON);
+    }
+
+    public void setOnButton(boolean on) {
+        getDataTracker().set(ON_BUTTON, on);
+    }
+
     public void setRotYaw(float yaw) {
-        rotation_yaw = yaw;
+        this.bodyYaw = yaw;
     }
 
-    public float getRotYaw(){
-        return  rotation_yaw;
-    }
-
-    public void setHolderUUID(UUID uuid) {
-        if(uuid != null) {
-            if (getDataTracker().get(HOLDER_UUID).isPresent()) {
-                PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-                if(player != null) {
-                    CalledValues.setCubeUUID(player,null);
-                }
-            }
-            this.getDataTracker().set(HOLDER_UUID, Optional.of(uuid));
-        }else {
-            this.getDataTracker().set(HOLDER_UUID, Optional.empty());
-        }
+    public float getRotYaw() {
+        return this.bodyYaw;
     }
 
     @Override
@@ -191,33 +149,18 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         return canUsePortals;
     }
 
-    public void dropCube(){
-        setHolderUUID(null);
-        var byteBuf = PacketByteBufs.create();
-        byteBuf.writeDouble(this.getPos().x);
-        byteBuf.writeDouble(this.getPos().y);
-        byteBuf.writeDouble(this.getPos().z);
-        byteBuf.writeDouble(this.lastPos.x);
-        byteBuf.writeDouble(this.lastPos.y);
-        byteBuf.writeDouble(this.lastPos.z);
-        byteBuf.writeFloat(this.rotation_yaw);
-        byteBuf.writeUuid(this.getUuid());
-        NetworkingSafetyWrapper.sendFromClient("cubeposupdate", byteBuf);
-    }
-
     @Override
     public void tick() {
         super.tick();
         timeSinceLastSound++;
-        this.bodyYaw = rotation_yaw;
-        this.headYaw = rotation_yaw;
-        canUsePortals = !getUUIDPresent();
+        this.headYaw = this.bodyYaw;
+        canUsePortals = !getHolderUUID().isPresent();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.getPos();
         if(!world.isClient) {
             this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
-            if (getUUIDPresent()) {
-                PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
+            if (getHolderUUID().isPresent()) {
+                PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID().get());
                 if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
@@ -226,7 +169,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,1,"player_interaction"));
                     this.fallDistance = 0;
-                    rotation_yaw = player.headYaw;
+                    this.bodyYaw = player.headYaw;
 
                     move(
                         MovementType.PLAYER,
@@ -234,19 +177,19 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     );
                 }else{
                     if(player != null ){
-                        setHolderUUID(null);
+                        setHolderUUID(Optional.empty());
                     }
                     canUsePortals = true;
                 }
             }
         }else{
-            if (getUUIDPresent()) {
-                PlayerEntity player = (PlayerEntity)((Accessors) world).getEntity(getHolderUUID());
+            if (getHolderUUID().isPresent()) {
+                PlayerEntity player = (PlayerEntity)((Accessors) world).getEntity(getHolderUUID().get());
                 if (player != null && player.isAlive()) {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
                     Vec3d vec3d2 = player.getRotationVec(1.0F);
-                    rotation_yaw = player.headYaw;
+                    this.bodyYaw = player.headYaw;
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     move(
                         MovementType.PLAYER,
@@ -281,9 +224,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         final PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(getId());
         final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);
-        for (final ServerPlayerEntity player : tracking) {
-            player.networkHandler.sendPacket(packet);
-        }
+        PlayerLookup.tracking(this).forEach(player -> player.networkHandler.sendPacket(packet));
     }
 
     public float getFizzleProgress() {
@@ -321,35 +262,9 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     }
 
     @Override
-    public void onRemoved() {
-        if(!world.isClient) {
-            PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-            if (player != null) {
-                CalledValues.setCubeUUID(player,null);
-            }
-        }
-    }
-
-    @Override
-    protected void updatePostDeath() {
-        if(!world.isClient) {
-            PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-            if (player != null) {
-                CalledValues.setCubeUUID(player,null);
-            }
-        }
-        super.updatePostDeath();
-    }
-
-    @Override
-    public void onDeath(DamageSource source) {
-        if(!world.isClient) {
-            PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID());
-            if (player != null) {
-                CalledValues.setCubeUUID(player,null);
-            }
-        }
-        super.onDeath(source);
+    public void remove(RemovalReason reason) {
+        if (!world.isClient) getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get((PlayerEntity) ((ServerWorld) world).getEntity(value)).stopHolding());
+        super.remove(reason);
     }
 
 }

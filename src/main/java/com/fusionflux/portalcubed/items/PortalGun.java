@@ -171,7 +171,7 @@ public class PortalGun extends Item implements DyeableItem {
 
                 assert portalHolder != null;
                 portalHolder.setOriginPos(portalPos1);
-                CalledValues.setDestination(portalHolder,portalPos1);
+                portalHolder.setDestination(portalPos1);
 
                 Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
                 portalHolder.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
@@ -179,14 +179,14 @@ public class PortalGun extends Item implements DyeableItem {
                 portalHolder.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
                 portalHolder.setColor(this.getSidedColor(stack));
 
-                CalledValues.setOrientation(portalHolder,Vec3d.of(right),Vec3d.of(up).multiply(-1));
+                portalHolder.setOrientation(Vec3d.of(right),Vec3d.of(up).multiply(-1));
 
                 if (!portalExists) {
-                    portalHolder.setLinkedPortalUuid("null");
+                    portalHolder.setLinkedPortalUUID(Optional.empty());
                     world.spawnEntity(portalHolder);
                     ((EntityPortalsAccess) user).addPortalToList(portalHolder);
 
-                    CalledValues.setPlayer(portalHolder,user.getUuid());
+                    portalHolder.setOwnerUUID(Optional.of(user.getUuid()));
 
                     CalledValues.addPortals(user,portalHolder.getUuid());
                 }else {
@@ -195,7 +195,7 @@ public class PortalGun extends Item implements DyeableItem {
                     world.spawnEntity(portalHolder);
                     ((EntityPortalsAccess) user).addPortalToList(portalHolder);
 
-                    CalledValues.setPlayer(portalHolder,user.getUuid());
+                    portalHolder.setOwnerUUID(Optional.of(user.getUuid()));
 
                     CalledValues.addPortals(user,portalHolder.getUuid());
                 }
@@ -207,9 +207,9 @@ public class PortalGun extends Item implements DyeableItem {
                 if (otherPortal != null) {
                     linkPortals(portalHolder, otherPortal, 0.1f);
 
-                    CalledValues.setPlayer(portalHolder,user.getUuid());
+                    portalHolder.setOwnerUUID(Optional.of(user.getUuid()));
                     if (!isOtherAuto) {
-                        CalledValues.setPlayer(otherPortal,user.getUuid());
+                        otherPortal.setOwnerUUID(Optional.of(user.getUuid()));
                     }
 
                     CalledValues.addPortals(user,portalHolder.getUuid());
@@ -247,20 +247,20 @@ public class PortalGun extends Item implements DyeableItem {
             p ->
                 p != ignore &&
                     p.getColor() == 0xffffff - color + 1 &&
-                    (includePlayerPortals || CalledValues.getPlayer(p) == null) &&
+                    (includePlayerPortals || p.getOwnerUUID().isEmpty()) &&
                     !p.getActive()
         ).stream().min(Comparator.comparingDouble(p -> p.getOriginPos().squaredDistanceTo(portalPos)));
     }
 
     public static void linkPortals(ExperimentalPortal portal1, ExperimentalPortal portal2, float volume) {
-        CalledValues.setDestination(portal1,portal2.getOriginPos().add(portal2.getFacingDirection().getUnitVector().getX()*.1,portal2.getFacingDirection().getUnitVector().getY()*.1,portal2.getFacingDirection().getUnitVector().getZ()*.1));
-        CalledValues.setOtherFacing(portal1,new Vec3d(portal2.getFacingDirection().getUnitVector().getX(),portal2.getFacingDirection().getUnitVector().getY(),portal2.getFacingDirection().getUnitVector().getZ()));
-        CalledValues.setOtherAxisH(portal1,CalledValues.getAxisH(portal2));
-        CalledValues.setDestination(portal2,portal1.getOriginPos().add(portal1.getFacingDirection().getUnitVector().getX()*.1,portal1.getFacingDirection().getUnitVector().getY()*.1,portal1.getFacingDirection().getUnitVector().getZ()*.1));
-        CalledValues.setOtherFacing(portal2,new Vec3d(portal1.getFacingDirection().getUnitVector().getX(),portal1.getFacingDirection().getUnitVector().getY(),portal1.getFacingDirection().getUnitVector().getZ()));
-        CalledValues.setOtherAxisH(portal2,CalledValues.getAxisH(portal1));
-        portal1.setLinkedPortalUuid(portal2.getUuidAsString());
-        portal2.setLinkedPortalUuid(portal1.getUuidAsString());
+        portal1.setDestination(portal2.getOriginPos().add(portal2.getFacingDirection().getUnitVector().getX()*.1,portal2.getFacingDirection().getUnitVector().getY()*.1,portal2.getFacingDirection().getUnitVector().getZ()*.1));
+        portal1.setOtherFacing(new Vec3d(portal2.getFacingDirection().getUnitVector().getX(),portal2.getFacingDirection().getUnitVector().getY(),portal2.getFacingDirection().getUnitVector().getZ()));
+        portal1.setOtherAxisH(portal2.getAxisH().get());
+        portal2.setDestination(portal1.getOriginPos().add(portal1.getFacingDirection().getUnitVector().getX()*.1,portal1.getFacingDirection().getUnitVector().getY()*.1,portal1.getFacingDirection().getUnitVector().getZ()*.1));
+        portal2.setOtherFacing(new Vec3d(portal1.getFacingDirection().getUnitVector().getX(),portal1.getFacingDirection().getUnitVector().getY(),portal1.getFacingDirection().getUnitVector().getZ()));
+        portal2.setOtherAxisH(portal1.getAxisH().get());
+        portal1.setLinkedPortalUUID(Optional.of(portal2.getUuid()));
+        portal2.setLinkedPortalUUID(Optional.of(portal1.getUuid()));
 
         portal1.getWorld().playSound(null, portal1.getPos().getX(), portal1.getPos().getY(), portal1.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, volume, 1F);
         portal2.getWorld().playSound(null, portal2.getPos().getX(), portal2.getPos().getY(), portal2.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, volume, 1F);

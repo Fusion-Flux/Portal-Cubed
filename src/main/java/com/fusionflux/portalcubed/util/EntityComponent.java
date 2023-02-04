@@ -8,14 +8,12 @@ import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
     VoxelShape portalCutout = VoxelShapes.empty();
     boolean hasTeleportationHappened = false;
-    UUID cubeUUID = null;
     public Set<UUID> portals = new HashSet<>();
     private final Entity entity;
 
@@ -46,17 +44,6 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public UUID getCubeUUID() {
-        return cubeUUID;
-    }
-
-    @Override
-    public void setCubeUUID(UUID CubeUUID) {
-        cubeUUID = CubeUUID;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
-    }
-
-    @Override
     public Set<UUID> getPortals() {
         return portals;
     }
@@ -75,13 +62,6 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        String cubeString = tag.getString("cubeUUID");
-        if(!Objects.equals(cubeString, "null")) {
-            cubeUUID = UUID.fromString(tag.getString("cubeUUID"));
-        }else{
-            cubeUUID = null;
-        }
-
         int size = tag.getInt("size");
 
         if(!portals.isEmpty())
@@ -96,12 +76,6 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
-        if(cubeUUID != null) {
-            tag.putString("cubeUUID", cubeUUID.toString());
-        }else{
-            tag.putString("cubeUUID", "null");
-        }
-
         int number = 0;
         for(UUID portal : portals) {
             tag.putUuid("portals" + number,portal);

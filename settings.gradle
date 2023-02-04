@@ -8,14 +8,7 @@ pluginManagement {
             name 'Quilt'
             url 'https://maven.quiltmc.org/repository/release'
         }
-        maven {
-            name = 'Cotton'
-            url = 'https://server.bbkr.space/artifactory/libs-release/'
-        }
-        maven {
-            name = "AlexIIL"
-            url = "https://maven.alexiil.uk/"
-        }
+        mavenCentral()
         gradlePluginPortal()
     }
 }

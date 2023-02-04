@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -9,7 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class CoreFrameEntity extends CorePhysicsEntity  {
+public class CoreFrameEntity extends CorePhysicsEntity {
 
     public CoreFrameEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);

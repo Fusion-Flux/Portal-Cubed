@@ -8,10 +8,6 @@ import java.util.UUID;
 
 public interface PortalCubedComponent extends Component {
 
-    UUID getCubeUUID();
-
-    void setCubeUUID(UUID cubeUUID);
-
     Set<UUID> getPortals();
 
     void addPortals(UUID portalUUID);

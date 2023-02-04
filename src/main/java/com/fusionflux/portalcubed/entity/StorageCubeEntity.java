@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.EntityType;
@@ -47,7 +46,7 @@ public class StorageCubeEntity extends CorePhysicsEntity  {
 
     private int buttonTimer = 0;
 
-    public void setButtonTimer(int time){
+    public void setButtonTimer(int time) {
         buttonTimer = time;
     }
 
@@ -56,9 +55,9 @@ public class StorageCubeEntity extends CorePhysicsEntity  {
         super.tick();
         if(!world.isClient) {
             if (buttonTimer <= 0) {
-                CalledValues.setOnButton(this, false);
+                setOnButton(false);
             } else {
-                CalledValues.setOnButton(this, true);
+                setOnButton(true);
                 buttonTimer -= 1;
             }
         }

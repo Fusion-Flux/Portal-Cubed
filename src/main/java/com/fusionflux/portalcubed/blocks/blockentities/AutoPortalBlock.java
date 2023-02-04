@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.SlidingDoorBlock;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -40,6 +39,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AutoPortalBlock extends BlockWithEntity {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
@@ -186,7 +186,7 @@ public class AutoPortalBlock extends BlockWithEntity {
             placeOn.getZ() + 0.5 - 0.510 * facingOpposite.getOffsetZ()
         );
         portal.setOriginPos(portalPos);
-        CalledValues.setDestination(portal, portalPos);
+        portal.setDestination(portalPos);
         final Vec3i right = new Vec3i(0, 1, 0).crossProduct(facingOpposite.getVector());
         final Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(
             PortalGun.getPortalOrientationQuaternion(Vec3d.of(right), new Vec3d(0, 1, 0))
@@ -194,15 +194,14 @@ public class AutoPortalBlock extends BlockWithEntity {
         portal.setYaw(rotAngles.getLeft().floatValue());
         portal.setPitch(rotAngles.getRight().floatValue());
         portal.setColor(color);
-        CalledValues.setOrientation(portal, Vec3d.of(right), new Vec3d(0, -1, 0));
-        portal.setLinkedPortalUuid("null");
+        portal.setOrientation(Vec3d.of(right), new Vec3d(0, -1, 0));
+        portal.setLinkedPortalUUID(Optional.empty());
         world.spawnEntity(portal);
         PortalGun.getPotentialOpposite(world, portalPos, portal, color, true)
             .ifPresent(other -> PortalGun.linkPortals(portal, other, 0.9f));
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         final boolean upper = state.get(HALF) == DoubleBlockHalf.UPPER;
         final BlockPos otherPos = upper ? pos.down() : pos.up();

@@ -5,7 +5,8 @@ import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import io.netty.buffer.Unpooled;
+import com.fusionflux.portalcubed.util.IPHelperDuplicate;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -13,39 +14,45 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.StringUtils;
-import org.quiltmc.loader.api.minecraft.ClientOnly;
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
+
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 public class ExperimentalPortal extends Entity {
 
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
 
     private Box cutoutBoundingBox = nullBox;
-    /**
-     * axisW and axisH define the orientation of the portal
-     * They should be normalized and should be perpendicular to each other
-     */
 
-    public static final TrackedData<String> LINKED_PORTAL_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
+    private Vec3d axisOH = Vec3d.ZERO;
+    private Vec3d destination = null;
+    private Vec3d facing = Vec3d.ZERO;
+    private Optional<UUID> ownerUUID = Optional.empty();
+
+    public static final TrackedData<Optional<UUID>> LINKED_PORTAL_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     public static final TrackedData<Boolean> IS_ACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final TrackedData<String> STORED_OUTLINE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
     public static final TrackedData<Float> ROLL = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.FLOAT);
     public static final TrackedData<Integer> COLOR = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.INTEGER);
-
+    /**
+     * getAxisW() and getAxisH() define the orientation of the portal
+     * They should be normalized and should be perpendicular to each other
+     */
+    public static final TrackedData<Optional<Vec3d>> AXIS_W = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC_3D);
+    public static final TrackedData<Optional<Vec3d>> AXIS_H = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC_3D);
 
     public Vec3d getNormal() {
-        return CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).normalize();
+        return getAxisW().get().crossProduct(getAxisH().get()).normalize();
     }
 
     public ExperimentalPortal(EntityType<?> entityType, World world) {
@@ -54,48 +61,59 @@ public class ExperimentalPortal extends Entity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(LINKED_PORTAL_UUID, "null");
+        this.getDataTracker().startTracking(LINKED_PORTAL_UUID, Optional.empty());
         this.getDataTracker().startTracking(STORED_OUTLINE, "null");
         this.getDataTracker().startTracking(IS_ACTIVE, false);
         this.getDataTracker().startTracking(ROLL, 0f);
         this.getDataTracker().startTracking(COLOR, 0);
+        this.getDataTracker().startTracking(AXIS_W, Optional.empty());
+        this.getDataTracker().startTracking(AXIS_H, Optional.empty());
     }
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound compoundTag) {
         this.setColor(compoundTag.getInt("color"));
         this.setRoll(compoundTag.getFloat("roll"));
-        this.setLinkedPortalUuid(StringUtils.defaultIfEmpty(compoundTag.getString("linkedPortalUuid"), "null"));
+        if (compoundTag.containsUuid("linkedPortalUUID")) this.setLinkedPortalUUID(Optional.of(compoundTag.getUuid("linkedPortalUUID")));
+        if (compoundTag.contains("axisW")) this.setOrientation(IPHelperDuplicate.getVec3d(compoundTag, "axisW").normalize(), IPHelperDuplicate.getVec3d(compoundTag, "axisH").normalize());
+        this.setOtherAxisH(IPHelperDuplicate.getVec3d(compoundTag, "axisOH").normalize());
+        this.setDestination(IPHelperDuplicate.getVec3d(compoundTag, "destination"));
+        this.setOtherFacing(IPHelperDuplicate.getVec3d(compoundTag, "facing"));
+        if (compoundTag.containsUuid("ownerUUID")) this.setOwnerUUID(Optional.of(compoundTag.getUuid("ownerUUID")));
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound compoundTag) {
         compoundTag.putFloat("color", this.getColor());
         compoundTag.putFloat("roll", this.getRoll());
-        compoundTag.putString("linkedPortalUuid", this.getLinkedPortalUuid());
+        this.getLinkedPortalUUID().ifPresent(uuid -> compoundTag.putUuid("linkedPortalUUID", uuid));
+        this.getAxisW().ifPresent(axisW -> IPHelperDuplicate.putVec3d(compoundTag, "axisW", axisW));
+        this.getAxisH().ifPresent(axisH -> IPHelperDuplicate.putVec3d(compoundTag, "axisH", axisH));
+        IPHelperDuplicate.putVec3d(compoundTag, "axisOH", this.getOtherAxisH());
+        IPHelperDuplicate.putVec3d(compoundTag, "destination", this.getDestination());
+        IPHelperDuplicate.putVec3d(compoundTag, "facing", this.getOtherFacing());
+        this.getOwnerUUID().ifPresent(uuid -> compoundTag.putUuid("ownerUUID", uuid));
     }
 
-    public Float getRoll() {
+    public float getRoll() {
         return getDataTracker().get(ROLL);
     }
 
-    public void setRoll(Float roll) {
+    public void setRoll(float roll) {
         this.getDataTracker().set(ROLL, roll);
     }
 
-
-    public Integer getColor() {
+    public int getColor() {
         return getDataTracker().get(COLOR);
     }
 
-    public void setColor(Integer color) {
+    public void setColor(int color) {
         this.getDataTracker().set(COLOR, color);
-
     }
 
     @Override
     public Packet<?> createSpawnPacket() {
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+        final var packet = PacketByteBufs.create();
 
         packet.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()))
                 .writeUuid(this.getUuid())
@@ -108,37 +126,78 @@ public class ExperimentalPortal extends Entity {
         return ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.SPAWN_PACKET, packet);
     }
 
-    @Override
-    @ClientOnly
-    public boolean shouldRender(double distance) {
-return true;
-    }
-
-
-    public String getLinkedPortalUuid() {
+    public Optional<UUID> getLinkedPortalUUID() {
         return getDataTracker().get(LINKED_PORTAL_UUID);
     }
 
-    public void setLinkedPortalUuid(String string) {
-        this.getDataTracker().set(LINKED_PORTAL_UUID, string);
+    public void setLinkedPortalUUID(Optional<UUID> uuid) {
+        this.getDataTracker().set(LINKED_PORTAL_UUID, uuid);
     }
 
-    public Boolean getActive() {
+    public Optional<UUID> getOwnerUUID() {
+        return this.ownerUUID;
+    }
+
+    public void setOwnerUUID(Optional<UUID> uuid) {
+        this.ownerUUID = uuid;
+    }
+
+    public boolean getActive() {
         return getDataTracker().get(IS_ACTIVE);
     }
 
-    private void setActive(Boolean active) {
+    private void setActive(boolean active) {
         this.getDataTracker().set(IS_ACTIVE, active);
     }
 
-    public Direction getFacingDirection(){
+    public Direction getFacingDirection() {
         return Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
+    }
+
+    public Optional<Vec3d> getAxisW() {
+        return getDataTracker().get(AXIS_W);
+    }
+
+    public Optional<Vec3d> getAxisH() {
+        return getDataTracker().get(AXIS_H);
+    }
+
+    public Vec3d getOtherAxisH() {
+        return axisOH;
+    }
+
+    public void setOtherAxisH(Vec3d h) {
+        axisOH = h;
+    }
+
+    public Vec3d getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Vec3d Destination) {
+        destination = Destination;
+    }
+
+    public Vec3d getOtherFacing() {
+        return facing;
+    }
+
+    public void setOtherFacing(Vec3d Facing) {
+        facing = Facing;
+    }
+
+    public void setOrientation(Vec3d axisW, Vec3d axisH) {
+        this.getDataTracker().set(AXIS_W, Optional.of(axisW));
+        this.getDataTracker().set(AXIS_H, Optional.of(axisH));
+        syncRotations();
     }
 
     @Override
     public void kill() {
-        Entity player = ((ServerWorld) world).getEntity(CalledValues.getPlayer(this));
-        CalledValues.removePortals(player, this.getUuid());
+        ownerUUID.ifPresent(uuid -> {
+            Entity player = ((ServerWorld) world).getEntity(uuid);
+            CalledValues.removePortals(player, this.getUuid());
+        });
         super.kill();
     }
 
@@ -150,36 +209,35 @@ return true;
             ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x,getChunkPos().z,true);
 
         if(!world.isClient){
-            final UUID playerUuid = CalledValues.getPlayer(this);
-            if (playerUuid != null) {
-                Entity player = ((ServerWorld) world).getEntity(playerUuid);
+            ownerUUID.ifPresent(uuid -> {
+                Entity player = ((ServerWorld) world).getEntity(uuid);
                 if(player == null || !player.isAlive()){
                     this.kill();
                 }
-            }
+            });
         }
 
-        if (!this.world.isClient && CalledValues.getAxisW(this) != null) {
-            ExperimentalPortal otherPortal =
-                !this.getLinkedPortalUuid().equals("null")
-                    ? (ExperimentalPortal)((ServerWorld)world).getEntity(UUID.fromString(this.getLinkedPortalUuid()))
+        if (!this.world.isClient && getAxisW().isPresent()) {
+            ExperimentalPortal otherPortal = 
+                this.getLinkedPortalUUID().isPresent()
+                    ? (ExperimentalPortal)((ServerWorld)world).getEntity(this.getLinkedPortalUUID().get())
                     : null;
 
             setActive(otherPortal != null);
-            CalledValues.setDestination(this, Objects.requireNonNullElse(otherPortal, this).getOriginPos());
+            this.destination = Objects.requireNonNullElse(otherPortal, this).getOriginPos();
 
             BlockPos topBehind = new BlockPos(
-                    this.getPos().getX() - CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).getX(),
-                    this.getPos().getY() - CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).getY(),
-                    this.getPos().getZ() - CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).getZ());
+                    this.getPos().getX() - getAxisW().get().crossProduct(getAxisH().get()).getX(),
+                    this.getPos().getY() - getAxisW().get().crossProduct(getAxisH().get()).getY(),
+                    this.getPos().getZ() - getAxisW().get().crossProduct(getAxisH().get()).getZ());
             BlockPos bottomBehind = new BlockPos(
-                    this.getPos().getX() - CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).getX() - Math.abs(CalledValues.getAxisH(this).getX()),
-                    this.getPos().getY() - CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).getY() + CalledValues.getAxisH(this).getY(),
-                    this.getPos().getZ() - CalledValues.getAxisW(this).crossProduct(CalledValues.getAxisH(this)).getZ() - Math.abs(CalledValues.getAxisH(this).getZ()));
+                    this.getPos().getX() - getAxisW().get().crossProduct(getAxisH().get()).getX() - Math.abs(getAxisH().get().getX()),
+                    this.getPos().getY() - getAxisW().get().crossProduct(getAxisH().get()).getY() + getAxisH().get().getY(),
+                    this.getPos().getZ() - getAxisW().get().crossProduct(getAxisH().get()).getZ() - Math.abs(getAxisH().get().getZ()));
             BlockPos bottom = new BlockPos(
-                    this.getPos().getX() - Math.abs(CalledValues.getAxisH(this).getX()),
-                    this.getPos().getY() + CalledValues.getAxisH(this).getY(),
-                    this.getPos().getZ() - Math.abs(CalledValues.getAxisH(this).getZ()));
+                    this.getPos().getX() - Math.abs(getAxisH().get().getX()),
+                    this.getPos().getY() + getAxisH().get().getY(),
+                    this.getPos().getZ() - Math.abs(getAxisH().get().getZ()));
 
 
             Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
@@ -222,7 +280,7 @@ return true;
 
     @Override
     protected Box calculateBoundingBox() {
-        if (CalledValues.getAxisW(this) == null) {
+        if (getAxisW().isEmpty()) {
             // it may be called when the portal is not yet initialized
             setBoundingBox(nullBox);
             return nullBox;
@@ -248,7 +306,7 @@ return true;
 
 
     public Box calculateCuttoutBox() {
-        if (CalledValues.getAxisW(this) == null) {
+        if (getAxisW().isEmpty()) {
             setCutoutBoundingBox(nullBox);
             return nullBox;
         }
@@ -277,7 +335,6 @@ return true;
         this.cutoutBoundingBox = boundingBox;
     }
 
-
     public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
         return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*-5,getFacingDirection().getUnitVector().getY()*-5,getFacingDirection().getUnitVector().getZ()*-5);
     }
@@ -287,7 +344,7 @@ return true;
     }
 
     public Vec3d getPointInPlaneLocal(double xInPlane, double yInPlane) {
-        return CalledValues.getAxisW(this).multiply(xInPlane).add(CalledValues.getAxisH(this).multiply(yInPlane));
+        return getAxisW().get().multiply(xInPlane).add(getAxisH().get().multiply(yInPlane));
     }
 
     public Vec3d getOriginPos() {

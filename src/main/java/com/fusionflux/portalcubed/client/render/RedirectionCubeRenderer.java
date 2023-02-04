@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.client.render;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.render.model.entity.RedirectionCubeModel;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import net.minecraft.client.MinecraftClient;
@@ -24,7 +23,7 @@ public class RedirectionCubeRenderer extends MobEntityRenderer<RedirectionCubeEn
 
     @Override
     public Identifier getTexture(RedirectionCubeEntity entity) {
-        if( CalledValues.getOnButton(entity)){
+        if (entity.isOnButton()) {
             return ACTIVE_TEXTURE;
         }
         return BASE_TEXTURE;

@@ -28,7 +28,7 @@
       },
       {
         "id": "gravity_api",
-        "versions": ">=0.7.21"
+        "versions": ">=0.7.20"
       }
     ],
 
@@ -66,8 +66,7 @@
   ],
   "cardinal-components": [
     "portalcubed:entity_component",
-    "portalcubed:portal_data",
-    "portalcubed:cube_component"
+    "portalcubed:holder_component"
   ],
   "lithium:options": {
     "mixin.entity.collisions": false,
