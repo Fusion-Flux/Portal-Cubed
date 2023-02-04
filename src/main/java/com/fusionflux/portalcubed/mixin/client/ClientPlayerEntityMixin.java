@@ -1,12 +1,15 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.blocks.SpecialHiddenBlock;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -24,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
 
     @Shadow @Final protected MinecraftClient client;
-    private boolean portalCubed$wasHoldingHammer = false;
+    private Item portalCubed$wasHoldingSpecial = null;
 
     public ClientPlayerEntityMixin(ClientWorld clientWorld, GameProfile gameProfile, @Nullable PlayerPublicKey playerPublicKey) {
         super(clientWorld, gameProfile, playerPublicKey);
@@ -41,9 +44,24 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void portalCubed$onTick(CallbackInfo ci) {
-        final boolean isHoldingHammer = isHolding(PortalCubedItems.HAMMER);
-        if (isHoldingHammer != portalCubed$wasHoldingHammer) {
-            portalCubed$wasHoldingHammer = isHoldingHammer;
+        final Item holdingSpecial;
+        if (isHolding(PortalCubedItems.HAMMER)) {
+            holdingSpecial = PortalCubedItems.HAMMER;
+        } else if (
+            getMainHandStack().getItem() instanceof BlockItem blockItem &&
+                blockItem.getBlock() instanceof SpecialHiddenBlock
+        ) {
+            holdingSpecial = blockItem;
+        } else if (
+            getOffHandStack().getItem() instanceof BlockItem blockItem &&
+                blockItem.getBlock() instanceof SpecialHiddenBlock
+        ) {
+            holdingSpecial = getOffHandStack().getItem();
+        } else {
+            holdingSpecial = null;
+        }
+        if (holdingSpecial != portalCubed$wasHoldingSpecial) {
+            portalCubed$wasHoldingSpecial = holdingSpecial;
             client.worldRenderer.reload();
         }
     }
