@@ -18,7 +18,8 @@
     "client.HeldItemRendererMixin",
     "client.InGameOverlayRendererMixin",
     "client.MinecraftClientMixin",
-    "client.ModelLoaderMixin"
+    "client.ModelLoaderMixin",
+    "client.ParticleManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
