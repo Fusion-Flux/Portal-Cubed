@@ -1,5 +1,5 @@
 plugins {
-	id 'org.quiltmc.loom' version '1.0.9'
+	id 'org.quiltmc.loom' version '1.0.+'
 	id 'org.ajoberstar.grgit' version '4.1.0'
 }
 
@@ -17,6 +17,8 @@ repositories {
 	maven { url = "https://maven.terraformersmc.com/releases" }
 	maven { url = "https://hephaestus.dev/release" }
 	maven { url "https://api.modrinth.com/maven" }
+	maven { url = "https://maven.tterrag.com/" }
+	maven { url = "https://mvn.devos.one/snapshots/" }
 	maven {
 		name = 'Ladysnake Mods'
 		url = 'https://ladysnake.jfrog.io/artifactory/mods'
@@ -26,6 +28,13 @@ repositories {
 		url "https://www.cursemaven.com"
 		content {
 			includeGroup "curse.maven"
+		}
+	}
+
+	maven {
+		url "https://maven.jamieswhiteshirt.com/libs-release"
+		content {
+			includeGroup "com.jamieswhiteshirt"
 		}
 	}
 }
@@ -61,7 +70,7 @@ dependencies {
 
 	include modImplementation("maven.modrinth:midnightlib:1.0.0-quilt")
 
-
+	modCompileOnly "com.simibubi.create:create-fabric-1.19.2:0.5.0.i-930+1.19.2"
 }
 
 processResources {

@@ -163,6 +163,12 @@ public class AutoPortalBlock extends BlockWithEntity {
 
     private static void openOrClosePortal(World world, BlockPos lower, Direction facing, boolean forceClose) {
         if (world.isClient) return;
+        openOrClosePortal(world, lower, facing, forceClose, true, true);
+    }
+
+    public static ExperimentalPortal openOrClosePortal(
+        World world, BlockPos lower, Direction facing, boolean forceClose, boolean playCloseSound, boolean spawnEntity
+    ) {
         final int color = getColor(world, lower);
         final BlockPos upper = lower.up();
         final List<ExperimentalPortal> portals = world.getEntitiesByType(
@@ -172,10 +178,12 @@ public class AutoPortalBlock extends BlockWithEntity {
         );
         if (!portals.isEmpty()) {
             portals.forEach(ExperimentalPortal::kill);
-            world.playSound(null, lower.getX(), lower.getY(), lower.getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
-            return;
+            if (playCloseSound) {
+                world.playSound(null, lower.getX(), lower.getY(), lower.getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
+            }
+            return null;
         }
-        if (forceClose) return;
+        if (forceClose) return null;
         final Direction facingOpposite = facing.getOpposite();
         final BlockPos placeOn = upper.offset(facingOpposite);
         final ExperimentalPortal portal = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
@@ -196,12 +204,16 @@ public class AutoPortalBlock extends BlockWithEntity {
         portal.setColor(color);
         portal.setOrientation(Vec3d.of(right), new Vec3d(0, -1, 0));
         portal.setLinkedPortalUUID(Optional.empty());
-        world.spawnEntity(portal);
-        PortalGun.getPotentialOpposite(world, portalPos, portal, color, true)
-            .ifPresent(other -> PortalGun.linkPortals(portal, other, 0.9f));
+        if (spawnEntity) {
+            world.spawnEntity(portal);
+            PortalGun.getPotentialOpposite(world, portalPos, portal, color, true)
+                .ifPresent(other -> PortalGun.linkPortals(portal, other, 0.9f));
+        }
+        return portal;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         final boolean upper = state.get(HALF) == DoubleBlockHalf.UPPER;
         final BlockPos otherPos = upper ? pos.down() : pos.up();
