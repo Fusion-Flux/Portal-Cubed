@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

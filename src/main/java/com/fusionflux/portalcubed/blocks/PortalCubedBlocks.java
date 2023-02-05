@@ -53,7 +53,7 @@ public class PortalCubedBlocks {
     public static final SlidingDoorBlock OLD_AP_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
     public static final SlidingDoorBlock PORTAL1DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
-    public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
+    public static BlockEntityType<HardLightBridgeEmitterBlockBlockEntity> HLB_EMITTER_ENTITY;
     public static BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY;
 
     public static BlockEntityType<AutoPortalBlockEntity> AUTO_PORTAL_BLOCK_ENTITY;
@@ -66,10 +66,10 @@ public class PortalCubedBlocks {
 
     public static BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY;
     public static BlockEntityType<NeurotoxinEmitterBlockEntity> NEUROTOXIN_EMITTER_ENTITY;
-    public static BlockEntityType<ExcursionFunnelEmitterEntity> EXCURSION_FUNNEL_EMITTER_ENTITY;
-    public static BlockEntityType<ReversedExcursionFunnelEmitterEntity> REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY;
-    public static BlockEntityType<DuelExcursionFunnelEmitterEntity> DUEL_EXCURSION_FUNNEL_EMITTER_ENTITY;
-    public static BlockEntityType<ExcursionFunnelEntityMain> EXCURSION_FUNNEL_ENTITY;
+    public static BlockEntityType<ExcursionFunnelEmitterBlockEntity> EXCURSION_FUNNEL_EMITTER_ENTITY;
+    public static BlockEntityType<ReversedExcursionFunnelEmitterBlockEntity> REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY;
+    public static BlockEntityType<DualExcursionFunnelEmitterBlockEntity> DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY;
+    public static BlockEntityType<ExcursionFunnelMainBlockEntity> EXCURSION_FUNNEL_ENTITY;
 
     public static final PowerBlock POWER_BLOCK = new PowerBlock(QuiltBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.8F).dropsNothing().nonOpaque());
 
@@ -94,13 +94,13 @@ public class PortalCubedBlocks {
     public static BlockEntityType<LaserBlockEntity> LASER_ENTITY;
 
     public static final LaserEmitter LASER_EMITTER = new LaserEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
-    public static BlockEntityType<LaserEmitterEntity> LASER_EMITTER_ENTITY;
+    public static BlockEntityType<LaserEmitterBlockEntity> LASER_EMITTER_ENTITY;
 
     public static final LaserCatcherBlock LASER_CATCHER = new LaserCatcherBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
-    public static BlockEntityType<LaserCatcherEntity> LASER_CATCHER_ENTITY;
+    public static BlockEntityType<LaserCatcherBlockEntity> LASER_CATCHER_ENTITY;
 
     public static final LaserRelayBlock LASER_RELAY = new LaserRelayBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
-    public static BlockEntityType<LaserRelayEntity> LASER_RELAY_ENTITY;
+    public static BlockEntityType<LaserRelayBlockEntity> LASER_RELAY_ENTITY;
 
     public static final FloorButtonBlock FLOOR_BUTTON = new FloorButtonBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<FloorButtonBlockEntity> FLOOR_BUTTON_BLOCK_ENTITY;
@@ -141,7 +141,7 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("portal_1_door"), PORTAL1DOOR);
         Registry.register(Registry.ITEM, id("portal_1_door"), new BlockItem(PORTAL1DOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        HLB_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_emitter_entity"), QuiltBlockEntityTypeBuilder.create(HardLightBridgeEmitterBlockEntity::new, HLB_EMITTER_BLOCK).build(null));
+        HLB_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_emitter_entity"), QuiltBlockEntityTypeBuilder.create(HardLightBridgeEmitterBlockBlockEntity::new, HLB_EMITTER_BLOCK).build(null));
         Registry.register(Registry.BLOCK, id("light_bridge_emitter"), HLB_EMITTER_BLOCK);
         Registry.register(Registry.ITEM, id("light_bridge_emitter"), new BlockItem(HLB_EMITTER_BLOCK, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
         HLB_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_entity"), QuiltBlockEntityTypeBuilder.create(HardLightBridgeBlockEntity::new, HLB_BLOCK).build(null));
@@ -156,17 +156,17 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("auto_portal"), AUTO_PORTAL_BLOCK);
         Registry.register(Registry.ITEM, id("auto_portal"), new BlockItem(AUTO_PORTAL_BLOCK, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        EXCURSION_FUNNEL_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_emitter_entity"), QuiltBlockEntityTypeBuilder.create(ExcursionFunnelEmitterEntity::new, EXCURSION_FUNNEL_EMITTER).build(null));
+        EXCURSION_FUNNEL_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_emitter_entity"), QuiltBlockEntityTypeBuilder.create(ExcursionFunnelEmitterBlockEntity::new, EXCURSION_FUNNEL_EMITTER).build(null));
         Registry.register(Registry.BLOCK, id("excursion_funnel_emitter"), EXCURSION_FUNNEL_EMITTER);
         Registry.register(Registry.ITEM, id("excursion_funnel_emitter"), new BlockItem(EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
-        EXCURSION_FUNNEL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_entity"), QuiltBlockEntityTypeBuilder.create(ExcursionFunnelEntityMain::new, EXCURSION_FUNNEL).build(null));
+        EXCURSION_FUNNEL_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_entity"), QuiltBlockEntityTypeBuilder.create(ExcursionFunnelMainBlockEntity::new, EXCURSION_FUNNEL).build(null));
         Registry.register(Registry.BLOCK, id("excursion_funnel"), EXCURSION_FUNNEL);
 
-        REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("reversed_excursion_funnel_emitter_entity"), QuiltBlockEntityTypeBuilder.create(ReversedExcursionFunnelEmitterEntity::new, REVERSED_EXCURSION_FUNNEL_EMITTER).build(null));
+        REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("reversed_excursion_funnel_emitter_entity"), QuiltBlockEntityTypeBuilder.create(ReversedExcursionFunnelEmitterBlockEntity::new, REVERSED_EXCURSION_FUNNEL_EMITTER).build(null));
         Registry.register(Registry.BLOCK, id("reversed_excursion_funnel_emitter"), REVERSED_EXCURSION_FUNNEL_EMITTER);
         Registry.register(Registry.ITEM, id("reversed_excursion_funnel_emitter"), new BlockItem(REVERSED_EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        DUEL_EXCURSION_FUNNEL_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("duel_excursion_funnel_emitter_entity"), QuiltBlockEntityTypeBuilder.create(DuelExcursionFunnelEmitterEntity::new, DUEL_EXCURSION_FUNNEL_EMITTER).build(null));
+        DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("duel_excursion_funnel_emitter_entity"), QuiltBlockEntityTypeBuilder.create(DualExcursionFunnelEmitterBlockEntity::new, DUEL_EXCURSION_FUNNEL_EMITTER).build(null));
         Registry.register(Registry.BLOCK, id("duel_excursion_funnel_emitter"), DUEL_EXCURSION_FUNNEL_EMITTER);
         Registry.register(Registry.ITEM, id("duel_excursion_funnel_emitter"), new BlockItem(DUEL_EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
@@ -181,15 +181,15 @@ public class PortalCubedBlocks {
         LASER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_entity"), QuiltBlockEntityTypeBuilder.create(LaserBlockEntity::new, LASER).build(null));
         Registry.register(Registry.BLOCK, id("laser"), LASER);
 
-        LASER_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), QuiltBlockEntityTypeBuilder.create(LaserEmitterEntity::new, LASER_EMITTER).build(null));
+        LASER_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), QuiltBlockEntityTypeBuilder.create(LaserEmitterBlockEntity::new, LASER_EMITTER).build(null));
         Registry.register(Registry.BLOCK, id("laser_emitter"), LASER_EMITTER);
         Registry.register(Registry.ITEM, id("laser_emitter"), new BlockItem(LASER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        LASER_CATCHER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_catcher_entity"), QuiltBlockEntityTypeBuilder.create(LaserCatcherEntity::new, LASER_CATCHER).build(null));
+        LASER_CATCHER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_catcher_entity"), QuiltBlockEntityTypeBuilder.create(LaserCatcherBlockEntity::new, LASER_CATCHER).build(null));
         Registry.register(Registry.BLOCK, id("laser_catcher"), LASER_CATCHER);
         Registry.register(Registry.ITEM, id("laser_catcher"), new BlockItem(LASER_CATCHER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        LASER_RELAY_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_relay_entity"), QuiltBlockEntityTypeBuilder.create(LaserRelayEntity::new, LASER_RELAY).build(null));
+        LASER_RELAY_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_relay_entity"), QuiltBlockEntityTypeBuilder.create(LaserRelayBlockEntity::new, LASER_RELAY).build(null));
         Registry.register(Registry.BLOCK, id("laser_relay"), LASER_RELAY);
         Registry.register(Registry.ITEM, id("laser_relay"), new BlockItem(LASER_RELAY, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 

@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class ExcursionFunnelEntityMain extends BlockEntity {
+public class ExcursionFunnelMainBlockEntity extends BlockEntity {
 
     public final List<BlockPos> emitters;
     public final List<BlockPos> portalEmitters;
     public final List<Direction> facing;
 
-    public ExcursionFunnelEntityMain(BlockPos pos, BlockState state) {
+    public ExcursionFunnelMainBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.EXCURSION_FUNNEL_ENTITY, pos, state);
         this.emitters = new ArrayList<>();
         this.portalEmitters = new ArrayList<>();
@@ -35,7 +35,7 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
     }
 
 
-    public void updateState(BlockState state, WorldAccess world, BlockPos pos, ExcursionFunnelEntityMain bridge) {
+    public void updateState(BlockState state, WorldAccess world, BlockPos pos, ExcursionFunnelMainBlockEntity bridge) {
             if (!world.isClient()) {
                 boolean MNorth = false;
                 boolean MSouth = false;
@@ -223,7 +223,7 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
     }
 
 
-    public static void tick(World world, BlockPos pos, BlockState state, ExcursionFunnelEntityMain blockEntity) {
+    public static void tick(World world, BlockPos pos, BlockState state, ExcursionFunnelMainBlockEntity blockEntity) {
         assert world != null;
         if (!world.isClient) {
             if (!blockEntity.emitters.isEmpty()) {
@@ -240,7 +240,7 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                             }
                         }
                     }
-                    if(!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof DuelExcursionFunnelEmitterEntity) && !(world.isReceivingRedstonePower(blockEntity.emitters.get(i)))){
+                    if(!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof DualExcursionFunnelEmitterBlockEntity) && !(world.isReceivingRedstonePower(blockEntity.emitters.get(i)))){
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
@@ -250,17 +250,17 @@ public class ExcursionFunnelEntityMain extends BlockEntity {
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof ExcursionFunnelEmitterEntityAbstract)) {
+                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof AbstractExcursionFunnelEmitterBlockEntity)) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    } else if (!((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.pos.mutableCopy())) {
+                    } else if (!((AbstractExcursionFunnelEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.pos.mutableCopy())) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!((ExcursionFunnelEmitterEntityAbstract) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
+                    }else if (!((AbstractExcursionFunnelEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
                         if(portalPresent) {
                             blockEntity.emitters.remove(i);
                             blockEntity.portalEmitters.remove(i);

@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;

@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.compatability.create;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.blocks.blockentities.AutoPortalBlock;
+import com.fusionflux.portalcubed.blocks.AutoPortalBlock;
 import com.fusionflux.portalcubed.blocks.blockentities.AutoPortalBlockEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.google.gson.GsonBuilder;

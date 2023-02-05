@@ -1,6 +1,7 @@
-package com.fusionflux.portalcubed.blocks.blockentities;
+package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.NeurotoxinBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -58,7 +59,7 @@ public class NeurotoxinBlock extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new NeurotoxinBlockEntity(pos,state);
+        return new NeurotoxinBlockEntity(pos, state);
     }
 
     @Override

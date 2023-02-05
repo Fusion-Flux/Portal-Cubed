@@ -1,6 +1,7 @@
-package com.fusionflux.portalcubed.blocks.blockentities;
+package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;

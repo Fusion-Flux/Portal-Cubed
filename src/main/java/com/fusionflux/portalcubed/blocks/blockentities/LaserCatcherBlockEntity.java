@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.BlockState;
@@ -16,15 +17,15 @@ import net.minecraft.world.World;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public class LaserCatcherEntity extends BlockEntity {
+public class LaserCatcherBlockEntity extends BlockEntity {
 
 
-    public LaserCatcherEntity(BlockPos pos, BlockState state) {
+    public LaserCatcherBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.LASER_CATCHER_ENTITY,pos,state);
 
     }
 
-    public static void tick1(World world, BlockPos pos, BlockState state, LaserCatcherEntity blockEntity) {
+    public static void tick1(World world, BlockPos pos, BlockState state, LaserCatcherBlockEntity blockEntity) {
         if (!world.isClient) {
             Direction storedDirec = blockEntity.getCachedState().get(Properties.FACING);
             BlockPos transPos = pos.offset(storedDirec);

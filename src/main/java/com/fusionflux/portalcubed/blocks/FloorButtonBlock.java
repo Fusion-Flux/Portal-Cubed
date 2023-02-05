@@ -1,6 +1,7 @@
-package com.fusionflux.portalcubed.blocks.blockentities;
+package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.FloorButtonBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -176,7 +177,7 @@ public class FloorButtonBlock extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FloorButtonBlockEntity(pos,state);
+        return new FloorButtonBlockEntity(pos, state);
     }
 
     @Override

@@ -1,6 +1,6 @@
-package com.fusionflux.portalcubed.blocks.blockentities;
+package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.HardLightBridgeBlockEntity;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.*;
@@ -173,7 +173,7 @@ public class HardLightBridgeBlock extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new HardLightBridgeBlockEntity(pos,state);
+        return new HardLightBridgeBlockEntity(pos, state);
     }
 
     @Override

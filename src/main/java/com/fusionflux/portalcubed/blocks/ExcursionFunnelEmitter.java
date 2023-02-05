@@ -1,6 +1,7 @@
-package com.fusionflux.portalcubed.blocks.blockentities;
+package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity;
+import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -18,13 +19,13 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
-public class LaserEmitter extends BlockWithEntity {
+public class ExcursionFunnelEmitter extends BlockWithEntity {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
-    public LaserEmitter(Settings settings) {
+    public ExcursionFunnelEmitter(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState());
+        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED,false));
     }
 
     @Override
@@ -60,12 +61,12 @@ public class LaserEmitter extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, Properties.POWERED);
+        builder.add(Properties.FACING, Properties.POWERED, CustomProperties.REVERSED);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.LASER_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(Properties.POWERED, false);
+        return PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(Properties.POWERED, false);
     }
 
 
@@ -81,19 +82,19 @@ public class LaserEmitter extends BlockWithEntity {
     @ClientOnly
     @SuppressWarnings("deprecation")
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-        if (stateFrom.isOf(PortalCubedBlocks.LASER_EMITTER)) {
+        if (stateFrom.isOf(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER)) {
             return stateFrom.get(Properties.POWERED);
         } else return stateFrom.isOf(PortalCubedBlocks.HLB_BLOCK);
     }
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new LaserEmitterEntity(pos,state);
+        return new ExcursionFunnelEmitterBlockEntity(pos, state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.LASER_EMITTER_ENTITY, LaserEmitterEntity::tick1);
+        return checkType(type, PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER_ENTITY, ExcursionFunnelEmitterBlockEntity::tick1);
     }
 
 }

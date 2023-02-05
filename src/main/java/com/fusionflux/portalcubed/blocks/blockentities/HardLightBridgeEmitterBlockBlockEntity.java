@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -26,18 +27,18 @@ import java.util.Objects;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterEntityAbstract {
+public class HardLightBridgeEmitterBlockBlockEntity extends AbstractExcursionFunnelEmitterBlockEntity {
 
     public final int MAX_RANGE = PortalCubedConfig.maxBridgeLength;
     public List<BlockPos> bridges;
     public List<BlockPos> portalBridges;
 
-    public HardLightBridgeEmitterBlockEntity(BlockPos pos, BlockState state) {
+    public HardLightBridgeEmitterBlockBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.HLB_EMITTER_ENTITY,pos,state);
         this.bridges = new ArrayList<>();
         this.portalBridges = new ArrayList<>();
     }
-    public static void tick(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, HardLightBridgeEmitterBlockEntity blockEntity) {
+    public static void tick(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, HardLightBridgeEmitterBlockBlockEntity blockEntity) {
         if (!world.isClient) {
             boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 

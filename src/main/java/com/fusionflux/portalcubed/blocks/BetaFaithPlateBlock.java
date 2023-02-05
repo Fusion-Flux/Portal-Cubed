@@ -1,6 +1,7 @@
-package com.fusionflux.portalcubed.blocks.blockentities;
+package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -117,7 +118,7 @@ public class BetaFaithPlateBlock extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new BetaFaithPlateBlockEntity(pos,state);
+        return new BetaFaithPlateBlockEntity(pos, state);
     }
 
     @Override

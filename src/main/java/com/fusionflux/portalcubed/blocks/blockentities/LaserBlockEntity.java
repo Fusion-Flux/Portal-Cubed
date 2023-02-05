@@ -240,17 +240,17 @@ public class LaserBlockEntity extends BlockEntity {
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof LaserEmitterEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
+                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof LaserEmitterBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    } else if (!((LaserEmitterEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.pos.mutableCopy())) {
+                    } else if (!((LaserEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.pos.mutableCopy())) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!((LaserEmitterEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
+                    }else if (!((LaserEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
                         if(portalPresent) {
                             blockEntity.emitters.remove(i);
                             blockEntity.portalEmitters.remove(i);

@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
@@ -32,7 +33,7 @@ import java.util.Objects;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public class LaserEmitterEntity extends BlockEntity {
+public class LaserEmitterBlockEntity extends BlockEntity {
 
     public final int MAX_RANGE = PortalCubedConfig.maxBridgeLength;
 
@@ -40,13 +41,13 @@ public class LaserEmitterEntity extends BlockEntity {
     public List<BlockPos> portalFunnels;
 
 
-    public LaserEmitterEntity(BlockPos pos, BlockState state) {
+    public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.LASER_EMITTER_ENTITY,pos,state);
         this.funnels = new ArrayList<>();
         this.portalFunnels = new ArrayList<>();
     }
 
-    public static void tick1(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, LaserEmitterEntity blockEntity) {
+    public static void tick1(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, LaserEmitterBlockEntity blockEntity) {
         if (!world.isClient) {
             boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 

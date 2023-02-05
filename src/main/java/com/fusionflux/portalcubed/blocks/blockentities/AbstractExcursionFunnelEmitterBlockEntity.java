@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -22,14 +23,14 @@ import java.util.List;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public abstract class ExcursionFunnelEmitterEntityAbstract extends BlockEntity {
+public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEntity {
 
     public final int MAX_RANGE = PortalCubedConfig.maxBridgeLength;
 
     public List<BlockPos> funnels;
     public List<BlockPos> portalFunnels;
 
-    public ExcursionFunnelEmitterEntityAbstract(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public AbstractExcursionFunnelEmitterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type,pos,state);
         this.funnels = new ArrayList<>();
         this.portalFunnels = new ArrayList<>();

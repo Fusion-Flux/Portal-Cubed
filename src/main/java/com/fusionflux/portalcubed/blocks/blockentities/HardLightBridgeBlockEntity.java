@@ -60,19 +60,19 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
                         blockEntity.facing.remove(i);
                         blockEntity.facingVert.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof HardLightBridgeEmitterBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
+                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof HardLightBridgeEmitterBlockBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
                             blockEntity.emitters.remove(i);
                             blockEntity.portalEmitters.remove(i);
                             blockEntity.facing.remove(i);
                             blockEntity.facingVert.remove(i);
                             blockEntity.updateState(state, world, pos, blockEntity);
-                    } else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).bridges.contains(blockEntity.pos.mutableCopy())) {
+                    } else if (!((HardLightBridgeEmitterBlockBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).bridges.contains(blockEntity.pos.mutableCopy())) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.facingVert.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalBridges.contains(blockEntity.pos.mutableCopy())) {
+                    }else if (!((HardLightBridgeEmitterBlockBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalBridges.contains(blockEntity.pos.mutableCopy())) {
                         if(portalPresent) {
                             blockEntity.emitters.remove(i);
                             blockEntity.portalEmitters.remove(i);

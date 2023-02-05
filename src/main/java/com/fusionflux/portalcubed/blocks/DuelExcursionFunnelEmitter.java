@@ -1,17 +1,16 @@
-package com.fusionflux.portalcubed.blocks.blockentities;
+package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.DualExcursionFunnelEmitterBlockEntity;
+import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -19,35 +18,15 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
-public class LaserCatcherBlock extends BlockWithEntity {
-    public static final BooleanProperty ENABLE;
-
+public class DuelExcursionFunnelEmitter extends BlockWithEntity {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
-    public LaserCatcherBlock(Settings settings) {
+    public DuelExcursionFunnelEmitter(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE,false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED,false));
     }
 
-    static {
-        ENABLE = Properties.ENABLED;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean emitsRedstonePower(BlockState state) {
-        return state.get(Properties.ENABLED);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        if(state.get(Properties.ENABLED)){
-            return 15;
-        }
-        return 0;
-    }
 
     @Override
     @SuppressWarnings("deprecation")
@@ -78,16 +57,9 @@ public class LaserCatcherBlock extends BlockWithEntity {
         return BlockRenderType.MODEL;
     }
 
-
-
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING,Properties.ENABLED);
-    }
-
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.LASER_CATCHER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
+        builder.add(Properties.FACING, Properties.POWERED, CustomProperties.REVERSED);
     }
 
     @Override
@@ -97,13 +69,18 @@ public class LaserCatcherBlock extends BlockWithEntity {
     }
 
     @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(Properties.POWERED, false).with(CustomProperties.REVERSED, false);
+    }
+
+    @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new LaserCatcherEntity(pos,state);
+        return new DualExcursionFunnelEmitterBlockEntity(pos, state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.LASER_CATCHER_ENTITY, LaserCatcherEntity::tick1);
+        return checkType(type, PortalCubedBlocks.DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY, DualExcursionFunnelEmitterBlockEntity::tick2);
     }
 
 }

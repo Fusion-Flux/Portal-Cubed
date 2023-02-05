@@ -1,6 +1,6 @@
-package com.fusionflux.portalcubed.blocks.blockentities;
+package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.LaserRelayBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -98,12 +98,12 @@ public class LaserRelayBlock extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new LaserRelayEntity(pos,state);
+        return new LaserRelayBlockEntity(pos, state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.LASER_RELAY_ENTITY, LaserRelayEntity::tick1);
+        return checkType(type, PortalCubedBlocks.LASER_RELAY_ENTITY, LaserRelayBlockEntity::tick1);
     }
 
 }

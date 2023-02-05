@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEntityAbstract {
+public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunnelEmitterBlockEntity {
 
-    public DuelExcursionFunnelEmitterEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER_ENTITY, pos, state);
+    public DualExcursionFunnelEmitterBlockEntity(BlockPos pos, BlockState state) {
+        super(PortalCubedBlocks.DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY, pos, state);
     }
 
-    public static void tick2(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, DuelExcursionFunnelEmitterEntity blockEntity) {
+    public static void tick2(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, DualExcursionFunnelEmitterBlockEntity blockEntity) {
         if (!world.isClient) {
             boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
 
@@ -51,7 +51,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
                             world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
 
-                            ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
+                            ExcursionFunnelMainBlockEntity funnel = ((ExcursionFunnelMainBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
                             modFunnels.add(funnel.getPos());
                             blockEntity.funnels.add(funnel.getPos());
@@ -139,7 +139,7 @@ public class DuelExcursionFunnelEmitterEntity extends ExcursionFunnelEmitterEnti
 
                             world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
 
-                            ExcursionFunnelEntityMain funnel = ((ExcursionFunnelEntityMain) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
+                            ExcursionFunnelMainBlockEntity funnel = ((ExcursionFunnelMainBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
                             modFunnels.add(funnel.getPos());
                             blockEntity.funnels.add(funnel.getPos());
