@@ -48,12 +48,6 @@
       }
     ],
 
-    "suggests": [
-      {
-        "id": "create"
-      }
-    ],
-
     "metadata": {
       "name": "Portal Cubed",
       "description": "A portal gun mod for Quilt",
