@@ -239,6 +239,7 @@
   "key.portalcubed.category" : "Portal³",
   "key.portalcubed.grab" : "Grab",
   "key.portalcubed.remove_portals" : "Remove Portals",
+  "key.portalcubed.toggle_hidden_blocks" : "Toggle Hidden Blocks",
 
   "portalcubed.auto_portal.set_portal_type": "Set portal type to %s",
   "portalcubed.portal_type.primary": "Primary",

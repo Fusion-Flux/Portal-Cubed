@@ -3,7 +3,6 @@ package com.fusionflux.portalcubed.client;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.client.key.GrabKeyBinding;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.*;
 import com.fusionflux.portalcubed.client.render.model.block.EmissiveSpriteRegistry;
@@ -41,6 +40,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 @ClientOnly
 public class PortalCubedClient implements ClientModInitializer {
     public static long shakeStart;
+    public static boolean hiddenBlocksVisible;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -51,7 +51,7 @@ public class PortalCubedClient implements ClientModInitializer {
         registerColorProviders();
         registerEmissiveModels(mod);
         PortalCubedClientPackets.registerPackets();
-        GrabKeyBinding.register();
+        PortalCubedKeyBindings.register();
 
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);

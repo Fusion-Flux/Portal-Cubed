@@ -1,10 +1,9 @@
 package com.fusionflux.portalcubed.blocks;
 
+import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import net.fabricmc.api.EnvType;
 import net.minecraft.block.*;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -66,9 +65,7 @@ public abstract class SpecialHiddenBlock extends Block implements Waterloggable 
 
     @ClientOnly
     private BlockRenderType overrideRenderTypeClient() {
-        final ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        return player != null && player.isHolding(PortalCubedItems.HAMMER)
-            ? BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
+        return PortalCubedClient.hiddenBlocksVisible ? BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
     }
 
     @Override
