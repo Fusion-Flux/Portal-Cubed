@@ -23,7 +23,7 @@ public class ClientWorldMixin {
     )
     private static boolean specialHiddenBlocks(Set<Item> instance, Object item, Operation<Boolean> original) {
         if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof SpecialHiddenBlock) {
-            return !PortalCubedClient.hiddenBlocksVisible;
+            return !PortalCubedClient.hiddenBlocksVisible();
         }
         return original.call(instance, item);
     }

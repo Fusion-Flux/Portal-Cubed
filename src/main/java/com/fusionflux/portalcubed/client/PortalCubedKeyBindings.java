@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.InputUtil;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBind;
 import org.lwjgl.glfw.GLFW;
+import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -42,18 +43,20 @@ public class PortalCubedKeyBindings {
             }
         });
 
-        final KeyBind toggleHiddenBlocksKey = new KeyBind(
-            "key." + PortalCubed.MOD_ID + ".toggle_hidden_blocks",
-            InputUtil.Type.KEYSYM,
-            GLFW.GLFW_KEY_H,
-            "key." + PortalCubed.MOD_ID + ".category"
-        );
-        KeyBindingHelper.registerKeyBinding(toggleHiddenBlocksKey);
-        ClientTickEvents.END.register(client -> {
-            if (toggleHiddenBlocksKey.wasPressed()) {
-                PortalCubedClient.hiddenBlocksVisible = !PortalCubedClient.hiddenBlocksVisible;
-                client.worldRenderer.reload();
-            }
-        });
+        if (!QuiltLoader.isModLoaded("visiblebarriers")) {
+            final KeyBind toggleHiddenBlocksKey = new KeyBind(
+                "key." + PortalCubed.MOD_ID + ".toggle_hidden_blocks",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_H,
+                "key." + PortalCubed.MOD_ID + ".category"
+            );
+            KeyBindingHelper.registerKeyBinding(toggleHiddenBlocksKey);
+            ClientTickEvents.END.register(client -> {
+                if (toggleHiddenBlocksKey.wasPressed()) {
+                    PortalCubedClient.toggleHiddenBlocksVisible();
+                    client.worldRenderer.reload();
+                }
+            });
+        }
     }
 }

@@ -65,7 +65,7 @@ public abstract class SpecialHiddenBlock extends Block implements Waterloggable 
 
     @ClientOnly
     private BlockRenderType overrideRenderTypeClient() {
-        return PortalCubedClient.hiddenBlocksVisible ? BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
+        return PortalCubedClient.hiddenBlocksVisible() ? BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
     }
 
     @Override

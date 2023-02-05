@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.client;
 
+import amymialee.visiblebarriers.VisibleBarriers;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -27,6 +28,7 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 
@@ -40,7 +42,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 @ClientOnly
 public class PortalCubedClient implements ClientModInitializer {
     public static long shakeStart;
-    public static boolean hiddenBlocksVisible;
+    private static boolean hiddenBlocksVisible;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -165,6 +167,20 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityRendererRegistry.register(PortalCubedEntities.REPULSION_GEL_BLOB, GelBlobRenderer::new);
         EntityRendererRegistry.register(PortalCubedEntities.CONVERSION_GEL_BLOB, GelBlobRenderer::new);
         EntityRendererRegistry.register(PortalCubedEntities.ADHESION_GEL_BLOB, GelBlobRenderer::new);
+    }
+
+    private static final class VisibleBarriersCompat {
+        static boolean isVisible() {
+            return VisibleBarriers.isVisible();
+        }
+    }
+
+    public static boolean hiddenBlocksVisible() {
+        return hiddenBlocksVisible || (QuiltLoader.isModLoaded("visiblebarriers") && VisibleBarriersCompat.isVisible());
+    }
+
+    public static void toggleHiddenBlocksVisible() {
+        hiddenBlocksVisible = !hiddenBlocksVisible;
     }
 
 }
