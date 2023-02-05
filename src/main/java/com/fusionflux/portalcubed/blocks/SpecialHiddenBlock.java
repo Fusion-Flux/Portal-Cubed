@@ -67,7 +67,7 @@ public abstract class SpecialHiddenBlock extends Block implements Waterloggable 
     @ClientOnly
     private BlockRenderType overrideRenderTypeClient() {
         final ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        return player != null && (player.isHolding(PortalCubedItems.HAMMER) || player.isHolding(asItem()))
+        return player != null && player.isHolding(PortalCubedItems.HAMMER)
             ? BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
     }
 

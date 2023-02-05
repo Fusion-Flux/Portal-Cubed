@@ -1,14 +1,12 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.blocks.SpecialHiddenBlock;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.math.BlockPos;
@@ -47,16 +45,6 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
         final Item holdingSpecial;
         if (isHolding(PortalCubedItems.HAMMER)) {
             holdingSpecial = PortalCubedItems.HAMMER;
-        } else if (
-            getMainHandStack().getItem() instanceof BlockItem blockItem &&
-                blockItem.getBlock() instanceof SpecialHiddenBlock
-        ) {
-            holdingSpecial = blockItem;
-        } else if (
-            getOffHandStack().getItem() instanceof BlockItem blockItem &&
-                blockItem.getBlock() instanceof SpecialHiddenBlock
-        ) {
-            holdingSpecial = getOffHandStack().getItem();
         } else {
             holdingSpecial = null;
         }
