@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.blockentities.HardLightBridgeEmitterBlockBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.HardLightBridgeEmitterBlockEntity;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -105,12 +105,12 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new HardLightBridgeEmitterBlockBlockEntity(pos, state);
+        return new HardLightBridgeEmitterBlockEntity(pos, state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.HLB_EMITTER_ENTITY, HardLightBridgeEmitterBlockBlockEntity::tick);
+        return checkType(type, PortalCubedBlocks.HLB_EMITTER_ENTITY, HardLightBridgeEmitterBlockEntity::tick);
     }
 
 }

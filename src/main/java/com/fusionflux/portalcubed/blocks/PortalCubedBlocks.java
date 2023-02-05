@@ -53,7 +53,7 @@ public class PortalCubedBlocks {
     public static final SlidingDoorBlock OLD_AP_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
     public static final SlidingDoorBlock PORTAL1DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool());
 
-    public static BlockEntityType<HardLightBridgeEmitterBlockBlockEntity> HLB_EMITTER_ENTITY;
+    public static BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY;
     public static BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY;
 
     public static BlockEntityType<AutoPortalBlockEntity> AUTO_PORTAL_BLOCK_ENTITY;
@@ -141,7 +141,7 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("portal_1_door"), PORTAL1DOOR);
         Registry.register(Registry.ITEM, id("portal_1_door"), new BlockItem(PORTAL1DOOR, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        HLB_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_emitter_entity"), QuiltBlockEntityTypeBuilder.create(HardLightBridgeEmitterBlockBlockEntity::new, HLB_EMITTER_BLOCK).build(null));
+        HLB_EMITTER_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_emitter_entity"), QuiltBlockEntityTypeBuilder.create(HardLightBridgeEmitterBlockEntity::new, HLB_EMITTER_BLOCK).build(null));
         Registry.register(Registry.BLOCK, id("light_bridge_emitter"), HLB_EMITTER_BLOCK);
         Registry.register(Registry.ITEM, id("light_bridge_emitter"), new BlockItem(HLB_EMITTER_BLOCK, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
         HLB_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_entity"), QuiltBlockEntityTypeBuilder.create(HardLightBridgeBlockEntity::new, HLB_BLOCK).build(null));
