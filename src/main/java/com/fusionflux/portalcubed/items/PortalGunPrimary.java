@@ -5,7 +5,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -16,8 +15,8 @@ public class PortalGunPrimary extends PortalGun {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        return useImpl(world, user, hand, true);
+    protected void shoot(World world, PlayerEntity user, Hand hand, boolean leftClick) {
+        super.shoot(world, user, hand, true);
     }
 
     @Override
