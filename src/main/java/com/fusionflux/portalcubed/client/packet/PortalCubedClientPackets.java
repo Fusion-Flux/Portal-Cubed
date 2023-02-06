@@ -5,7 +5,6 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.items.PaintGun;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 
 import net.minecraft.client.MinecraftClient;
@@ -13,15 +12,12 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
@@ -36,8 +32,6 @@ public class PortalCubedClientPackets {
     public static final Identifier GEL_OVERLAY_PACKET = new Identifier(PortalCubed.MOD_ID, "gel_overlay");
     public static final Identifier ROCKET_TURRET_UPDATE_PACKET = new Identifier(PortalCubed.MOD_ID, "rocket_turret_update");
 
-    public static final Identifier PORTAL_LEFT_CLICK = new Identifier(PortalCubed.MOD_ID, "portal_left_click_client");
-
     @ClientOnly
     public static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(SPAWN_PACKET, PortalCubedClientPackets::onEntitySpawn);
@@ -45,25 +39,7 @@ public class PortalCubedClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(HAND_SHAKE_PACKET, PortalCubedClientPackets::onHandShake);
         ClientPlayNetworking.registerGlobalReceiver(GEL_OVERLAY_PACKET, PortalCubedClientPackets::onGelOverlay);
         ClientPlayNetworking.registerGlobalReceiver(ROCKET_TURRET_UPDATE_PACKET, PortalCubedClientPackets::onRocketTurretUpdate);
-        ClientPlayNetworking.registerGlobalReceiver(PORTAL_LEFT_CLICK, PortalCubedClientPackets::onPortalLeftClick);
     }
-
-
-    @ClientOnly
-    public static void onPortalLeftClick(MinecraftClient client, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender) {
-        System.out.println("a");
-        if(client.player != null) {
-            World clientWorld = client.player.getWorld();
-            Hand hand = packetByteBuf.readEnumConstant(Hand.class);
-            ItemStack itemStack = client.player.getStackInHand(hand);
-            //player.updateLastActionTime();
-
-            if (!itemStack.isEmpty() && itemStack.getItem() instanceof PaintGun) {
-                client.execute(() -> ((PaintGun) itemStack.getItem()).useLeft(clientWorld, client.player));
-            }
-        }
-    }
-
 
     @ClientOnly
     public static void onEntitySpawn(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
@@ -112,7 +88,6 @@ public class PortalCubedClientPackets {
     @ClientOnly
     public static void onGelOverlay(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         // TODO: Implement
-        PortalCubed.LOGGER.info("Gel overlay");
     }
 
     @ClientOnly

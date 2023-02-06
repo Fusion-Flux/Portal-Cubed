@@ -13,8 +13,8 @@ public class PortalGunSecondary extends PortalGun {
     }
 
     @Override
-    public void useLeft(World world, PlayerEntity user, Hand hand) {
-        useImpl(world, user, hand, false);
+    protected void shoot(World world, PlayerEntity user, Hand hand, boolean leftClick) {
+        super.shoot(world, user, hand, false);
     }
 
     @Override

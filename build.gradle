@@ -25,9 +25,9 @@ repositories {
 	}
 
 	maven {
-		url "https://www.cursemaven.com"
+		url 'https://repo.sleeping.town'
 		content {
-			includeGroup "curse.maven"
+			includeGroup 'com.unascribed'
 		}
 	}
 
@@ -52,6 +52,9 @@ dependencies {
 	}
 
 	modApi include("maven.modrinth:stonecutter_recipe_tags:4.0.0-fabric")
+
+	modApi include("com.unascribed:lib39-core:1.4.2")
+	modApi include("com.unascribed:lib39-recoil:1.4.2")
 
 	modImplementation include ("maven.modrinth:gravity-api:${project.gravity_api_version}"){
 		exclude group: "net.fabricmc.fabric-api"
