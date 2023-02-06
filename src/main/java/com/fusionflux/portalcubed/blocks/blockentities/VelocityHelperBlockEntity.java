@@ -48,6 +48,8 @@ public class VelocityHelperBlockEntity extends BlockEntity {
     private String conditionString = DEFAULT_CONDITION_STRING;
     private Expression condition = DEFAULT_CONDITION;
 
+    private int flightDuration = 40;
+
     public VelocityHelperBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
@@ -65,7 +67,8 @@ public class VelocityHelperBlockEntity extends BlockEntity {
             destination = null;
         }
         setInterpolationCurve(nbt.getString("InterpolationCurve"));
-        setInterpolationCurve(nbt.getString("Condition"));
+        setCondition(nbt.getString("Condition"));
+        flightDuration = nbt.getInt("FlightDuration");
     }
 
     @Override
@@ -79,6 +82,7 @@ public class VelocityHelperBlockEntity extends BlockEntity {
         }
         nbt.putString("InterpolationCurve", interpolationCurveString);
         nbt.putString("Condition", conditionString);
+        nbt.putInt("FlightDuration", flightDuration);
     }
 
     @Override
@@ -132,6 +136,10 @@ public class VelocityHelperBlockEntity extends BlockEntity {
         if (reparse) {
             this.condition = parseExpression(condition, "x", "y", "z");
         }
+    }
+
+    public int getFlightDuration() {
+        return flightDuration;
     }
 
     private void updateListeners() {
