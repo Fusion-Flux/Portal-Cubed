@@ -23,10 +23,13 @@ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.item.Items;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -42,6 +45,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 @ClientOnly
 public class PortalCubedClient implements ClientModInitializer {
     public static long shakeStart;
+    @Nullable public static BlockPos velocityHelperDragStart;
     private static boolean hiddenBlocksVisible;
 
     @Override
@@ -55,8 +59,36 @@ public class PortalCubedClient implements ClientModInitializer {
         PortalCubedClientPackets.registerPackets();
         PortalCubedKeyBindings.register();
 
+        BlockEntityRendererFactories.register(PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY, VelocityHelperRenderer::new);
+
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
+
+        // TODO: Make this actually work
+//        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
+//            final BlockPos origin = velocityHelperDragStart;
+//            if (origin != null) {
+//                final VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+//                final Vec3d end = context.camera().getPos();
+//                final VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getLines());
+//                final MatrixStack.Entry matrix = context.matrixStack().peek();
+//                final Vec3f offset = new Vec3f(Vec3d.ofCenter(velocityHelperDragStart).subtract(end));
+//                final Vec3f normal = offset.copy();
+//                normal.modify(f -> -f);
+//                normal.normalize();
+//                vertexConsumer
+//                    .vertex(matrix.getModel(), offset.getX(), offset.getY(), offset.getZ())
+//                    .color(0.0f, 0.5f, 1.0f, 1.0f)
+//                    .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
+//                    .next();
+//                vertexConsumer
+//                    .vertex(matrix.getModel(), 0f, 0f, 0f)
+//                    .color(1.0f, 0.5f, 0.0f, 1.0f)
+//                    .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
+//                    .next();
+//                immediate.draw();
+//            }
+//        });
 
         final Identifier toxicGooStillSpriteId = id("block/toxic_goo_still");
         final Identifier toxicGooFlowSpriteId = id("block/toxic_goo_flow");

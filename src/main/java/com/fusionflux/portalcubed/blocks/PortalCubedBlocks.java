@@ -73,6 +73,9 @@ public class PortalCubedBlocks {
 
     public static final PowerBlock POWER_BLOCK = new PowerBlock(QuiltBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.8F).dropsNothing().nonOpaque());
 
+    public static final Block VELOCITY_HELPER = new VelocityHelperBlock(QuiltBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.8F).dropsNothing().nonOpaque());
+    public static final BlockEntityType<VelocityHelperBlockEntity> VELOCITY_HELPER_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(VelocityHelperBlockEntity::new, VELOCITY_HELPER).build();
+
     public static final FizzlerBlock FIZZLER = new FizzlerBlock(QuiltBlockSettings.of(Material.PORTAL).noCollision().strength(-1, 3600000));
     public static final FizzlerEmitter FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE), FIZZLER);
     public static final FizzlerBlock PORTAL_1_FIZZLER = new FizzlerBlock(QuiltBlockSettings.copyOf(FIZZLER));
@@ -208,6 +211,10 @@ public class PortalCubedBlocks {
 
         Registry.register(Registry.BLOCK, id("power_block"), POWER_BLOCK);
         Registry.register(Registry.ITEM, id("power_block"), new BlockItem(POWER_BLOCK, new Item.Settings().rarity(Rarity.EPIC).group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("velocity_helper"), VELOCITY_HELPER);
+        Registry.register(Registry.ITEM, id("velocity_helper"), new BlockItem(VELOCITY_HELPER, new Item.Settings().rarity(Rarity.EPIC).group(PortalCubed.TestingElementsGroup)));
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("velocity_helper"), VELOCITY_HELPER_BLOCK_ENTITY);
 
         Registry.register(Registry.BLOCK, id("fizzler"), FIZZLER);
         Registry.register(Registry.BLOCK, id("fizzler_emitter"), FIZZLER_EMITTER);
