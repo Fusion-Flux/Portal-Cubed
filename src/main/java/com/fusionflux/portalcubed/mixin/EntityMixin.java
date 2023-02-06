@@ -229,7 +229,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
                 if (otherDirec != null) {
                     double teleportYOffset = switch (otherDirec) {
-                        case DOWN -> thisentity.getStandingEyeHeight();
+                        case DOWN -> thisentity.getEyeHeight(thisentity.getPose());
                         case NORTH, SOUTH, EAST, WEST -> {
                             if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
                                 yield portal.getPos().y - thisentity.getPos().y;
