@@ -201,6 +201,11 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     }
                     canUsePortals = true;
                 }
+                this.setNoGravity(true);
+            }else{
+                if(this.hasNoGravity()){
+                    this.setNoGravity(false);
+                }
             }
         }else{
             if (getHolderUUID().isPresent()) {
