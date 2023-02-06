@@ -184,7 +184,7 @@ if(portal != null) {
 
         if (otherDirec != null) {
             double teleportYOffset = switch (otherDirec) {
-                case DOWN -> 2;
+                case DOWN -> this.getHeight();
                 case NORTH, SOUTH, EAST, WEST -> {
                     if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
                         yield portal.getPos().y - thisEntity.getPos().y;
