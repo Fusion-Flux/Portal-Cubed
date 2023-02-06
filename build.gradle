@@ -76,6 +76,8 @@ dependencies {
 
 	modCompileOnly "com.simibubi.create:create-fabric-1.19.2:0.5.0.i-930+1.19.2"
 	modCompileOnly "amymialee:visible-barriers:1.5.3+1.19.x"
+
+	include implementation("net.objecthunter:exp4j:0.4.8")
 }
 
 processResources {

@@ -6,7 +6,6 @@ import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
@@ -113,7 +112,7 @@ public class PortalCubedClientPackets {
                         case RocketTurretBlockEntity.UPDATE_LOCKED_TICKS -> entity.setLockedTicks((int)arg);
                     }
                 },
-                () -> PortalCubed.LOGGER.warn("Received rocket_turret_update for unloaded rocket turret at {}", pos)
+                () -> PortalCubed.LOGGER.warn("Received rocket_turret_update for unloaded rocket turret at {}.", pos)
             )
         );
     }

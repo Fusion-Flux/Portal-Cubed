@@ -2,11 +2,13 @@ package com.fusionflux.portalcubed.packet;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.VelocityHelperBlock;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.network.PacketByteBuf;
@@ -17,6 +19,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -24,11 +27,15 @@ import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedServerPackets {
     public static final Identifier GRAB_KEY_PRESSED = new Identifier(PortalCubed.MOD_ID, "grab_key_pressed");
     public static final Identifier REMOVE_PORTALS = new Identifier(PortalCubed.MOD_ID, "remove_portals");
+    public static final Identifier VELOCITY_HELPER_CONFIGURE = id("velocity_helper_configure");
 
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
@@ -74,8 +81,37 @@ public class PortalCubedServerPackets {
         });
     }
 
+    @SuppressWarnings("unchecked")
+    public static void onVelocityHelperConfigure(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
+        final BlockPos origin = buf.readBlockPos();
+        final int mode = buf.readByte();
+        final Object arg = switch (mode) {
+            case VelocityHelperBlock.CONFIG_DEST -> buf.readOptional(PacketByteBuf::readBlockPos);
+            default -> {
+                PortalCubed.LOGGER.error("Malformed velocity_helper_configure packet. Unknown mode {}.", mode);
+                yield null;
+            }
+        };
+        if (arg == null) return;
+        server.execute(() -> player.getWorld().getBlockEntity(origin, PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY).ifPresentOrElse(
+            entity -> {
+                switch (mode) {
+                    case VelocityHelperBlock.CONFIG_DEST -> {
+                        if (!player.isHolding(PortalCubedItems.HAMMER)) {
+                            PortalCubed.LOGGER.warn("Received velocity_helper_configure from {}, who's not holding a hammer.", player);
+                            return;
+                        }
+                        entity.setDestination(((Optional<BlockPos>)arg).orElse(null));
+                    }
+                }
+            },
+            () -> PortalCubed.LOGGER.warn("Received velocity_helper_configure for unloaded velocity helper at {}.", origin)
+        ));
+    }
+
     public static void registerPackets() {
         ServerPlayNetworking.registerGlobalReceiver(GRAB_KEY_PRESSED, PortalCubedServerPackets::onGrabKeyPressed);
         ServerPlayNetworking.registerGlobalReceiver(REMOVE_PORTALS, PortalCubedServerPackets::onRemovePortalKeyPressed);
+        ServerPlayNetworking.registerGlobalReceiver(VELOCITY_HELPER_CONFIGURE, PortalCubedServerPackets::onVelocityHelperConfigure);
     }
 }

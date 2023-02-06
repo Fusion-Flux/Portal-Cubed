@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.blocks;
 
-import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -10,14 +10,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class SpecialHiddenBlockWithEntity extends SpecialHiddenBlock {
+public abstract class SpecialHiddenBlockWithEntity extends SpecialHiddenBlock implements BlockEntityProvider {
     public SpecialHiddenBlockWithEntity(Settings settings) {
         super(settings);
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.INVISIBLE;
     }
 
     @Override
