@@ -97,8 +97,8 @@ public class VelocityHelperScreen extends HandledScreen<VelocityHelperScreenHand
                         drawLine(matrices, x - spacing, this.y + 157 - last, x, this.y + 157 - calculation, 0xffffffff);
                         last = calculation;
                     }
-                } catch (IllegalArgumentException e) {
-                    icWidget.setError(e.getMessage());
+                } catch (RuntimeException e) {
+                    icWidget.setError(ExpressionFieldWidget.cleanError(e));
                 }
             }
         }
