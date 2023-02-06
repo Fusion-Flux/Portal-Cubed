@@ -31,6 +31,7 @@ public class ExpressionFieldWidget extends TextFieldWidget {
             onChanged(s);
         });
         super.setRenderTextProvider(this::getTextToRender);
+        setMaxLength(256);
     }
 
     public void setExpression(String expression) {

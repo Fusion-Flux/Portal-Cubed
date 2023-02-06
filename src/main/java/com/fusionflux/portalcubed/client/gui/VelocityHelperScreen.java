@@ -36,6 +36,7 @@ public class VelocityHelperScreen extends HandledScreen<VelocityHelperScreenHand
 
     private TextFieldWidget flightDurationWidget;
     private ExpressionFieldWidget conditionWidget, icWidget;
+    private ButtonWidget doneButton;
 
     public VelocityHelperScreen(VelocityHelperScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -130,7 +131,7 @@ public class VelocityHelperScreen extends HandledScreen<VelocityHelperScreenHand
             width / 2 - 90, this.y + backgroundHeight + 5, 75, 20, ScreenTexts.CANCEL,
             w -> closeScreen()
         ));
-        addDrawableChild(new ButtonWidget(
+        addDrawableChild(doneButton = new ButtonWidget(
             width / 2 + 15, this.y + backgroundHeight + 5, 75, 20, ScreenTexts.DONE,
             w -> {
                 VelocityHelperBlock.sendConfigurePacket(handler.getAt(), VelocityHelperBlock.CONFIG_OTHER, buf -> {
@@ -162,6 +163,10 @@ public class VelocityHelperScreen extends HandledScreen<VelocityHelperScreenHand
         flightDurationWidget.tick();
         conditionWidget.tick();
         icWidget.tick();
+        doneButton.active =
+            !flightDurationWidget.getText().isEmpty() &&
+                !conditionWidget.getText().isEmpty() &&
+                !icWidget.getText().isEmpty();
     }
 
     public static void drawLine(MatrixStack matrices, float x0, float y0, float x1, float y1, int color) {
