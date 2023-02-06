@@ -270,10 +270,10 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
     }
 
     public static void linkPortals(ExperimentalPortal portal1, ExperimentalPortal portal2, float volume) {
-        portal1.setDestination(Optional.of(portal2.getOriginPos().add(portal2.getFacingDirection().getUnitVector().getX()*.1,portal2.getFacingDirection().getUnitVector().getY()*.1,portal2.getFacingDirection().getUnitVector().getZ()*.1)));
+        portal1.setDestination(Optional.of(portal2.getOriginPos()));
         portal1.setOtherFacing(new Vec3d(portal2.getFacingDirection().getUnitVector().getX(),portal2.getFacingDirection().getUnitVector().getY(),portal2.getFacingDirection().getUnitVector().getZ()));
         portal1.setOtherAxisH(portal2.getAxisH().get());
-        portal2.setDestination(Optional.of(portal1.getOriginPos().add(portal1.getFacingDirection().getUnitVector().getX()*.1,portal1.getFacingDirection().getUnitVector().getY()*.1,portal1.getFacingDirection().getUnitVector().getZ()*.1)));
+        portal2.setDestination(Optional.of(portal1.getOriginPos()));
         portal2.setOtherFacing(new Vec3d(portal1.getFacingDirection().getUnitVector().getX(),portal1.getFacingDirection().getUnitVector().getY(),portal1.getFacingDirection().getUnitVector().getZ()));
         portal2.setOtherAxisH(portal1.getAxisH().get());
         portal1.setLinkedPortalUUID(Optional.of(portal2.getUuid()));

@@ -4,6 +4,8 @@ import amymialee.visiblebarriers.VisibleBarriers;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.client.gui.FaithPlateScreen;
+import com.fusionflux.portalcubed.client.gui.VelocityHelperScreen;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.*;
 import com.fusionflux.portalcubed.client.render.model.block.EmissiveSpriteRegistry;
@@ -12,7 +14,6 @@ import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
-import com.fusionflux.portalcubed.util.FaithPlateScreen;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -52,6 +53,7 @@ public class PortalCubedClient implements ClientModInitializer {
     public void onInitializeClient(ModContainer mod) {
 
         HandledScreens.register(PortalCubed.FAITH_PLATE_SCREEN_HANDLER, FaithPlateScreen::new);
+        HandledScreens.register(PortalCubed.VELOCITY_HELPER_SCREEN_HANDLER, VelocityHelperScreen::new);
 
         registerEntityRenderers();
         registerColorProviders();

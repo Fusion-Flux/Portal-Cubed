@@ -1,7 +1,8 @@
-package com.fusionflux.portalcubed.util;
+package com.fusionflux.portalcubed.client.gui;
 
 import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
+import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.entity.BlockEntity;

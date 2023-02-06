@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -31,6 +32,7 @@ import java.util.function.Consumer;
 
 public class VelocityHelperBlock extends SpecialHiddenBlockWithEntity implements BlockCollisionTrigger {
     public static final int CONFIG_DEST = 0;
+    public static final int CONFIG_OTHER = 1;
 
     public static final VoxelShape SHAPE = createCuboidShape(4, 4, 4, 12, 12, 12);
 
@@ -65,6 +67,7 @@ public class VelocityHelperBlock extends SpecialHiddenBlockWithEntity implements
     @Override
     @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!player.isCreative()) return ActionResult.PASS;
         final ItemStack stack = player.getStackInHand(hand);
         if (stack.isOf(PortalCubedItems.HAMMER)) {
             final VelocityHelperBlockEntity entity = world.getBlockEntity(pos, PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY).orElse(null);
@@ -86,6 +89,15 @@ public class VelocityHelperBlock extends SpecialHiddenBlockWithEntity implements
                 }
                 return ActionResult.SUCCESS;
             }
+        } else {
+            if (!world.isClient) {
+                final NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
+
+                if (screenHandlerFactory != null) {
+                    player.openHandledScreen(screenHandlerFactory);
+                }
+            }
+            return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
     }

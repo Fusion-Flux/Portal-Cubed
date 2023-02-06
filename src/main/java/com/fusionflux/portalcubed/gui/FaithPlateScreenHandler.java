@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.util;
+package com.fusionflux.portalcubed.gui;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import net.minecraft.entity.player.PlayerEntity;

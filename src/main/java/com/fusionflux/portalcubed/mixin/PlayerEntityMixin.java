@@ -184,7 +184,7 @@ if(portal != null) {
 
         if (otherDirec != null) {
             double teleportYOffset = switch (otherDirec) {
-                case DOWN -> 2;
+                case DOWN -> this.getEyeHeight(this.getPose()) -( portal.getPos().y - thisEntity.getPos().y);
                 case NORTH, SOUTH, EAST, WEST -> {
                     if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
                         yield portal.getPos().y - thisEntity.getPos().y;
@@ -303,6 +303,7 @@ if(portal != null) {
                 if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY() && entityVelocity.getY() < 0) {
                     if (this.world.isClient && thisEntity.isMainPlayer()) {
                         var byteBuf = PacketByteBufs.create();
+                        //System.out.println(portal.getPos().y - thisEntity.getPos().y);
                         byteBuf.writeVarInt(portal.getId());
                         byteBuf.writeDouble(teleportXOffset);
                         byteBuf.writeDouble(teleportYOffset);

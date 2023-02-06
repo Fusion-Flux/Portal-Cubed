@@ -1,15 +1,23 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIntArray;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -19,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.ToDoubleFunction;
 
-public class VelocityHelperBlockEntity extends BlockEntity {
+public class VelocityHelperBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
     private static final List<Operator> OPERATORS = List.of(
         newOp("!", 1, false, Operator.PRECEDENCE_UNARY_MINUS, d -> d[0] == 0 ? 1 : 0),
         newOp("<", 2, true, Operator.PRECEDENCE_ADDITION - 1, d -> d[0] < d[1] ? 1 : 0),
@@ -103,7 +111,6 @@ public class VelocityHelperBlockEntity extends BlockEntity {
 
     public void setDestination(@Nullable BlockPos destination) {
         this.destination = destination;
-        updateListeners();
     }
 
     public Expression getInterpolationCurve() {
@@ -142,13 +149,33 @@ public class VelocityHelperBlockEntity extends BlockEntity {
         return flightDuration;
     }
 
-    private void updateListeners() {
+    public void setFlightDuration(int flightDuration) {
+        this.flightDuration = flightDuration;
+    }
+
+    public void updateListeners() {
         markDirty();
         assert world != null;
         world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
     }
 
-    private static Expression parseExpression(String expression, String... variables) {
+    @Override
+    public Text getDisplayName() {
+        return Text.translatable(getCachedState().getBlock().getTranslationKey());
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+        return new VelocityHelperScreenHandler(syncId, getPos());
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+        buf.writeBlockPos(getPos());
+    }
+
+    public static Expression parseExpression(String expression, String... variables) {
         return new ExpressionBuilder(expression)
             .operator(OPERATORS)
             .variables(variables)
