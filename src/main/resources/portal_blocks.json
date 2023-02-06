@@ -353,6 +353,10 @@
     "type": "provided",
     "render_layer": "translucent"
   },
+  "pedestal_button": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
   "matter_inquisition_field": {
     "type": "provided",
     "render_layer": "translucent"
