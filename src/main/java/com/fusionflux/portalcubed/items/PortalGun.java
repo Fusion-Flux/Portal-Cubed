@@ -8,6 +8,9 @@ import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.unascribed.lib39.recoil.api.DirectClickItem;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -19,9 +22,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
@@ -35,7 +39,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public class PortalGun extends Item implements DyeableItem {
+public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
     public PortalGun(Settings settings) {
         super(settings);
@@ -75,22 +79,40 @@ public class PortalGun extends Item implements DyeableItem {
         return false;
     }
 
-    public void useLeft(World world, PlayerEntity user, Hand hand) {
-        useImpl(world, user, hand, true);
+    @Override
+    public ActionResult onDirectAttack(PlayerEntity user, Hand hand) {
+        shoot(user.world, user, hand, true);
+        return ActionResult.CONSUME;
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        return useImpl(world, user, hand, false);
+    public ActionResult onDirectUse(PlayerEntity user, Hand hand) {
+        shoot(user.world, user, hand, false);
+        return ActionResult.CONSUME;
+    }
+
+    @Override
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.NONE;
+    }
+
+    @Override
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return false;
+    }
+
+    @Override
+    public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
+        return false;
     }
 
     protected boolean allowLinkingToOther() {
         return false;
     }
 
-    public TypedActionResult<ItemStack> useImpl(World world, PlayerEntity user, Hand hand, boolean leftClick) {
+    protected void shoot(World world, PlayerEntity user, Hand hand, boolean leftClick) {
         ItemStack stack = user.getStackInHand(hand);
-        if (user.isSpectator()) return TypedActionResult.pass(stack);
+        if (user.isSpectator()) return;
         stack.getOrCreateNbt().putBoolean("complementary", !leftClick);
         if (!world.isClient) {
             NbtCompound tag = stack.getOrCreateNbt();
@@ -161,7 +183,7 @@ public class PortalGun extends Item implements DyeableItem {
 
                         if (i == 8) {
                             world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                            return TypedActionResult.pass(stack);
+                            return;
                         }
                     }
                 }
@@ -214,7 +236,7 @@ public class PortalGun extends Item implements DyeableItem {
                 }
             } else {
                 world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                return TypedActionResult.pass(stack);
+                return;
             }
 
             portalsTag.putUuid((leftClick ? "Left" : "Right") + "Portal", portalHolder.getUuid());
@@ -223,7 +245,7 @@ public class PortalGun extends Item implements DyeableItem {
         } else {
             cancelClientMovement(user);
         }
-        return TypedActionResult.pass(stack);
+        return;
     }
 
     @ClientOnly
