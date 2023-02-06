@@ -251,6 +251,9 @@
   "portalcubed.velocity_helper.flight_duration": "Flight Duration (Ticks): ",
   "portalcubed.velocity_helper.condition": "Condition Expression (x, y, z)",
   "portalcubed.velocity_helper.interpolation_curve": "Interpolation Curve (x)",
+  "portalcubed.velocity_helper.failed_expression": "Failed to evaluate Velocity Helper %s",
+  "portalcubed.velocity_helper.condition_expression": "condition",
+  "portalcubed.velocity_helper.curve_expression": "interpolation curve",
 
   "item.portalcubed.music_disc_subject_name_here": "Music Disc",
   "item.portalcubed.music_disc_subject_name_here.desc": "Kelly Bailey - Subject Name Here",

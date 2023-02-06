@@ -1,15 +1,21 @@
 package com.fusionflux.portalcubed.mixin;
 
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
+import com.fusionflux.portalcubed.client.gui.ExpressionFieldWidget;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.objecthunter.exp4j.Expression;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -47,7 +53,12 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         condition.setVariable("x", getVelocity().x);
         condition.setVariable("y", getVelocity().y);
         condition.setVariable("z", getVelocity().z);
-        if (condition.evaluate() == 0) return;
+        try {
+            if (condition.evaluate() == 0) return;
+        } catch (RuntimeException e) {
+            logVHWarning("condition", e);
+            return;
+        }
         velocityHelper = block;
         velocityHelperStartTime = world.getTime();
     }
@@ -68,12 +79,41 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         }
         final Expression curve = velocityHelper.getInterpolationCurve();
         curve.setVariable("x", progress);
-        final double useProgress = MathHelper.clamp(curve.evaluate(), 0, 1);
+        final double useProgress;
+        try {
+            useProgress = MathHelper.clamp(curve.evaluate(), 0, 1);
+        } catch (RuntimeException e) {
+            logVHWarning("curve", e);
+            return;
+        }
         assert velocityHelper.getDestination() != null;
         setVelocity(new Vec3d(
             MathHelper.lerp(useProgress, velocityHelper.getPos().getX() + 0.5, velocityHelper.getDestination().getX() + 0.5),
             MathHelper.lerp(useProgress, velocityHelper.getPos().getY() + 0.5, velocityHelper.getDestination().getY() + 0.5),
             MathHelper.lerp(useProgress, velocityHelper.getPos().getZ() + 0.5, velocityHelper.getDestination().getZ() + 0.5)
         ).subtract(getPos()));
+    }
+
+    private void logVHWarning(String type, RuntimeException e) {
+        //noinspection ConstantValue
+        if ((Object)this instanceof PlayerEntity && world.isClient) {
+            logVHWarningToChat(type, e);
+        }
+        PortalCubed.LOGGER.info("{} at {}", getVHWarning(type).getString(), velocityHelper.getPos(), e);
+    }
+
+    @ClientOnly
+    private void logVHWarningToChat(String type, RuntimeException e) {
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(getVHWarning(type));
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(
+            Text.literal(ExpressionFieldWidget.cleanError(e)).formatted(Formatting.RED)
+        );
+    }
+
+    private Text getVHWarning(String type) {
+        return Text.translatable(
+            "portalcubed.velocity_helper.failed_expression",
+            Text.translatable("portalcubed.velocity_helper." + type + "_expression")
+        ).formatted(Formatting.RED);
     }
 }

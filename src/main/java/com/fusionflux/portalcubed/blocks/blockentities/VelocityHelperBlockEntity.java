@@ -37,7 +37,7 @@ public class VelocityHelperBlockEntity extends BlockEntity implements ExtendedSc
         newOp("==", 2, true, Operator.PRECEDENCE_ADDITION - 2, d -> d[0] == d[1] ? 1 : 0),
         newOp("!=", 2, true, Operator.PRECEDENCE_ADDITION - 2, d -> d[0] != d[1] ? 1 : 0),
         newOp("&", 2, true, Operator.PRECEDENCE_ADDITION - 3, d -> (d[0] != 0 && d[1] != 0) ? 1 : 0),
-        newOp("^", 2, true, Operator.PRECEDENCE_ADDITION - 4, d -> (d[0] != 0 ^ d[1] != 0) ? 1 : 0),
+        newOp("^", 2, true, Operator.PRECEDENCE_ADDITION - 4, d -> Math.pow(d[0], d[1])),
         newOp("|", 2, true, Operator.PRECEDENCE_ADDITION - 5, d -> (d[0] != 0 | d[1] != 0) ? 1 : 0)
     );
 

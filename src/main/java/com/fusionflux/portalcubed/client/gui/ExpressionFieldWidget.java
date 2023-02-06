@@ -85,7 +85,7 @@ public class ExpressionFieldWidget extends TextFieldWidget {
             }
         } catch (RuntimeException e) {
             this.expression = null;
-            setError(StringUtils.defaultIfEmpty(e.getMessage(), e.getClass().getSimpleName()));
+            setError(cleanError(e));
         }
     }
 
@@ -97,5 +97,9 @@ public class ExpressionFieldWidget extends TextFieldWidget {
         } else {
             setSuggestion(null);
         }
+    }
+
+    public static String cleanError(Throwable t) {
+        return StringUtils.defaultIfEmpty(t.getMessage(), t.getClass().getSimpleName());
     }
 }
