@@ -47,7 +47,7 @@
   "item.portalcubed.portal_gun_frame": "Portal Gun Frame",
   "item.portalcubed.portal_gun_casing": "Portal Gun Casing",
   "item.portalcubed.paint_gun": "Paint Gun",
-  "item.portalcubed.mini_blackhole": "Miniature Black hole",
+  "item.portalcubed.mini_blackhole": "Miniature Black Hole",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
 
   "item.portalcubed.base_gel": "Base Gel Glob",
@@ -172,7 +172,7 @@
   "block.portalcubed.portal_1_2x2_exposed_panel_bottom_right": "Portal 1 2x2 Exposed Panel Bottom Right",
   "block.portalcubed.portal_1_rusted_plating": "Portal 1 Rusted Plating",
 
-  "block.portalcubed.old_ap_mesh": "Old Aperture Mesh",
+  "block.portalcubed.old_ap_mesh": "Old Aperture Mesh Grating",
 
   "block.portalcubed.office_concrete": "Office Concrete + Office Tiling",
   "block.portalcubed.solid_office_concrete": "Portal 1 Office Concrete + Office Tiling",

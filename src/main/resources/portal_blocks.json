@@ -357,6 +357,14 @@
     "type": "provided",
     "render_layer": "cutout"
   },
+  "floor_button": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
+  "old_ap_floor_button": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
   "matter_inquisition_field": {
     "type": "provided",
     "render_layer": "translucent"
