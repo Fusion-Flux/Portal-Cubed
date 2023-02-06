@@ -96,6 +96,11 @@ public class PortalCubed implements ModInitializer {
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
                     return;
                 }
+                if (portal.getDestination().isEmpty()) {
+                    LOGGER.warn("{} tried to teleport through an inactive portal ({}).", player, portal);
+                    handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+                    return;
+                }
 
                 Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
 
@@ -165,7 +170,7 @@ public class PortalCubed implements ModInitializer {
                     LOGGER.warn("{} tried to drop nonexistent physics object", player);
                     return;
                 }
-                if (!player.getUuid().equals(cube.getHolderUUID().get())) {
+                if (!player.getUuid().equals(cube.getHolderUUID().orElse(null))) {
                     LOGGER.warn("{} tried to drop another player's physics object (held by {})", player, cube.getHolderUUID());
                     return;
                 }
