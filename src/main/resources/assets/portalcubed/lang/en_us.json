@@ -59,7 +59,8 @@
   "block.portalcubed.adhesion_gel": "Adhesion Gel Glob",
   "block.portalcubed.conversion_gel": "Conversion Gel Glob",
 
-  "block.portalcubed.auto_portal": "Autoportal",
+  "block.portalcubed.auto_portal": "Auto Portal",
+  "block.portalcubed.velocity_helper": "Velocity Helper",
 
   "block.portalcubed.fizzler": "Fizzler",
   "block.portalcubed.fizzler_emitter": "Fizzler Emitter",
@@ -235,7 +236,6 @@
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
 
-
   "key.portalcubed.category" : "Portal³",
   "key.portalcubed.grab" : "Grab",
   "key.portalcubed.remove_portals" : "Remove Portals",
@@ -247,6 +247,10 @@
   "portalcubed.portal_type.secondary": "Secondary",
   "portalcubed.auto_portal.set_portal_color": "Set portal color to %s",
   "portalcubed.auto_portal.set_portal_color.default": "Reset portal color",
+
+  "portalcubed.velocity_helper.flight_duration": "Flight Duration (Ticks): ",
+  "portalcubed.velocity_helper.condition": "Condition Expression (x, y, z)",
+  "portalcubed.velocity_helper.interpolation_curve": "Interpolation Curve (x)",
 
   "item.portalcubed.music_disc_subject_name_here": "Music Disc",
   "item.portalcubed.music_disc_subject_name_here.desc": "Kelly Bailey - Subject Name Here",

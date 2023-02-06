@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
+import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -60,7 +60,7 @@ public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedSc
         for(Entity liver : list){
             if(blockEntity.timer <= 0) {
                 if(liver instanceof CorePhysicsEntity physEn) {
-                    if(!physEn.getHolderUUID().isPresent()) {
+                    if(physEn.getHolderUUID().isEmpty()) {
                         liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
                         blockEntity.timer = 5;
                         blockEntity.animationTimer = 7;

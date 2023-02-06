@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
+import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

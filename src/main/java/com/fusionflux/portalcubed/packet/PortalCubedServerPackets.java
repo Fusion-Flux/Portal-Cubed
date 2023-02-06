@@ -22,6 +22,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.tuple.Triple;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -87,6 +88,7 @@ public class PortalCubedServerPackets {
         final int mode = buf.readByte();
         final Object arg = switch (mode) {
             case VelocityHelperBlock.CONFIG_DEST -> buf.readOptional(PacketByteBuf::readBlockPos);
+            case VelocityHelperBlock.CONFIG_OTHER -> Triple.of(buf.readVarInt(), buf.readString(), buf.readString());
             default -> {
                 PortalCubed.LOGGER.error("Malformed velocity_helper_configure packet. Unknown mode {}.", mode);
                 yield null;
@@ -103,7 +105,14 @@ public class PortalCubedServerPackets {
                         }
                         entity.setDestination(((Optional<BlockPos>)arg).orElse(null));
                     }
+                    case VelocityHelperBlock.CONFIG_OTHER -> {
+                        final var triple = (Triple<Integer, String, String>)arg;
+                        entity.setFlightDuration(triple.getLeft());
+                        entity.setCondition(triple.getMiddle());
+                        entity.setInterpolationCurve(triple.getRight());
+                    }
                 }
+                entity.updateListeners();
             },
             () -> PortalCubed.LOGGER.warn("Received velocity_helper_configure for unloaded velocity helper at {}.", origin)
         ));

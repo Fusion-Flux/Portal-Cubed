@@ -17,10 +17,11 @@ import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.PortalCubedTrackedDataHandlers;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
+import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
+import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.mojang.logging.LogUtils;
 import eu.midnightdust.lib.config.MidnightConfig;
@@ -60,11 +61,14 @@ public class PortalCubed implements ModInitializer {
     public static final ItemGroup PortalBlocksGroup = QuiltItemGroup.createWithIcon(
             id("portal_blocks"),
             () -> new ItemStack(PortalCubedItems.BLOCK_ITEM_ICON));
-
-    public static Identifier id(String path) {
-        return new Identifier(MOD_ID, path);
-    }
-    public static final ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = Registry.register(Registry.SCREEN_HANDLER, id("faith_plate_screen"), new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new));
+    public static final ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = Registry.register(
+        Registry.SCREEN_HANDLER, id("faith_plate_screen"),
+        new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new)
+    );
+    public static final ScreenHandlerType<VelocityHelperScreenHandler> VELOCITY_HELPER_SCREEN_HANDLER = Registry.register(
+        Registry.SCREEN_HANDLER, id("velocity_helper"),
+        new ExtendedScreenHandlerType<>(VelocityHelperScreenHandler::new)
+    );
 
     @Override
     public void onInitialize(ModContainer mod) {
@@ -207,6 +211,10 @@ public class PortalCubed implements ModInitializer {
         if (QuiltLoader.isModLoaded("create")) {
             CreateIntegration.init();
         }
+    }
+
+    public static Identifier id(String path) {
+        return new Identifier(MOD_ID, path);
     }
 
 }
