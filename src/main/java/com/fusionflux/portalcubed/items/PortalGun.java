@@ -9,7 +9,6 @@ import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.unascribed.lib39.recoil.api.DirectClickItem;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -124,10 +123,8 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
             boolean portalExists = false;
             if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
                 originalPortal = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
-                if (originalPortal == null) {
-                    portalHolder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
-                } else {
-                    portalHolder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
+                portalHolder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
+                if (originalPortal != null) {
                     portalExists = true;
                 }
             } else {
@@ -245,7 +242,6 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
         } else {
             cancelClientMovement(user);
         }
-        return;
     }
 
     @ClientOnly

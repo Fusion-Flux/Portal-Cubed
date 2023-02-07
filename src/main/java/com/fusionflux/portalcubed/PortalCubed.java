@@ -10,6 +10,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
+import com.fusionflux.portalcubed.commands.PortalCubedCommands;
 import com.fusionflux.portalcubed.compatability.create.CreateIntegration;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
@@ -41,6 +42,7 @@ import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
+import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
 import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -107,10 +109,13 @@ public class PortalCubed implements ModInitializer {
                 }
 
                 Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
-                Direction portalFacing = portal.getFacingDirection();
 
                 Vec3d rotatedVel = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
                 Vec3d rotatedGravOffset = PortalVelocityHelper.rotateVelocity(new Vec3d(0,0.0784000015258789,0), portal.getFacingDirection(), otherDirec);
+                //System.out.println(rotatedVel);
+                if(rotatedVel.y < -3.92){
+                    rotatedVel = rotatedVel.add(0,.081d,0);
+                }
                 CalledValues.setVelocityUpdateAfterTeleport(player,rotatedVel);
 
                 float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
@@ -119,7 +124,7 @@ public class PortalCubed implements ModInitializer {
                 if(!wasInfiniteFall) {
                     player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel.add(rotatedGravOffset))));
                 }else{
-                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.multiply(1,-1,1).add(rotatedVel.add(rotatedGravOffset))));
+                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel.multiply(1,-1,1)).add(rotatedGravOffset)));
                 }
                 if(otherDirec != Direction.DOWN && wasInfiniteFall){
                     CalledValues.setWasInfiniteFalling(player,false);
@@ -213,6 +218,8 @@ public class PortalCubed implements ModInitializer {
         PortalCubedSounds.registerSounds();
         BlockContentRegistries.FLAMMABLE_BLOCK.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
         GravityChannel.UPDATE_GRAVITY.getVerifierRegistry().register(AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, AdhesionGravityVerifier::check);
+
+        CommandRegistrationCallback.EVENT.register(new PortalCubedCommands());
 
         if (QuiltLoader.isModLoaded("create")) {
             CreateIntegration.init();

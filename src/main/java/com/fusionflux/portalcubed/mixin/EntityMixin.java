@@ -146,7 +146,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             VoxelShape omittedDirections = VoxelShapes.empty();
 
             for (ExperimentalPortal portal : list) {
-                if (portal.calculateCuttoutBox() != nullBox) {
+                if (portal.calculateCuttoutBox() != nullBox && portal.calculateBoundsCheckBox() != nullBox) {
                     if (portal.getActive())
                         omittedDirections = VoxelShapes.union(omittedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
                 }
