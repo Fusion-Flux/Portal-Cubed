@@ -374,7 +374,7 @@ public class ExperimentalPortal extends Entity {
     }
 
     public Vec3d getBoundsCheckPointInPlane(double xInPlane, double yInPlane) {
-        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*5,getFacingDirection().getUnitVector().getY()*5,getFacingDirection().getUnitVector().getZ()*5);
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane));
     }
 
     public Vec3d getPointInPlane(double xInPlane, double yInPlane) {

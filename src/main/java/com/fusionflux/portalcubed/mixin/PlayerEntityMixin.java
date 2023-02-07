@@ -254,7 +254,7 @@ if(portal != null) {
                         }
 
                     if(portalFacing != otherDirec){
-                        teleportYOffset = thisEntity.getEyeHeight(thisEntity.getPose());
+                        teleportYOffset = thisEntity.getEyeHeight(thisEntity.getPose()) - (portal.getPos().y - thisEntity.getPos().y);
                     }
                 }
             }

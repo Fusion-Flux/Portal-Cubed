@@ -112,6 +112,10 @@ public class PortalCubed implements ModInitializer {
 
                 Vec3d rotatedVel = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
                 Vec3d rotatedGravOffset = PortalVelocityHelper.rotateVelocity(new Vec3d(0,0.0784000015258789,0), portal.getFacingDirection(), otherDirec);
+                //System.out.println(rotatedVel);
+                if(rotatedVel.y < -3.92){
+                    rotatedVel = rotatedVel.add(0,.081d,0);
+                }
                 CalledValues.setVelocityUpdateAfterTeleport(player,rotatedVel);
 
                 float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
@@ -120,7 +124,7 @@ public class PortalCubed implements ModInitializer {
                 if(!wasInfiniteFall) {
                     player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel.add(rotatedGravOffset))));
                 }else{
-                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset));
+                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel.multiply(1,-1,1)).add(rotatedGravOffset)));
                 }
                 if(otherDirec != Direction.DOWN && wasInfiniteFall){
                     CalledValues.setWasInfiniteFalling(player,false);
