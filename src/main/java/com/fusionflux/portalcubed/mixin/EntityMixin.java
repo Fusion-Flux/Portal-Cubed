@@ -542,4 +542,12 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         return shape.getBoundingBoxes().stream().anyMatch(box::intersects);
     }
 
+    @Override
+    public boolean cfg() {
+        return false;
+    }
+
+    @Override
+    public void setCFG() {
+    }
 }

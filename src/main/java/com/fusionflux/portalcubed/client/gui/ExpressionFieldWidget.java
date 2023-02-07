@@ -31,6 +31,7 @@ public class ExpressionFieldWidget extends TextFieldWidget {
             onChanged(s);
         });
         super.setRenderTextProvider(this::getTextToRender);
+        setMaxLength(256);
     }
 
     public void setExpression(String expression) {
@@ -100,6 +101,6 @@ public class ExpressionFieldWidget extends TextFieldWidget {
     }
 
     public static String cleanError(Throwable t) {
-        return StringUtils.defaultIfEmpty(t.getMessage(), t.getClass().getSimpleName());
+        return StringUtils.defaultIfEmpty(t.getLocalizedMessage(), t.getClass().getSimpleName());
     }
 }
