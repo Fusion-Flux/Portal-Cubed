@@ -304,7 +304,7 @@ if(portal != null) {
                     if(portalFacing != otherDirec){
                         CalledValues.setWasInfiniteFalling(thisEntity, true);
                     }
-                    performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity.subtract(0,0.003167997,0));
+                    performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
                 }
             }
             if (portalFacing.getUnitVector().getZ() > 0) {
