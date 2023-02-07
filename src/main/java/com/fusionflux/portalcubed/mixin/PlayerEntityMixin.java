@@ -67,7 +67,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     @Shadow public abstract float getMovementSpeed();
 
     boolean isTeleporting;
-    final boolean wasInfiniteFall = false;
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void portalCubed$letYouFallLonger(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
@@ -147,7 +146,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
         if(itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)){
             if(this.getVelocity().y < -3.92){
-                this.setVelocity(this.getVelocity().add(0,.81d,0));
+                this.setVelocity(this.getVelocity().add(0,.081d,0));
             }
         }
     }
@@ -183,18 +182,7 @@ if(portal != null) {
         Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
 
         if (otherDirec != null) {
-            double teleportYOffset = switch (otherDirec) {
-                case DOWN -> this.getEyeHeight(this.getPose()) -( portal.getPos().y - thisEntity.getPos().y);
-                case NORTH, SOUTH, EAST, WEST -> {
-                    if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                        yield portal.getPos().y - thisEntity.getPos().y;
-                    } else {
-                        yield 1;
-                    }
-                }
-                default -> 0;
-            };
-
+            double teleportYOffset = portal.getPos().y - thisEntity.getPos().y;
             double teleportXOffset = portal.getPos().x - thisEntity.getPos().x;
             double teleportZOffset = portal.getPos().z - thisEntity.getPos().z;
 
@@ -256,6 +244,10 @@ if(portal != null) {
                             teleportZOffset = -teleportZOffset;
                             teleportXOffset = -teleportXOffset;
                         }
+
+                    if(portalFacing != otherDirec){
+                        teleportYOffset = thisEntity.getEyeHeight(thisEntity.getPose());
+                    }
                 }
             }
 
@@ -301,50 +293,10 @@ if(portal != null) {
             }
             if (portalFacing.getUnitVector().getY() > 0) {
                 if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY() && entityVelocity.getY() < 0) {
-                    if (this.world.isClient && thisEntity.isMainPlayer()) {
-                        var byteBuf = PacketByteBufs.create();
-                        //System.out.println(portal.getPos().y - thisEntity.getPos().y);
-                        byteBuf.writeVarInt(portal.getId());
-                        byteBuf.writeDouble(teleportXOffset);
-                        byteBuf.writeDouble(teleportYOffset);
-                        byteBuf.writeDouble(teleportZOffset);
-                        byteBuf.writeFloat(this.getYaw());
-                        byteBuf.writeFloat(thisEntity.getPitch());
-
-                        if (!(otherDirec.getUnitVector().getY() < 0)) {
-                            if (!CalledValues.getWasInfiniteFalling(thisEntity)) {
-                                double velocity;
-                                double fall = this.getMaxFallHeight();
-                                fall = fall - portal.getPos().y;
-                                if (fall < 0) {
-                                    velocity = entityVelocity.y;
-                                } else {
-                                    if (thisEntity.hasNoDrag()) {
-                                        velocity = -Math.sqrt(2 * .08 * (fall)) + .0402;
-                                    } else {
-                                        velocity = (-Math.sqrt(2 * .08 * (fall)) + .0402) / .98;
-                                    }
-
-                                }
-                                entityVelocity = new Vec3d(entityVelocity.x, velocity, entityVelocity.z);
-                            } else {
-                                CalledValues.setWasInfiniteFalling(thisEntity, false);
-                            }
-                        } else {
-                            CalledValues.setWasInfiniteFalling(thisEntity, true);
-                        }
-
-                        byteBuf.writeDouble(entityVelocity.x);
-                        byteBuf.writeDouble(entityVelocity.y);
-                        byteBuf.writeDouble(entityVelocity.z);
-                        byteBuf.writeBoolean(wasInfiniteFall);
-
-                        NetworkingSafetyWrapper.sendFromClient("portalpacket", byteBuf);
-                        isTeleporting = true;
-
-                        this.setVelocity(0, 0, 0);
+                    if(portalFacing != otherDirec){
+                        CalledValues.setWasInfiniteFalling(thisEntity, true);
                     }
-
+                    performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity.subtract(0,0.003167997,0));
                 }
             }
             if (portalFacing.getUnitVector().getZ() > 0) {
@@ -391,7 +343,7 @@ if(portal != null) {
             byteBuf.writeDouble(entityVelocity.x);
             byteBuf.writeDouble(entityVelocity.y);
             byteBuf.writeDouble(entityVelocity.z);
-            byteBuf.writeBoolean(wasInfiniteFall);
+            byteBuf.writeBoolean(CalledValues.getWasInfiniteFalling(thisEntity));
             NetworkingSafetyWrapper.sendFromClient("portalpacket", byteBuf);
             isTeleporting = true;
             this.setVelocity(0,0,0);
