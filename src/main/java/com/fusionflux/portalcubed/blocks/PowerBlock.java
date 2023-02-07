@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -13,11 +14,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class PowerBlock extends SpecialHiddenBlock {
     public static final IntProperty LEVEL = Properties.LEVEL_15;
+
+    public static final VoxelShape SHAPE = createCuboidShape(2, 2, 2, 14, 14, 14);
 
     public PowerBlock(Settings settings) {
         super(settings);
@@ -28,6 +32,11 @@ public class PowerBlock extends SpecialHiddenBlock {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.add(LEVEL);
+    }
+
+    @Override
+    protected VoxelShape getVisibleOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
     }
 
     @Override

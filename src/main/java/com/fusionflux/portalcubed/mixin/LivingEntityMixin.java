@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import com.fusionflux.portalcubed.client.gui.ExpressionFieldWidget;
+import com.fusionflux.portalcubed.entity.EntityAttachments;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -21,11 +22,14 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements LivingEntityAccessor {
     @Shadow protected boolean jumping;
+
+    @Shadow public abstract boolean canMoveVoluntarily();
 
     @Unique
     private VelocityHelperBlockEntity velocityHelper;
@@ -41,13 +45,17 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         return jumping;
     }
 
+    @ModifyVariable(method = "travel", at = @At("STORE"), ordinal = 0)
+    private double cfg(double original) {
+        if (((EntityAttachments)this).cfg()) {
+            return 0;
+        }
+        return original;
+    }
+
     @Override
     public void collidedWithVelocityHelper(VelocityHelperBlockEntity block) {
-        //noinspection ConstantValue
-        if ((Object) this instanceof PlayerEntity player) {
-            if (!player.isMainPlayer()) return;
-        } else if (world.isClient) return;
-        if (block.getDestination() == null) return;
+        if (!canMoveVoluntarily() || block.getDestination() == null) return;
         if (velocityHelper != null && block.getPos() != null && block.getPos().equals(velocityHelper.getPos())) return;
         final Expression condition = block.getCondition();
         condition.setVariable("x", getVelocity().x);

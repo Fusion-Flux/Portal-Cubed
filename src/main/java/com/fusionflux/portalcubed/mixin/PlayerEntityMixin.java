@@ -31,6 +31,7 @@ import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -41,6 +42,9 @@ import java.util.List;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements EntityAttachments {
+    @Unique
+    private boolean cfg;
+
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
         throw new AssertionError(
@@ -148,6 +152,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             if(this.getVelocity().y < -3.92){
                 this.setVelocity(this.getVelocity().add(0,.081d,0));
             }
+        }
+
+        if (!isSneaking()) {
+            cfg = false;
         }
     }
 
@@ -371,6 +379,16 @@ if(portal != null) {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean cfg() {
+        return cfg;
+    }
+
+    @Override
+    public void setCFG() {
+        cfg = true;
     }
 }
 
