@@ -1,21 +1,20 @@
 package com.fusionflux.portalcubed.util;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.networking.api.PacketByteBufs;
-
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
-
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+
+import java.util.Optional;
+import java.util.UUID;
 
 public final class HolderComponent implements AutoSyncedComponent {
 
@@ -57,7 +56,7 @@ public final class HolderComponent implements AutoSyncedComponent {
                 buf.writeDouble(heldEntity.lastPos.z);
                 buf.writeFloat(heldEntity.bodyYaw);
                 buf.writeUuid(heldEntity.getUuid());
-                NetworkingSafetyWrapper.sendFromClient("cubeposupdate", buf);
+                NetworkingSafetyWrapper.sendFromClient("cube_pos_update", buf);
             }
 
             this.heldEntityUUID = Optional.empty();
@@ -75,7 +74,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(@NotNull NbtCompound tag) {
         this.heldEntityUUID.ifPresent(value -> tag.putUuid("heldEntityUUID", value));
     }
 

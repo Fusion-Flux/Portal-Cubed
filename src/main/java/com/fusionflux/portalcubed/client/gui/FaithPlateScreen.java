@@ -166,7 +166,7 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
             buf.writeDouble(sendX);
             buf.writeDouble(sendY);
             buf.writeDouble(sendZ);
-            NetworkingSafetyWrapper.sendFromClient("faithplatepacket", buf);
+            NetworkingSafetyWrapper.sendFromClient("configure_faith_plate", buf);
             this.closeScreen();
            // ClientPlayNetworking.send("a", buf);
         }));

@@ -303,7 +303,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
 
         boolean topValidBlock=false;
-        if(world.getBlockState(new BlockPos(portalPos1)).isIn(PortalCubedBlocks.GEL_CHECK_TAG)&&world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+        if(world.getBlockState(new BlockPos(portalPos1)).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
             assert portalFacing != null;
             BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
             topValidBlock = world.getBlockState(new BlockPos(portalPos1)).get(booleanProperty);
@@ -311,7 +311,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
             topValidBlock=true;
         }
         boolean bottomValidBlock=false;
-        if(world.getBlockState(bottom).isIn(PortalCubedBlocks.GEL_CHECK_TAG)&&world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+        if(world.getBlockState(bottom).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
             assert portalFacing != null;
             BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
             bottomValidBlock = world.getBlockState(bottom).get(booleanProperty);

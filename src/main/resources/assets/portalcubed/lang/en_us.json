@@ -2,10 +2,10 @@
   "itemGroup.portalcubed.testing_elements": "Testing Elements",
   "itemGroup.portalcubed.portal_blocks": "Portal Blocks",
 
-  "subtitles.portalcubed.gelbounce": "Repulsion Gel Bounce",
-  "subtitles.portalcubed.gelrun": "Propulsion Gel Run",
-  "subtitles.portalcubed.portalgunsecondaryfire": "Portal Gun Secondary Fire",
-  "subtitles.portalcubed.portalgunprimaryfire": "Portal Gun Primary Fire",
+  "subtitles.portalcubed.gel_bounce": "Repulsion Gel Bounce",
+  "subtitles.portalcubed.gel_run": "Propulsion Gel Run",
+  "subtitles.portalcubed.portal_gun_secondaryfire": "Portal Gun Secondary Fire",
+  "subtitles.portalcubed.portal_gun_primaryfire": "Portal Gun Primary Fire",
   "subtitles.portalcubed.portal_invalid_surface": "Portal Gun Failed",
 
   "subtitles.portalcubed.portal_open": "Portal Opens",

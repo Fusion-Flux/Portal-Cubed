@@ -110,7 +110,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
         if (world.isClient && CalledValues.getHasTeleportationHappened(thisEntity)) {
             var byteBuf = PacketByteBufs.create();
-            NetworkingSafetyWrapper.sendFromClient("clientteleportupdate", byteBuf);
+            NetworkingSafetyWrapper.sendFromClient("client_teleport_update", byteBuf);
             CalledValues.setHasTeleportationHappened(thisEntity, false);
             ((EntityAttachments) thisEntity).setMaxFallHeight(-99999999);
             isTeleporting = false;
@@ -324,7 +324,7 @@ if(portal != null) {
 
         if (world.isClient && CalledValues.getHasTeleportationHappened(thisEntity)) {
             var byteBuf = PacketByteBufs.create();
-            NetworkingSafetyWrapper.sendFromClient("clientteleportupdate", byteBuf);
+            NetworkingSafetyWrapper.sendFromClient("client_teleport_update", byteBuf);
             CalledValues.setHasTeleportationHappened(thisEntity, false);
             ((EntityAttachments) thisEntity).setMaxFallHeight(-99999999);
             isTeleporting = false;
@@ -352,7 +352,7 @@ if(portal != null) {
             byteBuf.writeDouble(entityVelocity.y);
             byteBuf.writeDouble(entityVelocity.z);
             byteBuf.writeBoolean(CalledValues.getWasInfiniteFalling(thisEntity));
-            NetworkingSafetyWrapper.sendFromClient("portalpacket", byteBuf);
+            NetworkingSafetyWrapper.sendFromClient("use_portal", byteBuf);
             isTeleporting = true;
             this.setVelocity(0,0,0);
 

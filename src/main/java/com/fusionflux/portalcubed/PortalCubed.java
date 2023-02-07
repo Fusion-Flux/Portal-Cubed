@@ -74,7 +74,7 @@ public class PortalCubed implements ModInitializer {
 
     @Override
     public void onInitialize(ModContainer mod) {
-        ServerPlayNetworking.registerGlobalReceiver(id("portalpacket"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(id("use_portal"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
             final int targetEntityId = buf.readVarInt();
             final Vec3d offset = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
@@ -134,7 +134,7 @@ public class PortalCubed implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(id("faithplatepacket"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(id("configure_faith_plate"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
             BlockPos target = buf.readBlockPos();
             double x =  buf.readDouble();
@@ -155,11 +155,11 @@ public class PortalCubed implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(id("clientteleportupdate"), (server, player, handler, buf, responseSender) ->
+        ServerPlayNetworking.registerGlobalReceiver(id("client_teleport_update"), (server, player, handler, buf, responseSender) ->
             server.execute(() -> CalledValues.setHasTeleportationHappened(player, false))
         );
 
-        ServerPlayNetworking.registerGlobalReceiver(id("requestvelocityforgel"), (server, player, handler, buf, responseSender) ->{
+        ServerPlayNetworking.registerGlobalReceiver(id("request_velocity_for_gel"), (server, player, handler, buf, responseSender) ->{
                     final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
                     final boolean fireGel = buf.readBoolean();
                 server.execute(() -> {
@@ -170,7 +170,7 @@ public class PortalCubed implements ModInitializer {
     }
         );
 
-        ServerPlayNetworking.registerGlobalReceiver(id("cubeposupdate"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(id("cube_pos_update"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
             double x =  buf.readDouble();
             double y =  buf.readDouble();

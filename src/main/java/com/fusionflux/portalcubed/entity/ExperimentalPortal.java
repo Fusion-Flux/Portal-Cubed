@@ -6,7 +6,6 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -20,20 +19,18 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-
-import org.quiltmc.qsl.networking.api.PacketByteBufs;
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 public class ExperimentalPortal extends Entity {
 
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
 
     private Box cutoutBoundingBox = nullBox;
-    private Box boundsCheckBox = nullBox;
 
     public static final TrackedData<Optional<UUID>> LINKED_PORTAL_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     public static final TrackedData<Boolean> IS_ACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -223,7 +220,7 @@ public class ExperimentalPortal extends Entity {
         }
 
         if (!this.world.isClient && getAxisW().isPresent()) {
-            ExperimentalPortal otherPortal = 
+            ExperimentalPortal otherPortal =
                 this.getLinkedPortalUUID().isPresent()
                     ? (ExperimentalPortal)((ServerWorld)world).getEntity(this.getLinkedPortalUUID().get())
                     : null;
@@ -247,7 +244,7 @@ public class ExperimentalPortal extends Entity {
 
             Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
             boolean topValidBlock=false;
-            if(this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.GEL_CHECK_TAG)&&this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+            if(this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
                 assert portalFacing != null;
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
 
@@ -256,7 +253,7 @@ public class ExperimentalPortal extends Entity {
                 topValidBlock=true;
             }
             boolean bottomValidBlock=false;
-            if(this.world.getBlockState(bottom).isIn(PortalCubedBlocks.GEL_CHECK_TAG)&&this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+            if(this.world.getBlockState(bottom).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
                 assert portalFacing != null;
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
                 bottomValidBlock = this.world.getBlockState(bottom).get(booleanProperty);
@@ -366,7 +363,6 @@ public class ExperimentalPortal extends Entity {
     }
 
     public final void setBoundsCheckBox(Box boundingBox) {
-        this.boundsCheckBox = boundingBox;
     }
 
     public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
