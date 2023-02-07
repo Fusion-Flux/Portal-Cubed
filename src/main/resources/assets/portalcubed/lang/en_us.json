@@ -284,6 +284,8 @@
   "item.portalcubed.music_disc_want_you_gone": "Music Disc",
   "item.portalcubed.music_disc_want_you_gone.desc": "John Coulton - Want You Gone",
 
+  "portalcubed.command.fizzle.success": "Successfully fizzled %s physics objects",
+
   "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
   "portalcubed.ponder.auto_portal.text_1": "Power an Auto Portal with redstone to open it.",
   "portalcubed.ponder.auto_portal.text_2": "Power an Auto Portal with redstone again to close it.",
