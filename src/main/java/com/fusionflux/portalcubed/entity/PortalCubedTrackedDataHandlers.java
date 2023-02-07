@@ -1,14 +1,14 @@
 package com.fusionflux.portalcubed.entity;
 
-import java.util.Optional;
-
-import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
-
-import com.fusionflux.portalcubed.PortalCubed;
-
+import com.fusionflux.portalcubed.accessor.QuaternionHandler;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
+import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
+
+import java.util.Optional;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedTrackedDataHandlers {
 
@@ -43,8 +43,9 @@ public class PortalCubedTrackedDataHandlers {
     };
 
     public static void register() {
-        QuiltTrackedDataHandlerRegistry.register(PortalCubed.id("vec3d"), VEC3D);
-        QuiltTrackedDataHandlerRegistry.register(PortalCubed.id("optional_vec3d"), OPTIONAL_VEC3D);
+        QuiltTrackedDataHandlerRegistry.register(id("quaternion"), QuaternionHandler.QUATERNION_HANDLER);
+        QuiltTrackedDataHandlerRegistry.register(id("vec3d"), VEC3D);
+        QuiltTrackedDataHandlerRegistry.register(id("optional_vec3d"), OPTIONAL_VEC3D);
     }
 
 }

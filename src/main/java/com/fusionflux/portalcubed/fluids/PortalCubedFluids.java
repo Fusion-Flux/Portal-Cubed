@@ -1,18 +1,19 @@
 package com.fusionflux.portalcubed.fluids;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.google.common.base.Suppliers;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.util.Lazy;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -31,21 +32,20 @@ public class PortalCubedFluids {
         TOXIC_GOO.register();
     }
 
-    @SuppressWarnings("deprecation")
     public static class FluidRegistryContainer {
         public final String name;
         public final FlowableFluid flowing;
         public final FlowableFluid still;
         public final Item bucket;
 
-        private final Lazy<FluidBlock> block;
+        private final Supplier<FluidBlock> block;
 
         private FluidRegistryContainer(String name, FlowableFluid flowing, FlowableFluid still, Function<FlowableFluid, FluidBlock> blockSupplier, Item bucket) {
             this.name = name;
             this.flowing = flowing;
             this.still = still;
             this.bucket = bucket;
-            block = new Lazy<>(() -> blockSupplier.apply(still));
+            block = Suppliers.memoize(() -> blockSupplier.apply(still));
         }
 
         private void register() {
