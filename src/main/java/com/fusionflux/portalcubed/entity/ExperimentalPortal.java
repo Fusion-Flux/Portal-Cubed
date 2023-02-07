@@ -276,7 +276,6 @@ public class ExperimentalPortal extends Entity {
     public void syncRotations(){
         this.setBoundingBox(nullBox);
         this.setCutoutBoundingBox(nullBox);
-        this.setBoundsCheckBox(nullBox);
         this.calculateBoundingBox();
         this.calculateCuttoutBox();
         this.calculateBoundsCheckBox();
@@ -334,12 +333,11 @@ public class ExperimentalPortal extends Entity {
 
     public Box calculateBoundsCheckBox() {
         if (getAxisW().isEmpty()) {
-            setBoundsCheckBox(nullBox);
             return nullBox;
         }
         double w = .9;
         double h = 1.9;
-        Box portalBox = new Box(
+        return new Box(
                 getBoundsCheckPointInPlane(w / 2, h / 2)
                         .add(getNormal().multiply(5)),
                 getBoundsCheckPointInPlane(-w / 2, -h / 2)
@@ -350,8 +348,6 @@ public class ExperimentalPortal extends Entity {
                 getBoundsCheckPointInPlane(w / 2, -h / 2)
                         .add(getNormal().multiply(-5))
         ));
-        setBoundsCheckBox(portalBox);
-        return portalBox;
     }
 
     public final Box getCutoutBoundingBox() {
@@ -360,9 +356,6 @@ public class ExperimentalPortal extends Entity {
 
     public final void setCutoutBoundingBox(Box boundingBox) {
         this.cutoutBoundingBox = boundingBox;
-    }
-
-    public final void setBoundsCheckBox(Box boundingBox) {
     }
 
     public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
