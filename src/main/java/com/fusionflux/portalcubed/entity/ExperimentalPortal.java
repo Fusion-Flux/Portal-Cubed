@@ -33,6 +33,7 @@ public class ExperimentalPortal extends Entity {
     private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
 
     private Box cutoutBoundingBox = nullBox;
+    private Box boundsCheckBox = nullBox;
 
     public static final TrackedData<Optional<UUID>> LINKED_PORTAL_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     public static final TrackedData<Boolean> IS_ACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -208,6 +209,7 @@ public class ExperimentalPortal extends Entity {
     public void tick() {
             this.calculateBoundingBox();
             this.calculateCuttoutBox();
+            this.calculateBoundsCheckBox();
         if(!this.world.isClient)
             ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x,getChunkPos().z,true);
 
@@ -277,8 +279,10 @@ public class ExperimentalPortal extends Entity {
     public void syncRotations(){
         this.setBoundingBox(nullBox);
         this.setCutoutBoundingBox(nullBox);
+        this.setBoundsCheckBox(nullBox);
         this.calculateBoundingBox();
         this.calculateCuttoutBox();
+        this.calculateBoundsCheckBox();
     }
 
     @Override
@@ -330,6 +334,29 @@ public class ExperimentalPortal extends Entity {
         return portalBox;
     }
 
+
+    public Box calculateBoundsCheckBox() {
+        if (getAxisW().isEmpty()) {
+            setBoundsCheckBox(nullBox);
+            return nullBox;
+        }
+        double w = .9;
+        double h = 1.9;
+        Box portalBox = new Box(
+                getBoundsCheckPointInPlane(w / 2, h / 2)
+                        .add(getNormal().multiply(5)),
+                getBoundsCheckPointInPlane(-w / 2, -h / 2)
+                        .add(getNormal().multiply(-5))
+        ).union(new Box(
+                getBoundsCheckPointInPlane(-w / 2, h / 2)
+                        .add(getNormal().multiply(5)),
+                getBoundsCheckPointInPlane(w / 2, -h / 2)
+                        .add(getNormal().multiply(-5))
+        ));
+        setBoundsCheckBox(portalBox);
+        return portalBox;
+    }
+
     public final Box getCutoutBoundingBox() {
         return this.cutoutBoundingBox;
     }
@@ -338,8 +365,16 @@ public class ExperimentalPortal extends Entity {
         this.cutoutBoundingBox = boundingBox;
     }
 
+    public final void setBoundsCheckBox(Box boundingBox) {
+        this.boundsCheckBox = boundingBox;
+    }
+
     public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
         return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*-5,getFacingDirection().getUnitVector().getY()*-5,getFacingDirection().getUnitVector().getZ()*-5);
+    }
+
+    public Vec3d getBoundsCheckPointInPlane(double xInPlane, double yInPlane) {
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*5,getFacingDirection().getUnitVector().getY()*5,getFacingDirection().getUnitVector().getZ()*5);
     }
 
     public Vec3d getPointInPlane(double xInPlane, double yInPlane) {

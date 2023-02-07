@@ -120,7 +120,7 @@ public class PortalCubed implements ModInitializer {
                 if(!wasInfiniteFall) {
                     player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel.add(rotatedGravOffset))));
                 }else{
-                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.multiply(1,-1,1).add(rotatedVel.add(rotatedGravOffset))));
+                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset));
                 }
                 if(otherDirec != Direction.DOWN && wasInfiniteFall){
                     CalledValues.setWasInfiniteFalling(player,false);
