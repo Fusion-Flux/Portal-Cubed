@@ -229,13 +229,13 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("old_aperture_fizzler_emitter"), OLD_APERTURE_FIZZLER_EMITTER);
         Registry.register(Registry.ITEM, id("old_aperture_fizzler_emitter"), new BlockItem(OLD_APERTURE_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        Registry.register(Registry.BLOCK, id("death_fizzler"), DEATH_FIZZLER);
-        Registry.register(Registry.BLOCK, id("death_fizzler_emitter"), DEATH_FIZZLER_EMITTER);
-        Registry.register(Registry.ITEM, id("death_fizzler_emitter"), new BlockItem(DEATH_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
-
         Registry.register(Registry.BLOCK, id("laser_fizzler"), LASER_FIZZLER);
         Registry.register(Registry.BLOCK, id("laser_fizzler_emitter"), LASER_FIZZLER_EMITTER);
         Registry.register(Registry.ITEM, id("laser_fizzler_emitter"), new BlockItem(LASER_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("death_fizzler"), DEATH_FIZZLER);
+        Registry.register(Registry.BLOCK, id("death_fizzler_emitter"), DEATH_FIZZLER_EMITTER);
+        Registry.register(Registry.ITEM, id("death_fizzler_emitter"), new BlockItem(DEATH_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
         Registry.register(Registry.BLOCK, id("old_aperture_death_fizzler"), OLD_APERTURE_DEATH_FIZZLER);
         Registry.register(Registry.BLOCK, id("old_aperture_death_fizzler_emitter"), OLD_APERTURE_DEATH_FIZZLER_EMITTER);

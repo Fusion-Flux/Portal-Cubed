@@ -2,6 +2,7 @@
   "replace": false,
   "values" : [
     "portalcubed:light_bridge",
-    "portalcubed:auto_portal"
+    "portalcubed:auto_portal",
+    "minecraft:iron_bars"
   ]
 }
