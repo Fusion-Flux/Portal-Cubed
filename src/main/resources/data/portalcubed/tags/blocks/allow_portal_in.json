@@ -9,6 +9,8 @@
     "portalcubed:propulsion_gel",
     "portalcubed:repulsion_gel",
     "portalcubed:adhesion_gel",
-    "portalcubed:auto_portal"
+    "portalcubed:auto_portal",
+    "portalcubed:power_block",
+    "portalcubed:velocity_helper"
   ]
 }

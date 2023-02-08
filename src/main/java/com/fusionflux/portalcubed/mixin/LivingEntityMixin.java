@@ -35,6 +35,8 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     private VelocityHelperBlockEntity velocityHelper;
     @Unique
     private long velocityHelperStartTime;
+    @Unique
+    private Vec3d velocityHelperOffset;
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -69,6 +71,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         }
         velocityHelper = block;
         velocityHelperStartTime = world.getTime();
+        velocityHelperOffset = Vec3d.ofCenter(block.getPos()).subtract(getPos());
     }
 
     @Inject(method = "tickMovement", at = @At("TAIL"))
@@ -99,7 +102,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
             MathHelper.lerp(useProgress, velocityHelper.getPos().getX() + 0.5, velocityHelper.getDestination().getX() + 0.5),
             MathHelper.lerp(useProgress, velocityHelper.getPos().getY() + 0.5, velocityHelper.getDestination().getY() + 0.5),
             MathHelper.lerp(useProgress, velocityHelper.getPos().getZ() + 0.5, velocityHelper.getDestination().getZ() + 0.5)
-        ).subtract(getPos()));
+        ).subtract(getPos()).subtract(velocityHelperOffset));
     }
 
     private void logVHWarning(String type, RuntimeException e) {
