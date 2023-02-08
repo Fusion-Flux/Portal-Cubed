@@ -326,7 +326,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 (world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) &&
                         topValidBlock &&
                         bottomValidBlock) &&
-                ((world.getBlockState(new BlockPos(portalPos1)).isAir()) || world.getBlockState(new BlockPos(portalPos1)).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN)) && (world.getBlockState(bottom).isAir() || world.getBlockState(bottom).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN));
+                ((world.getBlockState(new BlockPos(portalPos1)).isAir()) || ExperimentalPortal.allowedPortalBlock(world, new BlockPos(portalPos1))) && (world.getBlockState(bottom).isAir() || ExperimentalPortal.allowedPortalBlock(world, bottom));
     }
 
     /**
