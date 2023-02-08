@@ -147,13 +147,10 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 blockPos = ((BlockHitResult) hitResult).getBlockPos();
                 normal = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
-                System.out.println(normal.getY());
                 if (normal.getY() == 0) {
                     up = new Vec3i(0, 1, 0);
-                } else if(normal.getY() == -1) {
+                } else {
                     up = user.getHorizontalFacing().getVector();
-                }else  {
-                    up = user.getHorizontalFacing().getOpposite().getVector();
                 }
                 right = up.crossProduct(normal);
 

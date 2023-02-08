@@ -199,7 +199,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                     double teleportZOffset = -(portal.getPos().z - thisEntity.getPos().z);
 
                     if(portalFacing == Direction.UP){
-                        teleportYOffset = -(portal.getPos().y - thisEntity.getPos().y);
+                        if(otherDirec == Direction.DOWN){
+                            teleportYOffset = (portal.getBoundingBox().getCenter().y - thisEntity.getPos().y);
+                        }else {
+                            teleportYOffset = -(portal.getPos().y - thisEntity.getPos().y);
+                        }
                     }
 
                     Vec3d rotatedOffsets = new Vec3d(teleportXOffset,teleportYOffset,teleportZOffset);

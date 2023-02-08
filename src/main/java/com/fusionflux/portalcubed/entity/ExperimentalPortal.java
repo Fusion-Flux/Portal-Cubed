@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -18,6 +19,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -71,6 +74,9 @@ public class ExperimentalPortal extends Entity {
         this.getDataTracker().startTracking(OWNER_UUID, Optional.empty());
     }
 
+
+
+
     @Override
     protected void readCustomDataFromNbt(NbtCompound compoundTag) {
         this.setColor(compoundTag.getInt("color"));
@@ -94,6 +100,29 @@ public class ExperimentalPortal extends Entity {
         this.getDestination().ifPresent(destination -> IPHelperDuplicate.putVec3d(compoundTag, "destination", destination));
         IPHelperDuplicate.putVec3d(compoundTag, "facing", this.getOtherFacing());
         this.getOwnerUUID().ifPresent(uuid -> compoundTag.putUuid("ownerUUID", uuid));
+    }
+
+
+    public VoxelShape getOtherPortalCollision(){
+        VoxelShape crossPortalCollisions = VoxelShapes.empty();
+
+        ExperimentalPortal otherPortal =
+                this.getLinkedPortalUUID().isPresent()
+                        ? (ExperimentalPortal)((ServerWorld)world).getEntity(this.getLinkedPortalUUID().get())
+                        : null;
+        if(otherPortal != null){
+            Box scannedArea = new Box(otherPortal.getBoundingBox().getCenter().subtract(1,1,1),otherPortal.getBoundingBox().getCenter().add(1,1,1))
+                    .offset(otherPortal.getFacingDirection().getVector().getX()*5,otherPortal.getFacingDirection().getVector().getY()*5,otherPortal.getFacingDirection().getVector().getZ()*5)
+                    .expand(2);
+            Iterable<VoxelShape> blocks = this.world.m_byqkqxkz(otherPortal,scannedArea);
+
+            for (VoxelShape shapes : blocks) {
+                crossPortalCollisions = VoxelShapes.union(crossPortalCollisions, shapes);
+            }
+
+        }
+
+        return crossPortalCollisions;
     }
 
     public float getRoll() {
@@ -222,7 +251,7 @@ public class ExperimentalPortal extends Entity {
         if (!this.world.isClient && getAxisW().isPresent()) {
             ExperimentalPortal otherPortal =
                 this.getLinkedPortalUUID().isPresent()
-                    ? (ExperimentalPortal)((ServerWorld)world).getEntity(this.getLinkedPortalUUID().get())
+                    ? (ExperimentalPortal)((Accessors) world).getEntity(this.getLinkedPortalUUID().get())
                     : null;
 
             setActive(otherPortal != null);
@@ -283,12 +312,12 @@ public class ExperimentalPortal extends Entity {
 
     @Override
     protected Box calculateBoundingBox() {
-        if (getAxisW().isEmpty()) {
-            // it may be called when the portal is not yet initialized
-            setBoundingBox(nullBox);
-            return nullBox;
-        }
-            double w =.9;
+            if (getAxisW().isEmpty()) {
+                // it may be called when the portal is not yet initialized
+                setBoundingBox(nullBox);
+                return nullBox;
+            }
+            double w = .9;
             double h = 1.9;
 
 
@@ -339,14 +368,14 @@ public class ExperimentalPortal extends Entity {
         double h = 1.9;
         return new Box(
                 getBoundsCheckPointInPlane(w / 2, h / 2)
-                        .add(getNormal().multiply(5)),
+                        .add(getNormal().multiply(10)),
                 getBoundsCheckPointInPlane(-w / 2, -h / 2)
-                        .add(getNormal().multiply(-5))
+                        .add(getNormal().multiply(-10))
         ).union(new Box(
                 getBoundsCheckPointInPlane(-w / 2, h / 2)
-                        .add(getNormal().multiply(5)),
+                        .add(getNormal().multiply(10)),
                 getBoundsCheckPointInPlane(w / 2, -h / 2)
-                        .add(getNormal().multiply(-5))
+                        .add(getNormal().multiply(-10))
         ));
     }
 
