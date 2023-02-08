@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
+import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
@@ -72,6 +73,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     @Shadow public abstract float getMovementSpeed();
 
     boolean isTeleporting;
+
+    boolean hasPreviouslyTeleported;
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void portalCubed$letYouFallLonger(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
@@ -177,151 +180,109 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
         ExperimentalPortal portal = null;
         double portalDistance = -1;
         for (ExperimentalPortal portalCheck : list) {
-            if(portalDistance == -1 || portalCheck.getBoundingBox().getCenter().subtract(thisEntity.getBoundingBox().getCenter()).length() < portalDistance){
+            if (portalDistance == -1 || portalCheck.getBoundingBox().getCenter().subtract(thisEntity.getBoundingBox().getCenter()).length() < portalDistance) {
                 portalDistance = portalCheck.getBoundingBox().getCenter().subtract(thisEntity.getBoundingBox().getCenter()).length();
                 portal = portalCheck;
             }
         }
-if(portal != null) {
-    if (this.canUsePortals() && portal.getActive() && this.world.isClient && !CalledValues.getHasTeleportationHappened(thisEntity) && !isTeleporting) {
-        Direction portalFacing = portal.getFacingDirection();
-        Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
+        if (portal != null) {
+            if (this.canUsePortals() && portal.getActive() && this.world.isClient && !CalledValues.getHasTeleportationHappened(thisEntity) && !isTeleporting) {
+                Direction portalFacing = portal.getFacingDirection();
+                Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
 
-        Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
-        Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
+                Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
+                Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
 
-        if (otherDirec != null) {
-            double teleportYOffset = portal.getPos().y - thisEntity.getPos().y;
-            double teleportXOffset = portal.getPos().x - thisEntity.getPos().x;
-            double teleportZOffset = portal.getPos().z - thisEntity.getPos().z;
+                if (otherDirec != null) {
+                    double teleportYOffset = (portal.getBoundingBox().getCenter().y - thisEntity.getPos().y);
+                    double teleportXOffset = -(portal.getPos().x - thisEntity.getPos().x);
+                    double teleportZOffset = -(portal.getPos().z - thisEntity.getPos().z);
 
-            if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-                if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                    if (portalVertFacing == Direction.NORTH || portalVertFacing == Direction.SOUTH) {
-                        if (otherDirec == Direction.EAST || otherDirec == Direction.WEST) {
-                            teleportZOffset = -teleportXOffset;
-                            teleportXOffset = 0;
+                    if(portalFacing == Direction.UP){
+                        teleportYOffset = -(portal.getPos().y - thisEntity.getPos().y);
+                    }
+
+                    Vec3d rotatedOffsets = new Vec3d(teleportXOffset,teleportYOffset,teleportZOffset);
+
+                    if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                        if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+                            rotatedOffsets = PortalVelocityHelper.rotateVelocity(rotatedOffsets, portalVertFacing, otherDirec);
                         }
                     }
 
-                    if (portalVertFacing == Direction.EAST || portalVertFacing == Direction.WEST) {
-                        if (otherDirec == Direction.NORTH || otherDirec == Direction.SOUTH) {
-                            teleportXOffset = -teleportZOffset;
-                            teleportZOffset = 0;
-                        }
-                    }
-                }
-            }
+                    rotatedOffsets = PortalVelocityHelper.rotateVelocity(rotatedOffsets, portalFacing, otherDirec);
 
-            if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                    if (otherPortalVertFacing == Direction.NORTH || otherPortalVertFacing == Direction.SOUTH) {
-                        if (portalFacing == Direction.EAST || portalFacing == Direction.WEST) {
-                            teleportXOffset = -teleportZOffset;
-                            teleportZOffset = 0;
+                    if(otherDirec == Direction.UP || otherDirec ==Direction.DOWN) {
+                        if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
+                            rotatedOffsets = PortalVelocityHelper.rotateVelocity(rotatedOffsets, portalFacing, otherPortalVertFacing);
                         }
                     }
 
-                    if (otherPortalVertFacing == Direction.EAST || otherPortalVertFacing == Direction.WEST) {
-                        if (portalFacing == Direction.NORTH || portalFacing == Direction.SOUTH) {
-                            teleportZOffset = -teleportXOffset;
-                            teleportXOffset = 0;
-                        }
-                    }
-                }
-            }
-
-            if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-                    if (otherPortalVertFacing == Direction.NORTH || otherPortalVertFacing == Direction.SOUTH) {
-                        if (portalVertFacing == Direction.EAST || portalVertFacing == Direction.WEST) {
-                            double storedX = teleportXOffset;
-                            teleportXOffset = -teleportZOffset;
-                            teleportZOffset = -storedX;
+                    if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                        if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
+                            rotatedOffsets = PortalVelocityHelper.rotateVelocity(rotatedOffsets, portalVertFacing, otherPortalVertFacing);
                         }
                     }
 
-                    if (otherPortalVertFacing == Direction.EAST || otherPortalVertFacing == Direction.WEST) {
-                        if (portalVertFacing == Direction.NORTH || portalVertFacing == Direction.SOUTH) {
-                            double storedZ = teleportZOffset;
-                            teleportZOffset = -teleportXOffset;
-                            teleportXOffset = -storedZ;
+
+                    teleportXOffset = rotatedOffsets.getX();
+                    teleportYOffset = rotatedOffsets.getY();
+                    teleportZOffset = rotatedOffsets.getZ();
+
+
+                    Vec3d entityEyePos = this.getEyePos();
+                    if (portalFacing.getUnitVector().getX() < 0) {
+                        if (entityEyePos.getX() + entityVelocity.getX() > portal.getPos().getX() && entityVelocity.getX() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
+
                         }
                     }
-                    if (portalVertFacing != null)
-                        if (otherPortalVertFacing == portalVertFacing.getOpposite()) {
-                            teleportZOffset = -teleportZOffset;
-                            teleportXOffset = -teleportXOffset;
+                    if (portalFacing.getUnitVector().getY() < 0) {
+                        if (entityEyePos.getY() + entityVelocity.getY() > portal.getPos().getY() && entityVelocity.getY() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
+
                         }
-
-                    if(portalFacing != otherDirec){
-                        teleportYOffset = thisEntity.getEyeHeight(thisEntity.getPose()) - (portal.getPos().y - thisEntity.getPos().y);
                     }
-                }
-            }
+                    if (portalFacing.getUnitVector().getZ() < 0) {
+                        if (entityEyePos.getZ() + entityVelocity.getZ() > portal.getPos().getZ() && entityVelocity.getZ() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
 
-            if (portalFacing == Direction.NORTH || portalFacing == Direction.SOUTH) {
-                if (otherDirec == Direction.EAST || otherDirec == Direction.WEST) {
-                    teleportZOffset = -teleportXOffset;
-                    teleportXOffset = 0;
-                }
-            }
-
-            if (portalFacing == Direction.EAST || portalFacing == Direction.WEST) {
-                if (otherDirec == Direction.NORTH || otherDirec == Direction.SOUTH) {
-                    teleportXOffset = -teleportZOffset;
-                    teleportZOffset = 0;
-                }
-            }
-            Vec3d entityEyePos = this.getEyePos();
-            if (portalFacing.getUnitVector().getX() < 0) {
-                if (entityEyePos.getX() + entityVelocity.getX() > portal.getPos().getX() && entityVelocity.getX() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                    performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
-
-                }
-            }
-            if (portalFacing.getUnitVector().getY() < 0) {
-                if (entityEyePos.getY() + entityVelocity.getY() > portal.getPos().getY() && entityVelocity.getY() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                    performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
-
-                }
-            }
-            if (portalFacing.getUnitVector().getZ() < 0) {
-                if (entityEyePos.getZ() + entityVelocity.getZ() > portal.getPos().getZ() && entityVelocity.getZ() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                    performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
-
-                }
-            }
-
-
-            if (portalFacing.getUnitVector().getX() > 0) {
-                if (entityEyePos.getX() + entityVelocity.getX() < portal.getPos().getX() && entityVelocity.getX() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                    performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
-
-                }
-            }
-            if (portalFacing.getUnitVector().getY() > 0) {
-                if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY() && entityVelocity.getY() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                    if(portalFacing.getOpposite() == otherDirec){
-                        CalledValues.setWasInfiniteFalling(thisEntity, true);
+                        }
                     }
-                    performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
-                }
-            }
-            if (portalFacing.getUnitVector().getZ() > 0) {
-                if (entityEyePos.getZ() + entityVelocity.getZ() < portal.getPos().getZ() && entityVelocity.getZ() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                    performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
+
+
+                    if (portalFacing.getUnitVector().getX() > 0) {
+                        if (entityEyePos.getX() + entityVelocity.getX() < portal.getPos().getX() && entityVelocity.getX() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
+
+                        }
+                    }
+                    if (portalFacing.getUnitVector().getY() > 0) {
+                        if (entityEyePos.getY() + entityVelocity.getY() < portal.getPos().getY() && entityVelocity.getY() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (portalFacing.getOpposite() == otherDirec) {
+                                CalledValues.setWasInfiniteFalling(thisEntity, true);
+                            }
+                            if(!hasPreviouslyTeleported){
+                                hasPreviouslyTeleported = true;
+                                performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity.add(0,-0.00316799700927733,0));
+                            }else {
+                                performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
+                            }
+                        }
+                    }
+                    if (portalFacing.getUnitVector().getZ() > 0) {
+                        if (entityEyePos.getZ() + entityVelocity.getZ() < portal.getPos().getZ() && entityVelocity.getZ() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, teleportXOffset, teleportYOffset, teleportZOffset, entityVelocity);
+
+                        }
+                    }
 
                 }
             }
-
+            if (this.world.isClient && CalledValues.getHasTeleportationHappened(this)) {
+                this.setVelocity(0, 0, 0);
+            }
         }
-    }
-    if (this.world.isClient && CalledValues.getHasTeleportationHappened(this)) {
-        this.setVelocity(0, 0, 0);
-
-    }
-}
 
         if (world.isClient && CalledValues.getHasTeleportationHappened(thisEntity)) {
             var byteBuf = PacketByteBufs.create();
@@ -330,6 +291,10 @@ if(portal != null) {
             ((EntityAttachments) thisEntity).setMaxFallHeight(-99999999);
             isTeleporting = false;
             this.setVelocity(CalledValues.getVelocityUpdateAfterTeleport(thisEntity));
+        }
+
+        if(thisEntity.isOnGround() && hasPreviouslyTeleported){
+            hasPreviouslyTeleported = false;
         }
     }
 

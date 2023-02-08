@@ -109,11 +109,40 @@ public class PortalCubed implements ModInitializer {
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
                     return;
                 }
+                Direction portalFacing = portal.getFacingDirection();
+                Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
 
                 Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
+                Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
 
-                Vec3d rotatedVel = PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDirec);
-                Vec3d rotatedGravOffset = PortalVelocityHelper.rotateVelocity(new Vec3d(0,0.0784000015258789,0), portal.getFacingDirection(), otherDirec);
+                Vec3d rotatedVel = entityVelocity;
+                if(rotatedVel.y == -0.0784000015258789){
+                    rotatedVel = rotatedVel.multiply(1,0,1);
+                }
+
+                if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                    if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+                        rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
+                    }
+                }
+
+                rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherDirec);
+
+
+                if(otherDirec == Direction.UP || otherDirec ==Direction.DOWN) {
+                    if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
+                        rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
+                    }
+                }
+
+
+                if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                    if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
+                        rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
+                    }
+                }
+
+
                 //System.out.println(rotatedVel);
                 if(rotatedVel.y < -3.92){
                     rotatedVel = rotatedVel.add(0,.081d,0);
@@ -123,10 +152,18 @@ public class PortalCubed implements ModInitializer {
                 float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
                 player.setYaw(yawValue);
                 player.setPitch(pitchSet);
-                if(!wasInfiniteFall) {
-                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel.add(rotatedGravOffset))));
+                //player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel.add(rotatedGravOffset))));
+                //0.00316799700927733
+                //Velocity from failed launch is: 0.47523200451660164
+                //Velocity From CORRECT launch Is 0.47840000152587897
+                if(portalFacing == otherDirec) {
+                    if(portalFacing == Direction.UP) {
+                        player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel)));
+                    }else {
+                        player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel)));
+                    }
                 }else{
-                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel.multiply(1,-1,1)).add(rotatedGravOffset)));
+                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset).add(rotatedVel));
                 }
                 if(otherDirec != Direction.DOWN && wasInfiniteFall){
                     CalledValues.setWasInfiniteFalling(player,false);
