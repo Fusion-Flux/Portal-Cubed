@@ -30,6 +30,7 @@ public class PortalCubedClientPackets {
     public static final Identifier HAND_SHAKE_PACKET = new Identifier(PortalCubed.MOD_ID, "hand_shake");
     public static final Identifier GEL_OVERLAY_PACKET = new Identifier(PortalCubed.MOD_ID, "gel_overlay");
     public static final Identifier ROCKET_TURRET_UPDATE_PACKET = new Identifier(PortalCubed.MOD_ID, "rocket_turret_update");
+    public static final Identifier ENABLE_CFG = new Identifier(PortalCubed.MOD_ID, "enable_cfg");
 
     @ClientOnly
     public static void registerPackets() {
@@ -38,6 +39,7 @@ public class PortalCubedClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(HAND_SHAKE_PACKET, PortalCubedClientPackets::onHandShake);
         ClientPlayNetworking.registerGlobalReceiver(GEL_OVERLAY_PACKET, PortalCubedClientPackets::onGelOverlay);
         ClientPlayNetworking.registerGlobalReceiver(ROCKET_TURRET_UPDATE_PACKET, PortalCubedClientPackets::onRocketTurretUpdate);
+        ClientPlayNetworking.registerGlobalReceiver(ENABLE_CFG, PortalCubedClientPackets::onEnableCfg);
     }
 
     @ClientOnly
@@ -115,6 +117,11 @@ public class PortalCubedClientPackets {
                 () -> PortalCubed.LOGGER.warn("Received rocket_turret_update for unloaded rocket turret at {}.", pos)
             )
         );
+    }
+
+    @ClientOnly
+    public static void onEnableCfg(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        PortalCubedClient.allowCfg = buf.readBoolean();
     }
 
 }

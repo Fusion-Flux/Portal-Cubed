@@ -48,6 +48,7 @@ public class PortalCubedClient implements ClientModInitializer {
     public static long shakeStart;
     @Nullable public static BlockPos velocityHelperDragStart;
     private static boolean hiddenBlocksVisible;
+    public static boolean allowCfg;
 
     @Override
     public void onInitializeClient(ModContainer mod) {

@@ -4,8 +4,8 @@
 
   "subtitles.portalcubed.gel_bounce": "Repulsion Gel Bounce",
   "subtitles.portalcubed.gel_run": "Propulsion Gel Run",
-  "subtitles.portalcubed.portal_gun_secondaryfire": "Portal Gun Secondary Fire",
-  "subtitles.portalcubed.portal_gun_primaryfire": "Portal Gun Primary Fire",
+  "subtitles.portalcubed.portal_gun_secondary_fire": "Portal Gun Secondary Fire",
+  "subtitles.portalcubed.portal_gun_primary_fire": "Portal Gun Primary Fire",
   "subtitles.portalcubed.portal_invalid_surface": "Portal Gun Failed",
 
   "subtitles.portalcubed.portal_open": "Portal Opens",
@@ -236,7 +236,7 @@
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
 
-  "key.portalcubed.category" : "Portal³",
+  "key.portalcubed.category" : "Portal\u00b3",
   "key.portalcubed.grab" : "Grab",
   "key.portalcubed.remove_portals" : "Remove Portals",
   "key.portalcubed.toggle_hidden_blocks" : "Toggle Hidden Blocks",
@@ -285,6 +285,9 @@
   "item.portalcubed.music_disc_want_you_gone.desc": "John Coulton - Want You Gone",
 
   "portalcubed.command.fizzle.success": "Successfully fizzled %s physics objects",
+
+  "gamerule.category.portalcubed": "Portal\u00b3",
+  "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
 
   "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
   "portalcubed.ponder.auto_portal.text_1": "Power an Auto Portal with redstone to open it.",

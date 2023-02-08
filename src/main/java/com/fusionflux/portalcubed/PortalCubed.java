@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
+import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.commands.PortalCubedCommands;
 import com.fusionflux.portalcubed.compatability.create.CreateIntegration;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
@@ -29,6 +30,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -43,6 +45,8 @@ import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.slf4j.Logger;
 
@@ -204,6 +208,12 @@ public class PortalCubed implements ModInitializer {
             });
         });
 
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            final PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeBoolean(handler.player.world.getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH));
+            handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_CFG, buf));
+        });
+
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
         PortalBlocksLoader.init(mod);
         PortalCubedBlocks.registerBlocks();
@@ -213,6 +223,7 @@ public class PortalCubed implements ModInitializer {
         PortalCubedTrackedDataHandlers.register();
         PortalCubedServerPackets.registerPackets();
         PortalCubedSounds.registerSounds();
+        PortalCubedGameRules.register();
         BlockContentRegistries.FLAMMABLE_BLOCK.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
         GravityChannel.UPDATE_GRAVITY.getVerifierRegistry().register(AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, AdhesionGravityVerifier::check);
 

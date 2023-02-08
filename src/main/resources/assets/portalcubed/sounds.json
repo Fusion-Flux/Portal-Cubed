@@ -30,13 +30,13 @@
 		]
 	},
 	"portal_gun_primary": {
-		"subtitle": "subtitles.portalcubed.portal_gun_primaryfire",
+		"subtitle": "subtitles.portalcubed.portal_gun_primary_fire",
 		"sounds": [
 			"portalcubed:portal_gun_primary"
 		]
 	},
 	"portal_gun_secondary": {
-		"subtitle": "subtitles.portalcubed.portal_gun_secondaryfire",
+		"subtitle": "subtitles.portalcubed.portal_gun_secondary_fire",
 		"sounds": [
 			"portalcubed:portal_gun_secondary"
 		]

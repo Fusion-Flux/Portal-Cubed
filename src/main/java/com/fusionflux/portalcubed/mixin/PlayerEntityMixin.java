@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.mixin;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -154,7 +155,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             }
         }
 
-        if (!isSneaking()) {
+        if (!PortalCubedClient.allowCfg || !isSneaking()) {
             cfg = false;
         }
     }
