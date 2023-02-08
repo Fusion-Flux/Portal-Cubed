@@ -7,6 +7,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -294,12 +295,17 @@ public class ExperimentalPortal extends Entity {
                     (!this.world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) ||
                             !topValidBlock ||
                             !bottomValidBlock)||
-                    ((!this.world.getBlockState(this.getBlockPos()).isAir())&& !this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN) )|| (!this.world.getBlockState(bottom).isAir() && !this.world.getBlockState(bottom).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN))) {
+                    ((!this.world.getBlockState(this.getBlockPos()).isAir())&& !allowedPortalBlock(world, getBlockPos()) )|| (!this.world.getBlockState(bottom).isAir() && !allowedPortalBlock(world, bottom))) {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
             }
         }
         super.tick();
+    }
+
+    public static boolean allowedPortalBlock(World world, BlockPos pos) {
+        final BlockState state = world.getBlockState(pos);
+        return state.isIn(PortalCubedBlocks.PORTAL_NONSOLID) || state.getCollisionShape(world, pos).isEmpty();
     }
 
     public void syncRotations(){
