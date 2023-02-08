@@ -115,8 +115,9 @@ public class PortalCubedBlocks {
     public static BlockEntityType<RocketTurretBlockEntity> ROCKET_TURRET_BLOCK_ENTITY;
 
     public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "cant_place_portal_on"));
+    public static final TagKey<Block> PORTAL_NONSOLID = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "portal_nonsolid"));
+    public static final TagKey<Block> PORTAL_SOLID = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "portal_solid"));
     public static final TagKey<Block> PORTALABLE_GELS = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "portalable_gels"));
-    public static final TagKey<Block> PORTAL_NONSOLID = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "allow_portal_in"));
 
     public static void registerBlocks() {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "base_gel"), BASE_GEL);
