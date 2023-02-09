@@ -48,10 +48,10 @@ public abstract class CalledValues {
         maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setHasTeleportationHappened(setValue));
     }
 
-    public static boolean getWasInfiniteFalling(Entity entity) {
+    public static boolean getIsTeleporting(Entity entity) {
         return maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).map(PortalCubedComponent::getWasInfiniteFalling).orElse(false);
     }
-    public static void setWasInfiniteFalling(Entity entity, boolean setValue) {
+    public static void setIsTeleporting(Entity entity, boolean setValue) {
         maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setWasInfiniteFalling(setValue));
     }
 
