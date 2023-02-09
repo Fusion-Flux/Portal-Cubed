@@ -1,5 +1,5 @@
 plugins {
-	id 'org.quiltmc.loom' version '1.1.+'
+	id 'org.quiltmc.loom' version '1.0.+'
 	id 'org.ajoberstar.grgit' version '4.1.0'
 }
 
@@ -20,7 +20,6 @@ repositories {
 	maven { url = "https://maven.tterrag.com/" }
 	maven { url = "https://mvn.devos.one/snapshots/" }
 	maven { url = "https://maven.willbl.dev/releases/" }
-	maven { url = "https://maven.quiltmc.org/repository/snapshot" }
 	maven {
 		name = 'Ladysnake Mods'
 		url = 'https://ladysnake.jfrog.io/artifactory/mods'
