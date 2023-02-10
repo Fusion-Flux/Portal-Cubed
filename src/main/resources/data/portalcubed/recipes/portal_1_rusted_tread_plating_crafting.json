@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XXX",
+        "YYY",
+        "XXX"
+    ],
+    "key": {
+        "Y": {
+            "item": "minecraft:copper_ingot"
+        },
+        "X": {
+            "item": "minecraft:iron_nugget"
+        }
+    },
+    "result": {
+        "item": "portalcubed:portal_1_rusted_tread_plating",
+        "count": 8
+    }
+}

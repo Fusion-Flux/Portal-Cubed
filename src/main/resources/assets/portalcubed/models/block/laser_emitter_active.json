@@ -5,8 +5,7 @@
 		"0": "portalcubed:block/laser_emitter",
 		"1": "portalcubed:block/laser_emitter_e",
 		"2": "portalcubed:block/padded_gray_panel",
-		"particle": "portalcubed:block/laser_emitter"
-	},
+		"particle": "portalcubed:block/padded_gray_panel"	},
 	"elements": [
 		{
 			"from": [-5, 7.5, 7.5],

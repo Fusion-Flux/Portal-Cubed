@@ -4,7 +4,7 @@
 	"textures": {
 		"0": "portalcubed:block/portal_1_door",
 		"1": "portalcubed:block/portal_1_door_e",
-		"particle": "portalcubed:block/portal_1_door"
+		"particle": "portalcubed:block/portal_1_gray_panel"
 	},
 	"elements": [
 		{
