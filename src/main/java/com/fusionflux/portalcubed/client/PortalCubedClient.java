@@ -8,8 +8,10 @@ import com.fusionflux.portalcubed.client.gui.FaithPlateScreen;
 import com.fusionflux.portalcubed.client.gui.VelocityHelperScreen;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.*;
-import com.fusionflux.portalcubed.client.render.model.block.EmissiveSpriteRegistry;
-import com.fusionflux.portalcubed.client.render.model.entity.*;
+import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
+import com.fusionflux.portalcubed.client.render.block.entity.VelocityHelperRenderer;
+import com.fusionflux.portalcubed.client.render.entity.*;
+import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -67,29 +69,40 @@ public class PortalCubedClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
 
-        // TODO: Make this actually work
-//        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
+        // Thanks to https://github.com/JulianWww/Amazia-fabric/blob/main/src/main/java/net/denanu/amazia/GUI/debug/VillagePathingOverlay.java for some code
+//        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
 //            final BlockPos origin = velocityHelperDragStart;
 //            if (origin != null) {
-//                final VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-//                final Vec3d end = context.camera().getPos();
-//                final VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getLines());
-//                final MatrixStack.Entry matrix = context.matrixStack().peek();
-//                final Vec3f offset = new Vec3f(Vec3d.ofCenter(velocityHelperDragStart).subtract(end));
-//                final Vec3f normal = offset.copy();
-//                normal.modify(f -> -f);
-//                normal.normalize();
-//                vertexConsumer
-//                    .vertex(matrix.getModel(), offset.getX(), offset.getY(), offset.getZ())
-//                    .color(0.0f, 0.5f, 1.0f, 1.0f)
-//                    .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
-//                    .next();
-//                vertexConsumer
-//                    .vertex(matrix.getModel(), 0f, 0f, 0f)
-//                    .color(1.0f, 0.5f, 0.0f, 1.0f)
-//                    .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
-//                    .next();
-//                immediate.draw();
+//                RenderSystem.enableDepthTest();
+//                RenderSystem.setShader(GameRenderer::getPositionColorShader);
+//                final Tessellator tessellator = Tessellator.getInstance();
+//                final BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
+//                RenderSystem.disableTexture();
+//                RenderSystem.disableBlend();
+//                RenderSystem.lineWidth(5f);
+//                bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+//
+//                final Vec3d camPos = context.camera().getPos();
+//
+//                context.matrixStack().push();
+//
+//                final Frustum frustum = new Frustum(context.matrixStack().peek().getModel(), RenderSystem.getProjectionMatrix());
+//                frustum.setPosition(camPos.x, camPos.y, camPos.z);
+//
+//                bufferBuilder.vertex(
+//                    velocityHelperDragStart.getX() - camPos.x + 0.5,
+//                    velocityHelperDragStart.getY() - camPos.y + 0.5,
+//                    velocityHelperDragStart.getZ() - camPos.z + 0.5
+//                ).color(0.0f, 0.5f, 1.0f, 1.0f).next();
+//                assert MinecraftClient.getInstance().cameraEntity != null;
+//                bufferBuilder.vertex(0, MinecraftClient.getInstance().cameraEntity.getEyeY() - camPos.y, 0).color(0.0f, 0.5f, 1.0f, 1.0f).next();
+//
+//                context.matrixStack().pop();
+//
+//                tessellator.draw();
+//                RenderSystem.lineWidth(1f);
+//                RenderSystem.enableBlend();
+//                RenderSystem.enableTexture();
 //            }
 //        });
 

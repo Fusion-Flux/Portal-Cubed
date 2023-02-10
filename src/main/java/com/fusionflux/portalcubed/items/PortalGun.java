@@ -10,6 +10,7 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.unascribed.lib39.recoil.api.DirectClickItem;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -28,7 +29,8 @@ import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
-import net.minecraft.world.RaycastContext;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -143,17 +145,14 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
             Vec3i right;
             BlockPos blockPos;
 
-            HitResult hitResult = customRaycast(user,128.0D, 0.0F, false);
+            HitResult hitResult = customRaycast(user,128.0D, 0.0F);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 blockPos = ((BlockHitResult) hitResult).getBlockPos();
                 normal = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
-                System.out.println(normal.getY());
                 if (normal.getY() == 0) {
                     up = new Vec3i(0, 1, 0);
-                } else if(normal.getY() == -1) {
+                } else {
                     up = user.getHorizontalFacing().getVector();
-                }else  {
-                    up = user.getHorizontalFacing().getOpposite().getVector();
                 }
                 right = up.crossProduct(normal);
 
@@ -326,7 +325,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 (world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) &&
                         topValidBlock &&
                         bottomValidBlock) &&
-                ((world.getBlockState(new BlockPos(portalPos1)).isAir()) || world.getBlockState(new BlockPos(portalPos1)).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN)) && (world.getBlockState(bottom).isAir() || world.getBlockState(bottom).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN));
+                ((world.getBlockState(new BlockPos(portalPos1)).isAir()) || ExperimentalPortal.allowedPortalBlock(world, new BlockPos(portalPos1))) && (world.getBlockState(bottom).isAir() || ExperimentalPortal.allowedPortalBlock(world, bottom));
     }
 
     /**
@@ -347,21 +346,29 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
         );
     }
 
-
-    public HitResult customRaycast(Entity user, double maxDistance, float tickDelta, boolean includeFluids) {
-        Vec3d vec3d = user.getCameraPosVec(tickDelta);
-        Vec3d vec3d2 = user.getRotationVec(tickDelta);
-        Vec3d vec3d3 = vec3d.add(vec3d2.x * maxDistance, vec3d2.y * maxDistance, vec3d2.z * maxDistance);
-        return user.world
-                .raycast(
-                        new RaycastContext(
-                                vec3d,
-                                vec3d3,
-                                RaycastContext.ShapeType.COLLIDER,
-                                includeFluids ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE,
-                                user
-                        )
-                );
+    public HitResult customRaycast(Entity user, double maxDistance, float tickDelta) {
+        final Vec3d start = user.getCameraPosVec(tickDelta);
+        final Vec3d rotation = user.getRotationVec(tickDelta);
+        final Vec3d end = start.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
+        final World world = user.world;
+        final ShapeContext shapeContext = ShapeContext.of(user);
+        return BlockView.raycast(
+            start, end, null,
+            (context, pos) -> {
+                final BlockState block = world.getBlockState(pos);
+                if (block.isIn(PortalCubedBlocks.PORTAL_NONSOLID)) {
+                    return null;
+                }
+                final VoxelShape blockShape = block.isIn(PortalCubedBlocks.PORTAL_SOLID)
+                    ? block.getOutlineShape(world, pos, shapeContext)
+                    : block.getCollisionShape(world, pos, shapeContext);
+                return world.raycastBlock(start, end, pos, blockShape, block);
+            },
+            context -> {
+                final Vec3d offset = start.subtract(end);
+                return BlockHitResult.createMissed(end, Direction.getFacing(offset.x, offset.y, offset.z), new BlockPos(end));
+            }
+        );
     }
 
     public static IPQuaternion getPortalOrientationQuaternion(
