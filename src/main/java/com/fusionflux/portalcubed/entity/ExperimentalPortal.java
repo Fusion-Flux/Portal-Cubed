@@ -4,7 +4,6 @@ import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
 import net.minecraft.block.BlockState;
@@ -15,16 +14,17 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.math.*;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import org.quiltmc.qsl.networking.api.PacketByteBufs;
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -144,17 +144,7 @@ public class ExperimentalPortal extends Entity {
 
     @Override
     public Packet<?> createSpawnPacket() {
-        final var packet = PacketByteBufs.create();
-
-        packet.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()))
-                .writeUuid(this.getUuid())
-                .writeVarInt(this.getId())
-                .writeDouble(this.getX())
-                .writeDouble(this.getY())
-                .writeDouble(this.getZ())
-                .writeByte(MathHelper.floor(this.getPitch() * 256.0F / 360.0F))
-                .writeByte(MathHelper.floor(this.getYaw() * 256.0F / 360.0F));
-        return ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.SPAWN_PACKET, packet);
+        return new EntitySpawnS2CPacket(this);
     }
 
     public Optional<UUID> getLinkedPortalUUID() {
