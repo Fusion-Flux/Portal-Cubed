@@ -1,6 +1,6 @@
 {
   "block/excursion_funnel": "block/excursion_funnel_beam",
-  "block/excursion_funnel_reversed": "block/reverse_excursion_funnel_beam",
+  "block/excursion_funnel_reversed": "block/excursion_funnel_beam",
 
   "block/faith_plate": "block/faith_plate_e",
   "block/faith_plate_active": "block/faith_plate_e",
@@ -82,9 +82,10 @@
 
   "block/light_bridge_emitter": "block/light_bridge_emitter_e",
 
-  "block/excursion_funnel_emitter_off": "block/funnel_wings_e",
-  "block/excursion_funnel_emitter": "block/funnel_wings_active_e",
-  "block/excursion_funnel_emitter_reversed": "block/funnel_wings_active_reverse_e",
+  "block/excursion_funnel_emitter_deactivated": "block/excursion_funnel_emitter_e",
+  "block/excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",
+  "block/reversed_excursion_funnel_emitter_deactivated": "block/excursion_funnel_emitter_e",
+  "block/reversed_excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",
 
   "block/laser_emitter_active": "block/laser_emitter_e",
   "block/laser_emitter_active_downward": "block/laser_emitter_e",

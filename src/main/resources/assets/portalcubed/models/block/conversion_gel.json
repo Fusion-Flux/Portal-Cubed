@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "portalcubed:block/gel",
-		"particle": "portalcubed:block/gel"
+		"0": "portalcubed:block/conversion_gel",
+		"particle": "portalcubed:block/conversion_gel"
 	},
 	"elements": [
 		{
