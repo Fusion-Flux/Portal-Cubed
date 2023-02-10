@@ -163,79 +163,73 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void tickTail(CallbackInfo ci) {
-        PlayerEntity thisEntity = ((PlayerEntity) (Object) this);
+        if(this.world.isClient) {
+            PlayerEntity thisEntity = ((PlayerEntity) (Object) this);
 
-        Vec3d entityVelocity = this.getVelocity();
+            Vec3d entityVelocity = thisEntity.getVelocity();
 
-        Box portalCheckBox = getBoundingBox();
+            Box portalCheckBox = getBoundingBox();
 
-        portalCheckBox = portalCheckBox.stretch(entityVelocity).stretch(entityVelocity.multiply(-1));
-
-
-        List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
-        ExperimentalPortal portal = null;
-        for (ExperimentalPortal portalCheck : list) {
-            portal = portalCheck;
-            break;
-        }
-
-        //0.544319986801145
+            portalCheckBox = portalCheckBox.stretch(entityVelocity).stretch(entityVelocity.multiply(-1));
 
 
-        if (portal != null) {
-            if (this.canUsePortals() && portal.getActive() && this.world.isClient && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
-                Direction portalFacing = portal.getFacingDirection();
-                Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
+            List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+            ExperimentalPortal portal = null;
+            for (ExperimentalPortal portalCheck : list) {
+                portal = portalCheck;
+                if (this.canUsePortals() && portal.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
+                    Direction portalFacing = portal.getFacingDirection();
+                    Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
 
-                if (otherDirec != null) {
-
-                    //-1.1634862531688395
-                    // 2.69651374683116
+                    if (otherDirec != null) {
 
 
-                    if(thisEntity.hasNoDrag()){
-                        entityVelocity = entityVelocity.add(0,.08,0);
-                    }else{
-                        entityVelocity = entityVelocity.add(0,.08*.98,0);
-                    }
-
-                    Vec3d entityEyePos = this.getEyePos();
-                    if (portalFacing.getUnitVector().getX() < 0) {
-                        if (entityEyePos.getX()  >= portal.getPos().getX() && entityVelocity.getX() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                            performTeleport(thisEntity, portal, entityVelocity);
-
+                        if (thisEntity.hasNoDrag()) {
+                            entityVelocity = entityVelocity.add(0, .08, 0);
+                        } else {
+                            entityVelocity = entityVelocity.add(0, .08 * .98, 0);
                         }
-                    }
-                    if (portalFacing.getUnitVector().getY() < 0) {
-                        if (entityEyePos.getY()  >= portal.getPos().getY() && entityVelocity.getY() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                            performTeleport(thisEntity, portal, entityVelocity);
 
-                        }
-                    }
-                    if (portalFacing.getUnitVector().getZ() < 0) {
-                        if (entityEyePos.getZ()>= portal.getPos().getZ() && entityVelocity.getZ() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                            performTeleport(thisEntity, portal, entityVelocity);
+                        Vec3d entityEyePos = thisEntity.getEyePos();
 
-                        }
-                    }
-                    if (portalFacing.getUnitVector().getX() > 0) {
-                        if (entityEyePos.getX() <= portal.getPos().getX() && entityVelocity.getX() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                            performTeleport(thisEntity, portal, entityVelocity);
-
-                        }
-                    }
-                    if (portalFacing.getUnitVector().getY() > 0) {
-                        if (entityEyePos.getY()  <= portal.getPos().getY() && entityVelocity.getY() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                        if (portalFacing.getUnitVector().getX() < 0) {
+                            if (entityEyePos.getX() >= portal.getPos().getX() && entityVelocity.getX() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
+                                break;
+                            }
                         }
-                    }
-                    if (portalFacing.getUnitVector().getZ() > 0) {
-                        if (entityEyePos.getZ() <= portal.getPos().getZ() && entityVelocity.getZ() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                            performTeleport(thisEntity, portal, entityVelocity);
-
+                        if (portalFacing.getUnitVector().getY() < 0) {
+                            if (entityEyePos.getY() >= portal.getPos().getY() && entityVelocity.getY() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                performTeleport(thisEntity, portal, entityVelocity);
+                                break;
+                            }
                         }
-                    }
+                        if (portalFacing.getUnitVector().getZ() < 0) {
+                            if (entityEyePos.getZ() >= portal.getPos().getZ() && entityVelocity.getZ() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                performTeleport(thisEntity, portal, entityVelocity);
+                                break;
+                            }
+                        }
+                        if (portalFacing.getUnitVector().getX() > 0) {
+                            if (entityEyePos.getX() <= portal.getPos().getX() && entityVelocity.getX() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                performTeleport(thisEntity, portal, entityVelocity);
+                                break;
+                            }
+                        }
+                        if (portalFacing.getUnitVector().getY() > 0) {
+                            if (entityEyePos.getY() <= portal.getPos().getY() && entityVelocity.getY() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                performTeleport(thisEntity, portal, entityVelocity);
+                                break;
+                            }
+                        }
+                        if (portalFacing.getUnitVector().getZ() > 0) {
+                            if (entityEyePos.getZ() <= portal.getPos().getZ() && entityVelocity.getZ() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                performTeleport(thisEntity, portal, entityVelocity);
+                                break;
+                            }
+                        }
 
+                    }
                 }
             }
         }
@@ -254,11 +248,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             byteBuf.writeDouble(entityVelocity.x);
             byteBuf.writeDouble(entityVelocity.y);
             byteBuf.writeDouble(entityVelocity.z);
-            byteBuf.writeDouble((thisEntity.getEyePos().x) - portal.getPos().x);
-            byteBuf.writeDouble((thisEntity.getEyePos().y) - portal.getPos().y);
-            byteBuf.writeDouble((thisEntity.getEyePos().z) - portal.getPos().z);
+            byteBuf.writeDouble((thisEntity.getEyePos().getX()) - portal.getPos().getX());
+            byteBuf.writeDouble((thisEntity.getEyePos().getY()) - portal.getPos().getY());
+            byteBuf.writeDouble((thisEntity.getEyePos().getZ()) - portal.getPos().getZ());
             NetworkingSafetyWrapper.sendFromClient("use_portal", byteBuf);
             CalledValues.setIsTeleporting(thisEntity,true);
+            //System.out.println(((EntityAttachments) thisEntity).getMaxFallHeight());
             //this.setVelocity(0,0,0);
         }
     }

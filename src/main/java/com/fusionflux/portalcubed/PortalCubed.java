@@ -144,7 +144,7 @@ public class PortalCubed implements ModInitializer {
 
                 Vec3d rotatedOffsets = new Vec3d(teleportXOffset,teleportYOffset,teleportZOffset);
 
-                double heightOffset = player.getEyeHeight(player.getPose())/2;
+                double heightOffset = (player.getEyeY()-player.getY())/2;
 
                 if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
                     if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
@@ -158,6 +158,9 @@ public class PortalCubed implements ModInitializer {
                     }
                 }
 
+                System.out.println(portalVertFacing);
+
+
                 if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                         if(portalVertFacing != otherPortalVertFacing)
@@ -166,6 +169,8 @@ public class PortalCubed implements ModInitializer {
                 }
 
                 rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
+
+                //System.out.println(rotatedOffsets);
 
                 Vec3d rotatedVel = entityVelocity;
 
@@ -184,7 +189,7 @@ public class PortalCubed implements ModInitializer {
 
                 if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                        if(portalVertFacing != otherPortalVertFacing)
+                        if(portalFacing.getOpposite() != otherDirec)
                             rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
                     }
                 }
@@ -197,11 +202,7 @@ public class PortalCubed implements ModInitializer {
                 float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
                 player.setYaw(yawValue);
                 player.setPitch(pitchSet);
-
-
-
-                player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0,player.getEyeHeight(player.getPose()),0));
-
+                    player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0, player.getEyeY() - player.getY(), 0));
                 CalledValues.setHasTeleportationHappened(player,true);
                 GravityChangerAPI.clearGravity(player);
             });
