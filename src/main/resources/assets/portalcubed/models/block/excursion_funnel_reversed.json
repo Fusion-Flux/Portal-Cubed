@@ -1,31 +1,32 @@
 {
 	"credit": "Made with Blockbench by Cart3r.  ",
+	"texture_size": [32, 32],
 	"textures": {
-		"0": "portalcubed:block/reverse_excursion_funnel_beam",
-		"particle": "portalcubed:block/reverse_excursion_funnel_beam"
+		"0": "portalcubed:block/excursion_funnel_beam",
+		"particle": "portalcubed:block/excursion_funnel_beam"
 	},
 	"elements": [
 		{
-			"from": [2.25, 2.25, 0],
-			"to": [13.75, 13.75, 16],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"from": [-7.01, -7.01, -0.01],
+			"to": [23.01, 23.01, 16.01],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 9, 8]},
 			"faces": {
-				"east": {"uv": [1.5, 8, 6.5, 16], "rotation": 90, "texture": "#0"},
-				"west": {"uv": [1.5, 0, 6.5, 8], "rotation": 270, "texture": "#0"},
-				"up": {"uv": [9.5, 8, 14.5, 16], "texture": "#0"},
-				"down": {"uv": [9.5, 0, 14.5, 8], "rotation": 180, "texture": "#0"}
+				"east": {"uv": [16, 16, 8, 0], "texture": "#0"},
+				"west": {"uv": [8, 0, 16, 16], "texture": "#0"},
+				"up": {"uv": [8, 0, 16, 16], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [16, 16, 8, 0], "rotation": 90, "texture": "#0"}
 			}
 		},
 		{
-			"name": "cube_outline",
-			"from": [13.75, 13.75, 16],
-			"to": [2.25, 2.25, 0],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"name": "cube inverted",
+			"from": [23.01, 23.01, 16.01],
+			"to": [-7.01, -7.01, -0.01],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 9, 8]},
 			"faces": {
-				"east": {"uv": [6.5, 0, 1.5, 8], "rotation": 270, "texture": "#0"},
-				"west": {"uv": [6.5, 8, 1.5, 16], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [14.5, 8, 9.5, 16], "rotation": 180, "texture": "#0"},
-				"down": {"uv": [14.5, 0, 9.5, 8], "texture": "#0"}
+				"east": {"uv": [8, 16, 16, 0], "texture": "#0"},
+				"west": {"uv": [16, 0, 8, 16], "texture": "#0"},
+				"up": {"uv": [16, 0, 8, 16], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [8, 16, 16, 0], "rotation": 90, "texture": "#0"}
 			}
 		}
 	],
