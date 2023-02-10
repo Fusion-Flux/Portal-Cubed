@@ -14,6 +14,7 @@ import net.minecraft.client.render.entity.model.EntityModelLoader;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 
 import java.util.Map;
@@ -33,6 +34,11 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
     }
 
     @Override
+    public boolean rendersOutsideBoundingBox(RocketTurretBlockEntity blockEntity) {
+        return true;
+    }
+
+    @Override
     public void render(RocketTurretBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
 
@@ -45,12 +51,11 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
             entity, e -> new RocketTurretModel(modelLoader.getModelPart(ROCKET_TURRET_LAYER))
         );
 
+        final float yaw = MathHelper.lerpAngleDegrees(tickDelta, entity.lastYaw, entity.getYaw());
+        final float pitch = MathHelper.lerpAngleDegrees(tickDelta, entity.lastPitch, entity.getPitch());
+
         model.animateModel(wrapper, 0, 0, tickDelta);
-        model.setAngles(
-            wrapper, 0, 0, entity.getAge() + tickDelta,
-            MathHelper.lerpAngleDegrees(tickDelta, entity.lastYaw, entity.getYaw()),
-            MathHelper.lerpAngleDegrees(tickDelta, entity.lastPitch, entity.getPitch())
-        );
+        model.setAngles(wrapper, 0, 0, entity.getAge() + tickDelta, yaw, pitch);
 
         final RenderLayer renderLayer = model.getLayer(TEXTURE);
         if (renderLayer != null) {
@@ -60,5 +65,25 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
         }
 
         matrices.pop();
+
+        if (entity.aimDest == null) return;
+
+        final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getLines());
+        final MatrixStack.Entry matrix = matrices.peek();
+        final Vec3f gunOffset = new Vec3f(entity.getGunOffset(tickDelta));
+        final Vec3f offset = new Vec3f(entity.aimDest.subtract(Vec3d.of(entity.getPos())));
+        final Vec3f normal = new Vec3f(entity.aimDest);
+        normal.subtract(gunOffset);
+        normal.normalize();
+        vertexConsumer
+            .vertex(matrix.getModel(), gunOffset.getX(), gunOffset.getY(), gunOffset.getZ())
+            .color(13 / 255f, 165 / 255f, 176 / 255f, 1.0f)
+            .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
+            .next();
+        vertexConsumer
+            .vertex(matrix.getModel(), offset.getX(), offset.getY(), offset.getZ())
+            .color(13 / 255f, 165 / 255f, 176 / 255f, 1.0f)
+            .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
+            .next();
     }
 }

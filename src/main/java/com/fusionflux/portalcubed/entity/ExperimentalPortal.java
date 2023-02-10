@@ -22,8 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 
 import java.util.Objects;
@@ -101,29 +99,6 @@ public class ExperimentalPortal extends Entity {
         this.getDestination().ifPresent(destination -> IPHelperDuplicate.putVec3d(compoundTag, "destination", destination));
         IPHelperDuplicate.putVec3d(compoundTag, "facing", this.getOtherFacing());
         this.getOwnerUUID().ifPresent(uuid -> compoundTag.putUuid("ownerUUID", uuid));
-    }
-
-
-    public VoxelShape getOtherPortalCollision(){
-        VoxelShape crossPortalCollisions = VoxelShapes.empty();
-
-        ExperimentalPortal otherPortal =
-                this.getLinkedPortalUUID().isPresent()
-                        ? (ExperimentalPortal)((ServerWorld)world).getEntity(this.getLinkedPortalUUID().get())
-                        : null;
-        if(otherPortal != null){
-            Box scannedArea = new Box(otherPortal.getBoundingBox().getCenter().subtract(1,1,1),otherPortal.getBoundingBox().getCenter().add(1,1,1))
-                    .offset(otherPortal.getFacingDirection().getVector().getX()*5,otherPortal.getFacingDirection().getVector().getY()*5,otherPortal.getFacingDirection().getVector().getZ()*5)
-                    .expand(2);
-            Iterable<VoxelShape> blocks = this.world.m_byqkqxkz(otherPortal,scannedArea);
-
-            for (VoxelShape shapes : blocks) {
-                crossPortalCollisions = VoxelShapes.union(crossPortalCollisions, shapes);
-            }
-
-        }
-
-        return crossPortalCollisions;
     }
 
     public float getRoll() {

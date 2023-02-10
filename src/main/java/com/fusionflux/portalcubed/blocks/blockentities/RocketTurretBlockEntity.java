@@ -35,8 +35,9 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     public static final int LOCK_TICKS = 25;
 
+    private static final Vec3d GUN_OFFSET = new Vec3d(0.5, 1.71875, 0.09375);
+
     private float yaw, pitch;
-    public float lastYaw, lastPitch;
     private int age, lockedTicks;
     private UUID rocketUuid = Util.NIL_UUID;
 
@@ -44,6 +45,8 @@ public class RocketTurretBlockEntity extends BlockEntity {
     private Boolean powered;
     private int opening = -1;
     private boolean closing;
+    public float lastYaw, lastPitch;
+    public Vec3d aimDest;
 
     public final AnimationState activatingAnimation = new AnimationState();
     public final AnimationState deactivatingAnimation = new AnimationState();
@@ -166,7 +169,23 @@ public class RocketTurretBlockEntity extends BlockEntity {
                 closing = false;
             }
         }
-        if (world.isClient || !powered) return;
+        if (!powered) {
+            if (world.isClient) {
+                aimDest = null;
+            }
+            return;
+        }
+        if (world.isClient) {
+            final Vec3d gunPos = Vec3d.of(getPos()).add(getGunOffset(0));
+            //noinspection DataFlowIssue
+            aimDest = world.raycast(new RaycastContext(
+                gunPos, gunPos.add(Vec3d.fromPolar(pitch, yaw - 90).multiply(127)),
+                RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE,
+                // We can pass null here because of ShapeContextMixin
+                null
+            )).getPos();
+            return;
+        }
         if (lockedTicks > 0) {
             if (lockedTicks++ == LOCK_TICKS) {
                 fire();
@@ -183,12 +202,11 @@ public class RocketTurretBlockEntity extends BlockEntity {
             return;
         }
         final BlockPos actualBody = getPos().up();
-        final Vec3d eye = Vec3d.ofCenter(actualBody, 0.75);
+        final Vec3d eye = Vec3d.ofCenter(actualBody, GUN_OFFSET.y - 1);
         //noinspection DataFlowIssue
         final PlayerEntity player = world.getClosestPlayer(
             TargetPredicate.createNonAttackable().setPredicate(p -> p.world.raycast(new RaycastContext(
-                // We can pass null here because of ShapeContextMixin
-                eye, p.getPos().relative(Direction.UP, 0.75), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, null
+                eye, p.getPos().withAxis(Direction.Axis.Y, p.getBodyY(0.5)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, null
             )).getType() == HitResult.Type.MISS),
             pos.getX(), pos.getY(), pos.getZ()
         );
@@ -203,7 +221,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
             0.05f, yaw, (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x))
         );
         final float newPitch = MathHelper.lerpAngleDegrees(
-            0.05f, pitch, (float)Math.toDegrees(-MathHelper.atan2(offset.y, offset.x * offset.x + offset.z * offset.z))
+            0.05f, pitch, (float)Math.toDegrees(-MathHelper.atan2(offset.y, Math.abs(offset.x) + Math.abs(offset.z)))
         );
 //        if (player != null && Math.max(Math.abs(newYaw - yaw), Math.abs(newPitch - pitch)) <= 5) {
 //            lockedTicks++;
@@ -213,6 +231,15 @@ public class RocketTurretBlockEntity extends BlockEntity {
         yaw = newYaw;
         pitch = newPitch;
         syncAngle();
+    }
+
+    public Vec3d getGunOffset(float tickDelta) {
+        return GUN_OFFSET
+            .add(-0.3, -1.475, -0.5)
+            .rotateZ((float)Math.toRadians(MathHelper.lerpAngleDegrees(tickDelta, lastPitch, pitch)))
+            .add(-0.2, -0.025, 0.0)
+            .rotateY((float)Math.toRadians(-MathHelper.lerpAngleDegrees(tickDelta, lastYaw, yaw)))
+            .add(0.5, 1.5, 0.5);
     }
 
     @Override
