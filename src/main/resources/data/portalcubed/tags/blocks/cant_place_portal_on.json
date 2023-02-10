@@ -54,6 +54,7 @@
     "portalcubed:2x2_double_crossbar_bottom_left",
     "portalcubed:2x2_double_crossbar_bottom_right",
     "portalcubed:portal_1_rusted_plating",
+    "portalcubed:portal_1_rusted_tread_plating",
     "portalcubed:portal_1_2x2_exposed_panel_top_left",
     "portalcubed:portal_1_2x2_exposed_panel_top_right",
     "portalcubed:portal_1_2x2_exposed_panel_bottom_left",
@@ -92,6 +93,7 @@
     "portalcubed:laser_relay",
     "portalcubed:floor_button",
     "portalcubed:old_ap_floor_button",
-    "portalcubed:neurotoxin_emitter"
+    "portalcubed:neurotoxin_emitter",
+    "portalcubed:portal_1_mesh"
   ]
 }

@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YXY",
+        "XYX",
+        "YXY"
+    ],
+    "key": {
+        "Y": {
+            "item": "minecraft:iron_nugget"
+        },
+        "X": {
+            "item": "minecraft:copper_ingot"
+        }
+    },
+    "result": {
+        "item": "portalcubed:portal_1_mesh",
+        "count": 8
+    }
+}

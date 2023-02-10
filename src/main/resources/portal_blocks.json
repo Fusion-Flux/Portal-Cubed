@@ -12,6 +12,7 @@
   "portal_1_elevator_wall_middle": {},
   "portal_1_elevator_wall_top": {},
   "solid_office_concrete": {},
+  "bordered_office_concrete": {},
   "portal_1_smooth_gray_panel": {},
   "portal_1_smooth_gray_half_panel": {},
   "portal_1_smooth_gray_2x1_panel_bottom": {
@@ -33,6 +34,11 @@
   "type": "directional"
   },
   "portal_1_rusted_plating": {},
+  "portal_1_rusted_tread_plating": {},
+  "portal_1_mesh": {
+    "render_layer": "translucent",
+    "opaque": false
+  },
   "portal_1_2x2_exposed_panel_bottom_left": {
   "type": "directional"
   },
