@@ -428,5 +428,9 @@
   "power_block": {
     "type": "provided",
     "render_layer": "cutout"
+  },
+  "rocket_turret": {
+    "type": "provided",
+    "render_layer": "cutout"
   }
 }

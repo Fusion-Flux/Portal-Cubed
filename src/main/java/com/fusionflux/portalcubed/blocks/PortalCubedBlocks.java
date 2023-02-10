@@ -111,7 +111,7 @@ public class PortalCubedBlocks {
     public static final OldApFloorButtonBlock OLD_AP_FLOOR_BUTTON = new OldApFloorButtonBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<OldApFloorButtonBlockEntity> OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY;
 
-//    public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
+    public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<RocketTurretBlockEntity> ROCKET_TURRET_BLOCK_ENTITY;
 
     public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "cant_place_portal_on"));
@@ -205,10 +205,9 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("old_ap_floor_button"), OLD_AP_FLOOR_BUTTON);
         Registry.register(Registry.ITEM, id("old_ap_floor_button"), new BlockItem(OLD_AP_FLOOR_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        // TODO: Implement
-//        ROCKET_TURRET_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("rocket_turret"), QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build(null));
-//        Registry.register(Registry.BLOCK, id("rocket_turret"), ROCKET_TURRET);
-//        Registry.register(Registry.ITEM, id("rocket_turret"), new BlockItem(ROCKET_TURRET, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+        ROCKET_TURRET_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("rocket_turret"), QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build(null));
+        Registry.register(Registry.BLOCK, id("rocket_turret"), ROCKET_TURRET);
+        Registry.register(Registry.ITEM, id("rocket_turret"), new BlockItem(ROCKET_TURRET, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
         Registry.register(Registry.BLOCK, id("power_block"), POWER_BLOCK);
         Registry.register(Registry.ITEM, id("power_block"), new BlockItem(POWER_BLOCK, new Item.Settings().rarity(Rarity.EPIC).group(PortalCubed.TestingElementsGroup)));

@@ -7,8 +7,10 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.gui.FaithPlateScreen;
 import com.fusionflux.portalcubed.client.gui.VelocityHelperScreen;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
-import com.fusionflux.portalcubed.client.render.*;
+import com.fusionflux.portalcubed.client.render.PortalHud;
 import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
+import com.fusionflux.portalcubed.client.render.block.entity.RocketTurretModel;
+import com.fusionflux.portalcubed.client.render.block.entity.RocketTurretRenderer;
 import com.fusionflux.portalcubed.client.render.block.entity.VelocityHelperRenderer;
 import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
@@ -63,8 +65,6 @@ public class PortalCubedClient implements ClientModInitializer {
         registerEmissiveModels(mod);
         PortalCubedClientPackets.registerPackets();
         PortalCubedKeyBindings.register();
-
-        BlockEntityRendererFactories.register(PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY, VelocityHelperRenderer::new);
 
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
@@ -215,6 +215,11 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityRendererRegistry.register(PortalCubedEntities.REPULSION_GEL_BLOB, GelBlobRenderer::new);
         EntityRendererRegistry.register(PortalCubedEntities.CONVERSION_GEL_BLOB, GelBlobRenderer::new);
         EntityRendererRegistry.register(PortalCubedEntities.ADHESION_GEL_BLOB, GelBlobRenderer::new);
+
+        BlockEntityRendererFactories.register(PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY, VelocityHelperRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(RocketTurretRenderer.ROCKET_TURRET_LAYER, RocketTurretModel::getTexturedModelData);
+        BlockEntityRendererFactories.register(PortalCubedBlocks.ROCKET_TURRET_BLOCK_ENTITY, RocketTurretRenderer::new);
     }
 
     private static final class VisibleBarriersCompat {
