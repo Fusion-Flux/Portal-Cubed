@@ -159,8 +159,8 @@ public class RocketTurretBlockEntity extends BlockEntity {
             return;
         } else if (closing) {
             if (Math.abs(yaw) > 5 || Math.abs(pitch) > 5) {
-                yaw = MathHelper.lerpAngleDegrees(0.2f, yaw, 0);
-                pitch = MathHelper.lerpAngleDegrees(0.2f, pitch, 0);
+                setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, 0));
+                setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, 0));
             } else {
                 yaw = 0;
                 pitch = 0;
@@ -212,7 +212,12 @@ public class RocketTurretBlockEntity extends BlockEntity {
         );
         final Vec3d offset;
         if (player != null) {
-            offset = player.getPos().subtract(Vec3d.ofBottomCenter(actualBody));
+            offset = player.getPos()
+                .withAxis(Direction.Axis.Y, player.getBodyY(0.5))
+                .subtract(
+                    Vec3d.of(pos)
+                        .add(getGunOffset(0))
+                );
         } else if (lastAimOffset != null) {
             offset = lastAimOffset.withAxis(Direction.Axis.Y, 0);
         } else return;
@@ -228,8 +233,8 @@ public class RocketTurretBlockEntity extends BlockEntity {
 //            syncLockedTicks();
 //            // Also play rocket_locking_beep1
 //        }
-        yaw = newYaw;
-        pitch = newPitch;
+        setYaw(newYaw);
+        setPitch(newPitch);
         syncAngle();
     }
 
@@ -255,8 +260,16 @@ public class RocketTurretBlockEntity extends BlockEntity {
         return yaw;
     }
 
+    public void setYaw(float yaw) {
+        this.yaw = MathHelper.wrapDegrees(yaw);
+    }
+
     public float getPitch() {
         return pitch;
+    }
+
+    public void setPitch(float pitch) {
+        this.pitch = MathHelper.wrapDegrees(pitch);
     }
 
     public enum State {
