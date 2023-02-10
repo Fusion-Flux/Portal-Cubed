@@ -35,9 +35,8 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     public static final int LOCK_TICKS = 25;
 
-    private static final float LOOK_SPEED = 0.05f;
-
     private float yaw, pitch;
+    public float lastYaw, lastPitch;
     private int age, lockedTicks;
     private UUID rocketUuid = Util.NIL_UUID;
 
@@ -133,6 +132,8 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     public void tick(World world, BlockPos pos, BlockState state) {
         age++;
+        lastYaw = yaw;
+        lastPitch = pitch;
         if (powered == null) {
             powered = state.get(POWERED);
             if (!powered) {
@@ -155,8 +156,8 @@ public class RocketTurretBlockEntity extends BlockEntity {
             return;
         } else if (closing) {
             if (Math.abs(yaw) > 5 || Math.abs(pitch) > 5) {
-                yaw = lerpDegrees(yaw, 0, 0.2f);
-                pitch = lerpDegrees(pitch, 0, 0.2f);
+                yaw = MathHelper.lerpAngleDegrees(0.2f, yaw, 0);
+                pitch = MathHelper.lerpAngleDegrees(0.2f, pitch, 0);
             } else {
                 yaw = 0;
                 pitch = 0;
@@ -198,11 +199,11 @@ public class RocketTurretBlockEntity extends BlockEntity {
             offset = lastAimOffset.withAxis(Direction.Axis.Y, 0);
         } else return;
         lastAimOffset = offset;
-        final float newYaw = lerpDegrees(
-            yaw, (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x)), LOOK_SPEED
+        final float newYaw = MathHelper.lerpAngleDegrees(
+            0.05f, yaw, (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x))
         );
-        final float newPitch = lerpDegrees(
-            pitch, (float)Math.toDegrees(-MathHelper.atan2(offset.y, offset.x * offset.x + offset.z * offset.z)), LOOK_SPEED
+        final float newPitch = MathHelper.lerpAngleDegrees(
+            0.05f, pitch, (float)Math.toDegrees(-MathHelper.atan2(offset.y, offset.x * offset.x + offset.z * offset.z))
         );
 //        if (player != null && Math.max(Math.abs(newYaw - yaw), Math.abs(newPitch - pitch)) <= 5) {
 //            lockedTicks++;
@@ -229,19 +230,6 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     public float getPitch() {
         return pitch;
-    }
-
-    // https://stackoverflow.com/a/2708740/8840278
-    private static float lerpDegrees(float start, float end, float amount) {
-        final float difference = Math.abs(end - start);
-        if (difference > 180) {
-            if (end > start) {
-                start += 360;
-            } else {
-                end += 360;
-            }
-        }
-        return MathHelper.wrapDegrees(start + (end - start) * amount);
     }
 
     public enum State {

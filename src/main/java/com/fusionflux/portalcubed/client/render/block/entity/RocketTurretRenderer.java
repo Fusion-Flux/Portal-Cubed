@@ -13,6 +13,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.entity.model.EntityModelLoader;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 
 import java.util.Map;
@@ -45,7 +46,11 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
         );
 
         model.animateModel(wrapper, 0, 0, tickDelta);
-        model.setAngles(wrapper, 0, 0, entity.getAge() + tickDelta, entity.getYaw(), entity.getPitch());
+        model.setAngles(
+            wrapper, 0, 0, entity.getAge() + tickDelta,
+            MathHelper.lerpAngleDegrees(tickDelta, entity.lastYaw, entity.getYaw()),
+            MathHelper.lerpAngleDegrees(tickDelta, entity.lastPitch, entity.getPitch())
+        );
 
         final RenderLayer renderLayer = model.getLayer(TEXTURE);
         if (renderLayer != null) {
