@@ -29,18 +29,18 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
-    private final Map<BlockState, VoxelShape> field_26659;
+    private final Map<BlockState, VoxelShape> stateToShape;
 
 
     public HardLightBridgeEmitterBlock(Settings settings) {
         super(settings);
-        this.field_26659 = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeEmitterBlock::method_31018)));
+        this.stateToShape = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeEmitterBlock::getShapeForState)));
 
     }
 
-    private static VoxelShape method_31018(BlockState ignoredBlockState) {
+    private static VoxelShape getShapeForState(BlockState ignoredBlockState) {
         VoxelShape voxelShape = VoxelShapes.empty();
-        voxelShape =VoxelShapes.union(voxelShape, SHAPE);
+        voxelShape = VoxelShapes.union(voxelShape, SHAPE);
 
         return voxelShape;
     }
@@ -78,13 +78,13 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.field_26659.get(state);
+        return this.stateToShape.get(state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.field_26659.get(state);
+        return this.stateToShape.get(state);
     }
 
 

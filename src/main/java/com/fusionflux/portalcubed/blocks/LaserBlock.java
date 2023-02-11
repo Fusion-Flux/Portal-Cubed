@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.LaserBlockEntity;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.util.CustomProperties;
@@ -40,7 +39,7 @@ public class LaserBlock extends BlockWithEntity {
 
     public LaserBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(REFLECT_DIRECT,Direction.NORTH).with(CUBE_REFLECT,false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(REFLECT_DIRECT, Direction.NORTH).with(CUBE_REFLECT, false));
     }
 
     @Override
@@ -70,7 +69,7 @@ public class LaserBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN,REFLECT_DIRECT,CUBE_REFLECT);
+        builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN, REFLECT_DIRECT, CUBE_REFLECT);
     }
 
 
@@ -109,15 +108,15 @@ public class LaserBlock extends BlockWithEntity {
 
 
     private void addCollisionEffects(Entity entity) {
-        if(entity instanceof PlayerEntity player){
-            if(!player.getAbilities().creativeMode) {
+        if (entity instanceof PlayerEntity player) {
+            if (!player.getAbilities().creativeMode) {
                 player.setOnFire(true);
                 player.damage(DamageSource.ON_FIRE, 1f);
             }
-        }else if(!(entity instanceof ItemEntity)&&!(entity instanceof CorePhysicsEntity)){
-           entity.setOnFire(true);
-           entity.setFireTicks(1);
-           entity.damage(DamageSource.ON_FIRE, 1f);
+        } else if (!(entity instanceof ItemEntity) && !(entity instanceof CorePhysicsEntity)) {
+            entity.setOnFire(true);
+            entity.setFireTicks(1);
+            entity.damage(DamageSource.ON_FIRE, 1f);
         }
     }
 
