@@ -8,6 +8,7 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
+    "ShapeContextMixin",
     "WorldMixin",
     "WorldViewMixin"
   ],

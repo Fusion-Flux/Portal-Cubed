@@ -6,7 +6,6 @@ import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.unascribed.lib39.recoil.api.DirectClickItem;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -73,7 +72,7 @@ public class PaintGun extends Item implements DirectClickItem, DyeableItem {
             byteBuf.writeDouble(user.getVelocity().y);
             byteBuf.writeDouble(user.getVelocity().z);
             byteBuf.writeBoolean(true);
-            NetworkingSafetyWrapper.sendFromClient("requestvelocityforgel", byteBuf);
+            NetworkingSafetyWrapper.sendFromClient("request_velocity_for_gel", byteBuf);
         }
         if (!world.isClient && !user.isSpectator() && CalledValues.getCanFireGel(user)) {
             final GelBlobEntity entity = gelType.blobEntityType.create(world);
@@ -94,7 +93,7 @@ public class PaintGun extends Item implements DirectClickItem, DyeableItem {
 
         public final EntityType<? extends GelBlobEntity> blobEntityType;
 
-        private FireableGelType(EntityType<? extends GelBlobEntity> blobEntityType) {
+        FireableGelType(EntityType<? extends GelBlobEntity> blobEntityType) {
             this.blobEntityType = blobEntityType;
         }
     }

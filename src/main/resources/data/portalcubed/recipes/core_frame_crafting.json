@@ -9,10 +9,10 @@
         "Z": {
             "item": "minecraft:iron_nugget"
         },
-        "X": {
+        "Y": {
             "item": "minecraft:iron_ingot"
         },
-        "Y": {
+        "X": {
             "item": "minecraft:redstone"
         }
     },

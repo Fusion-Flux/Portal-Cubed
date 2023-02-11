@@ -1,0 +1,21 @@
+{
+  "subtitles.portalcubed.gel_bounce": "Rückstoßgel-Abprallen",
+  "subtitles.portalcubed.gel_run": "Rennen Auf Beschleunigungsgel",
+  "subtitles.portalcubed.portal_gun_secondary_fire": "Portal Gun Sekundärer Schuß",
+  "subtitles.portalcubed.portal_gun_primary_fire": "Portal Gun Primärer Schuß",
+
+  "item.portalcubed.long_fall_boots": "Langfallschuhe",
+
+  "item.portalcubed.companion_cube": "Begleiterwürfel",
+
+  "item.portalcubed.portal_gun": "Portal Gun",
+  "item.portalcubed.portal_gun_frame": "Portal Gun Gestell",
+  "item.portalcubed.portal_gun_casing": "Portal Gun Gehäuse",
+  "item.portalcubed.paint_gun": "Sprühpistole",
+  "item.portalcubed.mini_blackhole": "Miniatur-Schwarzes Loch",
+
+  "block.portalcubed.neurotoxin_emitter": "Nervengiftausstrahler",
+  "block.portalcubed.excursion_funnel_emitter": "Exkursionskannal-Strahler",
+
+  "key.portalcubed.grab": "Greife"
+}

@@ -1,0 +1,21 @@
+{
+  "subtitles.portalcubed.gel_bounce": "Отскок от отталкивающего геля",
+  "subtitles.portalcubed.gel_run": "Бег на проталкивающем геле",
+  "subtitles.portalcubed.portal_gun_secondary_fire": "Вторичный огонь Портальной Пушки",
+  "subtitles.portalcubed.portal_gun_primary_fire": "Основной огонь Портальной Пушки",
+
+  "item.portalcubed.long_fall_boots": "Сапоги Прыгуна",
+
+  "item.portalcubed.companion_cube": "Куб-компаньон",
+
+  "item.portalcubed.portal_gun": "Портальная Пушка",
+  "item.portalcubed.portal_gun_frame": "Каркас Портальной Пушки",
+  "item.portalcubed.portal_gun_casing": "Обшивка Портальной Пушки",
+  "item.portalcubed.paint_gun": "Красящая пушка",
+  "item.portalcubed.mini_blackhole": "Миниатюрная чёрная дыра",
+
+  "block.portalcubed.neurotoxin_emitter": "Испускатель нейротоксина",
+  "block.portalcubed.excursion_funnel_emitter": "Испускатель экскурсионной воронки",
+
+  "key.portalcubed.grab": "Схватить"
+}

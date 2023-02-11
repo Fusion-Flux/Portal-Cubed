@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.client.render.model.block.EmissiveBakedModel;
+import com.fusionflux.portalcubed.client.render.block.EmissiveBakedModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;

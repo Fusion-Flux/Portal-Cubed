@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values" : [
+    "portalcubed:light_bridge",
+    "portalcubed:auto_portal",
+    "portalcubed:old_ap_mesh",
+    "portalcubed:portal_1_mesh",
+    "portalcubed:portal_2_panel_frame",
+    "portalcubed:1x1_single_crossbar",
+    "portalcubed:1x1_double_crossbar",
+    "portalcubed:2x2_double_crossbar_top_left",
+    "portalcubed:2x2_double_crossbar_bottom_left",
+    "portalcubed:2x2_double_crossbar_top_right",
+    "portalcubed:2x2_double_crossbar_bottom_right",
+    "minecraft:iron_bars"
+  ]
+}

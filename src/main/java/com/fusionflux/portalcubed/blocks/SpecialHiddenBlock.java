@@ -38,9 +38,13 @@ public abstract class SpecialHiddenBlock extends Block implements Waterloggable 
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public final VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return isHolding(context, asItem()) || isHolding(context, PortalCubedItems.HAMMER)
-            ? VoxelShapes.fullCube() : VoxelShapes.empty();
+            ? getVisibleOutlineShape(state, world, pos, context) : VoxelShapes.empty();
+    }
+
+    protected VoxelShape getVisibleOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return VoxelShapes.fullCube();
     }
 
     private static boolean isHolding(ShapeContext context, Item item) {

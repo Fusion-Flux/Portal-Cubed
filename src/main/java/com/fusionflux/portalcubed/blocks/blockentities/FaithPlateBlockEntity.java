@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.util.FaithPlateScreenHandler;
+import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,6 +14,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
@@ -60,7 +61,7 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
         for(Entity liver : list){
             if(blockEntity.timer <= 0) {
                 if(liver instanceof CorePhysicsEntity physEn) {
-                    if(!physEn.getHolderUUID().isPresent()) {
+                    if(physEn.getHolderUUID().isEmpty()) {
                         liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
                         blockEntity.timer = 5;
                         blockEntity.animationTimer = 7;
@@ -106,11 +107,15 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
         velZ = tag.getDouble("velZ");
     }
 
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        return toNbt();
+    }
 
     @Nullable
     @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return null;
+        return BlockEntityUpdateS2CPacket.of(this);
     }
 
     @Override

@@ -1,16 +1,36 @@
 package com.fusionflux.portalcubed.entity;
 
-import java.util.Optional;
-
-import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
-
-import com.fusionflux.portalcubed.PortalCubed;
-
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
+
+import java.util.Optional;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedTrackedDataHandlers {
+
+    public static final TrackedDataHandler<Quaternion> QUATERNION = new TrackedDataHandler.SimpleHandler<>() {
+        @Override
+        public Quaternion read(PacketByteBuf buf) {
+            return new Quaternion(
+                buf.readFloat(),
+                buf.readFloat(),
+                buf.readFloat(),
+                buf.readFloat()
+        );
+        }
+
+        @Override
+        public void write(PacketByteBuf buf, Quaternion value) {
+            buf.writeFloat(value.getX());
+            buf.writeFloat(value.getY());
+            buf.writeFloat(value.getZ());
+            buf.writeFloat(value.getW());
+        }
+    };
 
     public static final TrackedDataHandler<Vec3d> VEC3D = new TrackedDataHandler.SimpleHandler<>() {
         @Override
@@ -43,8 +63,9 @@ public class PortalCubedTrackedDataHandlers {
     };
 
     public static void register() {
-        QuiltTrackedDataHandlerRegistry.register(PortalCubed.id("vec3d"), VEC3D);
-        QuiltTrackedDataHandlerRegistry.register(PortalCubed.id("optional_vec3d"), OPTIONAL_VEC3D);
+        QuiltTrackedDataHandlerRegistry.register(id("quaternion"), QUATERNION);
+        QuiltTrackedDataHandlerRegistry.register(id("vec3d"), VEC3D);
+        QuiltTrackedDataHandlerRegistry.register(id("optional_vec3d"), OPTIONAL_VEC3D);
     }
 
 }

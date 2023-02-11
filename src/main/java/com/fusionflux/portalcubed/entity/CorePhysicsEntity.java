@@ -9,7 +9,6 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -174,7 +173,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         super.tick();
         timeSinceLastSound++;
         this.headYaw = this.bodyYaw;
-        canUsePortals = !getHolderUUID().isPresent();
+        canUsePortals = getHolderUUID().isEmpty();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.getPos();
         if(!world.isClient) {
@@ -200,6 +199,11 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                         setHolderUUID(Optional.empty());
                     }
                     canUsePortals = true;
+                }
+                this.setNoGravity(true);
+            }else{
+                if(this.hasNoGravity()){
+                    this.setNoGravity(false);
                 }
             }
         }else{
@@ -238,6 +242,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     }
 
     public void fizzle() {
+        if (fizzling) return;
         getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get((PlayerEntity) ((ServerWorld) world).getEntity(value)).stopHolding());
         world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
         setNoGravity(true);
@@ -284,7 +289,8 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     @Override
     public void remove(RemovalReason reason) {
-        if (!world.isClient) getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get((PlayerEntity) ((ServerWorld) world).getEntity(value)).stopHolding());
+        if (!world.isClient) //noinspection DataFlowIssue
+            getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get(((ServerWorld) world).getEntity(value)).stopHolding());
         super.remove(reason);
     }
 

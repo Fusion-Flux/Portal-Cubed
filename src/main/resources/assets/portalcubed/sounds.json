@@ -1,16 +1,16 @@
 {
-	"gelrun": {
-		"subtitle": "subtitles.portalcubed.gelrun",
+	"gel_run": {
+		"subtitle": "subtitles.portalcubed.gel_run",
 		"sounds": [
-			"portalcubed:gelrun"
+			"portalcubed:gel_run"
 		]
 	},
-	"gelbounce": {
-		"subtitle": "subtitles.portalcubed.gelbounce",
+	"gel_bounce": {
+		"subtitle": "subtitles.portalcubed.gel_bounce",
 		"sounds": [
-			"portalcubed:gelbounce",
-			"portalcubed:gelbounce2",
-			"portalcubed:gelbounce3"
+			"portalcubed:gel_bounce",
+			"portalcubed:gel_bounce2",
+			"portalcubed:gel_bounce3"
 		]
 	},
 	"gel_splat": {
@@ -29,30 +29,30 @@
 			"portalcubed:paint_blob_splat_12"
 		]
 	},
-	"portalgunprimary": {
-		"subtitle": "subtitles.portalcubed.portalgunprimaryfire",
+	"portal_gun_primary": {
+		"subtitle": "subtitles.portalcubed.portal_gun_primary_fire",
 		"sounds": [
-			"portalcubed:portalgunprimary"
+			"portalcubed:portal_gun_primary"
 		]
 	},
-	"portalgunsecondary": {
-		"subtitle": "subtitles.portalcubed.portalgunsecondaryfire",
+	"portal_gun_secondary": {
+		"subtitle": "subtitles.portalcubed.portal_gun_secondary_fire",
 		"sounds": [
-			"portalcubed:portalgunsecondary"
+			"portalcubed:portal_gun_secondary"
 		]
 	},
-	"portalenter": {
-		"subtitle": "subtitles.portalcubed.portalenter",
+	"portal_enter": {
+		"subtitle": "subtitles.portalcubed.portal_enter",
 		"sounds": [
-			"portalcubed:portalenter1",
-			"portalcubed:portalenter2"
+			"portalcubed:portal_enter1",
+			"portalcubed:portal_enter2"
 		]
 	},
-	"portalexit": {
-		"subtitle": "subtitles.portalcubed.portalexit",
+	"portal_exit": {
+		"subtitle": "subtitles.portalcubed.portal_exit",
 		"sounds": [
-			"portalcubed:portalexit1",
-			"portalcubed:portalexit2"
+			"portalcubed:portal_exit1",
+			"portalcubed:portal_exit2"
 		]
 	},
 	"portal_open": {
@@ -86,31 +86,31 @@
 			"portalcubed:portal_invalid_surface"
 		]
 	},
-	"portalambiance": {
+	"portal_ambience": {
 		"sounds": [
 			"portalcubed:portal_ambient_loop"
 		]
 	},
-	"cubehithigh": {
+	"cube_hit_high": {
 		"sounds": [
 			"portalcubed:cube_hit_hard1",
 			"portalcubed:cube_hit_hard2"
 		]
 	},
-	"cubehitlow": {
+	"cube_hit_low": {
 		"sounds": [
 			"portalcubed:cube_hit_soft1",
 			"portalcubed:cube_hit_soft2"
 		]
 	},
-	"cubescrape": {
+	"cube_scrape": {
 		"sounds": [
 			"portalcubed:cube_scrape"
 		]
 	},
-	"companioncubeambiance": {
+	"companion_cube_ambiance": {
 		"sounds": [
-			"portalcubed:companioncubeambiance"
+			"portalcubed:companion_cube_ambiance"
 		]
 	},
 	"material_emancipation": {
@@ -186,94 +186,6 @@
 		]
 	},
 
-	"disc/subject_name_here": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_subject_name_here",
-				"stream": true
-			}
-		]
-	},
-	"disc/taste_of_blood": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_taste_of_blood",
-				"stream": true
-			}
-		]
-	},
-	"disc/android_hell": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_android_hell",
-				"stream": true
-			}
-		]
-	},
-	"disc/self_esteem_fund": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_self_esteem_fund",
-				"stream": true
-			}
-		]
-	},
-	"disc/procedural_jiggle_bone": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_procedural_jiggle_bone",
-				"stream": true
-			}
-		]
-	},
-	"disc/no_cake_for_you": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_no_cake_for_you",
-				"stream": true
-			}
-		]
-	},
-	"disc/4000_degrees_kelvin": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_4000_degrees_kelvin",
-				"stream": true
-			}
-		]
-	},
-	"disc/stop_what_you_are_doing": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_stop_what_you_are_doing",
-				"stream": true
-			}
-		]
-	},
-	"disc/party_escort": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_party_escort",
-				"stream": true
-			}
-		]
-	},
-	"disc/youre_not_a_good_person": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_youre_not_a_good_person",
-				"stream": true
-			}
-		]
-	},
-	"disc/you_cant_escape_you_know": {
-		"sounds": [
-			{
-				"name": "portalcubed:disc/portal_you_cant_escape_you_know",
-				"stream": true
-			}
-		]
-	},
 	"disc/still_alive": {
 		"sounds": [
 			{
@@ -294,6 +206,14 @@
 		"sounds": [
 			{
 				"name": "portalcubed:disc/portal2-13-want_you_gone",
+				"stream": true
+			}
+		]
+	},
+	"disc/reconstructing_more_science": {
+		"sounds": [
+			{
+				"name": "portalcubed:disc/portal2-01-reconstructing_more_science",
 				"stream": true
 			}
 		]

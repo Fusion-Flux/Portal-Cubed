@@ -96,7 +96,7 @@ public class RadioEntity extends CorePhysicsEntity  {
     @Override
     public void setHolderUUID(Optional<UUID> uuid) {
         super.setHolderUUID(uuid);
-        if (uuid != null) {
+        if (uuid.isPresent()) {
             setNotPlaying(!isNotPlaying());
         }
     }

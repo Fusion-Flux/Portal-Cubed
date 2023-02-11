@@ -40,7 +40,7 @@ public class PortalArmor implements ArmorMaterial {
 
     @Override
     public String getName() {
-        return "portalarmor";
+        return "portal_armor";
     }
 
     @Override

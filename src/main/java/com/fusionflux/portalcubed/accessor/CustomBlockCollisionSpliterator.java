@@ -11,6 +11,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.CollisionView;
 import org.jetbrains.annotations.Nullable;
 
 public class CustomBlockCollisionSpliterator extends AbstractIterator<VoxelShape> {
@@ -25,6 +26,11 @@ public class CustomBlockCollisionSpliterator extends AbstractIterator<VoxelShape
     @Nullable
     private BlockView chunk;
     private long chunkPos;
+
+    public CustomBlockCollisionSpliterator(CollisionView world, @Nullable Entity entity, Box box) {
+        // Note: Might explode if ClientWorld is not compatible with CustomCollisionWorld
+        this((CustomCollisionView)world, entity, box, VoxelShapes.fullCube(), false);
+    }
 
     public CustomBlockCollisionSpliterator(CustomCollisionView world, @Nullable Entity entity, Box box, VoxelShape portalBox) {
         this(world, entity, box, portalBox,false);

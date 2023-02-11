@@ -235,6 +235,10 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                     gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(zOffset / Math.abs(zOffset)) * .004)), GravityChangerAPI.getGravityDirection(entity)));
                 }
                 entity.setVelocity(gotVelocity);
+
+                if (entity.isSneaking() && gotVelocity.lengthSquared() < 0.15 * 0.15 && !entity.doesNotCollide(gotVelocity.x, gotVelocity.y, gotVelocity.z)) {
+                    ((EntityAttachments)entity).setCFG();
+                }
             }
         } else {
             if (!world.isClient()) {

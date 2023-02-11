@@ -146,7 +146,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             VoxelShape omittedDirections = VoxelShapes.empty();
 
             for (ExperimentalPortal portal : list) {
-                if (portal.calculateCuttoutBox() != nullBox) {
+                if (portal.calculateCuttoutBox() != nullBox && portal.calculateBoundsCheckBox() != nullBox) {
                     if (portal.getActive())
                         omittedDirections = VoxelShapes.union(omittedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
                 }
@@ -229,7 +229,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
                 if (otherDirec != null) {
                     double teleportYOffset = switch (otherDirec) {
-                        case DOWN -> 2;
+                        case DOWN -> thisentity.getEyeHeight(thisentity.getPose());
                         case NORTH, SOUTH, EAST, WEST -> {
                             if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
                                 yield portal.getPos().y - thisentity.getPos().y;
@@ -542,4 +542,12 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         return shape.getBoundingBoxes().stream().anyMatch(box::intersects);
     }
 
+    @Override
+    public boolean cfg() {
+        return false;
+    }
+
+    @Override
+    public void setCFG() {
+    }
 }

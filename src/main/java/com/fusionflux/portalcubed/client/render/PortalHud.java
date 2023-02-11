@@ -17,8 +17,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.GameMode;
 
 public class PortalHud {
-    private static final Identifier ROUND_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/gui/activeportalindicator.png");
-    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/gui/activeportalindicator_square.png");
+    private static final Identifier ROUND_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/gui/active_portal_indicator.png");
+    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/gui/active_portal_indicator_square.png");
 
     public static void renderPortalLeft(@SuppressWarnings("unused") MatrixStack matrices, @SuppressWarnings("unused") float tickDelta) {
         //noinspection DataFlowIssue

@@ -1,12 +1,12 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -14,19 +14,19 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.math.*;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-
-import org.quiltmc.qsl.networking.api.PacketByteBufs;
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 public class ExperimentalPortal extends Entity {
 
@@ -73,6 +73,9 @@ public class ExperimentalPortal extends Entity {
         this.getDataTracker().startTracking(OWNER_UUID, Optional.empty());
     }
 
+
+
+
     @Override
     protected void readCustomDataFromNbt(NbtCompound compoundTag) {
         this.setColor(compoundTag.getInt("color"));
@@ -116,17 +119,7 @@ public class ExperimentalPortal extends Entity {
 
     @Override
     public Packet<?> createSpawnPacket() {
-        final var packet = PacketByteBufs.create();
-
-        packet.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()))
-                .writeUuid(this.getUuid())
-                .writeVarInt(this.getId())
-                .writeDouble(this.getX())
-                .writeDouble(this.getY())
-                .writeDouble(this.getZ())
-                .writeByte(MathHelper.floor(this.getPitch() * 256.0F / 360.0F))
-                .writeByte(MathHelper.floor(this.getYaw() * 256.0F / 360.0F));
-        return ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.SPAWN_PACKET, packet);
+        return new EntitySpawnS2CPacket(this);
     }
 
     public Optional<UUID> getLinkedPortalUUID() {
@@ -208,6 +201,7 @@ public class ExperimentalPortal extends Entity {
     public void tick() {
             this.calculateBoundingBox();
             this.calculateCuttoutBox();
+            this.calculateBoundsCheckBox();
         if(!this.world.isClient)
             ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x,getChunkPos().z,true);
 
@@ -221,9 +215,9 @@ public class ExperimentalPortal extends Entity {
         }
 
         if (!this.world.isClient && getAxisW().isPresent()) {
-            ExperimentalPortal otherPortal = 
+            ExperimentalPortal otherPortal =
                 this.getLinkedPortalUUID().isPresent()
-                    ? (ExperimentalPortal)((ServerWorld)world).getEntity(this.getLinkedPortalUUID().get())
+                    ? (ExperimentalPortal)((Accessors) world).getEntity(this.getLinkedPortalUUID().get())
                     : null;
 
             setActive(otherPortal != null);
@@ -245,7 +239,7 @@ public class ExperimentalPortal extends Entity {
 
             Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
             boolean topValidBlock=false;
-            if(this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.GEL_CHECK_TAG)&&this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+            if(this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
                 assert portalFacing != null;
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
 
@@ -254,7 +248,7 @@ public class ExperimentalPortal extends Entity {
                 topValidBlock=true;
             }
             boolean bottomValidBlock=false;
-            if(this.world.getBlockState(bottom).isIn(PortalCubedBlocks.GEL_CHECK_TAG)&&this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+            if(this.world.getBlockState(bottom).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
                 assert portalFacing != null;
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
                 bottomValidBlock = this.world.getBlockState(bottom).get(booleanProperty);
@@ -266,7 +260,7 @@ public class ExperimentalPortal extends Entity {
                     (!this.world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) ||
                             !topValidBlock ||
                             !bottomValidBlock)||
-                    ((!this.world.getBlockState(this.getBlockPos()).isAir())&& !this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN) )|| (!this.world.getBlockState(bottom).isAir() && !this.world.getBlockState(bottom).isIn(PortalCubedBlocks.ALLOW_PORTAL_IN))) {
+                    ((!this.world.getBlockState(this.getBlockPos()).isAir())&& !allowedPortalBlock(world, getBlockPos()) )|| (!this.world.getBlockState(bottom).isAir() && !allowedPortalBlock(world, bottom))) {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
             }
@@ -274,21 +268,27 @@ public class ExperimentalPortal extends Entity {
         super.tick();
     }
 
+    public static boolean allowedPortalBlock(World world, BlockPos pos) {
+        final BlockState state = world.getBlockState(pos);
+        return state.isIn(PortalCubedBlocks.PORTAL_NONSOLID) || state.getCollisionShape(world, pos).isEmpty();
+    }
+
     public void syncRotations(){
         this.setBoundingBox(nullBox);
         this.setCutoutBoundingBox(nullBox);
         this.calculateBoundingBox();
         this.calculateCuttoutBox();
+        this.calculateBoundsCheckBox();
     }
 
     @Override
     protected Box calculateBoundingBox() {
-        if (getAxisW().isEmpty()) {
-            // it may be called when the portal is not yet initialized
-            setBoundingBox(nullBox);
-            return nullBox;
-        }
-            double w =.9;
+            if (getAxisW().isEmpty()) {
+                // it may be called when the portal is not yet initialized
+                setBoundingBox(nullBox);
+                return nullBox;
+            }
+            double w = .9;
             double h = 1.9;
 
 
@@ -330,6 +330,26 @@ public class ExperimentalPortal extends Entity {
         return portalBox;
     }
 
+
+    public Box calculateBoundsCheckBox() {
+        if (getAxisW().isEmpty()) {
+            return nullBox;
+        }
+        double w = .9;
+        double h = 1.9;
+        return new Box(
+                getBoundsCheckPointInPlane(w / 2, h / 2)
+                        .add(getNormal().multiply(10)),
+                getBoundsCheckPointInPlane(-w / 2, -h / 2)
+                        .add(getNormal().multiply(-10))
+        ).union(new Box(
+                getBoundsCheckPointInPlane(-w / 2, h / 2)
+                        .add(getNormal().multiply(10)),
+                getBoundsCheckPointInPlane(w / 2, -h / 2)
+                        .add(getNormal().multiply(-10))
+        ));
+    }
+
     public final Box getCutoutBoundingBox() {
         return this.cutoutBoundingBox;
     }
@@ -340,6 +360,10 @@ public class ExperimentalPortal extends Entity {
 
     public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
         return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*-5,getFacingDirection().getUnitVector().getY()*-5,getFacingDirection().getUnitVector().getZ()*-5);
+    }
+
+    public Vec3d getBoundsCheckPointInPlane(double xInPlane, double yInPlane) {
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane));
     }
 
     public Vec3d getPointInPlane(double xInPlane, double yInPlane) {

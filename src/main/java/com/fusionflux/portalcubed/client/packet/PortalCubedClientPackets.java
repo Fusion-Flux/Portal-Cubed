@@ -5,65 +5,32 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.util.PortalCubedComponents;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
-import java.util.UUID;
-
 
 public class PortalCubedClientPackets {
-    public static final Identifier SPAWN_PACKET = new Identifier(PortalCubed.MOD_ID, "spawn_packet");
     public static final Identifier FIZZLE_PACKET = new Identifier(PortalCubed.MOD_ID, "fizzle");
     public static final Identifier HAND_SHAKE_PACKET = new Identifier(PortalCubed.MOD_ID, "hand_shake");
     public static final Identifier GEL_OVERLAY_PACKET = new Identifier(PortalCubed.MOD_ID, "gel_overlay");
     public static final Identifier ROCKET_TURRET_UPDATE_PACKET = new Identifier(PortalCubed.MOD_ID, "rocket_turret_update");
+    public static final Identifier ENABLE_CFG = new Identifier(PortalCubed.MOD_ID, "enable_cfg");
 
     @ClientOnly
     public static void registerPackets() {
-        ClientPlayNetworking.registerGlobalReceiver(SPAWN_PACKET, PortalCubedClientPackets::onEntitySpawn);
         ClientPlayNetworking.registerGlobalReceiver(FIZZLE_PACKET, PortalCubedClientPackets::onFizzle);
         ClientPlayNetworking.registerGlobalReceiver(HAND_SHAKE_PACKET, PortalCubedClientPackets::onHandShake);
         ClientPlayNetworking.registerGlobalReceiver(GEL_OVERLAY_PACKET, PortalCubedClientPackets::onGelOverlay);
         ClientPlayNetworking.registerGlobalReceiver(ROCKET_TURRET_UPDATE_PACKET, PortalCubedClientPackets::onRocketTurretUpdate);
-    }
-
-    @ClientOnly
-    public static void onEntitySpawn(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        EntityType<?> type = Registry.ENTITY_TYPE.get(buf.readVarInt());
-        UUID entityUUID = buf.readUuid();
-        int entityID = buf.readVarInt();
-        double x = buf.readDouble();
-        double y = buf.readDouble();
-        double z = buf.readDouble();
-        float pitch = (buf.readByte() * 360) / 256.0F;
-        float yaw = (buf.readByte() * 360) / 256.0F;
-        ClientWorld world = client.world;
-        Entity entity = type.create(world);
-        client.execute(() -> {
-            if (entity != null) {
-                entity.updatePosition(x, y, z);
-                entity.syncPacketPositionCodec(x, y, z);
-                entity.setPitch(pitch);
-                entity.setYaw(yaw);
-                entity.setId(entityID);
-                entity.setUuid(entityUUID);
-                world.addEntity(entityID, entity);
-            }
-        });
+        ClientPlayNetworking.registerGlobalReceiver(ENABLE_CFG, PortalCubedClientPackets::onEnableCfg);
     }
 
     @ClientOnly
@@ -71,9 +38,6 @@ public class PortalCubedClientPackets {
         final int entityId = buf.readVarInt();
         client.execute(() -> {
             if (client.world.getEntityById(entityId) instanceof CorePhysicsEntity physicsEntity) {
-                physicsEntity.getHolderUUID().ifPresent(value -> {
-                    if (client.player.getUuid().equals(value)) PortalCubedComponents.HOLDER_COMPONENT.get(client.player).stopHolding();
-                });
                 physicsEntity.startFizzlingProgress();
             }
         });
@@ -112,9 +76,14 @@ public class PortalCubedClientPackets {
                         case RocketTurretBlockEntity.UPDATE_LOCKED_TICKS -> entity.setLockedTicks((int)arg);
                     }
                 },
-                () -> PortalCubed.LOGGER.warn("Received rocket_turret_update for unloaded rocket turret at {}", pos)
+                () -> PortalCubed.LOGGER.warn("Received rocket_turret_update for unloaded rocket turret at {}.", pos)
             )
         );
+    }
+
+    @ClientOnly
+    public static void onEnableCfg(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        PortalCubedClient.allowCfg = buf.readBoolean();
     }
 
 }

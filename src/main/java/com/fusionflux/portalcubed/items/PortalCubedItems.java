@@ -57,20 +57,10 @@ public class PortalCubedItems {
 
     public static final Item HAMMER = new Item(new QuiltItemSettings().group(TestingElementsGroup).maxCount(1));
 
-    public static final Item SUBJECT_NAME_HERE = new MusicDiscItem(15, new SoundEvent(id("disc/subject_name_here")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 105);
-    public static final Item TASTE_OF_BLOOD = new MusicDiscItem(15, new SoundEvent(id("disc/taste_of_blood")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 187);
-    public static final Item ANDROID_HELL = new MusicDiscItem(15, new SoundEvent(id("disc/android_hell")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 226);
-    public static final Item SELF_ESTEEM_FUND = new MusicDiscItem(15, new SoundEvent(id("disc/self_esteem_fund")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 211);
-    public static final Item PROCEDURAL_JIGGLE_BONE = new MusicDiscItem(15, new SoundEvent(id("disc/procedural_jiggle_bone")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 275);
-    public static final Item NO_CAKE_FOR_YOU = new MusicDiscItem(15, new SoundEvent(id("disc/no_cake_for_you")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 246);
-    public static final Item _4000_DEGREES_KELVIN = new MusicDiscItem(15, new SoundEvent(id("disc/4000_degrees_kelvin")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 62);
-    public static final Item STOP_WHAT_YOU_ARE_DOING = new MusicDiscItem(15, new SoundEvent(id("disc/stop_what_you_are_doing")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 241);
-    public static final Item PARTY_ESCORT = new MusicDiscItem(15, new SoundEvent(id("disc/party_escort")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 262);
-    public static final Item YOURE_NOT_A_GOOD_PERSON = new MusicDiscItem(15, new SoundEvent(id("disc/youre_not_a_good_person")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 85);
-    public static final Item YOU_CANT_ESCAPE_YOU_KNOW = new MusicDiscItem(15, new SoundEvent(id("disc/you_cant_escape_you_know")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 385);
     public static final Item STILL_ALIVE = new MusicDiscItem(15, new SoundEvent(id("disc/still_alive")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 177);
     public static final Item CARA_MIA_ADDIO = new MusicDiscItem(15, new SoundEvent(id("disc/cara_mia_addio")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 154);
     public static final Item WANT_YOU_GONE = new MusicDiscItem(15, new SoundEvent(id("disc/want_you_gone")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 142);
+    public static final Item RECONSTRUCTING_MORE_SCIENCE = new MusicDiscItem(15, new SoundEvent(id("disc/reconstructing_more_science")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 157);
 
     public static void registerItems() {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "long_fall_boots"), LONG_FALL_BOOTS);
@@ -111,19 +101,9 @@ public class PortalCubedItems {
 
         Registry.register(Registry.ITEM, id("hammer"), HAMMER);
 
-        Registry.register(Registry.ITEM, id("music_disc_subject_name_here"), SUBJECT_NAME_HERE);
-        Registry.register(Registry.ITEM, id("music_disc_taste_of_blood"), TASTE_OF_BLOOD);
-        Registry.register(Registry.ITEM, id("music_disc_android_hell"), ANDROID_HELL);
-        Registry.register(Registry.ITEM, id("music_disc_self_esteem_fund"), SELF_ESTEEM_FUND);
-        Registry.register(Registry.ITEM, id("music_disc_procedural_jiggle_bone"), PROCEDURAL_JIGGLE_BONE);
-        Registry.register(Registry.ITEM, id("music_disc_no_cake_for_you"), NO_CAKE_FOR_YOU);
-        Registry.register(Registry.ITEM, id("music_disc_4000_degrees_kelvin"), _4000_DEGREES_KELVIN);
-        Registry.register(Registry.ITEM, id("music_disc_stop_what_you_are_doing"), STOP_WHAT_YOU_ARE_DOING);
-        Registry.register(Registry.ITEM, id("music_disc_party_escort"), PARTY_ESCORT);
-        Registry.register(Registry.ITEM, id("music_disc_youre_not_a_good_person"), YOURE_NOT_A_GOOD_PERSON);
-        Registry.register(Registry.ITEM, id("music_disc_you_cant_escape_you_know"), YOU_CANT_ESCAPE_YOU_KNOW);
         Registry.register(Registry.ITEM, id("music_disc_still_alive"), STILL_ALIVE);
         Registry.register(Registry.ITEM, id("music_disc_cara_mia_addio"), CARA_MIA_ADDIO);
         Registry.register(Registry.ITEM, id("music_disc_want_you_gone"), WANT_YOU_GONE);
+        Registry.register(Registry.ITEM, id("music_disc_reconstructing_more_science"), RECONSTRUCTING_MORE_SCIENCE);
     }
 }

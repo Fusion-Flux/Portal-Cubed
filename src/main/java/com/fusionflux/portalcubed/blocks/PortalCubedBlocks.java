@@ -73,6 +73,9 @@ public class PortalCubedBlocks {
 
     public static final PowerBlock POWER_BLOCK = new PowerBlock(QuiltBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.8F).dropsNothing().nonOpaque());
 
+    public static final Block VELOCITY_HELPER = new VelocityHelperBlock(QuiltBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.8F).dropsNothing().nonOpaque());
+    public static final BlockEntityType<VelocityHelperBlockEntity> VELOCITY_HELPER_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(VelocityHelperBlockEntity::new, VELOCITY_HELPER).build();
+
     public static final FizzlerBlock FIZZLER = new FizzlerBlock(QuiltBlockSettings.of(Material.PORTAL).noCollision().strength(-1, 3600000));
     public static final FizzlerEmitter FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE), FIZZLER);
     public static final FizzlerBlock PORTAL_1_FIZZLER = new FizzlerBlock(QuiltBlockSettings.copyOf(FIZZLER));
@@ -108,12 +111,13 @@ public class PortalCubedBlocks {
     public static final OldApFloorButtonBlock OLD_AP_FLOOR_BUTTON = new OldApFloorButtonBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<OldApFloorButtonBlockEntity> OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY;
 
-//    public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
+    public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f,3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static BlockEntityType<RocketTurretBlockEntity> ROCKET_TURRET_BLOCK_ENTITY;
 
     public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "cant_place_portal_on"));
-    public static final TagKey<Block> GEL_CHECK_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "gelchecktag"));
-    public static final TagKey<Block> ALLOW_PORTAL_IN = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "allowinside"));
+    public static final TagKey<Block> PORTAL_NONSOLID = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "portal_nonsolid"));
+    public static final TagKey<Block> PORTAL_SOLID = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "portal_solid"));
+    public static final TagKey<Block> PORTALABLE_GELS = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "portalable_gels"));
 
     public static void registerBlocks() {
         Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "base_gel"), BASE_GEL);
@@ -201,13 +205,16 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("old_ap_floor_button"), OLD_AP_FLOOR_BUTTON);
         Registry.register(Registry.ITEM, id("old_ap_floor_button"), new BlockItem(OLD_AP_FLOOR_BUTTON, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        // TODO: Implement
-//        ROCKET_TURRET_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("rocket_turret"), QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build(null));
-//        Registry.register(Registry.BLOCK, id("rocket_turret"), ROCKET_TURRET);
-//        Registry.register(Registry.ITEM, id("rocket_turret"), new BlockItem(ROCKET_TURRET, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+        ROCKET_TURRET_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, id("rocket_turret"), QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build(null));
+        Registry.register(Registry.BLOCK, id("rocket_turret"), ROCKET_TURRET);
+        Registry.register(Registry.ITEM, id("rocket_turret"), new BlockItem(ROCKET_TURRET, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
         Registry.register(Registry.BLOCK, id("power_block"), POWER_BLOCK);
         Registry.register(Registry.ITEM, id("power_block"), new BlockItem(POWER_BLOCK, new Item.Settings().rarity(Rarity.EPIC).group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("velocity_helper"), VELOCITY_HELPER);
+        Registry.register(Registry.ITEM, id("velocity_helper"), new BlockItem(VELOCITY_HELPER, new Item.Settings().rarity(Rarity.EPIC).group(PortalCubed.TestingElementsGroup)));
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("velocity_helper"), VELOCITY_HELPER_BLOCK_ENTITY);
 
         Registry.register(Registry.BLOCK, id("fizzler"), FIZZLER);
         Registry.register(Registry.BLOCK, id("fizzler_emitter"), FIZZLER_EMITTER);
@@ -221,13 +228,13 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("old_aperture_fizzler_emitter"), OLD_APERTURE_FIZZLER_EMITTER);
         Registry.register(Registry.ITEM, id("old_aperture_fizzler_emitter"), new BlockItem(OLD_APERTURE_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
-        Registry.register(Registry.BLOCK, id("death_fizzler"), DEATH_FIZZLER);
-        Registry.register(Registry.BLOCK, id("death_fizzler_emitter"), DEATH_FIZZLER_EMITTER);
-        Registry.register(Registry.ITEM, id("death_fizzler_emitter"), new BlockItem(DEATH_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
-
         Registry.register(Registry.BLOCK, id("laser_fizzler"), LASER_FIZZLER);
         Registry.register(Registry.BLOCK, id("laser_fizzler_emitter"), LASER_FIZZLER_EMITTER);
         Registry.register(Registry.ITEM, id("laser_fizzler_emitter"), new BlockItem(LASER_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
+
+        Registry.register(Registry.BLOCK, id("death_fizzler"), DEATH_FIZZLER);
+        Registry.register(Registry.BLOCK, id("death_fizzler_emitter"), DEATH_FIZZLER_EMITTER);
+        Registry.register(Registry.ITEM, id("death_fizzler_emitter"), new BlockItem(DEATH_FIZZLER_EMITTER, new Item.Settings().group(PortalCubed.TestingElementsGroup)));
 
         Registry.register(Registry.BLOCK, id("old_aperture_death_fizzler"), OLD_APERTURE_DEATH_FIZZLER);
         Registry.register(Registry.BLOCK, id("old_aperture_death_fizzler_emitter"), OLD_APERTURE_DEATH_FIZZLER_EMITTER);

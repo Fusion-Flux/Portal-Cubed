@@ -30,4 +30,8 @@ public interface EntityAttachments {
 
     void setMaxFallHeight(double maxFallHeight);
 
+    boolean cfg();
+
+    void setCFG();
+
 }
