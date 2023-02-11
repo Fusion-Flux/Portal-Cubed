@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.NeurotoxinBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;

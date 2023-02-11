@@ -67,6 +67,9 @@ public class RocketTurretBlockEntity extends BlockEntity {
         nbt.putFloat("Pitch", pitch);
         nbt.putFloat("LockedTicks", lockedTicks);
         nbt.putUuid("RocketUUID", rocketUuid);
+        if (destAngle != null) {
+            nbt.putIntArray("DestAngle", new int[] {Float.floatToRawIntBits(destAngle.x), Float.floatToRawIntBits(destAngle.y)});
+        }
     }
 
     @Override
@@ -76,6 +79,13 @@ public class RocketTurretBlockEntity extends BlockEntity {
         pitch = nbt.getFloat("Pitch");
         lockedTicks = nbt.getInt("LockedTicks");
         rocketUuid = nbt.getUuid("RocketUUID");
+        final int[] destAngleA = nbt.getIntArray("DestAngle");
+        if (destAngleA.length >= 2) {
+            destAngle = new Vec2f(
+                Float.intBitsToFloat(destAngleA[0]),
+                Float.intBitsToFloat(destAngleA[1])
+            );
+        }
     }
 
     public void setAngle(Pair<Float, Float> angle) {
@@ -203,9 +213,11 @@ public class RocketTurretBlockEntity extends BlockEntity {
                 fire();
                 syncLockedTicks();
             } else {
-                setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, destAngle.y));
-                setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, destAngle.x));
-                syncAngle();
+                if (destAngle != null) {
+                    setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, destAngle.y));
+                    setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, destAngle.x));
+                    syncAngle();
+                }
                 if (lockedTicks == 9) {
                     world.playSound(null, pos, PortalCubedSounds.ROCKET_LOCKED_EVENT, SoundCategory.HOSTILE, 1f, 1f);
                 } else if (

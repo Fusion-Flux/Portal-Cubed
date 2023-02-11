@@ -21,20 +21,20 @@ import java.util.Map;
 @Mixin(ModelLoader.class)
 public abstract class ModelLoaderMixin {
 
-	@Shadow
-	@Final
-	private Map<Triple<Identifier, AffineTransformation, Boolean>, BakedModel> bakedModelCache;
+    @Shadow
+    @Final
+    private Map<Triple<Identifier, AffineTransformation, Boolean>, BakedModel> bakedModelCache;
 
-	@Inject(method = "bake", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-	private void portalcubed$injectEmissiveModels(Identifier id, ModelBakeSettings settings, CallbackInfoReturnable<BakedModel> cir, Triple<Identifier, AffineTransformation, Boolean> triple) {
-		if (bakedModelCache.get(triple) instanceof EmissiveBakedModel || !id.getNamespace().equals(PortalCubed.MOD_ID)) return;
+    @Inject(method = "bake", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    private void portalcubed$injectEmissiveModels(Identifier id, ModelBakeSettings settings, CallbackInfoReturnable<BakedModel> cir, Triple<Identifier, AffineTransformation, Boolean> triple) {
+        if (bakedModelCache.get(triple) instanceof EmissiveBakedModel || !id.getNamespace().equals(PortalCubed.MOD_ID)) return;
 
-		final BakedModel modelToWrap = cir.getReturnValue();
-		final BakedModel customModel = EmissiveBakedModel.wrap(id, modelToWrap).orElse(modelToWrap);
-		if (customModel == null || customModel == modelToWrap) return;
+        final BakedModel modelToWrap = cir.getReturnValue();
+        final BakedModel customModel = EmissiveBakedModel.wrap(id, modelToWrap).orElse(modelToWrap);
+        if (customModel == null || customModel == modelToWrap) return;
 
-		bakedModelCache.replace(triple, customModel);
-		cir.setReturnValue(customModel);
-	}
+        bakedModelCache.replace(triple, customModel);
+        cir.setReturnValue(customModel);
+    }
 
 }

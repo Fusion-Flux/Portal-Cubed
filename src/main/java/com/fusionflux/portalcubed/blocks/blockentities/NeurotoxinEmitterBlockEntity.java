@@ -19,7 +19,7 @@ public class NeurotoxinEmitterBlockEntity extends BlockEntity {
     private final BlockPos.Mutable obstructorPos;
 
     public NeurotoxinEmitterBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.NEUROTOXIN_EMITTER_ENTITY,pos,state);
+        super(PortalCubedBlocks.NEUROTOXIN_EMITTER_ENTITY, pos, state);
         this.obstructorPos = pos.mutableCopy();
     }
 

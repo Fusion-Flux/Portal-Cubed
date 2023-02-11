@@ -2,7 +2,10 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.*;
+import com.fusionflux.portalcubed.entity.OldApCubeEntity;
+import com.fusionflux.portalcubed.entity.Portal1CompanionCubeEntity;
+import com.fusionflux.portalcubed.entity.Portal1StorageCubeEntity;
+import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -26,7 +29,7 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
 
 
     public OldApFloorButtonBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY,pos,state);
+        super(PortalCubedBlocks.OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY, pos, state);
 
     }
 
@@ -38,18 +41,18 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
 
             Box portalCheckBox = new Box(transPos);
 
-            portalCheckBox = portalCheckBox.contract(Math.abs(storedDirecOpp.getOffsetX())*.75,Math.abs(storedDirecOpp.getOffsetY())*.75,Math.abs(storedDirecOpp.getOffsetZ())*.75).offset(storedDirecOpp.getOffsetX()*.5,storedDirecOpp.getOffsetY()*.5,storedDirecOpp.getOffsetZ()*.5);
+            portalCheckBox = portalCheckBox.contract(Math.abs(storedDirecOpp.getOffsetX()) * .75, Math.abs(storedDirecOpp.getOffsetY()) * .75, Math.abs(storedDirecOpp.getOffsetZ()) * .75).offset(storedDirecOpp.getOffsetX() * .5, storedDirecOpp.getOffsetY() * .5, storedDirecOpp.getOffsetZ() * .5);
             List<LivingEntity> entities = world.getNonSpectatingEntities(LivingEntity.class, portalCheckBox);
 
             boolean isPowered = false;
             for (LivingEntity living : entities) {
-                if (living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof CompanionCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity || living instanceof RedirectionCubeEntity) {
+                if (living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity) {
                     isPowered = true;
                     break;
                 }
             }
 
-            blockEntity.updateState(state,isPowered);
+            blockEntity.updateState(state, isPowered);
 
         }
 
@@ -57,8 +60,8 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
     }
 
     public void updateState(BlockState state, boolean toggle) {
-        if(world != null) {
-            world.setBlockState(pos,state.with(Properties.ENABLED,toggle),3);
+        if (world != null) {
+            world.setBlockState(pos, state.with(Properties.ENABLED, toggle), 3);
         }
     }
 

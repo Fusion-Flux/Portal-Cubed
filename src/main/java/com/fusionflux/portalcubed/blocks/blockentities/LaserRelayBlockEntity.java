@@ -20,7 +20,7 @@ public class LaserRelayBlockEntity extends BlockEntity {
 
 
     public LaserRelayBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.LASER_RELAY_ENTITY,pos,state);
+        super(PortalCubedBlocks.LASER_RELAY_ENTITY, pos, state);
 
     }
 
@@ -30,7 +30,7 @@ public class LaserRelayBlockEntity extends BlockEntity {
             BlockPos transPos = pos.offset(storedDirec);
             BlockState neighborState = world.getBlockState(transPos);
             boolean isPowered = neighborState.getBlock().equals(PortalCubedBlocks.LASER);
-            blockEntity.updateState(state,isPowered);
+            blockEntity.updateState(state, isPowered);
 
         }
 
@@ -38,8 +38,8 @@ public class LaserRelayBlockEntity extends BlockEntity {
     }
 
     public void updateState(BlockState state, boolean toggle) {
-        if(world != null) {
-            world.setBlockState(pos,state.with(Properties.ENABLED,toggle),3);
+        if (world != null) {
+            world.setBlockState(pos, state.with(Properties.ENABLED, toggle), 3);
         }
     }
 

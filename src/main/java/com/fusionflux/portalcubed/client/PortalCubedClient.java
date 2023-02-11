@@ -127,7 +127,7 @@ public class PortalCubedClient implements ClientModInitializer {
     }
 
     private void registerEmissiveModels(ModContainer mod) {
-        try (final Reader reader = Files.newBufferedReader(mod.getPath("emissives.json"), StandardCharsets.UTF_8)) {
+        try (Reader reader = Files.newBufferedReader(mod.getPath("emissives.json"), StandardCharsets.UTF_8)) {
             for (final var entry : JsonHelper.deserialize(reader).entrySet()) {
                 EmissiveSpriteRegistry.register(id(entry.getKey()), id(entry.getValue().getAsString()));
             }

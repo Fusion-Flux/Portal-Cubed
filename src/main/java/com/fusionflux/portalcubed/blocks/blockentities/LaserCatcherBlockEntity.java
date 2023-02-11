@@ -21,7 +21,7 @@ public class LaserCatcherBlockEntity extends BlockEntity {
 
 
     public LaserCatcherBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.LASER_CATCHER_ENTITY,pos,state);
+        super(PortalCubedBlocks.LASER_CATCHER_ENTITY, pos, state);
 
     }
 
@@ -31,42 +31,42 @@ public class LaserCatcherBlockEntity extends BlockEntity {
             BlockPos transPos = pos.offset(storedDirec);
             BlockState neighborState = world.getBlockState(transPos);
             boolean isPowered = false;
-            if(neighborState.getBlock().equals(PortalCubedBlocks.LASER)){
-                if(!neighborState.get(CustomProperties.REFLECT)){
-                    if(neighborState.get(Properties.NORTH) && storedDirec.equals(Direction.SOUTH)){
+            if (neighborState.getBlock().equals(PortalCubedBlocks.LASER)) {
+                if (!neighborState.get(CustomProperties.REFLECT)) {
+                    if (neighborState.get(Properties.NORTH) && storedDirec.equals(Direction.SOUTH)) {
                         isPowered = true;
                     }
-                    if(neighborState.get(Properties.SOUTH) && storedDirec.equals(Direction.NORTH)){
+                    if (neighborState.get(Properties.SOUTH) && storedDirec.equals(Direction.NORTH)) {
                         isPowered = true;
                     }
-                    if(neighborState.get(Properties.EAST) && storedDirec.equals(Direction.WEST)){
+                    if (neighborState.get(Properties.EAST) && storedDirec.equals(Direction.WEST)) {
                         isPowered = true;
                     }
-                    if(neighborState.get(Properties.WEST) && storedDirec.equals(Direction.EAST)){
+                    if (neighborState.get(Properties.WEST) && storedDirec.equals(Direction.EAST)) {
                         isPowered = true;
                     }
-                    if(neighborState.get(Properties.UP) && storedDirec.equals(Direction.DOWN)){
+                    if (neighborState.get(Properties.UP) && storedDirec.equals(Direction.DOWN)) {
                         isPowered = true;
                     }
-                    if(neighborState.get(Properties.DOWN) && storedDirec.equals(Direction.UP)){
+                    if (neighborState.get(Properties.DOWN) && storedDirec.equals(Direction.UP)) {
                         isPowered = true;
                     }
-                }else{
-                    if(neighborState.getProperties().contains(Properties.FACING)) {
-                        if(neighborState.get(Properties.FACING).equals(storedDirec)){
+                } else {
+                    if (neighborState.getProperties().contains(Properties.FACING)) {
+                        if (neighborState.get(Properties.FACING).equals(storedDirec)) {
                             isPowered = true;
                         }
                     }
                 }
             }
-            blockEntity.updateState(state,isPowered);
+            blockEntity.updateState(state, isPowered);
 
         }
     }
 
     public void updateState(BlockState state, boolean toggle) {
-        if(world != null) {
-            world.setBlockState(pos,state.with(Properties.ENABLED,toggle),3);
+        if (world != null) {
+            world.setBlockState(pos, state.with(Properties.ENABLED, toggle), 3);
         }
     }
 

@@ -33,35 +33,35 @@ public class LilPineappleRenderer extends MobEntityRenderer<LilPineappleEntity, 
 
     @Override
     public Identifier getTexture(LilPineappleEntity entity) {
-        if(entity.getCustomName() != null) {
+        if (entity.getCustomName() != null) {
             if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "proud")) {
                 return PROUD_TEXTURE;
             }
-            if(Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "ace")){
+            if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "ace")) {
                 return ACE_TEXTURE;
             }
-            if(Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "aro")){
+            if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "aro")) {
                 return ARO_TEXTURE;
             }
-            if(Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "agender")){
+            if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "agender")) {
                 return AGENDER_TEXTURE;
             }
-            if(Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "bi")){
+            if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "bi")) {
                 return BI_TEXTURE;
             }
-            if(Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "genderfluid")){
+            if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "genderfluid")) {
                 return GENDERFLUID_TEXTURE;
             }
-            if(Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "lesbian")){
+            if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "lesbian")) {
                 return LESBIAN_TEXTURE;
             }
-            if(Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "nonbinary")){
+            if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "nonbinary")) {
                 return NONBINARY_TEXTURE;
             }
-            if(Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "pan")){
+            if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "pan")) {
                 return PAN_TEXTURE;
             }
-            if(Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "trans")){
+            if (Objects.equals(entity.getCustomName().getString().toLowerCase(Locale.ROOT), "trans")) {
                 return TRANS_TEXTURE;
             }
         }
