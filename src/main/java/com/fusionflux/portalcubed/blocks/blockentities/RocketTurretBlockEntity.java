@@ -33,7 +33,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
     public static final int UPDATE_ANGLE = 0;
     public static final int UPDATE_LOCKED_TICKS = 1;
 
-    public static final int LOCK_TICKS = 25;
+    public static final int LOCK_TICKS = 30;
 
     private static final Vec3d GUN_OFFSET = new Vec3d(0.5, 1.71875, 0.09375);
 
@@ -50,6 +50,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     public final AnimationState activatingAnimation = new AnimationState();
     public final AnimationState deactivatingAnimation = new AnimationState();
+    public final AnimationState shootAnimation = new AnimationState();
 
     public RocketTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -87,7 +88,10 @@ public class RocketTurretBlockEntity extends BlockEntity {
     }
 
     public void fire() {
-        if (world == null || world.isClient) return;
+        if (world == null || world.isClient) {
+            PortalCubed.LOGGER.warn("RocketTurretBlockEntity.fire() should only be called on the server, not the client.");
+            return;
+        }
         // TODO: Implement
         PortalCubed.LOGGER.info("BAM");
     }
@@ -184,6 +188,9 @@ public class RocketTurretBlockEntity extends BlockEntity {
                 // We can pass null here because of ShapeContextMixin
                 null
             )).getPos();
+            if (lockedTicks == 1) {
+                shootAnimation.restart(age);
+            }
             return;
         }
         if (lockedTicks > 0) {
@@ -222,19 +229,16 @@ public class RocketTurretBlockEntity extends BlockEntity {
             offset = lastAimOffset.withAxis(Direction.Axis.Y, 0);
         } else return;
         lastAimOffset = offset;
-        final float newYaw = MathHelper.lerpAngleDegrees(
-            0.05f, yaw, (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x))
-        );
-        final float newPitch = MathHelper.lerpAngleDegrees(
+        final float destYaw = (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x));
+        setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, destYaw));
+        setPitch(MathHelper.lerpAngleDegrees(
             0.05f, pitch, (float)Math.toDegrees(-MathHelper.atan2(offset.y, Math.abs(offset.x) + Math.abs(offset.z)))
-        );
-//        if (player != null && Math.max(Math.abs(newYaw - yaw), Math.abs(newPitch - pitch)) <= 5) {
-//            lockedTicks++;
-//            syncLockedTicks();
-//            // Also play rocket_locking_beep1
-//        }
-        setYaw(newYaw);
-        setPitch(newPitch);
+        ));
+        if (player != null && Math.abs(yaw - destYaw) <= 5) {
+            lockedTicks++;
+            syncLockedTicks();
+            // Also play rocket_locked_beep1
+        }
         syncAngle();
     }
 

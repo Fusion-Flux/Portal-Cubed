@@ -152,6 +152,7 @@ public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperE
         neck.setAngles((float)Math.toRadians(headPitch - 30), (float)Math.toRadians(-0.5105f), 0);
         m_rrbozhsc(entity.getBlockEntity().activatingAnimation, RocketTurretAnimations.ACTIVATE, animationProgress);
         m_rrbozhsc(entity.getBlockEntity().deactivatingAnimation, RocketTurretAnimations.DEACTIVATE, animationProgress);
+        m_rrbozhsc(entity.getBlockEntity().shootAnimation, RocketTurretAnimations.SHOOT, animationProgress);
     }
 
     @Override
