@@ -36,6 +36,8 @@ public class PaintGun extends Item implements DirectClickItem, DyeableItem {
         return compoundTag != null && compoundTag.contains("color", 99) ? complementary ? compoundTag.getInt("color") * -1 : compoundTag.getInt("color") : (complementary ? 14842149 : -14842149);
     }
 
+    private FireableGelType lastFiredGelType = null;
+
     @Override
     public ActionResult onDirectAttack(PlayerEntity user, Hand hand) {
         fireGel(user.world, user, FireableGelType.REPULSION);
@@ -59,6 +61,12 @@ public class PaintGun extends Item implements DirectClickItem, DyeableItem {
     }
 
     private void fireGel(World world, PlayerEntity user, FireableGelType gelType) {
+        if (lastFiredGelType != null && lastFiredGelType != gelType) {
+            lastFiredGelType = null;
+            return;
+        }
+        lastFiredGelType = gelType;
+
         if (world.isClient && !user.isSpectator() && !CalledValues.getCanFireGel(user)) {
             var byteBuf = PacketByteBufs.create();
             byteBuf.writeDouble(user.getVelocity().x);

@@ -238,6 +238,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     }
 
     public void fizzle() {
+        getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get((PlayerEntity) ((ServerWorld) world).getEntity(value)).stopHolding());
         world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
         setNoGravity(true);
         fizzling = true;

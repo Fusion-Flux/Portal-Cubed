@@ -51,7 +51,7 @@ public class PortalCubedClientPackets {
         double z = buf.readDouble();
         float pitch = (buf.readByte() * 360) / 256.0F;
         float yaw = (buf.readByte() * 360) / 256.0F;
-        ClientWorld world = MinecraftClient.getInstance().world;
+        ClientWorld world = client.world;
         Entity entity = type.create(world);
         client.execute(() -> {
             if (entity != null) {
@@ -61,7 +61,6 @@ public class PortalCubedClientPackets {
                 entity.setYaw(yaw);
                 entity.setId(entityID);
                 entity.setUuid(entityUUID);
-                assert world != null;
                 world.addEntity(entityID, entity);
             }
         });
