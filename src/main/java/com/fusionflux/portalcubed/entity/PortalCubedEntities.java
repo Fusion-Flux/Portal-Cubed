@@ -1,7 +1,5 @@
 package com.fusionflux.portalcubed.entity;
 
-import org.quiltmc.qsl.entity.api.QuiltEntityTypeBuilder;
-
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -11,6 +9,9 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.qsl.entity.api.QuiltEntityTypeBuilder;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedEntities {
 
@@ -116,6 +117,10 @@ public class PortalCubedEntities {
         new Identifier("portalcubed:textures/block/adhesion_gel.png")
     );
 
+    public static final EntityType<RocketEntity> ROCKET = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, RocketEntity::new)
+        .setDimensions(EntityDimensions.changing(0.1875f, 0.1875f))
+        .build();
+
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "experimental_portal"), EXPERIMENTAL_PORTAL);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "storage_cube"), STORAGE_CUBE);
@@ -145,6 +150,8 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "repulsion_gel_blob"), REPULSION_GEL_BLOB);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "conversion_gel_blob"), CONVERSION_GEL_BLOB);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "adhesion_gel_blob"), ADHESION_GEL_BLOB);
+
+        Registry.register(Registry.ENTITY_TYPE, id("rocket"), ROCKET);
 
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(STORAGE_CUBE, StorageCubeEntity.createMobAttributes().build());
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes().build());

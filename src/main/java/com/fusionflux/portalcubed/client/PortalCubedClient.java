@@ -220,6 +220,9 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(RocketTurretRenderer.ROCKET_TURRET_LAYER, RocketTurretModel::getTexturedModelData);
         BlockEntityRendererFactories.register(PortalCubedBlocks.ROCKET_TURRET_BLOCK_ENTITY, RocketTurretRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(RocketRenderer.ROCKET_LAYER, RocketModel::getTexturedModelData);
+        EntityRendererRegistry.register(PortalCubedEntities.ROCKET, RocketRenderer::new);
     }
 
     private static final class VisibleBarriersCompat {

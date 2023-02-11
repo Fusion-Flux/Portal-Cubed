@@ -239,7 +239,7 @@
   "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
   "portalcubed.midnightconfig.enableAccurateMovement": "Enable Accurate Movement",
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
-
+  "portalcubed.midnightconfig.rocketDamage": "Death Fizzler Damage",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",

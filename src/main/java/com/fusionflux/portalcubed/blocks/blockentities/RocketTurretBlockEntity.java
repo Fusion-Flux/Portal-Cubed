@@ -3,6 +3,8 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -93,7 +95,15 @@ public class RocketTurretBlockEntity extends BlockEntity {
             PortalCubed.LOGGER.warn("RocketTurretBlockEntity.fire() should only be called on the server, not the client.");
             return;
         }
-        PortalCubed.LOGGER.info("BAM");
+        final RocketEntity rocket = PortalCubedEntities.ROCKET.create(world);
+        if (rocket != null) {
+            rocketUuid = rocket.getUuid();
+            rocket.setPosition(Vec3d.of(pos).add(getGunOffset(0)));
+            rocket.setYaw(yaw - 90);
+            rocket.setPitch(pitch);
+            world.spawnEntity(rocket);
+            world.playSoundFromEntity(null, rocket, PortalCubedSounds.ROCKET_FIRE_EVENT, SoundCategory.HOSTILE, 1, 1);
+        }
     }
 
     private void syncLockedTicks() {
@@ -200,7 +210,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
             } else if (
                 lockedTicks > LOCK_TICKS &&
                     world instanceof ServerWorld serverWorld &&
-                    serverWorld.getEntity(rocketUuid) == null
+                    (lockedTicks > LOCK_TICKS + 400 || serverWorld.getEntity(rocketUuid) == null)
             ) {
                 lockedTicks = 0;
                 rocketUuid = Util.NIL_UUID;
@@ -230,11 +240,10 @@ public class RocketTurretBlockEntity extends BlockEntity {
         } else return;
         lastAimOffset = offset;
         final float destYaw = (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x));
+        final float destPitch = (float)Math.toDegrees(-MathHelper.atan2(offset.y, Math.sqrt(offset.x * offset.x + offset.z * offset.z)));
         setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, destYaw));
-        setPitch(MathHelper.lerpAngleDegrees(
-            0.05f, pitch, (float)Math.toDegrees(-MathHelper.atan2(offset.y, Math.abs(offset.x) + Math.abs(offset.z)))
-        ));
-        if (player != null && Math.abs(yaw - destYaw) <= 5) {
+        setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, destPitch));
+        if (player != null && Math.abs(yaw - destYaw) <= 1 && Math.abs(pitch - destPitch) <= 1) {
             lockedTicks++;
             syncLockedTicks();
             world.playSound(null, pos, PortalCubedSounds.ROCKET_LOCKING_EVENT, SoundCategory.HOSTILE, 1f, 1f);
