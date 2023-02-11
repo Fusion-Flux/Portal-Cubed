@@ -27,9 +27,9 @@ public class PortalHud {
                 MinecraftClient.getInstance().interactionManager.getCurrentGameMode() == GameMode.SPECTATOR
         ) return;
         RenderSystem.enableBlend();
-        if(PortalCubedConfig.enableRoundPortals) {
+        if (PortalCubedConfig.enableRoundPortals) {
             RenderSystem.setShaderTexture(0, ROUND_TEXTURE);
-        }else{
+        } else {
             RenderSystem.setShaderTexture(0, SQUARE_TEXTURE);
         }
         assert MinecraftClient.getInstance().player != null;
@@ -68,9 +68,9 @@ public class PortalHud {
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        if(PortalCubedConfig.enableRoundPortals) {
+        if (PortalCubedConfig.enableRoundPortals) {
             RenderSystem.setShaderTexture(0, ROUND_TEXTURE);
-        }else{
+        } else {
             RenderSystem.setShaderTexture(0, SQUARE_TEXTURE);
         }
         assert MinecraftClient.getInstance().player != null;

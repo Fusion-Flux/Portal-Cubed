@@ -10,15 +10,15 @@ import net.minecraft.util.Identifier;
 
 public class StorageCubeRenderer extends MobEntityRenderer<StorageCubeEntity, StorageCubeModel> {
 
-    private final Identifier TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/storage_cube.png");
-    private final Identifier ACTIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/storage_cube_lit.png");
+    private static final Identifier TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/storage_cube.png");
+    private static final Identifier ACTIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/storage_cube_lit.png");
 
     public StorageCubeRenderer(EntityRendererFactory.Context context) {
         super(context, new StorageCubeModel(context.getPart(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER)), 0.5f);
         this.addFeature(new EmissiveFeatureRenderer<>(this) {
 
-            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/storage_cube_e.png");
-            private final Identifier EMISSIVE_ACTIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/storage_cube_lit_e.png");
+            private static final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/storage_cube_e.png");
+            private static final Identifier EMISSIVE_ACTIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/storage_cube_lit_e.png");
 
             @Override
             public Identifier getEmissiveTexture(StorageCubeEntity entity) {

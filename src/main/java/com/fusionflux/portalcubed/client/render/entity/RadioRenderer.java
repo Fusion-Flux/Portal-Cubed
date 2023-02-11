@@ -15,14 +15,15 @@ public class RadioRenderer extends MobEntityRenderer<RadioEntity, RadioModel> {
         super(context, new RadioModel(context.getPart(RadioModel.RADIO_MAIN_LAYER)), 0.5f);
         this.addFeature(new EmissiveFeatureRenderer<>(this) {
 
-            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/radio_e.png");
+            private static final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/radio_e.png");
 
             @Override
             public Identifier getEmissiveTexture(RadioEntity entity) {
                 return EMISSIVE_TEXTURE;
             }
 
-        });    }
+        });
+    }
 
 
 

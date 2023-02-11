@@ -46,13 +46,13 @@ public class RadioEntity extends CorePhysicsEntity  {
         if (!this.world.isClient && !this.isRemoved()) {
             boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
             if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
+                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.RADIO);
                     }
                     this.discard();
                 }
-                if(!(source.getAttacker() instanceof PlayerEntity)) {
+                if (!(source.getAttacker() instanceof PlayerEntity)) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.RADIO);
                     }
@@ -133,7 +133,7 @@ public class RadioEntity extends CorePhysicsEntity  {
     private class RadioSoundInstance extends MovingSoundInstance {
         private final SoundEvent song;
 
-        public RadioSoundInstance(SoundEvent song) {
+        RadioSoundInstance(SoundEvent song) {
             super(song, SoundCategory.RECORDS, SoundInstance.m_mglvabhn());
             this.song = song;
             volume = 1f;

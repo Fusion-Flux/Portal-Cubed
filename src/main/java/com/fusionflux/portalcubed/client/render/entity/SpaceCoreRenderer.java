@@ -17,7 +17,7 @@ public class SpaceCoreRenderer extends MobEntityRenderer<SpaceCoreEntity, SpaceC
         super(context, new SpaceCoreModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(SpaceCoreModel.SPACE_CORE_LAYER)), 0.5f);
         this.addFeature(new EmissiveFeatureRenderer<>(this) {
 
-            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_2_cores_e.png");
+            private static final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_2_cores_e.png");
 
             @Override
             public Identifier getEmissiveTexture(SpaceCoreEntity entity) {
