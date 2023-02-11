@@ -57,6 +57,9 @@ public class RocketEntity extends Entity {
         if (age > 0 && age % 13 == 0) {
             world.playSoundFromEntity(null, this, PortalCubedSounds.ROCKET_FLY_EVENT, SoundCategory.HOSTILE, 1, 1);
         }
+        if (age > 200) {
+            explode(null);
+        }
     }
 
     protected boolean canHit(Entity entity) {

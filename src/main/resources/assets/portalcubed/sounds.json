@@ -145,10 +145,7 @@
 	},
 	"rocket_explode": {
 		"sounds": [
-			{
-				"name": "minecraft:fireworks/blast1",
-				"volume": 1
-			}
+			"portalcubed:blast1"
 		]
 	},
 

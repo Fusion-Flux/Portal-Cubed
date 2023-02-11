@@ -20,10 +20,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -45,7 +42,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
     private int age, lockedTicks;
     private UUID rocketUuid = Util.NIL_UUID;
 
-    private Vec3d lastAimOffset;
+    private Vec2f destAngle;
     private Boolean powered;
     private int opening = -1;
     private boolean closing;
@@ -205,16 +202,21 @@ public class RocketTurretBlockEntity extends BlockEntity {
             if (lockedTicks++ == LOCK_TICKS) {
                 fire();
                 syncLockedTicks();
-            } else if (lockedTicks == 9) {
-                world.playSound(null, pos, PortalCubedSounds.ROCKET_LOCKED_EVENT, SoundCategory.HOSTILE, 1f, 1f);
-            } else if (
-                lockedTicks > LOCK_TICKS &&
-                    world instanceof ServerWorld serverWorld &&
-                    (lockedTicks > LOCK_TICKS + 400 || serverWorld.getEntity(rocketUuid) == null)
-            ) {
-                lockedTicks = 0;
-                rocketUuid = Util.NIL_UUID;
-                syncLockedTicks();
+            } else {
+                setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, destAngle.y));
+                setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, destAngle.x));
+                syncAngle();
+                if (lockedTicks == 9) {
+                    world.playSound(null, pos, PortalCubedSounds.ROCKET_LOCKED_EVENT, SoundCategory.HOSTILE, 1f, 1f);
+                } else if (
+                    lockedTicks > LOCK_TICKS &&
+                        world instanceof ServerWorld serverWorld &&
+                        (lockedTicks > LOCK_TICKS + 200 || serverWorld.getEntity(rocketUuid) == null)
+                ) {
+                    lockedTicks = 0;
+                    rocketUuid = Util.NIL_UUID;
+                    syncLockedTicks();
+                }
             }
             return;
         }
@@ -227,23 +229,23 @@ public class RocketTurretBlockEntity extends BlockEntity {
             )).getType() == HitResult.Type.MISS),
             pos.getX(), pos.getY(), pos.getZ()
         );
-        final Vec3d offset;
         if (player != null) {
-            offset = player.getPos()
+            final Vec3d offset = player.getPos()
                 .withAxis(Direction.Axis.Y, player.getBodyY(0.5))
                 .subtract(
                     Vec3d.of(pos)
                         .add(getGunOffset(0))
                 );
-        } else if (lastAimOffset != null) {
-            offset = lastAimOffset.withAxis(Direction.Axis.Y, 0);
+            destAngle = new Vec2f(
+                (float)Math.toDegrees(-MathHelper.atan2(offset.y, Math.sqrt(offset.x * offset.x + offset.z * offset.z))),
+                (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x))
+            );
+        } else if (destAngle != null) {
+            destAngle = new Vec2f(0, destAngle.y);
         } else return;
-        lastAimOffset = offset;
-        final float destYaw = (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x));
-        final float destPitch = (float)Math.toDegrees(-MathHelper.atan2(offset.y, Math.sqrt(offset.x * offset.x + offset.z * offset.z)));
-        setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, destYaw));
-        setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, destPitch));
-        if (player != null && Math.abs(yaw - destYaw) <= 1 && Math.abs(pitch - destPitch) <= 1) {
+        setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, destAngle.y));
+        setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, destAngle.x));
+        if (player != null && Math.abs(yaw - destAngle.y) <= 1 && Math.abs(pitch - destAngle.x) <= 1) {
             lockedTicks++;
             syncLockedTicks();
             world.playSound(null, pos, PortalCubedSounds.ROCKET_LOCKING_EVENT, SoundCategory.HOSTILE, 1f, 1f);
