@@ -18,7 +18,6 @@ public class SpaceCoreModel extends FizzleableModel<SpaceCoreEntity> {
     private final ModelPart bb_main;
 
     public SpaceCoreModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

@@ -19,7 +19,6 @@ public class ExperimentalPortalModel extends EntityModel<ExperimentalPortal> {
     private final ModelPart bb_main;
 
     public ExperimentalPortalModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

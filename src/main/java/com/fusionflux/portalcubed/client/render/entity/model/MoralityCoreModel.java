@@ -18,7 +18,6 @@ public class MoralityCoreModel extends FizzleableModel<MoralityCoreEntity> {
     private final ModelPart bb_main;
 
     public MoralityCoreModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

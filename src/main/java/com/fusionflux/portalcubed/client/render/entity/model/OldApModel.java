@@ -18,7 +18,6 @@ public class OldApModel extends FizzleableModel<OldApCubeEntity> {
     private final ModelPart bb_main;
 
     public OldApModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bone");
     }
 

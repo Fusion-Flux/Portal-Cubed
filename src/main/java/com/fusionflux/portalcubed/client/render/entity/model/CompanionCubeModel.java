@@ -19,7 +19,6 @@ public class CompanionCubeModel extends FizzleableModel<CompanionCubeEntity> {
     private final ModelPart bb_main;
 
     public CompanionCubeModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

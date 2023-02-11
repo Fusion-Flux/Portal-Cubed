@@ -19,7 +19,6 @@ public class RedirectionCubeModel extends FizzleableModel<RedirectionCubeEntity>
     private final ModelPart bb_main;
 
     public RedirectionCubeModel(ModelPart root) {
-        //  TODO: add bone fields here!
         super(RenderLayer::getEntityTranslucent);
         this.bb_main = root.getChild("bb_main");
     }

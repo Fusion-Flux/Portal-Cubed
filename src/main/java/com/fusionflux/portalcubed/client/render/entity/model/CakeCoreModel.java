@@ -18,7 +18,6 @@ public class CakeCoreModel extends FizzleableModel<CakeCoreEntity> {
     private final ModelPart bb_main;
 
     public CakeCoreModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

@@ -18,7 +18,6 @@ public class JugModel extends FizzleableModel<JugEntity> {
     private final ModelPart bb_main;
 
     public JugModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

@@ -18,7 +18,6 @@ public class CuriosityCoreModel extends FizzleableModel<CuriosityCoreEntity> {
     private final ModelPart bb_main;
 
     public CuriosityCoreModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

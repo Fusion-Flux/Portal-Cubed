@@ -18,7 +18,6 @@ public class Portal1StorageCubeModel extends FizzleableModel<Portal1StorageCubeE
     private final ModelPart bb_main;
 
     public Portal1StorageCubeModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bone");
     }
 

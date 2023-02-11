@@ -18,7 +18,6 @@ public class Portal1CompanionCubeModel extends FizzleableModel<Portal1CompanionC
     private final ModelPart bb_main;
 
     public Portal1CompanionCubeModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bone");
     }
 

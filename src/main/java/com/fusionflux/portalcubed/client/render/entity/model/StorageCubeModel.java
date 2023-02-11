@@ -19,7 +19,6 @@ public class StorageCubeModel extends FizzleableModel<StorageCubeEntity> {
     private final ModelPart bb_main;
 
     public StorageCubeModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

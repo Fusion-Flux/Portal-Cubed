@@ -18,7 +18,6 @@ public class LilPineappleModel extends FizzleableModel<LilPineappleEntity> {
     private final ModelPart bb_main;
 
     public LilPineappleModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

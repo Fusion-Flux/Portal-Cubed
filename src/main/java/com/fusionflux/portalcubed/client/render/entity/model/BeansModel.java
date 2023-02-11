@@ -18,7 +18,6 @@ public class BeansModel extends FizzleableModel<BeansEntity> {
     private final ModelPart bb_main;
 
     public BeansModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

@@ -18,7 +18,6 @@ public class AdventureCoreModel extends FizzleableModel<AdventureCoreEntity> {
     private final ModelPart bb_main;
 
     public AdventureCoreModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 

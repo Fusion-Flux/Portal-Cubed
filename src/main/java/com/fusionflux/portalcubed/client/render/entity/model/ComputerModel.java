@@ -18,7 +18,6 @@ public class ComputerModel extends FizzleableModel<ComputerEntity> {
     private final ModelPart bb_main;
 
     public ComputerModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 
