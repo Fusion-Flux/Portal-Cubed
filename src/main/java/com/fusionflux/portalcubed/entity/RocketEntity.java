@@ -62,7 +62,7 @@ public class RocketEntity extends Entity {
             return;
         }
         final HitResult hit = ProjectileUtil.getCollision(this, this::canHit);
-        if (hit.getType() != HitResult.Type.MISS) {
+        if (hit.getType() == HitResult.Type.ENTITY) {
             explode(hit instanceof EntityHitResult entityHit ? (LivingEntity)entityHit.getEntity() : null);
         } else if (horizontalCollision || verticalCollision) {
             explode(null);
