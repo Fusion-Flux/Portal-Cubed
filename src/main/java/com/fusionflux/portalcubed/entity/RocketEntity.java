@@ -11,6 +11,8 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -47,7 +49,18 @@ public class RocketEntity extends Entity {
         super.tick();
         setVelocity(Vec3d.fromPolar(getPitch(), getYaw()).multiply(SPEED));
         move(MovementType.SELF, getVelocity());
-        if (world.isClient) return;
+        if (world.isClient) {
+            for (int i = 0; i < 2; i++) {
+                world.addParticle(
+                    ParticleTypes.POOF,
+                    getX() + random.nextGaussian() * 0.2,
+                    getY() + random.nextGaussian() * 0.2,
+                    getZ() + random.nextGaussian() * 0.2,
+                    getVelocity().x, getVelocity().y, getVelocity().z
+                );
+            }
+            return;
+        }
         final HitResult hit = ProjectileUtil.getCollision(this, this::canHit);
         if (hit.getType() != HitResult.Type.MISS) {
             explode(hit instanceof EntityHitResult entityHit ? (LivingEntity)entityHit.getEntity() : null);
@@ -74,6 +87,15 @@ public class RocketEntity extends Entity {
             );
         }
         world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_EXPLODE_EVENT, SoundCategory.HOSTILE, 1, 1);
+        if (world instanceof ServerWorld serverWorld) {
+            serverWorld.spawnParticles(
+                ParticleTypes.EXPLOSION,
+                getX(), getY(), getZ(),
+                8,
+                0.5, 0.5, 0.5,
+                0
+            );
+        }
         kill();
     }
 
