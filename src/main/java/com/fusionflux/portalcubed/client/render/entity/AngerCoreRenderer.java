@@ -16,7 +16,7 @@ public class AngerCoreRenderer extends MobEntityRenderer<AngerCoreEntity, AngerC
         super(context, new AngerCoreModel(context.getPart(AngerCoreModel.ANGER_CORE_LAYER)), 0.5f);
         this.addFeature(new EmissiveFeatureRenderer<>(this) {
 
-            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_1_cores_e.png");
+            private static final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_1_cores_e.png");
 
             @Override
             public Identifier getEmissiveTexture(AngerCoreEntity entity) {

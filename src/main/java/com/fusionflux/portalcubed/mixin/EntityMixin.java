@@ -47,7 +47,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     private double maxFallSpeed = 0;
 
     @Unique
-    private boolean IN_FUNNEL = false;
+    private boolean inFunnel = false;
 
     @Unique
     private double maxFallHeight = -99999999;
@@ -64,10 +64,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     private int gelTransferChangeTimer = 0;
 
     @Unique
-    private boolean IS_BOUNCED = false;
+    private boolean isBounced = false;
 
     @Unique
-    private int FUNNEL_TIMER = 0;
+    private int funnelTimer = 0;
 
     @Override
     public double getMaxFallSpeed() {
@@ -121,7 +121,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Shadow
     public abstract void setPosition(double x, double y, double z);
 
-    private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
+    private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
 
     @Unique
     private final Map<BlockState, BlockPos> collidingBlocks = new HashMap<>();
@@ -137,16 +137,16 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         Vec3d entityVelocity = this.getVelocity();
 
 
-        if(!(thisentity instanceof PlayerEntity)) {
+        if (!(thisentity instanceof PlayerEntity)) {
             Box portalCheckBox = getBoundingBox();
 
-                portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0, .08, 0));
+            portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0, .08, 0));
 
             List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
             VoxelShape omittedDirections = VoxelShapes.empty();
 
             for (ExperimentalPortal portal : list) {
-                if (portal.calculateCuttoutBox() != nullBox && portal.calculateBoundsCheckBox() != nullBox) {
+                if (portal.calculateCuttoutBox() != NULL_BOX && portal.calculateBoundsCheckBox() != NULL_BOX) {
                     if (portal.getActive())
                         omittedDirections = VoxelShapes.union(omittedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
                 }
@@ -213,7 +213,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         Box portalCheckBox = getBoundingBox();
 
-            portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0, .08, 0));
+        portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0, .08, 0));
 
 
         List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
@@ -395,37 +395,37 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             Vec3d entityVelocity
     ) {
         float yawValue = this.getYaw() + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDir);
-            this.setPosition(portal.getDestination().get().getX() - teleportXOffset, portal.getDestination().get().getY() - teleportYOffset, portal.getDestination().get().getZ() - teleportZOffset);
-            this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir));
-            this.setYaw(yawValue);
-            GravityChangerAPI.clearGravity(thisEntity);
+        this.setPosition(portal.getDestination().get().getX() - teleportXOffset, portal.getDestination().get().getY() - teleportYOffset, portal.getDestination().get().getZ() - teleportZOffset);
+        this.setVelocity(PortalVelocityHelper.rotateVelocity(entityVelocity, portal.getFacingDirection(), otherDir));
+        this.setYaw(yawValue);
+        GravityChangerAPI.clearGravity(thisEntity);
 
     }
 
     @Override
     public boolean isInFunnel() {
-        return this.IN_FUNNEL;
+        return this.inFunnel;
     }
 
     @Override
     public void setInFunnel(boolean inFunnel) {
-        this.IN_FUNNEL = inFunnel;
+        this.inFunnel = inFunnel;
     }
 
     @Override
     public boolean isBounced() {
-        return this.IS_BOUNCED;
+        return this.isBounced;
     }
 
     @Override
     public void setBounced(boolean bounced) {
-        this.IS_BOUNCED = bounced;
+        this.isBounced = bounced;
     }
 
     @Override
     public int getFunnelTimer() {
 
-        return this.FUNNEL_TIMER;
+        return this.funnelTimer;
     }
 
     @Override
@@ -447,7 +447,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Override
     public void setFunnelTimer(int funnelTimer) {
-        this.FUNNEL_TIMER = funnelTimer;
+        this.funnelTimer = funnelTimer;
     }
 
     @Override

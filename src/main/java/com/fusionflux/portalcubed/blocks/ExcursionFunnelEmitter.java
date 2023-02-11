@@ -25,7 +25,7 @@ public class ExcursionFunnelEmitter extends BlockWithEntity {
 
     public ExcursionFunnelEmitter(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED,false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED, false));
     }
 
     @Override

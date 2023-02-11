@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.*;
@@ -34,7 +33,7 @@ public class BetaFaithPlateBlock extends BlockWithEntity {
 
     public BetaFaithPlateBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE,false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE, false));
     }
 
     static {
@@ -63,7 +62,7 @@ public class BetaFaithPlateBlock extends BlockWithEntity {
 
         VoxelShape voxelShape = VoxelShapes.empty();
 
-        voxelShape = VoxelShapes.union(voxelShape,SHAPE);
+        voxelShape = VoxelShapes.union(voxelShape, SHAPE);
         return voxelShape;
     }
 
@@ -73,7 +72,7 @@ public class BetaFaithPlateBlock extends BlockWithEntity {
 
         VoxelShape voxelShape = VoxelShapes.empty();
 
-        voxelShape = VoxelShapes.union(voxelShape,SHAPE);
+        voxelShape = VoxelShapes.union(voxelShape, SHAPE);
 
         return voxelShape;
     }
@@ -104,7 +103,7 @@ public class BetaFaithPlateBlock extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        if(ctx.getPlayerLookDirection()==Direction.DOWN || ctx.getPlayerLookDirection()==Direction.UP ){
+        if (ctx.getPlayerLookDirection() == Direction.DOWN || ctx.getPlayerLookDirection() == Direction.UP) {
             return PortalCubedBlocks.BETA_FAITH_PLATE.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(CustomProperties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite());
         }
         return PortalCubedBlocks.BETA_FAITH_PLATE.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());

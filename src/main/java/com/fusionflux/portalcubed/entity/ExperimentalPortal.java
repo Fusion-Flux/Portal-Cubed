@@ -30,9 +30,9 @@ import java.util.UUID;
 
 public class ExperimentalPortal extends Entity {
 
-    private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
+    private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
 
-    private Box cutoutBoundingBox = nullBox;
+    private Box cutoutBoundingBox = NULL_BOX;
 
     public static final TrackedData<Optional<UUID>> LINKED_PORTAL_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     public static final TrackedData<Boolean> IS_ACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -199,16 +199,16 @@ public class ExperimentalPortal extends Entity {
 
     @Override
     public void tick() {
-            this.calculateBoundingBox();
-            this.calculateCuttoutBox();
-            this.calculateBoundsCheckBox();
-        if(!this.world.isClient)
-            ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x,getChunkPos().z,true);
+        this.calculateBoundingBox();
+        this.calculateCuttoutBox();
+        this.calculateBoundsCheckBox();
+        if (!this.world.isClient)
+            ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x, getChunkPos().z, true);
 
-        if(!world.isClient){
+        if (!world.isClient) {
             getOwnerUUID().ifPresent(uuid -> {
                 Entity player = ((ServerWorld) world).getEntity(uuid);
-                if(player == null || !player.isAlive()){
+                if (player == null || !player.isAlive()) {
                     this.kill();
                 }
             });
@@ -238,29 +238,29 @@ public class ExperimentalPortal extends Entity {
 
 
             Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
-            boolean topValidBlock=false;
-            if(this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+            boolean topValidBlock = false;
+            if (this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.PORTALABLE_GELS) && this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
                 assert portalFacing != null;
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
 
                 topValidBlock = this.world.getBlockState(this.getBlockPos()).get(booleanProperty);
-            }else if (!this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
-                topValidBlock=true;
+            } else if (!this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
+                topValidBlock = true;
             }
-            boolean bottomValidBlock=false;
-            if(this.world.getBlockState(bottom).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+            boolean bottomValidBlock = false;
+            if (this.world.getBlockState(bottom).isIn(PortalCubedBlocks.PORTALABLE_GELS) && this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
                 assert portalFacing != null;
                 BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
                 bottomValidBlock = this.world.getBlockState(bottom).get(booleanProperty);
-            }else if (!this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
-                bottomValidBlock=true;
+            } else if (!this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
+                bottomValidBlock = true;
             }
 
             if ((!this.world.getBlockState(topBehind).isSideSolidFullSquare(world, topBehind, portalFacing)) ||
                     (!this.world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) ||
                             !topValidBlock ||
-                            !bottomValidBlock)||
-                    ((!this.world.getBlockState(this.getBlockPos()).isAir())&& !allowedPortalBlock(world, getBlockPos()) )|| (!this.world.getBlockState(bottom).isAir() && !allowedPortalBlock(world, bottom))) {
+                            !bottomValidBlock) ||
+                    ((!this.world.getBlockState(this.getBlockPos()).isAir()) && !allowedPortalBlock(world, getBlockPos())) || (!this.world.getBlockState(bottom).isAir() && !allowedPortalBlock(world, bottom))) {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
             }
@@ -273,9 +273,9 @@ public class ExperimentalPortal extends Entity {
         return state.isIn(PortalCubedBlocks.PORTAL_NONSOLID) || state.getCollisionShape(world, pos).isEmpty();
     }
 
-    public void syncRotations(){
-        this.setBoundingBox(nullBox);
-        this.setCutoutBoundingBox(nullBox);
+    public void syncRotations() {
+        this.setBoundingBox(NULL_BOX);
+        this.setCutoutBoundingBox(NULL_BOX);
         this.calculateBoundingBox();
         this.calculateCuttoutBox();
         this.calculateBoundsCheckBox();
@@ -283,35 +283,35 @@ public class ExperimentalPortal extends Entity {
 
     @Override
     protected Box calculateBoundingBox() {
-            if (getAxisW().isEmpty()) {
-                // it may be called when the portal is not yet initialized
-                setBoundingBox(nullBox);
-                return nullBox;
-            }
-            double w = .9;
-            double h = 1.9;
+        if (getAxisW().isEmpty()) {
+            // it may be called when the portal is not yet initialized
+            setBoundingBox(NULL_BOX);
+            return NULL_BOX;
+        }
+        double w = .9;
+        double h = 1.9;
 
 
-            Box portalBox = new Box(
-                    getPointInPlane(w / 2, h / 2)
-                            .add(getNormal().multiply(.2)),
-                    getPointInPlane(-w / 2, -h / 2)
-                            .add(getNormal().multiply(-.2))
-            ).union(new Box(
-                    getPointInPlane(-w / 2, h / 2)
-                            .add(getNormal().multiply(.2)),
-                    getPointInPlane(w / 2, -h / 2)
-                            .add(getNormal().multiply(-.2))
-            ));
-            setBoundingBox(portalBox);
-            return portalBox;
+        Box portalBox = new Box(
+                getPointInPlane(w / 2, h / 2)
+                        .add(getNormal().multiply(.2)),
+                getPointInPlane(-w / 2, -h / 2)
+                        .add(getNormal().multiply(-.2))
+        ).union(new Box(
+                getPointInPlane(-w / 2, h / 2)
+                        .add(getNormal().multiply(.2)),
+                getPointInPlane(w / 2, -h / 2)
+                        .add(getNormal().multiply(-.2))
+        ));
+        setBoundingBox(portalBox);
+        return portalBox;
     }
 
 
     public Box calculateCuttoutBox() {
         if (getAxisW().isEmpty()) {
-            setCutoutBoundingBox(nullBox);
-            return nullBox;
+            setCutoutBoundingBox(NULL_BOX);
+            return NULL_BOX;
         }
         double w = .9;
         double h = 1.9;
@@ -333,7 +333,7 @@ public class ExperimentalPortal extends Entity {
 
     public Box calculateBoundsCheckBox() {
         if (getAxisW().isEmpty()) {
-            return nullBox;
+            return NULL_BOX;
         }
         double w = .9;
         double h = 1.9;
@@ -359,7 +359,7 @@ public class ExperimentalPortal extends Entity {
     }
 
     public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
-        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX()*-5,getFacingDirection().getUnitVector().getY()*-5,getFacingDirection().getUnitVector().getZ()*-5);
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX() * -5, getFacingDirection().getUnitVector().getY() * -5, getFacingDirection().getUnitVector().getZ() * -5);
     }
 
     public Vec3d getBoundsCheckPointInPlane(double xInPlane, double yInPlane) {

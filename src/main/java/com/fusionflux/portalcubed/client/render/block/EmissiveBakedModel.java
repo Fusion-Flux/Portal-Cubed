@@ -31,98 +31,98 @@ import java.util.function.Supplier;
 
 public final class EmissiveBakedModel extends ForwardingBakedModel {
 
-	private static final Map<Identifier, Function<BakedModel, EmissiveBakedModel>> wrappers = new Object2ObjectOpenHashMap<>();
+    private static final Map<Identifier, Function<BakedModel, EmissiveBakedModel>> WRAPPERS = new Object2ObjectOpenHashMap<>();
 
-	public static void register(Identifier modelId) {
-		wrappers.put(modelId, EmissiveBakedModel::new);
-	}
+    public static void register(Identifier modelId) {
+        WRAPPERS.put(modelId, EmissiveBakedModel::new);
+    }
 
-	public static Optional<BakedModel> wrap(Identifier modelId, BakedModel model) {
-		final Function<BakedModel, EmissiveBakedModel> wrapper = wrappers.get(new Identifier(modelId.getNamespace(), modelId.getPath()));
-		if (wrapper != null) return Optional.of(wrapper.apply(model));
-		return Optional.empty();
-	}
-
-
-	@SuppressWarnings("DataFlowIssue")
-	private static final MaterialFinder MATERIAL_FINDER = RendererAccess.INSTANCE.getRenderer().materialFinder();
-
-	private Pair<BlockState, Mesh> cachedMesh = Pair.of(null, null);
-
-	EmissiveBakedModel(BakedModel model) {
-		this.wrapped = model;
-	}
-
-	@Override
-	public boolean isVanillaAdapter() {
-		return false;
-	}
-
-	@Override
-	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
-		final ModelObjects objects = ModelObjects.get();
-		objects.cullingCache.prepare(pos, state);
-		buildMesh(objects, state, randomSupplier);
-		context.pushTransform(quad -> !objects.cullingCache.shouldCull(quad, blockView));
-		context.meshConsumer().accept(cachedMesh.getValue());
-		context.popTransform();
-	}
-
-	@Override
-	public void emitItemQuads(ItemStack stack, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
-		final ModelObjects objects = ModelObjects.get();
-		buildMesh(objects, null, randomSupplier);
-		context.meshConsumer().accept(cachedMesh.getValue());
-	}
+    public static Optional<BakedModel> wrap(Identifier modelId, BakedModel model) {
+        final Function<BakedModel, EmissiveBakedModel> wrapper = WRAPPERS.get(new Identifier(modelId.getNamespace(), modelId.getPath()));
+        if (wrapper != null) return Optional.of(wrapper.apply(model));
+        return Optional.empty();
+    }
 
 
-	private void buildMesh(ModelObjects objects, @Nullable BlockState state, Supplier<RandomGenerator> randomSupplier) {
-		boolean shouldBuild = true;
-		if (state != null) shouldBuild = cachedMesh.getKey() != state;
-		if (!shouldBuild) return;
+    @SuppressWarnings("DataFlowIssue")
+    private static final MaterialFinder MATERIAL_FINDER = RendererAccess.INSTANCE.getRenderer().materialFinder();
 
-		final QuadEmitter emitter = objects.meshBuilder.getEmitter();
+    private Pair<BlockState, Mesh> cachedMesh = Pair.of(null, null);
 
-		for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++) {
-			final Direction cullFace = ModelHelper.faceFromIndex(i);
-			final List<BakedQuad> quads = wrapped.getQuads(state, cullFace, randomSupplier.get());
+    EmissiveBakedModel(BakedModel model) {
+        this.wrapped = model;
+    }
 
-			for (BakedQuad quad : quads) {
-				boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().getId());
-				MATERIAL_FINDER.emissive(0, isQuadEmissive);
-				MATERIAL_FINDER.disableDiffuse(0, isQuadEmissive);
-				MATERIAL_FINDER.disableAo(0, isQuadEmissive);
+    @Override
+    public boolean isVanillaAdapter() {
+        return false;
+    }
 
-				BlendMode blendMode = BlendMode.DEFAULT;
-				if (state != null) {
-					blendMode = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(state));
-					if (blendMode == BlendMode.SOLID) blendMode = BlendMode.CUTOUT_MIPPED;
-				}
-				MATERIAL_FINDER.blendMode(0, blendMode);
+    @Override
+    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
+        final ModelObjects objects = ModelObjects.get();
+        objects.cullingCache.prepare(pos, state);
+        buildMesh(objects, state, randomSupplier);
+        context.pushTransform(quad -> !objects.cullingCache.shouldCull(quad, blockView));
+        context.meshConsumer().accept(cachedMesh.getValue());
+        context.popTransform();
+    }
 
-				emitter.fromVanilla(quad, MATERIAL_FINDER.find(), cullFace);
-				emitter.cullFace(cullFace);
-				emitter.emit();
-			}
-		}
-
-		cachedMesh = Pair.of(state, objects.meshBuilder.build());
-	}
+    @Override
+    public void emitItemQuads(ItemStack stack, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
+        final ModelObjects objects = ModelObjects.get();
+        buildMesh(objects, null, randomSupplier);
+        context.meshConsumer().accept(cachedMesh.getValue());
+    }
 
 
-	private static class ModelObjects {
+    private void buildMesh(ModelObjects objects, @Nullable BlockState state, Supplier<RandomGenerator> randomSupplier) {
+        boolean shouldBuild = true;
+        if (state != null) shouldBuild = cachedMesh.getKey() != state;
+        if (!shouldBuild) return;
 
-		private static final ThreadLocal<ModelObjects> INSTANCE = ThreadLocal.withInitial(ModelObjects::new);
+        final QuadEmitter emitter = objects.meshBuilder.getEmitter();
 
-		private final CullingCache cullingCache = new CullingCache();
+        for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++) {
+            final Direction cullFace = ModelHelper.faceFromIndex(i);
+            final List<BakedQuad> quads = wrapped.getQuads(state, cullFace, randomSupplier.get());
 
-		@SuppressWarnings("DataFlowIssue")
-		private final MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
+            for (BakedQuad quad : quads) {
+                boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().getId());
+                MATERIAL_FINDER.emissive(0, isQuadEmissive);
+                MATERIAL_FINDER.disableDiffuse(0, isQuadEmissive);
+                MATERIAL_FINDER.disableAo(0, isQuadEmissive);
 
-		private static ModelObjects get() {
-			return INSTANCE.get();
-		}
+                BlendMode blendMode = BlendMode.DEFAULT;
+                if (state != null) {
+                    blendMode = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(state));
+                    if (blendMode == BlendMode.SOLID) blendMode = BlendMode.CUTOUT_MIPPED;
+                }
+                MATERIAL_FINDER.blendMode(0, blendMode);
 
-	}
+                emitter.fromVanilla(quad, MATERIAL_FINDER.find(), cullFace);
+                emitter.cullFace(cullFace);
+                emitter.emit();
+            }
+        }
+
+        cachedMesh = Pair.of(state, objects.meshBuilder.build());
+    }
+
+
+    private static class ModelObjects {
+
+        private static final ThreadLocal<ModelObjects> INSTANCE = ThreadLocal.withInitial(ModelObjects::new);
+
+        private final CullingCache cullingCache = new CullingCache();
+
+        @SuppressWarnings("DataFlowIssue")
+        private final MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
+
+        private static ModelObjects get() {
+            return INSTANCE.get();
+        }
+
+    }
 
 }

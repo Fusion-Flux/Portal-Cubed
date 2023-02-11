@@ -7,19 +7,19 @@ import java.util.List;
 
 public final class EmissiveSpriteRegistry {
 
-	private static final List<Identifier> sprites = new ObjectArrayList<>();
+    private static final List<Identifier> SPRITES = new ObjectArrayList<>();
 
-	public static boolean isEmissive(Identifier spriteId) {
-		return sprites.contains(spriteId);
-	}
+    public static boolean isEmissive(Identifier spriteId) {
+        return SPRITES.contains(spriteId);
+    }
 
-	public static void register(Identifier modelId, Identifier spriteId) {
+    public static void register(Identifier modelId, Identifier spriteId) {
         EmissiveBakedModel.register(modelId);
         register(spriteId);
-	}
+    }
 
-	public static void register(Identifier spriteId) {
-		sprites.add(spriteId);
-	}
+    public static void register(Identifier spriteId) {
+        SPRITES.add(spriteId);
+    }
 
 }

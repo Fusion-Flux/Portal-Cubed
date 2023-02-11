@@ -127,5 +127,12 @@
         <module name="WhitespaceAfter">
             <property name="tokens" value="COMMA, SEMI, LITERAL_IF, LITERAL_ELSE, LITERAL_WHILE, LITERAL_DO, LITERAL_FOR, DO_WHILE" />
         </module>
+
+        <module name="WhitespaceAround">
+            <property name="allowEmptyLambdas" value="true"/>
+            <property name="ignoreEnhancedForColon" value="false"/>
+        </module>
+
+        <module name="NoWhitespaceAfter"/>
     </module>
 </module>

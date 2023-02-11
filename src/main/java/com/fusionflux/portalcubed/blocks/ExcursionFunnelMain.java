@@ -111,7 +111,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
     @Override
     @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        this.addCollisionEffects(world, entity, pos ,state);
+        this.addCollisionEffects(world, entity, pos, state);
     }
 
     public static Vec3d getPushDirection(BlockState state) {
@@ -121,72 +121,72 @@ public class ExcursionFunnelMain extends BlockWithEntity {
         boolean modifyZ = false;
 
 
-        if(state.get(Properties.NORTH)){
-            result =result.subtract(0, 0, 1);
+        if (state.get(Properties.NORTH)) {
+            result = result.subtract(0, 0, 1);
         }
-        if(state.get(Properties.SOUTH)){
-            result =result.add(0, 0, 1);
+        if (state.get(Properties.SOUTH)) {
+            result = result.add(0, 0, 1);
         }
-        if(state.get(Properties.EAST)){
-            result =result.add(1, 0, 0);
+        if (state.get(Properties.EAST)) {
+            result = result.add(1, 0, 0);
         }
-        if(state.get(Properties.WEST)){
-            result =result.subtract(1, 0, 0);
+        if (state.get(Properties.WEST)) {
+            result = result.subtract(1, 0, 0);
         }
-        if(state.get(Properties.UP)){
-            result =result.add(0, 1, 0);
+        if (state.get(Properties.UP)) {
+            result = result.add(0, 1, 0);
         }
-        if(state.get(Properties.DOWN)){
-            result =result.subtract(0, 1, 0);
+        if (state.get(Properties.DOWN)) {
+            result = result.subtract(0, 1, 0);
         }
 
-        if(state.get(Properties.NORTH) && state.get(Properties.SOUTH)){
+        if (state.get(Properties.NORTH) && state.get(Properties.SOUTH)) {
             modifyZ = true;
         }
-        if(state.get(Properties.EAST) && state.get(Properties.WEST)){
+        if (state.get(Properties.EAST) && state.get(Properties.WEST)) {
             modifyX = true;
         }
-        if(state.get(Properties.UP) && state.get(Properties.DOWN)){
+        if (state.get(Properties.UP) && state.get(Properties.DOWN)) {
             modifyY = true;
         }
 
-        if(state.get(CustomProperties.R_SOUTH)){
-            result =result.subtract(0, 0, 1);
+        if (state.get(CustomProperties.R_SOUTH)) {
+            result = result.subtract(0, 0, 1);
         }
-        if(state.get(CustomProperties.R_NORTH)){
-            result =result.add(0, 0, 1);
+        if (state.get(CustomProperties.R_NORTH)) {
+            result = result.add(0, 0, 1);
         }
-        if(state.get(CustomProperties.R_WEST)){
-            result =result.add(1, 0, 0);
+        if (state.get(CustomProperties.R_WEST)) {
+            result = result.add(1, 0, 0);
         }
-        if(state.get(CustomProperties.R_EAST)){
-            result =result.subtract(1, 0, 0);
+        if (state.get(CustomProperties.R_EAST)) {
+            result = result.subtract(1, 0, 0);
         }
-        if(state.get(CustomProperties.R_UP)){
-            result =result.subtract(0, 1, 0);
+        if (state.get(CustomProperties.R_UP)) {
+            result = result.subtract(0, 1, 0);
         }
-        if(state.get(CustomProperties.R_DOWN)){
+        if (state.get(CustomProperties.R_DOWN)) {
             result = result.add(0, 1, 0);
         }
 
-        if(state.get(CustomProperties.R_NORTH) && state.get(CustomProperties.R_SOUTH)){
+        if (state.get(CustomProperties.R_NORTH) && state.get(CustomProperties.R_SOUTH)) {
             modifyZ = true;
         }
-        if(state.get(CustomProperties.R_EAST) && state.get(CustomProperties.R_WEST)){
+        if (state.get(CustomProperties.R_EAST) && state.get(CustomProperties.R_WEST)) {
             modifyX = true;
         }
-        if(state.get(CustomProperties.R_UP) && state.get(CustomProperties.R_DOWN)){
+        if (state.get(CustomProperties.R_UP) && state.get(CustomProperties.R_DOWN)) {
             modifyY = true;
         }
 
-        if(modifyX){
-            result = new Vec3d(.00001,result.getY(), result.getZ() );
+        if (modifyX) {
+            result = new Vec3d(.00001, result.getY(), result.getZ());
         }
-        if(modifyY){
-            result = new Vec3d(result.getX(),.00001, result.getZ() );
+        if (modifyY) {
+            result = new Vec3d(result.getX(), .00001, result.getZ());
         }
-        if(modifyZ){
-            result = new Vec3d(result.getX(),result.getY(), .00001 );
+        if (modifyZ) {
+            result = new Vec3d(result.getX(), result.getY(), .00001);
         }
 
 
@@ -194,7 +194,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
     }
 
 
-    private void addCollisionEffects(World world, Entity entity, BlockPos pos,BlockState state) {
+    private void addCollisionEffects(World world, Entity entity, BlockPos pos, BlockState state) {
         if (entity instanceof PlayerEntity) {
             if (world.isClient()) {
                 Vec3d entityCenter = entity.getBoundingBox().getCenter();
@@ -276,7 +276,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                     gotVelocity = new Vec3d(direction.getX(), gotVelocity.y, gotVelocity.z);
                 } else {
                     if (entity instanceof CorePhysicsEntity) {
-                        gotVelocity = new Vec3d(-xOffset/4,gotVelocity.y,gotVelocity.z);
+                        gotVelocity = new Vec3d(-xOffset / 4, gotVelocity.y, gotVelocity.z);
                     } else {
                         gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d((-(xOffset / Math.abs(xOffset)) * .004), 0, 0), GravityChangerAPI.getGravityDirection(entity)));
                     }
@@ -285,7 +285,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                     gotVelocity = new Vec3d(gotVelocity.x, direction.getY(), gotVelocity.z);
                 } else {
                     if (entity instanceof CorePhysicsEntity) {
-                        gotVelocity = new Vec3d(gotVelocity.x,-yOffset/4,gotVelocity.z);
+                        gotVelocity = new Vec3d(gotVelocity.x, -yOffset / 4, gotVelocity.z);
                     } else {
                         gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(yOffset / Math.abs(yOffset)) * .004), 0), GravityChangerAPI.getGravityDirection(entity)));
                     }
@@ -294,7 +294,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                     gotVelocity = new Vec3d(gotVelocity.x, gotVelocity.y, direction.getZ());
                 } else {
                     if (entity instanceof CorePhysicsEntity) {
-                        gotVelocity = new Vec3d(gotVelocity.x,gotVelocity.y,-zOffset/4);
+                        gotVelocity = new Vec3d(gotVelocity.x, gotVelocity.y, -zOffset / 4);
                     } else {
                         gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(zOffset / Math.abs(zOffset)) * .004)), GravityChangerAPI.getGravityDirection(entity)));
                     }

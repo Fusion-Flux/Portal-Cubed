@@ -45,7 +45,7 @@ public class ReversedExcursionFunnelEmitterBlockEntity extends AbstractExcursion
                     List<BlockPos> portalFunnels = new ArrayList<>();
                     boolean teleported = false;
                     Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
-                    for (int i = 0; i <= blockEntity.MAX_RANGE; i++) {
+                    for (int i = 0; i <= blockEntity.maxRange; i++) {
                         if(!teleported) {
                             translatedPos = translatedPos.offset(storedDirection);
                         } else{

@@ -10,15 +10,15 @@ import net.minecraft.util.Identifier;
 
 public class CompanionCubeRenderer extends MobEntityRenderer<CompanionCubeEntity, CompanionCubeModel> {
 
-    private final Identifier TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/companion_cube.png");
-    private final Identifier ACTIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/companion_cube_lit.png");
+    private static final Identifier TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/companion_cube.png");
+    private static final Identifier ACTIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/companion_cube_lit.png");
 
     public CompanionCubeRenderer(EntityRendererFactory.Context context) {
         super(context, new CompanionCubeModel(context.getPart(CompanionCubeModel.COMPANION_CUBE_MAIN_LAYER)), 0.5f);
         this.addFeature(new EmissiveFeatureRenderer<>(this) {
 
-            private final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/companion_cube_e.png");
-            private final Identifier EMISSIVE_ACTIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/companion_cube_lit_e.png");
+            private static final Identifier EMISSIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/companion_cube_e.png");
+            private static final Identifier EMISSIVE_ACTIVE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/companion_cube_lit_e.png");
 
             @Override
             public Identifier getEmissiveTexture(CompanionCubeEntity entity) {
