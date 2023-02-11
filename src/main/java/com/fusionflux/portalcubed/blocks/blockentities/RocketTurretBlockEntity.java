@@ -50,7 +50,6 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     public final AnimationState activatingAnimation = new AnimationState();
     public final AnimationState deactivatingAnimation = new AnimationState();
-    public final AnimationState shootAnimation = new AnimationState();
 
     public RocketTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -154,6 +153,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
                 activatingAnimation.restart(age);
                 closing = false;
             } else {
+                lockedTicks = 0;
                 closing = true;
             }
             return;
@@ -188,9 +188,6 @@ public class RocketTurretBlockEntity extends BlockEntity {
                 // We can pass null here because of ShapeContextMixin
                 null
             )).getPos();
-            if (lockedTicks == 1) {
-                shootAnimation.restart(age);
-            }
             return;
         }
         if (lockedTicks > 0) {

@@ -7,8 +7,16 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperEntity<RocketTurretBlockEntity>> {
+    public static final Identifier TEXTURE_ACTIVE = id("textures/block/rocket_turret_active.png");
+    public static final Identifier TEXTURE_INACTIVE = id("textures/block/rocket_turret_inactive.png");
+    public static final Identifier TEXTURE_LOCK_ON = id("textures/block/rocket_turret_lock_on.png");
+    public static final Identifier TEXTURE_FIRING = id("textures/block/rocket_turret_firing.png");
+
     private final ModelPart root, turret, chassis, neck;
 
     public RocketTurretModel(ModelPart root) {
@@ -34,7 +42,7 @@ public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperE
         ModelPartData segment_1 = chassis.addChild("segment_1", ModelPartBuilder.create(), ModelTransform.of(0.0F, -1.0429F, 1.9571F, 0.3491F, 0.0F, 0.0F));
 
         segment_1.addChild(
-            "cube_r2", ModelPartBuilder.create().uv(0, 46).cuboid(-2.5F, -1.75F, -2.0F, 5.0F, 3.0F, 4.0F,
+            "cube_r2", ModelPartBuilder.create().uv(0, 46).cuboid(-2.5F, -1.5F, -2.0F, 5.0F, 3.0F, 4.0F,
                                                                   new Dilation(0.0F)
             ), ModelTransform.of(0.0F, -2.9874F, 2.841F, 0.7854F, 0.0F, 0.0F));
 
@@ -76,23 +84,6 @@ public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperE
 
         ModelPartData head = neck.addChild("head", ModelPartBuilder.create().uv(12, 52).cuboid(-2.25F, -3.0F, -3.0F, 5.0F, 6.0F, 6.0F, new Dilation(0.0F))
             .uv(16, 0).cuboid(-3.75F, -3.5F, -3.5F, 7.0F, 7.0F, 7.0F, new Dilation(0.0F)), ModelTransform.pivot(0.25F, -0.7007F, -5.6938F));
-
-        ModelPartData eye = head.addChild("eye", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 31.7538F, -2.3749F));
-
-        eye.addChild(
-            "green", ModelPartBuilder.create().uv(24, 25).cuboid(-1.5F, -0.75F, -0.25F, 3.0F, 3.0F, 0.0F,
-                                                                 new Dilation(0.0F)
-            ), ModelTransform.pivot(-0.25F, -32.5F, -0.875F));
-
-        eye.addChild(
-            "yellow", ModelPartBuilder.create().uv(30, 25).cuboid(-1.5F, -0.75F, -0.25F, 3.0F, 3.0F, 0.0F,
-                                                                  new Dilation(0.0F)
-            ), ModelTransform.pivot(-0.25F, -32.5F, -0.75F));
-
-        eye.addChild(
-            "red", ModelPartBuilder.create().uv(36, 25).cuboid(-1.5F, -0.75F, -0.25F, 3.0F, 3.0F, 0.0F,
-                                                               new Dilation(0.0F)
-            ), ModelTransform.pivot(-0.25F, -32.5F, -0.575F));
 
         ModelPartData hatch = head.addChild("hatch", ModelPartBuilder.create().uv(37, 7).cuboid(0.0F, -2.75F, -3.75F, 2.0F, 7.0F, 7.0F, new Dilation(0.0F))
             .uv(44, 41).cuboid(-3.0694F, -2.2721F, -2.7033F, 5.0F, 6.0F, 5.0F, new Dilation(0.0F)), ModelTransform.pivot(5.25F, -0.75F, 0.25F));
@@ -152,11 +143,21 @@ public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperE
         neck.setAngles((float)Math.toRadians(headPitch - 30), (float)Math.toRadians(-0.5105f), 0);
         m_rrbozhsc(entity.getBlockEntity().activatingAnimation, RocketTurretAnimations.ACTIVATE, animationProgress);
         m_rrbozhsc(entity.getBlockEntity().deactivatingAnimation, RocketTurretAnimations.DEACTIVATE, animationProgress);
-        m_rrbozhsc(entity.getBlockEntity().shootAnimation, RocketTurretAnimations.SHOOT, animationProgress);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
         turret.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+    }
+
+    public Identifier getTexture(RocketTurretBlockEntity entity) {
+        if (entity.deactivatingAnimation.isAnimating() && entity.deactivatingAnimation.m_hkidhtpg() >= 2000) {
+            return TEXTURE_INACTIVE;
+        }
+        return switch (entity.getState()) {
+            case SEARCHING -> TEXTURE_ACTIVE;
+            case LOCKED -> TEXTURE_LOCK_ON;
+            case FIRING -> TEXTURE_FIRING;
+        };
     }
 }

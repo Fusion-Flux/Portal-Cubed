@@ -2,7 +2,7 @@
 	"credit": "Made by Cart3r using Blockbench.",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "portalcubed:block/rocket_turret",
+		"0": "portalcubed:block/rocket_turret_inactive",
 		"1": "portalcubed:block/solid_office_concrete",
 		"2": "portalcubed:block/bordered_office_concrete",
 		"particle": "portalcubed:block/solid_office_concrete"

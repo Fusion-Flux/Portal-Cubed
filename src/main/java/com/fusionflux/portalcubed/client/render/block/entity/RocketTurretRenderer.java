@@ -20,11 +20,8 @@ import net.minecraft.util.math.Vec3f;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import static com.fusionflux.portalcubed.PortalCubed.id;
-
 public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlockEntity> {
     public static final EntityModelLayer ROCKET_TURRET_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "rocket_turret"), "main");
-    public static final Identifier TEXTURE = id("textures/block/rocket_turret.png");
 
     private final EntityModelLoader modelLoader;
     private final Map<RocketTurretBlockEntity, RocketTurretModel> models = new WeakHashMap<>();
@@ -57,7 +54,7 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
         model.animateModel(wrapper, 0, 0, tickDelta);
         model.setAngles(wrapper, 0, 0, entity.getAge() + tickDelta, yaw, pitch);
 
-        final RenderLayer renderLayer = model.getLayer(TEXTURE);
+        final RenderLayer renderLayer = model.getLayer(model.getTexture(entity));
         if (renderLayer != null) {
             final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(renderLayer);
             final int overlay2 = OverlayTexture.packUv(OverlayTexture.getU(0), OverlayTexture.getV(false));
