@@ -7,7 +7,7 @@
 		"4": "portalcubed:block/excursion_funnel_emitter_wings_active",
 		"5": "portalcubed:block/excursion_funnel_thingamajig",
 		"6": "portalcubed:block/excursion_funnel_emitter_wings_active_e",
-		"particle": "portalcubed:block/excursion_funnel_emitter"
+		"particle": "portalcubed:block/padded_gray_panel"
 	},
 	"elements": [
 		{

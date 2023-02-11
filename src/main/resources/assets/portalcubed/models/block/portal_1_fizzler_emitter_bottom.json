@@ -5,7 +5,7 @@
 		"0": "portalcubed:block/grill_emitters",
 		"1": "portalcubed:block/portal_1_gray_half_panel",
 		"2": "portalcubed:block/grill_emitters_e",
-		"particle": "portalcubed:block/grill_emitters"
+		"particle": "portalcubed:block/portal_1_gray_half_panel"
 	},
 	"elements": [
 		{

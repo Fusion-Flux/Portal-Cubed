@@ -4,8 +4,7 @@
 	"textures": {
 		"0": "portalcubed:block/light_bridge_emitter",
 		"1": "portalcubed:block/light_bridge",
-		"particle": "portalcubed:block/light_bridge_emitter"
-	},
+		"particle": "portalcubed:block/padded_gray_panel"	},
 	"elements": [
 		{
 			"from": [1, -1.38477, 13.57925],

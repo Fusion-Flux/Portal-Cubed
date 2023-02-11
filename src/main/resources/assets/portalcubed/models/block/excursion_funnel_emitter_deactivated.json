@@ -5,7 +5,7 @@
 		"1": "portalcubed:block/excursion_funnel_emitter",
 		"2": "portalcubed:block/excursion_funnel_emitter_e",
 		"3": "portalcubed:block/padded_gray_panel",
-		"particle": "portalcubed:block/excursion_funnel_emitter"
+		"particle": "portalcubed:block/padded_gray_panel"
 	},
 	"elements": [
 		{
