@@ -16,6 +16,8 @@
 
     <module name="NewlineAtEndOfFile"/>
 
+    <module name="SuppressWarningsFilter"/>
+
     <module name="TreeWalker">
         <module name="SuppressionCommentFilter">
             <property name="offCommentFormat" value="@checkstyle\:off ([\w\|]+)"/>
@@ -28,6 +30,8 @@
             <property name="illegalPattern" value="true"/>
             <property name="message" value="Trailing whitespace"/>
         </module>
+
+        <module name="SuppressWarningsHolder"/>
 
         <!-- Enforces that constants are in SHOUTING_SNAKE_CASE -->
         <module name="ConstantName"/>
