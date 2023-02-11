@@ -12,3 +12,6 @@ jobs:
         run: wget -P /opt/idea/plugins/ https://github.com/minecraft-dev/MinecraftDev/releases/download/1.5.22-2023.1/Minecraft.Development-2023.1-1.5.22.zip
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2022.3.2
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
