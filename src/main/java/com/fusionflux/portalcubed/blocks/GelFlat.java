@@ -32,7 +32,7 @@ public class GelFlat extends Block {
     public static final BooleanProperty WEST;
     public static final BooleanProperty UP;
     public static final BooleanProperty DOWN;
-    public static final Map<Direction, BooleanProperty> propertyMap;
+    public static final Map<Direction, BooleanProperty> PROPERTY_MAP;
     private static final VoxelShape UP_SHAPE = Block.createCuboidShape(0.0D, 15.99D, 0.0D, 16.0D, 16D, 16.0D);
     private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0D, 0.00D, 0.0D, 16.0D, 0.01D, 16.0D);
     private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.00D, 0.0D, 0.0D, 0.01D, 16.0D, 16.0D);
@@ -47,24 +47,24 @@ public class GelFlat extends Block {
         WEST = Properties.WEST;
         UP = Properties.UP;
         DOWN = Properties.DOWN;
-        propertyMap = new HashMap<>();
-        propertyMap.put(Direction.NORTH, Properties.NORTH);
-        propertyMap.put(Direction.SOUTH, Properties.SOUTH);
-        propertyMap.put(Direction.EAST, Properties.EAST);
-        propertyMap.put(Direction.WEST, Properties.WEST);
-        propertyMap.put(Direction.UP, Properties.UP);
-        propertyMap.put(Direction.DOWN, Properties.DOWN);
+        PROPERTY_MAP = new HashMap<>();
+        PROPERTY_MAP.put(Direction.NORTH, Properties.NORTH);
+        PROPERTY_MAP.put(Direction.SOUTH, Properties.SOUTH);
+        PROPERTY_MAP.put(Direction.EAST, Properties.EAST);
+        PROPERTY_MAP.put(Direction.WEST, Properties.WEST);
+        PROPERTY_MAP.put(Direction.UP, Properties.UP);
+        PROPERTY_MAP.put(Direction.DOWN, Properties.DOWN);
     }
 
-    private final Map<BlockState, VoxelShape> field_26659;
+    private final Map<BlockState, VoxelShape> stateToShape;
 
     public GelFlat(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
-        this.field_26659 = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), GelFlat::method_31018)));
+        this.stateToShape = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), GelFlat::getShapeForState)));
     }
 
-    private static VoxelShape method_31018(BlockState blockState) {
+    private static VoxelShape getShapeForState(BlockState blockState) {
         VoxelShape voxelShape = VoxelShapes.empty();
         if (blockState.get(UP)) {
             voxelShape = UP_SHAPE;
@@ -99,7 +99,7 @@ public class GelFlat extends Block {
     }
 
     public static BooleanProperty getFacingProperty(Direction direction) {
-        return propertyMap.get(direction);
+        return PROPERTY_MAP.get(direction);
     }
 
     private boolean hasAdjacentBlocks(BlockState state) {
@@ -109,7 +109,7 @@ public class GelFlat extends Block {
     private int getAdjacentBlockCount(BlockState state) {
         int i = 0;
 
-        for (BooleanProperty booleanProperty : propertyMap.values()) {
+        for (BooleanProperty booleanProperty : PROPERTY_MAP.values()) {
             if (state.get(booleanProperty)) {
                 ++i;
             }
@@ -127,7 +127,7 @@ public class GelFlat extends Block {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.field_26659.get(state);
+        return this.stateToShape.get(state);
     }
 
     @Override
@@ -211,7 +211,7 @@ public class GelFlat extends Block {
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         BlockState blockState = context.getWorld().getBlockState(context.getBlockPos());
         if (blockState.isOf(this)) {
-            return this.getAdjacentBlockCount(blockState) < propertyMap.size();
+            return this.getAdjacentBlockCount(blockState) < PROPERTY_MAP.size();
         } else {
             return super.canReplace(state, context);
         }
@@ -227,7 +227,7 @@ public class GelFlat extends Block {
             BlockPos pos,
             BlockPos neighborPos
     ) {
-        BooleanProperty direction = propertyMap.get(facing);
+        BooleanProperty direction = PROPERTY_MAP.get(facing);
         BlockState blockState = this.getPlacementShape(state, world, pos);
         return !this.hasAdjacentBlocks(blockState) ? Blocks.AIR.getDefaultState() : blockState.with(direction, false);
     }
@@ -252,7 +252,7 @@ public class GelFlat extends Block {
     @SuppressWarnings("deprecation")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
         if (world.hasRain(pos.up())) {
-            world.setBlockState(pos,Blocks.AIR.getDefaultState());
+            world.setBlockState(pos, Blocks.AIR.getDefaultState());
         }
 
     }

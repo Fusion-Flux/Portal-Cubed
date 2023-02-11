@@ -52,7 +52,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
     public Identifier getTexture(ExperimentalPortal entity) {
         if (PortalCubedConfig.enableRoundPortals) {
             return ROUND_TEXTURE;
-        }else{
+        } else {
             return SQUARE_TEXTURE;
         }
     }

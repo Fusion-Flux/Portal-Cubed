@@ -78,15 +78,15 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
     }
     @Override
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        }
+    }
 
     @Override
     protected void init() {
         super.init();
         var field1 = addDrawableChild(new TextFieldWidget(
                 textRenderer,
-                (this.width/2)- 80, // x ( aligned top-left )
-                (this.height/2) - 30, // y
+                (this.width / 2) - 80, // x ( aligned top-left )
+                (this.height / 2) - 30, // y
                 50, // width
                 20, // height
                 Text.of(String.valueOf(x)) // default text??? not sure
@@ -94,8 +94,8 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
         field1.setText("X: " + x);
         var field2 = addDrawableChild(new TextFieldWidget(
                 textRenderer,
-                (this.width/2)-25, // x ( aligned top-left )
-                (this.height/2) - 30, // y
+                (this.width / 2) - 25, // x ( aligned top-left )
+                (this.height / 2) - 30, // y
                 50, // width
                 20, // height
                 Text.of(String.valueOf(y)) // default text??? not sure
@@ -103,60 +103,60 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
         field2.setText("Y: " + y);
         var field3 = addDrawableChild(new TextFieldWidget(
                 textRenderer,
-                (this.width/2)+ 30, // x ( aligned top-left )
-                (this.height/2) - 30, // y
+                (this.width / 2) + 30, // x ( aligned top-left )
+                (this.height / 2) - 30, // y
                 50, // width
                 20, // height
                 Text.of(String.valueOf(z)) // default text??? not sure
         ));
         field3.setText("Z: " + z);
 
-        int x = this.width/2;
-        int y = this.height/2;
+        int x = this.width / 2;
+        int y = this.height / 2;
         addDrawableChild(new ButtonWidget(x - 50, y, 100, 20, Text.of("Done"), (button) -> {
 
             PacketByteBuf buf = PacketByteBufs.create();
 
             buf.writeBlockPos(pos);
 
-            String xString = field1.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-","m").replaceAll("-", "").replaceAll("m", "-");
-            String yString = field2.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-","m").replaceAll("-", "").replaceAll("m", "-");
-            String zString = field3.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]","d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-","m").replaceAll("-", "").replaceAll("m", "-");
+            String xString = field1.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]", "d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-", "m").replaceAll("-", "").replaceAll("m", "-");
+            String yString = field2.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]", "d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-", "m").replaceAll("-", "").replaceAll("m", "-");
+            String zString = field3.getText().replaceAll("[^\\d.-]", "").replaceFirst("[.]", "d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-", "m").replaceAll("-", "").replaceAll("m", "-");
 
             double sendX = 0;
             double sendY = 0;
             double sendZ = 0;
 
-            if(!xString.equals("")){
+            if (!xString.equals("")) {
                 sendX = Double.parseDouble(xString);
             }
-            if(!yString.equals("")){
+            if (!yString.equals("")) {
                 sendY = Double.parseDouble(yString);
             }
-            if(!zString.equals("")){
+            if (!zString.equals("")) {
                 sendZ = Double.parseDouble(zString);
             }
 
-            if(sendX >4){
+            if (sendX > 4) {
                 sendX = 4;
             }
-            if(sendY >4){
+            if (sendY > 4) {
                 sendY = 4;
             }
-            if(sendZ >4){
+            if (sendZ > 4) {
                 sendZ = 4;
             }
 
             World world = MinecraftClient.getInstance().world;
 
-            if(world != null){
+            if (world != null) {
                 BlockEntity entity = world.getBlockEntity(pos);
-                if(entity instanceof FaithPlateBlockEntity faith){
+                if (entity instanceof FaithPlateBlockEntity faith) {
                     faith.setVelX(sendX);
                     faith.setVelY(sendY);
                     faith.setVelZ(sendZ);
                 }
-                if(entity instanceof BetaFaithPlateBlockEntity faith){
+                if (entity instanceof BetaFaithPlateBlockEntity faith) {
                     faith.setVelX(sendX);
                     faith.setVelY(sendY);
                     faith.setVelZ(sendZ);
