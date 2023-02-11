@@ -119,6 +119,36 @@
 		],
 		"subtitle": "subtitles.portalcubed.material_emancipation"
 	},
+
+	"rocket_fire": {
+		"sounds": [
+			"portalcubed:rocket_fire1"
+		],
+		"subtitle": "subtitles.portalcubed.rocket_fire"
+	},
+	"rocket_fly": {
+		"sounds": [
+			"portalcubed:rocket_fly_loop1"
+		]
+	},
+	"rocket_locked": {
+		"sounds": [
+			"portalcubed:rocket_locked_beep1"
+		],
+		"subtitle": "subtitles.portalcubed.rocket_locked"
+	},
+	"rocket_locking": {
+		"sounds": [
+			"portalcubed:rocket_locking_beep1"
+		],
+		"subtitle": "subtitles.portalcubed.rocket_locking"
+	},
+	"rocket_explode": {
+		"sounds": [
+			"minecraft:fireworks/blast1"
+		]
+	},
+
 	"radio": {
 		"sounds": [
 			{

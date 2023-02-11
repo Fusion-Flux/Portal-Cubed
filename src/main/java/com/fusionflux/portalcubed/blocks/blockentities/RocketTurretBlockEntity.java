@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -13,6 +14,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
 import net.minecraft.util.hit.HitResult;
@@ -91,7 +93,6 @@ public class RocketTurretBlockEntity extends BlockEntity {
             PortalCubed.LOGGER.warn("RocketTurretBlockEntity.fire() should only be called on the server, not the client.");
             return;
         }
-        // TODO: Implement
         PortalCubed.LOGGER.info("BAM");
     }
 
@@ -194,6 +195,8 @@ public class RocketTurretBlockEntity extends BlockEntity {
             if (lockedTicks++ == LOCK_TICKS) {
                 fire();
                 syncLockedTicks();
+            } else if (lockedTicks == 9) {
+                world.playSound(null, pos, PortalCubedSounds.ROCKET_LOCKED_EVENT, SoundCategory.HOSTILE, 1f, 1f);
             } else if (
                 lockedTicks > LOCK_TICKS &&
                     world instanceof ServerWorld serverWorld &&
@@ -234,7 +237,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
         if (player != null && Math.abs(yaw - destYaw) <= 5) {
             lockedTicks++;
             syncLockedTicks();
-            // Also play rocket_locked_beep1
+            world.playSound(null, pos, PortalCubedSounds.ROCKET_LOCKING_EVENT, SoundCategory.HOSTILE, 1f, 1f);
         }
         syncAngle();
     }
