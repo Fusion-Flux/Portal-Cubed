@@ -14,7 +14,9 @@ jobs:
           key: qodana-gradle-${{ hashFiles('build.gradle', 'settings.gradle', 'gradle.properties', 'gradle/**') }}
           path: .gradle/quilt-loom-cache
       - name: Download mcdev
-        run: wget -P /opt/mcdev/ -O mcdev.zip https://github.com/minecraft-dev/MinecraftDev/releases/download/1.5.22-2023.1/Minecraft.Development-2023.1-1.5.22.zip
+        run: |
+          mkdir /opt/mcdev
+          wget -O /opt/mcdev/mcdev.zip https://github.com/minecraft-dev/MinecraftDev/releases/download/1.5.22-2023.1/Minecraft.Development-2023.1-1.5.22.zip
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2022.3.2
         with:
