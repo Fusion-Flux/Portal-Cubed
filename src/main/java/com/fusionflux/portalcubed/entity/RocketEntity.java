@@ -50,15 +50,20 @@ public class RocketEntity extends Entity {
         setVelocity(Vec3d.fromPolar(getPitch(), getYaw()).multiply(SPEED));
         move(MovementType.SELF, getVelocity());
         if (world.isClient) {
-            for (int i = 0; i < 2; i++) {
-                world.addParticle(
-                    ParticleTypes.POOF,
-                    getX() + random.nextGaussian() * 0.2,
-                    getY() + random.nextGaussian() * 0.2,
-                    getZ() + random.nextGaussian() * 0.2,
-                    getVelocity().x, getVelocity().y, getVelocity().z
-                );
-            }
+            world.addParticle(
+                ParticleTypes.SMOKE,
+                getX() + random.nextGaussian() * 0.1,
+                getY() + random.nextGaussian() * 0.1,
+                getZ() + random.nextGaussian() * 0.1,
+                0, 0, 0
+            );
+            world.addParticle(
+                ParticleTypes.SMALL_FLAME,
+                getX() + random.nextGaussian() * 0.1,
+                getY() + random.nextGaussian() * 0.1,
+                getZ() + random.nextGaussian() * 0.1,
+                0, 0, 0
+            );
             return;
         }
         final HitResult hit = ProjectileUtil.getCollision(this, this::canHit);
