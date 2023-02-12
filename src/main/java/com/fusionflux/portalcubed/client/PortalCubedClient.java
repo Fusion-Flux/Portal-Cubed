@@ -174,7 +174,13 @@ public class PortalCubedClient implements ClientModInitializer {
     private void registerEmissiveModels(ModContainer mod) {
         try (Reader reader = Files.newBufferedReader(mod.getPath("emissives.json"), StandardCharsets.UTF_8)) {
             for (final var entry : JsonHelper.deserialize(reader).entrySet()) {
-                EmissiveSpriteRegistry.register(id(entry.getKey()), id(entry.getValue().getAsString()));
+                if (entry.getValue().isJsonArray()) {
+                    for (final var value : entry.getValue().getAsJsonArray()) {
+                        EmissiveSpriteRegistry.register(id(entry.getKey()), id(value.getAsString()));
+                    }
+                } else {
+                    EmissiveSpriteRegistry.register(id(entry.getKey()), id(entry.getValue().getAsString()));
+                }
             }
         } catch (IOException e) {
             PortalCubed.LOGGER.error("Failed to load emissives.json", e);
