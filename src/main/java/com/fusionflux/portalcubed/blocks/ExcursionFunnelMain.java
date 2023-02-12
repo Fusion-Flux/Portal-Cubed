@@ -230,7 +230,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                             public void tick() {
                                 ticks++;
                                 if (ticks > 80) {
-                                    volume = 1f - 0.025f * ticks;
+                                    volume = 1f - 0.05f * (ticks - 80);
                                     if (volume <= 0) {
                                         setDone();
                                     }
