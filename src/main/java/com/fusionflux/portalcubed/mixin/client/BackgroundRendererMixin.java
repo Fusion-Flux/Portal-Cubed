@@ -47,9 +47,14 @@ public abstract class BackgroundRendererMixin {
         FluidState cameraSubmergedFluidState = ((CameraExt) camera).portalcubed$getSubmergedFluidState();
 
         if (cameraSubmergedFluidState.getFluid() instanceof ToxicGooFluid) {
-            // Same fog as lava with fire resistance
-            RenderSystem.setShaderFogStart(0.0F);
-            RenderSystem.setShaderFogEnd(3.0F);
+            if (camera.getFocusedEntity().isSpectator()) {
+                RenderSystem.setShaderFogStart(-8.0F);
+                RenderSystem.setShaderFogEnd(viewDistance * 0.5F);
+            } else {
+                // Same fog as lava with fire resistance
+                RenderSystem.setShaderFogStart(0.0F);
+                RenderSystem.setShaderFogEnd(3.0F);
+            }
 
             ci.cancel();
         }
