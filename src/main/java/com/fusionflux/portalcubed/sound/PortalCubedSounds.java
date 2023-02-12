@@ -30,7 +30,8 @@ public class PortalCubedSounds {
     public static final Identifier ROCKET_LOCKING = new Identifier("portalcubed:rocket_locking");
     public static final Identifier ROCKET_EXPLODE = new Identifier("portalcubed:rocket_explode");
 
-    public static final Identifier EXCURSION_FUNNEL = new Identifier("portalcubed:excursion_funnel");
+    public static final Identifier TBEAM_ENTER = new Identifier("portalcubed:tbeam/enter");
+    public static final Identifier TBEAM_TRAVEL = new Identifier("portalcubed:tbeam/travel");
 
     public static final Identifier RADIO_MUSIC = new Identifier("portalcubed:radio");
     public static final Identifier EXILE_SONG = new Identifier("portalcubed:exile_vilify");
@@ -67,7 +68,8 @@ public class PortalCubedSounds {
     public static final SoundEvent ROCKET_LOCKING_EVENT = new SoundEvent(ROCKET_LOCKING);
     public static final SoundEvent ROCKET_EXPLODE_EVENT = new SoundEvent(ROCKET_EXPLODE);
 
-    public static final SoundEvent EXCURSION_FUNNEL_EVENT = new SoundEvent(EXCURSION_FUNNEL);
+    public static final SoundEvent TBEAM_ENTER_EVENT = new SoundEvent(TBEAM_ENTER);
+    public static final SoundEvent TBEAM_TRAVEL_EVENT = new SoundEvent(TBEAM_TRAVEL);
 
     public static final SoundEvent RADIO_MUSIC_EVENT = new SoundEvent(RADIO_MUSIC);
     public static final SoundEvent EXILE_MUSIC_EVENT = new SoundEvent(EXILE_SONG);
@@ -105,7 +107,8 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKING, ROCKET_LOCKING_EVENT);
         Registry.register(Registry.SOUND_EVENT, ROCKET_EXPLODE, ROCKET_EXPLODE_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, EXCURSION_FUNNEL, EXCURSION_FUNNEL_EVENT);
+        Registry.register(Registry.SOUND_EVENT, TBEAM_ENTER, TBEAM_ENTER_EVENT);
+        Registry.register(Registry.SOUND_EVENT, TBEAM_TRAVEL, TBEAM_TRAVEL_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, RADIO_MUSIC, RADIO_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, EXILE_SONG, EXILE_MUSIC_EVENT);

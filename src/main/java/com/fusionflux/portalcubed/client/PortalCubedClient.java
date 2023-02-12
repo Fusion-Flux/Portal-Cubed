@@ -120,7 +120,7 @@ public class PortalCubedClient implements ClientModInitializer {
             if (((EntityAttachments)client.player).isInFunnel()) {
                 if (excursionFunnelMusic == null) {
                     excursionFunnelMusic = new PositionedSoundInstance(
-                        PortalCubedSounds.EXCURSION_FUNNEL, SoundCategory.MUSIC,
+                        PortalCubedSounds.TBEAM_TRAVEL, SoundCategory.BLOCKS,
                         0.1f, 1f, SoundInstance.m_mglvabhn(),
                         true, 0, SoundInstance.AttenuationType.NONE,
                         0.0, 0.0, 0.0, true

@@ -5,13 +5,18 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelMainBlockEntity;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.MovingSoundInstance;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -213,6 +218,26 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                 if (!((EntityAttachments) entity).isInFunnel()) {
                     ((EntityAttachments) entity).setInFunnel(true);
                     entity.setVelocity(0, 0, 0);
+                    MinecraftClient.getInstance().getSoundManager().play(
+                        new MovingSoundInstance(PortalCubedSounds.TBEAM_ENTER_EVENT, SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
+                            int ticks;
+
+                            {
+                                attenuationType = AttenuationType.NONE;
+                            }
+
+                            @Override
+                            public void tick() {
+                                ticks++;
+                                if (ticks > 80) {
+                                    volume = 1f - 0.025f * ticks;
+                                    if (volume <= 0) {
+                                        setDone();
+                                    }
+                                }
+                            }
+                        }
+                    );
                 }
 
                 ((EntityAttachments) entity).setFunnelTimer(2);

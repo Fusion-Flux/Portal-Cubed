@@ -149,9 +149,16 @@
 		]
 	},
 
-	"excursion_funnel": {
+	"tbeam/enter": {
 		"sounds": [
-			"portalcubed:sp_a4_tb_wall_button_tbin"
+			"portalcubed:tbeam/player_enter_tbeam_lp_01",
+			"portalcubed:tbeam/player_enter_tbeam_lp_02",
+			"portalcubed:tbeam/player_enter_tbeam_lp_03"
+		]
+	},
+	"tbeam/travel": {
+		"sounds": [
+			"portalcubed:tbeam/sp_a4_tb_wall_button_tbin"
 		]
 	},
 
