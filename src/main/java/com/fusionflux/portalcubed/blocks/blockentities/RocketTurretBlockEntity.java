@@ -67,6 +67,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
         nbt.putFloat("Pitch", pitch);
         nbt.putFloat("LockedTicks", lockedTicks);
         nbt.putUuid("RocketUUID", rocketUuid);
+        nbt.putBoolean("Closing", closing);
         if (destAngle != null) {
             nbt.putIntArray("DestAngle", new int[] {Float.floatToRawIntBits(destAngle.x), Float.floatToRawIntBits(destAngle.y)});
         }
@@ -79,6 +80,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
         pitch = nbt.getFloat("Pitch");
         lockedTicks = nbt.getInt("LockedTicks");
         rocketUuid = nbt.getUuid("RocketUUID");
+        closing = nbt.getBoolean("Closing");
         final int[] destAngleA = nbt.getIntArray("DestAngle");
         if (destAngleA.length >= 2) {
             destAngle = new Vec2f(
