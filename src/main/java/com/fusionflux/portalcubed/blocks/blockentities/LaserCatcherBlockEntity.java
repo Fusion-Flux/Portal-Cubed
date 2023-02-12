@@ -1,23 +1,14 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-/**
- * @author sailKite
- * @author FusionFlux
- * <p>
- * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
- */
-public class LaserCatcherBlockEntity extends BlockEntity {
+public class LaserCatcherBlockEntity extends AbstractLaserNodeBlockEntity {
 
 
     public LaserCatcherBlockEntity(BlockPos pos, BlockState state) {
@@ -61,23 +52,9 @@ public class LaserCatcherBlockEntity extends BlockEntity {
             }
             blockEntity.updateState(state, isPowered);
 
+        } else {
+            blockEntity.clientTick(state);
         }
-    }
-
-    public void updateState(BlockState state, boolean toggle) {
-        if (world != null) {
-            world.setBlockState(pos, state.with(Properties.ENABLED, toggle), 3);
-        }
-    }
-
-    @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
-    }
-
-    @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
     }
 
 }

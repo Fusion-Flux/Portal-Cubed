@@ -1,11 +1,11 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -13,8 +13,6 @@ import net.minecraft.block.TintedGlassBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -27,12 +25,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * @author sailKite
- * @author FusionFlux
- * <p>
- * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
- */
 public class LaserEmitterBlockEntity extends BlockEntity {
 
     public final int maxRange = PortalCubedConfig.maxBridgeLength;
@@ -178,12 +170,6 @@ public class LaserEmitterBlockEntity extends BlockEntity {
 
     }
 
-    public void playSound(SoundEvent soundEvent) {
-        assert this.world != null;
-        this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
-    }
-
-
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
@@ -262,10 +248,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         assert world != null;
         world.setBlockState(pos, state.cycle(Properties.POWERED));
         if (world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_ACTIVATE);
-        }
-        if (!world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_DEACTIVATE);
+            world.playSound(null, this.pos, PortalCubedSounds.LASER_EMITTER_ACTIVATE_EVENT, SoundCategory.BLOCKS, 0.25f, 1f);
         }
     }
 }

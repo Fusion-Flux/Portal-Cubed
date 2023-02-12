@@ -30,6 +30,11 @@ public class PortalCubedSounds {
     public static final Identifier ROCKET_LOCKING = new Identifier("portalcubed:rocket_locking");
     public static final Identifier ROCKET_EXPLODE = new Identifier("portalcubed:rocket_explode");
 
+    public static final Identifier LASER_EMITTER_ACTIVATE = new Identifier("portalcubed:laser/emitter_activate");
+    public static final Identifier LASER_NODE_MUSIC = new Identifier("portalcubed:laser/node_music");
+    public static final Identifier LASER_NODE_ACTIVATE = new Identifier("portalcubed:laser/node_activate");
+    public static final Identifier LASER_NODE_DEACTIVATE = new Identifier("portalcubed:laser/node_deactivate");
+
     public static final Identifier TBEAM_ENTER = new Identifier("portalcubed:tbeam/enter");
     public static final Identifier TBEAM_TRAVEL = new Identifier("portalcubed:tbeam/travel");
 
@@ -67,6 +72,11 @@ public class PortalCubedSounds {
     public static final SoundEvent ROCKET_LOCKED_EVENT = new SoundEvent(ROCKET_LOCKED);
     public static final SoundEvent ROCKET_LOCKING_EVENT = new SoundEvent(ROCKET_LOCKING);
     public static final SoundEvent ROCKET_EXPLODE_EVENT = new SoundEvent(ROCKET_EXPLODE);
+
+    public static final SoundEvent LASER_EMITTER_ACTIVATE_EVENT = new SoundEvent(LASER_EMITTER_ACTIVATE);
+    public static final SoundEvent LASER_NODE_MUSIC_EVENT = new SoundEvent(LASER_NODE_MUSIC);
+    public static final SoundEvent LASER_NODE_ACTIVATE_EVENT = new SoundEvent(LASER_NODE_ACTIVATE);
+    public static final SoundEvent LASER_NODE_DEACTIVATE_EVENT = new SoundEvent(LASER_NODE_DEACTIVATE);
 
     public static final SoundEvent TBEAM_ENTER_EVENT = new SoundEvent(TBEAM_ENTER);
     public static final SoundEvent TBEAM_TRAVEL_EVENT = new SoundEvent(TBEAM_TRAVEL);
@@ -106,6 +116,11 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKED, ROCKET_LOCKED_EVENT);
         Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKING, ROCKET_LOCKING_EVENT);
         Registry.register(Registry.SOUND_EVENT, ROCKET_EXPLODE, ROCKET_EXPLODE_EVENT);
+
+        Registry.register(Registry.SOUND_EVENT, LASER_EMITTER_ACTIVATE, LASER_EMITTER_ACTIVATE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_NODE_MUSIC, LASER_NODE_MUSIC_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_NODE_ACTIVATE, LASER_NODE_ACTIVATE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_NODE_DEACTIVATE, LASER_NODE_DEACTIVATE_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, TBEAM_ENTER, TBEAM_ENTER_EVENT);
         Registry.register(Registry.SOUND_EVENT, TBEAM_TRAVEL, TBEAM_TRAVEL_EVENT);

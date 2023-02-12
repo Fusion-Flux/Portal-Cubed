@@ -149,6 +149,27 @@
 		]
 	},
 
+	"laser/emitter_activate": {
+		"sounds": [
+			"portalcubed:laser/laser_activation_01"
+		]
+	},
+	"laser/node_music": {
+		"sounds": [
+			"portalcubed:laser/laser_node_lp_01"
+		]
+	},
+	"laser/node_activate": {
+		"sounds": [
+			"portalcubed:laser/laser_node_power_on"
+		]
+	},
+	"laser/node_deactivate": {
+		"sounds": [
+			"portalcubed:laser/laser_node_power_off"
+		]
+	},
+
 	"tbeam/enter": {
 		"sounds": [
 			"portalcubed:tbeam/player_enter_tbeam_lp_01",
