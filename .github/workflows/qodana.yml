@@ -20,7 +20,7 @@ jobs:
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2022.3.2
         with:
-          args: -v/opt/mcdev/mcdev.zip:/opt/idea/plugins/mcdev.zip
+          args: -v/opt/mcdev/mcdev.zip:/root/.config/idea/plugins/mcdev.zip
       - uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
