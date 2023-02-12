@@ -149,6 +149,12 @@
 		]
 	},
 
+	"excursion_funnel": {
+		"sounds": [
+			"portalcubed:sp_a4_tb_wall_button_tbin"
+		]
+	},
+
 	"radio": {
 		"sounds": [
 			{
