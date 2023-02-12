@@ -36,6 +36,11 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
     }
 
     @Override
+    public int getRenderDistance() {
+        return 128; // So that the whole laser can be seen. See the raycast in RocketTurretBlockEntity.java.
+    }
+
+    @Override
     public void render(RocketTurretBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
 
