@@ -80,7 +80,7 @@
   "block/octopus_door_top_right": "block/octopus_door_e",
   "block/octopus_door_top_right_open": "block/octopus_door_e",
 
-  "block/light_bridge_emitter": "block/light_bridge_emitter_e",
+  "block/light_bridge_emitter_active": "block/light_bridge_emitter_e",
 
   "block/excursion_funnel_emitter_deactivated": "block/excursion_funnel_emitter_e",
   "block/excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",

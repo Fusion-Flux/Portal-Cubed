@@ -1,26 +1,54 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,powered=false": {
       "model": "portalcubed:block/light_bridge_emitter",
       "y": 90
     },
-    "facing=north": {
+    "facing=north,powered=false": {
       "model": "portalcubed:block/light_bridge_emitter",
       "y": 0
     },
-    "facing=south": {
+    "facing=south,powered=false": {
       "model": "portalcubed:block/light_bridge_emitter",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,powered=false": {
       "model": "portalcubed:block/light_bridge_emitter",
       "y": 270
     },
-    "facing=up": {
-      "model": "portalcubed:block/light_bridge_emitter"
+    "facing=up,powered=false": {
+      "model": "portalcubed:block/light_bridge_emitter",
+      "x": 270
     },
-    "facing=down": {
-      "model": "portalcubed:block/light_bridge_emitter"
+    "facing=down,powered=false": {
+      "model": "portalcubed:block/light_bridge_emitter",
+      "x": 90,
+      "y": 180
+    },
+    "facing=east,powered=true": {
+      "model": "portalcubed:block/light_bridge_emitter_active",
+      "y": 90
+    },
+    "facing=north,powered=true": {
+      "model": "portalcubed:block/light_bridge_emitter_active",
+      "y": 0
+    },
+    "facing=south,powered=true": {
+      "model": "portalcubed:block/light_bridge_emitter_active",
+      "y": 180
+    },
+    "facing=west,powered=true": {
+      "model": "portalcubed:block/light_bridge_emitter_active",
+      "y": 270
+    },
+    "facing=up,powered=true": {
+      "model": "portalcubed:block/light_bridge_emitter_active",
+      "x": 270
+    },
+    "facing=down,powered=true": {
+      "model": "portalcubed:block/light_bridge_emitter_active",
+      "x": 90,
+      "y": 180
     }
   }
 }

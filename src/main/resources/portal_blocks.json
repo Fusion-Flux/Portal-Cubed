@@ -35,7 +35,13 @@
   },
   "portal_1_rusted_plating": {},
   "portal_1_rusted_tread_plating": {},
-  "portal_1_mesh": {
+  "portal_1_metal_grating": {
+    "type": "old_ap",
+    "render_layer": "translucent",
+    "opaque": false
+  },
+  "portal_1_mesh_grating": {
+    "type": "old_ap",
     "render_layer": "translucent",
     "opaque": false
   },
@@ -233,7 +239,8 @@
   },
   "office_concrete": {},
   "blue_office_concrete": {},
-  "old_ap_mesh": {
+  "old_ap_metal_grating": {
+    "type": "old_ap",
     "render_layer": "translucent",
     "opaque": false
   },
