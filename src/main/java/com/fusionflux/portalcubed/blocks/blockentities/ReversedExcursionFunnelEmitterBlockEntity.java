@@ -11,9 +11,10 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author sailKite
@@ -41,8 +42,8 @@ public class ReversedExcursionFunnelEmitterBlockEntity extends AbstractExcursion
                 BlockPos translatedPos = pos;
                 BlockPos savedPos = pos;
                 if (blockEntity.funnels != null) {
-                    List<BlockPos> modFunnels = new ArrayList<>();
-                    List<BlockPos> portalFunnels = new ArrayList<>();
+                    Set<BlockPos> modFunnels = new HashSet<>();
+                    Set<BlockPos> portalFunnels = new HashSet<>();
                     boolean teleported = false;
                     Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
                     for (int i = 0; i <= blockEntity.maxRange; i++) {

@@ -23,7 +23,7 @@ public final class EntityEmissiveRendering {
             brightness -= Math.min(physicsEntity.getFizzleProgress(), 1f);
         }
         final var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEyes(emissiveTextureGetter.apply(entity)));
-        model.render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, brightness, brightness, brightness, brightness);
+        model.render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, brightness, brightness, brightness, 1f);
     }
 
     public static <T extends Entity, M extends EntityModel<T>> EmissiveFeatureRenderer<T, M> featureRenderer(FeatureRendererContext<T, M> featureRendererContext, Function<T, Identifier> emissiveTextureGetter) {

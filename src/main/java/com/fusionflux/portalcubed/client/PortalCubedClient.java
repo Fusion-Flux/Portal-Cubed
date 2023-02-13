@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.client;
 
 import amymialee.visiblebarriers.VisibleBarriers;
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.gui.FaithPlateScreen;
@@ -169,6 +170,8 @@ public class PortalCubedClient implements ClientModInitializer {
         );
 
         PortalBlocksLoader.initClient();
+
+        FloorButtonBlock.enableEasterEgg = true;
     }
 
     private void registerEmissiveModels(ModContainer mod) {
