@@ -23,6 +23,21 @@ public class PortalCubedSounds {
     public static final Identifier CUBE_SCRAPE = new Identifier("portalcubed:cube_scrape");
     public static final Identifier COMPANION_CUBE_AMBIANCE = new Identifier("portalcubed:companion_cube_ambiance");
     public static final Identifier MATERIAL_EMANCIPATION = new Identifier("portalcubed:material_emancipation");
+
+    public static final Identifier ROCKET_FIRE = new Identifier("portalcubed:rocket_fire");
+    public static final Identifier ROCKET_FLY = new Identifier("portalcubed:rocket_fly");
+    public static final Identifier ROCKET_LOCKED = new Identifier("portalcubed:rocket_locked");
+    public static final Identifier ROCKET_LOCKING = new Identifier("portalcubed:rocket_locking");
+    public static final Identifier ROCKET_EXPLODE = new Identifier("portalcubed:rocket_explode");
+
+    public static final Identifier LASER_EMITTER_ACTIVATE = new Identifier("portalcubed:laser/emitter_activate");
+    public static final Identifier LASER_NODE_MUSIC = new Identifier("portalcubed:laser/node_music");
+    public static final Identifier LASER_NODE_ACTIVATE = new Identifier("portalcubed:laser/node_activate");
+    public static final Identifier LASER_NODE_DEACTIVATE = new Identifier("portalcubed:laser/node_deactivate");
+
+    public static final Identifier TBEAM_ENTER = new Identifier("portalcubed:tbeam/enter");
+    public static final Identifier TBEAM_TRAVEL = new Identifier("portalcubed:tbeam/travel");
+
     public static final Identifier RADIO_MUSIC = new Identifier("portalcubed:radio");
     public static final Identifier EXILE_SONG = new Identifier("portalcubed:exile_vilify");
     public static final Identifier CURIOSITY_CORE_SOUND = new Identifier("portalcubed:curiosity_core");
@@ -51,6 +66,21 @@ public class PortalCubedSounds {
     public static final SoundEvent CUBE_SCRAPE_EVENT = new SoundEvent(CUBE_SCRAPE);
     public static final SoundEvent COMPANION_CUBE_AMBIANCE_EVENT = new SoundEvent(COMPANION_CUBE_AMBIANCE);
     public static final SoundEvent MATERIAL_EMANCIPATION_EVENT = new SoundEvent(MATERIAL_EMANCIPATION);
+
+    public static final SoundEvent ROCKET_FIRE_EVENT = new SoundEvent(ROCKET_FIRE);
+    public static final SoundEvent ROCKET_FLY_EVENT = new SoundEvent(ROCKET_FLY);
+    public static final SoundEvent ROCKET_LOCKED_EVENT = new SoundEvent(ROCKET_LOCKED);
+    public static final SoundEvent ROCKET_LOCKING_EVENT = new SoundEvent(ROCKET_LOCKING);
+    public static final SoundEvent ROCKET_EXPLODE_EVENT = new SoundEvent(ROCKET_EXPLODE);
+
+    public static final SoundEvent LASER_EMITTER_ACTIVATE_EVENT = new SoundEvent(LASER_EMITTER_ACTIVATE);
+    public static final SoundEvent LASER_NODE_MUSIC_EVENT = new SoundEvent(LASER_NODE_MUSIC);
+    public static final SoundEvent LASER_NODE_ACTIVATE_EVENT = new SoundEvent(LASER_NODE_ACTIVATE);
+    public static final SoundEvent LASER_NODE_DEACTIVATE_EVENT = new SoundEvent(LASER_NODE_DEACTIVATE);
+
+    public static final SoundEvent TBEAM_ENTER_EVENT = new SoundEvent(TBEAM_ENTER);
+    public static final SoundEvent TBEAM_TRAVEL_EVENT = new SoundEvent(TBEAM_TRAVEL);
+
     public static final SoundEvent RADIO_MUSIC_EVENT = new SoundEvent(RADIO_MUSIC);
     public static final SoundEvent EXILE_MUSIC_EVENT = new SoundEvent(EXILE_SONG);
     public static final SoundEvent CURIOSITY_CORE_EVENT = new SoundEvent(CURIOSITY_CORE_SOUND);
@@ -77,11 +107,26 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, CUBE_HIT_HIGH, CUBE_HIGH_HIT_EVENT);
         Registry.register(Registry.SOUND_EVENT, CUBE_HIT_LOW, CUBE_LOW_HIT_EVENT);
         Registry.register(Registry.SOUND_EVENT, CUBE_SCRAPE, CUBE_SCRAPE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, EXILE_SONG, EXILE_MUSIC_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, COMPANION_CUBE_AMBIANCE, COMPANION_CUBE_AMBIANCE_EVENT);
         Registry.register(Registry.SOUND_EVENT, MATERIAL_EMANCIPATION, MATERIAL_EMANCIPATION_EVENT);
+
+        Registry.register(Registry.SOUND_EVENT, ROCKET_FIRE, ROCKET_FIRE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, ROCKET_FLY, ROCKET_FLY_EVENT);
+        Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKED, ROCKET_LOCKED_EVENT);
+        Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKING, ROCKET_LOCKING_EVENT);
+        Registry.register(Registry.SOUND_EVENT, ROCKET_EXPLODE, ROCKET_EXPLODE_EVENT);
+
+        Registry.register(Registry.SOUND_EVENT, LASER_EMITTER_ACTIVATE, LASER_EMITTER_ACTIVATE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_NODE_MUSIC, LASER_NODE_MUSIC_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_NODE_ACTIVATE, LASER_NODE_ACTIVATE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_NODE_DEACTIVATE, LASER_NODE_DEACTIVATE_EVENT);
+
+        Registry.register(Registry.SOUND_EVENT, TBEAM_ENTER, TBEAM_ENTER_EVENT);
+        Registry.register(Registry.SOUND_EVENT, TBEAM_TRAVEL, TBEAM_TRAVEL_EVENT);
+
         Registry.register(Registry.SOUND_EVENT, RADIO_MUSIC, RADIO_MUSIC_EVENT);
+        Registry.register(Registry.SOUND_EVENT, EXILE_SONG, EXILE_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, CURIOSITY_CORE_SOUND, CURIOSITY_CORE_EVENT);
         Registry.register(Registry.SOUND_EVENT, ANGER_CORE_SOUND, ANGER_CORE_EVENT);
         Registry.register(Registry.SOUND_EVENT, CAKE_CORE_SOUND, CAKE_CORE_EVENT);

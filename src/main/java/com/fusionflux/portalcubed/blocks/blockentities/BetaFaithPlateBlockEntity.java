@@ -33,40 +33,40 @@ import java.util.List;
  */
 public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
 
-    private double velX=0;
-    private double velY=0;
-    private double velZ=0;
+    private double velX = 0;
+    private double velY = 0;
+    private double velZ = 0;
 
     private  double timer = 0;
     private  double animationTimer = 0;
 
     public BetaFaithPlateBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.BETA_FAITH_PLATE_ENTITY,pos,state);
+        super(PortalCubedBlocks.BETA_FAITH_PLATE_ENTITY, pos, state);
 
     }
 
     public static void tick1(World world, BlockPos pos, BlockState state, BetaFaithPlateBlockEntity blockEntity) {
-        Box checkBox = new Box(pos).offset(state.get(Properties.FACING).getOffsetX(),state.get(Properties.FACING).getOffsetY(),state.get(Properties.FACING).getOffsetZ());
+        Box checkBox = new Box(pos).offset(state.get(Properties.FACING).getOffsetX(), state.get(Properties.FACING).getOffsetY(), state.get(Properties.FACING).getOffsetZ());
 
         List<Entity> list = world.getNonSpectatingEntities(Entity.class, checkBox);
 
-        if(blockEntity.animationTimer >0) {
+        if (blockEntity.animationTimer > 0) {
             blockEntity.animationTimer -= 1;
-            world.setBlockState(pos,state.with(Properties.ENABLED,true),3);
-        }else{
-            world.setBlockState(pos,state.with(Properties.ENABLED,false),3);
+            world.setBlockState(pos, state.with(Properties.ENABLED, true), 3);
+        } else {
+            world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
         }
 
-        for(Entity liver : list){
-            if(blockEntity.timer <= 0) {
-                if(liver instanceof CorePhysicsEntity physEn) {
-                    if(physEn.getHolderUUID().isEmpty()) {
+        for (Entity liver : list) {
+            if (blockEntity.timer <= 0) {
+                if (liver instanceof CorePhysicsEntity physEn) {
+                    if (physEn.getHolderUUID().isEmpty()) {
                         liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
                         blockEntity.timer = 5;
                         blockEntity.animationTimer = 7;
                         world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
                     }
-                }else{
+                } else {
                     liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
                     blockEntity.timer = 5;
                     blockEntity.animationTimer = 7;
@@ -74,7 +74,7 @@ public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedSc
                 }
             }
         }
-        if(blockEntity.timer>0)
+        if (blockEntity.timer > 0)
             blockEntity.timer -= 1;
 
     }
@@ -93,9 +93,9 @@ public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedSc
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        tag.putDouble("velX",velX);
-        tag.putDouble("velY",velY);
-        tag.putDouble("velZ",velZ);
+        tag.putDouble("velX", velX);
+        tag.putDouble("velY", velY);
+        tag.putDouble("velZ", velZ);
     }
 
     @Override

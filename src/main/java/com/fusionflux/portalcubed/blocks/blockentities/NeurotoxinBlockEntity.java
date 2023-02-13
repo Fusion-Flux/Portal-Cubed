@@ -12,7 +12,7 @@ public class NeurotoxinBlockEntity extends BlockEntity {
     private int age = 1;
 
     public NeurotoxinBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.NEUROTOXIN_BLOCK_ENTITY,pos,state);
+        super(PortalCubedBlocks.NEUROTOXIN_BLOCK_ENTITY, pos, state);
     }
 
     public static void tick(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, NeurotoxinBlockEntity blockEntity) {

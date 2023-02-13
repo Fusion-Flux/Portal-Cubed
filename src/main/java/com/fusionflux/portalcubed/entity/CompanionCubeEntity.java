@@ -23,13 +23,13 @@ public class CompanionCubeEntity extends StorageCubeEntity {
         if (!this.world.isClient && !this.isRemoved()) {
             boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
             if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
+                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.COMPANION_CUBE);
                     }
                     this.discard();
                 }
-                if(!(source.getAttacker() instanceof PlayerEntity)) {
+                if (!(source.getAttacker() instanceof PlayerEntity)) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.COMPANION_CUBE);
                     }
@@ -46,7 +46,7 @@ public class CompanionCubeEntity extends StorageCubeEntity {
         super.tick();
         if (!this.world.isClient) {
             if (t == 1500) {
-                world.playSoundFromEntity(null,this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT,this.getSoundCategory(),1f,1f);
+                world.playSoundFromEntity(null, this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundCategory(), 1f, 1f);
             }
             t--;
             if (t == 0) {

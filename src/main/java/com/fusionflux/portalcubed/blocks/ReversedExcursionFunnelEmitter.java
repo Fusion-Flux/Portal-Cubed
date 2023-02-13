@@ -26,7 +26,7 @@ public class ReversedExcursionFunnelEmitter extends BlockWithEntity {
 
     public ReversedExcursionFunnelEmitter(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED,true));
+        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED, true));
     }
 
     @Override

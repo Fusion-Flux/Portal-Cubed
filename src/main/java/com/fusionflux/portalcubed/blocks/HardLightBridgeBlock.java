@@ -40,7 +40,7 @@ public class HardLightBridgeBlock extends BlockWithEntity {
     public static final DirectionProperty VERT_FACING_UP;
     public static final DirectionProperty VERT_FACING_DOWN;
 
-    public static final Map<Direction, BooleanProperty> propertyMap;
+    public static final Map<Direction, BooleanProperty> PROPERTY_MAP;
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(2.0D, 1.0D, 0.0D, 14.0D, 2.0D, 16.0D);
     protected static final VoxelShape SHAPE_ROTATED = Block.createCuboidShape(0.0D, 1.0D, 2.0D, 16.0D, 2.0D, 14.0D);
@@ -49,14 +49,14 @@ public class HardLightBridgeBlock extends BlockWithEntity {
     protected static final VoxelShape VERT_SOUTH = Block.createCuboidShape(2.0D, 0.0D, 14.0D, 14.0D, 16.0D, 15.0D);
     protected static final VoxelShape VERT_EAST = Block.createCuboidShape(14.0D, 0.0D, 2.0D, 15.0D, 16.0D, 14.0D);
     protected static final VoxelShape VERT_WEST = Block.createCuboidShape(1.0D, 0.0D, 2.0D, 2.0D, 16.0D, 14.0D);
-    private final Map<BlockState, VoxelShape> field_26659;
+    private final Map<BlockState, VoxelShape> stateToShape;
 
 
 
     public HardLightBridgeBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(VERT_FACING_UP, Direction.NORTH).with(VERT_FACING_DOWN, Direction.NORTH));
-        this.field_26659 = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeBlock::method_31018)));
+        this.stateToShape = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeBlock::getShapeForState)));
     }
 
     static {
@@ -68,13 +68,13 @@ public class HardLightBridgeBlock extends BlockWithEntity {
         DOWN = Properties.DOWN;
         VERT_FACING_UP = CustomProperties.H_FACING_UP;
         VERT_FACING_DOWN = CustomProperties.H_FACING_DOWN;
-        propertyMap = new HashMap<>();
-        propertyMap.put(Direction.NORTH, Properties.NORTH);
-        propertyMap.put(Direction.SOUTH, Properties.SOUTH);
-        propertyMap.put(Direction.EAST, Properties.EAST);
-        propertyMap.put(Direction.WEST, Properties.WEST);
-        propertyMap.put(Direction.UP, Properties.UP);
-        propertyMap.put(Direction.DOWN, Properties.DOWN);
+        PROPERTY_MAP = new HashMap<>();
+        PROPERTY_MAP.put(Direction.NORTH, Properties.NORTH);
+        PROPERTY_MAP.put(Direction.SOUTH, Properties.SOUTH);
+        PROPERTY_MAP.put(Direction.EAST, Properties.EAST);
+        PROPERTY_MAP.put(Direction.WEST, Properties.WEST);
+        PROPERTY_MAP.put(Direction.UP, Properties.UP);
+        PROPERTY_MAP.put(Direction.DOWN, Properties.DOWN);
     }
 
     @Override
@@ -85,44 +85,44 @@ public class HardLightBridgeBlock extends BlockWithEntity {
 
 
 
-    private static VoxelShape method_31018(BlockState blockState) {
+    private static VoxelShape getShapeForState(BlockState blockState) {
         VoxelShape voxelShape = VoxelShapes.empty();
 
 
-        if (blockState.get(WEST)||blockState.get(EAST)) {
+        if (blockState.get(WEST) || blockState.get(EAST)) {
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_ROTATED);
         }
 
-        if (blockState.get(NORTH)||blockState.get(SOUTH)) {
+        if (blockState.get(NORTH) || blockState.get(SOUTH)) {
             voxelShape = VoxelShapes.union(voxelShape, SHAPE);
         }
 
-        if(blockState.get(UP)){
-            if(blockState.get(VERT_FACING_UP).equals(Direction.NORTH)){
+        if (blockState.get(UP)) {
+            if (blockState.get(VERT_FACING_UP).equals(Direction.NORTH)) {
                 voxelShape = VoxelShapes.union(voxelShape, VERT_NORTH);
             }
-            if(blockState.get(VERT_FACING_UP).equals(Direction.SOUTH)){
+            if (blockState.get(VERT_FACING_UP).equals(Direction.SOUTH)) {
                 voxelShape = VoxelShapes.union(voxelShape, VERT_SOUTH);
             }
-            if(blockState.get(VERT_FACING_UP).equals(Direction.EAST)){
+            if (blockState.get(VERT_FACING_UP).equals(Direction.EAST)) {
                 voxelShape = VoxelShapes.union(voxelShape, VERT_EAST);
             }
-            if(blockState.get(VERT_FACING_UP).equals(Direction.WEST)){
+            if (blockState.get(VERT_FACING_UP).equals(Direction.WEST)) {
                 voxelShape = VoxelShapes.union(voxelShape, VERT_WEST);
             }
         }
 
-        if(blockState.get(DOWN)){
-            if(blockState.get(VERT_FACING_DOWN).equals(Direction.NORTH)){
+        if (blockState.get(DOWN)) {
+            if (blockState.get(VERT_FACING_DOWN).equals(Direction.NORTH)) {
                 voxelShape = VoxelShapes.union(voxelShape, VERT_NORTH);
             }
-            if(blockState.get(VERT_FACING_DOWN).equals(Direction.SOUTH)){
+            if (blockState.get(VERT_FACING_DOWN).equals(Direction.SOUTH)) {
                 voxelShape = VoxelShapes.union(voxelShape, VERT_SOUTH);
             }
-            if(blockState.get(VERT_FACING_DOWN).equals(Direction.EAST)){
+            if (blockState.get(VERT_FACING_DOWN).equals(Direction.EAST)) {
                 voxelShape = VoxelShapes.union(voxelShape, VERT_EAST);
             }
-            if(blockState.get(VERT_FACING_DOWN).equals(Direction.WEST)){
+            if (blockState.get(VERT_FACING_DOWN).equals(Direction.WEST)) {
                 voxelShape = VoxelShapes.union(voxelShape, VERT_WEST);
             }
         }
@@ -153,13 +153,13 @@ public class HardLightBridgeBlock extends BlockWithEntity {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.field_26659.get(state);
+        return this.stateToShape.get(state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.field_26659.get(state);
+        return this.stateToShape.get(state);
     }
 
     @Override

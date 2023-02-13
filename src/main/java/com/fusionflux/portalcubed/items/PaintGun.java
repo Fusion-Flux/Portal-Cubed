@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.items;
 
-
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
@@ -19,7 +18,6 @@ import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
-
 
 public class PaintGun extends Item implements DirectClickItem, DyeableItem {
 
@@ -77,13 +75,13 @@ public class PaintGun extends Item implements DirectClickItem, DyeableItem {
         if (!world.isClient && !user.isSpectator() && CalledValues.getCanFireGel(user)) {
             final GelBlobEntity entity = gelType.blobEntityType.create(world);
             if (entity == null) return;
-            entity.setPosition(user.getX(), user.getEyeY()-.5, user.getZ());
+            entity.setPosition(user.getX(), user.getEyeY() - .5, user.getZ());
             entity.setProperties(user, user.getPitch(), user.getYaw(), 0f, 2f, 1f);
             entity.setOwner(user);
             entity.setSize(1);
             world.spawnEntity(entity);
-            CalledValues.setCanFireGel(user,false);
-            entity.addVelocity(CalledValues.getServerVelForGel(user).x,CalledValues.getServerVelForGel(user).y,CalledValues.getServerVelForGel(user).z);
+            CalledValues.setCanFireGel(user, false);
+            entity.addVelocity(CalledValues.getServerVelForGel(user).x, CalledValues.getServerVelForGel(user).y, CalledValues.getServerVelForGel(user).z);
         }
     }
 

@@ -14,10 +14,14 @@ import com.fusionflux.portalcubed.client.render.block.entity.RocketTurretRendere
 import com.fusionflux.portalcubed.client.render.block.entity.VelocityHelperRenderer;
 import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
+import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
+import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
+import com.fusionflux.portalcubed.mixin.client.MusicTrackerAccessor;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -29,8 +33,11 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.item.Items;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.BlockPos;
@@ -39,6 +46,7 @@ import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
+import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -53,6 +61,7 @@ public class PortalCubedClient implements ClientModInitializer {
     @Nullable public static BlockPos velocityHelperDragStart;
     private static boolean hiddenBlocksVisible;
     public static boolean allowCfg;
+    private static SoundInstance excursionFunnelMusic;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -106,6 +115,42 @@ public class PortalCubedClient implements ClientModInitializer {
 //            }
 //        });
 
+        ClientTickEvents.END.register(client -> {
+            if (client.player == null) return;
+            if (((EntityAttachments)client.player).isInFunnel()) {
+                if (excursionFunnelMusic == null) {
+                    excursionFunnelMusic = new PositionedSoundInstance(
+                        PortalCubedSounds.TBEAM_TRAVEL, SoundCategory.BLOCKS,
+                        0.1f, 1f, SoundInstance.m_mglvabhn(),
+                        true, 0, SoundInstance.AttenuationType.NONE,
+                        0.0, 0.0, 0.0, true
+                    );
+                    client.getSoundManager().play(excursionFunnelMusic);
+                } else if (excursionFunnelMusic.getVolume() < 1f && excursionFunnelMusic instanceof AbstractSoundInstanceAccessor access) {
+                    access.setVolume(excursionFunnelMusic.getVolume() + 0.05f);
+                    if (((MusicTrackerAccessor)client.getMusicTracker()).getCurrent() instanceof AbstractSoundInstanceAccessor cAccess) {
+                        cAccess.setVolume(1f - excursionFunnelMusic.getVolume() / 2);
+                    }
+                    client.getSoundManager().updateSoundVolume(null, 0); // If first argument is null, all it does is refresh SoundInstance volumes
+                }
+            } else if (excursionFunnelMusic != null) {
+                if (excursionFunnelMusic.getVolume() <= 0f) {
+                    client.getSoundManager().stop(excursionFunnelMusic);
+                    excursionFunnelMusic = null;
+                    if (((MusicTrackerAccessor)client.getMusicTracker()).getCurrent() instanceof AbstractSoundInstanceAccessor access) {
+                        access.setVolume(1f);
+                        client.getSoundManager().updateSoundVolume(null, 0); // See above
+                    }
+                } else if (excursionFunnelMusic instanceof AbstractSoundInstanceAccessor access) {
+                    access.setVolume(excursionFunnelMusic.getVolume() - 0.05f);
+                    if (((MusicTrackerAccessor)client.getMusicTracker()).getCurrent() instanceof AbstractSoundInstanceAccessor cAccess) {
+                        cAccess.setVolume(1f - excursionFunnelMusic.getVolume() / 2);
+                    }
+                    client.getSoundManager().updateSoundVolume(null, 0); // See above
+                }
+            }
+        });
+
         final Identifier toxicGooStillSpriteId = id("block/toxic_goo_still");
         final Identifier toxicGooFlowSpriteId = id("block/toxic_goo_flow");
         FluidRenderHandlerRegistry.INSTANCE.register(PortalCubedFluids.TOXIC_GOO.still, PortalCubedFluids.TOXIC_GOO.flowing, new SimpleFluidRenderHandler(toxicGooStillSpriteId, toxicGooFlowSpriteId));
@@ -127,9 +172,15 @@ public class PortalCubedClient implements ClientModInitializer {
     }
 
     private void registerEmissiveModels(ModContainer mod) {
-        try (final Reader reader = Files.newBufferedReader(mod.getPath("emissives.json"), StandardCharsets.UTF_8)) {
+        try (Reader reader = Files.newBufferedReader(mod.getPath("emissives.json"), StandardCharsets.UTF_8)) {
             for (final var entry : JsonHelper.deserialize(reader).entrySet()) {
-                EmissiveSpriteRegistry.register(id(entry.getKey()), id(entry.getValue().getAsString()));
+                if (entry.getValue().isJsonArray()) {
+                    for (final var value : entry.getValue().getAsJsonArray()) {
+                        EmissiveSpriteRegistry.register(id(entry.getKey()), id(value.getAsString()));
+                    }
+                } else {
+                    EmissiveSpriteRegistry.register(id(entry.getKey()), id(entry.getValue().getAsString()));
+                }
             }
         } catch (IOException e) {
             PortalCubed.LOGGER.error("Failed to load emissives.json", e);
@@ -220,6 +271,9 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(RocketTurretRenderer.ROCKET_TURRET_LAYER, RocketTurretModel::getTexturedModelData);
         BlockEntityRendererFactories.register(PortalCubedBlocks.ROCKET_TURRET_BLOCK_ENTITY, RocketTurretRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(RocketRenderer.ROCKET_LAYER, RocketModel::getTexturedModelData);
+        EntityRendererRegistry.register(PortalCubedEntities.ROCKET, RocketRenderer::new);
     }
 
     private static final class VisibleBarriersCompat {

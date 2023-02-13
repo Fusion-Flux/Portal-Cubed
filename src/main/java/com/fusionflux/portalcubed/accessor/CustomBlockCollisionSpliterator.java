@@ -11,7 +11,6 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.CollisionView;
 import org.jetbrains.annotations.Nullable;
 
 public class CustomBlockCollisionSpliterator extends AbstractIterator<VoxelShape> {
@@ -27,13 +26,8 @@ public class CustomBlockCollisionSpliterator extends AbstractIterator<VoxelShape
     private BlockView chunk;
     private long chunkPos;
 
-    public CustomBlockCollisionSpliterator(CollisionView world, @Nullable Entity entity, Box box) {
-        // Note: Might explode if ClientWorld is not compatible with CustomCollisionWorld
-        this((CustomCollisionView)world, entity, box, VoxelShapes.fullCube(), false);
-    }
-
     public CustomBlockCollisionSpliterator(CustomCollisionView world, @Nullable Entity entity, Box box, VoxelShape portalBox) {
-        this(world, entity, box, portalBox,false);
+        this(world, entity, box, portalBox, false);
     }
 
     public CustomBlockCollisionSpliterator(CustomCollisionView world, @Nullable Entity entity, Box box, VoxelShape portalBox, boolean forEntity) {
@@ -70,7 +64,7 @@ public class CustomBlockCollisionSpliterator extends AbstractIterator<VoxelShape
 
     @Override
     protected VoxelShape computeNext() {
-        while(this.blockIterator.step()) {
+        while (this.blockIterator.step()) {
             int i = this.blockIterator.getX();
             int j = this.blockIterator.getY();
             int k = this.blockIterator.getZ();
@@ -84,7 +78,7 @@ public class CustomBlockCollisionSpliterator extends AbstractIterator<VoxelShape
                             && (l != 1 || blockState.exceedsCube())
                             && (l != 2 || blockState.isOf(Blocks.MOVING_PISTON))) {
                         VoxelShape voxelShape = blockState.getCollisionShape(this.world, this.pos, this.context);
-                        VoxelShape cutout = portalBox.offset(-i,-j,-k);
+                        VoxelShape cutout = portalBox.offset(-i, -j, -k);
                         voxelShape = VoxelShapes.combine(voxelShape, cutout, BooleanBiFunction.ONLY_FIRST);
 
                         if (voxelShape == VoxelShapes.fullCube()) {

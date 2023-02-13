@@ -25,7 +25,7 @@ public class PortalCubedFluids {
     );
 
     private static FluidRegistryContainer createFluid(String name, FlowableFluid flowing, FlowableFluid still, Function<FlowableFluid, FluidBlock> blockSupplier) {
-        return new FluidRegistryContainer(name, flowing, still, blockSupplier, new BucketItem(still, new QuiltItemSettings().group(PortalCubed.TestingElementsGroup).recipeRemainder(Items.BUCKET).maxCount(1)));
+        return new FluidRegistryContainer(name, flowing, still, blockSupplier, new BucketItem(still, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).recipeRemainder(Items.BUCKET).maxCount(1)));
     }
 
     public static void registerFluids() {

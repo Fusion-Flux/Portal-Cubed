@@ -1,0 +1,31 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+
+      "portalcubed:rocket_turret_crafting",
+      "portalcubed:morality_core_crafting",
+      "portalcubed:curiosity_core_crafting",
+      "portalcubed:intelligence_core_crafting",
+      "portalcubed:anger_core_crafting",
+      "portalcubed:space_core_crafting",
+      "portalcubed:adventure_core_crafting",
+      "portalcubed:fact_core_crafting"
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+"portalcubed:core_frame"
+
+]
+          }
+        ]
+      }
+    }
+  }
+}

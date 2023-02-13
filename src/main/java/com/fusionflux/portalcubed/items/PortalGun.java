@@ -145,7 +145,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
             Vec3i right;
             BlockPos blockPos;
 
-            HitResult hitResult = customRaycast(user,128.0D, 0.0F);
+            HitResult hitResult = customRaycast(user, 128.0D, 0.0F);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 blockPos = ((BlockHitResult) hitResult).getBlockPos();
                 normal = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
@@ -160,7 +160,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
                 Vec3d portalPos1 = calcPos(blockPos, up, normal, right);
 
-                if(!validPos(world,up,right,portalPos1)) {
+                if (!validPos(world, up, right, portalPos1)) {
                     for (int i = 1; i < 9; i++) {
                         Vec3d shiftedPortalPos = portalPos1;
                         switch (i) {
@@ -203,12 +203,12 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 portalHolder.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
                 portalHolder.setColor(this.getSidedColor(stack));
 
-                portalHolder.setOrientation(Vec3d.of(right),Vec3d.of(up).multiply(-1));
+                portalHolder.setOrientation(Vec3d.of(right), Vec3d.of(up).multiply(-1));
 
                 if (!portalExists) {
                     portalHolder.setLinkedPortalUUID(Optional.empty());
                 } else {
-                    CalledValues.removePortals(user,originalPortal.getUuid());
+                    CalledValues.removePortals(user, originalPortal.getUuid());
                     originalPortal.kill();
                 }
                 world.spawnEntity(portalHolder);
@@ -228,9 +228,9 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                         otherPortal.setOwnerUUID(Optional.of(user.getUuid()));
                     }
 
-                    CalledValues.addPortals(user,portalHolder.getUuid());
+                    CalledValues.addPortals(user, portalHolder.getUuid());
                     if (!isOtherAuto) {
-                        CalledValues.addPortals(user,otherPortal.getUuid());
+                        CalledValues.addPortals(user, otherPortal.getUuid());
                     }
                 }
             } else {
@@ -269,10 +269,10 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
     public static void linkPortals(ExperimentalPortal portal1, ExperimentalPortal portal2, float volume) {
         portal1.setDestination(Optional.of(portal2.getOriginPos()));
-        portal1.setOtherFacing(new Vec3d(portal2.getFacingDirection().getUnitVector().getX(),portal2.getFacingDirection().getUnitVector().getY(),portal2.getFacingDirection().getUnitVector().getZ()));
+        portal1.setOtherFacing(new Vec3d(portal2.getFacingDirection().getUnitVector().getX(), portal2.getFacingDirection().getUnitVector().getY(), portal2.getFacingDirection().getUnitVector().getZ()));
         portal1.setOtherAxisH(portal2.getAxisH().get());
         portal2.setDestination(Optional.of(portal1.getOriginPos()));
-        portal2.setOtherFacing(new Vec3d(portal1.getFacingDirection().getUnitVector().getX(),portal1.getFacingDirection().getUnitVector().getY(),portal1.getFacingDirection().getUnitVector().getZ()));
+        portal2.setOtherFacing(new Vec3d(portal1.getFacingDirection().getUnitVector().getX(), portal1.getFacingDirection().getUnitVector().getY(), portal1.getFacingDirection().getUnitVector().getZ()));
         portal2.setOtherAxisH(portal1.getAxisH().get());
         portal1.setLinkedPortalUUID(Optional.of(portal2.getUuid()));
         portal2.setLinkedPortalUUID(Optional.of(portal1.getUuid()));
@@ -281,44 +281,44 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
         portal2.getWorld().playSound(null, portal2.getPos().getX(), portal2.getPos().getY(), portal2.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, volume, 1F);
     }
 
-    private boolean validPos(World world, Vec3i up, Vec3i right, Vec3d portalPos1){
-        Vec3d CalculatedAxisW;
-        Vec3d CalculatedAxisH;
+    private boolean validPos(World world, Vec3i up, Vec3i right, Vec3d portalPos1) {
+        Vec3d calculatedAxisW;
+        Vec3d calculatedAxisH;
         Vec3d posNormal;
-        CalculatedAxisW = Vec3d.of(right);
-        CalculatedAxisH = Vec3d.of(up).multiply(-1);
-        posNormal = CalculatedAxisW.crossProduct(CalculatedAxisH).normalize();
+        calculatedAxisW = Vec3d.of(right);
+        calculatedAxisH = Vec3d.of(up).multiply(-1);
+        posNormal = calculatedAxisW.crossProduct(calculatedAxisH).normalize();
         Direction portalFacing = Direction.fromVector((int) posNormal.getX(), (int) posNormal.getY(), (int) posNormal.getZ());
 
         BlockPos topBehind = new BlockPos(
-                portalPos1.getX() - CalculatedAxisW.crossProduct(CalculatedAxisH).getX(),
-                portalPos1.getY() - CalculatedAxisW.crossProduct(CalculatedAxisH).getY(),
-                portalPos1.getZ() - CalculatedAxisW.crossProduct(CalculatedAxisH).getZ());
+                portalPos1.getX() - calculatedAxisW.crossProduct(calculatedAxisH).getX(),
+                portalPos1.getY() - calculatedAxisW.crossProduct(calculatedAxisH).getY(),
+                portalPos1.getZ() - calculatedAxisW.crossProduct(calculatedAxisH).getZ());
         BlockPos bottomBehind = new BlockPos(
-                portalPos1.getX() - CalculatedAxisW.crossProduct(CalculatedAxisH).getX() - Math.abs(CalculatedAxisH.getX()),
-                portalPos1.getY() - CalculatedAxisW.crossProduct(CalculatedAxisH).getY() + CalculatedAxisH.getY(),
-                portalPos1.getZ() - CalculatedAxisW.crossProduct(CalculatedAxisH).getZ() - Math.abs(CalculatedAxisH.getZ()));
+                portalPos1.getX() - calculatedAxisW.crossProduct(calculatedAxisH).getX() - Math.abs(calculatedAxisH.getX()),
+                portalPos1.getY() - calculatedAxisW.crossProduct(calculatedAxisH).getY() + calculatedAxisH.getY(),
+                portalPos1.getZ() - calculatedAxisW.crossProduct(calculatedAxisH).getZ() - Math.abs(calculatedAxisH.getZ()));
         BlockPos bottom = new BlockPos(
-                portalPos1.getX() - Math.abs(CalculatedAxisH.getX()),
-                portalPos1.getY() + CalculatedAxisH.getY(),
-                portalPos1.getZ() - Math.abs(CalculatedAxisH.getZ()));
+                portalPos1.getX() - Math.abs(calculatedAxisH.getX()),
+                portalPos1.getY() + calculatedAxisH.getY(),
+                portalPos1.getZ() - Math.abs(calculatedAxisH.getZ()));
 
 
-        boolean topValidBlock=false;
-        if(world.getBlockState(new BlockPos(portalPos1)).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+        boolean topValidBlock = false;
+        if (world.getBlockState(new BlockPos(portalPos1)).isIn(PortalCubedBlocks.PORTALABLE_GELS) && world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
             assert portalFacing != null;
             BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
             topValidBlock = world.getBlockState(new BlockPos(portalPos1)).get(booleanProperty);
-        }else if (!world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
-            topValidBlock=true;
+        } else if (!world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
+            topValidBlock = true;
         }
-        boolean bottomValidBlock=false;
-        if(world.getBlockState(bottom).isIn(PortalCubedBlocks.PORTALABLE_GELS)&&world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
+        boolean bottomValidBlock = false;
+        if (world.getBlockState(bottom).isIn(PortalCubedBlocks.PORTALABLE_GELS) && world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
             assert portalFacing != null;
             BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
             bottomValidBlock = world.getBlockState(bottom).get(booleanProperty);
-        }else if (!world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)){
-            bottomValidBlock=true;
+        } else if (!world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
+            bottomValidBlock = true;
         }
 
         return (world.getBlockState(topBehind).isSideSolidFullSquare(world, topBehind, portalFacing)) &&

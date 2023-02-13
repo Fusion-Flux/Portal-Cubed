@@ -9,7 +9,9 @@
       "portalcubed:2x2_double_crossbar_top_right_crafting",
       "portalcubed:1x1_single_crossbar_crafting",
       "portalcubed:1x1_double_crossbar_crafting",
-      "portalcubed:old_ap_mesh_crafting"
+      "portalcubed:old_ap_metal_grating_crafting",
+      "portalcubed:portal_1_metal_grating_crafting",
+      "portalcubed:portal_1_mesh_grating_crafting"
     ]
   },
   "criteria": {

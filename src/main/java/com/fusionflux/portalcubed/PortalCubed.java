@@ -26,23 +26,16 @@ import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import com.mojang.logging.LogUtils;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
@@ -54,7 +47,6 @@ import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.slf4j.Logger;
 
 import java.util.UUID;
-import java.util.function.Predicate;
 
 public class PortalCubed implements ModInitializer {
 
@@ -62,13 +54,14 @@ public class PortalCubed implements ModInitializer {
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final ItemGroup TestingElementsGroup = QuiltItemGroup.createWithIcon(
+    public static final ItemGroup TESTING_ELEMENTS_GROUP = QuiltItemGroup.createWithIcon(
             id("testing_elements"),
             () -> new ItemStack(PortalCubedItems.PORTAL_GUN));
 
-    public static final ItemGroup PortalBlocksGroup = QuiltItemGroup.createWithIcon(
+    public static final ItemGroup PORTAL_BLOCKS_GROUP = QuiltItemGroup.createWithIcon(
             id("portal_blocks"),
             () -> new ItemStack(PortalCubedItems.BLOCK_ITEM_ICON));
+
     public static final ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = Registry.register(
         Registry.SCREEN_HANDLER, id("faith_plate_screen"),
         new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new)
@@ -78,19 +71,6 @@ public class PortalCubed implements ModInitializer {
         new ExtendedScreenHandlerType<>(VelocityHelperScreenHandler::new)
     );
 
-
-
-    public static BlockHitResult static_raycastBlock(World world, Vec3d start, Vec3d end, Entity entity, Predicate<BlockPos> shouldSkip) {
-        return BlockView.raycast(start, end, new RaycastContext(start, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity), (ctx, pos) -> {
-            if (shouldSkip.test(pos)) return null;
-            BlockState state = world.getBlockState(pos);
-            VoxelShape shape = ctx.getBlockShape(state, world, pos);
-            return world.raycastBlock(start, end, pos, shape, state);
-        }, (ctx)-> {
-            Vec3d vec3d = ctx.getStart().subtract(ctx.getEnd());
-            return BlockHitResult.createMissed(ctx.getEnd(), Direction.getFacing(vec3d.x, vec3d.y, vec3d.z), new BlockPos(ctx.getEnd()));
-        });
-    }
 
     @Override
     public void onInitialize(ModContainer mod) {
@@ -111,21 +91,21 @@ public class PortalCubed implements ModInitializer {
                 if (!(player.world.getEntityById(targetEntityId) instanceof ExperimentalPortal portal)) {
                     LOGGER.warn("{} tried to teleport through nonexistent portal", player);
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
-                    CalledValues.setIsTeleporting(player,false);
+                    CalledValues.setIsTeleporting(player, false);
                     GravityChangerAPI.clearGravity(player);
                     return;
                 }
                 if (portal.getPos().squaredDistanceTo(player.getPos()) > 10 * 10) {
                     LOGGER.warn("{} tried to teleport through distant portal ({})", player, portal.getPos().distanceTo(player.getPos()));
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
-                    CalledValues.setIsTeleporting(player,false);
+                    CalledValues.setIsTeleporting(player, false);
                     GravityChangerAPI.clearGravity(player);
                     return;
                 }
                 if (portal.getDestination().isEmpty()) {
                     LOGGER.warn("{} tried to teleport through an inactive portal ({}).", player, portal);
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
-                    CalledValues.setIsTeleporting(player,false);
+                    CalledValues.setIsTeleporting(player, false);
                     GravityChangerAPI.clearGravity(player);
                     return;
                 }
@@ -135,17 +115,17 @@ public class PortalCubed implements ModInitializer {
                 Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
                 Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
 
-                Vec3d rotatedOffsets = new Vec3d(teleportXOffset,teleportYOffset,teleportZOffset);
+                Vec3d rotatedOffsets = new Vec3d(teleportXOffset, teleportYOffset, teleportZOffset);
 
-                double heightOffset = (player.getEyeY()-player.getY())/2;
+                double heightOffset = (player.getEyeY() - player.getY()) / 2;
 
-                if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
                         rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherDirec);
                     }
                 }
 
-                if(otherDirec == Direction.UP || otherDirec ==Direction.DOWN) {
+                if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                     if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
                         rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherPortalVertFacing);
                     }
@@ -154,9 +134,9 @@ public class PortalCubed implements ModInitializer {
                 System.out.println(portalVertFacing);
 
 
-                if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                        if(portalVertFacing != otherPortalVertFacing)
+                        if (portalVertFacing != otherPortalVertFacing)
                             rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherPortalVertFacing);
                     }
                 }
@@ -167,22 +147,22 @@ public class PortalCubed implements ModInitializer {
 
                 Vec3d rotatedVel = entityVelocity;
 
-                if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
                         rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
                     }
                 }
 
-                if(otherDirec == Direction.UP || otherDirec ==Direction.DOWN) {
+                if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                     if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
                         rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
                     }
                 }
 
 
-                if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                        if(portalFacing.getOpposite() != otherDirec)
+                        if (portalFacing.getOpposite() != otherDirec)
                             rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
                     }
                 }
@@ -190,13 +170,13 @@ public class PortalCubed implements ModInitializer {
                 rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherDirec);
 
 
-                CalledValues.setVelocityUpdateAfterTeleport(player,rotatedVel);
+                CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
 
                 float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
                 player.setYaw(yawValue);
                 player.setPitch(pitchSet);
-                    player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0, player.getEyeY() - player.getY(), 0));
-                CalledValues.setHasTeleportationHappened(player,true);
+                player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0, player.getEyeY() - player.getY(), 0));
+                CalledValues.setHasTeleportationHappened(player, true);
                 GravityChangerAPI.clearGravity(player);
             });
         });
@@ -212,12 +192,12 @@ public class PortalCubed implements ModInitializer {
             double z =  buf.readDouble();
             server.execute(() -> {
                 BlockEntity entity = player.world.getBlockEntity(target);
-                if(entity instanceof FaithPlateBlockEntity plate){
+                if (entity instanceof FaithPlateBlockEntity plate) {
                     plate.setVelX(x);
                     plate.setVelY(y);
                     plate.setVelZ(z);
                 }
-                if(entity instanceof BetaFaithPlateBlockEntity plate){
+                if (entity instanceof BetaFaithPlateBlockEntity plate) {
                     plate.setVelX(x);
                     plate.setVelY(y);
                     plate.setVelZ(z);
@@ -229,16 +209,15 @@ public class PortalCubed implements ModInitializer {
             server.execute(() -> CalledValues.setHasTeleportationHappened(player, false))
         );
 
-        ServerPlayNetworking.registerGlobalReceiver(id("request_velocity_for_gel"), (server, player, handler, buf, responseSender) ->{
-                    final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-                    final boolean fireGel = buf.readBoolean();
-                server.execute(() -> {
-                    CalledValues.setServerVelForGel(player,entityVelocity);
-                    CalledValues.setCanFireGel(player,fireGel);
+        ServerPlayNetworking.registerGlobalReceiver(id("request_velocity_for_gel"), (server, player, handler, buf, responseSender) -> {
+            final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            final boolean fireGel = buf.readBoolean();
+            server.execute(() -> {
+                CalledValues.setServerVelForGel(player, entityVelocity);
+                CalledValues.setCanFireGel(player, fireGel);
 
-                });
-    }
-        );
+            });
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(id("cube_pos_update"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
@@ -260,8 +239,8 @@ public class PortalCubed implements ModInitializer {
                     return;
                 }
                 cube.setRotYaw(rotYaw);
-                Vec3d cubePos = new Vec3d(x,y,z);
-                Vec3d lastCubePos = new Vec3d(lastX,lastY,lastZ);
+                Vec3d cubePos = new Vec3d(x, y, z);
+                Vec3d lastCubePos = new Vec3d(lastX, lastY, lastZ);
                 if (cubePos.squaredDistanceTo(lastCubePos) > 10 * 10) {
                     LOGGER.warn("{} tried to throw a physics object really fast ({})", player, cubePos.distanceTo(lastCubePos));
                     return;

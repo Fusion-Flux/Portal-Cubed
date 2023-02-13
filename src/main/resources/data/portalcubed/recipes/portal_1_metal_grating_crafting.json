@@ -6,15 +6,15 @@
         "YXY"
     ],
     "key": {
-        "X": {
+        "Y": {
             "item": "minecraft:iron_nugget"
         },
-        "Y": {
+        "X": {
             "item": "minecraft:copper_ingot"
         }
     },
     "result": {
-        "item": "portalcubed:old_ap_mesh",
+        "item": "portalcubed:portal_1_metal_grating",
         "count": 8
     }
 }

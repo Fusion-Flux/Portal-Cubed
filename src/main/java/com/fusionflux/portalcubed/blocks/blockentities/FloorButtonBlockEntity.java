@@ -26,7 +26,7 @@ public class FloorButtonBlockEntity extends BlockEntity {
 
 
     public FloorButtonBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.FLOOR_BUTTON_BLOCK_ENTITY,pos,state);
+        super(PortalCubedBlocks.FLOOR_BUTTON_BLOCK_ENTITY, pos, state);
 
     }
 
@@ -38,7 +38,7 @@ public class FloorButtonBlockEntity extends BlockEntity {
 
             Box portalCheckBox = new Box(transPos);
 
-            portalCheckBox = portalCheckBox.contract(Math.abs(storedDirecOpp.getOffsetX()),Math.abs(storedDirecOpp.getOffsetY()),Math.abs(storedDirecOpp.getOffsetZ())).offset(storedDirecOpp.getOffsetX()*.8125,storedDirecOpp.getOffsetY()*.8125,storedDirecOpp.getOffsetZ()*.8125);
+            portalCheckBox = portalCheckBox.contract(Math.abs(storedDirecOpp.getOffsetX()), Math.abs(storedDirecOpp.getOffsetY()), Math.abs(storedDirecOpp.getOffsetZ())).offset(storedDirecOpp.getOffsetX() * .8125, storedDirecOpp.getOffsetY() * .8125, storedDirecOpp.getOffsetZ() * .8125);
             List<LivingEntity> entities = world.getNonSpectatingEntities(LivingEntity.class, portalCheckBox);
 
             boolean isPowered = false;
@@ -67,8 +67,8 @@ public class FloorButtonBlockEntity extends BlockEntity {
     }
 
     public void updateState(BlockState state, boolean toggle) {
-        if(world != null) {
-            world.setBlockState(pos,state.with(Properties.ENABLED,toggle),3);
+        if (world != null) {
+            world.setBlockState(pos, state.with(Properties.ENABLED, toggle), 3);
         }
     }
 

@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.OldApFloorButtonBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -58,7 +57,7 @@ public class OldApFloorButtonBlock extends BlockWithEntity {
 
     public OldApFloorButtonBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE,false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE, false));
     }
 
     static {
@@ -74,7 +73,7 @@ public class OldApFloorButtonBlock extends BlockWithEntity {
     @Override
     @SuppressWarnings("deprecation")
     public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        if(state.get(Properties.ENABLED)){
+        if (state.get(Properties.ENABLED)) {
             return 15;
         }
         return 0;
@@ -87,20 +86,20 @@ public class OldApFloorButtonBlock extends BlockWithEntity {
 
         VoxelShape voxelShape = VoxelShapes.empty();
 
-        if(facing == Direction.UP)
+        if (facing == Direction.UP)
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_UP);
-        if(facing == Direction.DOWN)
+        if (facing == Direction.DOWN)
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_DOWN);
-        if(facing == Direction.NORTH)
+        if (facing == Direction.NORTH)
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_NORTH);
-        if(facing == Direction.SOUTH)
+        if (facing == Direction.SOUTH)
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_SOUTH);
-        if(facing == Direction.EAST)
+        if (facing == Direction.EAST)
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_EAST);
-        if(facing == Direction.WEST)
+        if (facing == Direction.WEST)
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_WEST);
 
-        voxelShape = VoxelShapes.union(voxelShape,SHAPE);
+        voxelShape = VoxelShapes.union(voxelShape, SHAPE);
         return voxelShape;
     }
 
@@ -111,32 +110,32 @@ public class OldApFloorButtonBlock extends BlockWithEntity {
 
         VoxelShape voxelShape = VoxelShapes.empty();
 
-        if(facing == Direction.UP) {
+        if (facing == Direction.UP) {
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_UP);
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_UP_2);
         }
-        if(facing == Direction.DOWN) {
+        if (facing == Direction.DOWN) {
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_DOWN);
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_DOWN_2);
         }
-        if(facing == Direction.NORTH) {
+        if (facing == Direction.NORTH) {
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_NORTH);
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_NORTH_2);
         }
-        if(facing == Direction.SOUTH) {
+        if (facing == Direction.SOUTH) {
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_SOUTH);
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_SOUTH_2);
         }
-        if(facing == Direction.EAST) {
+        if (facing == Direction.EAST) {
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_EAST);
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_EAST_2);
         }
-        if(facing == Direction.WEST) {
+        if (facing == Direction.WEST) {
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_WEST);
             voxelShape = VoxelShapes.union(voxelShape, SHAPE_WEST_2);
         }
 
-        voxelShape = VoxelShapes.union(voxelShape,SHAPE);
+        voxelShape = VoxelShapes.union(voxelShape, SHAPE);
 
         return voxelShape;
     }
@@ -162,7 +161,7 @@ public class OldApFloorButtonBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING,Properties.ENABLED);
+        builder.add(Properties.FACING, Properties.ENABLED);
     }
 
     @Override

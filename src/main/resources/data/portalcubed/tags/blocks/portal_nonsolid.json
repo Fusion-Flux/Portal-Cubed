@@ -3,8 +3,9 @@
   "values" : [
     "portalcubed:light_bridge",
     "portalcubed:auto_portal",
-    "portalcubed:old_ap_mesh",
-    "portalcubed:portal_1_mesh",
+    "portalcubed:old_ap_metal_grating",
+    "portalcubed:portal_1_metal_grating",
+    "portalcubed:portal_1_mesh_grating",
     "portalcubed:portal_2_panel_frame",
     "portalcubed:1x1_single_crossbar",
     "portalcubed:1x1_double_crossbar",

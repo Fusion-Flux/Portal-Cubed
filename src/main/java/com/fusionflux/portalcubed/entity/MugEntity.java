@@ -30,11 +30,11 @@ public class MugEntity extends CorePhysicsEntity  {
     public void readCustomDataFromNbt(NbtCompound compoundTag) {
     }
 
-    public int getMugType(){
+    public int getMugType() {
         return getDataTracker().get(MUG_TYPE);
     }
 
-    public void genMugType(){
+    public void genMugType() {
         setMugType(rand.nextInt(4));
     }
 
@@ -54,13 +54,13 @@ public class MugEntity extends CorePhysicsEntity  {
         if (!this.world.isClient && !this.isRemoved()) {
             boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
             if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
+                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.MUG);
                     }
                     this.discard();
                 }
-                if(!(source.getAttacker() instanceof PlayerEntity)) {
+                if (!(source.getAttacker() instanceof PlayerEntity)) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.MUG);
                     }
@@ -74,7 +74,7 @@ public class MugEntity extends CorePhysicsEntity  {
 
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        if(this.getMugType() == 20){
+        if (this.getMugType() == 20) {
             setMugType(rand.nextInt(4));
         }
         super.onSpawnPacket(packet);

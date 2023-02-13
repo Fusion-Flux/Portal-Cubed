@@ -15,14 +15,14 @@ import net.minecraft.util.Identifier;
 
 public class ExperimentalPortalModel extends EntityModel<ExperimentalPortal> {
     public static final EntityModelLayer MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "experimental_placeholder"), "main");
+    @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 
     public ExperimentalPortalModel(ModelPart root) {
-        //  TODO: add bone fields here!
         this.bb_main = root.getChild("bb_main");
     }
 
-    public static ModelData getModelData(){
+    public static ModelData getModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
 

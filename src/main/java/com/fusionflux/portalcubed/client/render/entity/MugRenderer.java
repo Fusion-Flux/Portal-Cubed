@@ -18,19 +18,16 @@ public class MugRenderer extends MobEntityRenderer<MugEntity, MugModel> {
         super(context, new MugModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(MugModel.MUG_LAYER)), 0.5f);
     }
 
-
-
-
     @Override
     public Identifier getTexture(MugEntity entity) {
-        if(entity.getMugType() == 20){
+        if (entity.getMugType() == 20) {
             entity.genMugType();
         }
-        if(entity.getMugType() == 0)
+        if (entity.getMugType() == 0)
             return BASE_TEXTURE0;
-        if(entity.getMugType() == 1)
+        if (entity.getMugType() == 1)
             return BASE_TEXTURE1;
-        if(entity.getMugType() == 2)
+        if (entity.getMugType() == 2)
             return BASE_TEXTURE2;
         return BASE_TEXTURE3;
     }

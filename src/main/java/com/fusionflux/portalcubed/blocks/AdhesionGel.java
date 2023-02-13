@@ -29,7 +29,7 @@ public class AdhesionGel extends GelFlat {
         this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
     }
 
-    public static final BiMap<Direction, BooleanProperty> dirToProperty = ImmutableBiMap.of(
+    public static final BiMap<Direction, BooleanProperty> DIR_TO_PROPERTY = ImmutableBiMap.of(
             Direction.NORTH, Properties.NORTH,
             Direction.SOUTH, Properties.SOUTH,
             Direction.EAST, Properties.EAST,
@@ -38,19 +38,15 @@ public class AdhesionGel extends GelFlat {
             Direction.DOWN, Properties.DOWN
     );
 
-
     @Override
     @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         Box block = new Box(pos);
-        Box player = getPlayerBox(entity.getBoundingBox(),GravityChangerAPI.getGravityDirection(entity),-(entity.getHeight()-1));
-        if(block.intersects(player)) {
+        Box player = getPlayerBox(entity.getBoundingBox(), GravityChangerAPI.getGravityDirection(entity), -(entity.getHeight() - 1));
+        if (block.intersects(player)) {
             this.addCollisionEffects(world, entity, pos, state);
         }
     }
-
-
-
 
     private void addCollisionEffects(World world, Entity entity, BlockPos pos, BlockState state) {
         PacketByteBuf info = AdhesionGravityVerifier.packInfo(pos);
@@ -94,48 +90,48 @@ public class AdhesionGel extends GelFlat {
         }
     }
 
-    public static ArrayList<Direction> getDirections(BlockState blockState){
+    public static ArrayList<Direction> getDirections(BlockState blockState) {
         ArrayList<Direction> list = new ArrayList<>();
-        for(Direction direction : Direction.values()){
-            if(blockState.get(AdhesionGel.dirToProperty.get(direction))){
+        for (Direction direction : Direction.values()) {
+            if (blockState.get(AdhesionGel.DIR_TO_PROPERTY.get(direction))) {
                 list.add(direction);
             }
         }
         return list;
     }
 
-    public Box getGravityEffectBox(BlockPos blockPos, Direction direction, double delta){
+    public Box getGravityEffectBox(BlockPos blockPos, Direction direction, double delta) {
         double minX = blockPos.getX();
         double minY = blockPos.getY();
         double minZ = blockPos.getZ();
-        double maxX = blockPos.getX()+1;
-        double maxY = blockPos.getY()+1;
-        double maxZ = blockPos.getZ()+1;
-        switch(direction){
-            case DOWN -> maxY+=delta;
-            case UP -> minY-=delta;
-            case NORTH -> maxZ+=delta;
-            case SOUTH -> minZ-=delta;
-            case WEST -> maxX+=delta;
-            case EAST -> minX-=delta;
+        double maxX = blockPos.getX() + 1;
+        double maxY = blockPos.getY() + 1;
+        double maxZ = blockPos.getZ() + 1;
+        switch (direction) {
+            case DOWN -> maxY += delta;
+            case UP -> minY -= delta;
+            case NORTH -> maxZ += delta;
+            case SOUTH -> minZ -= delta;
+            case WEST -> maxX += delta;
+            case EAST -> minX -= delta;
         }
         return new Box(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    public Box getPlayerBox(Box playerBox, Direction direction, double delta){
+    public Box getPlayerBox(Box playerBox, Direction direction, double delta) {
         double minX = playerBox.minX;
         double minY = playerBox.minY;
         double minZ = playerBox.minZ;
         double maxX = playerBox.maxX;
         double maxY = playerBox.maxY;
         double maxZ = playerBox.maxZ;
-        switch(direction){
-            case DOWN -> maxY+=delta;
-            case UP -> minY-=delta;
-            case NORTH -> maxZ+=delta;
-            case SOUTH -> minZ-=delta;
-            case WEST -> maxX+=delta;
-            case EAST -> minX-=delta;
+        switch (direction) {
+            case DOWN -> maxY += delta;
+            case UP -> minY -= delta;
+            case NORTH -> maxZ += delta;
+            case SOUTH -> minZ -= delta;
+            case WEST -> maxX += delta;
+            case EAST -> minX -= delta;
         }
         return new Box(minX, minY, minZ, maxX, maxY, maxZ);
     }

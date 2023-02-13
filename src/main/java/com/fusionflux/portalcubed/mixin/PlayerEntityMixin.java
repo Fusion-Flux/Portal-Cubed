@@ -9,7 +9,6 @@ import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
-import com.fusionflux.portalcubed.util.PortalVelocityHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
@@ -72,8 +71,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     @Override
     @Shadow public abstract float getMovementSpeed();
 
-    boolean hasPreviouslyTeleported;
-
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void portalCubed$letYouFallLonger(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         ItemStack itemStack5 = this.getEquippedStack(EquipmentSlot.FEET);
@@ -96,16 +93,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                 this.flyingSpeed = .04f;
             }
         }
-        if(CalledValues.getIsTeleporting(this)){
+        if (CalledValues.getIsTeleporting(this)) {
             travelVectorOriginal = Vec3d.ZERO;
         }
 
-    return travelVectorOriginal;
+        return travelVectorOriginal;
     }
 
     private boolean enableNoDrag2;
 
-    private static final Box nullBox = new Box(0, 0, 0, 0, 0, 0);
+    private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickHead(CallbackInfo ci) {
         PlayerEntity thisEntity = ((PlayerEntity) (Object) this);
@@ -131,7 +128,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
         VoxelShape omittedDirections = VoxelShapes.empty();
 
         for (ExperimentalPortal portal : list) {
-            if (portal.calculateCuttoutBox() != nullBox) {
+            if (portal.calculateCuttoutBox() != NULL_BOX) {
                 if (portal.getActive())
                     omittedDirections = VoxelShapes.union(omittedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
             }
@@ -140,19 +137,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
 
         ItemStack itemFeet = this.getEquippedStack(EquipmentSlot.FEET);
-        if((!this.isOnGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(),this.getBlockPos().getY()+1,this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL))){
-            if(!enableNoDrag2) {
+        if ((!this.isOnGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.world.getBlockState(new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL))) {
+            if (!enableNoDrag2) {
                 enableNoDrag2 = true;
             }
-                this.setNoDrag(true);
-        }else if (enableNoDrag2){
+            this.setNoDrag(true);
+        } else if (enableNoDrag2) {
             enableNoDrag2 = false;
             this.setNoDrag(false);
         }
 
-        if(itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)){
-            if(this.getVelocity().y < -3.92){
-                this.setVelocity(this.getVelocity().add(0,.081d,0));
+        if (itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)) {
+            if (this.getVelocity().y < -3.92) {
+                this.setVelocity(this.getVelocity().add(0, .081d, 0));
             }
         }
 
@@ -163,7 +160,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void tickTail(CallbackInfo ci) {
-        if(this.world.isClient) {
+        if (this.world.isClient) {
             PlayerEntity thisEntity = ((PlayerEntity) (Object) this);
 
             Vec3d entityVelocity = thisEntity.getVelocity();
@@ -174,7 +171,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
 
             List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
-            ExperimentalPortal portal = null;
+            ExperimentalPortal portal;
             for (ExperimentalPortal portalCheck : list) {
                 portal = portalCheck;
                 if (this.canUsePortals() && portal.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
@@ -252,9 +249,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             byteBuf.writeDouble((thisEntity.getEyePos().getY()) - portal.getPos().getY());
             byteBuf.writeDouble((thisEntity.getEyePos().getZ()) - portal.getPos().getZ());
             NetworkingSafetyWrapper.sendFromClient("use_portal", byteBuf);
-            CalledValues.setIsTeleporting(thisEntity,true);
-            //System.out.println(((EntityAttachments) thisEntity).getMaxFallHeight());
-            //this.setVelocity(0,0,0);
+            CalledValues.setIsTeleporting(thisEntity, true);
         }
     }
 

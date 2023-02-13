@@ -25,13 +25,13 @@ import java.util.List;
  */
 public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEntity {
 
-    public final int MAX_RANGE = PortalCubedConfig.maxBridgeLength;
+    public final int maxRange = PortalCubedConfig.maxBridgeLength;
 
     public List<BlockPos> funnels;
     public List<BlockPos> portalFunnels;
 
     public AbstractExcursionFunnelEmitterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type,pos,state);
+        super(type, pos, state);
         this.funnels = new ArrayList<>();
         this.portalFunnels = new ArrayList<>();
     }
@@ -50,7 +50,7 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
         List<Integer> posYList = new ArrayList<>();
         List<Integer> posZList = new ArrayList<>();
 
-        for(BlockPos pos : funnels){
+        for (BlockPos pos : funnels) {
             posXList.add(pos.getX());
             posYList.add(pos.getY());
             posZList.add(pos.getZ());
@@ -64,7 +64,7 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
         List<Integer> portalYList = new ArrayList<>();
         List<Integer> portalZList = new ArrayList<>();
 
-        for(BlockPos pos : portalFunnels){
+        for (BlockPos pos : portalFunnels) {
             portalXList.add(pos.getX());
             portalYList.add(pos.getY());
             portalZList.add(pos.getZ());
@@ -91,7 +91,7 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
 
         int size = tag.getInt("size");
 
-        if(!funnels.isEmpty())
+        if (!funnels.isEmpty())
             funnels.clear();
 
         for (int i = 0; i < size; i++) {
@@ -108,7 +108,7 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
 
         int pSize = tag.getInt("pSize");
 
-        if(!portalFunnels.isEmpty())
+        if (!portalFunnels.isEmpty())
             portalFunnels.clear();
 
         for (int i = 0; i < pSize; i++) {

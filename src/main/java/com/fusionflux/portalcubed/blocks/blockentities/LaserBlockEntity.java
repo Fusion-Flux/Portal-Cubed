@@ -37,71 +37,71 @@ public class LaserBlockEntity extends BlockEntity {
 
 
     public void updateState(BlockState state, WorldAccess world, BlockPos pos, LaserBlockEntity bridge) {
-            if (!world.isClient()) {
-                boolean MNorth = false;
-                boolean MSouth = false;
-                boolean MEast = false;
-                boolean MWest = false;
-                boolean MUp = false;
-                boolean MDown = false;
-                Direction Reflect_Direct = Direction.NORTH;
-                boolean CubeReflect = false;
+        if (!world.isClient()) {
+            boolean mNorth = false;
+            boolean mSouth = false;
+            boolean mEast = false;
+            boolean mWest = false;
+            boolean mUp = false;
+            boolean mDown = false;
+            Direction reflectDirect = Direction.NORTH;
+            boolean cubeReflect = false;
 
 
-                for (Direction facing : bridge.facing) {
-                    BlockState emitter = world.getBlockState(bridge.emitters.get(bridge.facing.indexOf(facing)));
+            for (Direction facing : bridge.facing) {
+                BlockState emitter = world.getBlockState(bridge.emitters.get(bridge.facing.indexOf(facing)));
 
-                    Box portalCheckBox = new Box(pos).contract(.6);
+                Box portalCheckBox = new Box(pos).contract(.6);
 
-                    List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+                List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
 
 
-                    boolean portalPresent = false;
-                    for (ExperimentalPortal portal : list) {
-                        if (portal.getFacingDirection().equals(facing)) {
-                            if (portal.getActive()) {
-                                portalPresent = true;
-                            }
+                boolean portalPresent = false;
+                for (ExperimentalPortal portal : list) {
+                    if (portal.getFacingDirection().equals(facing)) {
+                        if (portal.getActive()) {
+                            portalPresent = true;
                         }
                     }
-                    portalCheckBox =new Box(pos).contract(.25);
-                    List<RedirectionCubeEntity> reflectCubes = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
-                    for (RedirectionCubeEntity cubes : reflectCubes) {
-                        if(cubes != null){
-                            CubeReflect=true;
-                            Reflect_Direct = Direction.fromRotation(cubes.getRotYaw());
-                            break;
-                        }
-                    }
-
-                    if(emitter.getBlock() == PortalCubedBlocks.LASER_EMITTER || portalPresent) {
-                            if (facing.equals(Direction.NORTH)) {
-                                MNorth = true;
-                            }
-                            if (facing.equals(Direction.EAST)) {
-                                MEast = true;
-                            }
-                            if (facing.equals(Direction.SOUTH)) {
-                                MSouth = true;
-                            }
-                            if (facing.equals(Direction.WEST)) {
-                                MWest = true;
-                            }
-                            if (facing.equals(Direction.UP)) {
-                                MUp = true;
-                            }
-                            if (facing.equals(Direction.DOWN)) {
-                                MDown = true;
-                            }
-
+                }
+                portalCheckBox = new Box(pos).contract(.25);
+                List<RedirectionCubeEntity> reflectCubes = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
+                for (RedirectionCubeEntity cubes : reflectCubes) {
+                    if (cubes != null) {
+                        cubeReflect = true;
+                        reflectDirect = Direction.fromRotation(cubes.getRotYaw());
+                        break;
                     }
                 }
 
-                state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
-                        .with(Properties.HORIZONTAL_FACING,Reflect_Direct).with(CustomProperties.REFLECT,CubeReflect);
+                if (emitter.getBlock() == PortalCubedBlocks.LASER_EMITTER || portalPresent) {
+                    if (facing.equals(Direction.NORTH)) {
+                        mNorth = true;
+                    }
+                    if (facing.equals(Direction.EAST)) {
+                        mEast = true;
+                    }
+                    if (facing.equals(Direction.SOUTH)) {
+                        mSouth = true;
+                    }
+                    if (facing.equals(Direction.WEST)) {
+                        mWest = true;
+                    }
+                    if (facing.equals(Direction.UP)) {
+                        mUp = true;
+                    }
+                    if (facing.equals(Direction.DOWN)) {
+                        mDown = true;
+                    }
+
+                }
             }
 
-        world.setBlockState(pos,state,3);
+            state = state.with(Properties.NORTH, mNorth).with(Properties.EAST, mEast).with(Properties.SOUTH, mSouth).with(Properties.WEST, mWest).with(Properties.UP, mUp).with(Properties.DOWN, mDown)
+                    .with(Properties.HORIZONTAL_FACING, reflectDirect).with(CustomProperties.REFLECT, cubeReflect);
+        }
+
+        world.setBlockState(pos, state, 3);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class LaserBlockEntity extends BlockEntity {
         List<Integer> posYList = new ArrayList<>();
         List<Integer> posZList = new ArrayList<>();
 
-        for(BlockPos pos : emitters){
+        for (BlockPos pos : emitters) {
             posXList.add(pos.getX());
             posYList.add(pos.getY());
             posZList.add(pos.getZ());
@@ -126,7 +126,7 @@ public class LaserBlockEntity extends BlockEntity {
         List<Integer> direcYList = new ArrayList<>();
         List<Integer> direcZList = new ArrayList<>();
 
-        for(Direction direc : facing){
+        for (Direction direc : facing) {
             direcXList.add(direc.getVector().getX());
             direcYList.add(direc.getVector().getY());
             direcZList.add(direc.getVector().getZ());
@@ -140,7 +140,7 @@ public class LaserBlockEntity extends BlockEntity {
         List<Integer> portalYList = new ArrayList<>();
         List<Integer> portalZList = new ArrayList<>();
 
-        for(BlockPos direc : portalEmitters){
+        for (BlockPos direc : portalEmitters) {
             portalXList.add(direc.getX());
             portalYList.add(direc.getY());
             portalZList.add(direc.getZ());
@@ -168,7 +168,7 @@ public class LaserBlockEntity extends BlockEntity {
 
         int size = tag.getInt("size");
 
-        if(!emitters.isEmpty())
+        if (!emitters.isEmpty())
             emitters.clear();
 
         for (int i = 0; i < size; i++) {
@@ -183,7 +183,7 @@ public class LaserBlockEntity extends BlockEntity {
         direcYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("direcyList")));
         direcZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("direczList")));
 
-        if(!facing.isEmpty())
+        if (!facing.isEmpty())
             facing.clear();
 
         for (int i = 0; i < size; i++) {
@@ -198,7 +198,7 @@ public class LaserBlockEntity extends BlockEntity {
         portalYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalyList")));
         portalZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalzList")));
 
-        if(!portalEmitters.isEmpty())
+        if (!portalEmitters.isEmpty())
             portalEmitters.clear();
 
         for (int i = 0; i < size; i++) {
@@ -212,7 +212,7 @@ public class LaserBlockEntity extends BlockEntity {
         if (!world.isClient) {
             if (!blockEntity.emitters.isEmpty()) {
 
-                for (int i = blockEntity.emitters.size()-1; i >= 0; i--) {
+                for (int i = blockEntity.emitters.size() - 1; i >= 0; i--) {
                     Box portalCheckBox = new Box(blockEntity.portalEmitters.get(i)).expand(.1);
 
                     List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
@@ -235,12 +235,12 @@ public class LaserBlockEntity extends BlockEntity {
                         }
                     }
 
-                    if(!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){
+                    if (!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof LaserEmitterBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
+                    } else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof LaserEmitterBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
@@ -250,8 +250,8 @@ public class LaserBlockEntity extends BlockEntity {
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!((LaserEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
-                        if(portalPresent) {
+                    } else if (!((LaserEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
+                        if (portalPresent) {
                             blockEntity.emitters.remove(i);
                             blockEntity.portalEmitters.remove(i);
                             blockEntity.facing.remove(i);
@@ -260,7 +260,7 @@ public class LaserBlockEntity extends BlockEntity {
                     }
 
                 }
-            }else{
+            } else {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
             }
 

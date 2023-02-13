@@ -15,9 +15,9 @@ public interface CustomCollisionView extends CollisionView {
         return () -> new CustomBlockCollisionSpliterator(this, entity, box, portalBox);
     }
 
-    default Iterable<VoxelShape> getPortalCollisions(@Nullable Entity entity, Box box,VoxelShape portalBox) {
+    default Iterable<VoxelShape> getPortalCollisions(@Nullable Entity entity, Box box, VoxelShape portalBox) {
         List<VoxelShape> list = this.getEntityCollisions(entity, box);
-        Iterable<VoxelShape> iterable = this.getPortalBlockCollisions(entity, box,portalBox);
+        Iterable<VoxelShape> iterable = this.getPortalBlockCollisions(entity, box, portalBox);
         return list.isEmpty() ? iterable : Iterables.concat(list, iterable);
     }
 

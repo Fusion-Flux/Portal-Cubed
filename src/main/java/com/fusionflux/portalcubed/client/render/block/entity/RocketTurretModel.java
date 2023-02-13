@@ -32,6 +32,7 @@ public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperE
         neck = chassis.getChild("segment_1").getChild("segment_2").getChild("segment_3").getChild("neck");
     }
 
+    @SuppressWarnings("checkstyle:LocalVariableName")
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
