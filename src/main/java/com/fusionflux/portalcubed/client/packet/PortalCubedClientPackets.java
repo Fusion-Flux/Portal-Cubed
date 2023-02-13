@@ -17,13 +17,15 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 
 public class PortalCubedClientPackets {
-    public static final Identifier FIZZLE_PACKET = new Identifier(PortalCubed.MOD_ID, "fizzle");
-    public static final Identifier HAND_SHAKE_PACKET = new Identifier(PortalCubed.MOD_ID, "hand_shake");
-    public static final Identifier GEL_OVERLAY_PACKET = new Identifier(PortalCubed.MOD_ID, "gel_overlay");
-    public static final Identifier ROCKET_TURRET_UPDATE_PACKET = new Identifier(PortalCubed.MOD_ID, "rocket_turret_update");
-    public static final Identifier ENABLE_CFG = new Identifier(PortalCubed.MOD_ID, "enable_cfg");
+    public static final Identifier FIZZLE_PACKET = id("fizzle");
+    public static final Identifier HAND_SHAKE_PACKET = id("hand_shake");
+    public static final Identifier GEL_OVERLAY_PACKET = id("gel_overlay");
+    public static final Identifier ROCKET_TURRET_UPDATE_PACKET = id("rocket_turret_update");
+    public static final Identifier ENABLE_CFG = id("enable_cfg");
 
     @ClientOnly
     public static void registerPackets() {

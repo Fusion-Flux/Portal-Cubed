@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalModel;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -14,10 +13,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPortal> {
 
-    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_square_outline_closed.png");
-    private static final Identifier ROUND_TEXTURE  = new Identifier(PortalCubed.MOD_ID, "textures/entity/portal_oval_outline_closed.png");
+    private static final Identifier SQUARE_TEXTURE = id("textures/entity/portal_square_outline_closed.png");
+    private static final Identifier ROUND_TEXTURE  = id("textures/entity/portal_oval_outline_closed.png");
     protected final ExperimentalPortalModel model = new ExperimentalPortalModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ExperimentalPortalModel.MAIN_LAYER));
 
     public ExperimentalPortalRenderer(EntityRendererFactory.Context dispatcher) {

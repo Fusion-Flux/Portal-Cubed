@@ -4,17 +4,17 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class StorageCubeModel extends FizzleableModel<StorageCubeEntity> {
 
-    public static final EntityModelLayer STORAGE_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "storage_cube"), "main");
+    public static final EntityModelLayer STORAGE_CUBE_MAIN_LAYER = new EntityModelLayer(id("storage_cube"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 

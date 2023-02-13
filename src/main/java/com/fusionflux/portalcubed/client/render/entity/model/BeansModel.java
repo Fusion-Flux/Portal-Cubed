@@ -4,16 +4,16 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.BeansEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class BeansModel extends FizzleableModel<BeansEntity> {
-    public static final EntityModelLayer BEANS_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "beans"), "main");
+    public static final EntityModelLayer BEANS_LAYER = new EntityModelLayer(id("beans"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 

@@ -4,16 +4,16 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.AngerCoreEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class AngerCoreModel extends FizzleableModel<AngerCoreEntity> {
-    public static final EntityModelLayer ANGER_CORE_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "anger_core"), "main");
+    public static final EntityModelLayer ANGER_CORE_LAYER = new EntityModelLayer(id("anger_core"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 

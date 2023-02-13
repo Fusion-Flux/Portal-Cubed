@@ -21,9 +21,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
 
-    private static final Identifier TEXTURE = new Identifier("portalcubed", "textures/gui/container/faith_plate.png");
+    private static final Identifier TEXTURE = id("textures/gui/container/faith_plate.png");
 
     private final BlockPos pos;
     private final double x;
