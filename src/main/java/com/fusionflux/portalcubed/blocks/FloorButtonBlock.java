@@ -53,6 +53,8 @@ public class FloorButtonBlock extends BlockWithEntity {
 
     protected static final VoxelShape SHAPE_EAST_2 = Block.createCuboidShape(16.0D, -1.0D, -1.0D, 17.0D, 17.0D, 17.0D);
 
+    public static boolean enableEasterEgg = false;
+
 
     public FloorButtonBlock(Settings settings) {
         super(settings);
@@ -184,4 +186,8 @@ public class FloorButtonBlock extends BlockWithEntity {
         return checkType(type, PortalCubedBlocks.FLOOR_BUTTON_BLOCK_ENTITY, FloorButtonBlockEntity::tick1);
     }
 
+    @Override
+    public String getTranslationKey() {
+        return enableEasterEgg ? "block.portalcubed.floor_button.easter_egg" : "block.portalcubed.floor_button";
+    }
 }
