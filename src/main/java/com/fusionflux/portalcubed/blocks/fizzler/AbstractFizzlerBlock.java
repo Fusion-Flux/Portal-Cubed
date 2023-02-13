@@ -59,6 +59,7 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (state.get(NS) && state.get(EW)) {
             return BOTH_SHAPE;
@@ -78,6 +79,7 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1;
     }

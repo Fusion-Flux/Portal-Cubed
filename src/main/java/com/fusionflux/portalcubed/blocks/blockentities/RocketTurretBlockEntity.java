@@ -6,6 +6,7 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -51,6 +52,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     public final AnimationState activatingAnimation = new AnimationState();
     public final AnimationState deactivatingAnimation = new AnimationState();
+
 
     public RocketTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);

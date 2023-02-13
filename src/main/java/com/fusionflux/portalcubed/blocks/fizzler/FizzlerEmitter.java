@@ -111,6 +111,7 @@ public class FizzlerEmitter extends HorizontalFacingBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         final BlockPos otherPos = pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN);
         final boolean powered = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(otherPos);
