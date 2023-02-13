@@ -3,7 +3,6 @@ package com.fusionflux.portalcubed.client;
 import com.fusionflux.gravity_api.api.RotationParameters;
 import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.gravity_api.util.packet.UpdateGravityPacket;
-import com.fusionflux.portalcubed.PortalCubed;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -12,8 +11,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 public class AdhesionGravityVerifier {
-    public static final Identifier FIELD_GRAVITY_SOURCE = new Identifier(PortalCubed.MOD_ID, "adhesion_gel");
+    public static final Identifier FIELD_GRAVITY_SOURCE = id("adhesion_gel");
     public static final int FIELD_GRAVITY_PRIORITY = 10;
     public static final int FIELD_GRAVITY_MAX_DURATION = 2;
 

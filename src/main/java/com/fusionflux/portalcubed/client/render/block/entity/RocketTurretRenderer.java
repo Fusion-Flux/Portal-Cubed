@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.client.render.block.entity;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.render.EntityEmissiveRendering;
 import com.fusionflux.portalcubed.util.BlockEntityWrapperEntity;
@@ -13,7 +12,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.entity.model.EntityModelLoader;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
@@ -21,8 +19,10 @@ import net.minecraft.util.math.Vec3f;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlockEntity> {
-    public static final EntityModelLayer ROCKET_TURRET_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "rocket_turret"), "main");
+    public static final EntityModelLayer ROCKET_TURRET_LAYER = new EntityModelLayer(id("rocket_turret"), "main");
 
     private final Map<RocketTurretBlockEntity, BlockEntityWrapperEntity<RocketTurretBlockEntity>> wrappers = new WeakHashMap<>();
 

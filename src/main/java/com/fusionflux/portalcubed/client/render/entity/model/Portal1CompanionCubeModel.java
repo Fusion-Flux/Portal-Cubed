@@ -4,16 +4,16 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.Portal1CompanionCubeEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class Portal1CompanionCubeModel extends FizzleableModel<Portal1CompanionCubeEntity> {
-    public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "portal_1_companion_cube"), "main");
+    public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(id("portal_1_companion_cube"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 

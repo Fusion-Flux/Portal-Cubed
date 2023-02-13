@@ -34,8 +34,8 @@ import java.util.UUID;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedServerPackets {
-    public static final Identifier GRAB_KEY_PRESSED = new Identifier(PortalCubed.MOD_ID, "grab_key_pressed");
-    public static final Identifier REMOVE_PORTALS = new Identifier(PortalCubed.MOD_ID, "remove_portals");
+    public static final Identifier GRAB_KEY_PRESSED = id("grab_key_pressed");
+    public static final Identifier REMOVE_PORTALS = id("remove_portals");
     public static final Identifier VELOCITY_HELPER_CONFIGURE = id("velocity_helper_configure");
 
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {

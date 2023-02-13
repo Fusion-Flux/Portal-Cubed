@@ -4,49 +4,51 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 public class PortalCubedSounds {
-    public static final Identifier GEL_BOUNCE = new Identifier("portalcubed:gel_bounce");
-    public static final Identifier GEL_RUN = new Identifier("portalcubed:gel_run");
-    public static final Identifier GEL_SPLAT = new Identifier("portalcubed:gel_splat");
-    public static final Identifier PORTAL_GUN_PRIMARY = new Identifier("portalcubed:portal_gun_primary");
-    public static final Identifier PORTAL_GUN_SECONDARY = new Identifier("portalcubed:portal_gun_secondary");
-    public static final Identifier PORTAL_INVALID_SURFACE = new Identifier("portalcubed:portal_invalid_surface");
-    public static final Identifier NOTHING_TO_GRAB = new Identifier("portalcubed:nothing_to_grab");
-    public static final Identifier PORTAL_AMBIANCE = new Identifier("portalcubed:portal_ambience");
-    public static final Identifier PORTAL_ENTER = new Identifier("portalcubed:portal_enter");
-    public static final Identifier PORTAL_EXIT = new Identifier("portalcubed:portal_exit");
-    public static final Identifier PORTAL_OPEN = new Identifier("portalcubed:portal_open");
-    public static final Identifier PORTAL_CLOSE = new Identifier("portalcubed:portal_close");
-    public static final Identifier PORTAL_FIZZLE = new Identifier("portalcubed:portal_fizzle");
-    public static final Identifier CUBE_HIT_HIGH = new Identifier("portalcubed:cube_hit_high");
-    public static final Identifier CUBE_HIT_LOW = new Identifier("portalcubed:cube_hit_low");
-    public static final Identifier CUBE_SCRAPE = new Identifier("portalcubed:cube_scrape");
-    public static final Identifier COMPANION_CUBE_AMBIANCE = new Identifier("portalcubed:companion_cube_ambiance");
-    public static final Identifier MATERIAL_EMANCIPATION = new Identifier("portalcubed:material_emancipation");
+    public static final Identifier GEL_BOUNCE = id("gel_bounce");
+    public static final Identifier GEL_RUN = id("gel_run");
+    public static final Identifier GEL_SPLAT = id("gel_splat");
+    public static final Identifier PORTAL_GUN_PRIMARY = id("portal_gun_primary");
+    public static final Identifier PORTAL_GUN_SECONDARY = id("portal_gun_secondary");
+    public static final Identifier PORTAL_INVALID_SURFACE = id("portal_invalid_surface");
+    public static final Identifier NOTHING_TO_GRAB = id("nothing_to_grab");
+    public static final Identifier PORTAL_AMBIANCE = id("portal_ambience");
+    public static final Identifier PORTAL_ENTER = id("portal_enter");
+    public static final Identifier PORTAL_EXIT = id("portal_exit");
+    public static final Identifier PORTAL_OPEN = id("portal_open");
+    public static final Identifier PORTAL_CLOSE = id("portal_close");
+    public static final Identifier PORTAL_FIZZLE = id("portal_fizzle");
+    public static final Identifier CUBE_HIT_HIGH = id("cube_hit_high");
+    public static final Identifier CUBE_HIT_LOW = id("cube_hit_low");
+    public static final Identifier CUBE_SCRAPE = id("cube_scrape");
+    public static final Identifier COMPANION_CUBE_AMBIANCE = id("companion_cube_ambiance");
+    public static final Identifier MATERIAL_EMANCIPATION = id("material_emancipation");
 
-    public static final Identifier ROCKET_FIRE = new Identifier("portalcubed:rocket_fire");
-    public static final Identifier ROCKET_FLY = new Identifier("portalcubed:rocket_fly");
-    public static final Identifier ROCKET_LOCKED = new Identifier("portalcubed:rocket_locked");
-    public static final Identifier ROCKET_LOCKING = new Identifier("portalcubed:rocket_locking");
-    public static final Identifier ROCKET_EXPLODE = new Identifier("portalcubed:rocket_explode");
+    public static final Identifier ROCKET_FIRE = id("rocket_fire");
+    public static final Identifier ROCKET_FLY = id("rocket_fly");
+    public static final Identifier ROCKET_LOCKED = id("rocket_locked");
+    public static final Identifier ROCKET_LOCKING = id("rocket_locking");
+    public static final Identifier ROCKET_EXPLODE = id("rocket_explode");
 
-    public static final Identifier LASER_EMITTER_ACTIVATE = new Identifier("portalcubed:laser/emitter_activate");
-    public static final Identifier LASER_NODE_MUSIC = new Identifier("portalcubed:laser/node_music");
-    public static final Identifier LASER_NODE_ACTIVATE = new Identifier("portalcubed:laser/node_activate");
-    public static final Identifier LASER_NODE_DEACTIVATE = new Identifier("portalcubed:laser/node_deactivate");
+    public static final Identifier LASER_EMITTER_ACTIVATE = id("laser/emitter_activate");
+    public static final Identifier LASER_NODE_MUSIC = id("laser/node_music");
+    public static final Identifier LASER_NODE_ACTIVATE = id("laser/node_activate");
+    public static final Identifier LASER_NODE_DEACTIVATE = id("laser/node_deactivate");
 
-    public static final Identifier TBEAM_ENTER = new Identifier("portalcubed:tbeam/enter");
-    public static final Identifier TBEAM_TRAVEL = new Identifier("portalcubed:tbeam/travel");
+    public static final Identifier TBEAM_ENTER = id("tbeam/enter");
+    public static final Identifier TBEAM_TRAVEL = id("tbeam/travel");
 
-    public static final Identifier RADIO_MUSIC = new Identifier("portalcubed:radio");
-    public static final Identifier EXILE_SONG = new Identifier("portalcubed:exile_vilify");
-    public static final Identifier CURIOSITY_CORE_SOUND = new Identifier("portalcubed:curiosity_core");
-    public static final Identifier ANGER_CORE_SOUND = new Identifier("portalcubed:anger_core");
-    public static final Identifier CAKE_CORE_SOUND = new Identifier("portalcubed:cake_core");
+    public static final Identifier RADIO_MUSIC = id("radio");
+    public static final Identifier EXILE_SONG = id("exile_vilify");
+    public static final Identifier CURIOSITY_CORE_SOUND = id("curiosity_core");
+    public static final Identifier ANGER_CORE_SOUND = id("anger_core");
+    public static final Identifier CAKE_CORE_SOUND = id("cake_core");
 
-    public static final Identifier SPACE_CORE_SOUND = new Identifier("portalcubed:space_core");
-    public static final Identifier FACT_CORE_SOUND = new Identifier("portalcubed:fact_core");
-    public static final Identifier ADVENTURE_CORE_SOUND = new Identifier("portalcubed:adventure_core");
+    public static final Identifier SPACE_CORE_SOUND = id("space_core");
+    public static final Identifier FACT_CORE_SOUND = id("fact_core");
+    public static final Identifier ADVENTURE_CORE_SOUND = id("adventure_core");
 
     public static final SoundEvent GEL_BOUNCE_EVENT = new SoundEvent(GEL_BOUNCE);
     public static final SoundEvent GEL_RUN_EVENT = new SoundEvent(GEL_RUN);

@@ -14,7 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.TagKey;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
@@ -114,13 +113,13 @@ public class PortalCubedBlocks {
     public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static final BlockEntityType<RocketTurretBlockEntity> ROCKET_TURRET_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build();
 
-    public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "cant_place_portal_on"));
-    public static final TagKey<Block> PORTAL_NONSOLID = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "portal_nonsolid"));
-    public static final TagKey<Block> PORTAL_SOLID = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "portal_solid"));
-    public static final TagKey<Block> PORTALABLE_GELS = TagKey.of(Registry.BLOCK_KEY, new Identifier("portalcubed", "portalable_gels"));
+    public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY, id("cant_place_portal_on"));
+    public static final TagKey<Block> PORTAL_NONSOLID = TagKey.of(Registry.BLOCK_KEY, id("portal_nonsolid"));
+    public static final TagKey<Block> PORTAL_SOLID = TagKey.of(Registry.BLOCK_KEY, id("portal_solid"));
+    public static final TagKey<Block> PORTALABLE_GELS = TagKey.of(Registry.BLOCK_KEY, id("portalable_gels"));
 
     public static void registerBlocks() {
-        Registry.register(Registry.ITEM, new Identifier(PortalCubed.MOD_ID, "base_gel"), BASE_GEL);
+        Registry.register(Registry.ITEM, id("base_gel"), BASE_GEL);
 
         Registry.register(Registry.BLOCK, id("propulsion_gel"), PROPULSION_GEL);
         Registry.register(Registry.ITEM, id("propulsion_gel"), new GelBlobItem(PROPULSION_GEL, PortalCubedEntities.PROPULSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64)));

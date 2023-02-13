@@ -4,16 +4,16 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.OldApCubeEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class OldApModel extends FizzleableModel<OldApCubeEntity> {
-    public static final EntityModelLayer OLD_AP_CUBE_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "old_ap_cube"), "main");
+    public static final EntityModelLayer OLD_AP_CUBE_MAIN_LAYER = new EntityModelLayer(id("old_ap_cube"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 
