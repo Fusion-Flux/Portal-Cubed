@@ -74,7 +74,7 @@
     "portalcubed:portal_2_panel_frame",
     "portalcubed:portal_2_exposed_panel",
     "portalcubed:portal_2_partially_exposed_panel",
-    "portalcubed:old_ap_mesh",
+    "portalcubed:old_ap_metal_grating",
     "portalcubed:fizzler_emitter",
     "portalcubed:laser_fizzler_emitter",
     "portalcubed:death_fizzler_emitter",
@@ -94,6 +94,8 @@
     "portalcubed:floor_button",
     "portalcubed:old_ap_floor_button",
     "portalcubed:neurotoxin_emitter",
-    "portalcubed:portal_1_mesh"
+    "portalcubed:rocket_turret",
+    "portalcubed:portal_1_metal_grating",
+    "portalcubed:portal_1_mesh_grating"
   ]
 }

@@ -15,7 +15,8 @@
       "portalcubed:chair_crafting",
       "portalcubed:jug_crafting",
       "portalcubed:hoopy_crafting",
-      "portalcubed:computer_crafting"
+      "portalcubed:computer_crafting",
+      "portalcubed:core_frame_crafting"
 
     ]
   },

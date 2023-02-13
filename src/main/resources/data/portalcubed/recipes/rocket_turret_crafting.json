@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "portalcubed:core_frame"
+    },
+    {
+      "item": "minecraft:firework_rocket"
+    },
+    {
+      "item": "minecraft:lime_dye"
+    },
+    {
+      "item": "portalcubed:solid_office_concrete"
+    },
+    {
+      "item": "minecraft:sticky_piston"
+    }
+  ],
+  "result": {
+    "item": "portalcubed:rocket_turret",
+    "count": 1
+  }
+}

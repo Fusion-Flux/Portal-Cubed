@@ -7,7 +7,7 @@
 "entries": [
  {
 "type": "minecraft:item",
-"name": "portalcubed:portal_1_mesh"
+"name": "portalcubed:portal_1_mesh_grating"
 }
 ],
 "conditions": [

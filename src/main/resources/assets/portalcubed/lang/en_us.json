@@ -178,8 +178,9 @@
   "block.portalcubed.portal_1_rusted_plating": "Portal 1 Rusted Plating",
   "block.portalcubed.portal_1_rusted_tread_plating": "Portal 1 Rusted Tread Plating",
 
-  "block.portalcubed.old_ap_mesh": "Old Aperture Mesh Grating",
-  "block.portalcubed.portal_1_mesh": "Portal 1 Mesh Grating",
+  "block.portalcubed.old_ap_metal_grating": "Old Aperture Metal Grating",
+  "block.portalcubed.portal_1_mesh_grating": "Portal 1 Mesh Grating",
+  "block.portalcubed.portal_1_metal_grating": "Portal 1 Mesh Grating",
 
   "block.portalcubed.office_concrete": "Horizontal Office Concrete + Orange Tiling",
   "block.portalcubed.solid_office_concrete": "Vertical Office Concrete + Blue Tiling",
@@ -239,7 +240,7 @@
   "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
   "portalcubed.midnightconfig.enableAccurateMovement": "Enable Accurate Movement",
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
-  "portalcubed.midnightconfig.rocketDamage": "Death Fizzler Damage",
+  "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
