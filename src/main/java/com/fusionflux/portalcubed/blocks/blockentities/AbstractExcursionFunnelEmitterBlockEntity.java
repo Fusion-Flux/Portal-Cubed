@@ -13,9 +13,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author sailKite
@@ -27,13 +25,13 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
 
     public final int maxRange = PortalCubedConfig.maxBridgeLength;
 
-    public List<BlockPos> funnels;
-    public List<BlockPos> portalFunnels;
+    public Set<BlockPos> funnels;
+    public Set<BlockPos> portalFunnels;
 
     public AbstractExcursionFunnelEmitterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        this.funnels = new ArrayList<>();
-        this.portalFunnels = new ArrayList<>();
+        this.funnels = new HashSet<>();
+        this.portalFunnels = new HashSet<>();
     }
 
 
