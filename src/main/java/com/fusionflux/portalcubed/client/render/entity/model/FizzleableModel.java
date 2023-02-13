@@ -22,12 +22,12 @@ public abstract class FizzleableModel<T extends CorePhysicsEntity> extends Entit
 
     @Override
     public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        fizzleProgress = Math.min(entity.getFizzleProgress(), 1f);
+        fizzleProgress = 1f - Math.min(entity.getFizzleProgress(), 1f);
     }
 
     @Override
     public final void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-        renderFizzled(matrices, vertices, light, overlay, red - fizzleProgress, green - fizzleProgress, blue - fizzleProgress, alpha - fizzleProgress);
+        renderFizzled(matrices, vertices, light, overlay, red * fizzleProgress, green * fizzleProgress, blue * fizzleProgress, alpha);
     }
 
     public abstract void renderFizzled(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha);

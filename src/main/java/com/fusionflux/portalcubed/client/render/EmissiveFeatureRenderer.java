@@ -28,7 +28,7 @@ public abstract class EmissiveFeatureRenderer<T extends Entity, M extends Entity
             brightness -= Math.min(physicsEntity.getFizzleProgress(), 1f);
         }
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEyes(this.getEmissiveTexture(entity)));
-        this.getContextModel().render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, brightness, brightness, brightness, brightness);
+        this.getContextModel().render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, brightness, brightness, brightness, 1f);
     }
 
     public abstract Identifier getEmissiveTexture(T entity);
