@@ -11,11 +11,11 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class StorageCubeRenderer extends MobEntityRenderer<StorageCubeEntity, StorageCubeModel> {
 
-    private final Identifier TEXTURE = id("textures/entity/storage_cube.png");
-    private final Identifier EMISSIVE_TEXTURE = id("textures/entity/storage_cube_e.png");
+    private static final Identifier TEXTURE = id("textures/entity/storage_cube.png");
+    private static final Identifier EMISSIVE_TEXTURE = id("textures/entity/storage_cube_e.png");
 
-    private final Identifier ACTIVE_TEXTURE = id("textures/entity/storage_cube_lit.png");
-    private final Identifier EMISSIVE_ACTIVE_TEXTURE = id("textures/entity/storage_cube_lit_e.png");
+    private static final Identifier ACTIVE_TEXTURE = id("textures/entity/storage_cube_lit.png");
+    private static final Identifier EMISSIVE_ACTIVE_TEXTURE = id("textures/entity/storage_cube_lit_e.png");
 
     public StorageCubeRenderer(EntityRendererFactory.Context context) {
         super(context, new StorageCubeModel(context.getPart(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER)), 0.5f);
