@@ -5,7 +5,7 @@
 		"0": "portalcubed:block/laser_emitter",
 		"1": "portalcubed:block/laser_emitter_e",
 		"2": "portalcubed:block/padded_gray_panel",
-		"particle": "portalcubed:block/laser_emitter"
+		"particle": "portalcubed:block/padded_gray_panel"
 	},
 	"elements": [
 		{
@@ -20,26 +20,6 @@
 		{
 			"from": [-7, 7.85711, 4.5],
 			"to": [-2, 8.08211, 11.5],
-			"rotation": {"angle": -45, "axis": "x", "origin": [0.5, 7.95711, 8]},
-			"faces": {
-				"up": {"uv": [8.258, 1.742, 9.492, 0.008], "rotation": 180, "texture": "#1"},
-				"down": {"uv": [9.492, 1.742, 8.258, 0.008], "texture": "#1"}
-			}
-		},
-		{
-			"name": "emission",
-			"from": [-7, 4.45711, 8],
-			"to": [-2, 11.45711, 8],
-			"rotation": {"angle": -45, "axis": "x", "origin": [2.5, 7.95711, 8]},
-			"faces": {
-				"north": {"uv": [9.492, 1.742, 8.258, 0.008], "rotation": 180, "texture": "#1"},
-				"south": {"uv": [8.258, 1.742, 9.492, 0.008], "rotation": 180, "texture": "#1"}
-			}
-		},
-		{
-			"name": "emission",
-			"from": [-7, 7.95711, 4.5],
-			"to": [-2, 7.95711, 11.5],
 			"rotation": {"angle": -45, "axis": "x", "origin": [0.5, 7.95711, 8]},
 			"faces": {
 				"up": {"uv": [8.258, 1.742, 9.492, 0.008], "rotation": 180, "texture": "#1"},

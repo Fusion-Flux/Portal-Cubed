@@ -13,6 +13,10 @@
   "subtitles.portalcubed.portal_fizzle": "Portal Fizzles",
   "subtitles.portalcubed.material_emancipation": "Object Disintegrates",
 
+  "subtitles.portalcubed.rocket_fire": "Rocket Launched",
+  "subtitles.portalcubed.rocket_locked": "Rocket Locked",
+  "subtitles.portalcubed.rocket_locking": "Rocket Locking",
+
   "item.portalcubed.long_fall_boots": "Long Fall Boots",
   "item.portalcubed.hammer": "Hammer",
 
@@ -61,6 +65,7 @@
 
   "block.portalcubed.auto_portal": "Auto Portal",
   "block.portalcubed.velocity_helper": "Velocity Helper",
+  "block.portalcubed.rocket_turret": "Rocket Turret",
 
   "block.portalcubed.fizzler": "Fizzler",
   "block.portalcubed.fizzler_emitter": "Fizzler Emitter",
@@ -171,12 +176,16 @@
   "block.portalcubed.portal_1_2x2_exposed_panel_bottom_left": "Portal 1 2x2 Exposed Panel Bottom Left",
   "block.portalcubed.portal_1_2x2_exposed_panel_bottom_right": "Portal 1 2x2 Exposed Panel Bottom Right",
   "block.portalcubed.portal_1_rusted_plating": "Portal 1 Rusted Plating",
+  "block.portalcubed.portal_1_rusted_tread_plating": "Portal 1 Rusted Tread Plating",
 
-  "block.portalcubed.old_ap_mesh": "Old Aperture Mesh Grating",
+  "block.portalcubed.old_ap_metal_grating": "Old Aperture Metal Grating",
+  "block.portalcubed.portal_1_mesh_grating": "Portal 1 Mesh Grating",
+  "block.portalcubed.portal_1_metal_grating": "Portal 1 Mesh Grating",
 
-  "block.portalcubed.office_concrete": "Office Concrete + Office Tiling",
-  "block.portalcubed.solid_office_concrete": "Portal 1 Office Concrete + Office Tiling",
-  "block.portalcubed.blue_office_concrete": "Blue Office Concrete + Tread Plating",
+  "block.portalcubed.office_concrete": "Horizontal Office Concrete + Orange Tiling",
+  "block.portalcubed.solid_office_concrete": "Vertical Office Concrete + Blue Tiling",
+  "block.portalcubed.bordered_office_concrete": "Bordered Office Concrete + Brown Tiling",
+  "block.portalcubed.blue_office_concrete": "Blue Horizontal Office Concrete + Tread Plating",
 
   "block.portalcubed.insulation": "Insulation",
   "block.portalcubed.portal_2_panel_frame": "Panel Frame",
@@ -231,7 +240,7 @@
   "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
   "portalcubed.midnightconfig.enableAccurateMovement": "Enable Accurate Movement",
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
-
+  "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
@@ -255,34 +264,14 @@
   "portalcubed.velocity_helper.condition_expression": "condition",
   "portalcubed.velocity_helper.curve_expression": "interpolation curve",
 
-  "item.portalcubed.music_disc_subject_name_here": "Music Disc",
-  "item.portalcubed.music_disc_subject_name_here.desc": "Kelly Bailey - Subject Name Here",
-  "item.portalcubed.music_disc_taste_of_blood": "Music Disc",
-  "item.portalcubed.music_disc_taste_of_blood.desc": "Kelly Bailey - Taste of Blood",
-  "item.portalcubed.music_disc_android_hell": "Music Disc",
-  "item.portalcubed.music_disc_android_hell.desc": "Kelly Bailey - Android Hell",
-  "item.portalcubed.music_disc_self_esteem_fund": "Music Disc",
-  "item.portalcubed.music_disc_self_esteem_fund.desc": "Kelly Bailey - Self Esteem Fund",
-  "item.portalcubed.music_disc_procedural_jiggle_bone": "Music Disc",
-  "item.portalcubed.music_disc_procedural_jiggle_bone.desc": "Kelly Bailey - Procedural Jiggle Bone",
-  "item.portalcubed.music_disc_no_cake_for_you": "Music Disc",
-  "item.portalcubed.music_disc_no_cake_for_you.desc": "Mike Morasky - No Cake For You",
-  "item.portalcubed.music_disc_4000_degrees_kelvin": "Music Disc",
-  "item.portalcubed.music_disc_4000_degrees_kelvin.desc": "Kelly Baily - 4000 Degrees Kelvin",
-  "item.portalcubed.music_disc_stop_what_you_are_doing": "Music Disc",
-  "item.portalcubed.music_disc_stop_what_you_are_doing.desc": "Mike Morasky - Stop What You Are Doing",
-  "item.portalcubed.music_disc_party_escort": "Music Disc",
-  "item.portalcubed.music_disc_party_escort.desc": "Mike Morasky - Party Escort",
-  "item.portalcubed.music_disc_youre_not_a_good_person": "Music Disc",
-  "item.portalcubed.music_disc_youre_not_a_good_person.desc": "Mike Morasky - You're Not a Good Person",
-  "item.portalcubed.music_disc_you_cant_escape_you_know": "Music Disc",
-  "item.portalcubed.music_disc_you_cant_escape_you_know.desc": "Mike Morasky - You Can't Escape, You Know",
   "item.portalcubed.music_disc_still_alive": "Music Disc",
   "item.portalcubed.music_disc_still_alive.desc": "John Coulton - Still Alive",
   "item.portalcubed.music_disc_cara_mia_addio": "Music Disc",
   "item.portalcubed.music_disc_cara_mia_addio.desc": "Mike Morasky - Cara Mia Addio",
   "item.portalcubed.music_disc_want_you_gone": "Music Disc",
   "item.portalcubed.music_disc_want_you_gone.desc": "John Coulton - Want You Gone",
+  "item.portalcubed.music_disc_reconstructing_more_science": "Music Disc",
+  "item.portalcubed.music_disc_reconstructing_more_science.desc": "Mike Morasky - Reconstructing More Science",
 
   "portalcubed.command.fizzle.success": "Successfully fizzled %s physics objects",
 

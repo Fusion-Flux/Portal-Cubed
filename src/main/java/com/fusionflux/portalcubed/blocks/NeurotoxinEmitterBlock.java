@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.NeurotoxinEmitterBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -85,7 +84,7 @@ public class NeurotoxinEmitterBlock extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new NeurotoxinEmitterBlockEntity(pos,state);
+        return new NeurotoxinEmitterBlockEntity(pos, state);
     }
 
     @Override

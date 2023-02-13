@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EN",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:white_concrete"
+    },
+    "E": {
+      "item": "minecraft:brown_dye"
+    },
+    "N": {
+      "item": "minecraft:black_dye"
+    }
+  },
+  "result": {
+    "item": "portalcubed:bordered_office_concrete",
+    "count": 16
+  }
+}

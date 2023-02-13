@@ -19,13 +19,13 @@ public class ChairEntity extends CorePhysicsEntity  {
         if (!this.world.isClient && !this.isRemoved()) {
             boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
             if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
+                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.CHAIR);
                     }
                     this.discard();
                 }
-                if(!(source.getAttacker() instanceof PlayerEntity)) {
+                if (!(source.getAttacker() instanceof PlayerEntity)) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.CHAIR);
                     }

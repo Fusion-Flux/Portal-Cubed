@@ -22,13 +22,13 @@ public class FactCoreEntity extends CorePhysicsEntity  {
         if (!this.world.isClient && !this.isRemoved()) {
             boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
             if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
+                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.FACT_CORE);
                     }
                     this.discard();
                 }
-                if(!(source.getAttacker() instanceof PlayerEntity)) {
+                if (!(source.getAttacker() instanceof PlayerEntity)) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.FACT_CORE);
                     }
@@ -44,7 +44,7 @@ public class FactCoreEntity extends CorePhysicsEntity  {
     public void tick() {
         if (!this.world.isClient) {
             if (t == 0) {
-                world.playSoundFromEntity(null,this, PortalCubedSounds.FACT_CORE_EVENT,this.getSoundCategory(),1f,1f);
+                world.playSoundFromEntity(null, this, PortalCubedSounds.FACT_CORE_EVENT, this.getSoundCategory(), 1f, 1f);
                 t = 5500;
             }
             t--;

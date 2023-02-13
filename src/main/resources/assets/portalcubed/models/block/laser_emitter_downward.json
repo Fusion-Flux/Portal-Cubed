@@ -4,8 +4,7 @@
 	"textures": {
 		"0": "portalcubed:block/laser_emitter",
 		"1": "portalcubed:block/padded_gray_panel",
-		"particle": "portalcubed:block/laser_emitter"
-	},
+		"particle": "portalcubed:block/padded_gray_panel"	},
 	"elements": [
 		{
 			"from": [0.1, -0.9, 15.925],

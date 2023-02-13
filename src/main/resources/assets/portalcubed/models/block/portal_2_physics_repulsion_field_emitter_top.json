@@ -5,7 +5,6 @@
 		"0": "portalcubed:block/padded_gray_2x1_panel_top",
 		"1": "portalcubed:block/padded_gray_half_panel",
 		"2": "portalcubed:block/grill_emitters",
-		"3": "portalcubed:block/modded_grill_emitters",
 		"4": "portalcubed:block/modded_grill_emitters_e",
 		"particle": "portalcubed:block/padded_gray_2x1_panel_top"
 	},
@@ -47,15 +46,6 @@
 			"faces": {
 				"east": {"uv": [3.016, 0.016, 3.984, 7.984], "texture": "#2"},
 				"west": {"uv": [3.984, 0.016, 3.016, 7.984], "texture": "#2"}
-			}
-		},
-		{
-			"from": [8, 0, -4],
-			"to": [8, 16, -1],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0.5, 0, 0]},
-			"faces": {
-				"east": {"uv": [0, 0, 1.468, 7.984], "texture": "#3"},
-				"west": {"uv": [1.468, 0, 0, 7.984], "texture": "#3"}
 			}
 		},
 		{

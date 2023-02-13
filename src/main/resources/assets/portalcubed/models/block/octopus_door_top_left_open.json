@@ -3,8 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "portalcubed:block/octopus_door",
-		"particle": "portalcubed:block/octopus_door"
-	},
+		"particle": "portalcubed:block/padded_gray_panel"	},
 	"elements": [
 		{
 			"from": [1, 0, -12],

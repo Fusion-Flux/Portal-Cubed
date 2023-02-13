@@ -37,7 +37,7 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void setPortalCutout(VoxelShape portalCutout) {
-            this.portalCutout = portalCutout;
+        this.portalCutout = portalCutout;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void setHasTeleportationHappened(boolean hasHappened) {
-        hasTeleportationHappened=hasHappened;
+        hasTeleportationHappened = hasHappened;
         PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
@@ -118,11 +118,11 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     public void readFromNbt(NbtCompound tag) {
         int size = tag.getInt("size");
 
-        if(!portals.isEmpty())
+        if (!portals.isEmpty())
             portals.clear();
 
         for (int i = 0; i < size; i++) {
-            portals.add(tag.getUuid("portals"+i));
+            portals.add(tag.getUuid("portals" + i));
         }
 
         hasTeleportationHappened = tag.getBoolean("hasTpHappened");
@@ -139,19 +139,19 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
         int number = 0;
-        for(UUID portal : portals) {
-            tag.putUuid("portals" + number,portal);
+        for (UUID portal : portals) {
+            tag.putUuid("portals" + number, portal);
             number++;
         }
         tag.putInt("size", portals.size());
-        tag.putBoolean("hasTpHappened",hasTeleportationHappened);
+        tag.putBoolean("hasTpHappened", hasTeleportationHappened);
 
         IPHelperDuplicate.putVec3d(tag, "velocity", this.getVelocityUpdateAfterTeleport());
 
-        tag.putBoolean("wasInfiniteFalling",wasInfiniteFalling);
+        tag.putBoolean("wasInfiniteFalling", wasInfiniteFalling);
 
         IPHelperDuplicate.putVec3d(tag, "gelVelocity", this.getServerVelForGel());
 
-        tag.putBoolean("canFireGel",canFireGel);
+        tag.putBoolean("canFireGel", canFireGel);
     }
 }

@@ -3,35 +3,54 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.entity.RocketEntity;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.*;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.UUID;
 
+import static com.fusionflux.portalcubed.blocks.RocketTurretBlock.POWERED;
+
 public class RocketTurretBlockEntity extends BlockEntity {
     public static final int UPDATE_ANGLE = 0;
     public static final int UPDATE_LOCKED_TICKS = 1;
 
-    public static final int LOCK_TICKS = 25;
+    public static final int LOCK_TICKS = 30;
+
+    private static final Vec3d GUN_OFFSET = new Vec3d(0.5, 1.71875, 0.09375);
 
     private float yaw, pitch;
-    private int lockedTicks;
+    private int age, lockedTicks;
     private UUID rocketUuid = Util.NIL_UUID;
+
+    private Vec2f destAngle;
+    private Boolean powered;
+    private int opening = -1;
+    private boolean closing;
+    public float lastYaw, lastPitch;
+    public Vec3d aimDest;
+
+    public final AnimationState activatingAnimation = new AnimationState();
+    public final AnimationState deactivatingAnimation = new AnimationState();
 
     public RocketTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -43,18 +62,32 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
+        nbt.putInt("Age", age);
         nbt.putFloat("Yaw", yaw);
         nbt.putFloat("Pitch", pitch);
         nbt.putFloat("LockedTicks", lockedTicks);
         nbt.putUuid("RocketUUID", rocketUuid);
+        nbt.putBoolean("Closing", closing);
+        if (destAngle != null) {
+            nbt.putIntArray("DestAngle", new int[] {Float.floatToRawIntBits(destAngle.x), Float.floatToRawIntBits(destAngle.y)});
+        }
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
+        age = nbt.getInt("Age");
         yaw = nbt.getFloat("Yaw");
         pitch = nbt.getFloat("Pitch");
         lockedTicks = nbt.getInt("LockedTicks");
         rocketUuid = nbt.getUuid("RocketUUID");
+        closing = nbt.getBoolean("Closing");
+        final int[] destAngleA = nbt.getIntArray("DestAngle");
+        if (destAngleA.length >= 2) {
+            destAngle = new Vec2f(
+                Float.intBitsToFloat(destAngleA[0]),
+                Float.intBitsToFloat(destAngleA[1])
+            );
+        }
     }
 
     public void setAngle(Pair<Float, Float> angle) {
@@ -67,9 +100,19 @@ public class RocketTurretBlockEntity extends BlockEntity {
     }
 
     public void fire() {
-        if (world == null || world.isClient) return;
-        // TODO: Implement
-        PortalCubed.LOGGER.info("BAM");
+        if (world == null || world.isClient) {
+            PortalCubed.LOGGER.warn("RocketTurretBlockEntity.fire() should only be called on the server, not the client.");
+            return;
+        }
+        final RocketEntity rocket = PortalCubedEntities.ROCKET.create(world);
+        if (rocket != null) {
+            rocketUuid = rocket.getUuid();
+            rocket.setPosition(Vec3d.of(pos).add(getGunOffset(0)));
+            rocket.setYaw(yaw - 90);
+            rocket.setPitch(pitch);
+            world.spawnEntity(rocket);
+            world.playSoundFromEntity(null, rocket, PortalCubedSounds.ROCKET_FIRE_EVENT, SoundCategory.HOSTILE, 1, 1);
+        }
     }
 
     private void syncLockedTicks() {
@@ -114,49 +157,148 @@ public class RocketTurretBlockEntity extends BlockEntity {
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
-        if (world.isClient) return;
+        age++;
+        lastYaw = yaw;
+        lastPitch = pitch;
+        if (powered == null) {
+            powered = state.get(POWERED);
+            if (!powered) {
+                deactivatingAnimation.restart(age - 41);
+            }
+        } else if (powered != state.get(POWERED)) {
+            powered = !powered;
+            if (powered) {
+                opening = 0;
+                deactivatingAnimation.stop();
+                activatingAnimation.restart(age);
+                closing = false;
+            } else {
+                lockedTicks = 0;
+                closing = true;
+            }
+            return;
+        }
+        if (opening >= 0 && opening < 60) {
+            opening++;
+            return;
+        } else if (closing) {
+            if (Math.abs(yaw) > 5 || Math.abs(pitch) > 5) {
+                setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, 0));
+                setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, 0));
+            } else {
+                yaw = 0;
+                pitch = 0;
+                activatingAnimation.stop();
+                deactivatingAnimation.restart(age);
+                closing = false;
+            }
+        }
+        if (!powered) {
+            if (world.isClient) {
+                aimDest = null;
+            }
+            return;
+        }
+        if (world.isClient) {
+            final Vec3d gunPos = Vec3d.of(getPos()).add(getGunOffset(0));
+            //noinspection DataFlowIssue
+            aimDest = world.raycast(new RaycastContext(
+                gunPos, gunPos.add(Vec3d.fromPolar(pitch, yaw - 90).multiply(127)),
+                RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE,
+                // We can pass null here because of ShapeContextMixin
+                null
+            )).getPos();
+            return;
+        }
         if (lockedTicks > 0) {
             if (lockedTicks++ == LOCK_TICKS) {
                 fire();
                 syncLockedTicks();
-            } else if (
-                lockedTicks > LOCK_TICKS &&
-                    world instanceof ServerWorld serverWorld &&
-                    serverWorld.getEntity(rocketUuid) == null
-            ) {
-                lockedTicks = 0;
-                rocketUuid = Util.NIL_UUID;
-                syncLockedTicks();
+            } else {
+                if (destAngle != null) {
+                    setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, destAngle.y));
+                    setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, destAngle.x));
+                    syncAngle();
+                }
+                if (lockedTicks == 9) {
+                    world.playSound(null, pos, PortalCubedSounds.ROCKET_LOCKED_EVENT, SoundCategory.HOSTILE, 1f, 1f);
+                } else if (
+                    lockedTicks > LOCK_TICKS &&
+                        world instanceof ServerWorld serverWorld &&
+                        (lockedTicks > LOCK_TICKS + 200 || serverWorld.getEntity(rocketUuid) == null)
+                ) {
+                    lockedTicks = 0;
+                    rocketUuid = Util.NIL_UUID;
+                    syncLockedTicks();
+                }
             }
             return;
         }
+        final BlockPos actualBody = getPos().up();
+        final Vec3d eye = Vec3d.ofCenter(actualBody, GUN_OFFSET.y - 1);
+        //noinspection DataFlowIssue
         final PlayerEntity player = world.getClosestPlayer(
-            TargetPredicate.createNonAttackable(),
+            TargetPredicate.createNonAttackable().setPredicate(p -> p.world.raycast(new RaycastContext(
+                eye, p.getPos().withAxis(Direction.Axis.Y, p.getBodyY(0.5)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, null
+            )).getType() == HitResult.Type.MISS),
             pos.getX(), pos.getY(), pos.getZ()
         );
-        if (player == null) return;
-        final Vec3d offset = player.getPos().subtract(Vec3d.ofCenter(getPos().up()));
-        final float newYaw = MathHelper.lerp(
-            0.5f, yaw,
-            (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x))
-        );
-        final float newPitch = MathHelper.lerp(
-            0.5f, pitch,
-            (float)Math.toDegrees(Math.asin(-offset.y))
-        );
-        if (Math.max(Math.abs(newYaw - yaw), Math.abs(newPitch - pitch)) <= 15) {
+        if (player != null) {
+            final Vec3d offset = player.getPos()
+                .withAxis(Direction.Axis.Y, player.getBodyY(0.5))
+                .subtract(
+                    Vec3d.of(pos)
+                        .add(getGunOffset(0))
+                );
+            destAngle = new Vec2f(
+                (float)Math.toDegrees(-MathHelper.atan2(offset.y, Math.sqrt(offset.x * offset.x + offset.z * offset.z))),
+                (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x))
+            );
+        } else if (destAngle != null) {
+            destAngle = new Vec2f(0, destAngle.y);
+        } else return;
+        setYaw(MathHelper.lerpAngleDegrees(0.05f, yaw, destAngle.y));
+        setPitch(MathHelper.lerpAngleDegrees(0.05f, pitch, destAngle.x));
+        if (player != null && Math.abs(yaw - destAngle.y) <= 1 && Math.abs(pitch - destAngle.x) <= 1) {
             lockedTicks++;
             syncLockedTicks();
-            // Also play rocket_locking_beep1
+            world.playSound(null, pos, PortalCubedSounds.ROCKET_LOCKING_EVENT, SoundCategory.HOSTILE, 1f, 1f);
         }
-        yaw = newYaw;
-        pitch = newPitch;
         syncAngle();
+    }
+
+    public Vec3d getGunOffset(float tickDelta) {
+        return GUN_OFFSET
+            .add(-0.3, -1.475, -0.5)
+            .rotateZ((float)Math.toRadians(MathHelper.lerpAngleDegrees(tickDelta, lastPitch, pitch)))
+            .add(-0.2, -0.025, 0.0)
+            .rotateY((float)Math.toRadians(-MathHelper.lerpAngleDegrees(tickDelta, lastYaw, yaw)))
+            .add(0.5, 1.5, 0.5);
     }
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         return toNbt();
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
+    public void setYaw(float yaw) {
+        this.yaw = MathHelper.wrapDegrees(yaw);
+    }
+
+    public float getPitch() {
+        return pitch;
+    }
+
+    public void setPitch(float pitch) {
+        this.pitch = MathHelper.wrapDegrees(pitch);
     }
 
     public enum State {

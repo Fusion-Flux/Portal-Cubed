@@ -60,7 +60,7 @@ public final class PortalBlocksLoader {
     }
 
     public static void init(ModContainer mod) {
-        try (final Reader reader = Files.newBufferedReader(mod.getPath("portal_blocks.json"), StandardCharsets.UTF_8)) {
+        try (Reader reader = Files.newBufferedReader(mod.getPath("portal_blocks.json"), StandardCharsets.UTF_8)) {
             load(JsonHelper.deserialize(reader));
         } catch (IOException e) {
             PortalCubed.LOGGER.error("Failed to load block data", e);
@@ -72,7 +72,7 @@ public final class PortalBlocksLoader {
             if (value.block == null) return;
             final Identifier id = PortalCubed.id(key);
             Registry.register(Registry.BLOCK, id, value.block);
-            Registry.register(Registry.ITEM, id, new BlockItem(value.block, new Item.Settings().group(PortalCubed.PortalBlocksGroup)));
+            Registry.register(Registry.ITEM, id, new BlockItem(value.block, new Item.Settings().group(PortalCubed.PORTAL_BLOCKS_GROUP)));
         });
     }
 

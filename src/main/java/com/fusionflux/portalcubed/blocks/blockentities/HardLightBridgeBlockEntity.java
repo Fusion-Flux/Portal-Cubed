@@ -29,7 +29,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
     public final List<Direction> facingVert;
 
     public HardLightBridgeBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.HLB_BLOCK_ENTITY,pos,state);
+        super(PortalCubedBlocks.HLB_BLOCK_ENTITY, pos, state);
         this.emitters = new ArrayList<>();
         this.portalEmitters = new ArrayList<>();
         this.facing = new ArrayList<>();
@@ -40,7 +40,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
         if (!world.isClient) {
             if (!blockEntity.emitters.isEmpty()) {
 
-                for (int i = blockEntity.emitters.size()-1; i >= 0; i--) {
+                for (int i = blockEntity.emitters.size() - 1; i >= 0; i--) {
                     Box portalCheckBox = new Box(blockEntity.portalEmitters.get(i)).expand(.1);
 
                     List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
@@ -54,26 +54,26 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
                         }
                     }
 
-                    if(!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))){
+                    if (!portalPresent && !blockEntity.emitters.get(i).equals(blockEntity.portalEmitters.get(i))) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.facingVert.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof HardLightBridgeEmitterBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
-                            blockEntity.emitters.remove(i);
-                            blockEntity.portalEmitters.remove(i);
-                            blockEntity.facing.remove(i);
-                            blockEntity.facingVert.remove(i);
-                            blockEntity.updateState(state, world, pos, blockEntity);
+                    } else if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof HardLightBridgeEmitterBlockEntity && world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
+                        blockEntity.emitters.remove(i);
+                        blockEntity.portalEmitters.remove(i);
+                        blockEntity.facing.remove(i);
+                        blockEntity.facingVert.remove(i);
+                        blockEntity.updateState(state, world, pos, blockEntity);
                     } else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).bridges.contains(blockEntity.pos.mutableCopy())) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.facingVert.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    }else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalBridges.contains(blockEntity.pos.mutableCopy())) {
-                        if(portalPresent) {
+                    } else if (!((HardLightBridgeEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalBridges.contains(blockEntity.pos.mutableCopy())) {
+                        if (portalPresent) {
                             blockEntity.emitters.remove(i);
                             blockEntity.portalEmitters.remove(i);
                             blockEntity.facing.remove(i);
@@ -82,22 +82,22 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
                         }
                     }
 
-            }
-            }else{
+                }
+            } else {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
             }
 
         }
     }
 
-    public void updateState(BlockState state, WorldAccess world, BlockPos pos,HardLightBridgeBlockEntity bridge) {
-        if(!world.isClient()) {
-            boolean MNorth = false;
-            boolean MSouth = false;
-            boolean MEast = false;
-            boolean MWest = false;
-            boolean MUp = false;
-            boolean MDown = false;
+    public void updateState(BlockState state, WorldAccess world, BlockPos pos, HardLightBridgeBlockEntity bridge) {
+        if (!world.isClient()) {
+            boolean mNorth = false;
+            boolean mSouth = false;
+            boolean mEast = false;
+            boolean mWest = false;
+            boolean mUp = false;
+            boolean mDown = false;
             Direction resultUp = Direction.NORTH;
             Direction resultDown = Direction.NORTH;
 
@@ -112,40 +112,40 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
                 boolean portalPresent = false;
                 for (ExperimentalPortal portal : list) {
                     if (portal.getFacingDirection().equals(facing)) {
-                    if (portal.getActive()) {
-                        portalPresent = true;
+                        if (portal.getActive()) {
+                            portalPresent = true;
+                        }
                     }
-                     }
                 }
 
                 if (emitter.getBlock() == PortalCubedBlocks.HLB_EMITTER_BLOCK || portalPresent) {
                     if (facing.equals(Direction.NORTH)) {
-                        MNorth = true;
+                        mNorth = true;
                     }
                     if (facing.equals(Direction.EAST)) {
-                        MEast = true;
+                        mEast = true;
                     }
                     if (facing.equals(Direction.SOUTH)) {
-                        MSouth = true;
+                        mSouth = true;
                     }
                     if (facing.equals(Direction.WEST)) {
-                        MWest = true;
+                        mWest = true;
                     }
-                    if(facing.equals(Direction.UP)){
-                        MUp=true;
+                    if (facing.equals(Direction.UP)) {
+                        mUp = true;
                         resultUp = facingVert;
                     }
-                    if(facing.equals(Direction.DOWN)){
-                        MDown = true;
+                    if (facing.equals(Direction.DOWN)) {
+                        mDown = true;
                         resultDown = facingVert;
                     }
                 }
             }
 
-            state = state.with(Properties.NORTH, MNorth).with(Properties.EAST, MEast).with(Properties.SOUTH, MSouth).with(Properties.WEST, MWest).with(Properties.UP, MUp).with(Properties.DOWN, MDown)
+            state = state.with(Properties.NORTH, mNorth).with(Properties.EAST, mEast).with(Properties.SOUTH, mSouth).with(Properties.WEST, mWest).with(Properties.UP, mUp).with(Properties.DOWN, mDown)
                     .with(CustomProperties.H_FACING_UP, resultUp).with(CustomProperties.H_FACING_DOWN, resultDown);
         }
-        world.setBlockState(pos,state,3);
+        world.setBlockState(pos, state, 3);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
         List<Integer> posYList = new ArrayList<>();
         List<Integer> posZList = new ArrayList<>();
 
-        for(BlockPos pos : emitters){
+        for (BlockPos pos : emitters) {
             posXList.add(pos.getX());
             posYList.add(pos.getY());
             posZList.add(pos.getZ());
@@ -170,7 +170,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
         List<Integer> direcYList = new ArrayList<>();
         List<Integer> direcZList = new ArrayList<>();
 
-        for(Direction direc : facing){
+        for (Direction direc : facing) {
             direcXList.add(direc.getVector().getX());
             direcYList.add(direc.getVector().getY());
             direcZList.add(direc.getVector().getZ());
@@ -184,7 +184,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
         List<Integer> direcYListVert = new ArrayList<>();
         List<Integer> direcZListVert = new ArrayList<>();
 
-        for(Direction direc : facingVert){
+        for (Direction direc : facingVert) {
             direcXListVert.add(direc.getVector().getX());
             direcYListVert.add(direc.getVector().getY());
             direcZListVert.add(direc.getVector().getZ());
@@ -198,7 +198,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
         List<Integer> portalYList = new ArrayList<>();
         List<Integer> portalZList = new ArrayList<>();
 
-        for(BlockPos direc : portalEmitters){
+        for (BlockPos direc : portalEmitters) {
             portalXList.add(direc.getX());
             portalYList.add(direc.getY());
             portalZList.add(direc.getZ());
@@ -241,7 +241,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
         direcYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("direcyList")));
         direcZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("direczList")));
 
-        if(!facing.isEmpty())
+        if (!facing.isEmpty())
             facing.clear();
 
         for (int i = 0; i < size; i++) {
@@ -256,7 +256,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
         direcYListVert = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("direcyListVert")));
         direcZListVert = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("direczListVert")));
 
-        if(!facingVert.isEmpty())
+        if (!facingVert.isEmpty())
             facingVert.clear();
 
         for (int i = 0; i < size; i++) {
@@ -267,11 +267,11 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
         List<Integer> portalYList;
         List<Integer> portalZList;
 
-       portalXList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalxList")));
-       portalYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalyList")));
-       portalZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalzList")));
+        portalXList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalxList")));
+        portalYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalyList")));
+        portalZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalzList")));
 
-        if(!portalEmitters.isEmpty())
+        if (!portalEmitters.isEmpty())
             portalEmitters.clear();
 
         for (int i = 0; i < size; i++) {

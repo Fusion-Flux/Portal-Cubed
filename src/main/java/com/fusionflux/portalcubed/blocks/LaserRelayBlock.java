@@ -27,7 +27,7 @@ public class LaserRelayBlock extends BlockWithEntity {
 
     public LaserRelayBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE,false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE, false));
     }
 
     static {
@@ -43,7 +43,7 @@ public class LaserRelayBlock extends BlockWithEntity {
     @Override
     @SuppressWarnings("deprecation")
     public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        if(state.get(Properties.ENABLED)){
+        if (state.get(Properties.ENABLED)) {
             return 15;
         }
         return 0;
@@ -82,7 +82,7 @@ public class LaserRelayBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING,Properties.ENABLED);
+        builder.add(Properties.FACING, Properties.ENABLED);
     }
 
     @Override

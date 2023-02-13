@@ -24,7 +24,7 @@ public class DuelExcursionFunnelEmitter extends BlockWithEntity {
 
     public DuelExcursionFunnelEmitter(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED,false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED, false));
     }
 
 

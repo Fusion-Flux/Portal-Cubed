@@ -22,7 +22,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @ModifyVariable(method = "isPlayerNotCollidingWithBlocks(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/Box;)Z", at = @At("STORE"), ordinal = 0)
     private Iterable<VoxelShape> isPlayerNotCollidingWithBlocks(Iterable<VoxelShape> shapes) {
         VoxelShape portalBox = CalledValues.getPortalCutout(this.getPlayer());
-        if(portalBox != VoxelShapes.empty()) {
+        if (portalBox != VoxelShapes.empty()) {
             // Would take in the world value from the code, but I guess I cant
             return (((CustomCollisionView) this.player.getWorld()).getPortalCollisions(this.getPlayer(), this.getPlayer().getBoundingBox().contract(1.0E-5F), portalBox));
         }

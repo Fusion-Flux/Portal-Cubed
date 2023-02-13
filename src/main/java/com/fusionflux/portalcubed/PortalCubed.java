@@ -58,13 +58,14 @@ public class PortalCubed implements ModInitializer {
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final ItemGroup TestingElementsGroup = QuiltItemGroup.createWithIcon(
+    public static final ItemGroup TESTING_ELEMENTS_GROUP = QuiltItemGroup.createWithIcon(
             id("testing_elements"),
             () -> new ItemStack(PortalCubedItems.PORTAL_GUN));
 
-    public static final ItemGroup PortalBlocksGroup = QuiltItemGroup.createWithIcon(
+    public static final ItemGroup PORTAL_BLOCKS_GROUP = QuiltItemGroup.createWithIcon(
             id("portal_blocks"),
             () -> new ItemStack(PortalCubedItems.BLOCK_ITEM_ICON));
+
     public static final ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = Registry.register(
         Registry.SCREEN_HANDLER, id("faith_plate_screen"),
         new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new)
@@ -74,39 +75,42 @@ public class PortalCubed implements ModInitializer {
         new ExtendedScreenHandlerType<>(VelocityHelperScreenHandler::new)
     );
 
+
     @Override
     public void onInitialize(ModContainer mod) {
         ServerPlayNetworking.registerGlobalReceiver(id("use_portal"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
             final int targetEntityId = buf.readVarInt();
-            final Vec3d offset = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
             float yawSet = buf.readFloat();
             float pitchSet = buf.readFloat();
             final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-            final boolean wasInfiniteFall = buf.readBoolean();
-            if (Double.isNaN(offset.x) || Double.isNaN(offset.y) || Double.isNaN(offset.z) || !Float.isFinite(yawSet)) {
+            double teleportXOffset = buf.readDouble();
+            double teleportYOffset = buf.readDouble();
+            double teleportZOffset = buf.readDouble();
+            if (!Float.isFinite(yawSet)) {
                 handler.disconnect(Text.translatable("multiplayer.disconnect.invalid_player_movement"));
                 return;
             }
             server.execute(() -> {
-                if (offset.lengthSquared() > 10 * 10) {
-                    LOGGER.warn("{} tried to teleport with a high offset ({})", player, offset.length());
-                    handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
-                    return;
-                }
                 if (!(player.world.getEntityById(targetEntityId) instanceof ExperimentalPortal portal)) {
                     LOGGER.warn("{} tried to teleport through nonexistent portal", player);
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+                    CalledValues.setIsTeleporting(player, false);
+                    GravityChangerAPI.clearGravity(player);
                     return;
                 }
                 if (portal.getPos().squaredDistanceTo(player.getPos()) > 10 * 10) {
                     LOGGER.warn("{} tried to teleport through distant portal ({})", player, portal.getPos().distanceTo(player.getPos()));
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+                    CalledValues.setIsTeleporting(player, false);
+                    GravityChangerAPI.clearGravity(player);
                     return;
                 }
                 if (portal.getDestination().isEmpty()) {
                     LOGGER.warn("{} tried to teleport through an inactive portal ({}).", player, portal);
                     handler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+                    CalledValues.setIsTeleporting(player, false);
+                    GravityChangerAPI.clearGravity(player);
                     return;
                 }
                 Direction portalFacing = portal.getFacingDirection();
@@ -115,63 +119,74 @@ public class PortalCubed implements ModInitializer {
                 Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
                 Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
 
-                Vec3d rotatedVel = entityVelocity;
-                if(rotatedVel.y == -0.0784000015258789){
-                    rotatedVel = rotatedVel.multiply(1,0,1);
+                Vec3d rotatedOffsets = new Vec3d(teleportXOffset, teleportYOffset, teleportZOffset);
+
+                double heightOffset = (player.getEyeY() - player.getY()) / 2;
+
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
+                    if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+                        rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherDirec);
+                    }
                 }
 
-                if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
+                    if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
+                        rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherPortalVertFacing);
+                    }
+                }
+
+                System.out.println(portalVertFacing);
+
+
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
+                    if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
+                        if (portalVertFacing != otherPortalVertFacing)
+                            rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherPortalVertFacing);
+                    }
+                }
+
+                rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
+
+                //System.out.println(rotatedOffsets);
+
+                Vec3d rotatedVel = entityVelocity;
+
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
                         rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
                     }
                 }
 
-                rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherDirec);
-
-
-                if(otherDirec == Direction.UP || otherDirec ==Direction.DOWN) {
+                if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                     if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
                         rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
                     }
                 }
 
 
-                if(portalFacing == Direction.UP || portalFacing ==Direction.DOWN) {
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                        rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
+                        if (portalFacing.getOpposite() != otherDirec)
+                            rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
                     }
                 }
 
+                rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherDirec);
 
-                //System.out.println(rotatedVel);
-                if(rotatedVel.y < -3.92){
-                    rotatedVel = rotatedVel.add(0,.081d,0);
-                }
-                CalledValues.setVelocityUpdateAfterTeleport(player,rotatedVel);
+
+                CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
 
                 float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
                 player.setYaw(yawValue);
                 player.setPitch(pitchSet);
-                //player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel.add(rotatedGravOffset))));
-                //0.00316799700927733
-                //Velocity from failed launch is: 0.47523200451660164
-                //Velocity From CORRECT launch Is 0.47840000152587897
-                if(portalFacing == otherDirec) {
-                    if(portalFacing == Direction.UP) {
-                        player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel)));
-                    }else {
-                        player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset.add(rotatedVel)));
-                    }
-                }else{
-                    player.refreshPositionAfterTeleport(portal.getDestination().get().subtract(offset).add(rotatedVel));
-                }
-                if(otherDirec != Direction.DOWN && wasInfiniteFall){
-                    CalledValues.setWasInfiniteFalling(player,false);
-                }
-                CalledValues.setHasTeleportationHappened(player,true);
+                player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0, player.getEyeY() - player.getY(), 0));
+                CalledValues.setHasTeleportationHappened(player, true);
                 GravityChangerAPI.clearGravity(player);
             });
         });
+
+
+
 
         ServerPlayNetworking.registerGlobalReceiver(id("configure_faith_plate"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
@@ -181,12 +196,12 @@ public class PortalCubed implements ModInitializer {
             double z =  buf.readDouble();
             server.execute(() -> {
                 BlockEntity entity = player.world.getBlockEntity(target);
-                if(entity instanceof FaithPlateBlockEntity plate){
+                if (entity instanceof FaithPlateBlockEntity plate) {
                     plate.setVelX(x);
                     plate.setVelY(y);
                     plate.setVelZ(z);
                 }
-                if(entity instanceof BetaFaithPlateBlockEntity plate){
+                if (entity instanceof BetaFaithPlateBlockEntity plate) {
                     plate.setVelX(x);
                     plate.setVelY(y);
                     plate.setVelZ(z);
@@ -198,16 +213,15 @@ public class PortalCubed implements ModInitializer {
             server.execute(() -> CalledValues.setHasTeleportationHappened(player, false))
         );
 
-        ServerPlayNetworking.registerGlobalReceiver(id("request_velocity_for_gel"), (server, player, handler, buf, responseSender) ->{
-                    final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-                    final boolean fireGel = buf.readBoolean();
-                server.execute(() -> {
-                    CalledValues.setServerVelForGel(player,entityVelocity);
-                    CalledValues.setCanFireGel(player,fireGel);
+        ServerPlayNetworking.registerGlobalReceiver(id("request_velocity_for_gel"), (server, player, handler, buf, responseSender) -> {
+            final Vec3d entityVelocity = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            final boolean fireGel = buf.readBoolean();
+            server.execute(() -> {
+                CalledValues.setServerVelForGel(player, entityVelocity);
+                CalledValues.setCanFireGel(player, fireGel);
 
-                });
-    }
-        );
+            });
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(id("cube_pos_update"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
@@ -229,8 +243,8 @@ public class PortalCubed implements ModInitializer {
                     return;
                 }
                 cube.setRotYaw(rotYaw);
-                Vec3d cubePos = new Vec3d(x,y,z);
-                Vec3d lastCubePos = new Vec3d(lastX,lastY,lastZ);
+                Vec3d cubePos = new Vec3d(x, y, z);
+                Vec3d lastCubePos = new Vec3d(lastX, lastY, lastZ);
                 if (cubePos.squaredDistanceTo(lastCubePos) > 10 * 10) {
                     LOGGER.warn("{} tried to throw a physics object really fast ({})", player, cubePos.distanceTo(lastCubePos));
                     return;

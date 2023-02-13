@@ -3,7 +3,7 @@
 	"textures": {
 		"0": "portalcubed:block/pedestal_button",
 		"1": "portalcubed:block/pedestal_button_e",
-		"particle": "portalcubed:block/pedestal_button"
+		"particle": "portalcubed:block/smooth_gray_panel"
 	},
 	"elements": [
 		{

@@ -10,9 +10,9 @@ import net.minecraft.util.math.BlockPos;
 
 public class FaithPlateScreenHandler extends ScreenHandler {
     private BlockPos pos;
-    private double x =0;
-    private double y =0;
-    private double z =0;
+    private double x = 0;
+    private double y = 0;
+    private double z = 0;
 
     public FaithPlateScreenHandler(int syncId, @SuppressWarnings("unused") PlayerInventory playerInventory, PacketByteBuf buf) {
         this(syncId);

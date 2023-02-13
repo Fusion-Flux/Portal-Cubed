@@ -12,6 +12,7 @@
   "portal_1_elevator_wall_middle": {},
   "portal_1_elevator_wall_top": {},
   "solid_office_concrete": {},
+  "bordered_office_concrete": {},
   "portal_1_smooth_gray_panel": {},
   "portal_1_smooth_gray_half_panel": {},
   "portal_1_smooth_gray_2x1_panel_bottom": {
@@ -33,6 +34,17 @@
   "type": "directional"
   },
   "portal_1_rusted_plating": {},
+  "portal_1_rusted_tread_plating": {},
+  "portal_1_metal_grating": {
+    "type": "old_ap",
+    "render_layer": "translucent",
+    "opaque": false
+  },
+  "portal_1_mesh_grating": {
+    "type": "old_ap",
+    "render_layer": "translucent",
+    "opaque": false
+  },
   "portal_1_2x2_exposed_panel_bottom_left": {
   "type": "directional"
   },
@@ -227,7 +239,8 @@
   },
   "office_concrete": {},
   "blue_office_concrete": {},
-  "old_ap_mesh": {
+  "old_ap_metal_grating": {
+    "type": "old_ap",
     "render_layer": "translucent",
     "opaque": false
   },
@@ -279,15 +292,15 @@
   },
   "excursion_funnel_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "duel_excursion_funnel_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "reversed_excursion_funnel_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "neurotoxin_emitter": {
     "type": "provided",
@@ -363,7 +376,7 @@
   },
   "old_ap_floor_button": {
     "type": "provided",
-    "render_layer": "cutout"
+    "render_layer": "translucent"
   },
   "matter_inquisition_field": {
     "type": "provided",
@@ -426,6 +439,10 @@
     "render_layer": "translucent"
   },
   "power_block": {
+    "type": "provided",
+    "render_layer": "cutout"
+  },
+  "rocket_turret": {
     "type": "provided",
     "render_layer": "cutout"
   }

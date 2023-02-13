@@ -8,10 +8,12 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
+    "ShapeContextMixin",
     "WorldMixin",
     "WorldViewMixin"
   ],
   "client": [
+    "client.AbstractSoundInstanceAccessor",
     "client.BackgroundRendererMixin",
     "client.CameraMixin",
     "client.ClientPlayerEntityMixin",
@@ -20,6 +22,7 @@
     "client.InGameOverlayRendererMixin",
     "client.MinecraftClientMixin",
     "client.ModelLoaderMixin",
+    "client.MusicTrackerAccessor",
     "client.ParticleManagerMixin"
   ],
   "injectors": {

@@ -50,7 +50,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     public Vec3d lastPos = this.getPos();
 
-    private final Vec3d offsetHeight = new Vec3d(0,this.getHeight()/2,0);
+    private final Vec3d offsetHeight = new Vec3d(0, this.getHeight() / 2, 0);
 
     @Override
     public boolean collides() {
@@ -69,7 +69,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
-        return  damageSource != DamageSource.OUT_OF_WORLD && !damageSource.isSourceCreativePlayer() ;
+        return  damageSource != DamageSource.OUT_OF_WORLD && !damageSource.isSourceCreativePlayer();
     }
 
     @Override
@@ -77,13 +77,13 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         if (!this.world.isClient && !this.isRemoved()) {
             boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
             if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if(source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld){
+                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.STORAGE_CUBE);
                     }
                     this.discard();
                 }
-                if(!(source.getAttacker() instanceof PlayerEntity)) {
+                if (!(source.getAttacker() instanceof PlayerEntity)) {
                     if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
                         this.dropItem(PortalCubedItems.STORAGE_CUBE);
                     }
@@ -176,7 +176,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         canUsePortals = getHolderUUID().isEmpty();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.getPos();
-        if(!world.isClient) {
+        if (!world.isClient) {
             this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
             if (getHolderUUID().isPresent()) {
                 PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID().get());
@@ -184,9 +184,9 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
                     canUsePortals = false;
-                    Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(),player.getYaw());
+                    Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(), player.getYaw());
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
-                    GravityChangerAPI.addGravity( this, new Gravity(GravityChangerAPI.getGravityDirection(player),10,1,"player_interaction"));
+                    GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
                     this.fallDistance = 0;
                     this.bodyYaw = player.headYaw;
 
@@ -194,19 +194,19 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                         MovementType.PLAYER,
                         RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
                     );
-                }else{
-                    if(player != null ){
+                } else {
+                    if (player != null) {
                         setHolderUUID(Optional.empty());
                     }
                     canUsePortals = true;
                 }
                 this.setNoGravity(true);
-            }else{
-                if(this.hasNoGravity()){
+            } else {
+                if (this.hasNoGravity()) {
                     this.setNoGravity(false);
                 }
             }
-        }else{
+        } else {
             if (getHolderUUID().isPresent()) {
                 PlayerEntity player = (PlayerEntity)((Accessors) world).getEntity(getHolderUUID().get());
                 if (player != null && player.isAlive()) {
@@ -222,8 +222,8 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 }
             }
         }
-        if(this.getVelocity().y < -3.92){
-            this.setVelocity(this.getVelocity().add(0,.81d,0));
+        if (this.getVelocity().y < -3.92) {
+            this.setVelocity(this.getVelocity().add(0, .81d, 0));
         }
         if (fizzling) {
             if (world.isClient) {
