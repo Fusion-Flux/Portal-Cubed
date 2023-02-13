@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.damage.ProjectileDamageSource;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
@@ -69,8 +70,18 @@ public class RocketEntity extends Entity {
         final HitResult hit = ProjectileUtil.getCollision(this, this::canHit);
         if (hit.getType() == HitResult.Type.ENTITY) {
             explode(hit instanceof EntityHitResult entityHit ? (LivingEntity)entityHit.getEntity() : null);
-        } else if (horizontalCollision || verticalCollision) {
-            explode(null);
+        } else {
+            final LivingEntity hit2 = world.getClosestEntity(
+                LivingEntity.class,
+                TargetPredicate.createNonAttackable().setPredicate(this::canHit),
+                null, getX(), getY(), getZ(),
+                getBoundingBox()
+            );
+            if (hit2 != null) {
+                explode(hit2);
+            } else if (horizontalCollision || verticalCollision) {
+                explode(null);
+            }
         }
         if (age > 0 && age % 13 == 0) {
             world.playSoundFromEntity(null, this, PortalCubedSounds.ROCKET_FLY_EVENT, SoundCategory.HOSTILE, 1, 1);
