@@ -146,7 +146,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                                     }
                                 }
                             }
-                        } else if((world.getBlockState(translatedPos).isIn(ConventionalBlockTags.GLASS_BLOCKS) || world.getBlockState(translatedPos).isIn(ConventionalBlockTags.GLASS_PANES)) && world.getBlockState(translatedPos).getOpacity(world, translatedPos) <= 0.0) {
+                        } else if ((world.getBlockState(translatedPos).isIn(ConventionalBlockTags.GLASS_BLOCKS) || world.getBlockState(translatedPos).isIn(ConventionalBlockTags.GLASS_PANES)) && world.getBlockState(translatedPos).getOpacity(world, translatedPos) <= 0.0) {
                             blockEntity.funnels = modFunnels;
                             blockEntity.portalFunnels = portalFunnels;
                         } else {

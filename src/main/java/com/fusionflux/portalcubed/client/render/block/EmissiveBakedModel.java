@@ -100,20 +100,20 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
             final Direction cullFace = ModelHelper.faceFromIndex(i);
             final List<BakedQuad> quads = wrapped.getQuads(state, cullFace, randomSupplier.get());
 
-			for (BakedQuad quad : quads) {
-				boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().getId());
+            for (BakedQuad quad : quads) {
+                boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().getId());
 
-				BlendMode blendMode = BlendMode.DEFAULT;
-				if (state != null) {
-					blendMode = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(state));
-					if (blendMode == BlendMode.SOLID) blendMode = BlendMode.CUTOUT_MIPPED;
-				}
+                BlendMode blendMode = BlendMode.DEFAULT;
+                if (state != null) {
+                    blendMode = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(state));
+                    if (blendMode == BlendMode.SOLID) blendMode = BlendMode.CUTOUT_MIPPED;
+                }
 
-				emitter.fromVanilla(quad, isQuadEmissive ? EMISSIVE_MATERIALS[blendMode.ordinal()] : DEFAULT_MATERIAL, cullFace);
-				emitter.cullFace(cullFace);
-				emitter.emit();
-			}
-		}
+                emitter.fromVanilla(quad, isQuadEmissive ? EMISSIVE_MATERIALS[blendMode.ordinal()] : DEFAULT_MATERIAL, cullFace);
+                emitter.cullFace(cullFace);
+                emitter.emit();
+            }
+        }
 
         cachedMesh = Pair.of(state, objects.meshBuilder.build());
     }

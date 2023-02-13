@@ -43,10 +43,10 @@ public class FloorButtonBlockEntity extends BlockEntity {
 
             boolean isPowered = false;
             for (LivingEntity living : entities) {
-                if(living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof CompanionCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity || living instanceof RedirectionCubeEntity) {
+                if (living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof CompanionCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity || living instanceof RedirectionCubeEntity) {
                     if (!(living instanceof CorePhysicsEntity physicsEntity && physicsEntity.getFizzleProgress() > 0)) {
                         isPowered = true;
-                        if(state.getBlock().equals(PortalCubedBlocks.FLOOR_BUTTON)) {
+                        if (state.getBlock().equals(PortalCubedBlocks.FLOOR_BUTTON)) {
                             if (living instanceof StorageCubeEntity cube) {
                                 cube.setButtonTimer(1);
                             }

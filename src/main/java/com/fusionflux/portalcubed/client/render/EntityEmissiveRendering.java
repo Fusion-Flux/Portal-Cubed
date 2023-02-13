@@ -34,11 +34,11 @@ public final class EntityEmissiveRendering {
 
         private final Function<T, Identifier> emissiveTextureGetter;
 
-        public EmissiveFeatureRenderer(FeatureRendererContext<T, M> featureRendererContext, Function<T, Identifier> emissiveTextureGetter) {
+        private EmissiveFeatureRenderer(FeatureRendererContext<T, M> featureRendererContext, Function<T, Identifier> emissiveTextureGetter) {
             super(featureRendererContext);
             this.emissiveTextureGetter = emissiveTextureGetter;
         }
-    
+
         @Override
         public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity,
                 float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw,
