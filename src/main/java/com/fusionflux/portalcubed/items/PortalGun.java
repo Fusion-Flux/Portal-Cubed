@@ -196,7 +196,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 if (
                     !world.getEntitiesByType(
                         PortalCubedEntities.EXPERIMENTAL_PORTAL,
-                        portalHolder.getBoundingBox(),
+                        portalHolder.getBoundingBox().expand(-0.2),
                         p -> p != originalPortal
                     ).isEmpty()
                 ) {
