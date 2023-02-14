@@ -119,19 +119,15 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
             NbtCompound tag = stack.getOrCreateNbt();
 
             ExperimentalPortal portalHolder;
-            ExperimentalPortal originalPortal = null;
+            ExperimentalPortal originalPortal;
             NbtCompound portalsTag = tag.getCompound(world.getRegistryKey().toString());
 
-            boolean portalExists = false;
             if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
                 originalPortal = (ExperimentalPortal) ((ServerWorld) world).getEntity(portalsTag.getUuid((leftClick ? "Left" : "Right") + "Portal"));
-                portalHolder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
-                if (originalPortal != null) {
-                    portalExists = true;
-                }
             } else {
-                portalHolder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
+                originalPortal = null;
             }
+            portalHolder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
 
             ExperimentalPortal otherPortal;
             if (portalsTag.contains((leftClick ? "Right" : "Left") + "Portal")) {
@@ -155,8 +151,6 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                     up = user.getHorizontalFacing().getVector();
                 }
                 right = up.crossProduct(normal);
-
-
 
                 Vec3d portalPos1 = calcPos(blockPos, up, normal, right);
 
@@ -187,12 +181,6 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                     }
                 }
 
-                world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), leftClick ? PortalCubedSounds.FIRE_EVENT_PRIMARY : PortalCubedSounds.FIRE_EVENT_SECONDARY, SoundCategory.NEUTRAL, .3F, 1F);
-                if (portalHolder != null && portalHolder.isAlive()) {
-                    world.playSound(null, portalHolder.getPos().getX(), portalHolder.getPos().getY(), portalHolder.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
-                }
-
-
                 assert portalHolder != null;
                 portalHolder.setOriginPos(portalPos1);
                 portalHolder.setDestination(Optional.of(portalPos1));
@@ -205,7 +193,20 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
                 portalHolder.setOrientation(Vec3d.of(right), Vec3d.of(up).multiply(-1));
 
-                if (!portalExists) {
+                if (
+                    !world.getEntitiesByType(
+                        PortalCubedEntities.EXPERIMENTAL_PORTAL,
+                        portalHolder.getBoundingBox(),
+                        p -> p != originalPortal
+                    ).isEmpty()
+                ) {
+                    world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                    return;
+                }
+
+                world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), leftClick ? PortalCubedSounds.FIRE_EVENT_PRIMARY : PortalCubedSounds.FIRE_EVENT_SECONDARY, SoundCategory.NEUTRAL, .3F, 1F);
+
+                if (originalPortal == null) {
                     portalHolder.setLinkedPortalUUID(Optional.empty());
                 } else {
                     CalledValues.removePortals(user, originalPortal.getUuid());
