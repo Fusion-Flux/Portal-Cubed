@@ -6,10 +6,10 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.block.AbstractGlassBlock;
+
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.TintedGlassBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
@@ -146,7 +146,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                                     }
                                 }
                             }
-                        } else if (world.getBlockState(translatedPos).getBlock() instanceof AbstractGlassBlock && !(world.getBlockState(translatedPos).getBlock() instanceof TintedGlassBlock)) {
+                        } else if ((world.getBlockState(translatedPos).isIn(ConventionalBlockTags.GLASS_BLOCKS) || world.getBlockState(translatedPos).isIn(ConventionalBlockTags.GLASS_PANES)) && world.getBlockState(translatedPos).getOpacity(world, translatedPos) <= 0.0) {
                             blockEntity.funnels = modFunnels;
                             blockEntity.portalFunnels = portalFunnels;
                         } else {

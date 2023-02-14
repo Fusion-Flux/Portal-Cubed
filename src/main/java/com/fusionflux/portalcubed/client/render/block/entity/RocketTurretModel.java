@@ -13,9 +13,14 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperEntity<RocketTurretBlockEntity>> {
     public static final Identifier TEXTURE_ACTIVE = id("textures/block/rocket_turret_active.png");
+    public static final Identifier TEXTURE_ACTIVE_E = id("textures/block/rocket_turret_active_e.png");
     public static final Identifier TEXTURE_INACTIVE = id("textures/block/rocket_turret_inactive.png");
+
     public static final Identifier TEXTURE_LOCK_ON = id("textures/block/rocket_turret_lock_on.png");
+    public static final Identifier TEXTURE_LOCK_ON_E = id("textures/block/rocket_turret_lock_on_e.png");
+
     public static final Identifier TEXTURE_FIRING = id("textures/block/rocket_turret_firing.png");
+    public static final Identifier TEXTURE_FIRING_E = id("textures/block/rocket_turret_firing_e.png");
 
     private final ModelPart root, turret, chassis, neck;
 
@@ -159,6 +164,14 @@ public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperE
             case SEARCHING -> TEXTURE_ACTIVE;
             case LOCKED -> TEXTURE_LOCK_ON;
             case FIRING -> TEXTURE_FIRING;
+        };
+    }
+
+    public Identifier getEmissiveTexture(RocketTurretBlockEntity entity) {
+        return switch (entity.getState()) {
+            case SEARCHING -> TEXTURE_ACTIVE_E;
+            case LOCKED -> TEXTURE_LOCK_ON_E;
+            case FIRING -> TEXTURE_FIRING_E;
         };
     }
 }

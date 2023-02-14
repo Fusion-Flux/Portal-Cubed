@@ -5,7 +5,6 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -41,9 +40,6 @@ public class PortalCubedClientPackets {
         final int entityId = buf.readVarInt();
         client.execute(() -> {
             if (client.world.getEntityById(entityId) instanceof CorePhysicsEntity physicsEntity) {
-                physicsEntity.getHolderUUID().ifPresent(value -> {
-                    if (client.player.getUuid().equals(value)) PortalCubedComponents.HOLDER_COMPONENT.get(client.player).stopHolding();
-                });
                 physicsEntity.startFizzlingProgress();
             }
         });

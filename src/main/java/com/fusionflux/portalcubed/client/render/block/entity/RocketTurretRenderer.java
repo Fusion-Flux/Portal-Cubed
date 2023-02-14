@@ -1,8 +1,11 @@
 package com.fusionflux.portalcubed.client.render.block.entity;
 
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
+import com.fusionflux.portalcubed.client.render.EntityEmissiveRendering;
 import com.fusionflux.portalcubed.util.BlockEntityWrapperEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -24,7 +27,7 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
     public static final EntityModelLayer ROCKET_TURRET_LAYER = new EntityModelLayer(id("rocket_turret"), "main");
 
     private final EntityModelLoader modelLoader;
-    private final Map<RocketTurretBlockEntity, RocketTurretModel> models = new WeakHashMap<>();
+    private final Map<RocketTurretBlockEntity, Pair<BlockEntityWrapperEntity<RocketTurretBlockEntity>, RocketTurretModel>> wrapperModelPairs = new WeakHashMap<>();
 
     public RocketTurretRenderer(BlockEntityRendererFactory.Context ctx) {
         modelLoader = ctx.getLayerRenderDispatcher();
@@ -40,6 +43,10 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
         return 128; // So that the whole laser can be seen. See the raycast in RocketTurretBlockEntity.java.
     }
 
+    private Pair<BlockEntityWrapperEntity<RocketTurretBlockEntity>, RocketTurretModel> createWrapperModelPair(RocketTurretBlockEntity entity) {
+        return Pair.of(new BlockEntityWrapperEntity<RocketTurretBlockEntity>(entity), new RocketTurretModel(modelLoader.getModelPart(ROCKET_TURRET_LAYER)));
+    }
+
     @Override
     public void render(RocketTurretBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
@@ -48,10 +55,9 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
         matrices.scale(-1, -1, 1);
         matrices.translate(0.5, -1.501, -0.5);
 
-        final BlockEntityWrapperEntity<RocketTurretBlockEntity> wrapper = new BlockEntityWrapperEntity<>(entity);
-        final RocketTurretModel model = models.computeIfAbsent(
-            entity, e -> new RocketTurretModel(modelLoader.getModelPart(ROCKET_TURRET_LAYER))
-        );
+        final Pair<BlockEntityWrapperEntity<RocketTurretBlockEntity>, RocketTurretModel> wrapperModelPair = wrapperModelPairs.computeIfAbsent(entity, e -> createWrapperModelPair(e));
+        final BlockEntityWrapperEntity<RocketTurretBlockEntity> wrapper = wrapperModelPair.key();
+        final RocketTurretModel model = wrapperModelPair.value();
 
         final float yaw = MathHelper.lerpAngleDegrees(tickDelta, entity.lastYaw, entity.getYaw());
         final float pitch = MathHelper.lerpAngleDegrees(tickDelta, entity.lastPitch, entity.getPitch());
@@ -64,6 +70,9 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
             final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(renderLayer);
             final int overlay2 = OverlayTexture.packUv(OverlayTexture.getU(0), OverlayTexture.getV(false));
             model.render(matrices, vertexConsumer, light, overlay2, 1, 1, 1, 1);
+            if (!(entity.deactivatingAnimation.isAnimating() && entity.deactivatingAnimation.m_hkidhtpg() >= 2000)) {
+                EntityEmissiveRendering.renderEmissive(matrices, vertexConsumers, wrapper, model, e -> model.getEmissiveTexture(entity));
+            }
         }
 
         matrices.pop();
