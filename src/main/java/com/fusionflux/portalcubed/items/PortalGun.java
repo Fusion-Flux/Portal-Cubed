@@ -154,32 +154,32 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
                 Vec3d portalPos1 = calcPos(blockPos, normal);
 
-                if (!validPos(world, up, right, portalPos1)) {
-                    for (int i = 1; i < 9; i++) {
-                        Vec3d shiftedPortalPos = portalPos1;
-                        switch (i) {
-                            case 1 -> shiftedPortalPos = portalPos1.add(Vec3d.of(up).multiply(-1.0));
-                            case 2 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0));
-                            case 3 -> shiftedPortalPos = portalPos1.add(Vec3d.of(up));
-                            case 4 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right));
-                            case 5 ->
-                                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up).multiply(-1.0));
-                            case 6 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up));
-                            case 7 -> shiftedPortalPos = portalPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
-                            case 8 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right)).add(Vec3d.of(up).multiply(-1.0));
-                        }
-
-                        if (validPos(world, up, right, shiftedPortalPos)) {
-                            portalPos1 = shiftedPortalPos;
-                            break;
-                        }
-
-                        if (i == 8) {
-                            world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                            return;
-                        }
-                    }
-                }
+//                if (!validPos(world, up, right, portalPos1)) {
+//                    for (int i = 1; i < 9; i++) {
+//                        Vec3d shiftedPortalPos = portalPos1;
+//                        switch (i) {
+//                            case 1 -> shiftedPortalPos = portalPos1.add(Vec3d.of(up).multiply(-1.0));
+//                            case 2 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0));
+//                            case 3 -> shiftedPortalPos = portalPos1.add(Vec3d.of(up));
+//                            case 4 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right));
+//                            case 5 ->
+//                                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up).multiply(-1.0));
+//                            case 6 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up));
+//                            case 7 -> shiftedPortalPos = portalPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
+//                            case 8 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right)).add(Vec3d.of(up).multiply(-1.0));
+//                        }
+//
+//                        if (validPos(world, up, right, shiftedPortalPos)) {
+//                            portalPos1 = shiftedPortalPos;
+//                            break;
+//                        }
+//
+//                        if (i == 8) {
+//                            world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+//                            return;
+//                        }
+//                    }
+//                }
 
                 assert portalHolder != null;
                 portalHolder.setOriginPos(portalPos1);
