@@ -139,11 +139,11 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
             Vec3i up;
             Vec3i normal;
             Vec3i right;
-            BlockPos blockPos;
+            Vec3d blockPos;
 
             HitResult hitResult = customRaycast(user, 128.0D, 0.0F);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                blockPos = ((BlockHitResult) hitResult).getBlockPos();
+                blockPos = hitResult.getPos();
                 normal = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
                 if (normal.getY() == 0) {
                     up = new Vec3i(0, 1, 0);
@@ -152,7 +152,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 }
                 right = up.crossProduct(normal);
 
-                Vec3d portalPos1 = calcPos(blockPos, up, normal, right);
+                Vec3d portalPos1 = calcPos(blockPos, normal);
 
                 if (!validPos(world, up, right, portalPos1)) {
                     for (int i = 1; i < 9; i++) {
@@ -196,7 +196,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 if (
                     !world.getEntitiesByType(
                         PortalCubedEntities.EXPERIMENTAL_PORTAL,
-                        portalHolder.getBoundingBox().expand(-0.2),
+                        portalHolder.getBoundingBox().expand(-0.1),
                         p -> p != originalPortal
                     ).isEmpty()
                 ) {
@@ -331,19 +331,15 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
     /**
      * @param hit     the position designated by the player's input for a given portal.
-     * @param upright the upright axial vector of the portal based on placement context.
      * @param facing  the facing axial vector of the portal based on placement context.
-     * @param cross   the cross product of upright x facing.
      * @return a vector position specifying the portal's final position in the world.
      */
-    private Vec3d calcPos(BlockPos hit, Vec3i upright, Vec3i facing, Vec3i cross) {
-        double upOffset = -0.5;
-        double faceOffset = -0.510;
-        double crossOffset = 0.0;
+    private Vec3d calcPos(Vec3d hit, Vec3i facing) {
+        double faceOffset = -0.01;
         return new Vec3d(
-                ((hit.getX() + 0.5) + upOffset * upright.getX() + faceOffset * facing.getX() + crossOffset * cross.getX()), // x component
-                ((hit.getY() + 0.5) + upOffset * upright.getY() + faceOffset * facing.getY() + crossOffset * cross.getY()), // y component
-                ((hit.getZ() + 0.5) + upOffset * upright.getZ() + faceOffset * facing.getZ() + crossOffset * cross.getZ())  // z component
+            ((hit.getX()) + faceOffset * facing.getX()), // x component
+            ((hit.getY()) + faceOffset * facing.getY()), // y component
+            ((hit.getZ()) + faceOffset * facing.getZ())  // z component
         );
     }
 
