@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -190,16 +191,16 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 portalHolder.setPitch(rotAngles.getRight().floatValue());
                 portalHolder.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
                 portalHolder.setColor(this.getSidedColor(stack));
-
                 portalHolder.setOrientation(Vec3d.of(right), Vec3d.of(up).multiply(-1));
 
-                if (
-                    !world.getEntitiesByType(
-                        PortalCubedEntities.EXPERIMENTAL_PORTAL,
-                        portalHolder.getBoundingBox().expand(-0.1),
-                        p -> p != originalPortal
-                    ).isEmpty()
-                ) {
+                final List<ExperimentalPortal> otherPortals = world.getEntitiesByType(
+                    PortalCubedEntities.EXPERIMENTAL_PORTAL,
+                    portalHolder.getBoundingBox().expand(-0.1),
+                    p -> p != originalPortal
+                );
+
+                if (!otherPortals.isEmpty() || !portalHolder.validate()) {
+                    // TODO: Portal bumping (but not necessarily the glitch)
                     world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
                     return;
                 }

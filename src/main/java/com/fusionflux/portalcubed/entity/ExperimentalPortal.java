@@ -221,7 +221,7 @@ public class ExperimentalPortal extends Entity {
             setActive(otherPortal != null);
             setDestination(Optional.of(Objects.requireNonNullElse(otherPortal, this).getOriginPos()));
 
-            if (!validateBehind() || !validateFront()) {
+            if (!validate()) {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
             }
@@ -229,7 +229,11 @@ public class ExperimentalPortal extends Entity {
         super.tick();
     }
 
-    public boolean validateBehind() {
+    public boolean validate() {
+        return validateBehind() && validateFront();
+    }
+
+    private boolean validateBehind() {
         final Box portalBox = new Box(
             getPointInPlane(WIDTH / 2, HEIGHT / 2)
                 .add(getNormal().multiply(-0.01)),
@@ -267,7 +271,7 @@ public class ExperimentalPortal extends Entity {
         return true;
     }
 
-    public boolean validateFront() {
+    private boolean validateFront() {
         final Box portalBox = new Box(
             getPointInPlane(WIDTH / 2, HEIGHT / 2)
                 .add(getNormal().multiply(0.2)),
