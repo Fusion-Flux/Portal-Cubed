@@ -24,7 +24,8 @@
     "client.MinecraftClientMixin",
     "client.ModelLoaderMixin",
     "client.MusicTrackerAccessor",
-    "client.ParticleManagerMixin"
+    "client.ParticleManagerMixin",
+    "client.SoundSystemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

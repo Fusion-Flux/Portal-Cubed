@@ -1,7 +1,9 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -88,6 +90,17 @@ public class RocketEntity extends Entity {
         }
         if (age > 200) {
             explode(null);
+        }
+    }
+
+    @Override
+    protected void onBlockCollision(BlockState state) {
+        if (
+            state.getFluidState().isOf(PortalCubedFluids.TOXIC_GOO.still) ||
+                state.getFluidState().isOf(PortalCubedFluids.TOXIC_GOO.flowing)
+        ) {
+            world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_GOO_EVENT, SoundCategory.HOSTILE, 1, 1);
+            kill();
         }
     }
 

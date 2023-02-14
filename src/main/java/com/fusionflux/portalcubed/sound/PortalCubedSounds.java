@@ -7,6 +7,8 @@ import net.minecraft.util.registry.Registry;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedSounds {
+    public static final Identifier ERROR = id("error");
+
     public static final Identifier GEL_BOUNCE = id("gel_bounce");
     public static final Identifier GEL_RUN = id("gel_run");
     public static final Identifier GEL_SPLAT = id("gel_splat");
@@ -31,6 +33,7 @@ public class PortalCubedSounds {
     public static final Identifier ROCKET_LOCKED = id("rocket_locked");
     public static final Identifier ROCKET_LOCKING = id("rocket_locking");
     public static final Identifier ROCKET_EXPLODE = id("rocket_explode");
+    public static final Identifier ROCKET_GOO = id("rocket_goo");
 
     public static final Identifier LASER_EMITTER_ACTIVATE = id("laser/emitter_activate");
     public static final Identifier LASER_NODE_MUSIC = id("laser/node_music");
@@ -49,6 +52,8 @@ public class PortalCubedSounds {
     public static final Identifier SPACE_CORE_SOUND = id("space_core");
     public static final Identifier FACT_CORE_SOUND = id("fact_core");
     public static final Identifier ADVENTURE_CORE_SOUND = id("adventure_core");
+
+    public static final SoundEvent ERROR_EVENT = new SoundEvent(ERROR);
 
     public static final SoundEvent GEL_BOUNCE_EVENT = new SoundEvent(GEL_BOUNCE);
     public static final SoundEvent GEL_RUN_EVENT = new SoundEvent(GEL_RUN);
@@ -74,6 +79,7 @@ public class PortalCubedSounds {
     public static final SoundEvent ROCKET_LOCKED_EVENT = new SoundEvent(ROCKET_LOCKED);
     public static final SoundEvent ROCKET_LOCKING_EVENT = new SoundEvent(ROCKET_LOCKING);
     public static final SoundEvent ROCKET_EXPLODE_EVENT = new SoundEvent(ROCKET_EXPLODE);
+    public static final SoundEvent ROCKET_GOO_EVENT = new SoundEvent(ROCKET_GOO);
 
     public static final SoundEvent LASER_EMITTER_ACTIVATE_EVENT = new SoundEvent(LASER_EMITTER_ACTIVATE);
     public static final SoundEvent LASER_NODE_MUSIC_EVENT = new SoundEvent(LASER_NODE_MUSIC);
@@ -93,6 +99,8 @@ public class PortalCubedSounds {
     public static final SoundEvent ADVENTURE_CORE_EVENT = new SoundEvent(ADVENTURE_CORE_SOUND);
 
     public static void registerSounds() {
+        Registry.register(Registry.SOUND_EVENT, ERROR, ERROR_EVENT);
+
         Registry.register(Registry.SOUND_EVENT, GEL_BOUNCE, GEL_BOUNCE_EVENT);
         Registry.register(Registry.SOUND_EVENT, GEL_RUN, GEL_RUN_EVENT);
         Registry.register(Registry.SOUND_EVENT, GEL_SPLAT, GEL_SPLAT_EVENT);
@@ -118,6 +126,7 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKED, ROCKET_LOCKED_EVENT);
         Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKING, ROCKET_LOCKING_EVENT);
         Registry.register(Registry.SOUND_EVENT, ROCKET_EXPLODE, ROCKET_EXPLODE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, ROCKET_GOO, ROCKET_GOO_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, LASER_EMITTER_ACTIVATE, LASER_EMITTER_ACTIVATE_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_MUSIC, LASER_NODE_MUSIC_EVENT);

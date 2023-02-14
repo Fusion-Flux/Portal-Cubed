@@ -1,4 +1,10 @@
 {
+	"error": {
+		"sounds": [
+			"portalcubed:error"
+		]
+	},
+
 	"gel_run": {
 		"subtitle": "subtitles.portalcubed.gel_run",
 		"sounds": [
@@ -146,6 +152,10 @@
 	"rocket_explode": {
 		"sounds": [
 			"portalcubed:blast1"
+		]
+	},
+	"rocket_goo": {
+		"sounds": [
 		]
 	},
 
