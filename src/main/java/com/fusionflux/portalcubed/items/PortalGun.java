@@ -8,7 +8,11 @@ import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.unascribed.lib39.recoil.api.DirectClickItem;
+import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -24,7 +28,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Pair;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -35,13 +38,41 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.BiFunction;
 
 
 public class PortalGun extends Item implements DirectClickItem, DyeableItem {
+
+    private static final Map<Pair<Vec3i, Vec3i>, List<List<Direction>>> FAIL_TRIES;
+    private static final Map<Direction.AxisDirection, Double2DoubleFunction> FAIL_AXIS_DIRS = new EnumMap<>(Map.of(
+        Direction.AxisDirection.NEGATIVE, Math::floor,
+        Direction.AxisDirection.POSITIVE, Math::ceil
+    ));
+
+    static {
+        final List<BiFunction<Direction, Direction, List<Direction>>> failTryFns = List.of(
+            (u, r) -> List.of(r.getOpposite()),
+            (u, r) -> List.of(u),
+            (u, r) -> List.of(r),
+            (u, r) -> List.of(u.getOpposite()),
+            (u, r) -> List.of(r.getOpposite(), u),
+            (u, r) -> List.of(r, u),
+            (u, r) -> List.of(r, u.getOpposite()),
+            (u, r) -> List.of(r.getOpposite(), u.getOpposite())
+        );
+        final ImmutableMap.Builder<Pair<Vec3i, Vec3i>, List<List<Direction>>> failTries = ImmutableMap.builder();
+        for (final Direction u : Direction.values()) {
+            for (final Direction r : Direction.values()) {
+                final ImmutableList.Builder<List<Direction>> entry = ImmutableList.builder();
+                for (final var fn : failTryFns) {
+                    entry.add(fn.apply(u, r));
+                }
+                failTries.put(Pair.of(u.getVector(), r.getVector()), entry.build());
+            }
+        }
+        FAIL_TRIES = failTries.build();
+    }
 
     public PortalGun(Settings settings) {
         super(settings);
@@ -155,43 +186,36 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
                 Vec3d portalPos1 = calcPos(blockPos, normal);
 
-//                if (!validPos(world, up, right, portalPos1)) {
-//                    for (int i = 1; i < 9; i++) {
-//                        Vec3d shiftedPortalPos = portalPos1;
-//                        switch (i) {
-//                            case 1 -> shiftedPortalPos = portalPos1.add(Vec3d.of(up).multiply(-1.0));
-//                            case 2 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0));
-//                            case 3 -> shiftedPortalPos = portalPos1.add(Vec3d.of(up));
-//                            case 4 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right));
-//                            case 5 ->
-//                                shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up).multiply(-1.0));
-//                            case 6 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right).multiply(-1.0)).add(Vec3d.of(up));
-//                            case 7 -> shiftedPortalPos = portalPos1.add(Vec3d.of(up)).add(Vec3d.of(right));
-//                            case 8 -> shiftedPortalPos = portalPos1.add(Vec3d.of(right)).add(Vec3d.of(up).multiply(-1.0));
-//                        }
-//
-//                        if (validPos(world, up, right, shiftedPortalPos)) {
-//                            portalPos1 = shiftedPortalPos;
-//                            break;
-//                        }
-//
-//                        if (i == 8) {
-//                            world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-//                            return;
-//                        }
-//                    }
-//                }
-
                 assert portalHolder != null;
                 portalHolder.setOriginPos(portalPos1);
                 portalHolder.setDestination(Optional.of(portalPos1));
 
-                Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
+                var rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3d.of(right), Vec3d.of(up)));
                 portalHolder.setYaw(rotAngles.getLeft().floatValue() + (90 * up.getX()));
                 portalHolder.setPitch(rotAngles.getRight().floatValue());
                 portalHolder.setRoll((rotAngles.getRight().floatValue() + (90)) * up.getX());
                 portalHolder.setColor(this.getSidedColor(stack));
                 portalHolder.setOrientation(Vec3d.of(right), Vec3d.of(up).multiply(-1));
+
+                findCorrectOrientation:
+                if (!portalHolder.validate()) {
+                    for (final var try_ : FAIL_TRIES.get(Pair.of(up, right))) {
+                        Vec3d tryPos = portalPos1;
+                        for (final Direction part : try_) {
+                            double newAxis = FAIL_AXIS_DIRS.get(part.getDirection()).get(tryPos.getComponentAlongAxis(part.getAxis()));
+                            if (part.getAxis().isHorizontal()) {
+                                newAxis += part.getDirection() == Direction.AxisDirection.POSITIVE ? -0.5 : 0.5;
+                            }
+                            tryPos = tryPos.withAxis(part.getAxis(), newAxis);
+                        }
+                        portalHolder.setOriginPos(tryPos);
+                        if (portalHolder.validate()) {
+                            break findCorrectOrientation;
+                        }
+                    }
+                    world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                    return;
+                }
 
                 final List<ExperimentalPortal> otherPortals = world.getEntitiesByType(
                     PortalCubedEntities.EXPERIMENTAL_PORTAL,
@@ -199,7 +223,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                     p -> p != originalPortal
                 );
 
-                if (!otherPortals.isEmpty() || !portalHolder.validate()) {
+                if (!otherPortals.isEmpty()) {
                     // TODO: Portal bumping (but not necessarily the glitch)
                     world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
                     return;
