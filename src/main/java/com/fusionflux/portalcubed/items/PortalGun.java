@@ -220,7 +220,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 final List<ExperimentalPortal> overlappingPortals = world.getEntitiesByType(
                     PortalCubedEntities.EXPERIMENTAL_PORTAL,
                     portalHolder.getBoundingBox(),
-                    p -> p != originalPortal && p.getNormal().equals(portalHolder.getNormal())
+                    p -> p != originalPortal && vectorsEqual(p.getNormal(), portalHolder.getNormal())
                 );
 
                 if (!overlappingPortals.isEmpty()) {
@@ -284,6 +284,14 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
         } else {
             cancelClientMovement(user);
         }
+    }
+
+    /**
+     * {@link Vec3d#equals} uses {@link Double#compare} to compare axes. {@link Double#compare}, however, treats 0.0 and
+     * -0.0 as not equal.
+     */
+    private static boolean vectorsEqual(Vec3d a, Vec3d b) {
+        return a.getX() == b.getX() && a.getY() == b.getY() && a.getZ() == b.getZ();
     }
 
     @ClientOnly
