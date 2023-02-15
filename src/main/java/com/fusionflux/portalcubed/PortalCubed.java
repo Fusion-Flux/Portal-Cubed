@@ -179,7 +179,7 @@ public class PortalCubed implements ModInitializer {
                 float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
                 player.setYaw(yawValue);
                 player.setPitch(pitchSet);
-                player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0, player.getEyeY() - player.getY(), 0));
+                player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets.subtract(rotatedVel)).subtract(0, player.getEyeY() - player.getY(), 0));
                 CalledValues.setHasTeleportationHappened(player, true);
                 GravityChangerAPI.clearGravity(player);
             });
