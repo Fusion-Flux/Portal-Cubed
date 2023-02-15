@@ -195,13 +195,15 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 portalHolder.setColor(this.getSidedColor(stack));
                 portalHolder.setOrientation(Vec3d.of(right), Vec3d.of(up).multiply(-1));
 
+                //noinspection DataFlowIssue
+                final Direction.Axis hAxis = Direction.fromVector(new BlockPos(right)).getAxis();
                 findCorrectOrientation:
                 if (!portalHolder.validate()) {
                     for (final var try_ : FAIL_TRIES.get(Pair.of(up, right))) {
                         Vec3d tryPos = portalPos1;
                         for (final Direction part : try_) {
                             double newAxis = FAIL_AXIS_DIRS.get(part.getDirection()).get(tryPos.getComponentAlongAxis(part.getAxis()));
-                            if (part.getAxis().isHorizontal()) {
+                            if (part.getAxis() == hAxis) {
                                 newAxis += part.getDirection() == Direction.AxisDirection.POSITIVE ? -0.5 : 0.5;
                             }
                             tryPos = tryPos.withAxis(part.getAxis(), newAxis);
