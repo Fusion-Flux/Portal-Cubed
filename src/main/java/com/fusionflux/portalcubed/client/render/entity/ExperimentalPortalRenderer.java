@@ -45,6 +45,10 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         int g = (color & 0xFF00) >> 8;
         int b = color & 0xFF;
 
+        final float progress = (entity.age + tickDelta) / 2.5f;
+        if (progress <= 1) {
+            matrices.scale(progress, progress, progress);
+        }
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
         matrices.pop();
     }

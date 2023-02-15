@@ -316,11 +316,6 @@ public class ExperimentalPortal extends Entity {
         return true;
     }
 
-    public static boolean allowedPortalBlock(World world, BlockPos pos) {
-        final BlockState state = world.getBlockState(pos);
-        return state.isIn(PortalCubedBlocks.PORTAL_NONSOLID) || state.getCollisionShape(world, pos).isEmpty();
-    }
-
     public void syncRotations() {
         this.setBoundingBox(NULL_BOX);
         this.setCutoutBoundingBox(NULL_BOX);
