@@ -215,7 +215,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public void tickTail(CallbackInfo ci) {
         Entity thisEntity = ((Entity) (Object) this);
 
-        if(!thisEntity.world.isClient() && !(thisEntity instanceof PlayerEntity)) {
+        if(!thisEntity.world.isClient() && !(thisEntity instanceof PlayerEntity) && !(thisEntity instanceof ExperimentalPortal)) {
             Vec3d entityVelocity = this.getVelocity();
 
 
