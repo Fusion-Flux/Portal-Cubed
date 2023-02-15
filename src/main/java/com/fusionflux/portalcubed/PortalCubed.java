@@ -121,7 +121,14 @@ public class PortalCubed implements ModInitializer {
 
                 Vec3d rotatedOffsets = new Vec3d(teleportXOffset, teleportYOffset, teleportZOffset);
 
-                double heightOffset = (player.getEyeY() - player.getY()) / 2;
+                double heightOffset = -(player.getEyeY() - player.getY()) / 2;
+
+                if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
+                    if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+                        rotatedOffsets = rotatedOffsets.multiply(1,-1,1);
+                    }
+                }
+
 
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
