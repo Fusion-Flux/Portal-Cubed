@@ -278,6 +278,7 @@
 
   "gamerule.category.portalcubed": "Portal\u00b3",
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
+  "gamerule.portalAlignment": "Portal Alignment (1/xth of a block, 0 to disable)",
 
   "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
   "portalcubed.ponder.auto_portal.text_1": "Power an Auto Portal with redstone to open it.",

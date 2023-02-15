@@ -27,6 +27,9 @@ public class PortalCubedGameRules {
             server.getPlayerManager().sendToAll(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_CFG, buf));
         })
     );
+    public static final GameRules.Key<GameRules.IntRule> PORTAL_ALIGNMENT = GameRuleRegistry.register(
+        "portalAlignment", CATEGORY, GameRuleFactory.createIntRule(16, 0)
+    );
 
     public static void register() {
     }

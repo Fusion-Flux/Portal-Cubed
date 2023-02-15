@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.items;
 
 
+import com.fusionflux.portalcubed.PortalCubedGameRules;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -173,11 +174,6 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
             HitResult hitResult = customRaycast(user, 128.0D, 0.0F);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                blockPos = new Vec3d(
-                    Math.round(hitResult.getPos().x * 16) / 16.0,
-                    Math.round(hitResult.getPos().y * 16) / 16.0,
-                    Math.round(hitResult.getPos().z * 16) / 16.0
-                );
                 normal = ((BlockHitResult) hitResult).getSide().getOpposite().getVector();
                 if (normal.getY() == 0) {
                     up = new Vec3i(0, 1, 0);
@@ -185,6 +181,17 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                     up = user.getHorizontalFacing().getVector();
                 }
                 right = up.crossProduct(normal);
+
+                final int alignment = world.getGameRules().getInt(PortalCubedGameRules.PORTAL_ALIGNMENT);
+                if (alignment == 0) {
+                    blockPos = hitResult.getPos();
+                } else {
+                    blockPos = new Vec3d(
+                        Math.round(hitResult.getPos().x * alignment) / (double)alignment,
+                        Math.round(hitResult.getPos().y * alignment) / (double)alignment,
+                        Math.round(hitResult.getPos().z * alignment) / (double)alignment
+                    );
+                }
 
                 Vec3d portalPos1 = calcPos(blockPos, normal);
 
