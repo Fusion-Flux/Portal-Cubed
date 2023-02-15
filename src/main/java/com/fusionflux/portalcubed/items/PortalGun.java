@@ -217,7 +217,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
                 final List<ExperimentalPortal> overlappingPortals = world.getEntitiesByType(
                     PortalCubedEntities.EXPERIMENTAL_PORTAL,
-                    portalHolder.getBoundingBox().expand(-0.1),
+                    portalHolder.getBoundingBox(),
                     p -> p != originalPortal && p.getNormal().equals(portalHolder.getNormal())
                 );
 
