@@ -2,7 +2,6 @@ package com.fusionflux.portalcubed.items;
 
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
@@ -25,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
@@ -217,16 +215,30 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                     return;
                 }
 
-                final List<ExperimentalPortal> otherPortals = world.getEntitiesByType(
+                final List<ExperimentalPortal> overlappingPortals = world.getEntitiesByType(
                     PortalCubedEntities.EXPERIMENTAL_PORTAL,
                     portalHolder.getBoundingBox().expand(-0.1),
-                    p -> p != originalPortal
+                    p -> p != originalPortal && p.getNormal().equals(portalHolder.getNormal())
                 );
 
-                if (!otherPortals.isEmpty()) {
-                    // TODO: Portal bumping (but not necessarily the glitch)
-                    world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
-                    return;
+                if (!overlappingPortals.isEmpty()) {
+                    boolean bumpSuccess = false;
+                    if (overlappingPortals.size() == 1) {
+                        final ExperimentalPortal overlappingPortal = overlappingPortals.get(0);
+                        if (overlappingPortal.getAxisW().equals(portalHolder.getAxisW())) {
+                            final Direction.Axis axis = Objects.requireNonNull(Direction.fromVector(new BlockPos(right))).getAxis();
+                            if (overlappingPortal.getOriginPos().getComponentAlongAxis(axis) < portalHolder.getOriginPos().getComponentAlongAxis(axis)) {
+                                portalHolder.setOriginPos(portalHolder.getOriginPos().withAxis(axis, overlappingPortal.getOriginPos().getComponentAlongAxis(axis) + 1));
+                            } else {
+                                portalHolder.setOriginPos(portalHolder.getOriginPos().withAxis(axis, overlappingPortal.getOriginPos().getComponentAlongAxis(axis) - 1));
+                            }
+                            bumpSuccess = portalHolder.validate();
+                        }
+                    }
+                    if (!bumpSuccess) {
+                        world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                        return;
+                    }
                 }
 
                 world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), leftClick ? PortalCubedSounds.FIRE_EVENT_PRIMARY : PortalCubedSounds.FIRE_EVENT_SECONDARY, SoundCategory.NEUTRAL, .3F, 1F);
@@ -305,53 +317,6 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
 
         portal1.getWorld().playSound(null, portal1.getPos().getX(), portal1.getPos().getY(), portal1.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, volume, 1F);
         portal2.getWorld().playSound(null, portal2.getPos().getX(), portal2.getPos().getY(), portal2.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundCategory.NEUTRAL, volume, 1F);
-    }
-
-    private boolean validPos(World world, Vec3i up, Vec3i right, Vec3d portalPos1) {
-        Vec3d calculatedAxisW;
-        Vec3d calculatedAxisH;
-        Vec3d posNormal;
-        calculatedAxisW = Vec3d.of(right);
-        calculatedAxisH = Vec3d.of(up).multiply(-1);
-        posNormal = calculatedAxisW.crossProduct(calculatedAxisH).normalize();
-        Direction portalFacing = Direction.fromVector((int) posNormal.getX(), (int) posNormal.getY(), (int) posNormal.getZ());
-
-        BlockPos topBehind = new BlockPos(
-                portalPos1.getX() - calculatedAxisW.crossProduct(calculatedAxisH).getX(),
-                portalPos1.getY() - calculatedAxisW.crossProduct(calculatedAxisH).getY(),
-                portalPos1.getZ() - calculatedAxisW.crossProduct(calculatedAxisH).getZ());
-        BlockPos bottomBehind = new BlockPos(
-                portalPos1.getX() - calculatedAxisW.crossProduct(calculatedAxisH).getX() - Math.abs(calculatedAxisH.getX()),
-                portalPos1.getY() - calculatedAxisW.crossProduct(calculatedAxisH).getY() + calculatedAxisH.getY(),
-                portalPos1.getZ() - calculatedAxisW.crossProduct(calculatedAxisH).getZ() - Math.abs(calculatedAxisH.getZ()));
-        BlockPos bottom = new BlockPos(
-                portalPos1.getX() - Math.abs(calculatedAxisH.getX()),
-                portalPos1.getY() + calculatedAxisH.getY(),
-                portalPos1.getZ() - Math.abs(calculatedAxisH.getZ()));
-
-
-        boolean topValidBlock = false;
-        if (world.getBlockState(new BlockPos(portalPos1)).isIn(PortalCubedBlocks.PORTALABLE_GELS) && world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-            assert portalFacing != null;
-            BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
-            topValidBlock = world.getBlockState(new BlockPos(portalPos1)).get(booleanProperty);
-        } else if (!world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-            topValidBlock = true;
-        }
-        boolean bottomValidBlock = false;
-        if (world.getBlockState(bottom).isIn(PortalCubedBlocks.PORTALABLE_GELS) && world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-            assert portalFacing != null;
-            BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
-            bottomValidBlock = world.getBlockState(bottom).get(booleanProperty);
-        } else if (!world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-            bottomValidBlock = true;
-        }
-
-        return (world.getBlockState(topBehind).isSideSolidFullSquare(world, topBehind, portalFacing)) &&
-                (world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) &&
-                        topValidBlock &&
-                        bottomValidBlock) &&
-                ((world.getBlockState(new BlockPos(portalPos1)).isAir()) || ExperimentalPortal.allowedPortalBlock(world, new BlockPos(portalPos1))) && (world.getBlockState(bottom).isAir() || ExperimentalPortal.allowedPortalBlock(world, bottom));
     }
 
     /**
