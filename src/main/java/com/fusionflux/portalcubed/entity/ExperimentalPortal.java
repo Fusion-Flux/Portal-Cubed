@@ -2,11 +2,11 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -17,11 +17,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.CuboidBlockIterator;
+import net.minecraft.util.math.*;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 
 import java.util.Objects;
@@ -31,6 +29,9 @@ import java.util.UUID;
 public class ExperimentalPortal extends Entity {
 
     private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
+
+    private static final double WIDTH = 0.9, HEIGHT = 1.9;
+    private static final double EPSILON = 1.0E-7;
 
     private Box cutoutBoundingBox = NULL_BOX;
 
@@ -72,9 +73,6 @@ public class ExperimentalPortal extends Entity {
         this.getDataTracker().startTracking(FACING, Vec3d.ZERO);
         this.getDataTracker().startTracking(OWNER_UUID, Optional.empty());
     }
-
-
-
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound compoundTag) {
@@ -223,49 +221,91 @@ public class ExperimentalPortal extends Entity {
             setActive(otherPortal != null);
             setDestination(Optional.of(Objects.requireNonNullElse(otherPortal, this).getOriginPos()));
 
-            BlockPos topBehind = new BlockPos(
-                    this.getPos().getX() - getAxisW().get().crossProduct(getAxisH().get()).getX(),
-                    this.getPos().getY() - getAxisW().get().crossProduct(getAxisH().get()).getY(),
-                    this.getPos().getZ() - getAxisW().get().crossProduct(getAxisH().get()).getZ());
-            BlockPos bottomBehind = new BlockPos(
-                    this.getPos().getX() - getAxisW().get().crossProduct(getAxisH().get()).getX() - Math.abs(getAxisH().get().getX()),
-                    this.getPos().getY() - getAxisW().get().crossProduct(getAxisH().get()).getY() + getAxisH().get().getY(),
-                    this.getPos().getZ() - getAxisW().get().crossProduct(getAxisH().get()).getZ() - Math.abs(getAxisH().get().getZ()));
-            BlockPos bottom = new BlockPos(
-                    this.getPos().getX() - Math.abs(getAxisH().get().getX()),
-                    this.getPos().getY() + getAxisH().get().getY(),
-                    this.getPos().getZ() - Math.abs(getAxisH().get().getZ()));
-
-
-            Direction portalFacing = Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
-            boolean topValidBlock = false;
-            if (this.world.getBlockState(this.getBlockPos()).isIn(PortalCubedBlocks.PORTALABLE_GELS) && this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-                assert portalFacing != null;
-                BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
-
-                topValidBlock = this.world.getBlockState(this.getBlockPos()).get(booleanProperty);
-            } else if (!this.world.getBlockState(topBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-                topValidBlock = true;
-            }
-            boolean bottomValidBlock = false;
-            if (this.world.getBlockState(bottom).isIn(PortalCubedBlocks.PORTALABLE_GELS) && this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-                assert portalFacing != null;
-                BooleanProperty booleanProperty = GelFlat.getFacingProperty(portalFacing.getOpposite());
-                bottomValidBlock = this.world.getBlockState(bottom).get(booleanProperty);
-            } else if (!this.world.getBlockState(bottomBehind).isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-                bottomValidBlock = true;
-            }
-
-            if ((!this.world.getBlockState(topBehind).isSideSolidFullSquare(world, topBehind, portalFacing)) ||
-                    (!this.world.getBlockState(bottomBehind).isSideSolidFullSquare(world, bottomBehind, portalFacing) ||
-                            !topValidBlock ||
-                            !bottomValidBlock) ||
-                    ((!this.world.getBlockState(this.getBlockPos()).isAir()) && !allowedPortalBlock(world, getBlockPos())) || (!this.world.getBlockState(bottom).isAir() && !allowedPortalBlock(world, bottom))) {
+            if (!validate()) {
                 this.kill();
                 world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
             }
         }
         super.tick();
+    }
+
+    public boolean validate() {
+        return validateBehind() && validateFront();
+    }
+
+    private boolean validateBehind() {
+        final Box portalBox = new Box(
+            getPointInPlane(WIDTH / 2, HEIGHT / 2)
+                .add(getNormal().multiply(-0.01)),
+            getPointInPlane(-WIDTH / 2, -HEIGHT / 2)
+                .add(getNormal().multiply(-0.2))
+        ).union(new Box(
+            getPointInPlane(-WIDTH / 2, HEIGHT / 2)
+                .add(getNormal().multiply(-0.01)),
+            getPointInPlane(WIDTH / 2, -HEIGHT / 2)
+                .add(getNormal().multiply(-0.2))
+        ));
+        final CuboidBlockIterator iter = new CuboidBlockIterator(
+            MathHelper.floor(portalBox.minX - EPSILON) - 1,
+            MathHelper.floor(portalBox.minY - EPSILON) - 1,
+            MathHelper.floor(portalBox.minZ - EPSILON) - 1,
+            MathHelper.floor(portalBox.maxX + EPSILON) + 1,
+            MathHelper.floor(portalBox.maxY + EPSILON) + 1,
+            MathHelper.floor(portalBox.maxZ + EPSILON) + 1
+        );
+        while (iter.step()) {
+            final BlockPos pos = new BlockPos(iter.getX(), iter.getY(), iter.getZ());
+            if (!Box.from(BlockBox.create(pos, pos)).intersects(portalBox)) continue;
+            final BlockState state = world.getBlockState(pos);
+            if (state.isIn(PortalCubedBlocks.PORTAL_NONSOLID) || state.isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
+                return false;
+            }
+            final VoxelShape shape = state.getCollisionShape(world, pos, ShapeContext.of(this));
+            if (
+                shape.offset(pos.getX(), pos.getY(), pos.getZ())
+                    .getBoundingBoxes()
+                    .stream()
+                    .noneMatch(portalBox::intersects)
+            ) return false;
+        }
+        return true;
+    }
+
+    private boolean validateFront() {
+        final Box portalBox = new Box(
+            getPointInPlane(WIDTH / 2, HEIGHT / 2)
+                .add(getNormal().multiply(0.2)),
+            getPointInPlane(-WIDTH / 2, -HEIGHT / 2)
+        ).union(new Box(
+            getPointInPlane(-WIDTH / 2, HEIGHT / 2)
+                .add(getNormal().multiply(0.2)),
+            getPointInPlane(WIDTH / 2, -HEIGHT / 2)
+        ));
+        final CuboidBlockIterator iter = new CuboidBlockIterator(
+            MathHelper.floor(portalBox.minX - EPSILON) - 1,
+            MathHelper.floor(portalBox.minY - EPSILON) - 1,
+            MathHelper.floor(portalBox.minZ - EPSILON) - 1,
+            MathHelper.floor(portalBox.maxX + EPSILON) + 1,
+            MathHelper.floor(portalBox.maxY + EPSILON) + 1,
+            MathHelper.floor(portalBox.maxZ + EPSILON) + 1
+        );
+        while (iter.step()) {
+            final BlockPos pos = new BlockPos(iter.getX(), iter.getY(), iter.getZ());
+            if (!Box.from(BlockBox.create(pos, pos)).intersects(portalBox)) continue;
+            final BlockState state = world.getBlockState(pos);
+            if (state.isIn(PortalCubedBlocks.PORTAL_NONSOLID)) continue;
+            if (state.isIn(PortalCubedBlocks.PORTAL_SOLID)) {
+                return false;
+            }
+            final VoxelShape shape = state.getCollisionShape(world, pos, ShapeContext.of(this));
+            if (
+                shape.offset(pos.getX(), pos.getY(), pos.getZ())
+                    .getBoundingBoxes()
+                    .stream()
+                    .anyMatch(portalBox::intersects)
+            ) return false;
+        }
+        return true;
     }
 
     public static boolean allowedPortalBlock(World world, BlockPos pos) {
@@ -288,19 +328,16 @@ public class ExperimentalPortal extends Entity {
             setBoundingBox(NULL_BOX);
             return NULL_BOX;
         }
-        double w = .9;
-        double h = 1.9;
-
 
         Box portalBox = new Box(
-                getPointInPlane(w / 2, h / 2)
+                getPointInPlane(WIDTH / 2, HEIGHT / 2)
                         .add(getNormal().multiply(.2)),
-                getPointInPlane(-w / 2, -h / 2)
+                getPointInPlane(-WIDTH / 2, -HEIGHT / 2)
                         .add(getNormal().multiply(-.2))
         ).union(new Box(
-                getPointInPlane(-w / 2, h / 2)
+                getPointInPlane(-WIDTH / 2, HEIGHT / 2)
                         .add(getNormal().multiply(.2)),
-                getPointInPlane(w / 2, -h / 2)
+                getPointInPlane(WIDTH / 2, -HEIGHT / 2)
                         .add(getNormal().multiply(-.2))
         ));
         setBoundingBox(portalBox);
@@ -313,17 +350,16 @@ public class ExperimentalPortal extends Entity {
             setCutoutBoundingBox(NULL_BOX);
             return NULL_BOX;
         }
-        double w = .9;
-        double h = 1.9;
+
         Box portalBox = new Box(
-                getCutoutPointInPlane(w / 2, h / 2)
+                getCutoutPointInPlane(WIDTH / 2, HEIGHT / 2)
                         .add(getNormal().multiply(5)),
-                getCutoutPointInPlane(-w / 2, -h / 2)
+                getCutoutPointInPlane(-WIDTH / 2, -HEIGHT / 2)
                         .add(getNormal().multiply(-5))
         ).union(new Box(
-                getCutoutPointInPlane(-w / 2, h / 2)
+                getCutoutPointInPlane(-WIDTH / 2, HEIGHT / 2)
                         .add(getNormal().multiply(5)),
-                getCutoutPointInPlane(w / 2, -h / 2)
+                getCutoutPointInPlane(WIDTH / 2, -HEIGHT / 2)
                         .add(getNormal().multiply(-5))
         ));
         setCutoutBoundingBox(portalBox);
@@ -335,17 +371,16 @@ public class ExperimentalPortal extends Entity {
         if (getAxisW().isEmpty()) {
             return NULL_BOX;
         }
-        double w = .9;
-        double h = 1.9;
+
         return new Box(
-                getBoundsCheckPointInPlane(w / 2, h / 2)
+                getBoundsCheckPointInPlane(WIDTH / 2, HEIGHT / 2)
                         .add(getNormal().multiply(10)),
-                getBoundsCheckPointInPlane(-w / 2, -h / 2)
+                getBoundsCheckPointInPlane(-WIDTH / 2, -HEIGHT / 2)
                         .add(getNormal().multiply(-10))
         ).union(new Box(
-                getBoundsCheckPointInPlane(-w / 2, h / 2)
+                getBoundsCheckPointInPlane(-WIDTH / 2, HEIGHT / 2)
                         .add(getNormal().multiply(10)),
-                getBoundsCheckPointInPlane(w / 2, -h / 2)
+                getBoundsCheckPointInPlane(WIDTH / 2, -HEIGHT / 2)
                         .add(getNormal().multiply(-10))
         ));
     }
