@@ -13,7 +13,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -215,7 +214,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public void tickTail(CallbackInfo ci) {
         Entity thisEntity = ((Entity) (Object) this);
 
-        if(!thisEntity.world.isClient() && !(thisEntity instanceof PlayerEntity) && !(thisEntity instanceof ExperimentalPortal)) {
+        if (!thisEntity.world.isClient() && !(thisEntity instanceof PlayerEntity) && !(thisEntity instanceof ExperimentalPortal)) {
             Vec3d entityVelocity = this.getVelocity();
 
 
@@ -310,7 +309,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
             if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                rotatedOffsets = rotatedOffsets.multiply(1,-1,1);
+                rotatedOffsets = rotatedOffsets.multiply(1, -1, 1);
             }
         }
 
