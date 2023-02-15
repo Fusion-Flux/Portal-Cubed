@@ -27,8 +27,12 @@ import net.minecraft.world.World;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class ExperimentalPortal extends Entity {
+
+    private static final Supplier<IllegalStateException> NOT_INIT =
+        () -> new IllegalStateException("Portal data accessed before initalized");
 
     private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
 
@@ -54,7 +58,7 @@ public class ExperimentalPortal extends Entity {
     public static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
     public Vec3d getNormal() {
-        return getAxisW().get().crossProduct(getAxisH().get()).normalize();
+        return getAxisW().orElseThrow(NOT_INIT).crossProduct(getAxisH().orElseThrow(NOT_INIT)).normalize();
     }
 
     public ExperimentalPortal(EntityType<?> entityType, World world) {
@@ -409,7 +413,7 @@ public class ExperimentalPortal extends Entity {
     }
 
     public Vec3d getPointInPlaneLocal(double xInPlane, double yInPlane) {
-        return getAxisW().get().multiply(xInPlane).add(getAxisH().get().multiply(yInPlane));
+        return getAxisW().orElseThrow(NOT_INIT).multiply(xInPlane).add(getAxisH().orElseThrow(NOT_INIT).multiply(yInPlane));
     }
 
     public Vec3d getOriginPos() {
