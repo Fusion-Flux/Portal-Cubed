@@ -4,7 +4,6 @@ import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalM
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -50,9 +49,6 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         if (progress <= 1) {
             matrices.scale(progress, progress, progress);
         }
-        new ModelPart.Cuboid(
-            0, 0, -1, -1, -1, 2, 2, 2, 0, 0, 0, false, 16, 16
-        ).renderCuboid(matrices.peek(), vertexConsumers.getBuffer(RenderLayer.getSolid()), light, OverlayTexture.DEFAULT_UV, r, g, b, 1);
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
         matrices.pop();
     }
