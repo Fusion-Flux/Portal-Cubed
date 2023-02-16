@@ -4,7 +4,6 @@ import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.render.EntityEmissiveRendering;
 import com.fusionflux.portalcubed.util.BlockEntityWrapperEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -44,7 +43,7 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
     }
 
     private Pair<BlockEntityWrapperEntity<RocketTurretBlockEntity>, RocketTurretModel> createWrapperModelPair(RocketTurretBlockEntity entity) {
-        return Pair.of(new BlockEntityWrapperEntity<RocketTurretBlockEntity>(entity), new RocketTurretModel(modelLoader.getModelPart(ROCKET_TURRET_LAYER)));
+        return Pair.of(new BlockEntityWrapperEntity<>(entity), new RocketTurretModel(modelLoader.getModelPart(ROCKET_TURRET_LAYER)));
     }
 
     @Override
@@ -55,7 +54,7 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
         matrices.scale(-1, -1, 1);
         matrices.translate(0.5, -1.501, -0.5);
 
-        final Pair<BlockEntityWrapperEntity<RocketTurretBlockEntity>, RocketTurretModel> wrapperModelPair = wrapperModelPairs.computeIfAbsent(entity, e -> createWrapperModelPair(e));
+        final var wrapperModelPair = wrapperModelPairs.computeIfAbsent(entity, this::createWrapperModelPair);
         final BlockEntityWrapperEntity<RocketTurretBlockEntity> wrapper = wrapperModelPair.key();
         final RocketTurretModel model = wrapperModelPair.value();
 
@@ -77,24 +76,25 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
 
         matrices.pop();
 
-        if (entity.aimDest == null) return;
+        if (entity.aimDests == null) return;
 
         final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getLines());
         final MatrixStack.Entry matrix = matrices.peek();
-        final Vec3f gunOffset = new Vec3f(entity.getGunOffset(tickDelta));
-        final Vec3f offset = new Vec3f(entity.aimDest.subtract(Vec3d.of(entity.getPos())));
-        final Vec3f normal = new Vec3f(entity.aimDest);
-        normal.subtract(gunOffset);
-        normal.normalize();
-        vertexConsumer
-            .vertex(matrix.getModel(), gunOffset.getX(), gunOffset.getY(), gunOffset.getZ())
-            .color(13 / 255f, 165 / 255f, 176 / 255f, 1.0f)
-            .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
-            .next();
-        vertexConsumer
-            .vertex(matrix.getModel(), offset.getX(), offset.getY(), offset.getZ())
-            .color(13 / 255f, 165 / 255f, 176 / 255f, 1.0f)
-            .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
-            .next();
+        for (final var aimDestInfo : entity.aimDests) {
+            final Vec3f origin = new Vec3f(aimDestInfo.getLeft().subtract(Vec3d.of(entity.getPos())));
+            final Vec3f offset = new Vec3f(aimDestInfo.getRight().subtract(Vec3d.of(entity.getPos())));
+            final Vec3f normal = offset.copy();
+            normal.normalize();
+            vertexConsumer
+                .vertex(matrix.getModel(), origin.getX(), origin.getY(), origin.getZ())
+                .color(13 / 255f, 165 / 255f, 176 / 255f, 1.0f)
+                .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
+                .next();
+            vertexConsumer
+                .vertex(matrix.getModel(), offset.getX(), offset.getY(), offset.getZ())
+                .color(13 / 255f, 165 / 255f, 176 / 255f, 1.0f)
+                .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
+                .next();
+        }
     }
 }
