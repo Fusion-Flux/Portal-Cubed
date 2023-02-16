@@ -106,21 +106,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public abstract boolean canUsePortals();
 
     @Shadow
-    public abstract Vec3d getEyePos();
-
-    @Shadow
     public abstract void setVelocity(Vec3d velocity);
 
     @Shadow
-    public abstract void setYaw(float yaw);
-
-    @Shadow
     public abstract float getYaw();
-
-    @Shadow
-    public abstract void setPosition(double x, double y, double z);
-
-    @Shadow public abstract void setPitch(float pitch);
 
     @Shadow public abstract float getPitch(float tickDelta);
 
