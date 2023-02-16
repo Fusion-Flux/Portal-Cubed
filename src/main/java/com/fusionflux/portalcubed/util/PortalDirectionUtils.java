@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
-public class PortalVelocityHelper {
+public class PortalDirectionUtils {
     public static Vec3d rotateVelocity(Vec3d velocity, Direction entryDirection, Direction exitDirection) {
         return switch (entryDirection) {
             case NORTH -> switch (exitDirection) {

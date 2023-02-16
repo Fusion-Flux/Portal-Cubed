@@ -23,7 +23,7 @@ import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.PortalVelocityHelper;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.logging.LogUtils;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
@@ -132,13 +132,13 @@ public class PortalCubed implements ModInitializer {
 
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                        rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherDirec);
+                        rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherDirec);
                     }
                 }
 
                 if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                     if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                        rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherPortalVertFacing);
+                        rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherPortalVertFacing);
                     }
                 }
 
@@ -148,11 +148,11 @@ public class PortalCubed implements ModInitializer {
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                         if (portalVertFacing != otherPortalVertFacing)
-                            rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherPortalVertFacing);
+                            rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherPortalVertFacing);
                     }
                 }
 
-                rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
+                rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
 
                 //System.out.println(rotatedOffsets);
 
@@ -162,28 +162,28 @@ public class PortalCubed implements ModInitializer {
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                         if (portalFacing.getOpposite() != otherDirec)
-                            rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
+                            rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
                     }
                 }
 
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                        rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
+                        rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
                     }
                 }
 
-                rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherDirec);
+                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherDirec);
 
                 if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                     if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                        rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
+                        rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
                     }
                 }
 
 
                 CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
 
-                float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
+                float yawValue = yawSet + PortalDirectionUtils.yawAddition(portal.getFacingDirection(), otherDirec);
                 player.setYaw(yawValue);
                 player.setPitch(pitchSet);
                 player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0, player.getEyeY() - player.getY(), 0));
