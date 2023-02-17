@@ -17,6 +17,10 @@
   "subtitles.portalcubed.rocket_locked": "Rocket Locked",
   "subtitles.portalcubed.rocket_locking": "Rocket Locking",
 
+  "subtitles.portalcubed.pellet.bounce": "Energy Ball Bounce",
+  "subtitles.portalcubed.pellet.explode": "Energy Ball Explosion",
+  "subtitles.portalcubed.pellet.spawn": "Energy Ball Launch",
+
   "item.portalcubed.long_fall_boots": "Long Fall Boots",
   "item.portalcubed.hammer": "Hammer",
   "item.portalcubed.energy_pellet": "High Energy Pellet",
