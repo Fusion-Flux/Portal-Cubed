@@ -24,8 +24,7 @@ public class EnergyPelletItem extends Item {
         final EnergyPelletEntity entity = PortalCubedEntities.ENERGY_PELLET.create(world);
         if (entity == null) return TypedActionResult.pass(item);
         entity.setPosition(user.getEyePos().add(user.getRotationVector()));
-        entity.setYaw(user.getYaw());
-        entity.setPitch(user.getPitch());
+        entity.setVelocity(user.getVelocity().add(user.getRotationVector().multiply(0.25)));
         world.spawnEntity(entity);
         return TypedActionResult.consume(item);
     }
