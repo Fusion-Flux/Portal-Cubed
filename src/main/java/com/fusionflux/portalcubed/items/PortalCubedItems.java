@@ -36,7 +36,6 @@ public class PortalCubedItems {
     public static final SpawnEggItem PORTAL_1_STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.PORTAL_1_STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
     public static final SpawnEggItem LIL_PINEAPPLE = new SpawnEggItem(PortalCubedEntities.LIL_PINEAPPLE, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
 
-
     public static final SpawnEggItem BEANS = new SpawnEggItem(PortalCubedEntities.BEANS, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
     public static final SpawnEggItem MUG = new SpawnEggItem(PortalCubedEntities.MUG, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
     public static final SpawnEggItem JUG = new SpawnEggItem(PortalCubedEntities.JUG, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));

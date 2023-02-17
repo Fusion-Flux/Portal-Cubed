@@ -116,6 +116,10 @@ public class PortalCubedEntities {
         .setDimensions(EntityDimensions.changing(0.1875f, 0.1875f))
         .build();
 
+    public static final EntityType<EnergyPelletEntity> ENERGY_PELLET = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, EnergyPelletEntity::new)
+        .setDimensions(EntityDimensions.changing(0.25f, 0.25f))
+        .build();
+
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, id("experimental_portal"), EXPERIMENTAL_PORTAL);
         Registry.register(Registry.ENTITY_TYPE, id("storage_cube"), STORAGE_CUBE);
@@ -147,6 +151,8 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, id("adhesion_gel_blob"), ADHESION_GEL_BLOB);
 
         Registry.register(Registry.ENTITY_TYPE, id("rocket"), ROCKET);
+
+        Registry.register(Registry.ENTITY_TYPE, id("energy_pellet"), ENERGY_PELLET);
 
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(STORAGE_CUBE, StorageCubeEntity.createMobAttributes().build());
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes().build());
