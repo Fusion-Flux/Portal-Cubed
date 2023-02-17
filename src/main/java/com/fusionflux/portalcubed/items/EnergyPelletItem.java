@@ -21,11 +21,14 @@ public class EnergyPelletItem extends Item {
         if (!user.getAbilities().creativeMode) {
             item.decrement(1);
         }
-        final EnergyPelletEntity entity = PortalCubedEntities.ENERGY_PELLET.create(world);
-        if (entity == null) return TypedActionResult.pass(item);
-        entity.setPosition(user.getEyePos().add(user.getRotationVector()));
-        entity.setVelocity(user.getVelocity().add(user.getRotationVector().multiply(0.25)));
-        world.spawnEntity(entity);
+        final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(world);
+        if (pellet == null) return TypedActionResult.pass(item);
+        pellet.setPosition(user.getEyePos().add(user.getRotationVector()));
+        pellet.setVelocity(user.getVelocity().add(user.getRotationVector().multiply(0.25)));
+        if (user.isSneaking()) {
+            pellet.resetLife(-1);
+        }
+        world.spawnEntity(pellet);
         return TypedActionResult.consume(item);
     }
 }

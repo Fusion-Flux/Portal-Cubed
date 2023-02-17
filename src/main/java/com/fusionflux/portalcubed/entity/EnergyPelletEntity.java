@@ -67,6 +67,15 @@ public class EnergyPelletEntity extends Entity {
         dataTracker.set(LIFE, ticks);
     }
 
+    public void resetLife(int startingLife) {
+        setStartingLife(startingLife);
+        resetLife();
+    }
+
+    public void resetLife() {
+        setLife(getStartingLife());
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -85,20 +94,21 @@ public class EnergyPelletEntity extends Entity {
         }
         boolean bounced = false;
         if (verticalCollision) {
-            setVelocity(vel = getVelocity().withAxis(Direction.Axis.Y, -vel.y));
+            vel = vel.withAxis(Direction.Axis.Y, -vel.y);
             bounced = true;
         }
         if (horizontalCollision) {
             if (getVelocity().x == 0) {
-                setVelocity(vel = getVelocity().withAxis(Direction.Axis.X, -vel.x));
+                vel = vel.withAxis(Direction.Axis.X, -vel.x);
                 bounced = true;
             }
             if (getVelocity().z == 0) {
-                setVelocity(getVelocity().withAxis(Direction.Axis.Z, -vel.z));
+                vel = vel.withAxis(Direction.Axis.Z, -vel.z);
                 bounced = true;
             }
         }
         if (bounced) {
+            setVelocity(vel);
             world.playSoundFromEntity(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundCategory.HOSTILE, 0.4f, 1f);
         }
         if ((age - 1) % 34 == 0) {

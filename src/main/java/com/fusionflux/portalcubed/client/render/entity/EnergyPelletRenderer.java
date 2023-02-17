@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class EnergyPelletRenderer extends EntityRenderer<EnergyPelletEntity> {
     private static final ItemStack ITEM = new ItemStack(PortalCubedItems.ENERGY_PELLET);
 
+    public static float pelletR = 1f, pelletG = 1f, pelletB = 1f;
     @Nullable
     public static Float pelletAlpha = null;
 
@@ -45,9 +46,15 @@ public class EnergyPelletRenderer extends EntityRenderer<EnergyPelletEntity> {
 
         if (entity.getStartingLife() > 0) {
             pelletAlpha = MathHelper.clamp(MathHelper.lerp((float)entity.getLife() / entity.getStartingLife(), 0.25f, 1f), 0f, 1f);
+        } else if (entity.getStartingLife() < 0) {
+            // Colors from root/materials/effects/eball_infinite_life.vmt
+            pelletR = 0.3f;
+            pelletG = 0.7f;
+            pelletB = 0.3f;
         }
         mc.getItemRenderer()
             .renderItem(ITEM, ModelTransformation.Mode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, 0);
+        pelletR = pelletG = pelletB = 1f;
         pelletAlpha = null;
         matrices.pop();
     }
