@@ -21,6 +21,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class EnergyPelletEntity extends Entity {
     private static final TrackedData<Integer> STARTING_LIFE = DataTracker.registerData(EnergyPelletEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -87,8 +88,7 @@ public class EnergyPelletEntity extends Entity {
         if (life > 0) {
             setLife(--life);
         } else if (life == 0) {
-            world.playSound(null, getPos().x, getPos().y, getPos().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundCategory.HOSTILE, 0.8f, 1f);
-            kill();
+            kill(null);
         } // life < 0 means green pellet
         if (age == 1) {
             world.playSound(null, getPos().x, getPos().y, getPos().z, PortalCubedSounds.PELLET_SPAWN_EVENT, SoundCategory.HOSTILE, 1f, 1f);
@@ -135,8 +135,11 @@ public class EnergyPelletEntity extends Entity {
         return entity instanceof LivingEntity && !entity.isSpectator() && entity.isAlive() && entity.collides();
     }
 
-    private void kill(LivingEntity entity) {
-        entity.damage(PortalCubedDamageSources.VAPORIZATION, PortalCubedConfig.pelletDamage);
+    private void kill(@Nullable LivingEntity entity) {
+        world.playSound(null, getPos().x, getPos().y, getPos().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundCategory.HOSTILE, 0.8f, 1f);
+        if (entity != null) {
+            entity.damage(PortalCubedDamageSources.VAPORIZATION, PortalCubedConfig.pelletDamage);
+        }
         kill();
     }
 
