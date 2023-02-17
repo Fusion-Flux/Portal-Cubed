@@ -316,7 +316,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
 
         Vec3d rotatedVel = entityVelocity;
-        Vec3d rotatedLook = Vec3d.fromPolar(thisEntity.getPitch(),thisEntity.getYaw());
+        Vec3d rotatedLook = Vec3d.fromPolar(thisEntity.getPitch(), thisEntity.getYaw());
 
         if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
             if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
@@ -349,10 +349,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         );
 
 
-        thisEntity.setYaw(MathHelper.lerpAngleDegrees(1,thisEntity.getYaw(),lookAngle.y)-90);
-        thisEntity.setPitch(MathHelper.lerpAngleDegrees(1,thisEntity.getYaw(),lookAngle.x));
-        thisEntity.setBodyYaw(thisEntity.getYaw());
-        thisEntity.setHeadYaw(thisEntity.getYaw());
+        thisEntity.setYaw(MathHelper.lerpAngleDegrees(1, thisEntity.getYaw(), lookAngle.y) - 90);
+        thisEntity.setPitch(MathHelper.lerpAngleDegrees(1, thisEntity.getPitch(), lookAngle.x));
+        thisEntity.setBodyYaw(MathHelper.lerpAngleDegrees(1, thisEntity.getYaw(), lookAngle.y) - 90);
+        thisEntity.setHeadYaw(MathHelper.lerpAngleDegrees(1, thisEntity.getYaw(), lookAngle.y) - 90);
         thisEntity.setPosition(portal.getDestination().get().add(rotatedOffsets).subtract(0, thisEntity.getEyeY() - thisEntity.getY(), 0));
         this.setVelocity(rotatedVel);
         GravityChangerAPI.clearGravity(thisEntity);
