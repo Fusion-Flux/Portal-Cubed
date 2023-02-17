@@ -123,13 +123,6 @@ public class PortalCubed implements ModInitializer {
 
                 double heightOffset = (player.getEyeY() - player.getY()) / 2;
 
-                //if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                //    if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                //        rotatedOffsets = rotatedOffsets.multiply(1,-1,1);
-                //    }
-                //}
-//
-
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
                         rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherDirec);
@@ -142,9 +135,6 @@ public class PortalCubed implements ModInitializer {
                     }
                 }
 
-                System.out.println(portalVertFacing);
-
-
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                         if (portalVertFacing != otherPortalVertFacing)
@@ -153,8 +143,6 @@ public class PortalCubed implements ModInitializer {
                 }
 
                 rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
-
-                //System.out.println(rotatedOffsets);
 
                 Vec3d rotatedVel = entityVelocity;
 
@@ -179,7 +167,6 @@ public class PortalCubed implements ModInitializer {
                         rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
                     }
                 }
-
 
                 CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
 
