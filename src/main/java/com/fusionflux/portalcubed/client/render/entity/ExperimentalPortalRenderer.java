@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalM
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -19,7 +20,11 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
 
     private static final Identifier SQUARE_TEXTURE = id("textures/entity/portal_square_outline_closed.png");
     private static final Identifier ROUND_TEXTURE  = id("textures/entity/portal_oval_outline_closed.png");
+    private static final Identifier SQUARE_TEXTURE_TRACER = id("textures/entity/portal_tracer_square.png");
+    private static final Identifier ROUND_TEXTURE_TRACER = id("textures/entity/portal_tracer_oval.png");
     protected final ExperimentalPortalModel model = new ExperimentalPortalModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ExperimentalPortalModel.MAIN_LAYER));
+
+    public static boolean renderingTracers = false;
 
     public ExperimentalPortalRenderer(EntityRendererFactory.Context dispatcher) {
         super(dispatcher);
@@ -45,16 +50,16 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         int g = (color & 0xFF00) >> 8;
         int b = color & 0xFF;
 
-        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.getTexture(entity))), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
         matrices.pop();
     }
 
     @Override
     public Identifier getTexture(ExperimentalPortal entity) {
         if (PortalCubedConfig.enableRoundPortals) {
-            return ROUND_TEXTURE;
+            return !renderingTracers ? ROUND_TEXTURE : ROUND_TEXTURE_TRACER;
         } else {
-            return SQUARE_TEXTURE;
+            return !renderingTracers ? SQUARE_TEXTURE : SQUARE_TEXTURE_TRACER;
         }
     }
 }

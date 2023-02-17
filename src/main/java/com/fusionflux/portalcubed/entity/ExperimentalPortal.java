@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ExperimentalPortal extends Entity {
+public class  ExperimentalPortal extends Entity {
 
     private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
 
