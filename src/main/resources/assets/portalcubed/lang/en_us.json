@@ -19,6 +19,7 @@
 
   "item.portalcubed.long_fall_boots": "Long Fall Boots",
   "item.portalcubed.hammer": "Hammer",
+  "item.portalcubed.energy_pellet": "High Energy Pellet",
 
   "item.portalcubed.storage_cube": "Weighted Storage Cube",
   "item.portalcubed.portal_1_storage_cube": "Portal 1 Weighted Storage Cube",
@@ -242,9 +243,11 @@
   "portalcubed.midnightconfig.enableAccurateMovement": "Enable Accurate Movement",
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
+  "portalcubed.midnightconfig.pelletDamage": "Energy Pellet Damage",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
+  "death.attack.portalcubed.vaporization": "%s was vaporized",
 
   "key.portalcubed.category" : "Portal\u00b3",
   "key.portalcubed.grab" : "Grab",
