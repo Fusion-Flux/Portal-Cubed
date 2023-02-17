@@ -26,14 +26,9 @@ import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
 import com.fusionflux.portalcubed.mixin.client.MusicTrackerAccessor;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
@@ -54,7 +49,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.RaycastContext.FluidHandling;
 import net.minecraft.world.RaycastContext.ShapeType;
-
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
@@ -187,8 +181,7 @@ public class PortalCubedClient implements ClientModInitializer {
         WorldRenderEvents.END.register(ctx -> {
             final var player = MinecraftClient.getInstance().player;
             if (player != null) {
-                if (!(ctx.consumers() instanceof VertexConsumerProvider.Immediate)) return;
-                final var consumers = (VertexConsumerProvider.Immediate) ctx.consumers();
+                if (!(ctx.consumers() instanceof final VertexConsumerProvider.Immediate consumers)) return;
                 final var cameraPos = ctx.camera().getPos();
                 ctx.matrixStack().push();
                 ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
