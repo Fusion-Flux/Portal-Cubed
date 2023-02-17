@@ -169,8 +169,8 @@ public class PortalCubed implements ModInitializer {
                         rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherPortalVertFacing);
                     }
                 }
-                if (otherDirec == Direction.UP && rotatedVel.y < 0.48000000000000004) {
-                    rotatedVel = new Vec3d(rotatedVel.x, 0.48000000000000004, rotatedVel.z);
+                if (otherDirec == Direction.UP && rotatedVel.y < 0.48) {
+                    rotatedVel = new Vec3d(rotatedVel.x, 0.48, rotatedVel.z);
                 }
                 Vec2f lookAngle = new Vec2f(
                         (float)Math.toDegrees(-MathHelper.atan2(rotatedLook.y, Math.sqrt(rotatedLook.x * rotatedLook.x + rotatedLook.z * rotatedLook.z))),
