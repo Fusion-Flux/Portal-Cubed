@@ -27,6 +27,7 @@
     "client.MusicTrackerAccessor",
     "client.ParticleManagerMixin",
     "client.SoundSystemMixin",
+    "client.RenderSystemMixin",
     "client.VertexConsumerMixin"
   ],
   "injectors": {

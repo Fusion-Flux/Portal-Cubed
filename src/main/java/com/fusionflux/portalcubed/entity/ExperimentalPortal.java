@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class ExperimentalPortal extends Entity {
+public class  ExperimentalPortal extends Entity {
 
     private static final Supplier<IllegalStateException> NOT_INIT =
         () -> new IllegalStateException("Portal data accessed before initalized");

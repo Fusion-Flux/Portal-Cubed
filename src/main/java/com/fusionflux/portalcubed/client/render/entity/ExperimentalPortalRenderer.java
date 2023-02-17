@@ -21,7 +21,11 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
 
     private static final Identifier SQUARE_TEXTURE = id("textures/entity/portal_square_outline_closed.png");
     private static final Identifier ROUND_TEXTURE  = id("textures/entity/portal_oval_outline_closed.png");
+    private static final Identifier SQUARE_TEXTURE_TRACER = id("textures/entity/portal_tracer_square.png");
+    private static final Identifier ROUND_TEXTURE_TRACER = id("textures/entity/portal_tracer_oval.png");
     protected final ExperimentalPortalModel model = new ExperimentalPortalModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ExperimentalPortalModel.MAIN_LAYER));
+
+    public static boolean renderingTracers = false;
 
     public ExperimentalPortalRenderer(EntityRendererFactory.Context dispatcher) {
         super(dispatcher);
@@ -81,9 +85,9 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
     @Override
     public Identifier getTexture(ExperimentalPortal entity) {
         if (PortalCubedConfig.enableRoundPortals) {
-            return ROUND_TEXTURE;
+            return !renderingTracers ? ROUND_TEXTURE : ROUND_TEXTURE_TRACER;
         } else {
-            return SQUARE_TEXTURE;
+            return !renderingTracers ? SQUARE_TEXTURE : SQUARE_TEXTURE_TRACER;
         }
     }
 }
