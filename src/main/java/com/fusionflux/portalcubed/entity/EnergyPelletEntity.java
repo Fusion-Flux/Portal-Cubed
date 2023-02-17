@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +15,7 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
@@ -75,19 +77,32 @@ public class EnergyPelletEntity extends Entity {
         if (life > 0) {
             setLife(--life);
         } else if (life == 0) {
-            // TODO: Death effects, etc.
+            world.playSound(null, getPos().x, getPos().y, getPos().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundCategory.HOSTILE, 0.8f, 1f);
             kill();
         } // life < 0 means green pellet
+        if (age == 1) {
+            world.playSound(null, getPos().x, getPos().y, getPos().z, PortalCubedSounds.PELLET_SPAWN_EVENT, SoundCategory.HOSTILE, 1f, 1f);
+        }
+        boolean bounced = false;
         if (verticalCollision) {
             setVelocity(vel = getVelocity().withAxis(Direction.Axis.Y, -vel.y));
+            bounced = true;
         }
         if (horizontalCollision) {
             if (getVelocity().x == 0) {
                 setVelocity(vel = getVelocity().withAxis(Direction.Axis.X, -vel.x));
+                bounced = true;
             }
             if (getVelocity().z == 0) {
                 setVelocity(getVelocity().withAxis(Direction.Axis.Z, -vel.z));
+                bounced = true;
             }
+        }
+        if (bounced) {
+            world.playSoundFromEntity(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundCategory.HOSTILE, 0.4f, 1f);
+        }
+        if ((age - 1) % 34 == 0) {
+            world.playSoundFromEntity(null, this, PortalCubedSounds.PELLET_TRAVEL_EVENT, SoundCategory.HOSTILE, 0.4f, 1f);
         }
         final HitResult hit = ProjectileUtil.getCollision(this, this::canHit);
         if (hit.getType() == HitResult.Type.ENTITY) {

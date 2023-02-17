@@ -40,6 +40,11 @@ public class PortalCubedSounds {
     public static final Identifier LASER_NODE_ACTIVATE = id("laser/node_activate");
     public static final Identifier LASER_NODE_DEACTIVATE = id("laser/node_deactivate");
 
+    public static final Identifier PELLET_BOUNCE = id("pellet/bounce");
+    public static final Identifier PELLET_EXPLODE = id("pellet/explode");
+    public static final Identifier PELLET_SPAWN = id("pellet/spawn");
+    public static final Identifier PELLET_TRAVEL = id("pellet/travel");
+
     public static final Identifier TBEAM_ENTER = id("tbeam/enter");
     public static final Identifier TBEAM_TRAVEL = id("tbeam/travel");
 
@@ -85,6 +90,11 @@ public class PortalCubedSounds {
     public static final SoundEvent LASER_NODE_MUSIC_EVENT = new SoundEvent(LASER_NODE_MUSIC);
     public static final SoundEvent LASER_NODE_ACTIVATE_EVENT = new SoundEvent(LASER_NODE_ACTIVATE);
     public static final SoundEvent LASER_NODE_DEACTIVATE_EVENT = new SoundEvent(LASER_NODE_DEACTIVATE);
+
+    public static final SoundEvent PELLET_BOUNCE_EVENT = new SoundEvent(PELLET_BOUNCE);
+    public static final SoundEvent PELLET_EXPLODE_EVENT = new SoundEvent(PELLET_EXPLODE);
+    public static final SoundEvent PELLET_SPAWN_EVENT = new SoundEvent(PELLET_SPAWN);
+    public static final SoundEvent PELLET_TRAVEL_EVENT = new SoundEvent(PELLET_TRAVEL);
 
     public static final SoundEvent TBEAM_ENTER_EVENT = new SoundEvent(TBEAM_ENTER);
     public static final SoundEvent TBEAM_TRAVEL_EVENT = new SoundEvent(TBEAM_TRAVEL);
@@ -132,6 +142,11 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_MUSIC, LASER_NODE_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_ACTIVATE, LASER_NODE_ACTIVATE_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_DEACTIVATE, LASER_NODE_DEACTIVATE_EVENT);
+
+        Registry.register(Registry.SOUND_EVENT, PELLET_BOUNCE, PELLET_BOUNCE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, PELLET_EXPLODE, PELLET_EXPLODE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, PELLET_SPAWN, PELLET_SPAWN_EVENT);
+        Registry.register(Registry.SOUND_EVENT, PELLET_TRAVEL, PELLET_TRAVEL_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, TBEAM_ENTER, TBEAM_ENTER_EVENT);
         Registry.register(Registry.SOUND_EVENT, TBEAM_TRAVEL, TBEAM_TRAVEL_EVENT);
