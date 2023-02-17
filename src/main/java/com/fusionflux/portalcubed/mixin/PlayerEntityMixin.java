@@ -240,7 +240,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
         if (this.world.isClient && thisEntity.isMainPlayer()) {
             var byteBuf = PacketByteBufs.create();
             byteBuf.writeVarInt(portal.getId());
-            byteBuf.writeFloat(this.getYaw());
+            byteBuf.writeFloat(thisEntity.getYaw());
             byteBuf.writeFloat(thisEntity.getPitch());
             byteBuf.writeDouble(entityVelocity.x);
             byteBuf.writeDouble(entityVelocity.y);

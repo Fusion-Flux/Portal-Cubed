@@ -34,9 +34,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
@@ -145,34 +143,44 @@ public class PortalCubed implements ModInitializer {
                 rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
 
                 Vec3d rotatedVel = entityVelocity;
-
+                Vec3d rotatedLook = Vec3d.fromPolar(pitchSet,yawSet);
 
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                         if (portalFacing.getOpposite() != otherDirec)
                             rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
+                        rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalVertFacing, otherPortalVertFacing);
                     }
                 }
 
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
                         rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
+                        rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalVertFacing, otherDirec);
                     }
                 }
 
                 rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherDirec);
+                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherDirec);
 
                 if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                     if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
                         rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
+                        rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherPortalVertFacing);
                     }
                 }
 
+                Vec2f lookAngle = new Vec2f(
+                        (float)Math.toDegrees(-MathHelper.atan2(rotatedLook.y, Math.sqrt(rotatedLook.x * rotatedLook.x + rotatedLook.z * rotatedLook.z))),
+                        (float)Math.toDegrees(MathHelper.atan2(rotatedLook.z, rotatedLook.x))
+                );
+
                 CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
 
-                float yawValue = yawSet + PortalDirectionUtils.yawAddition(portal.getFacingDirection(), otherDirec);
-                player.setYaw(yawValue);
-                player.setPitch(pitchSet);
+                //float yawValue = yawSet + PortalDirectionUtils.yawAddition(portal.getFacingDirection(), otherDirec);
+
+                player.setYaw(MathHelper.lerpAngleDegrees(1,yawSet,lookAngle.y)-90);
+                player.setPitch(MathHelper.lerpAngleDegrees(1,pitchSet,lookAngle.x));
                 player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0, player.getEyeY() - player.getY(), 0));
                 CalledValues.setHasTeleportationHappened(player, true);
                 GravityChangerAPI.clearGravity(player);
