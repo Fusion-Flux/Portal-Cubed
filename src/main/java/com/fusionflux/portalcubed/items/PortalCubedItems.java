@@ -56,7 +56,7 @@ public class PortalCubedItems {
     public static final Item HAMMER = new Item(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP).maxCount(1));
 
     // TODO: Item behavior. When that's done, add it to the creative inventory.
-    public static final Item ENERGY_PELLET = new Item(new QuiltItemSettings());
+    public static final Item ENERGY_PELLET = new EnergyPelletItem(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP));
 
     public static final Item STILL_ALIVE = new MusicDiscItem(15, new SoundEvent(id("disc/still_alive")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 177);
     public static final Item CARA_MIA_ADDIO = new MusicDiscItem(15, new SoundEvent(id("disc/cara_mia_addio")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 154);
