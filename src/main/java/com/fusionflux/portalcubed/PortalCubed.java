@@ -143,7 +143,7 @@ public class PortalCubed implements ModInitializer {
                 }
 
                 Vec3d rotatedVel = entityVelocity;
-                Vec3d rotatedLook = Vec3d.fromPolar(pitchSet,yawSet);
+                Vec3d rotatedLook = Vec3d.fromPolar(pitchSet, yawSet);
 
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
@@ -179,8 +179,8 @@ public class PortalCubed implements ModInitializer {
 
                 //float yawValue = yawSet + PortalDirectionUtils.yawAddition(portal.getFacingDirection(), otherDirec);
 
-                player.setYaw(MathHelper.lerpAngleDegrees(1,yawSet,lookAngle.y)-90);
-                player.setPitch(MathHelper.lerpAngleDegrees(1,pitchSet,lookAngle.x));
+                player.setYaw(MathHelper.lerpAngleDegrees(1, yawSet, lookAngle.y) - 90);
+                player.setPitch(MathHelper.lerpAngleDegrees(1, pitchSet, lookAngle.x));
                 player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0, player.getEyeY() - player.getY(), 0));
                 CalledValues.setHasTeleportationHappened(player, true);
                 GravityChangerAPI.clearGravity(player);

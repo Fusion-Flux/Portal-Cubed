@@ -203,7 +203,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 }
                 this.setNoGravity(true);
             } else {
-                if (this.hasNoGravity() && !fizzling) {
+                if (this.hasNoGravity() && !fizzling && !((EntityAttachments) this).isInFunnel()) {
                     this.setNoGravity(false);
                 }
             }
