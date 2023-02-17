@@ -130,36 +130,6 @@ public class PortalDirectionUtils {
         };
     }
 
-    public static float yawAddition(Direction entryDirection, Direction exitDirection) {
-        return switch (entryDirection) {
-            case NORTH -> switch (exitDirection) {
-                case NORTH -> 180;
-                case EAST -> -90;
-                case WEST -> 90;
-                default -> 0;
-            };
-            case SOUTH -> switch (exitDirection) {
-                case SOUTH -> 180;
-                case EAST -> 90;
-                case WEST -> -90;
-                default -> 0;
-            };
-            case EAST -> switch (exitDirection) {
-                case EAST -> 180;
-                case NORTH -> 90;
-                case SOUTH -> -90;
-                default -> 0;
-            };
-            case WEST -> switch (exitDirection) {
-                case WEST -> 180;
-                case NORTH -> -90;
-                case SOUTH -> 90;
-                default -> 0;
-            };
-            default -> 0;
-        };
-    }
-
     public static List<Pair<Vec3d, BlockHitResult>> raycast(World world, RaycastContext context) {
         final List<Pair<Vec3d, BlockHitResult>> hits = new ArrayList<>();
         final Supplier<Entity> marker = Suppliers.memoize(() -> EntityType.MARKER.create(world));
