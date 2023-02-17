@@ -7,6 +7,7 @@
     "EntityMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
+    "RaycastContextAccessor",
     "ServerPlayNetworkHandlerMixin",
     "ShapeContextMixin",
     "WorldMixin",

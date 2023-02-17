@@ -167,6 +167,8 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 otherPortal = null;
             }
 
+            world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), leftClick ? PortalCubedSounds.FIRE_EVENT_PRIMARY : PortalCubedSounds.FIRE_EVENT_SECONDARY, SoundCategory.NEUTRAL, .3F, 1F);
+
             Vec3i up;
             Vec3i normal;
             Vec3i right;
@@ -224,7 +226,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                             break findCorrectOrientation;
                         }
                     }
-                    world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                    world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, 1F, 1F);
                     return;
                 }
 
@@ -249,12 +251,10 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                         }
                     }
                     if (!bumpSuccess) {
-                        world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                        world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, 1F, 1F);
                         return;
                     }
                 }
-
-                world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), leftClick ? PortalCubedSounds.FIRE_EVENT_PRIMARY : PortalCubedSounds.FIRE_EVENT_SECONDARY, SoundCategory.NEUTRAL, .3F, 1F);
 
                 if (originalPortal == null) {
                     portalHolder.setLinkedPortalUUID(Optional.empty());
@@ -285,7 +285,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                     }
                 }
             } else {
-                world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, .3F, 1F);
+                world.playSound(null, user.getPos().getX(), user.getPos().getY(), user.getPos().getZ(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundCategory.NEUTRAL, 1F, 1F);
                 return;
             }
 

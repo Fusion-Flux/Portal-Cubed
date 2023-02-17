@@ -38,13 +38,17 @@
 	"portal_gun_primary": {
 		"subtitle": "subtitles.portalcubed.portal_gun_primary_fire",
 		"sounds": [
-			"portalcubed:portal_gun_primary"
+			"portalcubed:wpn_portal_gun_fire_blue_01",
+			"portalcubed:wpn_portal_gun_fire_blue_02",
+			"portalcubed:wpn_portal_gun_fire_blue_03"
 		]
 	},
 	"portal_gun_secondary": {
 		"subtitle": "subtitles.portalcubed.portal_gun_secondary_fire",
 		"sounds": [
-			"portalcubed:portal_gun_secondary"
+			"portalcubed:wpn_portal_gun_fire_red_01",
+			"portalcubed:wpn_portal_gun_fire_red_02",
+			"portalcubed:wpn_portal_gun_fire_red_03"
 		]
 	},
 	"portal_enter": {
@@ -84,12 +88,12 @@
 	"portal_invalid_surface": {
 		"subtitle": "subtitles.portalcubed.portal_invalid_surface",
 		"sounds": [
-			"portalcubed:portal_invalid_surface"
+			"portalcubed:portal_invalid_surface3"
 		]
 	},
 	"nothing_to_grab": {
 		"sounds": [
-			"portalcubed:portal_invalid_surface"
+			"portalcubed:object_use_failure_01"
 		]
 	},
 	"portal_ambience": {

@@ -190,37 +190,37 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
                         Vec3d entityEyePos = thisEntity.getEyePos();
 
                         if (portalFacing.getUnitVector().getX() < 0) {
-                            if (entityEyePos.getX() >= portal.getPos().getX() && entityVelocity.getX() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityEyePos.getX() + entityVelocity.x >= portal.getPos().getX() && entityVelocity.getX() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
                         if (portalFacing.getUnitVector().getY() < 0) {
-                            if (entityEyePos.getY() >= portal.getPos().getY() && entityVelocity.getY() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityEyePos.getY() + entityVelocity.y >= portal.getPos().getY() && entityVelocity.getY() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
                         if (portalFacing.getUnitVector().getZ() < 0) {
-                            if (entityEyePos.getZ() >= portal.getPos().getZ() && entityVelocity.getZ() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityEyePos.getZ() + entityVelocity.z >= portal.getPos().getZ() && entityVelocity.getZ() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
                         if (portalFacing.getUnitVector().getX() > 0) {
-                            if (entityEyePos.getX() <= portal.getPos().getX() && entityVelocity.getX() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityEyePos.getX() + entityVelocity.x <= portal.getPos().getX() && entityVelocity.getX() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
                         if (portalFacing.getUnitVector().getY() > 0) {
-                            if (entityEyePos.getY() <= portal.getPos().getY() && entityVelocity.getY() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityEyePos.getY() + entityVelocity.y <= portal.getPos().getY() && entityVelocity.getY() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
                         if (portalFacing.getUnitVector().getZ() > 0) {
-                            if (entityEyePos.getZ() <= portal.getPos().getZ() && entityVelocity.getZ() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityEyePos.getZ() + entityVelocity.z <= portal.getPos().getZ() && entityVelocity.getZ() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }

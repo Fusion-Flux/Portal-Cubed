@@ -6,7 +6,7 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.fusionflux.portalcubed.blocks.RocketTurretBlock.POWERED;
@@ -48,7 +49,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
     private int opening = -1;
     private boolean closing;
     public float lastYaw, lastPitch;
-    public Vec3d aimDest;
+    public List<Pair<Vec3d, Vec3d>> aimDests;
 
     public final AnimationState activatingAnimation = new AnimationState();
     public final AnimationState deactivatingAnimation = new AnimationState();
@@ -197,19 +198,19 @@ public class RocketTurretBlockEntity extends BlockEntity {
         }
         if (!powered) {
             if (world.isClient) {
-                aimDest = null;
+                aimDests = null;
             }
             return;
         }
         if (world.isClient) {
             final Vec3d gunPos = Vec3d.of(getPos()).add(getGunOffset(0));
             //noinspection DataFlowIssue
-            aimDest = world.raycast(new RaycastContext(
+            aimDests = PortalDirectionUtils.raycast(world, new RaycastContext(
                 gunPos, gunPos.add(Vec3d.fromPolar(pitch, yaw - 90).multiply(127)),
                 RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE,
                 // We can pass null here because of ShapeContextMixin
                 null
-            )).getPos();
+            )).stream().map(p -> new Pair<>(p.getLeft(), p.getRight().getPos())).toList();
             return;
         }
         if (lockedTicks > 0) {

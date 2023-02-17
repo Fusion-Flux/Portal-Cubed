@@ -323,6 +323,8 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(RocketRenderer.ROCKET_LAYER, RocketModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.ROCKET, RocketRenderer::new);
+
+        EntityRendererRegistry.register(PortalCubedEntities.ENERGY_PELLET, EnergyPelletRenderer::new);
     }
 
     private static final class VisibleBarriersCompat {

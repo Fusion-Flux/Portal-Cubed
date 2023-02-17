@@ -3,8 +3,8 @@ package com.fusionflux.portalcubed.client.render.entity;
 import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalModel;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -12,6 +12,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
@@ -50,8 +51,35 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         int g = (color & 0xFF00) >> 8;
         int b = color & 0xFF;
 
-        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.getTexture(entity))), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+        final float progress = (entity.age + tickDelta) / 2.5f;
+        if (progress <= 1) {
+            matrices.scale(progress, progress, progress);
+        }
+        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
         matrices.pop();
+        if (MinecraftClient.getInstance().getEntityRenderDispatcher().shouldRenderHitboxes() && !entity.isInvisible() && !MinecraftClient.getInstance().hasReducedDebugInfo()) {
+            renderAxes(entity, matrices, vertexConsumers.getBuffer(RenderLayer.getLines()));
+        }
+    }
+
+    private void renderAxes(ExperimentalPortal entity, MatrixStack matrices, VertexConsumer vertices) {
+        final MatrixStack.Entry entry = matrices.peek();
+        renderAxis(entry, vertices, entity.getNormal());
+        entity.getAxisW().ifPresent(axisW -> renderAxis(entry, vertices, axisW));
+        entity.getAxisH().ifPresent(axisH -> renderAxis(entry, vertices, axisH));
+    }
+
+    private void renderAxis(MatrixStack.Entry entry, VertexConsumer vertices, Vec3d axis) {
+        vertices
+            .vertex(entry.getModel(), 0, 0, 0)
+            .color(1f, 0f, 0f, 1f)
+            .normal(entry.getNormal(), (float)axis.x, (float)axis.y, (float)axis.z)
+            .next();
+        vertices
+            .vertex(entry.getModel(), (float)axis.x, (float)axis.y, (float)axis.z)
+            .color(1f, 0f, 0f, 1f)
+            .normal(entry.getNormal(), (float)axis.x, (float)axis.y, (float)axis.z)
+            .next();
     }
 
     @Override

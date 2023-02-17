@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
@@ -17,6 +18,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.CuboidBlockIterator;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
@@ -25,8 +27,12 @@ import net.minecraft.world.World;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class  ExperimentalPortal extends Entity {
+
+    private static final Supplier<IllegalStateException> NOT_INIT =
+        () -> new IllegalStateException("Portal data accessed before initalized");
 
     private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
 
@@ -52,7 +58,7 @@ public class  ExperimentalPortal extends Entity {
     public static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
     public Vec3d getNormal() {
-        return getAxisW().get().crossProduct(getAxisH().get()).normalize();
+        return getAxisW().orElseThrow(NOT_INIT).crossProduct(getAxisH().orElseThrow(NOT_INIT)).normalize();
     }
 
     public ExperimentalPortal(EntityType<?> entityType, World world) {
@@ -253,12 +259,18 @@ public class  ExperimentalPortal extends Entity {
             MathHelper.floor(portalBox.maxY + EPSILON) + 1,
             MathHelper.floor(portalBox.maxZ + EPSILON) + 1
         );
+        final Direction forward = Direction.fromVector(new BlockPos(getNormal()));
+        assert forward != null;
         while (iter.step()) {
             final BlockPos pos = new BlockPos(iter.getX(), iter.getY(), iter.getZ());
             if (!Box.from(BlockBox.create(pos, pos)).intersects(portalBox)) continue;
             final BlockState state = world.getBlockState(pos);
             if (state.isIn(PortalCubedBlocks.PORTAL_NONSOLID) || state.isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-                return false;
+                final BlockState gelState = world.getBlockState(pos.offset(forward));
+                final BooleanProperty property = GelFlat.getFacingProperty(forward.getOpposite());
+                if (!gelState.isIn(PortalCubedBlocks.PORTALABLE_GELS) || !gelState.getOrEmpty(property).orElse(false)) {
+                    return false;
+                }
             }
             final VoxelShape shape = state.getCollisionShape(world, pos, ShapeContext.of(this));
             if (
@@ -306,11 +318,6 @@ public class  ExperimentalPortal extends Entity {
             ) return false;
         }
         return true;
-    }
-
-    public static boolean allowedPortalBlock(World world, BlockPos pos) {
-        final BlockState state = world.getBlockState(pos);
-        return state.isIn(PortalCubedBlocks.PORTAL_NONSOLID) || state.getCollisionShape(world, pos).isEmpty();
     }
 
     public void syncRotations() {
@@ -406,7 +413,7 @@ public class  ExperimentalPortal extends Entity {
     }
 
     public Vec3d getPointInPlaneLocal(double xInPlane, double yInPlane) {
-        return getAxisW().get().multiply(xInPlane).add(getAxisH().get().multiply(yInPlane));
+        return getAxisW().orElseThrow(NOT_INIT).multiply(xInPlane).add(getAxisH().orElseThrow(NOT_INIT).multiply(yInPlane));
     }
 
     public Vec3d getOriginPos() {
