@@ -278,7 +278,6 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(RocketRenderer.ROCKET_LAYER, RocketModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.ROCKET, RocketRenderer::new);
 
-        EnergyPelletRenderer.init();
         EntityRendererRegistry.register(PortalCubedEntities.ENERGY_PELLET, EnergyPelletRenderer::new);
     }
 
