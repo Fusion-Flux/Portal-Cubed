@@ -14,10 +14,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
@@ -309,6 +306,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             }
         }
 
+        rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
+
         if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
             if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                 if (portalVertFacing != otherPortalVertFacing)
@@ -316,36 +315,44 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             }
         }
 
-        rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
-
-
         Vec3d rotatedVel = entityVelocity;
-
-        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-            if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
-            }
-        }
-
-        if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-            if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
-            }
-        }
-
-        rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherDirec);
+        Vec3d rotatedLook = Vec3d.fromPolar(thisEntity.getPitch(),thisEntity.getYaw());
 
         if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
             if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                 if (portalFacing.getOpposite() != otherDirec)
                     rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
+                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalVertFacing, otherPortalVertFacing);
             }
         }
 
+        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
+            if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
+                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalVertFacing, otherDirec);
+            }
+        }
 
-        float yawValue = thisEntity.getYaw() + PortalDirectionUtils.yawAddition(portal.getFacingDirection(), otherDirec);
-        thisEntity.setYaw(yawValue);
-        thisEntity.setPitch(thisEntity.getPitch());
+        rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherDirec);
+        rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherDirec);
+
+        if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
+            if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
+                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
+                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherPortalVertFacing);
+            }
+        }
+
+        Vec2f lookAngle = new Vec2f(
+                (float)Math.toDegrees(-MathHelper.atan2(rotatedLook.y, Math.sqrt(rotatedLook.x * rotatedLook.x + rotatedLook.z * rotatedLook.z))),
+                (float)Math.toDegrees(MathHelper.atan2(rotatedLook.z, rotatedLook.x))
+        );
+
+
+        thisEntity.setYaw(MathHelper.lerpAngleDegrees(1,thisEntity.getYaw(),lookAngle.y)-90);
+        thisEntity.setPitch(MathHelper.lerpAngleDegrees(1,thisEntity.getYaw(),lookAngle.x));
+        thisEntity.setBodyYaw(thisEntity.getYaw());
+        thisEntity.setHeadYaw(thisEntity.getYaw());
         thisEntity.setPosition(portal.getDestination().get().add(rotatedOffsets).subtract(0, thisEntity.getEyeY() - thisEntity.getY(), 0));
         this.setVelocity(rotatedVel);
         GravityChangerAPI.clearGravity(thisEntity);

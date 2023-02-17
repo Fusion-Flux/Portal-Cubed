@@ -133,14 +133,14 @@ public class PortalCubed implements ModInitializer {
                     }
                 }
 
+                rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
+
                 if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
                     if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                         if (portalVertFacing != otherPortalVertFacing)
                             rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherPortalVertFacing);
                     }
                 }
-
-                rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
 
                 Vec3d rotatedVel = entityVelocity;
                 Vec3d rotatedLook = Vec3d.fromPolar(pitchSet,yawSet);

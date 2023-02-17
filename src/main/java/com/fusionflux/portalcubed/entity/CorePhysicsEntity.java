@@ -172,7 +172,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     public void tick() {
         super.tick();
         timeSinceLastSound++;
-        this.headYaw = this.bodyYaw;
+        //this.bodyYaw = this.headYaw;
         canUsePortals = getHolderUUID().isEmpty();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.getPos();
@@ -188,8 +188,9 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
                     this.fallDistance = 0;
-                    this.bodyYaw = player.headYaw;
-
+                    this.setYaw(player.headYaw);
+                    this.setHeadYaw(player.headYaw);
+                    this.setBodyYaw(player.headYaw);
                     move(
                         MovementType.PLAYER,
                         RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
@@ -202,7 +203,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 }
                 this.setNoGravity(true);
             } else {
-                if (this.hasNoGravity()) {
+                if (this.hasNoGravity() && !fizzling) {
                     this.setNoGravity(false);
                 }
             }
@@ -213,7 +214,9 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                     Vec3d vec3d = player.getCameraPosVec(0);
                     double d = 2;
                     Vec3d vec3d2 = player.getRotationVec(1.0F);
-                    this.bodyYaw = player.headYaw;
+                    this.setYaw(player.headYaw);
+                    this.setHeadYaw(player.headYaw);
+                    this.setBodyYaw(player.headYaw);
                     Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
                     move(
                         MovementType.PLAYER,
