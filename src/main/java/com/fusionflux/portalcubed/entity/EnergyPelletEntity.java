@@ -81,7 +81,8 @@ public class EnergyPelletEntity extends Entity {
         super.tick();
         if (world.isClient) return;
         Vec3d vel = getVelocity();
-        move(MovementType.SELF, getVelocity());
+        move(MovementType.SELF, vel);
+        velocityDirty = true;
         int life = getLife();
         if (life > 0) {
             setLife(--life);
