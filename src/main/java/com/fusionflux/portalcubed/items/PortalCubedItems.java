@@ -36,7 +36,6 @@ public class PortalCubedItems {
     public static final SpawnEggItem PORTAL_1_STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.PORTAL_1_STORAGE_CUBE, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
     public static final SpawnEggItem LIL_PINEAPPLE = new SpawnEggItem(PortalCubedEntities.LIL_PINEAPPLE, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
 
-
     public static final SpawnEggItem BEANS = new SpawnEggItem(PortalCubedEntities.BEANS, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
     public static final SpawnEggItem MUG = new SpawnEggItem(PortalCubedEntities.MUG, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
     public static final SpawnEggItem JUG = new SpawnEggItem(PortalCubedEntities.JUG, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
@@ -55,6 +54,9 @@ public class PortalCubedItems {
     public static final SpawnEggItem ADVENTURE_CORE = new SpawnEggItem(PortalCubedEntities.ADVENTURE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64));
 
     public static final Item HAMMER = new Item(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP).maxCount(1));
+
+    // TODO: Item behavior. When that's done, add it to the creative inventory.
+    public static final Item ENERGY_PELLET = new EnergyPelletItem(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP));
 
     public static final Item STILL_ALIVE = new MusicDiscItem(15, new SoundEvent(id("disc/still_alive")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 177);
     public static final Item CARA_MIA_ADDIO = new MusicDiscItem(15, new SoundEvent(id("disc/cara_mia_addio")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 154);
@@ -99,6 +101,7 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, id("block_item_icon"), BLOCK_ITEM_ICON);
 
         Registry.register(Registry.ITEM, id("hammer"), HAMMER);
+        Registry.register(Registry.ITEM, id("energy_pellet"), ENERGY_PELLET);
 
         Registry.register(Registry.ITEM, id("music_disc_still_alive"), STILL_ALIVE);
         Registry.register(Registry.ITEM, id("music_disc_cara_mia_addio"), CARA_MIA_ADDIO);
