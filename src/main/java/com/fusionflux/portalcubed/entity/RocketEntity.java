@@ -176,6 +176,11 @@ public class RocketEntity extends Entity implements Fizzleable {
     }
 
     @Override
+    public FizzleType getFizzleType() {
+        return FizzleType.OBJECT;
+    }
+
+    @Override
     public void remove(RemovalReason reason) {
         if (reason == RemovalReason.UNLOADED_TO_CHUNK) {
             reason = RemovalReason.DISCARDED;

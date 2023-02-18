@@ -118,7 +118,7 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
 
     protected final void fizzlePhysicsEntity(Entity entity) {
         if (entity.world.isClient) return;
-        if (entity instanceof Fizzleable fizzleable) {
+        if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() == Fizzleable.FizzleType.OBJECT) {
             fizzleable.fizzle();
         }
     }
@@ -126,8 +126,11 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
     protected final void fizzleLiving(Entity entity) {
         if (entity.world.isClient) return;
         // TODO: Fizzle players visually?
-        if (entity instanceof LivingEntity && !(entity instanceof Fizzleable)) {
+        if (entity instanceof LivingEntity || (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() == Fizzleable.FizzleType.LIVING)) {
             entity.damage(PortalCubedDamageSources.FIZZLE, PortalCubedConfig.fizzlerDamage);
+            if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() != Fizzleable.FizzleType.NOT) {
+                fizzleable.fizzle();
+            }
         }
     }
 }

@@ -8,4 +8,10 @@ public interface Fizzleable {
     float getFizzleProgress();
 
     boolean fizzlesInGoo();
+
+    FizzleType getFizzleType();
+
+    enum FizzleType {
+        NOT, OBJECT, LIVING
+    }
 }

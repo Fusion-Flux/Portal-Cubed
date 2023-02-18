@@ -269,6 +269,11 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
         return true;
     }
 
+    @Override
+    public FizzleType getFizzleType() {
+        return FizzleType.OBJECT;
+    }
+
     protected final Vec3d getPlayerRotationVector(float pitch, float yaw) {
         float f = pitch * (float) (Math.PI / 180.0);
         float g = -yaw * (float) (Math.PI / 180.0);
