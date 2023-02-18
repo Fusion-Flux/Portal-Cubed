@@ -7,6 +7,8 @@ public interface Fizzleable {
 
     float getFizzleProgress();
 
+    boolean fizzling();
+
     boolean fizzlesInGoo();
 
     FizzleType getFizzleType();

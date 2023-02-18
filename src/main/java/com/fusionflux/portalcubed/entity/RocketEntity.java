@@ -171,6 +171,11 @@ public class RocketEntity extends Entity implements Fizzleable {
     }
 
     @Override
+    public boolean fizzling() {
+        return fizzling;
+    }
+
+    @Override
     public boolean fizzlesInGoo() {
         return false;
     }
