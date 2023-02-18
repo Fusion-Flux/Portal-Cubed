@@ -1,11 +1,18 @@
 package com.fusionflux.portalcubed.items;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.entity.EnergyPelletEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Rarity;
+import net.minecraft.util.math.BlockPointer;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Position;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
@@ -106,5 +113,27 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, id("music_disc_cara_mia_addio"), CARA_MIA_ADDIO);
         Registry.register(Registry.ITEM, id("music_disc_want_you_gone"), WANT_YOU_GONE);
         Registry.register(Registry.ITEM, id("music_disc_reconstructing_more_science"), RECONSTRUCTING_MORE_SCIENCE);
+
+        DispenserBlock.registerBehavior(ENERGY_PELLET, new ItemDispenserBehavior() {
+            @Override
+            protected ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
+                final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(pointer.getWorld());
+                if (pellet == null) return stack;
+                final Position pos = DispenserBlock.getOutputLocation(pointer);
+                pellet.setPosition(pos.getX(), pos.getY(), pos.getZ());
+                pellet.setVelocity(Vec3d.of(pointer.getBlockState().get(DispenserBlock.FACING).getVector()));
+                pointer.getWorld().spawnEntity(pellet);
+                stack.decrement(1);
+                return stack;
+            }
+
+            @Override
+            protected void playSound(BlockPointer pointer) {
+            }
+
+            @Override
+            protected void spawnParticles(BlockPointer pointer, Direction side) {
+            }
+        });
     }
 }
