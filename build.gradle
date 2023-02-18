@@ -39,6 +39,10 @@ repositories {
 			includeGroup "com.jamieswhiteshirt"
 		}
 	}
+	maven {
+		name = "AlexIIL"
+		url = "https://maven.alexiil.uk/"
+	}
 }
 
 dependencies {
@@ -79,6 +83,8 @@ dependencies {
 	modCompileOnly "amymialee:visible-barriers:1.5.3+1.19.x"
 
 	include implementation("net.objecthunter:exp4j:0.4.8")
+
+	modCompileOnly ("alexiil.mc.lib:libmultipart-all:0.8.0")
 }
 
 checkstyle {
