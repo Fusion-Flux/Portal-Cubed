@@ -26,7 +26,9 @@
     "client.ModelLoaderMixin",
     "client.MusicTrackerAccessor",
     "client.ParticleManagerMixin",
-    "client.SoundSystemMixin"
+    "client.SoundSystemMixin",
+    "client.RenderSystemMixin",
+    "client.VertexConsumerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -2,6 +2,8 @@ package com.fusionflux.portalcubed.client;
 
 import amymialee.visiblebarriers.VisibleBarriers;
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.accessor.Accessors;
+import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -23,16 +25,17 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
 import com.fusionflux.portalcubed.mixin.client.MusicTrackerAccessor;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
@@ -41,8 +44,13 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.RaycastContext;
+import net.minecraft.world.RaycastContext.FluidHandling;
+import net.minecraft.world.RaycastContext.ShapeType;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -53,6 +61,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.UUID;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -168,6 +177,33 @@ public class PortalCubedClient implements ClientModInitializer {
                 Items.LIGHT, new Identifier("level")
             )
         );
+
+        WorldRenderEvents.END.register(ctx -> {
+            final var player = MinecraftClient.getInstance().player;
+            if (player != null) {
+                if (!(ctx.consumers() instanceof final VertexConsumerProvider.Immediate consumers)) return;
+                final var cameraPos = ctx.camera().getPos();
+                ctx.matrixStack().push();
+                ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+                ExperimentalPortalRenderer.renderingTracers = true;
+                for (UUID portalUuid : CalledValues.getPortals(player)) {
+                    final var portal = ((Accessors) ctx.world()).getEntity(portalUuid);
+                    if (portal == null) continue;
+                    final var hit = ctx.world().raycast(new RaycastContext(portal.getPos(), cameraPos, ShapeType.COLLIDER, FluidHandling.NONE, portal));
+                    if (hit.getType() == HitResult.Type.BLOCK && ctx.world().getBlockState(hit.getBlockPos()).getOpacity(ctx.world(), hit.getBlockPos()) > 0.0) {
+                        MinecraftClient.getInstance().getEntityRenderDispatcher().render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYaw(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+                    }
+                }
+                ctx.matrixStack().pop();
+
+                RenderSystem.disableCull();
+                // depth func change handled in RenderSystemMixin
+                consumers.drawCurrentLayer();
+                ExperimentalPortalRenderer.renderingTracers = false;
+                RenderSystem.depthFunc(GL11.GL_LEQUAL);
+                RenderSystem.enableCull();
+            }
+        });
 
         PortalBlocksLoader.initClient();
 

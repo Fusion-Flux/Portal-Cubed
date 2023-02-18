@@ -184,6 +184,32 @@
 		]
 	},
 
+	"pellet/bounce": {
+		"sounds": [
+			"portalcubed:pellet/energy_bounce1",
+			"portalcubed:pellet/energy_bounce2"
+		],
+		"subtitle": "subtitles.portalcubed.pellet.bounce"
+	},
+	"pellet/explode": {
+		"sounds": [
+			"portalcubed:pellet/energy_sing_explosion2"
+		],
+		"subtitle": "subtitles.portalcubed.pellet.explode"
+	},
+	"pellet/spawn": {
+		"sounds": [
+			"portalcubed:pellet/energy_sing_flyby1",
+			"portalcubed:pellet/energy_sing_flyby2"
+		],
+		"subtitle": "subtitles.portalcubed.pellet.spawn"
+	},
+	"pellet/travel": {
+		"sounds": [
+			"portalcubed:pellet/energy_sing_loop4"
+		]
+	},
+
 	"tbeam/enter": {
 		"sounds": [
 			"portalcubed:tbeam/player_enter_tbeam_lp_01",

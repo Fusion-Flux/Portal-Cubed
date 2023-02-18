@@ -71,7 +71,7 @@ public class RocketEntity extends Entity {
         }
         final HitResult hit = ProjectileUtil.getCollision(this, this::canHit);
         if (hit.getType() == HitResult.Type.ENTITY) {
-            explode(hit instanceof EntityHitResult entityHit ? (LivingEntity)entityHit.getEntity() : null);
+            explode((LivingEntity)((EntityHitResult)hit).getEntity());
         } else {
             final LivingEntity hit2 = world.getClosestEntity(
                 LivingEntity.class,
