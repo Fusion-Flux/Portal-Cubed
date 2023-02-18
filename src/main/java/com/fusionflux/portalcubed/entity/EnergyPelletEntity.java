@@ -122,7 +122,7 @@ public class EnergyPelletEntity extends Entity {
                 if (bouncedAxis == Direction.Axis.Y) {
                     spawnPos = spawnPos.withAxis(Direction.Axis.Y, spawnPos.y + 0.1);
                 }
-                DecalEntity.spawn(serverWorld, spawnPos, bouncedAxis, DECAL);
+                DecalEntity.spawn(serverWorld, spawnPos, bouncedAxis, DECAL, 1200);
             }
         }
         if ((age - 1) % 34 == 0) {
