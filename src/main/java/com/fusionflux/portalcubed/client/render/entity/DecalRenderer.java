@@ -27,7 +27,7 @@ public class DecalRenderer extends EntityRenderer<DecalEntity> {
 
         float alpha = 1f;
         if (entity.getDuration() > 0 && entity.age + 100 >= entity.getDuration()) {
-            final int past100 = entity.age - entity.getDuration() + 100;
+            final float past100 = (entity.age + tickDelta) - entity.getDuration() + 100;
             alpha = 1f - MathHelper.clamp(past100 / 100f, 0f, 1f);
         }
 
