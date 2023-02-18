@@ -112,8 +112,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract double getY();
 
-    @Shadow public abstract double getEyeY();
-
     private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
 
     @Unique
@@ -282,42 +280,45 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         double teleportXOffset = (thisEntity.getEyePos().getX()) - portal.getPos().getX();
         double teleportYOffset = (thisEntity.getEyePos().getY()) - portal.getPos().getY();
         double teleportZOffset = (thisEntity.getEyePos().getZ()) - portal.getPos().getZ();
-
         Direction portalFacing = portal.getFacingDirection();
         Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
-
         Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
         Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
-
         Vec3d rotatedOffsets = new Vec3d(teleportXOffset, teleportYOffset, teleportZOffset);
-
         double heightOffset = (thisEntity.getEyeY() - thisEntity.getY()) / 2;
-
-
         if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
             if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
                 rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherDirec);
             }
         }
-
         if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
             if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
                 rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherPortalVertFacing);
             }
         }
-
         rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
-
         if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
             if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                 if (portalVertFacing != otherPortalVertFacing)
                     rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherPortalVertFacing);
             }
         }
-
         Vec3d rotatedVel = entityVelocity;
         Vec3d rotatedLook = Vec3d.fromPolar(thisEntity.getPitch(), thisEntity.getYaw());
-
+        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
+            if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
+                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalVertFacing, otherDirec);
+            }
+        }
+        if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
+            if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
+                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
+                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherPortalVertFacing);
+            }
+        }
+        rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherDirec);
+        rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherDirec);
         if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
             if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
                 if (portalFacing.getOpposite() != otherDirec)
@@ -325,36 +326,16 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                 rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalVertFacing, otherPortalVertFacing);
             }
         }
-
-        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-            if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
-                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalVertFacing, otherDirec);
-            }
-        }
-
-        rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherDirec);
-        rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherDirec);
-
-        if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-            if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
-                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherPortalVertFacing);
-            }
-        }
-
         Vec2f lookAngle = new Vec2f(
                 (float)Math.toDegrees(-MathHelper.atan2(rotatedLook.y, Math.sqrt(rotatedLook.x * rotatedLook.x + rotatedLook.z * rotatedLook.z))),
                 (float)Math.toDegrees(MathHelper.atan2(rotatedLook.z, rotatedLook.x))
         );
-
-
         thisEntity.setYaw(MathHelper.lerpAngleDegrees(1, thisEntity.getYaw(), lookAngle.y) - 90);
         thisEntity.setPitch(MathHelper.lerpAngleDegrees(1, thisEntity.getPitch(), lookAngle.x));
         thisEntity.setBodyYaw(MathHelper.lerpAngleDegrees(1, thisEntity.getYaw(), lookAngle.y) - 90);
         thisEntity.setHeadYaw(MathHelper.lerpAngleDegrees(1, thisEntity.getYaw(), lookAngle.y) - 90);
         thisEntity.setPosition(portal.getDestination().get().add(rotatedOffsets).subtract(0, thisEntity.getEyeY() - thisEntity.getY(), 0));
-        this.setVelocity(rotatedVel);
+        thisEntity.setVelocity(rotatedVel);
         GravityChangerAPI.clearGravity(thisEntity);
     }
 
