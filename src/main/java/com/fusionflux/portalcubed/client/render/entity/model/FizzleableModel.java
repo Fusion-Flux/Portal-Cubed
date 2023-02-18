@@ -1,15 +1,16 @@
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.entity.Fizzleable;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
 
-public abstract class FizzleableModel<T extends CorePhysicsEntity> extends EntityModel<T> {
+public abstract class FizzleableModel<T extends Entity & Fizzleable> extends EntityModel<T> {
     private float fizzleProgress;
 
     public FizzleableModel() {

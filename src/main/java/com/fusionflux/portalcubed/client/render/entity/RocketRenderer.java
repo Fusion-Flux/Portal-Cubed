@@ -36,7 +36,7 @@ public class RocketRenderer extends EntityRenderer<RocketEntity> {
         final float yaw = MathHelper.lerpAngleDegrees(tickDelta, entity.prevYaw, entity.getYaw());
         final float pitch = MathHelper.lerpAngleDegrees(tickDelta, entity.prevPitch, entity.getPitch());
 
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(2 * pitch));
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-pitch));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180 - yaw));
         matrices.scale(-1, -1, 1);
         matrices.translate(0.0, -1.501, 0.0);

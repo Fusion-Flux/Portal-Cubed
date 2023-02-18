@@ -4,7 +4,7 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
-import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.entity.Fizzleable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -39,8 +39,9 @@ public class PortalCubedClientPackets {
     public static void onFizzle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         final int entityId = buf.readVarInt();
         client.execute(() -> {
-            if (client.world.getEntityById(entityId) instanceof CorePhysicsEntity physicsEntity) {
-                physicsEntity.startFizzlingProgress();
+            assert client.world != null;
+            if (client.world.getEntityById(entityId) instanceof Fizzleable fizzleable) {
+                fizzleable.startFizzlingProgress();
             }
         });
     }

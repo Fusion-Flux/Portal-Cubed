@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.commands;
 
-import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.entity.Fizzleable;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -18,10 +18,10 @@ public class FizzleCommand {
             .requires(s -> s.hasPermissionLevel(2))
             .then(RequiredArgumentBuilder.<ServerCommandSource, EntitySelector>argument("entity", EntityArgumentType.entities())
                 .executes(ctx -> {
-                    final List<CorePhysicsEntity> entities = EntityArgumentType.getOptionalEntities(ctx, "entity")
+                    final List<Fizzleable> entities = EntityArgumentType.getOptionalEntities(ctx, "entity")
                         .stream()
-                        .filter(e -> e instanceof CorePhysicsEntity)
-                        .map(e -> (CorePhysicsEntity)e)
+                        .filter(e -> e instanceof Fizzleable)
+                        .map(e -> (Fizzleable)e)
                         .toList();
                     if (entities.isEmpty()) {
                         throw EntityArgumentType.ENTITY_NOT_FOUND_EXCEPTION.create();
@@ -37,8 +37,8 @@ public class FizzleCommand {
         );
     }
 
-    public static void fizzle(Collection<CorePhysicsEntity> entities) {
-        for (final CorePhysicsEntity physics : entities) {
+    public static void fizzle(Collection<Fizzleable> entities) {
+        for (final Fizzleable physics : entities) {
             physics.fizzle();
         }
     }

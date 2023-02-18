@@ -35,7 +35,7 @@ import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import java.util.Optional;
 import java.util.UUID;
 
-public class CorePhysicsEntity extends PathAwareEntity  {
+public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     private float fizzleProgress = 0f;
     private boolean fizzling = false;
@@ -240,13 +240,16 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         }
     }
 
+    @Override
     public void startFizzlingProgress() {
         fizzling = true;
     }
 
+    @Override
     public void fizzle() {
         if (fizzling) return;
-        getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get((PlayerEntity) ((ServerWorld) world).getEntity(value)).stopHolding());
+        //noinspection DataFlowIssue
+        getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get(((ServerWorld) world).getEntity(value)).stopHolding());
         world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
         setNoGravity(true);
         fizzling = true;
@@ -256,8 +259,14 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         PlayerLookup.tracking(this).forEach(player -> player.networkHandler.sendPacket(packet));
     }
 
+    @Override
     public float getFizzleProgress() {
         return fizzleProgress;
+    }
+
+    @Override
+    public boolean fizzlesInGoo() {
+        return true;
     }
 
     protected final Vec3d getPlayerRotationVector(float pitch, float yaw) {
