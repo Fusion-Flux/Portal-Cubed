@@ -29,32 +29,32 @@ public class PortalDirectionUtils {
                 case NORTH -> velocity.multiply(-1, 1, -1);
                 case EAST -> new Vec3d(velocity.getZ(), velocity.getY(), -velocity.getX());
                 case WEST -> new Vec3d(-velocity.getZ(), velocity.getY(), -velocity.getX());
-                case UP -> new Vec3d(-velocity.getX(), velocity.getZ(), velocity.getY());
-                case DOWN -> new Vec3d(-velocity.getX(), -velocity.getZ(), velocity.getY());
+                case UP -> new Vec3d(-velocity.getX(), -velocity.getZ(), velocity.getY());
+                case DOWN -> new Vec3d(-velocity.getX(), velocity.getZ(), velocity.getY());
                 default -> velocity;
             };
             case SOUTH -> switch (exitDirection) {
                 case SOUTH -> velocity.multiply(-1, 1, -1);
-                case EAST -> new Vec3d(-velocity.getZ(), velocity.getY(),- velocity.getX());
-                case WEST -> new Vec3d(velocity.getZ(), velocity.getY(),- velocity.getX());
-                case UP -> new Vec3d(-velocity.getX(), -velocity.getZ(), velocity.getY());
-                case DOWN -> new Vec3d(-velocity.getX(), velocity.getZ(), velocity.getY());
+                case EAST -> new Vec3d(-velocity.getZ(), velocity.getY(), -velocity.getX());
+                case WEST -> new Vec3d(velocity.getZ(), velocity.getY(), -velocity.getX());
+                case UP -> new Vec3d(-velocity.getX(), velocity.getZ(), velocity.getY());
+                case DOWN -> new Vec3d(-velocity.getX(), -velocity.getZ(), velocity.getY());
                 default -> velocity;
             };
             case EAST -> switch (exitDirection) {
                 case EAST -> velocity.multiply(-1, 1, -1);
                 case NORTH -> new Vec3d(-velocity.getZ(), velocity.getY(), velocity.getX());
                 case SOUTH -> new Vec3d(-velocity.getZ(), velocity.getY(), -velocity.getX());
-                case UP -> new Vec3d(velocity.getY(), -velocity.getX(), -velocity.getZ());
-                case DOWN -> new Vec3d(velocity.getY(), velocity.getX(), -velocity.getZ());
+                case UP -> new Vec3d(velocity.getY(), velocity.getX(), -velocity.getZ());
+                case DOWN -> new Vec3d(velocity.getY(), -velocity.getX(), -velocity.getZ());
                 default -> velocity;
             };
             case WEST -> switch (exitDirection) {
                 case WEST -> velocity.multiply(-1, 1, -1);
                 case NORTH -> new Vec3d(-velocity.getZ(), velocity.getY(), -velocity.getX());
                 case SOUTH -> new Vec3d(-velocity.getZ(), velocity.getY(), velocity.getX());
-                case UP -> new Vec3d(velocity.getY(), velocity.getX(), -velocity.getZ());
-                case DOWN -> new Vec3d(velocity.getY(), -velocity.getX(), -velocity.getZ());
+                case UP -> new Vec3d(velocity.getY(), -velocity.getX(), -velocity.getZ());
+                case DOWN -> new Vec3d(velocity.getY(), velocity.getX(), -velocity.getZ());
                 default -> velocity;
             };
             case UP -> switch (exitDirection) {
@@ -80,7 +80,7 @@ public class PortalDirectionUtils {
     public static Vec3d rotatePosition(Vec3d velocity, double entityHeight, Direction entryDirection, Direction exitDirection) {
         return switch (entryDirection) {
             case NORTH -> switch (exitDirection) {
-                case NORTH -> velocity.multiply(-1,1,1);
+                case NORTH -> velocity.multiply(-1, 1, 1);
                 case EAST -> new Vec3d(-velocity.getZ(), velocity.getY(), velocity.getX());
                 case WEST -> new Vec3d(velocity.getZ(), velocity.getY(), velocity.getX());
                 case UP -> new Vec3d(-velocity.getX(), -velocity.getZ(), -velocity.getY());
@@ -88,7 +88,7 @@ public class PortalDirectionUtils {
                 default -> velocity.multiply(1, 1, -1);
             };
             case SOUTH -> switch (exitDirection) {
-                case SOUTH -> velocity.multiply(-1,1,1);
+                case SOUTH -> velocity.multiply(-1, 1, 1);
                 case EAST -> new Vec3d(velocity.getZ(), velocity.getY(), -velocity.getX());
                 case WEST -> new Vec3d(-velocity.getZ(), velocity.getY(), -velocity.getX());
                 case UP -> new Vec3d(-velocity.getX(), velocity.getZ(), velocity.getY());
@@ -96,7 +96,7 @@ public class PortalDirectionUtils {
                 default -> velocity.multiply(1, 1, -1);
             };
             case EAST -> switch (exitDirection) {
-                case EAST -> velocity.multiply(1,1,-1);
+                case EAST -> velocity.multiply(1, 1, -1);
                 case NORTH -> new Vec3d(-velocity.getZ(), velocity.getY(), -velocity.getX());
                 case SOUTH -> new Vec3d(-velocity.getZ(), velocity.getY(), velocity.getX());
                 case UP -> new Vec3d(velocity.getY(), velocity.getX(), -velocity.getZ());
@@ -104,7 +104,7 @@ public class PortalDirectionUtils {
                 default -> velocity.multiply(-1, 1, 1);
             };
             case WEST -> switch (exitDirection) {
-                case WEST -> velocity.multiply(1,1,-1);
+                case WEST -> velocity.multiply(1, 1, -1);
                 case NORTH -> new Vec3d(-velocity.getZ(), velocity.getY(), velocity.getX());
                 case SOUTH -> new Vec3d(-velocity.getZ(), velocity.getY(), -velocity.getX());
                 case UP -> new Vec3d(velocity.getY(), -velocity.getX(), -velocity.getZ());
@@ -127,36 +127,6 @@ public class PortalDirectionUtils {
                 case WEST -> new Vec3d(velocity.getY(), entityHeight, velocity.getZ());
                 default -> velocity.multiply(1, -1, 1);
             };
-        };
-    }
-
-    public static float yawAddition(Direction entryDirection, Direction exitDirection) {
-        return switch (entryDirection) {
-            case NORTH -> switch (exitDirection) {
-                case NORTH -> 180;
-                case EAST -> -90;
-                case WEST -> 90;
-                default -> 0;
-            };
-            case SOUTH -> switch (exitDirection) {
-                case SOUTH -> 180;
-                case EAST -> 90;
-                case WEST -> -90;
-                default -> 0;
-            };
-            case EAST -> switch (exitDirection) {
-                case EAST -> 180;
-                case NORTH -> 90;
-                case SOUTH -> -90;
-                default -> 0;
-            };
-            case WEST -> switch (exitDirection) {
-                case WEST -> 180;
-                case NORTH -> -90;
-                case SOUTH -> 90;
-                default -> 0;
-            };
-            default -> 0;
         };
     }
 
