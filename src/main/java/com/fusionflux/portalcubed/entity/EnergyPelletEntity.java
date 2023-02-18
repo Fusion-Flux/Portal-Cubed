@@ -166,6 +166,7 @@ public class EnergyPelletEntity extends Entity {
             ));
             final double mag = vel.length();
             setVelocity(Math.cos(newAngle) * mag, vel.y, Math.sin(newAngle) * mag);
+            world.playSoundFromEntity(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundCategory.HOSTILE, 0.4f, 1f);
         } else {
             kill(entity);
         }
