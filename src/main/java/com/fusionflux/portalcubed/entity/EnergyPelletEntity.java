@@ -21,6 +21,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -130,7 +131,7 @@ public class EnergyPelletEntity extends Entity {
         }
         final HitResult hit = ProjectileUtil.getCollision(this, this::canHit);
         if (hit.getType() == HitResult.Type.ENTITY) {
-            kill((LivingEntity)((EntityHitResult)hit).getEntity());
+            bounceOrKill((LivingEntity)((EntityHitResult)hit).getEntity());
         } else {
             final LivingEntity hit2 = world.getClosestEntity(
                 LivingEntity.class,
@@ -139,13 +140,35 @@ public class EnergyPelletEntity extends Entity {
                 getBoundingBox()
             );
             if (hit2 != null) {
-                kill(hit2);
+                bounceOrKill(hit2);
             }
         }
     }
 
     protected boolean canHit(Entity entity) {
         return entity instanceof LivingEntity && !entity.isSpectator() && entity.isAlive() && entity.collides();
+    }
+
+    private static double getBounceAngle(double inAngle, double propAngle) {
+        // -(a - b) - 180 + b
+        // Simplifies to
+        // -a + b - 180 + b
+        // -a - 180 + 2b
+        return MathHelper.wrapDegrees(-inAngle - 180 + 2 * propAngle);
+    }
+
+    private void bounceOrKill(LivingEntity entity) {
+        if (entity instanceof CorePhysicsEntity) {
+            final Vec3d vel = getVelocity();
+            final double newAngle = Math.toRadians(getBounceAngle(
+                Math.toDegrees(Math.atan2(vel.z, vel.x)),
+                MathHelper.wrapDegrees(entity.getYaw() + 90)
+            ));
+            final double mag = vel.length();
+            setVelocity(Math.cos(newAngle) * mag, vel.y, Math.sin(newAngle) * mag);
+        } else {
+            kill(entity);
+        }
     }
 
     private void kill(@Nullable LivingEntity entity) {
