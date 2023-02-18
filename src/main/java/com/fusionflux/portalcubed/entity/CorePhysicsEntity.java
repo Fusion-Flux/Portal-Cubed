@@ -172,7 +172,7 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     public void tick() {
         super.tick();
         timeSinceLastSound++;
-        //this.bodyYaw = this.headYaw;
+        this.velocityDirty = true;
         canUsePortals = getHolderUUID().isEmpty();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.getPos();
