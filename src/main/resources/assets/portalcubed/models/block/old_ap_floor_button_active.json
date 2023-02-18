@@ -2,14 +2,14 @@
 	"credit": "Made with Blockbench by Cart3r.  ",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "portalcubed:block/aged_smooth_gray_panel",
+		"0": "portalcubed:block/aged_smooth_gray_panel_1",
 		"3": "portalcubed:block/aged_smooth_gray_2x2_panel_bottom_left",
 		"4": "portalcubed:block/aged_smooth_gray_2x2_panel_bottom_right",
 		"5": "portalcubed:block/aged_smooth_gray_2x2_panel_top_left",
 		"6": "portalcubed:block/aged_smooth_gray_2x2_panel_top_right",
 		"7": "portalcubed:block/old_ap_floor_button",
 		"8": "portalcubed:block/old_ap_floor_button_e",
-		"particle": "portalcubed:block/aged_smooth_gray_panel"
+		"particle": "portalcubed:block/aged_smooth_gray_panel_1"
 	},
 	"elements": [
 		{

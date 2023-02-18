@@ -6,7 +6,8 @@
       "portalcubed:office_concrete_crafting",
       "portalcubed:blue_office_concrete_crafting",
       "portalcubed:solid_office_concrete_crafting",
-      "portalcubed:bordered_office_concrete_crafting"
+      "portalcubed:bordered_office_concrete_crafting",
+      "portalcubed:striped_office_concrete_crafting"
     ]
   },
   "criteria": {

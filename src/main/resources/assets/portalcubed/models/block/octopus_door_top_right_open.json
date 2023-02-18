@@ -4,11 +4,12 @@
 	"textures": {
 		"0": "portalcubed:block/octopus_door",
 		"1": "portalcubed:block/octopus_door_e",
-		"particle": "portalcubed:block/padded_gray_panel"	},
+		"particle": "portalcubed:block/padded_gray_panel"
+	},
 	"elements": [
 		{
-			"from": [1, 0, 12],
-			"to": [5, 16, 28],
+			"from": [0.99, -0.01, 11.99],
+			"to": [5.01, 16.01, 28.01],
 			"faces": {
 				"north": {"uv": [5, 8, 6, 12], "texture": "#0"},
 				"east": {"uv": [8, 0, 12, 4], "texture": "#0"},
@@ -18,15 +19,11 @@
 			}
 		},
 		{
-			"from": [0.99, -0.01, 11.99],
-			"to": [5.01, 16.01, 28.01],
+			"from": [0.97, -0.03, 11.97],
+			"to": [5.03, 16.03, 28.03],
 			"faces": {
 				"north": {"uv": [5, 8, 6, 12], "texture": "#1"},
-				"east": {"uv": [8, 0, 12, 4], "texture": "#1"},
-				"south": {"uv": [7, 8, 8, 12], "texture": "#1"},
-				"west": {"uv": [12, 8, 16, 12], "texture": "#1"},
-				"up": {"uv": [7, 12, 8, 16], "texture": "#1"},
-				"down": {"uv": [0, 0, 0, 0], "texture": "#1"}
+				"west": {"uv": [12, 8, 16, 12], "texture": "#1"}
 			}
 		},
 		{
