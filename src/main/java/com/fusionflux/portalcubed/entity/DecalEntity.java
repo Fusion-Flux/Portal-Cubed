@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -15,17 +16,17 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class DecalEntity extends Entity {
     private static final TrackedData<Identifier> TEXTURE = DataTracker.registerData(DecalEntity.class, PortalCubedTrackedDataHandlers.IDENTIFIER);
+    private static final TrackedData<Integer> DURATION = DataTracker.registerData(DecalEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     public DecalEntity(EntityType<?> type, World world) {
         super(type, world);
         ignoreCameraFrustum = true;
     }
 
-    public static void spawn(ServerWorld world, Vec3d origin, Direction.Axis axis, Identifier texture) {
+    public static void spawn(ServerWorld world, Vec3d origin, Direction.Axis axis, Identifier texture, int duration) {
         final DecalEntity decal = PortalCubedEntities.DECAL.create(null);
         if (decal == null) return;
         decal.setPosition(origin);
@@ -35,6 +36,7 @@ public class DecalEntity extends Entity {
             decal.setYaw(90);
         }
         decal.setTexture(texture);
+        decal.setDuration(duration);
         final Packet<?> packet1 = decal.createSpawnPacket();
         final Packet<?> packet2 = new EntityTrackerUpdateS2CPacket(decal.getId(), decal.getDataTracker(), true);
         for (final ServerPlayerEntity player : world.getPlayers()) {
@@ -46,6 +48,7 @@ public class DecalEntity extends Entity {
     @Override
     protected void initDataTracker() {
         dataTracker.startTracking(TEXTURE, new Identifier(""));
+        dataTracker.startTracking(DURATION, -1);
     }
 
     @Override
@@ -69,6 +72,14 @@ public class DecalEntity extends Entity {
         dataTracker.set(TEXTURE, path);
     }
 
+    public int getDuration() {
+        return dataTracker.get(DURATION);
+    }
+
+    private void setDuration(int duration) {
+        dataTracker.set(DURATION, duration);
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -77,11 +88,9 @@ public class DecalEntity extends Entity {
             kill();
             return;
         }
-        clientTick();
-    }
-
-    @ClientOnly
-    private void clientTick() {
+        if (age == getDuration()) {
+            kill();
+        }
     }
 
     @Override
