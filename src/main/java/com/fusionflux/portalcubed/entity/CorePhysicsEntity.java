@@ -248,11 +248,9 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
     @Override
     public void fizzle() {
         if (fizzling) return;
-        //noinspection DataFlowIssue
-        getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get(((ServerWorld) world).getEntity(value)).stopHolding());
+        fizzling = true;
         world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
         setNoGravity(true);
-        fizzling = true;
         final PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(getId());
         final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);

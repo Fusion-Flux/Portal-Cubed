@@ -4,15 +4,20 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.Fizzleable;
+import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
@@ -40,8 +45,14 @@ public class PortalCubedClientPackets {
         final int entityId = buf.readVarInt();
         client.execute(() -> {
             assert client.world != null;
-            if (client.world.getEntityById(entityId) instanceof Fizzleable fizzleable) {
+            final Entity entity = client.world.getEntityById(entityId);
+            if (entity instanceof Fizzleable fizzleable) {
                 fizzleable.startFizzlingProgress();
+            }
+            assert client.player != null;
+            if (entity instanceof CorePhysicsEntity prop && client.player.getUuid().equals(prop.getHolderUUID().orElse(null))) {
+                PortalCubedComponents.HOLDER_COMPONENT.get(client.player).stopHolding();
+                ClientPlayNetworking.send(PortalCubedServerPackets.GRAB_KEY_PRESSED, PacketByteBufs.create());
             }
         });
     }
