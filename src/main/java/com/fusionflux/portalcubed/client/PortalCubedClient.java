@@ -315,6 +315,8 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityRendererRegistry.register(PortalCubedEntities.ROCKET, RocketRenderer::new);
 
         EntityRendererRegistry.register(PortalCubedEntities.ENERGY_PELLET, EnergyPelletRenderer::new);
+
+        EntityRendererRegistry.register(PortalCubedEntities.DECAL, DecalRenderer::new);
     }
 
     private static final class VisibleBarriersCompat {
