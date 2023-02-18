@@ -1,6 +1,8 @@
 package com.fusionflux.portalcubed.entity;
 
 import net.minecraft.entity.data.TrackedDataHandler;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
@@ -32,10 +34,13 @@ public class PortalCubedTrackedDataHandlers {
 
     public static final TrackedDataHandler<Optional<Vec3d>> OPTIONAL_VEC3D = TrackedDataHandler.createOptional(VEC3D::write, VEC3D::read);
 
+    public static final TrackedDataHandler<Identifier> IDENTIFIER = TrackedDataHandler.create(PacketByteBuf::writeIdentifier, PacketByteBuf::readIdentifier);
+
     public static void register() {
         QuiltTrackedDataHandlerRegistry.register(id("quaternion"), QUATERNION);
         QuiltTrackedDataHandlerRegistry.register(id("vec3d"), VEC3D);
         QuiltTrackedDataHandlerRegistry.register(id("optional_vec3d"), OPTIONAL_VEC3D);
+        QuiltTrackedDataHandlerRegistry.register(id("identifier"), IDENTIFIER);
     }
 
 }
