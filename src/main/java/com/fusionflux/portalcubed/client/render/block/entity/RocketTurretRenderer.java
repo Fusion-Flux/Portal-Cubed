@@ -87,12 +87,12 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
             normal.normalize();
             vertexConsumer
                 .vertex(matrix.getModel(), origin.getX(), origin.getY(), origin.getZ())
-                .color(13 / 255f, 165 / 255f, 176 / 255f, 1.0f)
+                .color(130 / 255f, 200 / 255f, 230 / 255f, 0.25f)
                 .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
                 .next();
             vertexConsumer
                 .vertex(matrix.getModel(), offset.getX(), offset.getY(), offset.getZ())
-                .color(13 / 255f, 165 / 255f, 176 / 255f, 1.0f)
+                .color(130 / 255f, 200 / 255f, 230 / 255f, 0.25f)
                 .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
                 .next();
         }
