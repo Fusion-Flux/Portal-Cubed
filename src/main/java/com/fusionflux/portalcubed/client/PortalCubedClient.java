@@ -18,6 +18,7 @@ import com.fusionflux.portalcubed.client.render.block.entity.VelocityHelperRende
 import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
+import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -44,11 +45,7 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.RaycastContext.FluidHandling;
-import net.minecraft.world.RaycastContext.ShapeType;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
@@ -187,12 +184,11 @@ public class PortalCubedClient implements ClientModInitializer {
                 ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
                 ExperimentalPortalRenderer.renderingTracers = true;
                 for (UUID portalUuid : CalledValues.getPortals(player)) {
-                    final var portal = ((Accessors) ctx.world()).getEntity(portalUuid);
-                    if (portal == null) continue;
-                    final var hit = ctx.world().raycast(new RaycastContext(portal.getPos(), cameraPos, ShapeType.COLLIDER, FluidHandling.NONE, portal));
-                    if (hit.getType() == HitResult.Type.BLOCK && ctx.world().getBlockState(hit.getBlockPos()).getOpacity(ctx.world(), hit.getBlockPos()) > 0.0) {
-                        MinecraftClient.getInstance().getEntityRenderDispatcher().render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYaw(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightmapTextureManager.MAX_LIGHT_COORDINATE);
-                    }
+                    if (
+                        !(((Accessors) ctx.world()).getEntity(portalUuid) instanceof ExperimentalPortal portal) ||
+                            !player.getUuid().equals(portal.getOwnerUUID().orElse(null))
+                    ) continue;
+                    MinecraftClient.getInstance().getEntityRenderDispatcher().render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYaw(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightmapTextureManager.MAX_LIGHT_COORDINATE);
                 }
                 ctx.matrixStack().pop();
 
