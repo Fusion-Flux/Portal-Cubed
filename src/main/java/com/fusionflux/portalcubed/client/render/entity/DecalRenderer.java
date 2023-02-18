@@ -33,7 +33,7 @@ public class DecalRenderer extends EntityRenderer<DecalEntity> {
 
         new ModelPart.Cuboid(
             0, 0, 0, -8, -8, 0.01f, 16, 16, 0, 0, 0, false, 16, 16
-        ).renderCuboid(matrices.peek(), vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, alpha);
+        ).renderCuboid(matrices.peek(), vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, alpha);
         matrices.pop();
     }
 
