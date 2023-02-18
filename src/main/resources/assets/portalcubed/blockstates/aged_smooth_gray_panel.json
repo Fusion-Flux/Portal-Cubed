@@ -2,19 +2,9 @@
   "variants": {
     "":[
       { "model": "portalcubed:block/aged_smooth_gray_panel" },
-      { "model": "portalcubed:block/aged_smooth_gray_panel" },
-      { "model": "portalcubed:block/aged_smooth_gray_panel" },
-      { "model": "portalcubed:block/aged_smooth_gray_panel" },
-
       { "model": "portalcubed:block/aged_smooth_gray_panel2" },
-      { "model": "portalcubed:block/aged_smooth_gray_panel2" },
-      { "model": "portalcubed:block/aged_smooth_gray_panel2" },
-      { "model": "portalcubed:block/aged_smooth_gray_panel2" },
-
       { "model": "portalcubed:block/aged_smooth_gray_panel3" },
       { "model": "portalcubed:block/aged_smooth_gray_panel3" },
-      { "model": "portalcubed:block/aged_smooth_gray_panel3" },
-
       { "model": "portalcubed:block/aged_smooth_gray_panel4" },
       { "model": "portalcubed:block/aged_smooth_gray_panel5" },
       { "model": "portalcubed:block/aged_smooth_gray_panel6" }
