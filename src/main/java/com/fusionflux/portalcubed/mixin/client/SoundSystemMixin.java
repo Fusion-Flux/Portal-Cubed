@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.mixin.client;
 
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
@@ -23,10 +24,7 @@ public abstract class SoundSystemMixin {
         )
     )
     private void ohFiddlesticks(SoundInstance sound, CallbackInfo ci) {
-        if (sound.getId().equals(PortalCubedSounds.ERROR)) {
-            // Don't recurse infinitely
-            return;
-        }
+        if (!sound.getId().getNamespace().equals(PortalCubed.MOD_ID) || sound.getId().equals(PortalCubedSounds.ERROR)) return;
         play(PositionedSoundInstance.master(PortalCubedSounds.ERROR_EVENT, 1f));
     }
 }
