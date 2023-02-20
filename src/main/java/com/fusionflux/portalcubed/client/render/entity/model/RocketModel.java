@@ -30,10 +30,6 @@ public class RocketModel extends FizzleableModel<RocketEntity> {
     }
 
     @Override
-    public void setAngles(RocketEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    }
-
-    @Override
     public void renderFizzled(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         bone.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
