@@ -25,7 +25,7 @@ public class EnergyPelletItem extends Item {
         }
         final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(world);
         if (pellet == null) return TypedActionResult.pass(item);
-        pellet.setPosition(user.getEyePos().add(user.getRotationVector()));
+        pellet.setPosition(user.getCameraPosVec(0).add(user.getRotationVector()));
         Vec3d userVelocity = user.getVelocity();
         if (user.isOnGround()) {
             userVelocity = userVelocity.withAxis(Direction.Axis.Y, 0);
