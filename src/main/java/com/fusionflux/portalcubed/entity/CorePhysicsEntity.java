@@ -11,6 +11,7 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -18,12 +19,14 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Arm;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
@@ -32,9 +35,11 @@ import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
+// TODO: Extend LivingEntity
 public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     private float fizzleProgress = 0f;
@@ -177,54 +182,35 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
         canUsePortals = getHolderUUID().isEmpty();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.getPos();
-        if (!world.isClient) {
-            this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
-            if (isBeingHeld) {
-                PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID().get());
-                if (player != null && player.isAlive()) {
-                    Vec3d vec3d = player.getCameraPosVec(0);
-                    double d = 2;
-                    canUsePortals = false;
-                    Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(), player.getYaw());
-                    Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
-                    GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
-                    this.fallDistance = 0;
-                    this.setYaw(player.headYaw);
-                    this.setHeadYaw(player.headYaw);
-                    this.setBodyYaw(player.headYaw);
-                    move(
-                        MovementType.PLAYER,
-                        RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
-                    );
-                } else {
-                    if (player != null) {
-                        setHolderUUID(Optional.empty());
-                    }
-                    canUsePortals = true;
-                }
-                this.setNoGravity(true);
-            } else if (this.hasNoGravity() && !fizzling && !((EntityAttachments)this).isInFunnel()) {
-                this.setNoGravity(false);
-            }
-        } else if (isBeingHeld) {
-            PlayerEntity player = (PlayerEntity)((Accessors)world).getEntity(getHolderUUID().get());
+        this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
+        if (isBeingHeld) {
+            PlayerEntity player = (PlayerEntity) ((Accessors) world).getEntity(getHolderUUID().get());
             if (player != null && player.isAlive()) {
                 Vec3d vec3d = player.getCameraPosVec(0);
                 double d = 2;
-                Vec3d vec3d2 = player.getRotationVec(1.0F);
+                canUsePortals = false;
+                Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(), player.getYaw());
+                Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
+                if (!world.isClient) {
+                    GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
+                }
+                this.fallDistance = 0;
                 this.setYaw(player.headYaw);
                 this.setHeadYaw(player.headYaw);
                 this.setBodyYaw(player.headYaw);
-                Vec3d vec3d3 = vec3d.add(
-                    (vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y,
-                    (vec3d2.z * d) - rotatedOffset.z
-                );
                 move(
                     MovementType.PLAYER,
-                    RotationUtil.vecWorldToPlayer(
-                        vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
+                    RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
                 );
+            } else {
+                if (player != null) {
+                    setHolderUUID(Optional.empty());
+                }
+                canUsePortals = true;
             }
+            this.setNoGravity(true);
+        } else if (this.hasNoGravity() && !fizzling && !((EntityAttachments)this).isInFunnel()) {
+            this.setNoGravity(false);
         }
         if (this.getVelocity().y < -3.92) {
             this.setVelocity(this.getVelocity().add(0, .81d, 0));
@@ -239,6 +225,30 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isLogicalSideForUpdatingMovement() {
+        return true;
+    }
+
+    @Override
+    public Iterable<ItemStack> getArmorItems() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public ItemStack getEquippedStack(EquipmentSlot slot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+    }
+
+    @Override
+    public Arm getMainArm() {
+        return Arm.RIGHT;
     }
 
     @Override
