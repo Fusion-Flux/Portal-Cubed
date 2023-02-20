@@ -15,6 +15,8 @@
 
   "subtitles.portalcubed.pedestal_button_press": "Switch Activated",
   "subtitles.portalcubed.pedestal_button_release": "Switch Deactivated",
+  "subtitles.portalcubed.floor_button_press": "Button Activated",
+  "subtitles.portalcubed.floor_button_release": "Button Deactivated",
 
   "subtitles.portalcubed.rocket_fire": "Rocket Launched",
   "subtitles.portalcubed.rocket_locked": "Rocket Locked",

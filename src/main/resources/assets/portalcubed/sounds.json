@@ -142,6 +142,34 @@
 		],
 		"subtitle": "subtitles.portalcubed.pedestal_button_release"
 	},
+	"floor_button_press": {
+		"sounds": [
+			"portalcubed:portal_button_down_01"
+		],
+		"subtitle": "subtitles.portalcubed.floor_button_press"
+	},
+	"floor_button_release": {
+		"sounds": [
+			"portalcubed:portal_button_up_01"
+		],
+		"subtitle": "subtitles.portalcubed.floor_button_release"
+	},
+	"old_ap_floor_button_press": {
+		"sounds": [
+			"portalcubed:og_button_down_01",
+			"portalcubed:og_button_down_02",
+			"portalcubed:og_button_down_03"
+		],
+		"subtitle": "subtitles.portalcubed.floor_button_press"
+	},
+	"old_ap_floor_button_release": {
+		"sounds": [
+			"portalcubed:og_button_up_01",
+			"portalcubed:og_button_up_02",
+			"portalcubed:og_button_up_03"
+		],
+		"subtitle": "subtitles.portalcubed.floor_button_release"
+	},
 
 	"rocket_fire": {
 		"sounds": [

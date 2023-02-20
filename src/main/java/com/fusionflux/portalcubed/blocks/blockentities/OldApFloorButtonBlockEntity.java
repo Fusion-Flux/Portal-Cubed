@@ -6,11 +6,13 @@ import com.fusionflux.portalcubed.entity.OldApCubeEntity;
 import com.fusionflux.portalcubed.entity.Portal1CompanionCubeEntity;
 import com.fusionflux.portalcubed.entity.Portal1StorageCubeEntity;
 import com.fusionflux.portalcubed.entity.StorageCubeEntity;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -52,7 +54,9 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
                 }
             }
 
-            blockEntity.updateState(state, isPowered);
+            if (state.get(Properties.ENABLED) != isPowered) {
+                blockEntity.updateState(state, isPowered);
+            }
 
         }
 
@@ -62,6 +66,13 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
     public void updateState(BlockState state, boolean toggle) {
         if (world != null) {
             world.setBlockState(pos, state.with(Properties.ENABLED, toggle), 3);
+            if (!world.isClient) {
+                world.playSound(
+                    null, pos,
+                    toggle ? PortalCubedSounds.OLD_AP_FLOOR_BUTTON_PRESS_EVENT : PortalCubedSounds.OLD_AP_FLOOR_BUTTON_RELEASE_EVENT,
+                    SoundCategory.BLOCKS, 0.8f, 1f
+                );
+            }
         }
     }
 
