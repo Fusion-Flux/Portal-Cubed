@@ -130,6 +130,19 @@
 		"subtitle": "subtitles.portalcubed.material_emancipation"
 	},
 
+	"pedestal_button_press": {
+		"sounds": [
+			"portalcubed:button_synth_positive_01"
+		],
+		"subtitle": "subtitles.portalcubed.pedestal_button_press"
+	},
+	"pedestal_button_release": {
+		"sounds": [
+			"portalcubed:button_synth_negative_02"
+		],
+		"subtitle": "subtitles.portalcubed.pedestal_button_release"
+	},
+
 	"rocket_fire": {
 		"sounds": [
 			"portalcubed:rocket_fire1"

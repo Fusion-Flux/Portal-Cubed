@@ -107,10 +107,10 @@ public abstract class TallButtonVariant extends WallMountedBlock {
     }
 
     protected void playClickSound(@Nullable PlayerEntity player, WorldAccess world, BlockPos pos, boolean powered) {
-        world.playSound(powered ? player : null, pos, this.getClickSound(powered), SoundCategory.BLOCKS, 0.3F, powered ? 0.6F : 0.5F);
+        world.playSound(powered ? player : null, pos, this.getClickSound(powered), SoundCategory.BLOCKS, 0.8f, 1f);
     }
 
-    protected abstract SoundEvent getClickSound(boolean powered);
+    public abstract SoundEvent getClickSound(boolean powered);
 
     @Override
     @SuppressWarnings("deprecation")
