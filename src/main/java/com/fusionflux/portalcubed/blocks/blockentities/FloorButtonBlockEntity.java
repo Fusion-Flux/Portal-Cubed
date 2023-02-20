@@ -46,13 +46,12 @@ public class FloorButtonBlockEntity extends BlockEntity {
             boolean isPowered = false;
             for (LivingEntity living : entities) {
                 if (living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity) {
-                    if (!(living instanceof CorePhysicsEntity physicsEntity && physicsEntity.fizzling())) {
-                        isPowered = true;
-                        if (state.getBlock().equals(PortalCubedBlocks.FLOOR_BUTTON)) {
+                    if (living instanceof CorePhysicsEntity physicsEntity) {
+                        if (physicsEntity.fizzling()) {
+                            physicsEntity.addVelocity(0, 0.015, 0);
+                        } else {
+                            isPowered = true;
                             if (living instanceof StorageCubeEntity cube) {
-                                cube.setButtonTimer(1);
-                            }
-                            if (living instanceof CompanionCubeEntity cube) {
                                 cube.setButtonTimer(1);
                             }
                         }

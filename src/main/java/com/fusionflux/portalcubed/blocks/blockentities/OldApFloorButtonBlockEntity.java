@@ -2,10 +2,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.OldApCubeEntity;
-import com.fusionflux.portalcubed.entity.Portal1CompanionCubeEntity;
-import com.fusionflux.portalcubed.entity.Portal1StorageCubeEntity;
-import com.fusionflux.portalcubed.entity.StorageCubeEntity;
+import com.fusionflux.portalcubed.entity.*;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -49,8 +46,16 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
             boolean isPowered = false;
             for (LivingEntity living : entities) {
                 if (living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity) {
-                    isPowered = true;
-                    break;
+                    if (living instanceof CorePhysicsEntity physicsEntity) {
+                        if (physicsEntity.fizzling()) {
+                            physicsEntity.addVelocity(0, 0.015, 0);
+                        } else {
+                            isPowered = true;
+                            if (living instanceof StorageCubeEntity cube) {
+                                cube.setButtonTimer(1);
+                            }
+                        }
+                    }
                 }
             }
 
