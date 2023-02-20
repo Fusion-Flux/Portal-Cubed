@@ -10,9 +10,7 @@ import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -65,6 +63,11 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
     @Override
     public boolean isCollidable() {
         return canUsePortals;
+    }
+
+    @Override
+    public boolean collidesWith(Entity other) {
+        return isCollidable() && other instanceof LivingEntity && other.isAlive();
     }
 
     @Override
