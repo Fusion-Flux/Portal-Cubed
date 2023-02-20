@@ -142,6 +142,18 @@
 		],
 		"subtitle": "subtitles.portalcubed.pedestal_button_release"
 	},
+	"old_ap_pedestal_button_press": {
+		"sounds": [
+			"portalcubed:old_ap_pedestal_button_press"
+		],
+		"subtitle": "subtitles.portalcubed.pedestal_button_press"
+	},
+	"old_ap_pedestal_button_release": {
+		"sounds": [
+			"portalcubed:old_ap_pedestal_button_release"
+		],
+		"subtitle": "subtitles.portalcubed.pedestal_button_release"
+	},
 	"floor_button_press": {
 		"sounds": [
 			"portalcubed:portal_button_down_01"

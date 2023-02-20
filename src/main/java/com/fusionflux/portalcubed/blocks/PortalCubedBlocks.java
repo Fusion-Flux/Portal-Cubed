@@ -45,7 +45,7 @@ public class PortalCubedBlocks {
     public static final ExcursionFunnelMain EXCURSION_FUNNEL = new ExcursionFunnelMain(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
 
     public static final TallButton TALL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
-    public static final TallButton OLD_AP_PEDESTAL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
+    public static final OldApTallButton OLD_AP_PEDESTAL_BUTTON = new OldApTallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
 
     public static final SlidingDoorBlock PORTAL2DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
     public static final SlidingDoorBlock OCTOPUS_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());

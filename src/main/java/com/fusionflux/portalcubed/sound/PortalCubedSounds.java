@@ -30,6 +30,8 @@ public class PortalCubedSounds {
 
     public static final Identifier PEDESTAL_BUTTON_PRESS = id("pedestal_button_press");
     public static final Identifier PEDESTAL_BUTTON_RELEASE = id("pedestal_button_release");
+    public static final Identifier OLD_AP_PEDESTAL_BUTTON_PRESS = id("old_ap_pedestal_button_press");
+    public static final Identifier OLD_AP_PEDESTAL_BUTTON_RELEASE = id("old_ap_pedestal_button_release");
     public static final Identifier FLOOR_BUTTON_PRESS = id("floor_button_press");
     public static final Identifier FLOOR_BUTTON_RELEASE = id("floor_button_release");
     public static final Identifier OLD_AP_FLOOR_BUTTON_PRESS = id("old_ap_floor_button_press");
@@ -88,6 +90,8 @@ public class PortalCubedSounds {
 
     public static final SoundEvent PEDESTAL_BUTTON_PRESS_EVENT = new SoundEvent(PEDESTAL_BUTTON_PRESS);
     public static final SoundEvent PEDESTAL_BUTTON_RELEASE_EVENT = new SoundEvent(PEDESTAL_BUTTON_RELEASE);
+    public static final SoundEvent OLD_AP_PEDESTAL_BUTTON_PRESS_EVENT = new SoundEvent(OLD_AP_PEDESTAL_BUTTON_PRESS);
+    public static final SoundEvent OLD_AP_PEDESTAL_BUTTON_RELEASE_EVENT = new SoundEvent(OLD_AP_PEDESTAL_BUTTON_RELEASE);
     public static final SoundEvent FLOOR_BUTTON_PRESS_EVENT = new SoundEvent(FLOOR_BUTTON_PRESS);
     public static final SoundEvent FLOOR_BUTTON_RELEASE_EVENT = new SoundEvent(FLOOR_BUTTON_RELEASE);
     public static final SoundEvent OLD_AP_FLOOR_BUTTON_PRESS_EVENT = new SoundEvent(OLD_AP_FLOOR_BUTTON_PRESS);
@@ -147,6 +151,8 @@ public class PortalCubedSounds {
 
         Registry.register(Registry.SOUND_EVENT, PEDESTAL_BUTTON_PRESS, PEDESTAL_BUTTON_PRESS_EVENT);
         Registry.register(Registry.SOUND_EVENT, PEDESTAL_BUTTON_RELEASE, PEDESTAL_BUTTON_RELEASE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, OLD_AP_PEDESTAL_BUTTON_PRESS, OLD_AP_PEDESTAL_BUTTON_PRESS_EVENT);
+        Registry.register(Registry.SOUND_EVENT, OLD_AP_PEDESTAL_BUTTON_RELEASE, OLD_AP_PEDESTAL_BUTTON_RELEASE_EVENT);
         Registry.register(Registry.SOUND_EVENT, FLOOR_BUTTON_PRESS, FLOOR_BUTTON_PRESS_EVENT);
         Registry.register(Registry.SOUND_EVENT, FLOOR_BUTTON_RELEASE, FLOOR_BUTTON_RELEASE_EVENT);
         Registry.register(Registry.SOUND_EVENT, OLD_AP_FLOOR_BUTTON_PRESS, OLD_AP_FLOOR_BUTTON_PRESS_EVENT);
