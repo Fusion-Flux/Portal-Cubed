@@ -229,7 +229,7 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     @Override
     public boolean isLogicalSideForUpdatingMovement() {
-        return true;
+        return !world.isClient || getHolderUUID().isPresent();
     }
 
     @Override
