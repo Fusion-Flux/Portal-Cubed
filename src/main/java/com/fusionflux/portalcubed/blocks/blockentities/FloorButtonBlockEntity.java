@@ -55,6 +55,8 @@ public class FloorButtonBlockEntity extends BlockEntity {
                                 cube.setButtonTimer(1);
                             }
                         }
+                    } else {
+                        isPowered = true;
                     }
                 }
             }

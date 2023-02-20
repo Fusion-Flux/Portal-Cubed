@@ -55,6 +55,8 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
                                 cube.setButtonTimer(1);
                             }
                         }
+                    } else {
+                        isPowered = true;
                     }
                 }
             }
