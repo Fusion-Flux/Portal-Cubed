@@ -260,6 +260,7 @@
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
   "death.attack.portalcubed.vaporization": "%s was vaporized",
+  "death.attack.portalcubed.cube": "%s was hit on the head by a weighted cube",
 
   "key.portalcubed.category" : "Portal\u00b3",
   "key.portalcubed.grab" : "Grab",

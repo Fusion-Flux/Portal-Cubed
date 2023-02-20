@@ -1,12 +1,18 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class Portal1StorageCubeEntity extends CorePhysicsEntity  {
     public Portal1StorageCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
@@ -37,5 +43,14 @@ public class Portal1StorageCubeEntity extends CorePhysicsEntity  {
         return false;
     }
 
-
+    @Override
+    protected void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition) {
+        if (onGround && landedState.isAir()) {
+            final List<Entity> collisions = world.getEntitiesByClass(Entity.class, getBoundingBox().stretch(0, -0.1, 0), this::collidesWith);
+            for (final Entity collision : collisions) {
+                collision.handleFallDamage(fallDistance + 3, 1.5f, PortalCubedDamageSources.CUBE);
+            }
+        }
+        super.fall(heightDifference, onGround, landedState, landedPosition);
+    }
 }
