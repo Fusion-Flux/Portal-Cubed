@@ -92,7 +92,7 @@ public abstract class TallButtonVariant extends WallMountedBlock {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (state.get(POWERED)) {
-            return ActionResult.CONSUME;
+            return ActionResult.PASS;
         } else {
             this.powerOn(state, world, pos);
             this.playClickSound(player, world, pos, true);

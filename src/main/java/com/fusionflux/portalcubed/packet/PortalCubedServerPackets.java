@@ -20,6 +20,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -70,8 +71,9 @@ public class PortalCubedServerPackets {
                     if (hit.getType() != HitResult.Type.MISS) {
                         final BlockState state = player.world.getBlockState(hit.getBlockPos());
                         if (state.getBlock() instanceof TallButtonVariant button) {
-                            player.interactionManager.interactBlock(player, player.world, ItemStack.EMPTY, Hand.MAIN_HAND, hit);
-                            player.world.playSound(null, hit.getBlockPos(), button.getClickSound(true), SoundCategory.BLOCKS, 0.8f, 1f);
+                            if (player.interactionManager.interactBlock(player, player.world, ItemStack.EMPTY, Hand.MAIN_HAND, hit) != ActionResult.PASS) {
+                                player.world.playSound(null, hit.getBlockPos(), button.getClickSound(true), SoundCategory.BLOCKS, 0.8f, 1f);
+                            }
                         }
                     } else {
                         player.playSound(PortalCubedSounds.NOTHING_TO_GRAB_EVENT, SoundCategory.NEUTRAL, 0.3f, 1f);
