@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -24,12 +25,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements LivingEntityAccessor {
     @Shadow protected boolean jumping;
 
     @Shadow public abstract boolean canMoveVoluntarily();
+
+    @Shadow protected abstract float getMovementSpeed(float slipperiness);
+
+    @Shadow protected abstract Vec3d applyClimbingSpeed(Vec3d motion);
 
     @Unique
     private VelocityHelperBlockEntity velocityHelper;
@@ -54,6 +60,37 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         }
         return original;
     }
+
+
+    @Inject(method = "handleFrictionAndCalculateMovement", at = @At("HEAD"), cancellable = true)
+    public void handleFrictionAndCalculateMovement(Vec3d movementInput, float slipperiness, CallbackInfoReturnable<Vec3d> cir) {
+        if (((EntityAttachments) this).isInFunnel()) {
+            this.updateVelocityCustom(this.getMovementSpeed(slipperiness), movementInput);
+            this.setVelocity(this.applyClimbingSpeed(this.getVelocity()));
+            this.move(MovementType.SELF, this.getVelocity());
+            Vec3d vec3d = this.getVelocity();
+            cir.setReturnValue(vec3d);
+        }
+    }
+
+    public void updateVelocityCustom(float speed, Vec3d movementInput) {
+        Vec3d vec3d = movementInputToVelocityCustom(movementInput, speed, this.getYaw(), this.getPitch());
+        this.setVelocity(this.getVelocity().add(vec3d));
+    }
+
+    private static Vec3d movementInputToVelocityCustom(Vec3d movementInput, float speed, float yaw, float pitch) {
+        double d = movementInput.lengthSquared();
+        if (d < 1.0E-7) {
+            return Vec3d.ZERO;
+        } else {
+            Vec3d vec3d = (d > 1.0 ? movementInput.normalize() : movementInput).multiply(speed);
+            float f = MathHelper.sin(yaw * 0.017453292F);
+            float g = MathHelper.cos(yaw * 0.017453292F);
+            float x = MathHelper.sin(pitch * 0.017453292F);
+            return new Vec3d(vec3d.x * (double)g - vec3d.z * (double)f, -vec3d.z * (double)x, vec3d.z * (double)g + vec3d.x * (double)f);
+        }
+    }
+
 
     @Override
     public void collidedWithVelocityHelper(VelocityHelperBlockEntity block) {
