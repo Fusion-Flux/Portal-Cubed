@@ -245,7 +245,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
         //noinspection DataFlowIssue
         final LivingEntity player = world.getClosestEntity(
             LivingEntity.class,
-            TargetPredicate.createAttackable().setPredicate(e -> !(e instanceof CorePhysicsEntity) && e.world.raycast(new RaycastContext(
+            TargetPredicate.createNonAttackable().setPredicate(e -> !(e instanceof CorePhysicsEntity) && e.world.raycast(new RaycastContext(
                 eye, e.getPos().withAxis(Direction.Axis.Y, e.getBodyY(0.5)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, null
             )).getType() == HitResult.Type.MISS),
             null,

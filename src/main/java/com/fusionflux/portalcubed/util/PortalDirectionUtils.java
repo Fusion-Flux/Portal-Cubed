@@ -2,25 +2,16 @@ package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.mixin.RaycastContextAccessor;
-import com.google.common.base.Suppliers;
 import net.minecraft.block.EntityShapeContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class PortalDirectionUtils {
     public static Vec3d rotateVelocity(Vec3d velocity, Direction entryDirection, Direction exitDirection) {
@@ -130,22 +121,14 @@ public class PortalDirectionUtils {
         };
     }
 
-    public static List<Pair<Vec3d, BlockHitResult>> raycast(World world, RaycastContext context) {
-        final List<Pair<Vec3d, BlockHitResult>> hits = new ArrayList<>();
-        final Supplier<Entity> marker = Suppliers.memoize(() -> EntityType.MARKER.create(world));
-        while (true) {
-            final BlockHitResult result = world.raycast(context);
-            hits.add(new Pair<>(context.getStart(), result));
-            if (result.getType() == HitResult.Type.MISS) break;
+    public static final GeneralUtils.EntityRaycastTransform PORTAL_RAYCAST_TRANSFORM = new GeneralUtils.EntityRaycastTransform(
+        e -> e instanceof ExperimentalPortal,
+        (context, result, portalHit) -> {
+            final ExperimentalPortal portal = (ExperimentalPortal)portalHit.getEntity();
+            if (!portal.getActive()) return null;
             final double distance = context.getStart().distanceTo(context.getEnd());
             final Vec3d offset = result.getPos().subtract(context.getStart());
-            final EntityHitResult portalHit = ProjectileUtil.raycast(
-                marker.get(), context.getStart(), result.getPos(), Box.of(result.getPos(), 5, 5, 5),
-                e -> e instanceof ExperimentalPortal, offset.lengthSquared()
-            );
-            if (portalHit == null) break;
-            final ExperimentalPortal portal = (ExperimentalPortal)portalHit.getEntity();
-            if (!portal.getActive()) break;
+
             final Direction facing = portal.getFacingDirection();
             final Direction otherFacing = Direction.fromVector(new BlockPos(portal.getOtherFacing()));
             final Vec3d newOffset = rotateVelocity(offset, facing, otherFacing)
@@ -155,7 +138,7 @@ public class PortalDirectionUtils {
             final Vec3d newRel = rotateVelocity(hitRelative, facing, otherFacing);
             final Vec3d newStart = portal.getDestination().orElseThrow().add(newRel);
             //noinspection DataFlowIssue
-            context = new RaycastContext(
+            return new RaycastContext(
                 newStart, newStart.add(newOffset),
                 ((RaycastContextAccessor)context).getShapeType(),
                 ((RaycastContextAccessor)context).getFluid(),
@@ -163,7 +146,10 @@ public class PortalDirectionUtils {
                     ? esc.getEntity() : null
             );
         }
-        return hits;
+    );
+
+    public static List<Pair<Vec3d, BlockHitResult>> raycast(World world, RaycastContext context) {
+        return GeneralUtils.raycastWithEntityTransforms(world, context, PORTAL_RAYCAST_TRANSFORM);
     }
 
 }
