@@ -281,6 +281,9 @@
   "portalcubed.velocity_helper.condition_expression": "condition",
   "portalcubed.velocity_helper.curve_expression": "interpolation curve",
 
+  "portalcubed.radio.allow_mute": "Muting Allowed",
+  "portalcubed.radio.disallow_mute": "Muting Disallowed",
+
   "item.portalcubed.music_disc_still_alive": "Music Disc",
   "item.portalcubed.music_disc_still_alive.desc": "John Coulton - Still Alive",
   "item.portalcubed.music_disc_cara_mia_addio": "Music Disc",
