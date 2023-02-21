@@ -20,6 +20,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -33,24 +34,14 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class ExcursionFunnelMain extends BlockWithEntity {
 
-    public static final BooleanProperty NORTH;
-    public static final BooleanProperty EAST;
-    public static final BooleanProperty SOUTH;
-    public static final BooleanProperty WEST;
-    public static final BooleanProperty UP;
-    public static final BooleanProperty DOWN;
-    public static final BooleanProperty R_NORTH;
-    public static final BooleanProperty R_EAST;
-    public static final BooleanProperty R_SOUTH;
-    public static final BooleanProperty R_WEST;
-    public static final BooleanProperty R_UP;
-    public static final BooleanProperty R_DOWN;
+    public static final DirectionProperty FACING;
+    public static final BooleanProperty REVERSED;
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 
     public ExcursionFunnelMain(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(R_NORTH, false).with(R_EAST, false).with(R_SOUTH, false).with(R_WEST, false).with(R_UP, false).with(R_DOWN, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(REVERSED, false));
     }
 
     @Override
@@ -67,24 +58,14 @@ public class ExcursionFunnelMain extends BlockWithEntity {
 
 
     static {
-        NORTH = Properties.NORTH;
-        EAST = Properties.EAST;
-        SOUTH = Properties.SOUTH;
-        WEST = Properties.WEST;
-        UP = Properties.UP;
-        DOWN = Properties.DOWN;
-        R_NORTH = CustomProperties.R_NORTH;
-        R_EAST = CustomProperties.R_EAST;
-        R_SOUTH = CustomProperties.R_SOUTH;
-        R_WEST = CustomProperties.R_WEST;
-        R_UP = CustomProperties.R_UP;
-        R_DOWN = CustomProperties.R_DOWN;
+        FACING = Properties.FACING;
+        REVERSED = CustomProperties.REVERSED;
     }
 
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN, R_NORTH, R_EAST, R_WEST, R_SOUTH, R_UP, R_DOWN);
+        builder.add(FACING, REVERSED);
     }
 
 
@@ -122,80 +103,27 @@ public class ExcursionFunnelMain extends BlockWithEntity {
 
     public static Vec3d getPushDirection(BlockState state) {
         Vec3d result = Vec3d.ZERO;
-        boolean modifyX = false;
-        boolean modifyY = false;
-        boolean modifyZ = false;
-
-
-        if (state.get(Properties.NORTH)) {
+        if (state.get(Properties.FACING) == Direction.NORTH) {
             result = result.subtract(0, 0, 1);
         }
-        if (state.get(Properties.SOUTH)) {
+        if (state.get(Properties.FACING) == Direction.SOUTH) {
             result = result.add(0, 0, 1);
         }
-        if (state.get(Properties.EAST)) {
+        if (state.get(Properties.FACING) == Direction.EAST) {
             result = result.add(1, 0, 0);
         }
-        if (state.get(Properties.WEST)) {
+        if (state.get(Properties.FACING) == Direction.WEST) {
             result = result.subtract(1, 0, 0);
         }
-        if (state.get(Properties.UP)) {
+        if (state.get(Properties.FACING) == Direction.UP) {
             result = result.add(0, 1, 0);
         }
-        if (state.get(Properties.DOWN)) {
+        if (state.get(Properties.FACING) == Direction.DOWN) {
             result = result.subtract(0, 1, 0);
         }
-
-        if (state.get(Properties.NORTH) && state.get(Properties.SOUTH)) {
-            modifyZ = true;
+        if (state.get(CustomProperties.REVERSED)) {
+            result = result.multiply(-1);
         }
-        if (state.get(Properties.EAST) && state.get(Properties.WEST)) {
-            modifyX = true;
-        }
-        if (state.get(Properties.UP) && state.get(Properties.DOWN)) {
-            modifyY = true;
-        }
-
-        if (state.get(CustomProperties.R_SOUTH)) {
-            result = result.subtract(0, 0, 1);
-        }
-        if (state.get(CustomProperties.R_NORTH)) {
-            result = result.add(0, 0, 1);
-        }
-        if (state.get(CustomProperties.R_WEST)) {
-            result = result.add(1, 0, 0);
-        }
-        if (state.get(CustomProperties.R_EAST)) {
-            result = result.subtract(1, 0, 0);
-        }
-        if (state.get(CustomProperties.R_UP)) {
-            result = result.subtract(0, 1, 0);
-        }
-        if (state.get(CustomProperties.R_DOWN)) {
-            result = result.add(0, 1, 0);
-        }
-
-        if (state.get(CustomProperties.R_NORTH) && state.get(CustomProperties.R_SOUTH)) {
-            modifyZ = true;
-        }
-        if (state.get(CustomProperties.R_EAST) && state.get(CustomProperties.R_WEST)) {
-            modifyX = true;
-        }
-        if (state.get(CustomProperties.R_UP) && state.get(CustomProperties.R_DOWN)) {
-            modifyY = true;
-        }
-
-        if (modifyX) {
-            result = new Vec3d(.00001, result.getY(), result.getZ());
-        }
-        if (modifyY) {
-            result = new Vec3d(result.getX(), .00001, result.getZ());
-        }
-        if (modifyZ) {
-            result = new Vec3d(result.getX(), result.getY(), .00001);
-        }
-
-
         return result;
     }
 

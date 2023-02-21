@@ -59,15 +59,11 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
                             if (!savedPos.equals(pos)) {
                                 portalFunnels.add(funnel.getPos());
                                 blockEntity.portalFunnels.add(funnel.getPos());
+                                funnel.portalEmitters.add(savedPos);
                             }
+                            funnel.emitter = pos;
 
-                            if (!funnel.facing.contains(storedDirection)) {
-                                funnel.facing.add(storedDirection);
-                                funnel.emitters.add(funnel.facing.indexOf(storedDirection), pos);
-                                funnel.portalEmitters.add(funnel.facing.indexOf(storedDirection), savedPos);
-                            }
-
-                            funnel.updateState(world.getBlockState(translatedPos), world, translatedPos, funnel);
+                            funnel.updateState(world.getBlockState(translatedPos), world, translatedPos, funnel, storedDirection);
 
                             Box portalCheckBox = new Box(translatedPos);
 
@@ -147,14 +143,11 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
                             if (!savedPos.equals(pos)) {
                                 portalFunnels.add(funnel.getPos());
                                 blockEntity.portalFunnels.add(funnel.getPos());
+                                funnel.portalEmitters.add(savedPos);
                             }
-                            if (!funnel.facing.contains(storedDirection)) {
-                                funnel.facing.add(storedDirection);
-                                funnel.emitters.add(funnel.facing.indexOf(storedDirection), pos);
-                                funnel.portalEmitters.add(funnel.facing.indexOf(storedDirection), savedPos);
-                            }
+                            funnel.emitter = pos;
 
-                            funnel.updateState(world.getBlockState(translatedPos), world, translatedPos, funnel);
+                            funnel.updateState(world.getBlockState(translatedPos), world, translatedPos, funnel, storedDirection);
 
                             Box portalCheckBox = new Box(translatedPos);
 
