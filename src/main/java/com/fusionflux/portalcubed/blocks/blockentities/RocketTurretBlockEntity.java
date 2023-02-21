@@ -201,6 +201,8 @@ public class RocketTurretBlockEntity extends BlockEntity {
             if (world.isClient) {
                 aimDests = null;
             }
+            setYaw(0);
+            setPitch(0);
             return;
         }
         if (world.isClient) {
