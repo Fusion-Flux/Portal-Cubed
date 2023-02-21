@@ -1,127 +1,71 @@
-{
-  "multipart": [
-    {
-      "when": {
-        "north": "true"
-      },
-      "apply": {
+ {
+   "variants": {
+
+      "facing=north": {
         "model": "portalcubed:block/light_bridge",
         "y": 0
-      }
-    },
-    {
-      "when": {
-        "east": "true"
       },
-      "apply": {
+
+      "facing=east": {
         "model": "portalcubed:block/light_bridge",
         "y": 90
-      }
-    },
-    {
-      "when": {
-        "south": "true"
       },
-      "apply": {
+
+      "facing=south": {
         "model": "portalcubed:block/light_bridge",
         "y": 180
-      }
-    },
-    {
-      "when": {
-        "west": "true"
       },
-      "apply": {
+
+      "facing=west": {
         "model": "portalcubed:block/light_bridge",
         "y": 270
-      }
-    },
-    {
-      "when": {
-        "up": "true",
-        "hfacingup": "north"
       },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "x": 270
-      }
-    },
-    {
-      "when": {
-        "up": "true",
-        "hfacingup": "south"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 180,
-        "x": 270
-      }
-    },
-    {
-      "when": {
-        "up": "true",
-        "hfacingup": "east"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 90,
-        "x": 270
-      }
-    },
-    {
-      "when": {
-        "up": "true",
-        "hfacingup": "west"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 270,
-        "x": 270
-      }
-    },
-    {
-      "when": {
-        "down": "true",
-        "hfacingdown": "north"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 180,
-        "x": 90
-      }
-    },
-    {
-      "when": {
-        "down": "true",
-        "hfacingdown": "south"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "x": 90
-      }
-    },
-    {
-      "when": {
-        "down": "true",
-        "hfacingdown": "east"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 270,
-        "x": 90
-      }
-    },
-    {
-      "when": {
-        "down": "true",
-        "hfacingdown": "west"
-      },
-      "apply": {
-        "model": "portalcubed:block/light_bridge",
-        "y": 90,
-        "x": 90
-      }
-    }
 
-  ]
+      "facing=up,hfacingup=north": {
+        "model": "portalcubed:block/light_bridge",
+        "x": 270
+      },
+
+      "facing=up,hfacingup=south": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 180,
+        "x": 270
+      },
+
+      "facing=up,hfacingup=east": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 90,
+        "x": 270
+      },
+
+      "facing=up,hfacingup=west": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 270,
+        "x": 270
+      },
+
+      "facing=down,hfacingup=north": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 180,
+        "x": 90
+      },
+
+      "facing=down,hfacingup=south": {
+        "model": "portalcubed:block/light_bridge",
+        "x": 90
+      },
+
+      "facing=down,hfacingup=east": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 270,
+        "x": 90
+      },
+
+      "facing=down,hfacingup=west": {
+        "model": "portalcubed:block/light_bridge",
+        "y": 90,
+        "x": 90
+      }
+
+  }
 }

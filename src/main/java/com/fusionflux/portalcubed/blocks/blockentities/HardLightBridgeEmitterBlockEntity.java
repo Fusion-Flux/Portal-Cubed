@@ -73,16 +73,11 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
                             if (!savedPos.equals(pos)) {
                                 portalFunnels.add(bridge.getPos());
                                 blockEntity.portalBridges.add(bridge.getPos());
+                                bridge.portalEmitters.add(savedPos);
                             }
+                            bridge.emitter = pos;
 
-                            if (!bridge.facing.contains(storedDirection)) {
-                                bridge.facing.add(storedDirection);
-                                bridge.facingVert.add(bridge.facing.indexOf(storedDirection), vertDirection);
-                                bridge.emitters.add(bridge.facing.indexOf(storedDirection), pos);
-                                bridge.portalEmitters.add(bridge.facing.indexOf(storedDirection), savedPos);
-                            }
-
-                            bridge.updateState(world.getBlockState(translatedPos), world, translatedPos, bridge);
+                            bridge.updateState(world.getBlockState(translatedPos), world, translatedPos, storedDirection, vertDirection);
 
                             Box portalCheckBox = new Box(translatedPos);
 

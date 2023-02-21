@@ -8,7 +8,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +19,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -28,19 +26,9 @@ import java.util.stream.Collectors;
 // TODO replace with your own reference as appropriate
 
 public class HardLightBridgeBlock extends BlockWithEntity {
-
-
-
-    public static final BooleanProperty NORTH;
-    public static final BooleanProperty EAST;
-    public static final BooleanProperty SOUTH;
-    public static final BooleanProperty WEST;
-    public static final BooleanProperty UP;
-    public static final BooleanProperty DOWN;
+    public static final DirectionProperty FACING;
     public static final DirectionProperty VERT_FACING_UP;
     public static final DirectionProperty VERT_FACING_DOWN;
-
-    public static final Map<Direction, BooleanProperty> PROPERTY_MAP;
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(2.0D, 1.0D, 0.0D, 14.0D, 2.0D, 16.0D);
     protected static final VoxelShape SHAPE_ROTATED = Block.createCuboidShape(0.0D, 1.0D, 2.0D, 16.0D, 2.0D, 14.0D);
@@ -55,31 +43,19 @@ public class HardLightBridgeBlock extends BlockWithEntity {
 
     public HardLightBridgeBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(VERT_FACING_UP, Direction.NORTH).with(VERT_FACING_DOWN, Direction.NORTH));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(VERT_FACING_UP, Direction.NORTH).with(VERT_FACING_DOWN, Direction.NORTH));
         this.stateToShape = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeBlock::getShapeForState)));
     }
 
     static {
-        NORTH = Properties.NORTH;
-        EAST = Properties.EAST;
-        SOUTH = Properties.SOUTH;
-        WEST = Properties.WEST;
-        UP = Properties.UP;
-        DOWN = Properties.DOWN;
+        FACING = Properties.FACING;
         VERT_FACING_UP = CustomProperties.H_FACING_UP;
         VERT_FACING_DOWN = CustomProperties.H_FACING_DOWN;
-        PROPERTY_MAP = new HashMap<>();
-        PROPERTY_MAP.put(Direction.NORTH, Properties.NORTH);
-        PROPERTY_MAP.put(Direction.SOUTH, Properties.SOUTH);
-        PROPERTY_MAP.put(Direction.EAST, Properties.EAST);
-        PROPERTY_MAP.put(Direction.WEST, Properties.WEST);
-        PROPERTY_MAP.put(Direction.UP, Properties.UP);
-        PROPERTY_MAP.put(Direction.DOWN, Properties.DOWN);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN, VERT_FACING_UP, VERT_FACING_DOWN);
+        builder.add(FACING, VERT_FACING_UP, VERT_FACING_DOWN);
     }
 
 
@@ -89,41 +65,41 @@ public class HardLightBridgeBlock extends BlockWithEntity {
         VoxelShape voxelShape = VoxelShapes.empty();
 
 
-        if (blockState.get(WEST) || blockState.get(EAST)) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_ROTATED);
+        if (blockState.get(FACING) == Direction.WEST || blockState.get(FACING) == Direction.EAST) {
+            return SHAPE_ROTATED;
         }
 
-        if (blockState.get(NORTH) || blockState.get(SOUTH)) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE);
+        if (blockState.get(FACING) == Direction.NORTH || blockState.get(FACING) == Direction.SOUTH) {
+            return SHAPE;
         }
 
-        if (blockState.get(UP)) {
+        if (blockState.get(FACING) == Direction.UP) {
             if (blockState.get(VERT_FACING_UP).equals(Direction.NORTH)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_NORTH);
+                return VERT_NORTH;
             }
             if (blockState.get(VERT_FACING_UP).equals(Direction.SOUTH)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_SOUTH);
+                return VERT_SOUTH;
             }
             if (blockState.get(VERT_FACING_UP).equals(Direction.EAST)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_EAST);
+                return VERT_EAST;
             }
             if (blockState.get(VERT_FACING_UP).equals(Direction.WEST)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_WEST);
+                return VERT_WEST;
             }
         }
 
-        if (blockState.get(DOWN)) {
+        if (blockState.get(FACING) == Direction.DOWN) {
             if (blockState.get(VERT_FACING_DOWN).equals(Direction.NORTH)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_NORTH);
+                return VERT_NORTH;
             }
             if (blockState.get(VERT_FACING_DOWN).equals(Direction.SOUTH)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_SOUTH);
+                return VERT_SOUTH;
             }
             if (blockState.get(VERT_FACING_DOWN).equals(Direction.EAST)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_EAST);
+                return VERT_EAST;
             }
             if (blockState.get(VERT_FACING_DOWN).equals(Direction.WEST)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_WEST);
+                return VERT_WEST;
             }
         }
 
