@@ -35,12 +35,9 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
     public void updateState(BlockState state, WorldAccess world, BlockPos pos, ExcursionFunnelMainBlockEntity bridge, Direction facing) {
         if (!world.isClient()) {
 
-            boolean reversed = false;
-
             BlockState emitter = world.getBlockState(bridge.emitter);
-            reversed = emitter.get(CustomProperties.REVERSED);
 
-            state = state.with(Properties.FACING, facing).with(CustomProperties.REVERSED, reversed);
+            state = state.with(Properties.FACING, facing).with(CustomProperties.REVERSED, emitter.get(CustomProperties.REVERSED));
         }
 
         world.setBlockState(pos, state, 3);
