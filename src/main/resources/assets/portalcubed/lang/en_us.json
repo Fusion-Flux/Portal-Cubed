@@ -293,6 +293,8 @@
   "item.portalcubed.music_disc_reconstructing_more_science": "Music Disc",
   "item.portalcubed.music_disc_reconstructing_more_science.desc": "Mike Morasky - Reconstructing More Science",
 
+  "item.portalcubed.block_item_icon": "Blocks Group Icon",
+
   "portalcubed.command.fizzle.success": "Successfully fizzled %s physics objects",
 
   "gamerule.category.portalcubed": "Portal\u00b3",
