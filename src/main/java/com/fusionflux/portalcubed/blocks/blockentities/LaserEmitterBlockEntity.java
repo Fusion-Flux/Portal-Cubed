@@ -58,11 +58,11 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                     final double distance = context.getStart().distanceTo(context.getEnd());
                     final Vec3d offset = entityHit.getPos().subtract(context.getStart());
                     final Vec3d newOffset = Vec3d.fromPolar(entity.getPitch(), entity.getYaw())
-                        .multiply((distance - offset.length()) / offset.length());
+                        .multiply(distance - offset.length());
                     final Vec3d origin = entity.getPos().add(new Vec3d(0, entity.getHeight() / 2, 0));
                     //noinspection DataFlowIssue
                     return new Pair<>(
-                        entityHit.getPos().add(offset.normalize().multiply(0.25)),
+                        entityHit.getPos().add(offset.multiply(0.25 / offset.length())),
                         new RaycastContext(
                             origin, origin.add(newOffset),
                             ((RaycastContextAccessor)context).getShapeType(),
