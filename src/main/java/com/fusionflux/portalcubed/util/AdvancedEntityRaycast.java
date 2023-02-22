@@ -7,10 +7,12 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,8 +22,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class GeneralUtils {
-    public record EntityRaycastTransform(
+public class AdvancedEntityRaycast {
+    public record TransformInfo(
         Predicate<@NotNull Entity> hittable,
         Transform transform
     ) {
@@ -36,12 +38,31 @@ public class GeneralUtils {
         }
     }
 
-    public static List<Pair<Vec3d, Vec3d>> raycastWithEntityTransforms(World world, RaycastContext context, EntityRaycastTransform... transforms) {
-        final List<Pair<Vec3d, Vec3d>> hits = new ArrayList<>();
+    public record Result(
+        List<Ray> rays
+    ) {
+        public record Ray(Vec3d start, Vec3d end, HitResult hit) {
+            public Ray(Vec3d start, HitResult hit) {
+                this(start, hit.getPos(), hit);
+            }
+        }
+
+        public Result {
+            Validate.isTrue(!rays.isEmpty(), "AdvancedEntityRaycast.Result must have at least one ray.");
+            Validate.isTrue(rays.get(rays.size() - 1).hit instanceof BlockHitResult, "AdvancedEntityRaycast.Result.finalHit must be a BlockHitResult.");
+        }
+
+        public BlockHitResult finalHit() {
+            return (BlockHitResult)rays.get(rays.size() - 1).hit;
+        }
+    }
+
+    public static Result raycast(World world, RaycastContext context, TransformInfo... transforms) {
+        final List<Result.Ray> hits = new ArrayList<>();
         final Supplier<Entity> marker = Suppliers.memoize(() -> EntityType.MARKER.create(world));
         final Entity[] lastEntity = new Entity[1];
         final Predicate<Entity> predicate = Arrays.stream(transforms)
-            .map(EntityRaycastTransform::hittable)
+            .map(TransformInfo::hittable)
             .reduce(Predicate::or)
             .map(p -> p.and(e -> e != lastEntity[0]))
             .orElse(null);
@@ -61,7 +82,7 @@ public class GeneralUtils {
                     final Pair<Vec3d, RaycastContext> newContext = transform.transform.transform(context, result, hit);
                     if (newContext != null) {
                         lastEntity[0] = hit.getEntity();
-                        hits.add(new Pair<>(context.getStart(), newContext.getLeft()));
+                        hits.add(new Result.Ray(context.getStart(), newContext.getLeft(), hit));
                         context = newContext.getRight();
                         continue mainLoop;
                     }
@@ -69,7 +90,7 @@ public class GeneralUtils {
             }
             break;
         }
-        hits.add(new Pair<>(context.getStart(), result.getPos()));
-        return hits;
+        hits.add(new Result.Ray(context.getStart(), result));
+        return new Result(hits);
     }
 }

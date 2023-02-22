@@ -213,7 +213,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
                 RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE,
                 // We can pass null here because of ShapeContextMixin
                 null
-            ));
+            )).rays().stream().map(r -> new Pair<>(r.start(), r.end())).toList();
             return;
         }
         if (lockedTicks > 0) {

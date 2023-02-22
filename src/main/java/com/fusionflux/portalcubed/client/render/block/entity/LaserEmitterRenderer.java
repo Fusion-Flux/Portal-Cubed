@@ -30,9 +30,9 @@ public class LaserEmitterRenderer implements BlockEntityRenderer<LaserEmitterBlo
         if (entity.getSegments() == null) return;
         final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getLines());
         final MatrixStack.Entry matrix = matrices.peek();
-        for (final var aimDestInfo : entity.getSegments()) {
-            final Vec3f origin = new Vec3f(aimDestInfo.getLeft().subtract(Vec3d.of(entity.getPos())));
-            final Vec3f offset = new Vec3f(aimDestInfo.getRight().subtract(Vec3d.of(entity.getPos())));
+        for (final var aimDestInfo : entity.getSegments().rays()) {
+            final Vec3f origin = new Vec3f(aimDestInfo.start().subtract(Vec3d.of(entity.getPos())));
+            final Vec3f offset = new Vec3f(aimDestInfo.end().subtract(Vec3d.of(entity.getPos())));
             final Vec3f normal = offset.copy();
             normal.normalize();
             vertexConsumer

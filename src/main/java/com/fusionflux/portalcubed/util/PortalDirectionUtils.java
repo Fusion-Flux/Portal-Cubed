@@ -10,8 +10,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
-import java.util.List;
-
 public class PortalDirectionUtils {
     public static Vec3d rotateVelocity(Vec3d velocity, Direction entryDirection, Direction exitDirection) {
         return switch (entryDirection) {
@@ -120,7 +118,7 @@ public class PortalDirectionUtils {
         };
     }
 
-    public static final GeneralUtils.EntityRaycastTransform PORTAL_RAYCAST_TRANSFORM = new GeneralUtils.EntityRaycastTransform(
+    public static final AdvancedEntityRaycast.TransformInfo PORTAL_RAYCAST_TRANSFORM = new AdvancedEntityRaycast.TransformInfo(
         e -> e instanceof ExperimentalPortal,
         (context, blockHit, entityHit) -> {
             final ExperimentalPortal portal = (ExperimentalPortal)entityHit.getEntity();
@@ -150,8 +148,8 @@ public class PortalDirectionUtils {
         }
     );
 
-    public static List<Pair<Vec3d, Vec3d>> raycast(World world, RaycastContext context) {
-        return GeneralUtils.raycastWithEntityTransforms(world, context, PORTAL_RAYCAST_TRANSFORM);
+    public static AdvancedEntityRaycast.Result raycast(World world, RaycastContext context) {
+        return AdvancedEntityRaycast.raycast(world, context, PORTAL_RAYCAST_TRANSFORM);
     }
 
 }

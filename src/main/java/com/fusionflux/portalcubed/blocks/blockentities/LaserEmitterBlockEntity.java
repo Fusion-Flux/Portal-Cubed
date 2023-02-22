@@ -5,7 +5,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import com.fusionflux.portalcubed.mixin.RaycastContextAccessor;
-import com.fusionflux.portalcubed.util.GeneralUtils;
+import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.EntityShapeContext;
@@ -18,11 +18,9 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class LaserEmitterBlockEntity extends BlockEntity {
     @Nullable
-    private List<Pair<Vec3d, Vec3d>> segments;
+    private AdvancedEntityRaycast.Result segments;
 
     public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, pos, state);
@@ -44,14 +42,14 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         final Vec3d direction = Vec3d.of(state.get(LaserEmitterBlock.FACING).getVector());
         final Vec3d start = Vec3d.ofCenter(pos).add(direction.multiply(0.5));
         //noinspection DataFlowIssue
-        segments = GeneralUtils.raycastWithEntityTransforms(
+        segments = AdvancedEntityRaycast.raycast(
             world,
             new RaycastContext(
                 start, start.add(direction.multiply(PortalCubedConfig.maxBridgeLength)),
                 RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, null
             ),
             PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
-            new GeneralUtils.EntityRaycastTransform(
+            new AdvancedEntityRaycast.TransformInfo(
                 e -> e instanceof RedirectionCubeEntity,
                 (context, blockHit, entityHit) -> {
                     final var entity = (RedirectionCubeEntity)entityHit.getEntity();
@@ -77,7 +75,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
     }
 
     @Nullable
-    public List<Pair<Vec3d, Vec3d>> getSegments() {
+    public AdvancedEntityRaycast.Result getSegments() {
         return segments;
     }
 }
