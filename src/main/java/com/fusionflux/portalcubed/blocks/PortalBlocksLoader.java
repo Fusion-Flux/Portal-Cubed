@@ -88,7 +88,7 @@ public final class PortalBlocksLoader {
                 BlockRenderLayerMap.put(
                     renderLayer,
                     Registry.BLOCK.getOrEmpty(id)
-                        .orElseThrow(() -> new IllegalArgumentException("Unknown block " + id))
+                        .orElseThrow(() -> new IllegalArgumentException("Unknown block in portal_blocks.json " + id))
                 );
             }
         });

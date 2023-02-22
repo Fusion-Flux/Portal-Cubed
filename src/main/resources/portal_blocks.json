@@ -313,10 +313,6 @@
     "type": "provided",
     "render_layer": "translucent"
   },
-  "laser": {
-    "type": "provided",
-    "render_layer": "translucent"
-  },
   "laser_emitter": {
     "type": "provided",
     "render_layer": "translucent"

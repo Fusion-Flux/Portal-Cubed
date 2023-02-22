@@ -34,7 +34,7 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
 
     @Override
     public boolean rendersOutsideBoundingBox(RocketTurretBlockEntity blockEntity) {
-        return true;
+        return blockEntity.aimDests != null;
     }
 
     @Override

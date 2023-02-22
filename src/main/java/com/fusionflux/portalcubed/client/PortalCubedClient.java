@@ -12,6 +12,7 @@ import com.fusionflux.portalcubed.client.gui.VelocityHelperScreen;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.PortalHud;
 import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
+import com.fusionflux.portalcubed.client.render.block.entity.LaserEmitterRenderer;
 import com.fusionflux.portalcubed.client.render.block.entity.RocketTurretModel;
 import com.fusionflux.portalcubed.client.render.block.entity.RocketTurretRenderer;
 import com.fusionflux.portalcubed.client.render.block.entity.VelocityHelperRenderer;
@@ -313,6 +314,8 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityRendererRegistry.register(PortalCubedEntities.ENERGY_PELLET, EnergyPelletRenderer::new);
 
         EntityRendererRegistry.register(PortalCubedEntities.DECAL, DecalRenderer::new);
+
+        BlockEntityRendererFactories.register(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, LaserEmitterRenderer::new);
     }
 
     private static final class VisibleBarriersCompat {
