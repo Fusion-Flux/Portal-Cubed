@@ -28,6 +28,7 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
+import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 
 import net.minecraft.block.BlockState;
@@ -490,7 +491,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Redirect(method = "raycast", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;raycast(Lnet/minecraft/world/RaycastContext;)Lnet/minecraft/util/hit/BlockHitResult;"))
     private BlockHitResult portalCubed$portalCompatibleRaycast(World world, RaycastContext context) {
-        return PortalDirectionUtils.raycast(world, context).finalHit();
+        return CrossPortalInteraction.blockInteractionRaycast(world, context);
     }
 
     private boolean intersects(Box box, VoxelShape shape) {
