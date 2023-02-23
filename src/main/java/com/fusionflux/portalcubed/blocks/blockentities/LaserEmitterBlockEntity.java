@@ -57,6 +57,11 @@ public class LaserEmitterBlockEntity extends BlockEntity {
     public void tick(World world, BlockPos pos, BlockState state) {
         if (!state.get(LaserEmitterBlock.POWERED)) {
             segments = null;
+            if (target != null) {
+                world.getBlockEntity(target, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
+                target = null;
+                targetSide = null;
+            }
             return;
         }
         final Vec3d direction = Vec3d.of(state.get(LaserEmitterBlock.FACING).getVector());
@@ -98,7 +103,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         final BlockState targetState = world.getBlockState(finalHit.getBlockPos());
         final boolean singleSide = targetState.isOf(PortalCubedBlocks.LASER_CATCHER);
         if (!singleSide && finalHit.getBlockPos().equals(target)) return;
-        if (finalHit.getSide() == targetSide) return;
+        if (finalHit.getSide() == targetSide && finalHit.getBlockPos().equals(target)) return;
         if (target != null) {
             world.getBlockEntity(target, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
             target = null;

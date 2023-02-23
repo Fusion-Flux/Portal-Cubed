@@ -103,7 +103,7 @@ public class LaserRelayBlock extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.LASER_RELAY.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
+        return PortalCubedBlocks.LASER_RELAY.getDefaultState().with(FACING, ctx.getSide());
     }
 
     @Override
