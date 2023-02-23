@@ -6,7 +6,6 @@ import net.minecraft.block.EntityShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -21,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -32,11 +32,21 @@ public class AdvancedEntityRaycast {
         @FunctionalInterface
         public interface Transform {
             @Nullable
-            Pair<@NotNull Vec3d, @NotNull RaycastContext> transform(
+            TransformResult transform(
                 @NotNull RaycastContext context,
                 @NotNull BlockHitResult blockHit,
                 @NotNull EntityHitResult entityHit
             );
+        }
+    }
+
+    public record TransformResult(
+        Vec3d prevHitPos,
+        RaycastContext newContext,
+        Set<Entity> ignoredEntities
+    ) {
+        public TransformResult(Vec3d prevHitPos, RaycastContext newContext) {
+            this(prevHitPos, newContext, Set.of());
         }
     }
 
@@ -62,11 +72,11 @@ public class AdvancedEntityRaycast {
     public static Result raycast(World world, RaycastContext context, TransformInfo... transforms) {
         final List<Result.Ray> hits = new ArrayList<>();
         final Supplier<Entity> marker = Suppliers.memoize(() -> EntityType.MARKER.create(world));
-        final Entity[] lastEntity = new Entity[1];
+        @SuppressWarnings("unchecked") Set<Entity>[] ignoredEntities = new Set[] {Set.of()};
         final Predicate<Entity> predicate = Arrays.stream(transforms)
             .map(TransformInfo::hittable)
             .reduce(Predicate::or)
-            .map(p -> p.and(e -> e != lastEntity[0]))
+            .map(p -> p.and(e -> !ignoredEntities[0].contains(e)))
             .orElse(null);
         BlockHitResult result;
         mainLoop:
@@ -81,11 +91,11 @@ public class AdvancedEntityRaycast {
             if (hit == null) break;
             for (final var transform : transforms) {
                 if (transform.hittable.test(hit.getEntity())) {
-                    final Pair<Vec3d, RaycastContext> newContext = transform.transform.transform(context, result, hit);
+                    final TransformResult newContext = transform.transform.transform(context, result, hit);
                     if (newContext != null) {
-                        lastEntity[0] = hit.getEntity();
-                        hits.add(new Result.Ray(context.getStart(), newContext.getLeft(), hit));
-                        context = newContext.getRight();
+                        ignoredEntities[0] = newContext.ignoredEntities;
+                        hits.add(new Result.Ray(context.getStart(), newContext.prevHitPos, hit));
+                        context = newContext.newContext;
                         continue mainLoop;
                     }
                 }
