@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.util;
 
+import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
 import com.google.common.base.Suppliers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -50,6 +52,7 @@ public class AdvancedEntityRaycast {
         public Result {
             Validate.isTrue(!rays.isEmpty(), "AdvancedEntityRaycast.Result must have at least one ray.");
             Validate.isTrue(rays.get(rays.size() - 1).hit instanceof BlockHitResult, "AdvancedEntityRaycast.Result.finalHit must be a BlockHitResult.");
+            ((AdvancedRaycastResultHolder) rays.get(rays.size() - 1).hit).setResult(Optional.of(this));
         }
 
         public BlockHitResult finalHit() {

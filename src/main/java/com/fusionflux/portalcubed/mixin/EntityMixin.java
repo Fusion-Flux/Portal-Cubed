@@ -490,8 +490,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Redirect(method = "raycast", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;raycast(Lnet/minecraft/world/RaycastContext;)Lnet/minecraft/util/hit/BlockHitResult;"))
     private BlockHitResult portalCubed$portalCompatibleRaycast(World world, RaycastContext context) {
-        final var hits = PortalDirectionUtils.raycast(world, context);
-        return hits.get(hits.size() - 1).getRight();
+        return PortalDirectionUtils.raycast(world, context).finalHit();
     }
 
     private boolean intersects(Box box, VoxelShape shape) {

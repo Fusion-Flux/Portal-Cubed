@@ -8,6 +8,7 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "RaycastContextAccessor",
+    "BlockHitResultMixin",
     "ServerPlayNetworkHandlerMixin",
     "ShapeContextMixin",
     "WorldMixin",
@@ -28,7 +29,8 @@
     "client.ParticleManagerMixin",
     "client.SoundSystemMixin",
     "client.RenderSystemMixin",
-    "client.VertexConsumerMixin"
+    "client.VertexConsumerMixin",
+    "client.GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

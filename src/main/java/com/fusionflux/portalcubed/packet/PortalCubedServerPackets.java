@@ -10,6 +10,8 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -65,9 +67,9 @@ public class PortalCubedServerPackets {
                 }
             } else {
                 if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding()) {
-                    final BlockHitResult hit = player.world.raycast(new RaycastContext(
+                    final BlockHitResult hit = PortalDirectionUtils.raycast(player.world, new RaycastContext(
                         vec3d, vec3d3, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, player
-                    ));
+                    )).finalHit();
                     if (hit.getType() != HitResult.Type.MISS) {
                         final BlockState state = player.world.getBlockState(hit.getBlockPos());
                         if (state.getBlock() instanceof TallButtonVariant button) {
