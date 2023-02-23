@@ -32,16 +32,13 @@ public class LaserRelayBlock extends BlockWithEntity {
     public static final BooleanProperty ENABLED = Properties.ENABLED;
 
     private static final VoxelShape UP_SHAPE = VoxelShapes.union(
-        createCuboidShape(0, 0, 0, 16, 17, 16),
-        createCuboidShape(4, 17, 4, 12, 27, 12)
+        createCuboidShape(4, 0, 4, 12, 11, 12)
     );
     private static final VoxelShape DOWN_SHAPE = VoxelShapes.union(
-        createCuboidShape(0, -1, 0, 16, 16, 16),
-        createCuboidShape(4, -11, 4, 12, -1, 12)
+        createCuboidShape(4, 6, 4, 12, 16, 12)
     );
     private static final VoxelShape NORTH_SHAPE = VoxelShapes.union(
-        createCuboidShape(0, 0, -1, 16, 16, 16),
-        createCuboidShape(4, 4, -11, 12, 12, -1)
+        createCuboidShape(4, 4, 6, 12, 12, 16)
     );
     private static final Map<Direction, VoxelShape> DIRECTION_TO_SHAPE = Direction.stream()
         .filter(d -> d.getAxis().isHorizontal())
@@ -67,13 +64,13 @@ public class LaserRelayBlock extends BlockWithEntity {
     @Override
     @SuppressWarnings("deprecation")
     public boolean emitsRedstonePower(BlockState state) {
-        return state.get(Properties.ENABLED);
+        return state.get(ENABLED);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        return state.get(Properties.ENABLED) ? 15 : 0;
+        return state.get(ENABLED) ? 15 : 0;
     }
 
     @Override
