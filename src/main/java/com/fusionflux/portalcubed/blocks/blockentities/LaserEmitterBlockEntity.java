@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
@@ -19,6 +20,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class LaserEmitterBlockEntity extends BlockEntity {
     @Nullable
@@ -66,6 +70,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         }
         final Vec3d direction = Vec3d.of(state.get(LaserEmitterBlock.FACING).getVector());
         final Vec3d start = Vec3d.ofCenter(pos).add(direction.multiply(0.5));
+        final Set<Entity> alreadyHit = new HashSet<>();
         //noinspection DataFlowIssue
         segments = AdvancedEntityRaycast.raycast(
             world,
@@ -75,9 +80,10 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             ),
             PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
             new AdvancedEntityRaycast.TransformInfo(
-                e -> e instanceof RedirectionCubeEntity,
+                e -> e instanceof RedirectionCubeEntity && !alreadyHit.contains(e),
                 (context, blockHit, entityHit) -> {
                     final var entity = (RedirectionCubeEntity)entityHit.getEntity();
+                    alreadyHit.add(entity);
                     final double distance = context.getStart().distanceTo(context.getEnd());
                     final Vec3d offset = entityHit.getPos().subtract(context.getStart());
                     final Vec3d newOffset = Vec3d.fromPolar(entity.getPitch(), entity.getYaw())
