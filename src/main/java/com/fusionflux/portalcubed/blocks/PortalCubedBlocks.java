@@ -97,10 +97,8 @@ public class PortalCubedBlocks {
     public static final BlockEntityType<LaserEmitterBlockEntity> LASER_EMITTER_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserEmitterBlockEntity::new, LASER_EMITTER).build();
 
     public static final LaserCatcherBlock LASER_CATCHER = new LaserCatcherBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
-    public static final BlockEntityType<LaserCatcherBlockEntity> LASER_CATCHER_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserCatcherBlockEntity::new, LASER_CATCHER).build();
-
     public static final LaserRelayBlock LASER_RELAY = new LaserRelayBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
-    public static final BlockEntityType<LaserRelayBlockEntity> LASER_RELAY_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserRelayBlockEntity::new, LASER_RELAY).build();
+    public static final BlockEntityType<LaserNodeBlockEntity> LASER_NODE_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserNodeBlockEntity::new, LASER_CATCHER, LASER_RELAY).build();
 
     public static final FloorButtonBlock FLOOR_BUTTON = new FloorButtonBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static final BlockEntityType<FloorButtonBlockEntity> FLOOR_BUTTON_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(FloorButtonBlockEntity::new, FLOOR_BUTTON).build();
@@ -183,13 +181,13 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("laser_emitter"), LASER_EMITTER);
         Registry.register(Registry.ITEM, id("laser_emitter"), new BlockItem(LASER_EMITTER, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_catcher_entity"), LASER_CATCHER_ENTITY);
         Registry.register(Registry.BLOCK, id("laser_catcher"), LASER_CATCHER);
         Registry.register(Registry.ITEM, id("laser_catcher"), new BlockItem(LASER_CATCHER, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_relay_entity"), LASER_RELAY_ENTITY);
         Registry.register(Registry.BLOCK, id("laser_relay"), LASER_RELAY);
         Registry.register(Registry.ITEM, id("laser_relay"), new BlockItem(LASER_RELAY, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
+
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_node"), LASER_NODE_BLOCK_ENTITY);
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, id("floor_button_block_entity"), FLOOR_BUTTON_BLOCK_ENTITY);
         Registry.register(Registry.BLOCK, id("floor_button"), FLOOR_BUTTON);

@@ -1,7 +1,9 @@
 package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
+import com.fusionflux.portalcubed.mixin.RaycastContextAccessor;
 import com.google.common.base.Suppliers;
+import net.minecraft.block.EntityShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -95,5 +97,16 @@ public class AdvancedEntityRaycast {
         }
         hits.add(new Result.Ray(context.getStart(), result));
         return new Result(hits);
+    }
+
+    public static RaycastContext withStartEnd(RaycastContext context, Vec3d start, Vec3d end) {
+        //noinspection DataFlowIssue
+        return new RaycastContext(
+            start, end,
+            ((RaycastContextAccessor)context).getShapeType(),
+            ((RaycastContextAccessor)context).getFluid(),
+            ((RaycastContextAccessor)context).getEntityPosition() instanceof EntityShapeContext esc
+                ? esc.getEntity() : null
+        );
     }
 }
