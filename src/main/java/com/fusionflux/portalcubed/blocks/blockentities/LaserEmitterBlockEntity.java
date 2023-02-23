@@ -4,11 +4,9 @@ import com.fusionflux.portalcubed.blocks.LaserEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
-import com.fusionflux.portalcubed.mixin.RaycastContextAccessor;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.EntityShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Pair;
@@ -58,16 +56,9 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                     final Vec3d newOffset = Vec3d.fromPolar(entity.getPitch(), entity.getYaw())
                         .multiply(distance - offset.length());
                     final Vec3d origin = entity.getPos().add(new Vec3d(0, entity.getHeight() / 2, 0));
-                    //noinspection DataFlowIssue
                     return new Pair<>(
                         entityHit.getPos().add(offset.multiply(0.25 / offset.length())),
-                        new RaycastContext(
-                            origin, origin.add(newOffset),
-                            ((RaycastContextAccessor)context).getShapeType(),
-                            ((RaycastContextAccessor)context).getFluid(),
-                            ((RaycastContextAccessor)context).getEntityPosition() instanceof EntityShapeContext esc
-                                ? esc.getEntity() : null
-                        )
+                        AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
                     );
                 }
             )

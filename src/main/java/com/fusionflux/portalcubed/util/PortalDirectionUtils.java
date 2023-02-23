@@ -1,8 +1,6 @@
 package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import com.fusionflux.portalcubed.mixin.RaycastContextAccessor;
-import net.minecraft.block.EntityShapeContext;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -134,16 +132,9 @@ public class PortalDirectionUtils {
                 .withAxis(facing.getAxis(), 0);
             final Vec3d newRel = rotateVelocity(hitRelative, facing, otherFacing);
             final Vec3d newStart = portal.getDestination().orElseThrow().add(newRel);
-            //noinspection DataFlowIssue
             return new Pair<>(
                 blockHit.getPos(),
-                new RaycastContext(
-                    newStart, newStart.add(newOffset),
-                    ((RaycastContextAccessor)context).getShapeType(),
-                    ((RaycastContextAccessor)context).getFluid(),
-                    ((RaycastContextAccessor)context).getEntityPosition() instanceof EntityShapeContext esc
-                        ? esc.getEntity() : null
-                )
+                AdvancedEntityRaycast.withStartEnd(context, newStart, newStart.add(newOffset))
             );
         }
     );
