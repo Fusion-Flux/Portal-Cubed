@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.blockentities.LaserRelayBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.LaserNodeBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -20,18 +20,14 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
 public class LaserRelayBlock extends BlockWithEntity {
-    public static final BooleanProperty ENABLE;
+    public static final BooleanProperty ENABLED = Properties.ENABLED;
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
     public LaserRelayBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE, false));
-    }
-
-    static {
-        ENABLE = Properties.ENABLED;
+        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLED, false));
     }
 
     @Override
@@ -98,12 +94,12 @@ public class LaserRelayBlock extends BlockWithEntity {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new LaserRelayBlockEntity(pos, state);
+        return new LaserNodeBlockEntity(pos, state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.LASER_RELAY_ENTITY, LaserRelayBlockEntity::tick1);
+        return checkType(type, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY, LaserNodeBlockEntity::tick);
     }
 
 }
