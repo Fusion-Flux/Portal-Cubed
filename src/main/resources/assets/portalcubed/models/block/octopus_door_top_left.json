@@ -3,7 +3,8 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "portalcubed:block/octopus_door",
-		"particle": "portalcubed:block/padded_gray_panel"	},
+		"particle": "portalcubed:block/padded_gray_panel"
+	},
 	"elements": [
 		{
 			"from": [1, 0, 0],
@@ -21,8 +22,8 @@
 			"to": [6.01, 16.01, 16.01],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 16]},
 			"faces": {
-				"east": {"uv": [4, 0, 0, 4], "texture": "#0"},
-				"west": {"uv": [8, 0, 4, 4], "texture": "#0"}
+				"east": {"uv": [4, 0, 8, 4], "texture": "#0"},
+				"west": {"uv": [0, 0, 4, 4], "texture": "#0"}
 			}
 		},
 		{

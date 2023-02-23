@@ -2,8 +2,8 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
+import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelMainBlockEntity;
-import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.CustomProperties;
@@ -12,6 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.Entity;
@@ -200,12 +201,10 @@ public class ExcursionFunnelMain extends BlockWithEntity {
 
 
     private void addCollisionEffects(World world, Entity entity, BlockPos pos, BlockState state) {
-        if (entity instanceof PlayerEntity) {
+        if (entity instanceof PlayerEntity player) {
             if (world.isClient()) {
                 Vec3d entityCenter = entity.getBoundingBox().getCenter();
-                double xOffset = (entityCenter.getX() - pos.getX() - .5);
-                double yOffset = (entityCenter.getY() - pos.getY() - .5);
-                double zOffset = (entityCenter.getZ() - pos.getZ() - .5);
+
                 Vec3d direction = getPushDirection(state);
 
                 direction = direction.multiply(.125);
@@ -219,67 +218,83 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                     ((EntityAttachments) entity).setInFunnel(true);
                     entity.setVelocity(0, 0, 0);
                     MinecraftClient.getInstance().getSoundManager().play(
-                        new MovingSoundInstance(PortalCubedSounds.TBEAM_ENTER_EVENT, SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
-                            int ticks;
+                            new MovingSoundInstance(PortalCubedSounds.TBEAM_ENTER_EVENT, SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
+                                int ticks;
 
-                            {
-                                attenuationType = AttenuationType.NONE;
-                            }
+                                {
+                                    attenuationType = AttenuationType.NONE;
+                                }
 
-                            @Override
-                            public void tick() {
-                                ticks++;
-                                if (ticks > 80) {
-                                    volume = 1f - 0.05f * (ticks - 80);
-                                    if (volume <= 0) {
-                                        setDone();
+                                @Override
+                                public void tick() {
+                                    ticks++;
+                                    if (ticks > 80) {
+                                        volume = 1f - 0.05f * (ticks - 80);
+                                        if (volume <= 0) {
+                                            setDone();
+                                        }
                                     }
                                 }
                             }
-                        }
                     );
                 }
-
+                double xOffset = (entityCenter.getX() - pos.getX() - .5) + entity.getVelocity().x;
+                double yOffset = (entityCenter.getY() - pos.getY() - .5) + entity.getVelocity().y;
+                double zOffset = (entityCenter.getZ() - pos.getZ() - .5) + entity.getVelocity().z;
+                if (xOffset == 0) {
+                    xOffset = .0001;
+                }
+                if (yOffset == 0) {
+                    yOffset = .0001;
+                }
+                if (zOffset == 0) {
+                    zOffset = .0001;
+                }
                 ((EntityAttachments) entity).setFunnelTimer(2);
 
-                Vec3d gotVelocity = entity.getVelocity();
+                Vec3d gotVelocity = Vec3d.ZERO;
 
-                if (direction.x != 0) {
-                    gotVelocity = new Vec3d(direction.getX(), gotVelocity.y, gotVelocity.z);
-                } else {
-                    gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d((-(xOffset / Math.abs(xOffset)) * .004), 0, 0), GravityChangerAPI.getGravityDirection(entity)));
-                }
-                if (direction.y != 0) {
-                    gotVelocity = new Vec3d(gotVelocity.x, direction.getY(), gotVelocity.z);
-                } else {
-                    gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(yOffset / Math.abs(yOffset)) * .004), 0), GravityChangerAPI.getGravityDirection(entity)));
-                }
-                if (direction.z != 0) {
-                    gotVelocity = new Vec3d(gotVelocity.x, gotVelocity.y, direction.getZ());
-                } else {
-                    gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(zOffset / Math.abs(zOffset)) * .004)), GravityChangerAPI.getGravityDirection(entity)));
-                }
-                entity.setVelocity(gotVelocity);
 
-                if (entity.isSneaking() && gotVelocity.lengthSquared() < 0.15 * 0.15 && !entity.doesNotCollide(gotVelocity.x, gotVelocity.y, gotVelocity.z)) {
-                    ((EntityAttachments)entity).setCFG();
+                if (player.isMainPlayer()) {
+                    ClientPlayerEntity alpha = (ClientPlayerEntity) player;
+                    if (direction.x != 0) {
+                        gotVelocity = new Vec3d(direction.getX(), gotVelocity.y, gotVelocity.z);
+                    } else {
+                        if (!((HasMovementInputAccessor) alpha).hasMovementInputPublic()) {
+                            gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(-((xOffset / Math.abs(xOffset)) * Math.sqrt(Math.abs(xOffset))) / 20, 0, 0), GravityChangerAPI.getGravityDirection(entity)));
+                        } else {
+                            gotVelocity = gotVelocity.add(player.getVelocity().x, 0, 0);
+                        }
+                    }
+                    if (direction.y != 0) {
+                        gotVelocity = new Vec3d(gotVelocity.x, direction.getY(), gotVelocity.z);
+                    } else {
+                        if (!((HasMovementInputAccessor) alpha).hasMovementInputPublic()) {
+                            gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, -((yOffset / Math.abs(yOffset)) * Math.sqrt(Math.abs(yOffset))) / 20, 0), GravityChangerAPI.getGravityDirection(entity)));
+                        } else {
+                            gotVelocity = gotVelocity.add(0, player.getVelocity().y, 0);
+                        }
+                    }
+                    if (direction.z != 0) {
+                        gotVelocity = new Vec3d(gotVelocity.x, gotVelocity.y, direction.getZ());
+                    } else {
+                        if (!((HasMovementInputAccessor) alpha).hasMovementInputPublic()) {
+                            gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, -((zOffset / Math.abs(zOffset)) * Math.sqrt(Math.abs(zOffset))) / 20), GravityChangerAPI.getGravityDirection(entity)));
+                        } else {
+                            gotVelocity = gotVelocity.add(0, 0, player.getVelocity().z);
+                        }
+                    }
+                    entity.setVelocity(gotVelocity);
+
+                    if (entity.isSneaking() && gotVelocity.lengthSquared() < 0.15 * 0.15 && !entity.doesNotCollide(gotVelocity.x, gotVelocity.y, gotVelocity.z)) {
+                        ((EntityAttachments) entity).setCFG();
+                    }
+
                 }
             }
         } else {
             if (!world.isClient()) {
-                double xOffset = (entity.getPos().getX() - pos.getX()) - .5;
-                double yOffset = ((entity.getPos().getY() + entity.getHeight() / 2) - pos.getY()) - .5;
-                double zOffset = (entity.getPos().getZ() - pos.getZ()) - .5;
-
-                if (xOffset == 0) {
-                    xOffset = .1;
-                }
-                if (yOffset == 0) {
-                    yOffset = .1;
-                }
-                if (zOffset == 0) {
-                    zOffset = .1;
-                }
+                Vec3d entityCenter = entity.getBoundingBox().getCenter();
 
                 Vec3d direction = getPushDirection(state);
                 direction = direction.multiply(.125);
@@ -291,38 +306,39 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                     entity.setVelocity(0, 0, 0); //not this code
                 }
 
+                double xOffset = (entityCenter.getX() - pos.getX() - .5) + entity.getVelocity().x;
+                double yOffset = (entityCenter.getY() - pos.getY() - .5) + entity.getVelocity().y;
+                double zOffset = (entityCenter.getZ() - pos.getZ() - .5) + entity.getVelocity().z;
+
+                if (xOffset == 0) {
+                    xOffset = .0001;
+                }
+                if (yOffset == 0) {
+                    yOffset = .0001;
+                }
+                if (zOffset == 0) {
+                    zOffset = .0001;
+                }
                 entity.fallDistance = 0;
 
                 ((EntityAttachments) entity).setFunnelTimer(2);
 
-                Vec3d gotVelocity = entity.getVelocity();
+                Vec3d gotVelocity = Vec3d.ZERO;
 
                 if (direction.x != 0) {
                     gotVelocity = new Vec3d(direction.getX(), gotVelocity.y, gotVelocity.z);
                 } else {
-                    if (entity instanceof CorePhysicsEntity) {
-                        gotVelocity = new Vec3d(-xOffset / 4, gotVelocity.y, gotVelocity.z);
-                    } else {
-                        gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d((-(xOffset / Math.abs(xOffset)) * .004), 0, 0), GravityChangerAPI.getGravityDirection(entity)));
-                    }
+                    gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(-((xOffset / Math.abs(xOffset)) * Math.sqrt(Math.abs(xOffset))) / 20, 0, 0), GravityChangerAPI.getGravityDirection(entity)));
                 }
                 if (direction.y != 0) {
                     gotVelocity = new Vec3d(gotVelocity.x, direction.getY(), gotVelocity.z);
                 } else {
-                    if (entity instanceof CorePhysicsEntity) {
-                        gotVelocity = new Vec3d(gotVelocity.x, -yOffset / 4, gotVelocity.z);
-                    } else {
-                        gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, (-(yOffset / Math.abs(yOffset)) * .004), 0), GravityChangerAPI.getGravityDirection(entity)));
-                    }
+                    gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, -((yOffset / Math.abs(yOffset)) * Math.sqrt(Math.abs(yOffset))) / 20, 0), GravityChangerAPI.getGravityDirection(entity)));
                 }
                 if (direction.z != 0) {
                     gotVelocity = new Vec3d(gotVelocity.x, gotVelocity.y, direction.getZ());
                 } else {
-                    if (entity instanceof CorePhysicsEntity) {
-                        gotVelocity = new Vec3d(gotVelocity.x, gotVelocity.y, -zOffset / 4);
-                    } else {
-                        gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, (-(zOffset / Math.abs(zOffset)) * .004)), GravityChangerAPI.getGravityDirection(entity)));
-                    }
+                    gotVelocity = gotVelocity.add(RotationUtil.vecWorldToPlayer(new Vec3d(0, 0, -((zOffset / Math.abs(zOffset)) * Math.sqrt(Math.abs(zOffset))) / 20), GravityChangerAPI.getGravityDirection(entity)));
                 }
                 if (!gotVelocity.equals(Vec3d.ZERO))
                     entity.setVelocity(gotVelocity);

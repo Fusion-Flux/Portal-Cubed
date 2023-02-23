@@ -1,8 +1,14 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/portal_2_panel_frame" }
-
-
+    "":[
+      { "model": "portalcubed:block/portal_2_panel_frame_1" },
+      { "model": "portalcubed:block/portal_2_panel_frame_2" },
+      { "model": "portalcubed:block/portal_2_panel_frame_3" },
+      { "model": "portalcubed:block/portal_2_panel_frame_4" },
+      { "model": "portalcubed:block/portal_2_panel_frame_5" },
+      { "model": "portalcubed:block/portal_2_panel_frame_6" },
+      { "model": "portalcubed:block/portal_2_panel_frame_7" },
+      { "model": "portalcubed:block/portal_2_panel_frame_8" }
     ]
 
 

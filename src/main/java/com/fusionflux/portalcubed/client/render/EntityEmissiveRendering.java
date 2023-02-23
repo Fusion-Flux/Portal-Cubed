@@ -1,9 +1,6 @@
 package com.fusionflux.portalcubed.client.render;
 
-import java.util.function.Function;
-
-import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-
+import com.fusionflux.portalcubed.entity.Fizzleable;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -15,12 +12,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
+import java.util.function.Function;
+
 public final class EntityEmissiveRendering {
 
     public static <T extends Entity, M extends EntityModel<T>> void renderEmissive(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, M model, Function<T, Identifier> emissiveTextureGetter) {
         var brightness = 1f;
-        if (entity instanceof CorePhysicsEntity physicsEntity) {
-            brightness -= Math.min(physicsEntity.getFizzleProgress(), 1f);
+        if (entity instanceof Fizzleable fizzleable) {
+            brightness -= Math.min(fizzleable.getFizzleProgress(), 1f);
         }
         final var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEyes(emissiveTextureGetter.apply(entity)));
         model.render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, brightness, brightness, brightness, 1f);

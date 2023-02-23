@@ -3,11 +3,13 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.*;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -44,16 +46,17 @@ public class FloorButtonBlockEntity extends BlockEntity {
             boolean isPowered = false;
             for (LivingEntity living : entities) {
                 if (living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity) {
-                    if (!(living instanceof CorePhysicsEntity physicsEntity && physicsEntity.getFizzleProgress() > 0)) {
-                        isPowered = true;
-                        if (state.getBlock().equals(PortalCubedBlocks.FLOOR_BUTTON)) {
+                    if (living instanceof CorePhysicsEntity physicsEntity) {
+                        if (physicsEntity.fizzling()) {
+                            physicsEntity.addVelocity(0, 0.015, 0);
+                        } else {
+                            isPowered = true;
                             if (living instanceof StorageCubeEntity cube) {
                                 cube.setButtonTimer(1);
                             }
-                            if (living instanceof CompanionCubeEntity cube) {
-                                cube.setButtonTimer(1);
-                            }
                         }
+                    } else {
+                        isPowered = true;
                     }
                 }
             }
@@ -69,6 +72,13 @@ public class FloorButtonBlockEntity extends BlockEntity {
     public void updateState(BlockState state, boolean toggle) {
         if (world != null) {
             world.setBlockState(pos, state.with(Properties.ENABLED, toggle), 3);
+            if (!world.isClient && state.get(Properties.ENABLED) != toggle) {
+                world.playSound(
+                    null, pos,
+                    toggle ? PortalCubedSounds.FLOOR_BUTTON_PRESS_EVENT : PortalCubedSounds.FLOOR_BUTTON_RELEASE_EVENT,
+                    SoundCategory.BLOCKS, 0.8f, 1f
+                );
+            }
         }
     }
 

@@ -3,10 +3,9 @@ package com.fusionflux.portalcubed.client.render.entity.model;
 import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class RocketModel extends EntityModel<RocketEntity> {
+public class RocketModel extends FizzleableModel<RocketEntity> {
     private final ModelPart bone;
 
     public RocketModel(ModelPart root) {
@@ -31,11 +30,7 @@ public class RocketModel extends EntityModel<RocketEntity> {
     }
 
     @Override
-    public void setAngles(RocketEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    }
-
-    @Override
-    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public void renderFizzled(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         bone.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 }

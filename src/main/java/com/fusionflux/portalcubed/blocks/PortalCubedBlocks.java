@@ -45,7 +45,7 @@ public class PortalCubedBlocks {
     public static final ExcursionFunnelMain EXCURSION_FUNNEL = new ExcursionFunnelMain(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
 
     public static final TallButton TALL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
-    public static final TallButton OLD_AP_PEDESTAL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
+    public static final OldApTallButton OLD_AP_PEDESTAL_BUTTON = new OldApTallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
 
     public static final SlidingDoorBlock PORTAL2DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
     public static final SlidingDoorBlock OCTOPUS_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool());
@@ -92,11 +92,9 @@ public class PortalCubedBlocks {
     public static final PhysicsRepulsionField PHYSICS_REPULSION_FIELD = new PhysicsRepulsionField(QuiltBlockSettings.copyOf(FIZZLER));
     public static final FizzlerEmitter PHYSICS_REPULSION_FIELD_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(FIZZLER_EMITTER), PHYSICS_REPULSION_FIELD);
 
-    public static final LaserBlock LASER = new LaserBlock(QuiltBlockSettings.of(Material.AIR).nonOpaque().noCollision());
-    public static final BlockEntityType<LaserBlockEntity> LASER_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserBlockEntity::new, LASER).build();
 
-    public static final LaserEmitter LASER_EMITTER = new LaserEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
-    public static final BlockEntityType<LaserEmitterBlockEntity> LASER_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserEmitterBlockEntity::new, LASER_EMITTER).build();
+    public static final LaserEmitterBlock LASER_EMITTER = new LaserEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
+    public static final BlockEntityType<LaserEmitterBlockEntity> LASER_EMITTER_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserEmitterBlockEntity::new, LASER_EMITTER).build();
 
     public static final LaserCatcherBlock LASER_CATCHER = new LaserCatcherBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().nonOpaque().sounds(BlockSoundGroup.STONE));
     public static final BlockEntityType<LaserCatcherBlockEntity> LASER_CATCHER_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserCatcherBlockEntity::new, LASER_CATCHER).build();
@@ -181,10 +179,7 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK, id("beta_faith_plate"), BETA_FAITH_PLATE);
         Registry.register(Registry.ITEM, id("beta_faith_plate"), new BlockItem(BETA_FAITH_PLATE, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_entity"), LASER_ENTITY);
-        Registry.register(Registry.BLOCK, id("laser"), LASER);
-
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), LASER_EMITTER_ENTITY);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), LASER_EMITTER_BLOCK_ENTITY);
         Registry.register(Registry.BLOCK, id("laser_emitter"), LASER_EMITTER);
         Registry.register(Registry.ITEM, id("laser_emitter"), new BlockItem(LASER_EMITTER, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
 

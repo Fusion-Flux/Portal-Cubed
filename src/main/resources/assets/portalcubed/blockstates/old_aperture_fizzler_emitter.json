@@ -1,34 +1,34 @@
 {
   "variants": {
     "facing=north,powered=false,half=lower": {
-      "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom_deactivated"
+      "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom"
     },
     "facing=south,powered=false,half=lower": {
-      "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom_deactivated",
+      "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom",
       "y": 180
     },
     "facing=west,powered=false,half=lower": {
-      "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom_deactivated",
+      "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom",
       "y": -90
     },
     "facing=east,powered=false,half=lower": {
-      "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom_deactivated",
+      "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom",
       "y": 90
     },
 
     "facing=north,powered=false,half=upper": {
-      "model": "portalcubed:block/old_aperture_fizzler_emitter_top_deactivated"
+      "model": "portalcubed:block/old_aperture_fizzler_emitter_top"
     },
     "facing=south,powered=false,half=upper": {
-      "model": "portalcubed:block/old_aperture_fizzler_emitter_top_deactivated",
+      "model": "portalcubed:block/old_aperture_fizzler_emitter_top",
       "y": 180
     },
     "facing=west,powered=false,half=upper": {
-      "model": "portalcubed:block/old_aperture_fizzler_emitter_top_deactivated",
+      "model": "portalcubed:block/old_aperture_fizzler_emitter_top",
       "y": -90
     },
     "facing=east,powered=false,half=upper": {
-      "model": "portalcubed:block/old_aperture_fizzler_emitter_top_deactivated",
+      "model": "portalcubed:block/old_aperture_fizzler_emitter_top",
       "y": 90
     },
 

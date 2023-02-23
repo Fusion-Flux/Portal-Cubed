@@ -1,7 +1,7 @@
 {
-  "portal_1_white_panel": {},
-  "portal_1_white_half_panel": {},
   "portal_1_white_checkered_panel": {},
+  "portal_1_white_half_panel": {},
+  "portal_1_white_panel": {},
   "portal_1_white_2x1_panel_bottom": {
   "type": "pillar"
   },
@@ -13,8 +13,8 @@
   "portal_1_elevator_wall_top": {},
   "solid_office_concrete": {},
   "bordered_office_concrete": {},
-  "portal_1_smooth_gray_panel": {},
   "portal_1_smooth_gray_half_panel": {},
+  "portal_1_smooth_gray_panel": {},
   "portal_1_smooth_gray_2x1_panel_bottom": {
   "type": "pillar"
   },
@@ -57,9 +57,9 @@
   "portal_1_2x2_exposed_panel_top_right": {
   "type": "directional"
   },
-  "white_panel": {},
-  "white_half_panel": {},
   "white_checkered_panel": {},
+  "white_half_panel": {},
+  "white_panel": {},
   "white_2x1_panel_bottom": {
     "type": "pillar"
   },
@@ -78,8 +78,9 @@
   "white_2x2_panel_top_right": {
     "type": "directional"
   },
-  "aged_white_panel": {},
+  "aged_white_checkered_panel": {},
   "aged_white_half_panel": {},
+  "aged_white_panel": {},
   "aged_white_2x1_panel_bottom": {
     "type": "pillar"
   },
@@ -98,8 +99,8 @@
   "aged_white_2x2_panel_top_right": {
     "type": "directional"
   },
-  "padded_gray_panel": {},
   "padded_gray_half_panel": {},
+  "padded_gray_panel": {},
   "padded_gray_2x1_panel_bottom": {
     "type": "pillar"
   },
@@ -118,8 +119,8 @@
   "padded_gray_2x2_panel_top_right": {
     "type": "directional"
   },
-  "aged_padded_gray_panel": {},
   "aged_padded_gray_half_panel": {},
+  "aged_padded_gray_panel": {},
   "aged_padded_gray_2x1_panel_bottom": {
     "type": "pillar"
   },
@@ -138,8 +139,8 @@
   "aged_padded_gray_2x2_panel_top_right": {
     "type": "directional"
   },
-  "smooth_gray_panel": {},
   "smooth_gray_half_panel": {},
+  "smooth_gray_panel": {},
   "smooth_gray_2x1_panel_bottom": {
     "type": "pillar"
   },
@@ -158,8 +159,8 @@
   "smooth_gray_2x2_panel_top_right": {
     "type": "directional"
   },
-  "aged_smooth_gray_panel": {},
   "aged_smooth_gray_half_panel": {},
+  "aged_smooth_gray_panel": {},
   "aged_smooth_gray_2x1_panel_bottom": {
     "type": "pillar"
   },
@@ -185,6 +186,13 @@
   },
   "portal_2_exposed_panel": {},
   "portal_2_partially_exposed_panel": {},
+  "portal_2_metal_grating": {
+    "type": "old_ap",
+    "render_layer": "translucent",
+    "opaque": false
+  },
+  "old_ap_white_checkered_panel": {},
+  "old_ap_white_panel": {},
   "old_ap_white_2x2_panel_bottom_left": {
     "type": "directional"
   },
@@ -197,8 +205,6 @@
   "old_ap_white_2x2_panel_top_right": {
     "type": "directional"
   },
-  "old_ap_white_checkered_panel": {},
-  "old_ap_white_panel": {},
   "old_ap_green_panel": {},
   "old_ap_green_2x1_panel_bottom": {
     "type": "pillar"
@@ -239,6 +245,7 @@
   },
   "office_concrete": {},
   "blue_office_concrete": {},
+  "striped_office_concrete": {},
   "old_ap_metal_grating": {
     "type": "old_ap",
     "render_layer": "translucent",
@@ -303,10 +310,6 @@
     "render_layer": "cutout"
   },
   "neurotoxin_emitter": {
-    "type": "provided",
-    "render_layer": "translucent"
-  },
-  "laser": {
     "type": "provided",
     "render_layer": "translucent"
   },

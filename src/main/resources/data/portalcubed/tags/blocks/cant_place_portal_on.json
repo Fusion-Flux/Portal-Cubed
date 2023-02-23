@@ -96,6 +96,12 @@
     "portalcubed:neurotoxin_emitter",
     "portalcubed:rocket_turret",
     "portalcubed:portal_1_metal_grating",
-    "portalcubed:portal_1_mesh_grating"
+    "portalcubed:portal_2_metal_grating",
+    "portalcubed:portal_1_mesh_grating",
+    "portalcubed:portal_2_door",
+    "portalcubed:portal_1_door",
+    "portalcubed:octopus_door",
+    "portalcubed:old_ap_door"
+
   ]
 }

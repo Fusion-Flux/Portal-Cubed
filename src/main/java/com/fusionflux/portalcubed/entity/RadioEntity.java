@@ -16,19 +16,26 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public class RadioEntity extends CorePhysicsEntity  {
-    private static final TrackedData<Boolean> NOT_PLAYING = DataTracker.registerData(RadioEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> MUTED = DataTracker.registerData(RadioEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> ALLOW_MUTE = DataTracker.registerData(RadioEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
+    @Nullable
     private SoundEvent song = PortalCubedSounds.RADIO_MUSIC_EVENT;
+    @Nullable
     private SoundEvent lastSong = song;
 
     public RadioEntity(EntityType<? extends PathAwareEntity> type, World world) {
@@ -38,7 +45,8 @@ public class RadioEntity extends CorePhysicsEntity  {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        dataTracker.startTracking(NOT_PLAYING, false);
+        dataTracker.startTracking(MUTED, false);
+        dataTracker.startTracking(ALLOW_MUTE, true);
     }
 
     @Override
@@ -74,16 +82,25 @@ public class RadioEntity extends CorePhysicsEntity  {
         }
     }
 
-    public boolean isNotPlaying() {
-        return dataTracker.get(NOT_PLAYING);
+    public boolean isMuted() {
+        return dataTracker.get(MUTED);
     }
 
-    public void setNotPlaying(boolean notPlaying) {
-        dataTracker.set(NOT_PLAYING, notPlaying);
+    public void setMuted(boolean notPlaying) {
+        dataTracker.set(MUTED, notPlaying);
+    }
+
+    public boolean isAllowMute() {
+        return dataTracker.get(ALLOW_MUTE);
+    }
+
+    public void setAllowMute(boolean allowMute) {
+        dataTracker.set(ALLOW_MUTE, allowMute);
     }
 
     @ClientOnly
     private void performPlay() {
+        if (song == null) return;
         MinecraftClient.getInstance().getSoundManager().play(new RadioSoundInstance(song));
     }
 
@@ -96,8 +113,8 @@ public class RadioEntity extends CorePhysicsEntity  {
     @Override
     public void setHolderUUID(Optional<UUID> uuid) {
         super.setHolderUUID(uuid);
-        if (uuid.isPresent()) {
-            setNotPlaying(!isNotPlaying());
+        if (uuid.isPresent() && isAllowMute()) {
+            setMuted(!isMuted());
         }
     }
 
@@ -105,8 +122,13 @@ public class RadioEntity extends CorePhysicsEntity  {
     public void tick() {
         super.tick();
         if (getCustomName() != null) {
-            if (getCustomName().getString().equalsIgnoreCase("exile") || this.getCustomName().getString().equalsIgnoreCase("vilify") || this.getCustomName().getString().equalsIgnoreCase("exile vilify")) {
+            final String name = getCustomName().getString();
+            if (name.equalsIgnoreCase("exile") || name.equalsIgnoreCase("vilify") || name.equalsIgnoreCase("exile vilify")) {
                 song = PortalCubedSounds.EXILE_MUSIC_EVENT;
+            } else if (name.equalsIgnoreCase("silent")) {
+                song = null;
+            } else {
+                song = PortalCubedSounds.RADIO_MUSIC_EVENT;
             }
         } else {
             song = PortalCubedSounds.RADIO_MUSIC_EVENT;
@@ -118,15 +140,32 @@ public class RadioEntity extends CorePhysicsEntity  {
     }
 
     @Override
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+        if (!world.isClient && player.getStackInHand(hand).isOf(PortalCubedItems.HAMMER)) {
+            setAllowMute(!isAllowMute());
+            if (isAllowMute()) {
+                player.sendMessage(Text.translatable("portalcubed.radio.allow_mute"), true);
+            } else {
+                setMuted(false);
+                player.sendMessage(Text.translatable("portalcubed.radio.disallow_mute"), true);
+            }
+            return ActionResult.SUCCESS;
+        }
+        return ActionResult.PASS;
+    }
+
+    @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putBoolean("NotPlaying", isNotPlaying());
+        nbt.putBoolean("Muted", isMuted());
+        nbt.putBoolean("AllowMute", isAllowMute());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        setNotPlaying(nbt.getBoolean("NotPlaying"));
+        setMuted(nbt.getBoolean("Muted"));
+        setAllowMute(nbt.getBoolean("AllowMute"));
     }
 
     @ClientOnly
@@ -150,7 +189,7 @@ public class RadioEntity extends CorePhysicsEntity  {
                 setDone();
                 return;
             }
-            volume = isNotPlaying() ? 0f : 1f;
+            volume = isMuted() ? 0f : 1f;
             x = RadioEntity.this.getX();
             y = RadioEntity.this.getY();
             z = RadioEntity.this.getZ();

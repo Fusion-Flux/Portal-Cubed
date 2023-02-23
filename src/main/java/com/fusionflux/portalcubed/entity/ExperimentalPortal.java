@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 public class  ExperimentalPortal extends Entity {
 
     private static final Supplier<IllegalStateException> NOT_INIT =
-        () -> new IllegalStateException("Portal data accessed before initalized");
+        () -> new IllegalStateException("Portal data accessed before initialized");
 
     private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
 
@@ -381,14 +381,14 @@ public class  ExperimentalPortal extends Entity {
 
         return new Box(
                 getBoundsCheckPointInPlane(WIDTH / 2, HEIGHT / 2)
-                        .add(getNormal().multiply(10)),
+                        .add(getNormal().multiply(2.5)),
                 getBoundsCheckPointInPlane(-WIDTH / 2, -HEIGHT / 2)
-                        .add(getNormal().multiply(-10))
+                        .add(getNormal().multiply(-2.5))
         ).union(new Box(
                 getBoundsCheckPointInPlane(-WIDTH / 2, HEIGHT / 2)
-                        .add(getNormal().multiply(10)),
+                        .add(getNormal().multiply(2.5)),
                 getBoundsCheckPointInPlane(WIDTH / 2, -HEIGHT / 2)
-                        .add(getNormal().multiply(-10))
+                        .add(getNormal().multiply(-2.5))
         ));
     }
 
@@ -405,7 +405,7 @@ public class  ExperimentalPortal extends Entity {
     }
 
     public Vec3d getBoundsCheckPointInPlane(double xInPlane, double yInPlane) {
-        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane));
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX() * 2.5, getFacingDirection().getUnitVector().getY() * 2.5, getFacingDirection().getUnitVector().getZ() * 2.5);
     }
 
     public Vec3d getPointInPlane(double xInPlane, double yInPlane) {

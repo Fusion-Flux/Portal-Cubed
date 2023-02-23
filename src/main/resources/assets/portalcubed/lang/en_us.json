@@ -13,6 +13,11 @@
   "subtitles.portalcubed.portal_fizzle": "Portal Fizzles",
   "subtitles.portalcubed.material_emancipation": "Object Disintegrates",
 
+  "subtitles.portalcubed.pedestal_button_press": "Switch Activated",
+  "subtitles.portalcubed.pedestal_button_release": "Switch Deactivated",
+  "subtitles.portalcubed.floor_button_press": "Button Activated",
+  "subtitles.portalcubed.floor_button_release": "Button Deactivated",
+
   "subtitles.portalcubed.rocket_fire": "Rocket Launched",
   "subtitles.portalcubed.rocket_locked": "Rocket Locked",
   "subtitles.portalcubed.rocket_locking": "Rocket Locking",
@@ -114,6 +119,7 @@
   "block.portalcubed.aged_white_2x2_panel_bottom_left": "Aged White 2x2 Panel Bottom Left",
   "block.portalcubed.aged_white_2x2_panel_bottom_right": "Aged White 2x2 Panel Bottom Right",
   "block.portalcubed.aged_white_half_panel": "Aged White Half Panel",
+  "block.portalcubed.aged_white_checkered_panel": "Aged White Checkered Panel",
   "block.portalcubed.aged_white_panel": "Aged White Panel",
 
   "block.portalcubed.padded_gray_2x1_panel_bottom": "Padded Gray 2x1 Panel Bottom",
@@ -185,12 +191,14 @@
 
   "block.portalcubed.old_ap_metal_grating": "Old Aperture Metal Grating",
   "block.portalcubed.portal_1_mesh_grating": "Portal 1 Mesh Grating",
-  "block.portalcubed.portal_1_metal_grating": "Portal 1 Mesh Grating",
+  "block.portalcubed.portal_1_metal_grating": "Portal 1 Metal Grating",
+  "block.portalcubed.portal_2_metal_grating": "Portal 2 Metal Grating",
 
   "block.portalcubed.office_concrete": "Horizontal Office Concrete + Orange Tiling",
   "block.portalcubed.solid_office_concrete": "Vertical Office Concrete + Blue Tiling",
   "block.portalcubed.bordered_office_concrete": "Bordered Office Concrete + Brown Tiling",
   "block.portalcubed.blue_office_concrete": "Blue Horizontal Office Concrete + Tread Plating",
+  "block.portalcubed.striped_office_concrete": "Striped Horizontal Office Concrete + Gray Tiling",
 
   "block.portalcubed.insulation": "Insulation",
   "block.portalcubed.portal_2_panel_frame": "Panel Frame",
@@ -252,6 +260,7 @@
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
   "death.attack.portalcubed.vaporization": "%s was vaporized",
+  "death.attack.portalcubed.cube": "%s was hit on the head by a weighted cube",
 
   "key.portalcubed.category" : "Portal\u00b3",
   "key.portalcubed.grab" : "Grab",
@@ -272,6 +281,9 @@
   "portalcubed.velocity_helper.condition_expression": "condition",
   "portalcubed.velocity_helper.curve_expression": "interpolation curve",
 
+  "portalcubed.radio.allow_mute": "Muting Allowed",
+  "portalcubed.radio.disallow_mute": "Muting Disallowed",
+
   "item.portalcubed.music_disc_still_alive": "Music Disc",
   "item.portalcubed.music_disc_still_alive.desc": "John Coulton - Still Alive",
   "item.portalcubed.music_disc_cara_mia_addio": "Music Disc",
@@ -280,6 +292,8 @@
   "item.portalcubed.music_disc_want_you_gone.desc": "John Coulton - Want You Gone",
   "item.portalcubed.music_disc_reconstructing_more_science": "Music Disc",
   "item.portalcubed.music_disc_reconstructing_more_science.desc": "Mike Morasky - Reconstructing More Science",
+
+  "item.portalcubed.block_item_icon": "Blocks Group Icon",
 
   "portalcubed.command.fizzle.success": "Successfully fizzled %s physics objects",
 

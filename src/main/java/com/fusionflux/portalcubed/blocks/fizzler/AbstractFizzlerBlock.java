@@ -4,7 +4,7 @@ import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.entity.Fizzleable;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.Block;
@@ -118,15 +118,19 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
 
     protected final void fizzlePhysicsEntity(Entity entity) {
         if (entity.world.isClient) return;
-        if (entity instanceof CorePhysicsEntity physicsEntity) {
-            physicsEntity.fizzle();
+        if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() == Fizzleable.FizzleType.OBJECT) {
+            fizzleable.fizzle();
         }
     }
 
     protected final void fizzleLiving(Entity entity) {
         if (entity.world.isClient) return;
-        if (entity instanceof LivingEntity && !(entity instanceof CorePhysicsEntity)) {
+        // TODO: Fizzle players visually?
+        if (entity instanceof LivingEntity || (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() == Fizzleable.FizzleType.LIVING)) {
             entity.damage(PortalCubedDamageSources.FIZZLE, PortalCubedConfig.fizzlerDamage);
+            if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() != Fizzleable.FizzleType.NOT) {
+                fizzleable.fizzle();
+            }
         }
     }
 }

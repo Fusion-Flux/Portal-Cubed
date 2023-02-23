@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -11,8 +12,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.AnimationState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -200,6 +201,8 @@ public class RocketTurretBlockEntity extends BlockEntity {
             if (world.isClient) {
                 aimDests = null;
             }
+            setYaw(0);
+            setPitch(0);
             return;
         }
         if (world.isClient) {
@@ -210,7 +213,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
                 RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE,
                 // We can pass null here because of ShapeContextMixin
                 null
-            )).stream().map(p -> new Pair<>(p.getLeft(), p.getRight().getPos())).toList();
+            )).rays().stream().map(r -> new Pair<>(r.start(), r.end())).toList();
             return;
         }
         if (lockedTicks > 0) {
@@ -240,11 +243,14 @@ public class RocketTurretBlockEntity extends BlockEntity {
         final BlockPos actualBody = getPos().up();
         final Vec3d eye = Vec3d.ofCenter(actualBody, GUN_OFFSET.y - 1);
         //noinspection DataFlowIssue
-        final PlayerEntity player = world.getClosestPlayer(
-            TargetPredicate.createNonAttackable().setPredicate(p -> p.world.raycast(new RaycastContext(
-                eye, p.getPos().withAxis(Direction.Axis.Y, p.getBodyY(0.5)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, null
+        final LivingEntity player = world.getClosestEntity(
+            LivingEntity.class,
+            TargetPredicate.createAttackable().setPredicate(e -> !(e instanceof CorePhysicsEntity) && e.world.raycast(new RaycastContext(
+                eye, e.getPos().withAxis(Direction.Axis.Y, e.getBodyY(0.5)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, null
             )).getType() == HitResult.Type.MISS),
-            pos.getX(), pos.getY(), pos.getZ()
+            null,
+            pos.getX(), pos.getY(), pos.getZ(),
+            Box.of(eye, 128, 128, 128)
         );
         if (player != null) {
             final Vec3d offset = player.getPos()

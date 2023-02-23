@@ -1,12 +1,5 @@
 package com.fusionflux.portalcubed.util;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.networking.api.PacketByteBufs;
-
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
@@ -17,6 +10,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public final class HolderComponent implements AutoSyncedComponent {
 
@@ -31,7 +30,7 @@ public final class HolderComponent implements AutoSyncedComponent {
 
     public boolean hold(CorePhysicsEntity entityToHold) {
         Objects.requireNonNull(entityToHold, "The entity to hold can not be null!");
-        if (entityBeingHeld() == null && entityToHold.getFizzleProgress() == 0) {
+        if (entityBeingHeld() == null && !entityToHold.fizzling()) {
             entityToHold.setHolderUUID(Optional.of(owner.getUuid()));
             this.heldEntity = entityToHold;
             this.heldEntity.setNoGravity(true);
@@ -50,7 +49,9 @@ public final class HolderComponent implements AutoSyncedComponent {
     public boolean stopHolding() {
         if (this.heldEntity != null) {
             heldEntity.setHolderUUID(Optional.empty());
-            this.heldEntity.setNoGravity(false);
+            if (!heldEntity.fizzling()) {
+                heldEntity.setNoGravity(false);
+            }
             if (owner.world.isClient && !heldEntity.isRemoved()) {
                 var buf = PacketByteBufs.create();
                 buf.writeDouble(heldEntity.getPos().x);
