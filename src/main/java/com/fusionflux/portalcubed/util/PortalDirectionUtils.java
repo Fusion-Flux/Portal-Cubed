@@ -1,12 +1,15 @@
 package com.fusionflux.portalcubed.util;
 
+import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+
+import java.util.Optional;
+import java.util.Set;
 
 public class PortalDirectionUtils {
     public static Vec3d rotateVelocity(Vec3d velocity, Direction entryDirection, Direction exitDirection) {
@@ -132,9 +135,13 @@ public class PortalDirectionUtils {
                 .withAxis(facing.getAxis(), 0);
             final Vec3d newRel = rotateVelocity(hitRelative, facing, otherFacing);
             final Vec3d newStart = portal.getDestination().orElseThrow().add(newRel);
-            return new Pair<>(
+            return new AdvancedEntityRaycast.TransformResult(
                 blockHit.getPos(),
-                AdvancedEntityRaycast.withStartEnd(context, newStart, newStart.add(newOffset))
+                AdvancedEntityRaycast.withStartEnd(context, newStart, newStart.add(newOffset)),
+                portal.getLinkedPortalUUID()
+                    .flatMap(id -> Optional.ofNullable(((Accessors)portal.getWorld()).getEntity(id)))
+                    .map(Set::of)
+                    .orElse(Set.of())
             );
         }
     );

@@ -11,7 +11,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -89,7 +88,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                     final Vec3d newOffset = Vec3d.fromPolar(entity.getPitch(), entity.getYaw())
                         .multiply(distance - offset.length());
                     final Vec3d origin = entity.getPos().add(new Vec3d(0, entity.getHeight() / 2, 0));
-                    return new Pair<>(
+                    return new AdvancedEntityRaycast.TransformResult(
                         entityHit.getPos().add(offset.multiply(0.25 / offset.length())),
                         AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
                     );
