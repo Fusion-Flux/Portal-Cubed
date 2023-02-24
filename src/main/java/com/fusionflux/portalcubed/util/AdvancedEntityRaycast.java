@@ -21,11 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-<<<<<<< HEAD
 import java.util.Optional;
-=======
 import java.util.Set;
->>>>>>> origin/1.19.2
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
