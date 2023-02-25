@@ -169,10 +169,6 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
         this.bodyYaw = yaw;
     }
 
-    public float getRotYaw() {
-        return this.bodyYaw;
-    }
-
     @Override
     public boolean canUsePortals() {
         return canUsePortals;
@@ -192,7 +188,7 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
             PlayerEntity player = (PlayerEntity) ((Accessors) world).getEntity(getHolderUUID().get());
             if (player != null && player.isAlive()) {
                 Vec3d vec3d = player.getCameraPosVec(0);
-                double d = 2;
+                double d = 1.5;
                 canUsePortals = false;
                 Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(), player.getYaw());
                 Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
