@@ -58,11 +58,11 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity implemen
             target = "Lnet/minecraft/client/network/ClientPlayerEntity;hasStatusEffect(Lnet/minecraft/entity/effect/StatusEffect;)Z"
         )
     )
-    private boolean noSprinting(ClientPlayerEntity entity, StatusEffect effect, Operation<Boolean> original) {
+    private boolean noSprinting(ClientPlayerEntity instance, StatusEffect effect, Operation<Boolean> original) {
         if (PortalCubedClient.isPortalHudMode()) {
             return true;
         }
-        return original.call(effect);
+        return original.call(instance, effect);
     }
 
 }
