@@ -16,15 +16,15 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 @ClientOnly
 public class PortalCubedKeyBindings {
     public static void register() {
-        KeyBind key = new KeyBind(
+        KeyBind grabKey = new KeyBind(
             "key." + PortalCubed.MOD_ID + ".grab",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_G,
             "key." + PortalCubed.MOD_ID + ".category"
         );
-        KeyBindingHelper.registerKeyBinding(key);
+        KeyBindingHelper.registerKeyBinding(grabKey);
         ClientTickEvents.END.register(client -> {
-            if (client.player != null && key.wasPressed()) {
+            if (client.player != null && grabKey.wasPressed()) {
                 PortalCubedComponents.HOLDER_COMPONENT.get(client.player).stopHolding();
                 ClientPlayNetworking.send(PortalCubedServerPackets.GRAB_KEY_PRESSED, PacketByteBufs.create());
             }
@@ -38,7 +38,7 @@ public class PortalCubedKeyBindings {
         );
         KeyBindingHelper.registerKeyBinding(portalRemoveKey);
         ClientTickEvents.END.register(client -> {
-            if (client.player != null && portalRemoveKey.wasPressed()) {
+            if (client.player != null && portalRemoveKey.wasPressed() && !PortalCubedClient.isPortalHudMode()) {
                 ClientPlayNetworking.send(PortalCubedServerPackets.REMOVE_PORTALS, PacketByteBufs.create());
             }
         });
