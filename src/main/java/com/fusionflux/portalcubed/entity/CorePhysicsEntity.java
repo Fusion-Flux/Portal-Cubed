@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -28,6 +29,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
@@ -194,6 +196,9 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                 canUsePortals = false;
                 Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(), player.getYaw());
                 Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
+                final Vec3d holdPos = PortalDirectionUtils.raycast(world, new RaycastContext(
+                    vec3d, vec3d3, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this
+                )).finalHit().getPos();
                 if (!world.isClient) {
                     GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
                 }
@@ -203,7 +208,7 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                 this.setBodyYaw(player.headYaw);
                 move(
                     MovementType.PLAYER,
-                    RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
+                    RotationUtil.vecWorldToPlayer(holdPos.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
                 );
             } else {
                 if (player != null) {
