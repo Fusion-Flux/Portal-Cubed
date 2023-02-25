@@ -18,6 +18,7 @@ import com.fusionflux.portalcubed.client.render.block.entity.RocketTurretRendere
 import com.fusionflux.portalcubed.client.render.block.entity.VelocityHelperRenderer;
 import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
+import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
@@ -54,6 +55,7 @@ import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
+import org.quiltmc.qsl.networking.api.client.ClientLoginConnectionEvents;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -70,6 +72,7 @@ public class PortalCubedClient implements ClientModInitializer {
     private static boolean hiddenBlocksVisible;
     public static boolean allowCfg;
     private static SoundInstance excursionFunnelMusic;
+    private static boolean portalHudMode = false;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -205,6 +208,11 @@ public class PortalCubedClient implements ClientModInitializer {
         PortalBlocksLoader.initClient();
 
         FloorButtonBlock.enableEasterEgg = true;
+
+        ClientLoginConnectionEvents.INIT.register((handler, client) -> {
+            allowCfg = true;
+            portalHudMode = false;
+        });
     }
 
     private void registerEmissiveModels(ModContainer mod) {
@@ -332,4 +340,11 @@ public class PortalCubedClient implements ClientModInitializer {
         hiddenBlocksVisible = !hiddenBlocksVisible;
     }
 
+    public static boolean isPortalHudMode() {
+        return portalHudMode || PortalCubedConfig.portalHudMode;
+    }
+
+    public static void setPortalHudMode(boolean portalHudMode) {
+        PortalCubedClient.portalHudMode = portalHudMode;
+    }
 }

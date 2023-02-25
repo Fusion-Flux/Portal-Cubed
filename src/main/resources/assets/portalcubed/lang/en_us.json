@@ -256,6 +256,7 @@
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
   "portalcubed.midnightconfig.pelletDamage": "Energy Pellet Damage",
+  "portalcubed.midnightconfig.portalHudMode": "Use Portal HUD",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
@@ -300,6 +301,7 @@
   "gamerule.category.portalcubed": "Portal\u00b3",
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
   "gamerule.portalAlignment": "Portal Alignment (1/xth of a block, 0 to disable)",
+  "gamerule.usePortalHud": "Use Portal HUD",
 
   "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
   "portalcubed.ponder.auto_portal.text_1": "Power an Auto Portal with redstone to open it.",

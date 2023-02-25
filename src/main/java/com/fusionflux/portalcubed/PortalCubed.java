@@ -253,9 +253,18 @@ public class PortalCubed implements ModInitializer {
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            final PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeBoolean(handler.player.world.getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH));
-            handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_CFG, buf));
+            if (!handler.player.world.getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH)) {
+                // Default is true on the client, so we don't need to send in that case
+                final PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBoolean(false);
+                handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_CFG, buf));
+            }
+            if (handler.player.world.getGameRules().getBoolean(PortalCubedGameRules.USE_PORTAL_HUD)) {
+                // Same as above, but false
+                final PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBoolean(true);
+                handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_PORTAL_HUD, buf));
+            }
         });
 
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
