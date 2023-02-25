@@ -85,6 +85,8 @@ dependencies {
 	include implementation("net.objecthunter:exp4j:0.4.8")
 
 	modCompileOnly ("alexiil.mc.lib:libmultipart-all:0.8.0")
+
+	modCompileOnly "maven.modrinth:lambdynamiclights:2.2.0+1.19.2"
 }
 
 checkstyle {

@@ -11,7 +11,7 @@ import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.commands.PortalCubedCommands;
-import com.fusionflux.portalcubed.compatability.create.CreateIntegration;
+import com.fusionflux.portalcubed.compat.create.CreateIntegration;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;

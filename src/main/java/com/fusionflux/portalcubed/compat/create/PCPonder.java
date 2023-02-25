@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.compatability.create;
+package com.fusionflux.portalcubed.compat.create;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.AutoPortalBlock;

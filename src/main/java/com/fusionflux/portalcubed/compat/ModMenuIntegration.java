@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.compatability;
+package com.fusionflux.portalcubed.compat;
 
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;

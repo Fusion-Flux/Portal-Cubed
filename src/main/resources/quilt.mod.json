@@ -9,8 +9,9 @@
       "preLaunch": "com.llamalad7.mixinextras.MixinExtrasBootstrap::init",
       "init": "com.fusionflux.portalcubed.PortalCubed",
       "client_init": "com.fusionflux.portalcubed.client.PortalCubedClient",
-      "modmenu": "com.fusionflux.portalcubed.compatability.ModMenuIntegration",
-      "cardinal-components": "com.fusionflux.portalcubed.util.PortalCubedComponents"
+      "modmenu": "com.fusionflux.portalcubed.compat.ModMenuIntegration",
+      "cardinal-components": "com.fusionflux.portalcubed.util.PortalCubedComponents",
+      "dynamiclights": "com.fusionflux.portalcubed.compat.LambDynamicLightsIntegration"
     },
 
     "depends": [
