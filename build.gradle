@@ -43,6 +43,10 @@ repositories {
 		name = "AlexIIL"
 		url = "https://maven.alexiil.uk/"
 	}
+	maven {
+		name 'Gegy'
+		url 'https://maven.gegy.dev'
+	}
 }
 
 dependencies {
@@ -86,7 +90,7 @@ dependencies {
 
 	modCompileOnly ("alexiil.mc.lib:libmultipart-all:0.8.0")
 
-	modCompileOnly "maven.modrinth:lambdynamiclights:2.2.0+1.19.2"
+	modCompileOnly "dev.lambdaurora:lambdynamiclights:2.2.0+1.19.2"
 }
 
 checkstyle {
