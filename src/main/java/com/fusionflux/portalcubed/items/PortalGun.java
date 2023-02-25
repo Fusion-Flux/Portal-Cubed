@@ -355,7 +355,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
     }
 
     public HitResult customRaycast(Entity user, double maxDistance, float tickDelta) {
-        final Vec3d start = user.getCameraPosVec(tickDelta).add(user.getVelocity());
+        final Vec3d start = user.getCameraPosVec(tickDelta);
         final Vec3d rotation = user.getRotationVec(tickDelta);
         final Vec3d end = start.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
         final World world = user.world;
