@@ -346,4 +346,7 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
         super.remove(reason);
     }
 
+    @Override
+    public void checkDespawn() {
+    }
 }

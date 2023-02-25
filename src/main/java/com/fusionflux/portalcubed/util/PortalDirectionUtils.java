@@ -130,7 +130,8 @@ public class PortalDirectionUtils {
             final Direction facing = portal.getFacingDirection();
             final Direction otherFacing = Direction.fromVector(new BlockPos(portal.getOtherFacing()));
             final Vec3d newOffset = rotateVelocity(offset, facing, otherFacing)
-                .multiply((distance - offset.length()) / offset.length());
+                .normalize()
+                .multiply(distance - offset.length());
             final Vec3d hitRelative = entityHit.getPos().subtract(portal.getOriginPos())
                 .withAxis(facing.getAxis(), 0);
             final Vec3d newRel = rotateVelocity(hitRelative, facing, otherFacing);
