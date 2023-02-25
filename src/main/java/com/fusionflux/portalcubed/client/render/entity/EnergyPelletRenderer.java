@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.client.render.entity;
 import com.fusionflux.portalcubed.entity.EnergyPelletEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -53,7 +54,7 @@ public class EnergyPelletRenderer extends EntityRenderer<EnergyPelletEntity> {
             pelletB = 0.3f;
         }
         mc.getItemRenderer()
-            .renderItem(ITEM, ModelTransformation.Mode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, 0);
+            .renderItem(ITEM, ModelTransformation.Mode.GROUND, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, 0);
         pelletR = pelletG = pelletB = 1f;
         pelletAlpha = null;
         matrices.pop();
