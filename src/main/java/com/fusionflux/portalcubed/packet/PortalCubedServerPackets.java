@@ -9,7 +9,9 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -53,32 +55,32 @@ public class PortalCubedServerPackets {
 
         Vec3d vec3d2 = player.getRotationVec(1.0F);
         Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
-        Box box = player.getBoundingBox().stretch(vec3d2.multiply(d)).expand(1.0D, 1.0D, 1.0D);
 
         server.execute(() -> {
-            EntityHitResult entityHitResult = ProjectileUtil.raycast(player, vec3d, vec3d3, box, (entity) -> !entity.isSpectator() && entity.collides(), d);
-            if (entityHitResult != null) {
-                if (entityHitResult.getEntity() instanceof CorePhysicsEntity entity) {
-                    if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).hold(entity)) {
+            final AdvancedEntityRaycast.Result advancedCast = PortalDirectionUtils.raycast(player.world, new RaycastContext(
+                vec3d, vec3d3, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, player
+            ));
+            for (final var ray : advancedCast.rays()) {
+                EntityHitResult entityHitResult = ProjectileUtil.raycast(player, ray.start(), ray.end(), new Box(ray.start(), ray.end()).expand(1), (entity) -> !entity.isSpectator() && entity.collides(), d);
+                if (entityHitResult != null) {
+                    if (entityHitResult.getEntity() instanceof CorePhysicsEntity entity && !PortalCubedComponents.HOLDER_COMPONENT.get(player).hold(entity)) {
                         PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding();
                     }
+                    return;
                 }
-            } else {
-                if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding()) {
-                    final BlockHitResult hit = player.world.raycast(new RaycastContext(
-                        vec3d, vec3d3, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, player
-                    ));
-                    if (hit.getType() != HitResult.Type.MISS) {
-                        final BlockState state = player.world.getBlockState(hit.getBlockPos());
-                        if (state.getBlock() instanceof TallButtonVariant button) {
-                            if (player.interactionManager.interactBlock(player, player.world, ItemStack.EMPTY, Hand.MAIN_HAND, hit) != ActionResult.PASS) {
-                                player.world.playSound(null, hit.getBlockPos(), button.getClickSound(true), SoundCategory.BLOCKS, 0.8f, 1f);
-                            }
+            }
+            if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding()) {
+                final BlockHitResult hit = advancedCast.finalHit();
+                if (hit.getType() != HitResult.Type.MISS) {
+                    final BlockState state = player.world.getBlockState(hit.getBlockPos());
+                    if (state.getBlock() instanceof TallButtonVariant button) {
+                        if (player.interactionManager.interactBlock(player, player.world, ItemStack.EMPTY, Hand.MAIN_HAND, hit) != ActionResult.PASS) {
+                            player.world.playSound(null, hit.getBlockPos(), button.getClickSound(true), SoundCategory.BLOCKS, 0.8f, 1f);
                         }
-                    } else {
-                        player.playSound(PortalCubedSounds.NOTHING_TO_GRAB_EVENT, SoundCategory.NEUTRAL, 0.3f, 1f);
-                        ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
                     }
+                } else {
+                    player.playSound(PortalCubedSounds.NOTHING_TO_GRAB_EVENT, SoundCategory.NEUTRAL, 0.3f, 1f);
+                    ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
                 }
             }
         });
