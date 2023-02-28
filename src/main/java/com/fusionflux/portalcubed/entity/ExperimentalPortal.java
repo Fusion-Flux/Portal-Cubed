@@ -53,12 +53,13 @@ public class  ExperimentalPortal extends Entity {
     public static final TrackedData<Optional<Vec3d>> AXIS_W = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
     public static final TrackedData<Optional<Vec3d>> AXIS_H = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
     public static final TrackedData<Vec3d> AXIS_OH = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
+    public static final TrackedData<Vec3d> AXIS_OW = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
     public static final TrackedData<Optional<Vec3d>> DESTINATION = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
     public static final TrackedData<Vec3d> FACING = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
     public static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
     public Vec3d getNormal() {
-        return getAxisW().orElseThrow(NOT_INIT).crossProduct(getAxisH().orElseThrow(NOT_INIT)).normalize();
+        return (getAxisW().orElseThrow(NOT_INIT).crossProduct(getAxisH().orElseThrow(NOT_INIT)));
     }
 
     public ExperimentalPortal(EntityType<?> entityType, World world) {
@@ -75,6 +76,7 @@ public class  ExperimentalPortal extends Entity {
         this.getDataTracker().startTracking(AXIS_W, Optional.empty());
         this.getDataTracker().startTracking(AXIS_H, Optional.empty());
         this.getDataTracker().startTracking(AXIS_OH, Vec3d.ZERO);
+        this.getDataTracker().startTracking(AXIS_OW, Vec3d.ZERO);
         this.getDataTracker().startTracking(DESTINATION, Optional.empty());
         this.getDataTracker().startTracking(FACING, Vec3d.ZERO);
         this.getDataTracker().startTracking(OWNER_UUID, Optional.empty());
@@ -85,8 +87,9 @@ public class  ExperimentalPortal extends Entity {
         this.setColor(compoundTag.getInt("color"));
         this.setRoll(compoundTag.getFloat("roll"));
         if (compoundTag.containsUuid("linkedPortalUUID")) this.setLinkedPortalUUID(Optional.of(compoundTag.getUuid("linkedPortalUUID")));
-        if (compoundTag.contains("axisW")) this.setOrientation(IPHelperDuplicate.getVec3d(compoundTag, "axisW").normalize(), IPHelperDuplicate.getVec3d(compoundTag, "axisH").normalize());
-        this.setOtherAxisH(IPHelperDuplicate.getVec3d(compoundTag, "axisOH").normalize());
+        if (compoundTag.contains("axisW")) this.setOrientation(IPHelperDuplicate.getVec3d(compoundTag, "axisW"), IPHelperDuplicate.getVec3d(compoundTag, "axisH"));
+        this.setOtherAxisH(IPHelperDuplicate.getVec3d(compoundTag, "axisOH"));
+        this.setOtherAxisW(IPHelperDuplicate.getVec3d(compoundTag, "axisOW"));
         if (compoundTag.contains("destination")) this.setDestination(Optional.of(IPHelperDuplicate.getVec3d(compoundTag, "destination")));
         this.setOtherFacing(IPHelperDuplicate.getVec3d(compoundTag, "facing"));
         if (compoundTag.containsUuid("ownerUUID")) this.setOwnerUUID(Optional.of(compoundTag.getUuid("ownerUUID")));
@@ -100,6 +103,7 @@ public class  ExperimentalPortal extends Entity {
         this.getAxisW().ifPresent(axisW -> IPHelperDuplicate.putVec3d(compoundTag, "axisW", axisW));
         this.getAxisH().ifPresent(axisH -> IPHelperDuplicate.putVec3d(compoundTag, "axisH", axisH));
         IPHelperDuplicate.putVec3d(compoundTag, "axisOH", this.getOtherAxisH());
+        IPHelperDuplicate.putVec3d(compoundTag, "axisOW", this.getOtherAxisW());
         this.getDestination().ifPresent(destination -> IPHelperDuplicate.putVec3d(compoundTag, "destination", destination));
         IPHelperDuplicate.putVec3d(compoundTag, "facing", this.getOtherFacing());
         this.getOwnerUUID().ifPresent(uuid -> compoundTag.putUuid("ownerUUID", uuid));
@@ -166,8 +170,16 @@ public class  ExperimentalPortal extends Entity {
         return getDataTracker().get(AXIS_OH);
     }
 
+    public Vec3d getOtherAxisW() {
+        return getDataTracker().get(AXIS_OW);
+    }
+
     public void setOtherAxisH(Vec3d h) {
         this.getDataTracker().set(AXIS_OH, h);
+    }
+
+    public void setOtherAxisW(Vec3d w) {
+        this.getDataTracker().set(AXIS_OW, w);
     }
 
     public Optional<Vec3d> getDestination() {

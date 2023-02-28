@@ -39,10 +39,12 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 
 public class PortalGun extends Item implements DirectClickItem, DyeableItem {
-
+    private static final Supplier<IllegalStateException> NOT_INIT =
+            () -> new IllegalStateException("Portal data accessed before initialized");
     private static final Map<Pair<Vec3i, Vec3i>, List<List<Direction>>> FAIL_TRIES;
     private static final Map<Direction.AxisDirection, Double2DoubleFunction> FAIL_AXIS_DIRS = new EnumMap<>(Map.of(
         Direction.AxisDirection.NEGATIVE, Math::floor,
@@ -189,9 +191,9 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                     blockPos = hitResult.getPos();
                 } else {
                     blockPos = new Vec3d(
-                        Math.round(hitResult.getPos().x * alignment) / (double)alignment,
-                        Math.round(hitResult.getPos().y * alignment) / (double)alignment,
-                        Math.round(hitResult.getPos().z * alignment) / (double)alignment
+                            Math.round(hitResult.getPos().x * alignment) / (double) alignment,
+                            Math.round(hitResult.getPos().y * alignment) / (double) alignment,
+                            Math.round(hitResult.getPos().z * alignment) / (double) alignment
                     );
                 }
 
@@ -231,9 +233,9 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
                 }
 
                 final List<ExperimentalPortal> overlappingPortals = world.getEntitiesByType(
-                    PortalCubedEntities.EXPERIMENTAL_PORTAL,
-                    portalHolder.getBoundingBox(),
-                    p -> p != originalPortal && vectorsEqual(p.getNormal(), portalHolder.getNormal())
+                        PortalCubedEntities.EXPERIMENTAL_PORTAL,
+                        portalHolder.getBoundingBox(),
+                        p -> p != originalPortal && vectorsEqual(p.getNormal(), portalHolder.getNormal())
                 );
 
                 if (!overlappingPortals.isEmpty()) {
@@ -329,10 +331,12 @@ public class PortalGun extends Item implements DirectClickItem, DyeableItem {
     public static void linkPortals(ExperimentalPortal portal1, ExperimentalPortal portal2, float volume) {
         portal1.setDestination(Optional.of(portal2.getOriginPos()));
         portal1.setOtherFacing(new Vec3d(portal2.getFacingDirection().getUnitVector().getX(), portal2.getFacingDirection().getUnitVector().getY(), portal2.getFacingDirection().getUnitVector().getZ()));
-        portal1.setOtherAxisH(portal2.getAxisH().get());
+        portal1.setOtherAxisH(portal2.getAxisH().orElseThrow(NOT_INIT));
+        portal1.setOtherAxisW(portal2.getAxisW().orElseThrow(NOT_INIT));
         portal2.setDestination(Optional.of(portal1.getOriginPos()));
         portal2.setOtherFacing(new Vec3d(portal1.getFacingDirection().getUnitVector().getX(), portal1.getFacingDirection().getUnitVector().getY(), portal1.getFacingDirection().getUnitVector().getZ()));
-        portal2.setOtherAxisH(portal1.getAxisH().get());
+        portal2.setOtherAxisH(portal1.getAxisH().orElseThrow(NOT_INIT));
+        portal2.setOtherAxisW(portal1.getAxisW().orElseThrow(NOT_INIT));
         portal1.setLinkedPortalUUID(Optional.of(portal2.getUuid()));
         portal2.setLinkedPortalUUID(Optional.of(portal1.getUuid()));
 
