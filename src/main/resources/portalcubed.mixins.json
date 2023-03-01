@@ -10,6 +10,7 @@
     "RaycastContextAccessor",
     "BlockHitResultMixin",
     "ServerPlayNetworkHandlerMixin",
+    "ServerPlayerInteractionManagerMixin",
     "ShapeContextMixin",
     "WorldMixin",
     "WorldViewMixin"

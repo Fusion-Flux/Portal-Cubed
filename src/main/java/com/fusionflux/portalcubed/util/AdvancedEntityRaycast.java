@@ -1,8 +1,19 @@
 package com.fusionflux.portalcubed.util;
 
-import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.fusionflux.portalcubed.mixin.RaycastContextAccessor;
 import com.google.common.base.Suppliers;
+
 import net.minecraft.block.EntityShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -14,17 +25,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class AdvancedEntityRaycast {
     public record TransformInfo(
@@ -64,7 +64,6 @@ public class AdvancedEntityRaycast {
         public Result {
             Validate.isTrue(!rays.isEmpty(), "AdvancedEntityRaycast.Result must have at least one ray.");
             Validate.isTrue(rays.get(rays.size() - 1).hit instanceof BlockHitResult, "AdvancedEntityRaycast.Result.finalHit must be a BlockHitResult.");
-            ((AdvancedRaycastResultHolder) rays.get(rays.size() - 1).hit).setResult(Optional.of(this));
         }
 
         public BlockHitResult finalHit() {
