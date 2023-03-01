@@ -69,6 +69,17 @@ public class AdvancedEntityRaycast {
         public BlockHitResult finalHit() {
             return (BlockHitResult)rays.get(rays.size() - 1).hit;
         }
+
+        @Nullable
+        public EntityHitResult entityRaycast(@NotNull Entity owner, Predicate<Entity> predicate) {
+            for (final Ray ray : rays) {
+                final EntityHitResult hit = ProjectileUtil.raycast(
+                    owner, ray.start, ray.end, new Box(ray.start, ray.end).expand(1), predicate, ray.start.squaredDistanceTo(ray.end)
+                );
+                if (hit != null) return hit;
+            }
+            return null;
+        }
     }
 
     public static Result raycast(World world, RaycastContext context, TransformInfo... transforms) {

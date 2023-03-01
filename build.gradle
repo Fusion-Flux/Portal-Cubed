@@ -43,6 +43,10 @@ repositories {
 		name = "AlexIIL"
 		url = "https://maven.alexiil.uk/"
 	}
+	maven {
+		name 'Gegy'
+		url 'https://maven.gegy.dev'
+	}
 }
 
 dependencies {
@@ -85,6 +89,8 @@ dependencies {
 	include implementation("net.objecthunter:exp4j:0.4.8")
 
 	modCompileOnly ("alexiil.mc.lib:libmultipart-all:0.8.0")
+
+	modCompileOnly "dev.lambdaurora:lambdynamiclights:2.2.0+1.19.2"
 }
 
 checkstyle {

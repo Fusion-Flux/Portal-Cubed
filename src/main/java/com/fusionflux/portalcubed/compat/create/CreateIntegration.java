@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.compatability.create;
+package com.fusionflux.portalcubed.compat.create;
 
 public class CreateIntegration {
     public static void init() {

@@ -20,18 +20,23 @@
     "client.BackgroundRendererMixin",
     "client.CameraMixin",
     "client.ClientPlayerEntityMixin",
+    "client.ClientPlayNetworkHandlerMixin",
     "client.ClientWorldMixin",
+    "client.DeathScreenAccessor",
+    "client.DeathScreenMixin",
+    "client.GameRendererMixin",
     "client.HandledScreenMixin",
     "client.HeldItemRendererMixin",
+    "client.InGameHudMixin",
     "client.InGameOverlayRendererMixin",
     "client.MinecraftClientMixin",
     "client.ModelLoaderMixin",
+    "client.MouseMixin",
     "client.MusicTrackerAccessor",
     "client.ParticleManagerMixin",
-    "client.SoundSystemMixin",
     "client.RenderSystemMixin",
-    "client.VertexConsumerMixin",
-    "client.GameRendererMixin"
+    "client.SoundSystemMixin",
+    "client.VertexConsumerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

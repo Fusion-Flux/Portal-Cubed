@@ -5,7 +5,49 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.Vec3d;
 
 //This is from https://github.com/qouteall/ImmersivePortalsMod/blob/1.18/q_misc_util/src/main/java/qouteall/q_misc_util/my_util/DQuaternion.java,
-public record IPQuaternion(double x, double y, double z, double w) {
+public class IPQuaternion {
+    public final double x;
+    public final double y;
+    public final double z;
+    public final double w;
+
+
+
+    public IPQuaternion(double x, double y, double z, double w) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
+    public double getW() {
+        return w;
+    }
+
+    public static IPQuaternion rotationByRadians(
+            Vec3d axis,
+            double rotationAngle
+    ) {
+        double s = Math.sin(rotationAngle / 2.0F);
+        return new IPQuaternion(
+                axis.x * s,
+                axis.y * s,
+                axis.z * s,
+                Math.cos(rotationAngle / 2.0F)
+        );
+    }
 
     /**
      * @return the axis that the rotation is being performed along
@@ -41,11 +83,55 @@ public record IPQuaternion(double x, double y, double z, double w) {
         );
     }
 
+    public IPQuaternion multiply(double val) {
+        return new IPQuaternion(
+                x * val, y * val, z * val, w * val
+        );
+    }
+
+    /**
+     * vector add
+     */
+    public IPQuaternion add(IPQuaternion q) {
+        return new IPQuaternion(
+                x + q.x, y + q.y, z + q.z, w + q.w
+        );
+    }
+
+    public Vec3d rotate(Vec3d vec) {
+        IPQuaternion result = this.hamiltonProduct(new IPQuaternion(vec.x, vec.y, vec.z, 0)).hamiltonProduct(getConjugated());
+
+        return new Vec3d(result.x, result.y, result.z);
+    }
+
+    public IPQuaternion getConjugated() {
+        return new IPQuaternion(
+                -x, -y, -z, w
+        );
+    }
+
+    public IPQuaternion hamiltonProduct(IPQuaternion other) {
+        double x1 = this.getX();
+        double y1 = this.getY();
+        double z1 = this.getZ();
+        double w1 = this.getW();
+        double x2 = other.getX();
+        double y2 = other.getY();
+        double z2 = other.getZ();
+        double w2 = other.getW();
+        return new IPQuaternion(
+                w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+                w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2,
+                w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2,
+                w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
+        );
+    }
+
     public static Pair<Double, Double> getPitchYawFromRotation(IPQuaternion quaternion) {
-        double x = quaternion.x();
-        double y = quaternion.y();
-        double z = quaternion.z();
-        double w = quaternion.w();
+        double x = quaternion.getX();
+        double y = quaternion.getY();
+        double z = quaternion.getZ();
+        double w = quaternion.getW();
 
         double cosYaw = 2 * (y * y + z * z) - 1;
         double sinYaw = -(x * z + y * w) * 2;
@@ -58,6 +144,7 @@ public record IPQuaternion(double x, double y, double z, double w) {
             Math.toDegrees(Math.atan2(sinYaw, cosYaw))
         );
     }
+
 
     // x, y, z are the 3 rows of the matrix
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
@@ -109,6 +196,19 @@ public record IPQuaternion(double x, double y, double z, double w) {
         }
 
         return new IPQuaternion(qx, qy, qz, qw);
+    }
+
+    public static IPQuaternion getRotationBetween(Vec3d from, Vec3d to, Vec3d backup) {
+        from = from.normalize();
+        to = to.normalize();
+        Vec3d axis = from.crossProduct(to).normalize();
+        double cos = from.dotProduct(to);
+        double angle = Math.acos(cos);
+
+        if (Math.toDegrees(angle) == 180) {
+            axis = backup;
+        }
+        return IPQuaternion.rotationByRadians(axis, angle);
     }
 
 }

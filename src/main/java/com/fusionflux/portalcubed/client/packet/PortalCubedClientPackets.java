@@ -30,6 +30,7 @@ public class PortalCubedClientPackets {
     public static final Identifier GEL_OVERLAY_PACKET = id("gel_overlay");
     public static final Identifier ROCKET_TURRET_UPDATE_PACKET = id("rocket_turret_update");
     public static final Identifier ENABLE_CFG = id("enable_cfg");
+    public static final Identifier ENABLE_PORTAL_HUD = id("enable_portal_hud");
 
     @ClientOnly
     public static void registerPackets() {
@@ -38,6 +39,7 @@ public class PortalCubedClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(GEL_OVERLAY_PACKET, PortalCubedClientPackets::onGelOverlay);
         ClientPlayNetworking.registerGlobalReceiver(ROCKET_TURRET_UPDATE_PACKET, PortalCubedClientPackets::onRocketTurretUpdate);
         ClientPlayNetworking.registerGlobalReceiver(ENABLE_CFG, PortalCubedClientPackets::onEnableCfg);
+        ClientPlayNetworking.registerGlobalReceiver(ENABLE_PORTAL_HUD, PortalCubedClientPackets::onEnablePortalHud);
     }
 
     @ClientOnly
@@ -98,6 +100,11 @@ public class PortalCubedClientPackets {
     @ClientOnly
     public static void onEnableCfg(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         PortalCubedClient.allowCfg = buf.readBoolean();
+    }
+
+    @ClientOnly
+    public static void onEnablePortalHud(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        PortalCubedClient.setPortalHudMode(buf.readBoolean());
     }
 
 }

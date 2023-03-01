@@ -39,7 +39,6 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(entity.getPitch()));
         matrices.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(entity.getRoll()));
 
-
         int color = entity.getColor() * -1;
         if (color == -16383998) {
             color = 1908001;

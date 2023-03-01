@@ -9,12 +9,11 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -29,7 +28,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import org.apache.commons.lang3.tuple.Triple;
@@ -51,37 +49,34 @@ public class PortalCubedServerPackets {
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
         Vec3d vec3d = player.getCameraPosVec(0);
-        double d = 5;
+        double d = 3;
 
         Vec3d vec3d2 = player.getRotationVec(1.0F);
         Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
-        Box box = player.getBoundingBox().stretch(vec3d2.multiply(d)).expand(1.0D, 1.0D, 1.0D);
 
         server.execute(() -> {
-            EntityHitResult entityHitResult = ProjectileUtil.raycast(player, vec3d, vec3d3, box, (entity) -> !entity.isSpectator() && entity.collides(), d);
+            final AdvancedEntityRaycast.Result advancedCast = PortalDirectionUtils.raycast(player.world, new RaycastContext(
+                vec3d, vec3d3, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, player
+            ));
+            EntityHitResult entityHitResult = advancedCast.entityRaycast(player, (entity) -> !entity.isSpectator() && entity.collides());
             if (entityHitResult != null) {
-                if (entityHitResult.getEntity() instanceof CorePhysicsEntity entity) {
-                    if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).hold(entity)) {
-                        PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding();
+                if (entityHitResult.getEntity() instanceof CorePhysicsEntity entity && !PortalCubedComponents.HOLDER_COMPONENT.get(player).hold(entity)) {
+                    PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding();
+                }
+            } else if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding()) {
+                final BlockHitResult hit = advancedCast.finalHit();
+                if (hit.getType() != HitResult.Type.MISS) {
+                    final BlockState state = player.world.getBlockState(hit.getBlockPos());
+                    if (
+                        state.getBlock() instanceof TallButtonVariant button &&
+                            player.interactionManager.interactBlock(player, player.world, ItemStack.EMPTY, Hand.MAIN_HAND, hit) != ActionResult.PASS
+                    ) {
+                        player.world.playSound(null, hit.getBlockPos(), button.getClickSound(true), SoundCategory.BLOCKS, 0.8f, 1f);
+                        return;
                     }
                 }
-            } else {
-                if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding()) {
-                    final BlockHitResult hit = PortalDirectionUtils.raycast(player.world, new RaycastContext(
-                        vec3d, vec3d3, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, player
-                    )).finalHit();
-                    if (hit.getType() != HitResult.Type.MISS) {
-                        final BlockState state = player.world.getBlockState(hit.getBlockPos());
-                        if (state.getBlock() instanceof TallButtonVariant button) {
-                            if (player.interactionManager.interactBlock(player, player.world, ItemStack.EMPTY, Hand.MAIN_HAND, hit) != ActionResult.PASS) {
-                                player.world.playSound(null, hit.getBlockPos(), button.getClickSound(true), SoundCategory.BLOCKS, 0.8f, 1f);
-                            }
-                        }
-                    } else {
-                        player.playSound(PortalCubedSounds.NOTHING_TO_GRAB_EVENT, SoundCategory.NEUTRAL, 0.3f, 1f);
-                        ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
-                    }
-                }
+                player.playSound(PortalCubedSounds.NOTHING_TO_GRAB_EVENT, SoundCategory.NEUTRAL, 0.3f, 1f);
+                ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
             }
         });
     }

@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
+import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -41,5 +42,19 @@ public abstract class GameRendererMixin {
         } else {
             return original.call(entity, min, max, box, predicate, d);
         }
+    }
+
+    @WrapOperation(
+        method = {"getFov", "bobViewWhenHurt"},
+        at = @At(
+            value = "INVOKE",
+            target = "Ljava/lang/Math;min(FF)F"
+        )
+    )
+    private float noDeathEffects(float a, float b, Operation<Float> original) {
+        if (PortalCubedClient.isPortalHudMode()) {
+            return 0;
+        }
+        return original.call(a, b);
     }
 }

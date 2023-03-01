@@ -29,7 +29,7 @@ import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
-import com.fusionflux.portalcubed.util.PortalDirectionUtils;
+import com.fusionflux.portalcubed.util.IPQuaternion;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -295,60 +295,60 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         double teleportYOffset = (thisEntity.getEyePos().getY()) - portal.getPos().getY();
         double teleportZOffset = (thisEntity.getEyePos().getZ()) - portal.getPos().getZ();
         Direction portalFacing = portal.getFacingDirection();
-        Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
         Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
-        Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
-        Vec3d rotatedOffsets = new Vec3d(teleportXOffset, teleportYOffset, teleportZOffset);
-        double heightOffset = (thisEntity.getEyeY() - thisEntity.getY()) / 2;
-        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-            if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherDirec);
+
+        IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().multiply(-1), portal.getOtherAxisW(), portal.getAxisH().orElseThrow());
+        IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow());
+
+        if(portalFacing == Direction.UP || portalFacing == Direction.DOWN){
+            if(otherDirec.equals(portalFacing)) {
+                rotationW = IPQuaternion.getRotationBetween(portal.getNormal().multiply(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
+                rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().multiply(-1));
             }
         }
-        if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-            if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherPortalVertFacing);
-            }
+
+        float modPitch = thisEntity.getPitch();
+        if(modPitch == 90){
+            modPitch = 0;
         }
-        rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
-        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-            if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                if (portalVertFacing != otherPortalVertFacing)
-                    rotatedOffsets = PortalDirectionUtils.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherPortalVertFacing);
-            }
-        }
+
+        Vec3d rotatedYaw = Vec3d.fromPolar(modPitch, thisEntity.getYaw());
+        Vec3d rotatedPitch = Vec3d.fromPolar(thisEntity.getPitch(), thisEntity.getYaw());
         Vec3d rotatedVel = entityVelocity;
-        Vec3d rotatedLook = Vec3d.fromPolar(thisEntity.getPitch(), thisEntity.getYaw());
-        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-            if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
-                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalVertFacing, otherDirec);
+        Vec3d rotatedOffsets = new Vec3d(teleportXOffset, teleportYOffset, teleportZOffset);
+
+        rotatedYaw = (rotationH.rotate(rotationW.rotate(rotatedYaw)));
+        rotatedPitch = (rotationH.rotate(rotationW.rotate(rotatedPitch)));
+        rotatedVel = (rotationH.rotate(rotationW.rotate(rotatedVel)));
+        rotatedOffsets = (rotationH.rotate(rotationW.rotate(rotatedOffsets)));
+
+        if (otherDirec == Direction.UP && rotatedVel.y < 0.48) {
+            rotatedVel = new Vec3d(rotatedVel.x, 0.48, rotatedVel.z);
+        }
+
+        rotatedOffsets = rotatedOffsets.subtract(0, thisEntity.getEyeY() - thisEntity.getY(), 0);
+        if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+            if (rotatedOffsets.y < -0.95) {
+                rotatedOffsets = new Vec3d(rotatedOffsets.x, -0.95, rotatedOffsets.z);
+            } else if (rotatedOffsets.y > (-0.95 + (1.9 - thisEntity.getHeight())) ) {
+                rotatedOffsets = new Vec3d(rotatedOffsets.x, (-0.95 + (1.9 - thisEntity.getHeight())), rotatedOffsets.z);
             }
         }
-        if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-            if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
-                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherPortalVertFacing);
-            }
-        }
-        rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalFacing, otherDirec);
-        rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalFacing, otherDirec);
-        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-            if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                if (portalFacing.getOpposite() != otherDirec)
-                    rotatedVel = PortalDirectionUtils.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
-                rotatedLook = PortalDirectionUtils.rotateVelocity(rotatedLook, portalVertFacing, otherPortalVertFacing);
-            }
-        }
-        Vec2f lookAngle = new Vec2f(
-                (float)Math.toDegrees(-MathHelper.atan2(rotatedLook.y, Math.sqrt(rotatedLook.x * rotatedLook.x + rotatedLook.z * rotatedLook.z))),
-                (float)Math.toDegrees(MathHelper.atan2(rotatedLook.z, rotatedLook.x))
+
+        Vec2f lookAnglePitch = new Vec2f(
+                (float)Math.toDegrees(-MathHelper.atan2(rotatedPitch.y, Math.sqrt(rotatedPitch.x * rotatedPitch.x + rotatedPitch.z * rotatedPitch.z))),
+                (float)Math.toDegrees(MathHelper.atan2(rotatedPitch.z, rotatedPitch.x))
         );
-        thisEntity.setYaw(MathHelper.lerpAngleDegrees(1, thisEntity.getYaw(), lookAngle.y) - 90);
-        thisEntity.setPitch(MathHelper.lerpAngleDegrees(1, thisEntity.getPitch(), lookAngle.x));
-        thisEntity.setBodyYaw(MathHelper.lerpAngleDegrees(1, thisEntity.getYaw(), lookAngle.y) - 90);
-        thisEntity.setHeadYaw(MathHelper.lerpAngleDegrees(1, thisEntity.getYaw(), lookAngle.y) - 90);
-        thisEntity.setPosition(portal.getDestination().get().add(rotatedOffsets).subtract(0, thisEntity.getEyeY() - thisEntity.getY(), 0));
+
+        Vec2f lookAngleYaw = new Vec2f(
+                (float)Math.toDegrees(-MathHelper.atan2(rotatedYaw.y, Math.sqrt(rotatedYaw.x * rotatedYaw.x + rotatedYaw.z * rotatedYaw.z))),
+                (float)Math.toDegrees(MathHelper.atan2(rotatedYaw.z, rotatedYaw.x))
+        );
+        thisEntity.setBodyYaw(lookAngleYaw.y - 90);
+        thisEntity.setHeadYaw(lookAngleYaw.y - 90);
+        thisEntity.setYaw(lookAngleYaw.y - 90);
+        thisEntity.setPitch(lookAnglePitch.x);
+        thisEntity.setPosition(portal.getDestination().get().add(rotatedOffsets));
         thisEntity.setVelocity(rotatedVel);
         GravityChangerAPI.clearGravity(thisEntity);
     }
