@@ -62,6 +62,10 @@ public class  ExperimentalPortal extends Entity {
         return (getAxisW().orElseThrow(NOT_INIT).crossProduct(getAxisH().orElseThrow(NOT_INIT)));
     }
 
+    public Vec3d getOtherNormal() {
+        return (getOtherAxisW().crossProduct(getOtherAxisH()));
+    }
+
     public ExperimentalPortal(EntityType<?> entityType, World world) {
         super(entityType, world);
     }

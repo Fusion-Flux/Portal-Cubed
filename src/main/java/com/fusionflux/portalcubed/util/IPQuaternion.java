@@ -204,7 +204,8 @@ public class IPQuaternion {
         Vec3d axis = from.crossProduct(to).normalize();
         double cos = from.dotProduct(to);
         double angle = Math.acos(cos);
-        if (from.multiply(-1).equals(to) && angle != 0) {
+
+        if (Math.toDegrees(angle) == 180) {
             axis = backup;
         }
         return IPQuaternion.rotationByRadians(axis, angle);

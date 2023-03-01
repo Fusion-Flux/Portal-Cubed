@@ -113,31 +113,38 @@ public class PortalCubed implements ModInitializer {
                 Direction portalFacing = portal.getFacingDirection();
                 Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
 
-                IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().multiply(-1), portal.getOtherAxisW(), portal.getAxisH().orElseThrow());
-                IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow());
+                IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().multiply(-1), portal.getOtherAxisW(), (portal.getAxisH().orElseThrow()));
+                IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow().multiply(-1));
 
-                Vec3d rotatedYaw = Vec3d.fromPolar(0, yawSet);
-                Vec3d rotatedPitch = Vec3d.fromPolar(pitchSet, 0);
+                if(portalFacing == Direction.UP || portalFacing == Direction.DOWN){
+                    if(otherDirec.equals(portalFacing)) {
+                        rotationW = IPQuaternion.getRotationBetween(portal.getNormal().multiply(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
+                        rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().multiply(-1));
+                    }
+                }
+
+                float modPitch = pitchSet;
+                if(modPitch == 90){
+                    modPitch = 0;
+                }
+                
+                Vec3d rotatedYaw = Vec3d.fromPolar(modPitch, yawSet);
+                Vec3d rotatedPitch = Vec3d.fromPolar(pitchSet, yawSet);
                 Vec3d rotatedVel = entityVelocity;
                 Vec3d rotatedOffsets = new Vec3d(teleportXOffset, teleportYOffset, teleportZOffset);
 
-                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-                    rotatedYaw = (rotationW.rotate(rotationH.rotate(rotatedYaw)));
-                    rotatedPitch = (rotationW.rotate(rotationH.rotate(rotatedPitch)));
-                    rotatedVel = (rotationW.rotate(rotationH.rotate(rotatedVel)));
-                    rotatedOffsets = (rotationW.rotate(rotationH.rotate(rotatedOffsets)));
-                } else {
-                    rotatedYaw = (rotationH.rotate(rotationW.rotate(rotatedYaw)));
-                    rotatedPitch = (rotationH.rotate(rotationW.rotate(rotatedPitch)));
-                    rotatedVel = (rotationH.rotate(rotationW.rotate(rotatedVel)));
-                    rotatedOffsets = (rotationH.rotate(rotationW.rotate(rotatedOffsets)));
-                }
+                rotatedYaw = (rotationH.rotate(rotationW.rotate(rotatedYaw)));
+                rotatedPitch = (rotationH.rotate(rotationW.rotate(rotatedPitch)));
+                rotatedVel = (rotationH.rotate(rotationW.rotate(rotatedVel)));
+                rotatedOffsets = (rotationH.rotate(rotationW.rotate(rotatedOffsets)));
+
 
                 if (otherDirec == Direction.UP && rotatedVel.y < 0.48) {
                     rotatedVel = new Vec3d(rotatedVel.x, 0.48, rotatedVel.z);
                 }
 
                 rotatedOffsets = rotatedOffsets.subtract(0, player.getEyeY() - player.getY(), 0);
+
                 if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
                     if (rotatedOffsets.y < -0.95) {
                         rotatedOffsets = new Vec3d(rotatedOffsets.x, -0.95, rotatedOffsets.z);
@@ -146,14 +153,18 @@ public class PortalCubed implements ModInitializer {
                     }
                 }
 
-                System.out.println(rotatedOffsets);
-                Vec2f lookAngle = new Vec2f(
+                Vec2f lookAnglePitch = new Vec2f(
                         (float)Math.toDegrees(-MathHelper.atan2(rotatedPitch.y, Math.sqrt(rotatedPitch.x * rotatedPitch.x + rotatedPitch.z * rotatedPitch.z))),
+                        (float)Math.toDegrees(MathHelper.atan2(rotatedPitch.z, rotatedPitch.x))
+                );
+
+                Vec2f lookAngleYaw = new Vec2f(
+                        (float)Math.toDegrees(-MathHelper.atan2(rotatedYaw.y, Math.sqrt(rotatedYaw.x * rotatedYaw.x + rotatedYaw.z * rotatedYaw.z))),
                         (float)Math.toDegrees(MathHelper.atan2(rotatedYaw.z, rotatedYaw.x))
                 );
                 CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
-                player.setYaw(lookAngle.y - 90);
-                player.setPitch(lookAngle.x);
+                player.setYaw((lookAngleYaw.y ) - 90);
+                player.setPitch(lookAnglePitch.x);
                 player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets));
                 CalledValues.setHasTeleportationHappened(player, true);
                 GravityChangerAPI.clearGravity(player);
