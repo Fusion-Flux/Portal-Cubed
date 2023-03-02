@@ -28,9 +28,12 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
 import com.fusionflux.portalcubed.mixin.client.DeathScreenAccessor;
 import com.fusionflux.portalcubed.mixin.client.MusicTrackerAccessor;
+import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
@@ -64,7 +67,9 @@ import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientLoginConnectionEvents;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -82,6 +87,7 @@ public class PortalCubedClient implements ClientModInitializer {
         PortalCubedItems.PORTAL_GUN_SECONDARY,
         Items.AIR
     };
+    public static final int ZOOM_TIME = 2;
 
     public static long shakeStart;
     @Nullable public static BlockPos velocityHelperDragStart;
@@ -89,6 +95,9 @@ public class PortalCubedClient implements ClientModInitializer {
     public static boolean allowCfg;
     private static SoundInstance excursionFunnelMusic;
     private static boolean portalHudMode = false;
+
+    public static int zoomTimer;
+    public static int zoomDir;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -141,6 +150,39 @@ public class PortalCubedClient implements ClientModInitializer {
 //                RenderSystem.enableTexture();
 //            }
 //        });
+
+        ClientTickEvents.START.register(client -> {
+            if (zoomDir != 0) {
+                zoomTimer++;
+                if (zoomDir < 0 && zoomTimer >= ZOOM_TIME) {
+                    zoomDir = 0;
+                    zoomTimer = 0;
+                }
+            }
+            if (isPortalHudMode()) {
+                assert client.player != null;
+                while (client.options.inventoryKey.wasPressed()) {
+                    PortalCubedComponents.HOLDER_COMPONENT.get(client.player).stopHolding();
+                    ClientPlayNetworking.send(PortalCubedServerPackets.GRAB_KEY_PRESSED, PacketByteBufs.create());
+                }
+                while (client.options.pickItemKey.wasPressed()) {
+                    if (zoomDir == 0) {
+                        zoomDir = 1;
+                        zoomTimer = 0;
+                    } else {
+                        zoomDir = -zoomDir;
+                        zoomTimer = Math.max(ZOOM_TIME - zoomTimer, 0);
+                    }
+                }
+            } else if (zoomDir > 0) {
+                zoomDir = -1;
+                zoomTimer = Math.max(ZOOM_TIME - zoomTimer, 0);
+            }
+            if (zoomDir > 0 && zoomTimer > 100 && client.player.input.getMovementInput().lengthSquared() > 0.1) {
+                zoomDir = -1;
+                zoomTimer = 0;
+            }
+        });
 
         ClientTickEvents.END.register(client -> {
             if (client.player == null) return;
@@ -291,6 +333,19 @@ public class PortalCubedClient implements ClientModInitializer {
             bufferBuilder.vertex(matrix, w, 0, 0).color(red, 0f, 0f, alpha).next();
             bufferBuilder.vertex(matrix, 0, 0, 0).color(red, 0f, 0f, alpha).next();
             BufferRenderer.drawWithShader(bufferBuilder.end());
+        });
+
+        RecoilEvents.UPDATE_FOV.register((value, tickDelta) -> {
+            if (zoomDir == 0) return;
+            if (zoomDir > 0) {
+                if (zoomTimer < ZOOM_TIME) {
+                    value.set(MathHelper.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get(), value.get() / 2));
+                } else {
+                    value.scale(0.5f);
+                }
+            } else {
+                value.set(MathHelper.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get() / 2, value.get()));
+            }
         });
     }
 

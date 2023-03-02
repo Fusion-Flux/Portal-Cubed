@@ -249,11 +249,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     ) {
         if (this.world.isClient && thisEntity.isMainPlayer()) {
             Vec3d invert = (portal.getNormal().multiply(portal.getNormal())).multiply(-1);
-            if(invert.x != 0){
+            if (invert.x != 0) {
                 invert = invert.add(0, 1, 1);
-            } else if(invert.y != 0){
+            } else if (invert.y != 0) {
                 invert = invert.add(1, 0, 1);
-            } else if(invert.z != 0){
+            } else if (invert.z != 0) {
                 invert = invert.add(1, 1, 0);
             }
             var byteBuf = PacketByteBufs.create();
