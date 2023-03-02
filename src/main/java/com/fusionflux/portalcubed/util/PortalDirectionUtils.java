@@ -15,12 +15,13 @@ public class PortalDirectionUtils {
     public static Vec3d rotateVector(ExperimentalPortal portal, Vec3d vector) {
         Direction portalFacing = portal.getFacingDirection();
         Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
+        Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
 
         IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().multiply(-1), portal.getOtherAxisW(), (portal.getAxisH().orElseThrow()));
         IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow().multiply(-1));
 
-        if(portalFacing == Direction.UP || portalFacing == Direction.DOWN){
-            if(otherDirec.equals(portalFacing)) {
+        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
+            if (otherDirec.equals(portalFacing) || (portalVertFacing != otherDirec && portalVertFacing != otherDirec.getOpposite())) {
                 rotationW = IPQuaternion.getRotationBetween(portal.getNormal().multiply(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
                 rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().multiply(-1));
             }
