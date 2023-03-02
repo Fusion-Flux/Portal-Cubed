@@ -270,6 +270,7 @@ public class PortalCubedClient implements ClientModInitializer {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             RenderSystem.enableBlend();
             final boolean fadeOut = !client.player.showsDeathScreen() && client.currentScreen instanceof DeathScreenAccessor;
+            if (!fadeOut && client.player.getAbilities().invulnerable) return;
             final float red = fadeOut ? 0f : 1f;
             final float alpha = fadeOut
                 ? Math.min(((DeathScreenAccessor)client.currentScreen).getTicksSinceDeath() / 40f, 1f)
