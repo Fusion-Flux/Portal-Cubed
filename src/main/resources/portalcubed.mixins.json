@@ -27,6 +27,7 @@
     "client.HeldItemRendererMixin",
     "client.InGameHudMixin",
     "client.InGameOverlayRendererMixin",
+    "client.KeyboardInputMixin",
     "client.MinecraftClientMixin",
     "client.ModelLoaderMixin",
     "client.MouseMixin",
