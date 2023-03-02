@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
+import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -19,9 +20,11 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -304,7 +307,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow());
 
         if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-            if (otherDirec.equals(portalFacing)) {
+            if (otherDirec == portalFacing) {
                 rotationW = IPQuaternion.getRotationBetween(portal.getNormal().multiply(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
                 rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().multiply(-1));
             }
@@ -500,6 +503,11 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             collidingBlocks.remove(entry.getKey());
         }
         leftBlocks.clear();
+    }
+
+    @Redirect(method = "raycast", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;raycast(Lnet/minecraft/world/RaycastContext;)Lnet/minecraft/util/hit/BlockHitResult;"))
+    private BlockHitResult portalCubed$portalCompatibleRaycast(World world, RaycastContext context) {
+        return CrossPortalInteraction.blockInteractionRaycast(world, context);
     }
 
     private boolean intersects(Box box, VoxelShape shape) {
