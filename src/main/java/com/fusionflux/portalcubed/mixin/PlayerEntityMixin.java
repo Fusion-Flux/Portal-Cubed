@@ -242,6 +242,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             Vec3d entityVelocity
     ) {
         if (this.world.isClient && thisEntity.isMainPlayer()) {
+            Vec3d invert = (portal.getNormal().multiply(portal.getNormal())).multiply(-1);
+            if(invert.x != 0){
+                invert = invert.add(0, 1, 1);
+            } else if(invert.y != 0){
+                invert = invert.add(1, 0, 1);
+            } else if(invert.z != 0){
+                invert = invert.add(1, 1, 0);
+            }
             var byteBuf = PacketByteBufs.create();
             byteBuf.writeVarInt(portal.getId());
             byteBuf.writeFloat(thisEntity.getYaw());
@@ -249,9 +257,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             byteBuf.writeDouble(entityVelocity.x);
             byteBuf.writeDouble(entityVelocity.y);
             byteBuf.writeDouble(entityVelocity.z);
-            byteBuf.writeDouble((thisEntity.getEyePos().getX()) - portal.getPos().getX());
-            byteBuf.writeDouble((thisEntity.getEyePos().getY()) - portal.getPos().getY());
-            byteBuf.writeDouble((thisEntity.getEyePos().getZ()) - portal.getPos().getZ());
+            byteBuf.writeDouble(((thisEntity.getEyePos().getX()) - portal.getPos().getX()) * invert.x);
+            byteBuf.writeDouble(((thisEntity.getEyePos().getY()) - portal.getPos().getY()) * invert.y);
+            byteBuf.writeDouble(((thisEntity.getEyePos().getZ()) - portal.getPos().getZ()) * invert.z);
             NetworkingSafetyWrapper.sendFromClient("use_portal", byteBuf);
             CalledValues.setIsTeleporting(thisEntity, true);
             thisEntity.setVelocity(0, 0, 0);
