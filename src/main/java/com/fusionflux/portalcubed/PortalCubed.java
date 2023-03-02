@@ -112,22 +112,22 @@ public class PortalCubed implements ModInitializer {
                 }
                 Direction portalFacing = portal.getFacingDirection();
                 Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
+                Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
 
                 IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().multiply(-1), portal.getOtherAxisW(), (portal.getAxisH().orElseThrow()));
                 IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow().multiply(-1));
 
-                if(portalFacing == Direction.UP || portalFacing == Direction.DOWN){
-                    if(otherDirec.equals(portalFacing)) {
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
+                    if (otherDirec.equals(portalFacing) || (portalVertFacing  != otherDirec && portalVertFacing != otherDirec.getOpposite())) {
                         rotationW = IPQuaternion.getRotationBetween(portal.getNormal().multiply(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
                         rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().multiply(-1));
                     }
                 }
 
                 float modPitch = pitchSet;
-                if(modPitch == 90){
+                if (modPitch == 90) {
                     modPitch = 0;
                 }
-                
                 Vec3d rotatedYaw = Vec3d.fromPolar(modPitch, yawSet);
                 Vec3d rotatedPitch = Vec3d.fromPolar(pitchSet, yawSet);
                 Vec3d rotatedVel = entityVelocity;
@@ -163,7 +163,7 @@ public class PortalCubed implements ModInitializer {
                         (float)Math.toDegrees(MathHelper.atan2(rotatedYaw.z, rotatedYaw.x))
                 );
                 CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
-                player.setYaw((lookAngleYaw.y ) - 90);
+                player.setYaw(lookAngleYaw.y - 90);
                 player.setPitch(lookAnglePitch.x);
                 player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets));
                 CalledValues.setHasTeleportationHappened(player, true);
