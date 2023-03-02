@@ -13,7 +13,8 @@
     "ServerPlayerInteractionManagerMixin",
     "ShapeContextMixin",
     "WorldMixin",
-    "WorldViewMixin"
+    "WorldViewMixin",
+    "client.PlayerInventoryMixin"
   ],
   "client": [
     "client.AbstractSoundInstanceAccessor",
