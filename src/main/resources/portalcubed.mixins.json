@@ -32,6 +32,7 @@
     "client.MouseMixin",
     "client.MusicTrackerAccessor",
     "client.ParticleManagerMixin",
+    "client.PlayerEntityRendererMixin",
     "client.RenderSystemMixin",
     "client.SoundSystemMixin",
     "client.VertexConsumerMixin"

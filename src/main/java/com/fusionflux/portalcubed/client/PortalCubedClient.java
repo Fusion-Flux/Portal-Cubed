@@ -423,6 +423,10 @@ public class PortalCubedClient implements ClientModInitializer {
         return portalHudMode || PortalCubedConfig.portalHudMode;
     }
 
+    public static boolean isPortalHudModeServer() {
+        return portalHudMode;
+    }
+
     public static void setPortalHudMode(boolean portalHudMode) {
         PortalCubedClient.portalHudMode = portalHudMode;
     }

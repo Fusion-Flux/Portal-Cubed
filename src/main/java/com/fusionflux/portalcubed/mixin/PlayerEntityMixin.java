@@ -1,14 +1,18 @@
 package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.PortalCubedGameRules;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.MixinPCClientAccessor;
+import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerAbilities;
@@ -25,6 +29,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -296,6 +302,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     @Override
     public void setCFG() {
         cfg = true;
+    }
+
+    @WrapOperation(
+        method = "updatePose",
+        at = @At(
+            value = "FIELD",
+            target = "Lnet/minecraft/entity/EntityPose;CROUCHING:Lnet/minecraft/entity/EntityPose;",
+            opcode = Opcodes.GETSTATIC
+        )
+    )
+    private EntityPose playerCrouching(Operation<EntityPose> original) {
+        if (world.getGameRules().get(PortalCubedGameRules.USE_PORTAL_HUD).get() || (world.isClient && isPortalHudServerClient())) {
+            return EntityPose.SWIMMING;
+        }
+        return original.call();
+    }
+
+    @ClientOnly
+    private boolean isPortalHudServerClient() {
+        return PortalCubedClient.isPortalHudModeServer();
     }
 }
 
