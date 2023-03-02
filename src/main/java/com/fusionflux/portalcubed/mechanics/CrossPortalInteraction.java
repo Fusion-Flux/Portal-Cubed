@@ -1,26 +1,22 @@
 package com.fusionflux.portalcubed.mechanics;
 
-import java.util.Optional;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public final class CrossPortalInteraction {
 
     private CrossPortalInteraction() { }
 
-    @Nullable
     public static BlockHitResult blockInteractionRaycast(@NotNull World world, @NotNull RaycastContext context) {
         final var result = PortalDirectionUtils.raycast(world, context);
         final var finalHit = result.finalHit();
