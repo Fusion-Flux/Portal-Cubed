@@ -11,7 +11,6 @@ import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
@@ -29,26 +28,21 @@ public final class CrossPortalInteraction {
         return finalHit;
     }
 
-    public static double blockInteractionDistance(@NotNull Entity originEntity, @NotNull Vec3d originPos, @NotNull Vec3d endPos, @NotNull Vec3d regularInteractionPos) {
+    public static double interactionDistance(@NotNull Entity originEntity, @NotNull Vec3d originPos, @NotNull Vec3d endPos, @NotNull Vec3d regularInteractionPos) {
         final var rays = PortalDirectionUtils.raycast(originEntity.world, new RaycastContext(originPos, endPos, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, originEntity)).rays();
         if (rays.size() > 1) {
-            var length = 0.0;
+            var distance = 0.0;
             for (AdvancedEntityRaycast.Result.Ray ray : rays) {
-                System.out.println("RAY:");
-                System.out.println(length);
-                length += ray.start().distanceTo(ray.end());
-                System.out.println(length);
+                distance += ray.start().distanceTo(ray.end());
             }
-            length *= length;
-            System.out.println("FINAL:");
-            System.out.println(length);
-            return length;
+            distance *= distance;
+            return distance;
         }
         return originPos.squaredDistanceTo(regularInteractionPos);
     }
 
-    public static double blockInteractionDistance(@NotNull PlayerEntity player, @NotNull Vec3d regularInteractionPos) {
-        return blockInteractionDistance(player, player.getEyePos(), player.getEyePos().add(player.getRotationVector().multiply(ServerPlayNetworkHandler.MAX_INTERACTION_DISTANCE)), regularInteractionPos);
+    public static double interactionDistance(@NotNull PlayerEntity player, double maxDistance, @NotNull Vec3d regularInteractionPos) {
+        return interactionDistance(player, player.getEyePos(), player.getEyePos().add(player.getRotationVector().multiply(maxDistance)), regularInteractionPos);
     }
 
 }

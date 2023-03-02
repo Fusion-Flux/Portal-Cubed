@@ -10,6 +10,7 @@ import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.CustomCollisionView;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -37,12 +38,17 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     @Redirect(method = "onPlayerInteractBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Vec3d;squaredDistanceTo(Lnet/minecraft/util/math/Vec3d;)D", ordinal = 0))
     private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck1(Vec3d from, Vec3d to) {
-        return CrossPortalInteraction.blockInteractionDistance(player, to);
+        return CrossPortalInteraction.interactionDistance(player, ServerPlayNetworkHandler.MAX_INTERACTION_DISTANCE, to);
     }
 
     @Redirect(method = "onPlayerInteractBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;squaredDistanceTo(DDD)D", ordinal = 0))
     private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck2(ServerPlayerEntity self, double x, double y, double z) {
-        return CrossPortalInteraction.blockInteractionDistance(player, player.getEyePos(), player.getEyePos().add(player.getRotationVector().multiply(64)), new Vec3d(x, y, z));
+        return CrossPortalInteraction.interactionDistance(player, 64, new Vec3d(x, y, z));
+    }
+
+    @Redirect(method = "onPlayerInteractEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;squaredDistanceTo(Lnet/minecraft/util/math/Vec3d;)D", ordinal = 0))
+    private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck3(Entity self, Vec3d to) {
+        return CrossPortalInteraction.interactionDistance(player, ServerPlayNetworkHandler.MAX_INTERACTION_DISTANCE, to);
     }
 
 }
