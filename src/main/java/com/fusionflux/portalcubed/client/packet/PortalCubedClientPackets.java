@@ -31,6 +31,7 @@ public class PortalCubedClientPackets {
     public static final Identifier ROCKET_TURRET_UPDATE_PACKET = id("rocket_turret_update");
     public static final Identifier ENABLE_CFG = id("enable_cfg");
     public static final Identifier ENABLE_PORTAL_HUD = id("enable_portal_hud");
+    public static final Identifier REFRESH_POS = id("refresh_pos");
 
     @ClientOnly
     public static void registerPackets() {
@@ -40,6 +41,7 @@ public class PortalCubedClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(ROCKET_TURRET_UPDATE_PACKET, PortalCubedClientPackets::onRocketTurretUpdate);
         ClientPlayNetworking.registerGlobalReceiver(ENABLE_CFG, PortalCubedClientPackets::onEnableCfg);
         ClientPlayNetworking.registerGlobalReceiver(ENABLE_PORTAL_HUD, PortalCubedClientPackets::onEnablePortalHud);
+        ClientPlayNetworking.registerGlobalReceiver(REFRESH_POS, PortalCubedClientPackets::onRefreshPos);
     }
 
     @ClientOnly
@@ -105,6 +107,23 @@ public class PortalCubedClientPackets {
     @ClientOnly
     public static void onEnablePortalHud(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         PortalCubedClient.setPortalHudMode(buf.readBoolean());
+    }
+
+    @ClientOnly
+    public static void onRefreshPos(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        final int entityId = buf.readVarInt();
+        final double x = buf.readDouble();
+        final double y = buf.readDouble();
+        final double z = buf.readDouble();
+        final float yaw = buf.readFloat();
+        final float pitch = buf.readFloat();
+        client.execute(() -> {
+            assert client.world != null;
+            final Entity entity = client.world.getEntityById(entityId);
+            if (entity != null) {
+                entity.refreshPositionAndAngles(x, y, z, yaw, pitch);
+            }
+        });
     }
 
 }
