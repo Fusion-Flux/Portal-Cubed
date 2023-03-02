@@ -4,13 +4,11 @@
   "package": "com.fusionflux.portalcubed.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "BlockHitResultMixin",
     "EntityMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
     "RaycastContextAccessor",
-    "ServerPlayerInteractionManagerMixin",
     "ServerPlayNetworkHandlerMixin",
     "ShapeContextMixin",
     "WorldMixin",
