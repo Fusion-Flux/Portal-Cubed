@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
-import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
