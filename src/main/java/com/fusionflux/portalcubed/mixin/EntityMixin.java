@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,6 +26,7 @@ import com.fusionflux.portalcubed.accessor.ClientTeleportCheck;
 import com.fusionflux.portalcubed.accessor.CustomCollisionView;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -36,6 +39,10 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -125,6 +132,16 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Shadow public abstract float getPitch(float tickDelta);
 
     @Shadow public abstract double getY();
+
+    @Shadow public abstract int getId();
+
+    @Shadow public abstract double getX();
+
+    @Shadow public abstract double getZ();
+
+    @Shadow public abstract float getYaw(float tickDelta);
+
+    @Shadow public abstract float getPitch();
 
     private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
 
@@ -300,15 +317,15 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().multiply(-1), portal.getOtherAxisW(), portal.getAxisH().orElseThrow());
         IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow());
 
-        if(portalFacing == Direction.UP || portalFacing == Direction.DOWN){
-            if(otherDirec.equals(portalFacing)) {
+        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
+            if (otherDirec.equals(portalFacing)) {
                 rotationW = IPQuaternion.getRotationBetween(portal.getNormal().multiply(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
                 rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().multiply(-1));
             }
         }
 
         float modPitch = thisEntity.getPitch();
-        if(modPitch == 90){
+        if (modPitch == 90) {
             modPitch = 0;
         }
 
@@ -330,7 +347,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
             if (rotatedOffsets.y < -0.95) {
                 rotatedOffsets = new Vec3d(rotatedOffsets.x, -0.95, rotatedOffsets.z);
-            } else if (rotatedOffsets.y > (-0.95 + (1.9 - thisEntity.getHeight())) ) {
+            } else if (rotatedOffsets.y > (-0.95 + (1.9 - thisEntity.getHeight()))) {
                 rotatedOffsets = new Vec3d(rotatedOffsets.x, (-0.95 + (1.9 - thisEntity.getHeight())), rotatedOffsets.z);
             }
         }
@@ -344,13 +361,23 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                 (float)Math.toDegrees(-MathHelper.atan2(rotatedYaw.y, Math.sqrt(rotatedYaw.x * rotatedYaw.x + rotatedYaw.z * rotatedYaw.z))),
                 (float)Math.toDegrees(MathHelper.atan2(rotatedYaw.z, rotatedYaw.x))
         );
-        thisEntity.setBodyYaw(lookAngleYaw.y - 90);
-        thisEntity.setHeadYaw(lookAngleYaw.y - 90);
-        thisEntity.setYaw(lookAngleYaw.y - 90);
-        thisEntity.setPitch(lookAnglePitch.x);
-        thisEntity.setPosition(portal.getDestination().get().add(rotatedOffsets));
+        final Vec3d destPos = portal.getDestination().orElseThrow(ExperimentalPortal.NOT_INIT).add(rotatedOffsets);
+        thisEntity.refreshPositionAndAngles(destPos.x, destPos.y, destPos.z, lookAngleYaw.y - 90, lookAnglePitch.x);
         thisEntity.setVelocity(rotatedVel);
         GravityChangerAPI.clearGravity(thisEntity);
+        if (world instanceof ServerWorld serverWorld) {
+            final PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeVarInt(getId());
+            buf.writeDouble(getX());
+            buf.writeDouble(getY());
+            buf.writeDouble(getZ());
+            buf.writeFloat(getYaw());
+            buf.writeFloat(getPitch());
+            final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.REFRESH_POS, buf);
+            for (final ServerPlayerEntity player : serverWorld.getPlayers()) {
+                serverWorld.sendToPlayerIfNearby(player, true, destPos.x, destPos.y, destPos.z, packet);
+            }
+        }
     }
 
     @Override

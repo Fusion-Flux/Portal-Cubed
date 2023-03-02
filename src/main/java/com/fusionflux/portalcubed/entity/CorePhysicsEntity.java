@@ -216,7 +216,7 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                     .toList();
                 if (!portals.equals(intermediaryPortals)) {
                     intermediaryPortals = portals;
-                    setPosition(holdPos);
+                    refreshPositionAfterTeleport(holdPos);
                 } else {
                     move(
                         MovementType.PLAYER,

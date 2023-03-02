@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 
 public class  ExperimentalPortal extends Entity {
 
-    private static final Supplier<IllegalStateException> NOT_INIT =
+    public static final Supplier<IllegalStateException> NOT_INIT =
         () -> new IllegalStateException("Portal data accessed before initialized");
 
     private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);

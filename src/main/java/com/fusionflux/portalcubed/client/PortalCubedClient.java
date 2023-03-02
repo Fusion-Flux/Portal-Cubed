@@ -49,6 +49,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
@@ -239,10 +240,15 @@ public class PortalCubedClient implements ClientModInitializer {
             inventory.selectedSlot = 0;
             outer:
             for (final Item desirable : PORTAL_HUD_DESIRABLES) {
-                for (int slot = 0, l = inventory.size(); slot < l; slot++) {
-                    if (inventory.getStack(slot).isOf(desirable)) {
-                        if (slot != 0) {
-                            client.interactionManager.clickSlot(0, slot, 0, SlotActionType.SWAP, client.player);
+                for (int i = 0, l = inventory.size(); i < l; i++) {
+                    if (inventory.getStack(i).isOf(desirable)) {
+                        if (i != 0) {
+                            for (final Slot slot : client.player.playerScreenHandler.slots) {
+                                if (slot.getIndex() == i) {
+                                    client.interactionManager.clickSlot(0, slot.id, 0, SlotActionType.SWAP, client.player);
+                                    break;
+                                }
+                            }
                         }
                         break outer;
                     }
@@ -270,6 +276,7 @@ public class PortalCubedClient implements ClientModInitializer {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             RenderSystem.enableBlend();
             final boolean fadeOut = !client.player.showsDeathScreen() && client.currentScreen instanceof DeathScreenAccessor;
+            if (!fadeOut && client.player.getAbilities().invulnerable) return;
             final float red = fadeOut ? 0f : 1f;
             final float alpha = fadeOut
                 ? Math.min(((DeathScreenAccessor)client.currentScreen).getTicksSinceDeath() / 40f, 1f)
@@ -414,6 +421,10 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static boolean isPortalHudMode() {
         return portalHudMode || PortalCubedConfig.portalHudMode;
+    }
+
+    public static boolean isPortalHudModeServer() {
+        return portalHudMode;
     }
 
     public static void setPortalHudMode(boolean portalHudMode) {
