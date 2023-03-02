@@ -8,13 +8,13 @@
     "EntityMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
+    "PlayerInventoryMixin",
     "RaycastContextAccessor",
     "ServerPlayerInteractionManagerMixin",
     "ServerPlayNetworkHandlerMixin",
     "ShapeContextMixin",
     "WorldMixin",
-    "WorldViewMixin",
-    "client.PlayerInventoryMixin"
+    "WorldViewMixin"
   ],
   "client": [
     "client.AbstractSoundInstanceAccessor",
