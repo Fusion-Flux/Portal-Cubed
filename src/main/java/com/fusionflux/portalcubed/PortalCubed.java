@@ -112,7 +112,7 @@ public class PortalCubed implements ModInitializer {
                 }
                 Direction portalFacing = portal.getFacingDirection();
                 Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
-                Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
+                Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().orElseThrow().x, portal.getAxisH().orElseThrow().y, portal.getAxisH().orElseThrow().z));
 
                 IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().multiply(-1), portal.getOtherAxisW(), (portal.getAxisH().orElseThrow()));
                 IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow().multiply(-1));
