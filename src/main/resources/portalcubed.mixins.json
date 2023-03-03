@@ -21,6 +21,7 @@
     "client.BackgroundRendererMixin",
     "client.CameraMixin",
     "client.ClientPlayerEntityMixin",
+    "client.ClientPlayerInteractionManagerMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.ClientWorldMixin",
     "client.DeathScreenAccessor",

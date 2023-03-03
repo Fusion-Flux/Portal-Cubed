@@ -313,14 +313,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
         )
     )
     private EntityPose playerCrouching(Operation<EntityPose> original) {
-        if (world.getGameRules().get(PortalCubedGameRules.USE_PORTAL_HUD).get() || (world.isClient && isPortalHudServerClient())) {
+        if (world.getGameRules().get(PortalCubedGameRules.USE_PORTAL_HUD).get() || (world.isClient && isPortalHudModeServerClient())) {
             return EntityPose.SWIMMING;
         }
         return original.call();
     }
 
     @ClientOnly
-    private boolean isPortalHudServerClient() {
+    private boolean isPortalHudModeServerClient() {
         return PortalCubedClient.isPortalHudModeServer();
     }
 }

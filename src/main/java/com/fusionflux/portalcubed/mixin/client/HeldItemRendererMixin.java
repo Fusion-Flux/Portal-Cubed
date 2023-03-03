@@ -6,6 +6,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Vec3f;
@@ -28,5 +29,12 @@ public class HeldItemRendererMixin {
         final long time = Util.getMeasuringTimeMs() - PortalCubedClient.shakeStart;
         if (time > 440) return;
         matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float)Math.sin(time / 35.0) * 6));
+    }
+
+    @Inject(method = "renderArmHoldingItem", at = @At("HEAD"), cancellable = true)
+    private void noHand(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, float equipProgress, float swingProgress, Arm arm, CallbackInfo ci) {
+        if (PortalCubedClient.isPortalHudMode()) {
+            ci.cancel();
+        }
     }
 }
