@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "portalcubed:block/portal_2_panel_frame_8"
-  }
-}

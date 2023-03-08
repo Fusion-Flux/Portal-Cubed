@@ -75,6 +75,8 @@
 
   "block.portalcubed.auto_portal": "Auto Portal",
   "block.portalcubed.velocity_helper": "Velocity Helper",
+  "block.portalcubed.catapult": "Catapult",
+
   "block.portalcubed.rocket_turret": "Rocket Turret",
 
   "block.portalcubed.fizzler": "Fizzler",
@@ -202,6 +204,7 @@
 
   "block.portalcubed.insulation": "Insulation",
   "block.portalcubed.portal_2_panel_frame": "Panel Frame",
+  "block.portalcubed.portal_2_panel_wireframe": "Panel Wireframe",
   "block.portalcubed.portal_2_exposed_panel": "Exposed Panel",
   "block.portalcubed.portal_2_partially_exposed_panel": "Partially Exposed Panel",
 
@@ -217,12 +220,14 @@
 
   "block.portalcubed.portal_1_smooth_gray_2x1_panel_bottom": "Portal 1 Metal 2x1 Panel Bottom",
   "block.portalcubed.portal_1_smooth_gray_2x1_panel_top": "Portal 1 Metal 2x1 Panel Top",
+  "block.portalcubed.portal_1_smooth_gray_2x1_joiner": "Portal 1 Metal 2x1 Joiner",
   "block.portalcubed.portal_1_smooth_gray_2x2_panel_top_left": "Portal 1 Metal 2x2 Panel Top Left",
   "block.portalcubed.portal_1_smooth_gray_2x2_panel_top_right": "Portal 1 Metal 2x2 Panel Top Right",
   "block.portalcubed.portal_1_smooth_gray_2x2_panel_bottom_left": "Portal 1 Metal 2x2 Panel Bottom Left",
   "block.portalcubed.portal_1_smooth_gray_2x2_panel_bottom_right": "Portal 1 Metal 2x2 Panel Bottom Right",
   "block.portalcubed.portal_1_smooth_gray_half_panel": "Portal 1 Metal Half Panel",
   "block.portalcubed.portal_1_smooth_gray_panel": "Portal 1 Metal Panel",
+  "block.portalcubed.portal_1_smooth_tiles": "Portal 1 Smooth Tiles",
 
   "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",
   "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",

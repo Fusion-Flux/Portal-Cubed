@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YY",
+        "YY"
+    ],
+    "key": {
+        "Y": {
+            "item": "minecraft:iron_bars"
+        }
+    },
+    "result": {
+        "item": "portalcubed:portal_2_panel_wireframe",
+        "count": 16
+    }
+}
