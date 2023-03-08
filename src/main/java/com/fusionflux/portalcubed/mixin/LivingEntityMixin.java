@@ -2,9 +2,11 @@ package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
+import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import com.fusionflux.portalcubed.client.gui.ExpressionFieldWidget;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
+import com.fusionflux.portalcubed.util.GeneralUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -109,6 +111,18 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         velocityHelper = block;
         velocityHelperStartTime = world.getTime();
         velocityHelperOffset = Vec3d.ofCenter(block.getPos()).subtract(getPos());
+    }
+
+    @Override
+    public void collidedWithCatapult(CatapultBlockEntity block) {
+        if (!canMoveVoluntarily()) return;
+        final double relH = block.getRelH();
+        final double relY = block.getRelY();
+        final double angle = block.getAngle();
+        final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08);
+        if (!Double.isFinite(speed)) return;
+        setVelocity(getVelocity().add(block.getLaunchDir().multiply(speed)));
+        velocityDirty = true;
     }
 
     @Inject(method = "tickMovement", at = @At("TAIL"))

@@ -28,6 +28,7 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
 import com.fusionflux.portalcubed.mixin.client.DeathScreenAccessor;
 import com.fusionflux.portalcubed.mixin.client.MusicTrackerAccessor;
+import com.fusionflux.portalcubed.optionslist.OptionsListScreen;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
@@ -104,6 +105,7 @@ public class PortalCubedClient implements ClientModInitializer {
 
         HandledScreens.register(PortalCubed.FAITH_PLATE_SCREEN_HANDLER, FaithPlateScreen::new);
         HandledScreens.register(PortalCubed.VELOCITY_HELPER_SCREEN_HANDLER, VelocityHelperScreen::new);
+        HandledScreens.register(PortalCubed.OPTIONS_LIST_SCREEN_HANDLER, OptionsListScreen::new);
 
         registerEntityRenderers();
         registerColorProviders();

@@ -8,6 +8,8 @@ import com.fusionflux.portalcubed.blocks.VelocityHelperBlock;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.optionslist.OptionsListBlockEntity;
+import com.fusionflux.portalcubed.optionslist.OptionsListData;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
@@ -45,6 +47,7 @@ public class PortalCubedServerPackets {
     public static final Identifier GRAB_KEY_PRESSED = id("grab_key_pressed");
     public static final Identifier REMOVE_PORTALS = id("remove_portals");
     public static final Identifier VELOCITY_HELPER_CONFIGURE = id("velocity_helper_configure");
+    public static final Identifier OPTIONS_LIST_CONFIGURE = id("options_list_configure");
 
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
@@ -135,9 +138,22 @@ public class PortalCubedServerPackets {
         ));
     }
 
+    public static void onOptionsListConfigure(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
+        final BlockPos origin = buf.readBlockPos();
+        final String json = buf.readString();
+        server.execute(() -> {
+            if (!(player.getWorld().getBlockEntity(origin) instanceof OptionsListBlockEntity optionsListBlockEntity) || !player.isCreative()) {
+                return;
+            }
+            OptionsListData.read(json, optionsListBlockEntity);
+            optionsListBlockEntity.updateListeners();
+        });
+    }
+
     public static void registerPackets() {
         ServerPlayNetworking.registerGlobalReceiver(GRAB_KEY_PRESSED, PortalCubedServerPackets::onGrabKeyPressed);
         ServerPlayNetworking.registerGlobalReceiver(REMOVE_PORTALS, PortalCubedServerPackets::onRemovePortalKeyPressed);
         ServerPlayNetworking.registerGlobalReceiver(VELOCITY_HELPER_CONFIGURE, PortalCubedServerPackets::onVelocityHelperConfigure);
+        ServerPlayNetworking.registerGlobalReceiver(OPTIONS_LIST_CONFIGURE, PortalCubedServerPackets::onOptionsListConfigure);
     }
 }

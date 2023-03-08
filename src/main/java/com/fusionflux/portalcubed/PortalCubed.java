@@ -21,6 +21,7 @@ import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.optionslist.OptionsListScreenHandler;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
@@ -71,6 +72,10 @@ public class PortalCubed implements ModInitializer {
     public static final ScreenHandlerType<VelocityHelperScreenHandler> VELOCITY_HELPER_SCREEN_HANDLER = Registry.register(
         Registry.SCREEN_HANDLER, id("velocity_helper"),
         new ExtendedScreenHandlerType<>(VelocityHelperScreenHandler::new)
+    );
+    public static final ScreenHandlerType<OptionsListScreenHandler> OPTIONS_LIST_SCREEN_HANDLER = Registry.register(
+        Registry.SCREEN_HANDLER, id("options_list"),
+        new ExtendedScreenHandlerType<>(OptionsListScreenHandler::new)
     );
 
     @Override

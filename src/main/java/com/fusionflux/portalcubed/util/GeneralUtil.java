@@ -7,6 +7,8 @@ import net.minecraft.util.shape.VoxelShapes;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.*;
+
 public class GeneralUtil {
     /**
      * @author maximum
@@ -22,5 +24,10 @@ public class GeneralUtil {
         }));
 
         return VoxelShapes.union(VoxelShapes.empty(), shapes.toArray(new VoxelShape[0]));
+    }
+
+    public static double calculateVelocity(double x, double y, double a, double g) {
+        a = Math.toRadians(a);
+        return sqrt(2 * (y - x * tan(a)) / (g * x * x)) / cos(a);
     }
 }
