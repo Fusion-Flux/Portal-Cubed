@@ -13,13 +13,17 @@
   "portal_1_elevator_wall_top": {},
   "solid_office_concrete": {},
   "bordered_office_concrete": {},
+  "portal_1_smooth_tiles": {},
   "portal_1_smooth_gray_half_panel": {},
   "portal_1_smooth_gray_panel": {},
   "portal_1_smooth_gray_2x1_panel_bottom": {
   "type": "pillar"
   },
   "portal_1_smooth_gray_2x1_panel_top": {
-  "type": "pillar"
+    "type": "pillar"
+  },
+  "portal_1_smooth_gray_2x1_joiner": {
+    "type": "pillar"
   },
   "portal_1_smooth_gray_2x2_panel_bottom_left": {
   "type": "directional"
@@ -181,6 +185,9 @@
   },
   "insulation": {},
   "portal_2_panel_frame": {
+    "render_layer": "translucent"
+  },
+  "portal_2_panel_wireframe": {
     "opaque": false,
     "render_layer": "translucent"
   },
