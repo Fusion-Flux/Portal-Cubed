@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.optionslist;
 
+import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -16,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -76,6 +78,7 @@ public class OptionsListScreen extends HandledScreen<OptionsListScreenHandler> {
             final PacketByteBuf buf = PacketByteBufs.create();
             buf.writeBlockPos(handler.getAt());
             buf.writeString(OptionsListData.write(target));
+            ClientPlayNetworking.send(PortalCubedServerPackets.OPTIONS_LIST_CONFIGURE, buf);
             closeScreen();
         }));
 

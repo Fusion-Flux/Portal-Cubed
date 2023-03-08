@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.optionslist;
 
+import com.fusionflux.portalcubed.PortalCubed;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eu.midnightdust.lib.config.MidnightConfig;
@@ -77,11 +78,14 @@ public class OptionsListData {
     public static void read(String json, OptionsListBlockEntity target) {
         final List<EntryInfo> entries = getEntries(target);
 
+        if (json.isEmpty()) return;
+
         OptionsListBlockEntity newInstance;
         try {
             newInstance = GSON.fromJson(json, target.getClass());
-        } catch (Exception ignored) {
-            newInstance = null;
+        } catch (Exception e) {
+            PortalCubed.LOGGER.error("Failed to read OptionsListData for {}", target, e);
+            return;
         }
 
         for (EntryInfo info : entries) {

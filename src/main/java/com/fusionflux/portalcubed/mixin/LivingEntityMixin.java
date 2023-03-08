@@ -121,7 +121,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         final double angle = block.getAngle();
         final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08);
         if (!Double.isFinite(speed)) return;
-        setVelocity(getVelocity().add(block.getLaunchDir().multiply(speed)));
+        setVelocity(block.getLaunchDir().multiply(speed));
         velocityDirty = true;
     }
 
