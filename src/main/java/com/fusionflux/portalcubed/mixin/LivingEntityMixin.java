@@ -6,13 +6,12 @@ import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import com.fusionflux.portalcubed.client.gui.ExpressionFieldWidget;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.util.GeneralUtil;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
@@ -38,6 +37,10 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Shadow protected abstract float getMovementSpeed(float slipperiness);
 
     @Shadow protected abstract Vec3d applyClimbingSpeed(Vec3d motion);
+
+    @Shadow public abstract void setNoDrag(boolean noDrag);
+
+    @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 
     @Unique
     private VelocityHelperBlockEntity velocityHelper;
@@ -119,9 +122,10 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         final double relH = block.getRelH();
         final double relY = block.getRelY();
         final double angle = block.getAngle();
-        final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08) * 1.825;
+        final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08);
         if (!Double.isFinite(speed)) return;
-        setVelocity(block.getLaunchDir().multiply(speed));
+        setNoDrag(getEquippedStack(EquipmentSlot.FEET).isOf(PortalCubedItems.LONG_FALL_BOOTS));
+        setVelocity(block.getLaunchDir().multiply(Math.min(speed, 10)));
         velocityDirty = true;
     }
 
