@@ -28,6 +28,6 @@ public class GeneralUtil {
 
     public static double calculateVelocity(double x, double y, double a, double g) {
         a = Math.toRadians(a);
-        return sqrt(2 * (y - x * tan(a)) / (g * x * x)) / cos(a);
+        return sqrt(x * x * g / (2 * cos(-a) * (x * sin(-a) + y * cos(-a))));
     }
 }
