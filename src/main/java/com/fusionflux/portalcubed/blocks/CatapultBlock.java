@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class CatapultBlock extends SpecialHiddenBlockWithEntity implements BlockCollisionTrigger {
+    private static final VoxelShape SHAPE = createCuboidShape(3, 3, 3, 13, 13, 13);
+
     public CatapultBlock(Settings settings) {
         super(settings);
     }
@@ -32,7 +34,7 @@ public class CatapultBlock extends SpecialHiddenBlockWithEntity implements Block
 
     @Override
     protected VoxelShape getVisibleOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return super.getVisibleOutlineShape(state, world, pos, context);
+        return SHAPE;
     }
 
     @Override
