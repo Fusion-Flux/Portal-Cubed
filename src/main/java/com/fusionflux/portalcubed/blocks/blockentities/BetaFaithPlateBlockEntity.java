@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,6 +17,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -68,8 +70,14 @@ public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedSc
                     liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
                 }
                 blockEntity.timer = 5;
-                blockEntity.animationTimer = 7;
+                blockEntity.animationTimer = 50;
                 world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
+                world.playSound(
+                    null,
+                    pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
+                    PortalCubedSounds.CATAPULT_LAUNCH_EVENT, SoundCategory.BLOCKS,
+                    1f, 1f
+                );
             }
         }
         if (blockEntity.timer > 0)

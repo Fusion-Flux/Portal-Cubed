@@ -27,6 +27,7 @@ public class PortalCubedSounds {
     public static final Identifier CUBE_SCRAPE = id("cube_scrape");
     public static final Identifier COMPANION_CUBE_AMBIANCE = id("companion_cube_ambiance");
     public static final Identifier MATERIAL_EMANCIPATION = id("material_emancipation");
+    public static final Identifier CATAPULT_LAUNCH = id("catapult_launch");
 
     public static final Identifier PEDESTAL_BUTTON_PRESS = id("pedestal_button_press");
     public static final Identifier PEDESTAL_BUTTON_RELEASE = id("pedestal_button_release");
@@ -87,6 +88,7 @@ public class PortalCubedSounds {
     public static final SoundEvent CUBE_SCRAPE_EVENT = new SoundEvent(CUBE_SCRAPE);
     public static final SoundEvent COMPANION_CUBE_AMBIANCE_EVENT = new SoundEvent(COMPANION_CUBE_AMBIANCE);
     public static final SoundEvent MATERIAL_EMANCIPATION_EVENT = new SoundEvent(MATERIAL_EMANCIPATION);
+    public static final SoundEvent CATAPULT_LAUNCH_EVENT = new SoundEvent(CATAPULT_LAUNCH);
 
     public static final SoundEvent PEDESTAL_BUTTON_PRESS_EVENT = new SoundEvent(PEDESTAL_BUTTON_PRESS);
     public static final SoundEvent PEDESTAL_BUTTON_RELEASE_EVENT = new SoundEvent(PEDESTAL_BUTTON_RELEASE);
@@ -148,6 +150,7 @@ public class PortalCubedSounds {
 
         Registry.register(Registry.SOUND_EVENT, COMPANION_CUBE_AMBIANCE, COMPANION_CUBE_AMBIANCE_EVENT);
         Registry.register(Registry.SOUND_EVENT, MATERIAL_EMANCIPATION, MATERIAL_EMANCIPATION_EVENT);
+        Registry.register(Registry.SOUND_EVENT, CATAPULT_LAUNCH, CATAPULT_LAUNCH_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, PEDESTAL_BUTTON_PRESS, PEDESTAL_BUTTON_PRESS_EVENT);
         Registry.register(Registry.SOUND_EVENT, PEDESTAL_BUTTON_RELEASE, PEDESTAL_BUTTON_RELEASE_EVENT);

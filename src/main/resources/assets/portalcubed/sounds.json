@@ -129,6 +129,11 @@
 		],
 		"subtitle": "subtitles.portalcubed.material_emancipation"
 	},
+	"catapult_launch": {
+		"sounds": [
+			"portalcubed:heavy_metal_stop1"
+		]
+	},
 
 	"pedestal_button_press": {
 		"sounds": [
