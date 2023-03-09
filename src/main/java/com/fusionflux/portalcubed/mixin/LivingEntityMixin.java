@@ -119,13 +119,13 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Override
     public void collidedWithCatapult(CatapultBlockEntity block) {
         if (!canMoveVoluntarily()) return;
-        final double relH = block.getRelH();
-        final double relY = block.getRelY();
+        final double relH = block.getRelH(getPos().x, getPos().z);
+        final double relY = block.getRelY(getPos().y);
         final double angle = block.getAngle();
         final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08);
         if (!Double.isFinite(speed)) return;
         setNoDrag(getEquippedStack(EquipmentSlot.FEET).isOf(PortalCubedItems.LONG_FALL_BOOTS));
-        setVelocity(block.getLaunchDir().multiply(Math.min(speed, 10)));
+        setVelocity(block.getLaunchDir(getPos().x, getPos().z).multiply(Math.min(speed, 10)));
         velocityDirty = true;
     }
 

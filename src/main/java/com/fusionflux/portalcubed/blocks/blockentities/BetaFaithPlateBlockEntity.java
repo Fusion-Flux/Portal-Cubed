@@ -20,6 +20,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,21 +58,18 @@ public class BetaFaithPlateBlockEntity extends BlockEntity implements ExtendedSc
             world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
         }
 
+        final boolean launch = new Vec3d(blockEntity.velX, blockEntity.velY, blockEntity.velZ).lengthSquared() > 1e-7;
         for (Entity liver : list) {
             if (blockEntity.timer <= 0) {
-                if (liver instanceof CorePhysicsEntity physEn) {
-                    if (physEn.getHolderUUID().isEmpty()) {
-                        liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
-                        blockEntity.timer = 5;
-                        blockEntity.animationTimer = 7;
-                        world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
-                    }
-                } else {
-                    liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
-                    blockEntity.timer = 5;
-                    blockEntity.animationTimer = 7;
-                    world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
+                if (liver instanceof CorePhysicsEntity physEn && physEn.getHolderUUID().isPresent()) {
+                    continue;
                 }
+                if (launch) {
+                    liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
+                }
+                blockEntity.timer = 5;
+                blockEntity.animationTimer = 7;
+                world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
             }
         }
         if (blockEntity.timer > 0)

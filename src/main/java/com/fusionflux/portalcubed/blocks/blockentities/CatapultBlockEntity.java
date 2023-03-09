@@ -84,29 +84,29 @@ public class CatapultBlockEntity extends OptionsListBlockEntity implements Exten
         buf.writeBlockPos(pos);
     }
 
-    private double getRelX() {
-        return destX - pos.getX() - 0.5;
+    private double getRelX(double startX) {
+        return destX - startX - 0.5;
     }
 
-    private double getRelZ() {
-        return destZ - pos.getZ() - 0.5;
+    private double getRelZ(double startZ) {
+        return destZ - startZ - 0.5;
     }
 
-    public double getRelH() {
-        return Math.sqrt(MathHelper.square(getRelX()) + MathHelper.square(getRelZ()));
+    public double getRelH(double startX, double startZ) {
+        return Math.sqrt(MathHelper.square(getRelX(startX)) + MathHelper.square(getRelZ(startZ)));
     }
 
-    public double getRelY() {
-        return destY - pos.getY();
+    public double getRelY(double startY) {
+        return destY - startY;
     }
 
     public double getAngle() {
         return angle;
     }
 
-    public Vec3d getLaunchDir() {
+    public Vec3d getLaunchDir(double startX, double startZ) {
         final double a = Math.toRadians(angle);
-        return new Vec3d(getRelX(), 0, getRelZ())
+        return new Vec3d(getRelX(startX), 0, getRelZ(startZ))
             .normalize()
             .multiply(Math.cos(a))
             .add(0, Math.sin(a), 0);
