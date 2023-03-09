@@ -72,7 +72,7 @@ public class PortalCubedServerPackets {
                     final BlockState state = player.world.getBlockState(hit.getBlockPos());
                     if (
                         state.getBlock() instanceof TallButtonVariant button &&
-                            player.interactionManager.interactBlock(player, player.world, ItemStack.EMPTY, Hand.MAIN_HAND, hit) != ActionResult.PASS
+                            player.interactionManager.interactBlock(player, player.world, ItemStack.EMPTY, Hand.OFF_HAND, hit) != ActionResult.PASS
                     ) {
                         player.world.playSound(null, hit.getBlockPos(), button.getClickSound(true), SoundCategory.BLOCKS, 0.8f, 1f);
                         return;
