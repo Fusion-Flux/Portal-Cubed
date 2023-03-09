@@ -63,6 +63,8 @@ public class PortalCubedBlocks {
     public static final BetaFaithPlateBlock BETA_FAITH_PLATE = new BetaFaithPlateBlock(QuiltBlockSettings.of(Material.STONE).hardness(999999f).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)));
     public static final BlockEntityType<BetaFaithPlateBlockEntity> BETA_FAITH_PLATE_ENTITY = QuiltBlockEntityTypeBuilder.create(BetaFaithPlateBlockEntity::new, BETA_FAITH_PLATE).build();
 
+    public static final Block FAITH_PLATE_TARGET = new SimpleMultiSidedBlock(QuiltBlockSettings.of(Material.PLANT).hardness(0).nonOpaque().noCollision());
+
     public static final BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinBlockEntity::new, NEUROTOXIN_BLOCK).build();
     public static final BlockEntityType<NeurotoxinEmitterBlockEntity> NEUROTOXIN_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinEmitterBlockEntity::new, NEUROTOXIN_EMITTER).build();
     public static final BlockEntityType<ExcursionFunnelEmitterBlockEntity> EXCURSION_FUNNEL_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(ExcursionFunnelEmitterBlockEntity::new, EXCURSION_FUNNEL_EMITTER).build();
@@ -179,6 +181,9 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, id("beta_faith_plate_entity"), BETA_FAITH_PLATE_ENTITY);
         Registry.register(Registry.BLOCK, id("beta_faith_plate"), BETA_FAITH_PLATE);
         Registry.register(Registry.ITEM, id("beta_faith_plate"), new BlockItem(BETA_FAITH_PLATE, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
+
+        Registry.register(Registry.BLOCK, id("faith_plate_target"), FAITH_PLATE_TARGET);
+        Registry.register(Registry.ITEM, id("faith_plate_target"), new BlockItem(FAITH_PLATE_TARGET, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), LASER_EMITTER_BLOCK_ENTITY);
         Registry.register(Registry.BLOCK, id("laser_emitter"), LASER_EMITTER);

@@ -348,13 +348,17 @@
     "type": "provided",
     "render_layer": "translucent"
   },
+  "faith_plate": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
   "beta_faith_plate": {
     "type": "provided",
     "render_layer": "translucent"
   },
-  "faith_plate": {
+  "faith_plate_target": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "portal_1_door": {
     "type": "provided",
