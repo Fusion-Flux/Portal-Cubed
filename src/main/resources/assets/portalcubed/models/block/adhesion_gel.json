@@ -1,20 +1,15 @@
 {
-	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
 	"textures": {
-		"0": "portalcubed:block/adhesion_gel",
-		"particle": "portalcubed:block/adhesion_gel"
+		"particle": "portalcubed:block/adhesion_gel",
+		"adhesion_gel": "portalcubed:block/adhesion_gel"
 	},
 	"elements": [
-		{
-			"from": [0, 0, 0],
-			"to": [16, 0.01, 16],
-			"color": 6,
+		{   "from": [ 0, 0, 0.1 ],
+			"to": [ 16, 16, 0.1 ],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 1], "texture": "#0"},
-				"east": {"uv": [0, 0, 16, 1], "texture": "#0"},
-				"south": {"uv": [0, 0, 16, 1], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 1], "texture": "#0"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#0"}
+				"north": { "uv": [ 0, 0, 16, 16 ], "texture": "#adhesion_gel" },
+				"south": { "uv": [ 0, 0, 16, 16 ], "texture": "#adhesion_gel" }
 			}
 		}
 	]

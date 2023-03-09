@@ -1,19 +1,15 @@
 {
-	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
 	"textures": {
-		"0": "portalcubed:block/propulsion_gel",
-		"particle": "portalcubed:block/propulsion_gel"
+		"particle": "portalcubed:block/propulsion_gel",
+		"propulsion_gel": "portalcubed:block/propulsion_gel"
 	},
 	"elements": [
-		{
-			"from": [0, 0, 0],
-			"to": [16, 0.01, 16],
+		{   "from": [ 0, 0, 0.1 ],
+			"to": [ 16, 16, 0.1 ],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 1], "texture": "#0"},
-				"east": {"uv": [0, 0, 16, 1], "texture": "#0"},
-				"south": {"uv": [0, 0, 16, 1], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 1], "texture": "#0"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#0"}
+				"north": { "uv": [ 0, 0, 16, 16 ], "texture": "#propulsion_gel" },
+				"south": { "uv": [ 0, 0, 16, 16 ], "texture": "#propulsion_gel" }
 			}
 		}
 	]

@@ -2,10 +2,10 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.blocks.GelFlat;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
+import net.minecraft.block.AbstractLichenBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
@@ -283,7 +283,7 @@ public class  ExperimentalPortal extends Entity {
             final BlockState state = world.getBlockState(pos);
             if (state.isIn(PortalCubedBlocks.PORTAL_NONSOLID) || state.isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
                 final BlockState gelState = world.getBlockState(pos.offset(forward));
-                final BooleanProperty property = GelFlat.getFacingProperty(forward.getOpposite());
+                final BooleanProperty property = AbstractLichenBlock.getProperty(forward.getOpposite());
                 if (!gelState.isIn(PortalCubedBlocks.PORTALABLE_GELS) || !gelState.getOrEmpty(property).orElse(false)) {
                     return false;
                 }

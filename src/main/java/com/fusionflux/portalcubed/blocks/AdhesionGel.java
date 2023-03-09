@@ -26,7 +26,6 @@ public class AdhesionGel extends GelFlat {
 
     public AdhesionGel(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
     }
 
     public static final BiMap<Direction, BooleanProperty> DIR_TO_PROPERTY = ImmutableBiMap.of(
@@ -142,6 +141,7 @@ public class AdhesionGel extends GelFlat {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
