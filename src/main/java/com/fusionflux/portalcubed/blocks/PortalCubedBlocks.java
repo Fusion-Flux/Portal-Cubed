@@ -63,7 +63,7 @@ public class PortalCubedBlocks {
     public static final BetaFaithPlateBlock BETA_FAITH_PLATE = new BetaFaithPlateBlock(QuiltBlockSettings.of(Material.STONE).hardness(999999f).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)));
     public static final BlockEntityType<BetaFaithPlateBlockEntity> BETA_FAITH_PLATE_ENTITY = QuiltBlockEntityTypeBuilder.create(BetaFaithPlateBlockEntity::new, BETA_FAITH_PLATE).build();
 
-    public static final Block FAITH_PLATE_TARGET = new SimpleMultiSidedBlock(QuiltBlockSettings.of(Material.PLANT).hardness(0).nonOpaque().noCollision());
+    public static final Block FAITH_PLATE_TARGET = new FaithPlateTargetBlock(QuiltBlockSettings.of(Material.PLANT).hardness(0).nonOpaque().noCollision());
 
     public static final BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinBlockEntity::new, NEUROTOXIN_BLOCK).build();
     public static final BlockEntityType<NeurotoxinEmitterBlockEntity> NEUROTOXIN_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinEmitterBlockEntity::new, NEUROTOXIN_EMITTER).build();
