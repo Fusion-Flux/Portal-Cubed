@@ -15,6 +15,7 @@ import net.minecraft.text.ScreenTexts;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
@@ -46,7 +47,8 @@ public class OptionsListScreen extends HandledScreen<OptionsListScreenHandler> {
             return;
         }
         target = ola;
-        this.translationPrefix = "optionslist." + target.getClass().getSimpleName() + ".";
+        //noinspection DataFlowIssue
+        this.translationPrefix = "optionslist." + Registry.BLOCK_ENTITY_TYPE.getId(ola.getType()).toString().replace(':', '.') + ".";
         for (final EntryInfo entry : OptionsListData.getEntries(target)) {
             try {
                 entry.value = entry.field.get(target);

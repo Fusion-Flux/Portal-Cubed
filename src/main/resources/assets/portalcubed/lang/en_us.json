@@ -315,5 +315,10 @@
   "portalcubed.ponder.auto_portal.text_3": "Right-click with a hammer to switch between primary and secondary modes.",
   "portalcubed.ponder.auto_portal.text_4": "Right-click with dye to change the portal\u0027s base color.",
   "portalcubed.ponder.auto_portal.text_5": "This portal is green because the Auto Portal is still set to secondary.",
-  "portalcubed.ponder.auto_portal.text_6": "Sneak right-click with a hammer to reset the portal\u0027s base color."
+  "portalcubed.ponder.auto_portal.text_6": "Sneak right-click with a hammer to reset the portal\u0027s base color.",
+
+  "optionslist.portalcubed.catapult.destX": "Destination X",
+  "optionslist.portalcubed.catapult.destY": "Destination Y",
+  "optionslist.portalcubed.catapult.destZ": "Destination Z",
+  "optionslist.portalcubed.catapult.angle": "Launch Angle"
 }
