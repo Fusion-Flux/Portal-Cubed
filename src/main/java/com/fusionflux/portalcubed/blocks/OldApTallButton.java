@@ -5,7 +5,7 @@ import net.minecraft.sound.SoundEvent;
 
 public class OldApTallButton extends TallButtonVariant {
     public OldApTallButton(Settings settings) {
-        super(false, settings);
+        super(settings);
     }
 
     @Override

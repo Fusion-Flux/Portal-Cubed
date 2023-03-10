@@ -5,7 +5,7 @@ import net.minecraft.sound.SoundEvent;
 
 public class TallButton extends TallButtonVariant {
     public TallButton(Settings settings) {
-        super(false, settings);
+        super(settings);
     }
 
     @Override
