@@ -24,16 +24,16 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 public class CatapultBlockEntity extends OptionsListBlockEntity implements ExtendedScreenHandlerFactory {
-    @MidnightConfig.Entry
+    @MidnightConfig.Entry(min = -30_000_000, max = 30_000_000)
     private double destX;
 
-    @MidnightConfig.Entry
+    @MidnightConfig.Entry(min = -2032, max = 4064)
     private double destY;
 
-    @MidnightConfig.Entry
+    @MidnightConfig.Entry(min = -30_000_000, max = 30_000_000)
     private double destZ;
 
-    @MidnightConfig.Entry
+    @MidnightConfig.Entry(min = 0, max = 90)
     private double angle = 45;
 
     public CatapultBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
