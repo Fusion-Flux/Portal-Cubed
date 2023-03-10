@@ -185,7 +185,8 @@
   },
   "insulation": {},
   "portal_2_panel_frame": {
-    "render_layer": "translucent"
+    "render_layer": "cutout",
+    "opaque": false
   },
   "portal_2_panel_wireframe": {
     "opaque": false,
@@ -459,5 +460,9 @@
   "rocket_turret": {
     "type": "provided",
     "render_layer": "cutout"
+  },
+  "catapult": {
+    "type": "provided",
+    "render_layer": "translucent"
   }
 }
