@@ -3,13 +3,11 @@
   "block/excursion_funnel_reversed": "block/excursion_funnel_beam",
 
   "block/faith_plate": "block/faith_plate_e",
-  "block/faith_plate_active": "block/faith_plate_e",
+  "block/faith_plate_target": "block/faith_plate_target",
 
   "block/laser": "block/laser_beam",
   "block/laser_ref_main": "block/laser_beam",
   "block/laser_ref_prev": "block/laser_beam",
-
-
 
   "block/portal_2_fizzler_top": "block/portal_2_fizzler_top",
   "block/portal_2_fizzler_bottom": "block/portal_2_fizzler_bottom",
