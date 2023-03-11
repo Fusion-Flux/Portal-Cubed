@@ -101,9 +101,11 @@
   "block/floor_button": "block/floor_button_e",
   "block/old_ap_floor_button": "block/old_ap_floor_button_e",
   "block/pedestal_button": "block/pedestal_button_e",
+  "block/offset_pedestal_button": "block/pedestal_button_e",
   "block/floor_button_active": "block/floor_button_e",
   "block/old_ap_floor_button_active": "block/old_ap_floor_button_e",
   "block/pedestal_button_active": "block/pedestal_button_e",
+  "block/offset_pedestal_button_active": "block/pedestal_button_e",
 
   "block/rocket_turret_active": "block/rocket_turret_active_e",
   "block/rocket_turret_inactive": "block/rocket_turret_inactive_e",
