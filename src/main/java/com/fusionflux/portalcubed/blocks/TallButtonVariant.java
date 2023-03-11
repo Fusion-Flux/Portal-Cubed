@@ -26,8 +26,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public abstract class TallButtonVariant extends WallMountedBlock {
     public static final BooleanProperty POWERED = Properties.POWERED;
@@ -50,7 +50,7 @@ public abstract class TallButtonVariant extends WallMountedBlock {
     protected static final VoxelShape WEST_PRESSED_SHAPE = createCuboidShape(-4, 5.5, 5.5, 16, 10.5, 10.5);
     protected static final VoxelShape EAST_PRESSED_SHAPE = createCuboidShape(0, 5.5, 5.5, 20, 10.5, 10.5);
 
-    protected static final Map<VoxelShape, VoxelShape> OFFSET_SHAPE_CACHE = new WeakHashMap<>();
+    protected static final Map<BlockState, VoxelShape> OFFSET_SHAPE_CACHE = new HashMap<>();
 
     protected TallButtonVariant(Settings settings) {
         super(settings);
@@ -72,10 +72,10 @@ public abstract class TallButtonVariant extends WallMountedBlock {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         final VoxelShape baseShape = getNonOffsetShape(state);
         if (!state.get(OFFSET)) return baseShape;
-        VoxelShape offset = OFFSET_SHAPE_CACHE.get(baseShape);
+        VoxelShape offset = OFFSET_SHAPE_CACHE.get(state);
         if (offset == null) {
             final Vec3d offsetDir = Vec3d.of(getOffsetDir(state).getVector()).multiply(0.25);
-            OFFSET_SHAPE_CACHE.put(baseShape, offset = baseShape.offset(offsetDir.x, offsetDir.y, offsetDir.z));
+            OFFSET_SHAPE_CACHE.put(state, offset = baseShape.offset(offsetDir.x, offsetDir.y, offsetDir.z));
         }
         return offset;
     }
