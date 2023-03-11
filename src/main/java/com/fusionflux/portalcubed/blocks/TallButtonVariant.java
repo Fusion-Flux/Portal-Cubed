@@ -33,24 +33,16 @@ public abstract class TallButtonVariant extends WallMountedBlock {
     public static final BooleanProperty POWERED = Properties.POWERED;
     public static final BooleanProperty OFFSET = BooleanProperty.of("offset");
 
-    protected static final VoxelShape CEILING_X_SHAPE = createCuboidShape(5.5, -4, 5.5, 10.5, 16, 10.5);
-    protected static final VoxelShape CEILING_Z_SHAPE = createCuboidShape(5.5, -4, 5.5, 10.5, 16, 10.5);
-    protected static final VoxelShape FLOOR_X_SHAPE = createCuboidShape(5.5, 0, 5.5, 10.5, 20, 10.5);
-    protected static final VoxelShape FLOOR_Z_SHAPE = createCuboidShape(5.5, 0, 5.5, 10.5, 20, 10.5);
-    protected static final VoxelShape NORTH_SHAPE = createCuboidShape(5.5, 5.5, -4, 10.5, 10.5, 16);
-    protected static final VoxelShape SOUTH_SHAPE = createCuboidShape(5.5, 5.5, 0, 10.5, 10.5, 20);
-    protected static final VoxelShape WEST_SHAPE = createCuboidShape(-4, 5.5, 5.5, 16, 10.5, 10.5);
-    protected static final VoxelShape EAST_SHAPE = createCuboidShape(0, 5.5, 5.5, 20, 10.5, 10.5);
-    protected static final VoxelShape CEILING_X_PRESSED_SHAPE = createCuboidShape(5.5, -4, 5.5, 10.5, 16, 10.5);
-    protected static final VoxelShape CEILING_Z_PRESSED_SHAPE = createCuboidShape(5.5, -4, 5.5, 10.5, 16, 10.5);
-    protected static final VoxelShape FLOOR_X_PRESSED_SHAPE = createCuboidShape(5.5, 0, 5.5, 10.5, 20, 10.5);
-    protected static final VoxelShape FLOOR_Z_PRESSED_SHAPE = createCuboidShape(5.5, 0, 5.5, 10.5, 20, 10.5);
-    protected static final VoxelShape NORTH_PRESSED_SHAPE = createCuboidShape(5.5, 5.5, -4, 10.5, 10.5, 16);
-    protected static final VoxelShape SOUTH_PRESSED_SHAPE = createCuboidShape(5.5, 5.5, 0, 10.5, 10.5, 20);
-    protected static final VoxelShape WEST_PRESSED_SHAPE = createCuboidShape(-4, 5.5, 5.5, 16, 10.5, 10.5);
-    protected static final VoxelShape EAST_PRESSED_SHAPE = createCuboidShape(0, 5.5, 5.5, 20, 10.5, 10.5);
+    private static final VoxelShape[] CEILING_X_SHAPE = createShapePair(5.5, -4, 5.5, 10.5, 16, 10.5);
+    private static final VoxelShape[] CEILING_Z_SHAPE = createShapePair(5.5, -4, 5.5, 10.5, 16, 10.5);
+    private static final VoxelShape[] FLOOR_X_SHAPE = createShapePair(5.5, 0, 5.5, 10.5, 20, 10.5);
+    private static final VoxelShape[] FLOOR_Z_SHAPE = createShapePair(5.5, 0, 5.5, 10.5, 20, 10.5);
+    private static final VoxelShape[] NORTH_SHAPE = createShapePair(5.5, 5.5, -4, 10.5, 10.5, 16);
+    private static final VoxelShape[] SOUTH_SHAPE = createShapePair(5.5, 5.5, 0, 10.5, 10.5, 20);
+    private static final VoxelShape[] WEST_SHAPE = createShapePair(-4, 5.5, 5.5, 16, 10.5, 10.5);
+    private static final VoxelShape[] EAST_SHAPE = createShapePair(0, 5.5, 5.5, 20, 10.5, 10.5);
 
-    protected static final Map<BlockState, VoxelShape> OFFSET_SHAPE_CACHE = new HashMap<>();
+    protected static final Map<BlockState, VoxelShape> SHAPE_CACHE = new HashMap<>();
 
     protected TallButtonVariant(Settings settings) {
         super(settings);
@@ -67,45 +59,50 @@ public abstract class TallButtonVariant extends WallMountedBlock {
         return 30;
     }
 
+    private static VoxelShape[] createShapePair(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        return new VoxelShape[] {
+            createCuboidShape(minX, minY, minZ, maxX, maxY, maxZ),
+            createCuboidShape(
+                maybeShrink(minX), maybeShrink(minY), maybeShrink(minZ),
+                maybeShrink(maxX), maybeShrink(maxY), maybeShrink(maxZ)
+            )
+        };
+    }
+
+    private static double maybeShrink(double v) {
+        return v == 20 ? 18 : v == -4 ? -2 : v;
+    }
+
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        final VoxelShape baseShape = getNonOffsetShape(state);
-        if (!state.get(OFFSET)) return baseShape;
-        VoxelShape offset = OFFSET_SHAPE_CACHE.get(state);
-        if (offset == null) {
-            final Vec3d offsetDir = Vec3d.of(getOffsetDir(state).getVector()).multiply(0.25);
-            OFFSET_SHAPE_CACHE.put(state, offset = baseShape.offset(offsetDir.x, offsetDir.y, offsetDir.z));
+        final VoxelShape[] baseShape = getBaseShape(state);
+        VoxelShape shape = SHAPE_CACHE.get(state);
+        if (shape == null) {
+            if (state.get(OFFSET)) {
+                final Vec3d offsetDir = Vec3d.of(getOffsetDir(state).getVector()).multiply(0.25);
+                shape = baseShape[1].offset(offsetDir.x, offsetDir.y, offsetDir.z);
+            } else {
+                shape = baseShape[0];
+            }
+            SHAPE_CACHE.put(state, shape);
         }
-        return offset;
+        return shape;
     }
 
-    private VoxelShape getNonOffsetShape(BlockState state) {
+    private VoxelShape[] getBaseShape(BlockState state) {
         Direction direction = state.get(FACING);
-        boolean bl = state.get(POWERED);
-        switch (state.get(FACE)) {
-            case FLOOR -> {
-                if (direction.getAxis() == Direction.Axis.X) {
-                    return bl ? FLOOR_X_PRESSED_SHAPE : FLOOR_X_SHAPE;
-                }
-                return bl ? FLOOR_Z_PRESSED_SHAPE : FLOOR_Z_SHAPE;
-            }
-            case WALL -> {
-                return switch (direction) {
-                    case EAST -> bl ? EAST_PRESSED_SHAPE : EAST_SHAPE;
-                    case WEST -> bl ? WEST_PRESSED_SHAPE : WEST_SHAPE;
-                    case SOUTH -> bl ? SOUTH_PRESSED_SHAPE : SOUTH_SHAPE;
-                    default -> bl ? NORTH_PRESSED_SHAPE : NORTH_SHAPE;
-                };
-            }
-            default -> {
-                if (direction.getAxis() == Direction.Axis.X) {
-                    return bl ? CEILING_X_PRESSED_SHAPE : CEILING_X_SHAPE;
-                } else {
-                    return bl ? CEILING_Z_PRESSED_SHAPE : CEILING_Z_SHAPE;
-                }
-            }
-        }
+        return switch (state.get(FACE)) {
+            case FLOOR -> direction.getAxis() == Direction.Axis.X ? FLOOR_X_SHAPE : FLOOR_Z_SHAPE;
+            case WALL -> switch (direction) {
+                case EAST -> EAST_SHAPE;
+                case WEST -> WEST_SHAPE;
+                case SOUTH -> SOUTH_SHAPE;
+                case NORTH -> NORTH_SHAPE;
+                default -> throw new AssertionError();
+            };
+            case CEILING -> direction.getAxis() == Direction.Axis.X ? CEILING_X_SHAPE : CEILING_Z_SHAPE;
+        };
     }
 
     @SuppressWarnings("deprecation")
