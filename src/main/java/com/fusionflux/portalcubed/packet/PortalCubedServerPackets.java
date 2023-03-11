@@ -6,6 +6,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.TallButtonVariant;
 import com.fusionflux.portalcubed.blocks.VelocityHelperBlock;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.optionslist.OptionsListBlockEntity;
@@ -52,7 +53,7 @@ public class PortalCubedServerPackets {
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
         Vec3d vec3d = player.getCameraPosVec(0);
-        double d = 3;
+        double d = 3 * PehkuiScaleTypes.ENTITY_REACH.getScaleData(player).getScale();
 
         Vec3d vec3d2 = player.getRotationVec(1.0F);
         Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);

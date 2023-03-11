@@ -12,7 +12,6 @@ version = "${project.mod_version}-rev.${grgit.head().abbreviatedId}"
 group = project.maven_group
 
 repositories {
-	maven { url = "https://jitpack.io" }
 	maven { url = "https://maven.shedaniel.me/" }
 	maven { url = "https://www.cursemaven.com" }
 	maven { url = "https://maven.terraformersmc.com/releases" }
@@ -27,7 +26,7 @@ repositories {
 	}
 
 	maven {
-		url 'https://repo.sleeping.town'
+		url = 'https://repo.sleeping.town'
 		content {
 			includeGroup 'com.unascribed'
 		}
@@ -44,9 +43,11 @@ repositories {
 		url = "https://maven.alexiil.uk/"
 	}
 	maven {
-		name 'Gegy'
-		url 'https://maven.gegy.dev'
+		name = 'Gegy'
+		url = 'https://maven.gegy.dev'
 	}
+
+	maven { url = "https://jitpack.io/" }
 }
 
 dependencies {
@@ -91,10 +92,14 @@ dependencies {
 	modCompileOnly ("alexiil.mc.lib:libmultipart-all:0.8.0")
 
 	modCompileOnly "dev.lambdaurora:lambdynamiclights:2.2.0+1.19.2"
+
+	modImplementation("com.github.Virtuoel:Pehkui:3.6.3", {
+		exclude group: "net.fabricmc.fabric-api"
+	})
 }
 
 checkstyle {
-	toolVersion '10.7.0'
+	toolVersion = '10.7.0'
 	ignoreFailures = false
 	maxWarnings = project.checkstyle_max_warns as int
 }

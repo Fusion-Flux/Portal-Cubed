@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
 import net.minecraft.block.AbstractLichenBlock;
@@ -257,14 +258,14 @@ public class  ExperimentalPortal extends Entity {
 
     private boolean validateBehind() {
         final Box portalBox = new Box(
-            getPointInPlane(WIDTH / 2, HEIGHT / 2)
+            getPointInPlane(width() / 2, height() / 2)
                 .add(getNormal().multiply(-0.01)),
-            getPointInPlane(-WIDTH / 2, -HEIGHT / 2)
+            getPointInPlane(-width() / 2, -height() / 2)
                 .add(getNormal().multiply(-0.2))
         ).union(new Box(
-            getPointInPlane(-WIDTH / 2, HEIGHT / 2)
+            getPointInPlane(-width() / 2, height() / 2)
                 .add(getNormal().multiply(-0.01)),
-            getPointInPlane(WIDTH / 2, -HEIGHT / 2)
+            getPointInPlane(width() / 2, -height() / 2)
                 .add(getNormal().multiply(-0.2))
         ));
         final CuboidBlockIterator iter = new CuboidBlockIterator(
@@ -301,13 +302,13 @@ public class  ExperimentalPortal extends Entity {
 
     private boolean validateFront() {
         final Box portalBox = new Box(
-            getPointInPlane(WIDTH / 2, HEIGHT / 2)
+            getPointInPlane(width() / 2, height() / 2)
                 .add(getNormal().multiply(0.2)),
-            getPointInPlane(-WIDTH / 2, -HEIGHT / 2)
+            getPointInPlane(-width() / 2, -height() / 2)
         ).union(new Box(
-            getPointInPlane(-WIDTH / 2, HEIGHT / 2)
+            getPointInPlane(-width() / 2, height() / 2)
                 .add(getNormal().multiply(0.2)),
-            getPointInPlane(WIDTH / 2, -HEIGHT / 2)
+            getPointInPlane(width() / 2, -height() / 2)
         ));
         final CuboidBlockIterator iter = new CuboidBlockIterator(
             MathHelper.floor(portalBox.minX - EPSILON) - 1,
@@ -353,14 +354,14 @@ public class  ExperimentalPortal extends Entity {
         }
 
         Box portalBox = new Box(
-                getPointInPlane(WIDTH / 2, HEIGHT / 2)
+                getPointInPlane(width() / 2, height() / 2)
                         .add(getNormal().multiply(.2)),
-                getPointInPlane(-WIDTH / 2, -HEIGHT / 2)
+                getPointInPlane(-width() / 2, -height() / 2)
                         .add(getNormal().multiply(-.2))
         ).union(new Box(
-                getPointInPlane(-WIDTH / 2, HEIGHT / 2)
+                getPointInPlane(-width() / 2, height() / 2)
                         .add(getNormal().multiply(.2)),
-                getPointInPlane(WIDTH / 2, -HEIGHT / 2)
+                getPointInPlane(width() / 2, -height() / 2)
                         .add(getNormal().multiply(-.2))
         ));
         setBoundingBox(portalBox);
@@ -375,14 +376,14 @@ public class  ExperimentalPortal extends Entity {
         }
 
         Box portalBox = new Box(
-                getCutoutPointInPlane(WIDTH / 2, HEIGHT / 2)
+                getCutoutPointInPlane(width() / 2, height() / 2)
                         .add(getNormal().multiply(5)),
-                getCutoutPointInPlane(-WIDTH / 2, -HEIGHT / 2)
+                getCutoutPointInPlane(-width() / 2, -height() / 2)
                         .add(getNormal().multiply(-5))
         ).union(new Box(
-                getCutoutPointInPlane(-WIDTH / 2, HEIGHT / 2)
+                getCutoutPointInPlane(-width() / 2, height() / 2)
                         .add(getNormal().multiply(5)),
-                getCutoutPointInPlane(WIDTH / 2, -HEIGHT / 2)
+                getCutoutPointInPlane(width() / 2, -height() / 2)
                         .add(getNormal().multiply(-5))
         ));
         setCutoutBoundingBox(portalBox);
@@ -396,14 +397,14 @@ public class  ExperimentalPortal extends Entity {
         }
 
         return new Box(
-                getBoundsCheckPointInPlane(WIDTH / 2, HEIGHT / 2)
+                getBoundsCheckPointInPlane(width() / 2, height() / 2)
                         .add(getNormal().multiply(2.5)),
-                getBoundsCheckPointInPlane(-WIDTH / 2, -HEIGHT / 2)
+                getBoundsCheckPointInPlane(-width() / 2, -height() / 2)
                         .add(getNormal().multiply(-2.5))
         ).union(new Box(
-                getBoundsCheckPointInPlane(-WIDTH / 2, HEIGHT / 2)
+                getBoundsCheckPointInPlane(-width() / 2, height() / 2)
                         .add(getNormal().multiply(2.5)),
-                getBoundsCheckPointInPlane(WIDTH / 2, -HEIGHT / 2)
+                getBoundsCheckPointInPlane(width() / 2, -height() / 2)
                         .add(getNormal().multiply(-2.5))
         ));
     }
@@ -438,6 +439,14 @@ public class  ExperimentalPortal extends Entity {
 
     public void setOriginPos(Vec3d pos) {
         setPosition(pos);
+    }
+
+    private double width() {
+        return WIDTH * PehkuiScaleTypes.HITBOX_WIDTH.getScaleData(this).getScale();
+    }
+
+    private double height() {
+        return HEIGHT * PehkuiScaleTypes.HITBOX_HEIGHT.getScaleData(this).getScale();
     }
 
 }
