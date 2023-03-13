@@ -10,9 +10,18 @@ import net.minecraft.util.math.Vec3d;
 
 public class RayonIntegrationPresent implements RayonIntegration {
     @Override
+    public void init() {
+    }
+
+    @Override
+    public boolean isPresent() {
+        return true;
+    }
+
+    @Override
     public void setVelocity(Entity entity, Vec3d velocity) {
         if (entity instanceof EntityPhysicsElement physicsElement) {
-            physicsElement.getRigidBody().setLinearVelocity(Convert.toBullet(velocity));
+            physicsElement.getRigidBody().setLinearVelocity(Convert.toBullet(velocity.multiply(14.5)));
         } else {
             entity.setVelocity(velocity);
         }

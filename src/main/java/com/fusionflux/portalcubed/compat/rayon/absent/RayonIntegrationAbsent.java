@@ -10,6 +10,15 @@ public enum RayonIntegrationAbsent implements RayonIntegration {
     INSTANCE;
 
     @Override
+    public void init() {
+    }
+
+    @Override
+    public boolean isPresent() {
+        return false;
+    }
+
+    @Override
     public void setVelocity(Entity entity, Vec3d velocity) {
         entity.setVelocity(velocity);
     }

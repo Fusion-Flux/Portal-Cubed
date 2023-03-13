@@ -10,6 +10,10 @@ import org.quiltmc.loader.api.QuiltLoader;
 public interface RayonIntegration {
     RayonIntegration INSTANCE = QuiltLoader.isModLoaded("rayon") ? RayonPresentHolder.create() : RayonIntegrationAbsent.INSTANCE;
 
+    void init();
+
+    boolean isPresent();
+
     void setVelocity(Entity entity, Vec3d velocity);
 
     Quaternion getVisualRotation(Entity entity, float tickDelta);

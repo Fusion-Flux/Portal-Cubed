@@ -14,6 +14,7 @@ import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.commands.PortalCubedCommands;
 import com.fusionflux.portalcubed.compat.create.CreateIntegration;
+import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -181,9 +182,6 @@ public class PortalCubed implements ModInitializer {
             });
         });
 
-
-
-
         ServerPlayNetworking.registerGlobalReceiver(id("configure_faith_plate"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
             BlockPos target = buf.readBlockPos();
@@ -295,6 +293,8 @@ public class PortalCubed implements ModInitializer {
         if (QuiltLoader.isModLoaded("create")) {
             CreateIntegration.init();
         }
+
+        RayonIntegration.INSTANCE.init();
     }
 
     public static Identifier id(String path) {
