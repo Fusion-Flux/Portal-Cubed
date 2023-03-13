@@ -4,12 +4,11 @@ import com.fusionflux.portalcubed.client.render.EntityEmissiveRendering;
 import com.fusionflux.portalcubed.client.render.entity.model.CompanionCubeModel;
 import com.fusionflux.portalcubed.entity.CompanionCubeEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class CompanionCubeRenderer extends MobEntityRenderer<CompanionCubeEntity, CompanionCubeModel> {
+public class CompanionCubeRenderer extends CorePhysicsRenderer<CompanionCubeEntity, CompanionCubeModel> {
 
     private static final Identifier TEXTURE = id("textures/entity/companion_cube.png");
     private static final Identifier EMISSIVE_TEXTURE = id("textures/entity/companion_cube_e.png");

@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -68,7 +69,7 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
                     continue;
                 }
                 if (launch) {
-                    liver.setVelocity(blockEntity.velX, blockEntity.velY, blockEntity.velZ);
+                    RayonIntegration.INSTANCE.setVelocity(liver, new Vec3d(blockEntity.velX, blockEntity.velY, blockEntity.velZ));
                 }
                 blockEntity.timer = 5;
                 blockEntity.animationTimer = 50;

@@ -4,12 +4,11 @@ import com.fusionflux.portalcubed.client.render.entity.model.BeansModel;
 import com.fusionflux.portalcubed.entity.BeansEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class BeansRenderer extends MobEntityRenderer<BeansEntity, BeansModel> {
+public class BeansRenderer extends CorePhysicsRenderer<BeansEntity, BeansModel> {
     private static final Identifier BASE_TEXTURE = id("textures/entity/beans.png");
 
     public BeansRenderer(EntityRendererFactory.Context context) {

@@ -4,12 +4,11 @@ import com.fusionflux.portalcubed.client.render.entity.model.ComputerModel;
 import com.fusionflux.portalcubed.entity.ComputerEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class ComputerRenderer extends MobEntityRenderer<ComputerEntity, ComputerModel> {
+public class ComputerRenderer extends CorePhysicsRenderer<ComputerEntity, ComputerModel> {
     private static final Identifier BASE_TEXTURE = id("textures/entity/computer.png");
 
     public ComputerRenderer(EntityRendererFactory.Context context) {

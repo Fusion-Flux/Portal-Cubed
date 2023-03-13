@@ -5,12 +5,11 @@ import com.fusionflux.portalcubed.client.render.entity.model.SpaceCoreModel;
 import com.fusionflux.portalcubed.entity.SpaceCoreEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class SpaceCoreRenderer extends MobEntityRenderer<SpaceCoreEntity, SpaceCoreModel> {
+public class SpaceCoreRenderer extends CorePhysicsRenderer<SpaceCoreEntity, SpaceCoreModel> {
 
     private static final Identifier TEXTURE = id("textures/entity/portal_2_cores.png");
     private static final Identifier EMISSIVE_TEXTURE = id("textures/entity/portal_2_cores_e.png");

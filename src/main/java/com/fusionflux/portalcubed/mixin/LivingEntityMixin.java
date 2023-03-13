@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
 import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import com.fusionflux.portalcubed.client.gui.ExpressionFieldWidget;
+import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.util.GeneralUtil;
@@ -125,7 +126,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08);
         if (!Double.isFinite(speed)) return;
         setNoDrag(getEquippedStack(EquipmentSlot.FEET).isOf(PortalCubedItems.LONG_FALL_BOOTS));
-        setVelocity(block.getLaunchDir(getPos().x, getPos().z).multiply(Math.min(speed, 10)));
+        RayonIntegration.INSTANCE.setVelocity(this, block.getLaunchDir(getPos().x, getPos().z).multiply(Math.min(speed, 10)));
         velocityDirty = true;
     }
 

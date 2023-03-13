@@ -4,7 +4,6 @@ import com.fusionflux.portalcubed.client.render.entity.model.LilPineappleModel;
 import com.fusionflux.portalcubed.entity.LilPineappleEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 import java.util.Locale;
@@ -12,7 +11,7 @@ import java.util.Objects;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class LilPineappleRenderer extends MobEntityRenderer<LilPineappleEntity, LilPineappleModel> {
+public class LilPineappleRenderer extends CorePhysicsRenderer<LilPineappleEntity, LilPineappleModel> {
     private static final Identifier BASE_TEXTURE = id("textures/entity/lil_pineapple.png");
     private static final Identifier PROUD_TEXTURE = id("textures/entity/lil_prideapple_proud.png");
     private static final Identifier ACE_TEXTURE = id("textures/entity/lil_prideapple_ace.png");
