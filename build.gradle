@@ -78,9 +78,8 @@ dependencies {
 		exclude group: "net.fabricmc"
 	}
 
-	implementation("com.github.LlamaLad7:MixinExtras:0.2.0-beta.4")
+	include implementation("com.github.LlamaLad7:MixinExtras:0.2.0-beta.4")
 	include("com.github.LlamaLad7:MixinExtras:0.2.0-beta.1")
-	annotationProcessor("com.github.LlamaLad7:MixinExtras:0.2.0-beta.1")
 
 	include modImplementation("maven.modrinth:midnightlib:1.0.0-quilt")
 
@@ -93,7 +92,7 @@ dependencies {
 
 	modCompileOnly "dev.lambdaurora:lambdynamiclights:2.2.0+1.19.2"
 
-	modImplementation("com.github.Virtuoel:Pehkui:3.6.3", {
+	modCompileOnly("com.github.Virtuoel:Pehkui:3.6.3", {
 		exclude group: "net.fabricmc.fabric-api"
 	})
 }
