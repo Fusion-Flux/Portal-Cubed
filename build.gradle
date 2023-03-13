@@ -47,6 +47,8 @@ repositories {
 		url = 'https://maven.gegy.dev'
 	}
 
+	maven { url = "https://lazurite.dev/maven" }
+
 	maven { url = "https://jitpack.io/" }
 }
 
@@ -95,6 +97,8 @@ dependencies {
 	modCompileOnly("com.github.Virtuoel:Pehkui:3.6.3", {
 		exclude group: "net.fabricmc.fabric-api"
 	})
+
+	modCompileOnly 'dev.lazurite:rayon-fabric:1.6.1'
 }
 
 checkstyle {

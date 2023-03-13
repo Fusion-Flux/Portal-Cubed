@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.fusionflux.portalcubed.compat.rayon.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "com.fusionflux.portalcubed.compat.rayon.PortalCubedRayonMixinPlugin",
+  "mixins": [
+    "CorePhysicsEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

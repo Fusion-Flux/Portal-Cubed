@@ -349,4 +349,9 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
     @Override
     public void checkDespawn() {
     }
+
+    @SuppressWarnings("unused")
+    public float getRayonMass() {
+        return 70f;
+    }
 }

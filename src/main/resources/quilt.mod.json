@@ -71,7 +71,8 @@
 
   },
   "mixin": [
-    "portalcubed.mixins.json"
+    "portalcubed.mixins.json",
+    "portalcubed.rayon.mixins.json"
   ],
   "cardinal-components": [
     "portalcubed:entity_component",
