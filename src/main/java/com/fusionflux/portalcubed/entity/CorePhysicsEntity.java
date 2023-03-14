@@ -207,7 +207,11 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                     GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
                 }
                 this.fallDistance = 0;
-                final float yawDelta = RayonIntegration.INSTANCE.getYaw(this) - player.headYaw;
+                final float wrappedPlayerYaw = MathHelper.wrapDegrees(player.headYaw);
+                final float multiplier = wrappedPlayerYaw > 120 || wrappedPlayerYaw < 0 ? -1 : 1;
+                final float yawDelta = MathHelper.wrapDegrees(
+                    MathHelper.wrapDegrees(RayonIntegration.INSTANCE.getYaw(this) * multiplier) - wrappedPlayerYaw
+                );
                 RayonIntegration.INSTANCE.rotateYaw(this, yawDelta);
                 RayonIntegration.INSTANCE.setAngularVelocityYaw(this, new Vec3f(0, yawDelta, 0));
                 final List<UUID> portals = raycastResult.rays()
