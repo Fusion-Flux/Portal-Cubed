@@ -6,6 +6,7 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
@@ -30,6 +31,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
@@ -205,9 +207,9 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                     GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
                 }
                 this.fallDistance = 0;
-                this.setYaw(player.headYaw);
-                this.setHeadYaw(player.headYaw);
-                this.setBodyYaw(player.headYaw);
+                final float yawDelta = RayonIntegration.INSTANCE.getYaw(this) - player.headYaw;
+                RayonIntegration.INSTANCE.rotateYaw(this, yawDelta);
+                RayonIntegration.INSTANCE.setAngularVelocityYaw(this, new Vec3f(0, yawDelta, 0));
                 final List<UUID> portals = raycastResult.rays()
                     .stream()
                     .map(AdvancedEntityRaycast.Result.Ray::hit)
@@ -218,10 +220,11 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                     intermediaryPortals = portals;
                     refreshPositionAfterTeleport(holdPos);
                 } else {
-                    move(
-                        MovementType.PLAYER,
-                        RotationUtil.vecWorldToPlayer(holdPos.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
-                    );
+                    final Vec3d movement = RotationUtil.vecWorldToPlayer(holdPos.subtract(getPos()), GravityChangerAPI.getGravityDirection(player));
+                    if (RayonIntegration.INSTANCE.isPresent()) {
+                        RayonIntegration.INSTANCE.setVelocity(this, movement);
+                    }
+                    RayonIntegration.INSTANCE.simpleMove(this, MovementType.PLAYER, movement);
                 }
             } else {
                 if (player != null) {
@@ -229,9 +232,9 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                 }
                 canUsePortals = true;
             }
-            this.setNoGravity(true);
+            RayonIntegration.INSTANCE.setNoGravity(this, true);
         } else if (this.hasNoGravity() && !fizzling && !((EntityAttachments)this).isInFunnel()) {
-            this.setNoGravity(false);
+            RayonIntegration.INSTANCE.setNoGravity(this, false);
         }
         if (this.getVelocity().y < -3.92) {
             this.setVelocity(this.getVelocity().add(0, .81d, 0));
@@ -282,7 +285,7 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
         if (fizzling) return;
         fizzling = true;
         world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
-        setNoGravity(true);
+        RayonIntegration.INSTANCE.setNoGravity(this, true);
         final PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(getId());
         final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);

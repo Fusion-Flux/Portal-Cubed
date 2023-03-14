@@ -4,6 +4,7 @@ import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelMainBlockEntity;
+import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.CustomProperties;
@@ -212,7 +213,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
 
                 direction = RotationUtil.vecWorldToPlayer(direction, GravityChangerAPI.getGravityDirection(entity));
 
-                entity.setNoGravity(true);
+                RayonIntegration.INSTANCE.setNoGravity(entity, true);
 
                 if (!((EntityAttachments) entity).isInFunnel()) {
                     ((EntityAttachments) entity).setInFunnel(true);
@@ -299,7 +300,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                 Vec3d direction = getPushDirection(state);
                 direction = direction.multiply(.125);
 
-                entity.setNoGravity(true);
+                RayonIntegration.INSTANCE.setNoGravity(entity, true);
 
                 if (!((EntityAttachments) entity).isInFunnel()) {
                     ((EntityAttachments) entity).setInFunnel(true);

@@ -5,6 +5,7 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.*;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -98,9 +99,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public abstract boolean equals(Object o);
 
     @Shadow
-    public abstract void setNoGravity(boolean noGravity);
-
-    @Shadow
     public abstract boolean hasNoGravity();
 
     @Shadow
@@ -169,7 +167,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             this.setFunnelTimer(this.getFunnelTimer() - 1);
         }
         if (this.isInFunnel() && this.getFunnelTimer() == 0 && this.hasNoGravity()) {
-            this.setNoGravity(false);
+            RayonIntegration.INSTANCE.setNoGravity((Entity)(Object)this, false);
             setInFunnel(false);
         }
 
