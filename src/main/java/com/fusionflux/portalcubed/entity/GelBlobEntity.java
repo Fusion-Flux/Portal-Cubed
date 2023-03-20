@@ -17,6 +17,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.BooleanProperty;
@@ -28,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -162,6 +164,15 @@ public abstract class GelBlobEntity extends ProjectileEntity {
         if (hitResult.getType() == HitResult.Type.MISS) return;
         kill();
         if (!world.isClient) {
+            if (hitResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof ServerPlayerEntity serverPlayer) {
+                final PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeIdentifier(Registry.BLOCK.getId(getGel()));
+                ServerPlayNetworking.send(
+                    serverPlayer,
+                    PortalCubedClientPackets.GEL_OVERLAY_PACKET,
+                    buf
+                );
+            }
             explode();
         }
     }
@@ -177,14 +188,17 @@ public abstract class GelBlobEntity extends ProjectileEntity {
 
     public void explode() {
         world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.GEL_SPLAT_EVENT, SoundCategory.NEUTRAL, 0.5f, 1f);
+        final PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeIdentifier(Registry.BLOCK.getId(getGel()));
+        final int overlayDiameter = getSize() + 1;
         world.getEntitiesByType(
             EntityType.PLAYER,
-            Box.of(getPos(), 1, 1, 1),
+            Box.of(getPos(), overlayDiameter, overlayDiameter, overlayDiameter),
             p -> p instanceof ServerPlayerEntity
         ).forEach(p -> ServerPlayNetworking.send(
             (ServerPlayerEntity)p,
             PortalCubedClientPackets.GEL_OVERLAY_PACKET,
-            PacketByteBufs.create()
+            buf
         ));
         final int radius = getExplosionRadius();
         final Vec3d origin = getBoundingBox().getCenter();

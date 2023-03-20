@@ -68,7 +68,11 @@ public class PortalCubedClientPackets {
 
     @ClientOnly
     public static void onGelOverlay(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        // TODO: Implement
+        final Identifier blockId = buf.readIdentifier();
+        PortalCubedClient.gelOverlayTimer = 0;
+        PortalCubedClient.gelOverlayTexture = new Identifier(
+            blockId.getNamespace(), "textures/block/" + blockId.getPath() + ".png"
+        );
     }
 
     @ClientOnly

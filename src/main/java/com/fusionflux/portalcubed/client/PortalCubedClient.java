@@ -49,6 +49,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -99,6 +100,9 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static int zoomTimer;
     public static int zoomDir;
+
+    public static int gelOverlayTimer = -1;
+    public static Identifier gelOverlayTexture = TextureManager.MISSING_IDENTIFIER;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -183,6 +187,9 @@ public class PortalCubedClient implements ClientModInitializer {
             if (zoomDir > 0 && zoomTimer > 100 && client.player.input.getMovementInput().lengthSquared() > 0.1) {
                 zoomDir = -1;
                 zoomTimer = 0;
+            }
+            if (gelOverlayTimer >= 0) {
+                gelOverlayTimer++;
             }
         });
 
@@ -334,6 +341,36 @@ public class PortalCubedClient implements ClientModInitializer {
             bufferBuilder.vertex(matrix, w, h, 0).color(red, 0f, 0f, alpha).next();
             bufferBuilder.vertex(matrix, w, 0, 0).color(red, 0f, 0f, alpha).next();
             bufferBuilder.vertex(matrix, 0, 0, 0).color(red, 0f, 0f, alpha).next();
+            BufferRenderer.drawWithShader(bufferBuilder.end());
+        });
+
+        HudRenderCallback.EVENT.register((matrixStack, tickDelta) -> {
+            if (gelOverlayTimer < 0) return;
+            if (gelOverlayTimer > 100) {
+                gelOverlayTimer = -1;
+                return;
+            }
+            final float alpha;
+            if (gelOverlayTimer <= 40) {
+                alpha = 1;
+            } else {
+                alpha = Math.max(0, 1 - (gelOverlayTimer + tickDelta - 40) / 60f);
+            }
+            if (alpha <= 0) return;
+
+            final MinecraftClient client = MinecraftClient.getInstance();
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            RenderSystem.enableBlend();
+            RenderSystem.setShaderTexture(0, gelOverlayTexture);
+            BufferBuilder bufferBuilder = Tessellator.getInstance().getBufferBuilder();
+            final Matrix4f matrix = matrixStack.peek().getModel();
+            final float w = client.getWindow().getScaledWidth();
+            final float h = client.getWindow().getScaledHeight();
+            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+            bufferBuilder.vertex(matrix, 0, h, 0).uv(0f, 0f).color(1f, 1f, 1f, alpha).next();
+            bufferBuilder.vertex(matrix, w, h, 0).uv(1f, 0f).color(1f, 1f, 1f, alpha).next();
+            bufferBuilder.vertex(matrix, w, 0, 0).uv(1f, 1f).color(1f, 1f, 1f, alpha).next();
+            bufferBuilder.vertex(matrix, 0, 0, 0).uv(0f, 1f).color(1f, 1f, 1f, alpha).next();
             BufferRenderer.drawWithShader(bufferBuilder.end());
         });
 
