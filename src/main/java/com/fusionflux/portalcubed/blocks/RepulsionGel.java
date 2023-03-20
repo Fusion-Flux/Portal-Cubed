@@ -82,9 +82,10 @@ public class RepulsionGel extends GelFlat {
         if (!entity.bypassesLandingEffects()) {
             final boolean jumping = entity instanceof LivingEntityAccessor living && living.isJumping();
             if (entity.verticalCollision || jumping) {
-                if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.getY() < 0 || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6 || jumping)) {
+                final boolean speedGel = Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6;
+                if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.getY() < 0 || speedGel || jumping)) {
                     double fall = ((EntityAttachments) entity).getMaxFallHeight();
-                    if (fall != rotatedPos.y || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6) {
+                    if (fall != rotatedPos.y || speedGel) {
 
                         fall = fall - rotatedPos.y;
                         if (fall < 5) {
@@ -95,7 +96,7 @@ public class RepulsionGel extends GelFlat {
                         entity.setVelocity(vec3d.x, velocity, vec3d.z);
                         ((EntityAttachments) entity).setMaxFallHeight(rotatedPos.y);
                         PortalCubed.playBounceSound(entity);
-                        if (entity instanceof PlayerEntity && world.isClient && jumping) {
+                        if (entity instanceof PlayerEntity && world.isClient && (jumping || speedGel)) {
                             PortalCubed.playBounceSoundRemotely();
                         }
                     }
