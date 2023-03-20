@@ -49,6 +49,7 @@ public class PortalCubedServerPackets {
     public static final Identifier REMOVE_PORTALS = id("remove_portals");
     public static final Identifier VELOCITY_HELPER_CONFIGURE = id("velocity_helper_configure");
     public static final Identifier OPTIONS_LIST_CONFIGURE = id("options_list_configure");
+    public static final Identifier PLAY_BOUNCE_SOUND = id("play_bounce_sound");
 
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
@@ -156,5 +157,8 @@ public class PortalCubedServerPackets {
         ServerPlayNetworking.registerGlobalReceiver(REMOVE_PORTALS, PortalCubedServerPackets::onRemovePortalKeyPressed);
         ServerPlayNetworking.registerGlobalReceiver(VELOCITY_HELPER_CONFIGURE, PortalCubedServerPackets::onVelocityHelperConfigure);
         ServerPlayNetworking.registerGlobalReceiver(OPTIONS_LIST_CONFIGURE, PortalCubedServerPackets::onOptionsListConfigure);
+        ServerPlayNetworking.registerGlobalReceiver(
+            PLAY_BOUNCE_SOUND, (server, player, handler, buf, responseSender) -> PortalCubed.playBounceSound(player)
+        );
     }
 }

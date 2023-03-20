@@ -33,10 +33,12 @@ import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -45,6 +47,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
@@ -53,6 +56,7 @@ import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -295,6 +299,20 @@ public class PortalCubed implements ModInitializer {
         }
 
         RayonIntegration.INSTANCE.init();
+    }
+
+    public static void playBounceSound(Entity entity) {
+        entity.world.playSound(
+            null,
+            entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(),
+            PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS,
+            1f, 0.95f + entity.world.random.nextFloat() * 0.1f
+        );
+    }
+
+    @ClientOnly
+    public static void playBounceSoundRemotely() {
+        ClientPlayNetworking.send(PortalCubedServerPackets.PLAY_BOUNCE_SOUND, PacketByteBufs.empty());
     }
 
     public static Identifier id(String path) {
