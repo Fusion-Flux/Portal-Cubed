@@ -263,6 +263,7 @@
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
   "portalcubed.midnightconfig.pelletDamage": "Energy Pellet Damage",
   "portalcubed.midnightconfig.portalHudMode": "Use Portal HUD",
+  "portalcubed.midnightconfig.gelOverlayOpacity": "Gel Overlay Opacity",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",

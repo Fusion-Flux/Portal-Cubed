@@ -350,12 +350,13 @@ public class PortalCubedClient implements ClientModInitializer {
                 gelOverlayTimer = -1;
                 return;
             }
-            final float alpha;
+            float alpha;
             if (gelOverlayTimer <= 40) {
                 alpha = 1;
             } else {
                 alpha = Math.max(0, 1 - (gelOverlayTimer + tickDelta - 40) / 60f);
             }
+            alpha *= PortalCubedConfig.gelOverlayOpacity / 100f;
             if (alpha <= 0) return;
 
             final MinecraftClient client = MinecraftClient.getInstance();
