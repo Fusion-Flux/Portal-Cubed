@@ -141,7 +141,10 @@ public class PortalCubed implements ModInitializer {
 
                 float modPitch = pitchSet;
                 if (modPitch == 90) {
-                    modPitch = 0;
+                    modPitch = 89.9999999f;
+                }
+                if (modPitch == -90) {
+                    modPitch = -89.9999999f;
                 }
                 Vec3d rotatedYaw = Vec3d.fromPolar(modPitch, yawSet);
                 Vec3d rotatedPitch = Vec3d.fromPolar(pitchSet, yawSet);

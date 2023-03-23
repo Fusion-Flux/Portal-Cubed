@@ -1,18 +1,44 @@
 {
   "block/excursion_funnel": "block/excursion_funnel_beam",
   "block/excursion_funnel_reversed": "block/excursion_funnel_beam",
+  "block/excursion_funnel_emitter_deactivated": "block/excursion_funnel_emitter_e",
+  "block/excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",
+  "block/reversed_excursion_funnel_emitter_deactivated": "block/excursion_funnel_emitter_e",
+  "block/reversed_excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",
 
-  "block/faith_plate": "block/faith_plate_e",
+
+
   "block/faith_plate_target": "block/faith_plate_target",
+
+
 
   "block/laser": "block/laser_beam",
   "block/laser_ref_main": "block/laser_beam",
   "block/laser_ref_prev": "block/laser_beam",
 
+  "block/laser_emitter_active": "block/laser_emitter_e",
+  "block/laser_emitter_active_downward": "block/laser_emitter_e",
+  "block/laser_emitter_active_upward": "block/laser_emitter_e",
+
+  "block/laser_relay_active": "block/laser_emitter_e",
+
+  "block/laser_catcher_active": "block/laser_emitter_e",
+  "block/laser_catcher_active_downward": "block/laser_emitter_e",
+  "block/laser_catcher_active_upward": "block/laser_emitter_e",
+  "block/laser_catcher": "block/laser_emitter_e",
+  "block/laser_catcher_downward": "block/laser_emitter_e",
+  "block/laser_catcher_upward": "block/laser_emitter_e",
+
+
+
   "block/portal_2_fizzler_top": "block/portal_2_fizzler_top",
   "block/portal_2_fizzler_bottom": "block/portal_2_fizzler_bottom",
   "block/portal_2_fizzler_emitter_top": "block/grill_emitters_e",
   "block/portal_2_fizzler_emitter_bottom": "block/grill_emitters_e",
+
+  "block/portal_1_fizzler": "block/portal_1_fizzler",
+  "block/portal_1_fizzler_emitter_top": "block/grill_emitters_e",
+  "block/portal_1_fizzler_emitter_bottom": "block/grill_emitters_e",
 
   "block/old_aperture_fizzler_top": "block/old_aperture_fizzler_top",
   "block/old_aperture_fizzler_bottom": "block/old_aperture_fizzler_bottom",
@@ -20,27 +46,6 @@
   "block/old_aperture_fizzler_emitter_bottom": "block/grill_emitters_e",
   "block/old_aperture_fizzler_emitter_top_deactivated": "block/grill_emitters_e",
   "block/old_aperture_fizzler_emitter_bottom_deactivated": "block/grill_emitters_e",
-
-  "block/old_aperture_death_fizzler_top": "block/old_aperture_death_fizzler_top",
-  "block/old_aperture_death_fizzler_bottom": "block/old_aperture_death_fizzler_bottom",
-  "block/old_aperture_death_fizzler_emitter_top": "block/grill_emitters_e",
-  "block/old_aperture_death_fizzler_emitter_bottom": "block/grill_emitters_e",
-  "block/old_aperture_death_fizzler_emitter_top_deactivated": "block/grill_emitters_e",
-  "block/old_aperture_death_fizzler_emitter_bottom_deactivated": "block/grill_emitters_e",
-
-  "block/portal_1_fizzler": "block/portal_1_fizzler",
-  "block/portal_1_fizzler_emitter_top": "block/grill_emitters_e",
-  "block/portal_1_fizzler_emitter_bottom": "block/grill_emitters_e",
-
-  "block/portal_2_matter_inquisition_field_top": "block/portal_2_matter_inquisition_field_top",
-  "block/portal_2_matter_inquisition_field_bottom": "block/portal_2_matter_inquisition_field_bottom",
-  "block/portal_2_matter_inquisition_field_emitter_top": "block/modded_grill_emitters_e",
-  "block/portal_2_matter_inquisition_field_emitter_bottom": "block/modded_grill_emitters_e",
-
-  "block/portal_2_physics_repulsion_field_top": "block/portal_2_physics_repulsion_field_top",
-  "block/portal_2_physics_repulsion_field_bottom": "block/portal_2_physics_repulsion_field_bottom",
-  "block/portal_2_physics_repulsion_field_emitter_top": "block/modded_grill_emitters_e",
-  "block/portal_2_physics_repulsion_field_emitter_bottom": "block/modded_grill_emitters_e",
 
   "block/portal_2_laser_field_top": "block/portal_2_laser_field_top",
   "block/portal_2_laser_field_bottom": "block/portal_2_laser_field_bottom",
@@ -56,10 +61,34 @@
   "block/portal_2_death_fizzler_emitter_top_disabled": "block/grill_emitters_e",
   "block/portal_2_death_fizzler_emitter_bottom_disabled": "block/grill_emitters_e",
 
+  "block/old_aperture_death_fizzler_top": "block/old_aperture_death_fizzler_top",
+  "block/old_aperture_death_fizzler_bottom": "block/old_aperture_death_fizzler_bottom",
+  "block/old_aperture_death_fizzler_emitter_top": "block/grill_emitters_e",
+  "block/old_aperture_death_fizzler_emitter_bottom": "block/grill_emitters_e",
+  "block/old_aperture_death_fizzler_emitter_top_deactivated": "block/grill_emitters_e",
+  "block/old_aperture_death_fizzler_emitter_bottom_deactivated": "block/grill_emitters_e",
+
+  "block/portal_2_matter_inquisition_field_top": "block/portal_2_matter_inquisition_field_top",
+  "block/portal_2_matter_inquisition_field_bottom": "block/portal_2_matter_inquisition_field_bottom",
+  "block/portal_2_matter_inquisition_field_emitter_top": "block/modded_grill_emitters_e",
+  "block/portal_2_matter_inquisition_field_emitter_bottom": "block/modded_grill_emitters_e",
+
+  "block/portal_2_physics_repulsion_field_top": "block/portal_2_physics_repulsion_field_top",
+  "block/portal_2_physics_repulsion_field_bottom": "block/portal_2_physics_repulsion_field_bottom",
+  "block/portal_2_physics_repulsion_field_emitter_top": "block/modded_grill_emitters_e",
+  "block/portal_2_physics_repulsion_field_emitter_bottom": "block/modded_grill_emitters_e",
+
+
+
+  "block/light_bridge_emitter_active": "block/light_bridge_emitter_e",
   "block/light_bridge": "block/light_bridge",
+
+
 
   "block/auto_portal_lower": "block/auto_portal_e",
   "block/auto_portal_upper": "block/auto_portal_e",
+
+
 
   "block/portal_1_door_bottom_left": "block/portal_1_door_e",
   "block/portal_1_door_bottom_left_open": "block/portal_1_door_e",
@@ -78,34 +107,21 @@
   "block/octopus_door_top_right": "block/octopus_door_e",
   "block/octopus_door_top_right_open": "block/octopus_door_e",
 
-  "block/light_bridge_emitter_active": "block/light_bridge_emitter_e",
 
-  "block/excursion_funnel_emitter_deactivated": "block/excursion_funnel_emitter_e",
-  "block/excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",
-  "block/reversed_excursion_funnel_emitter_deactivated": "block/excursion_funnel_emitter_e",
-  "block/reversed_excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",
-
-  "block/laser_emitter_active": "block/laser_emitter_e",
-  "block/laser_emitter_active_downward": "block/laser_emitter_e",
-  "block/laser_emitter_active_upward": "block/laser_emitter_e",
-
-  "block/laser_relay_active": "block/laser_emitter_e",
-
-  "block/laser_catcher_active": "block/laser_emitter_e",
-  "block/laser_catcher_active_downward": "block/laser_emitter_e",
-  "block/laser_catcher_active_upward": "block/laser_emitter_e",
-  "block/laser_catcher": "block/laser_emitter_e",
-  "block/laser_catcher_downward": "block/laser_emitter_e",
-  "block/laser_catcher_upward": "block/laser_emitter_e",
 
   "block/floor_button": "block/floor_button_e",
-  "block/old_ap_floor_button": "block/old_ap_floor_button_e",
-  "block/pedestal_button": "block/pedestal_button_e",
-  "block/offset_pedestal_button": "block/pedestal_button_e",
   "block/floor_button_active": "block/floor_button_e",
+
+  "block/old_ap_floor_button": "block/old_ap_floor_button_e",
   "block/old_ap_floor_button_active": "block/old_ap_floor_button_e",
+
+  "block/pedestal_button": "block/pedestal_button_e",
   "block/pedestal_button_active": "block/pedestal_button_e",
+
+  "block/offset_pedestal_button": "block/pedestal_button_e",
   "block/offset_pedestal_button_active": "block/pedestal_button_e",
+
+
 
   "block/rocket_turret_active": "block/rocket_turret_active_e",
   "block/rocket_turret_inactive": "block/rocket_turret_inactive_e",
