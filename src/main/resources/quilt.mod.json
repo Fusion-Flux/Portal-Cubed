@@ -4,7 +4,7 @@
     "id": "portalcubed",
     "group": "com.fusionflux",
     "provides": [],
-    "version": "${version}",
+    "version": "2.3.0-rev.9a84fb0",
     "entrypoints": {
       "preLaunch": "com.llamalad7.mixinextras.MixinExtrasBootstrap::init",
       "init": "com.fusionflux.portalcubed.PortalCubed",
@@ -54,15 +54,20 @@
       "description": "A portal gun mod for Quilt",
       "contributors": {
         "Fusion Flux": "Developer",
-        "sailKite": "ADD CONTRIBUTIONS HERE",
+        "Gaming32": "Developer",
+        "Maximum": "Developer",
         "Platymemo": "Developer",
-        "Siuolplex": "Quilt Porter"
+        "sailKite": "Cheerleader",
+        "Siuolplex": "Quilt Porter",
+        "Cart3r": "Artist",
+        "LudoCrypt": "Audio",
+        "asojidev": "Audio"
       },
       "license": "MIT",
       "contact": {
-        "homepage": "https://www.curseforge.com/minecraft/mc-mods/portalcubed",
-        "sources": "https://github.com/Fusion-Flux/Thinking-With-Portatos",
-        "issues": "https://github.com/Fusion-Flux/Thinking-With-Portatos/issues"
+        "homepage": "https://modrinth.com/mod/portal-cubed",
+        "sources": "https://github.com/Fusion-Flux/Portal-Cubed",
+        "issues": "https://github.com/Fusion-Flux/Portal-Cubed/issues"
       },
       "icon": "assets/portalcubed/icon.png"
     },
