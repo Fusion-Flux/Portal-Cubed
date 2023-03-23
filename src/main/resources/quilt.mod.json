@@ -4,7 +4,7 @@
     "id": "portalcubed",
     "group": "com.fusionflux",
     "provides": [],
-    "version": "2.3.0-rev.9a84fb0",
+    "version": "${version}",
     "entrypoints": {
       "preLaunch": "com.llamalad7.mixinextras.MixinExtrasBootstrap::init",
       "init": "com.fusionflux.portalcubed.PortalCubed",
