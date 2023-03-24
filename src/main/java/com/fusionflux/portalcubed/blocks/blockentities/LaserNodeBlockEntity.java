@@ -75,7 +75,7 @@ public class LaserNodeBlockEntity extends BlockEntity {
 
     @ClientOnly
     protected void clientTick() {
-        if (musicInstance == null && laserCount > 0) {
+        if (musicInstance == null && world != null && world.getBlockState(pos).get(Properties.ENABLED)) {
             musicInstance = new MovingSoundInstance(PortalCubedSounds.LASER_NODE_MUSIC_EVENT, SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
                 {
                     volume = 0.5f;

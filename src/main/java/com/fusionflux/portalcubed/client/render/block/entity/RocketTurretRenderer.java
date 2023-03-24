@@ -84,6 +84,7 @@ public class RocketTurretRenderer implements BlockEntityRenderer<RocketTurretBlo
             final Vec3f origin = new Vec3f(aimDestInfo.getLeft().subtract(Vec3d.of(entity.getPos())));
             final Vec3f offset = new Vec3f(aimDestInfo.getRight().subtract(Vec3d.of(entity.getPos())));
             final Vec3f normal = offset.copy();
+            normal.subtract(origin);
             normal.normalize();
             vertexConsumer
                 .vertex(matrix.getModel(), origin.getX(), origin.getY(), origin.getZ())
