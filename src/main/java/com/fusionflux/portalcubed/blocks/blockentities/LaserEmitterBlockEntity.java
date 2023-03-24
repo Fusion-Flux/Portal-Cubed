@@ -7,10 +7,14 @@ import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -18,19 +22,20 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class LaserEmitterBlockEntity extends BlockEntity {
-    @Nullable
-    private AdvancedEntityRaycast.Result segments;
+    private record Target(@NotNull BlockPos pos, @Nullable Direction side) {
+    }
 
-    @Nullable
-    private BlockPos target;
-    @Nullable
-    private Direction targetSide;
+    private final List<AdvancedEntityRaycast.Result> multiSegments = new ArrayList<>();
+    private final Set<Target> targets = new HashSet<>();
 
     public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, pos, state);
@@ -38,90 +43,126 @@ public class LaserEmitterBlockEntity extends BlockEntity {
 
     @Override
     public void writeNbt(NbtCompound tag) {
-        if (target != null) {
-            assert targetSide != null;
-            tag.putIntArray("Target", new int[] {target.getX(), target.getY(), target.getZ()});
-            tag.putString("TargetSide", targetSide.getName());
+        final NbtList list = new NbtList();
+        for (final Target target : targets) {
+            final NbtCompound targetNbt = new NbtCompound();
+            targetNbt.putIntArray("Target", new int[] {target.pos.getX(), target.pos.getY(), target.pos.getZ()});
+            if (target.side != null) {
+                targetNbt.putString("TargetSide", target.side.getName());
+            }
+            list.add(targetNbt);
         }
+        tag.put("Targets", list);
     }
 
     @Override
     public void readNbt(NbtCompound tag) {
-        final int[] targetA = tag.getIntArray("Target");
-        if (targetA.length >= 3) {
-            target = new BlockPos(targetA[0], targetA[1], targetA[2]);
-            targetSide = Direction.byName(tag.getString("TargetSide"));
-        } else {
-            target = null;
-            targetSide = null;
+        targets.clear();
+        for (final NbtElement elem : tag.getList("Targets", NbtElement.COMPOUND_TYPE)) {
+            final NbtCompound targetNbt = (NbtCompound)elem;
+            final int[] targetA = targetNbt.getIntArray("Target");
+            if (targetA.length >= 3) {
+                targets.add(new Target(
+                    new BlockPos(targetA[0], targetA[1], targetA[2]),
+                    Direction.byName(tag.getString("TargetSide"))
+                ));
+            }
         }
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
+        multiSegments.clear();
         if (!state.get(LaserEmitterBlock.POWERED)) {
-            segments = null;
-            if (target != null) {
-                world.getBlockEntity(target, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
-                target = null;
-                targetSide = null;
+            if (!world.isClient) {
+                for (final Target target : targets) {
+                    world.getBlockEntity(target.pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
+                }
+                targets.clear();
             }
             return;
         }
-        final Vec3d direction = Vec3d.of(state.get(LaserEmitterBlock.FACING).getVector());
-        final Vec3d start = Vec3d.ofCenter(pos).add(direction.multiply(0.5));
+        Vec3d direction = Vec3d.of(state.get(LaserEmitterBlock.FACING).getVector());
+        Vec3d start = Vec3d.ofCenter(pos).add(direction.multiply(0.5));
+        double lengthRemaining = PortalCubedConfig.maxBridgeLength;
         final Set<Entity> alreadyHit = new HashSet<>();
-        //noinspection DataFlowIssue
-        segments = AdvancedEntityRaycast.raycast(
-            world,
-            new RaycastContext(
-                start, start.add(direction.multiply(PortalCubedConfig.maxBridgeLength)),
-                RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, null
-            ),
-            PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
-            new AdvancedEntityRaycast.TransformInfo(
-                e -> e instanceof RedirectionCubeEntity && !alreadyHit.contains(e),
-                (context, blockHit, entityHit) -> {
-                    final var entity = (RedirectionCubeEntity)entityHit.getEntity();
-                    alreadyHit.add(entity);
-                    final double distance = context.getStart().distanceTo(context.getEnd());
-                    final Vec3d offset = entityHit.getPos().subtract(context.getStart());
-                    final Vec3d newOffset = Vec3d.fromPolar(entity.getPitch(), entity.getYaw())
-                        .multiply(distance - offset.length());
-                    final Vec3d origin = entity.getPos().add(new Vec3d(0, entity.getHeight() / 2, 0));
-                    return new AdvancedEntityRaycast.TransformResult(
-                        entityHit.getPos().add(offset.multiply(0.25 / offset.length())),
-                        AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
-                    );
-                }
-            )
+        AdvancedEntityRaycast.Result segments;
+        do {
+            //noinspection DataFlowIssue
+            segments = AdvancedEntityRaycast.raycast(
+                world,
+                new RaycastContext(
+                    start, start.add(direction.multiply(lengthRemaining)),
+                    RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, null
+                ),
+                PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
+                new AdvancedEntityRaycast.TransformInfo(
+                    e -> e instanceof RedirectionCubeEntity && !alreadyHit.contains(e),
+                    (context, blockHit, entityHit) -> {
+                        final var entity = (RedirectionCubeEntity)entityHit.getEntity();
+                        alreadyHit.add(entity);
+                        final double distance = context.getStart().distanceTo(context.getEnd());
+                        final Vec3d offset = entityHit.getPos().subtract(context.getStart());
+                        final Vec3d newOffset = Vec3d.fromPolar(entity.getPitch(), entity.getYaw())
+                            .multiply(distance - offset.length());
+                        final Vec3d origin = entity.getPos().add(new Vec3d(0, entity.getHeight() / 2, 0));
+                        return new AdvancedEntityRaycast.TransformResult(
+                            entityHit.getPos().add(offset.multiply(0.25 / offset.length())),
+                            AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
+                        );
+                    }
+                )
+            );
+            direction = segments.finalRay().relative().normalize();
+            start = segments.finalRay().end();
+            lengthRemaining -= segments.length();
+            multiSegments.add(segments);
+        } while (
+            segments.finalHit().getType() == HitResult.Type.BLOCK &&
+                world.getBlockState(segments.finalHit().getBlockPos()).isOf(PortalCubedBlocks.LASER_RELAY)
         );
         if (world.isClient) return;
-        final BlockHitResult finalHit = segments.finalHit();
-        if (finalHit.getType() == HitResult.Type.MISS) {
-            if (target != null) {
-                world.getBlockEntity(target, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
-                target = null;
-                targetSide = null;
+        final Set<Target> newTargets = new HashSet<>();
+        final Object2IntMap<BlockPos> changes = new Object2IntOpenHashMap<>(targets.size() + multiSegments.size());
+        for (final AdvancedEntityRaycast.Result result : multiSegments) {
+            final BlockHitResult finalHit = result.finalHit();
+            if (finalHit.getType() == HitResult.Type.MISS) continue;
+            final BlockState hitState = world.getBlockState(finalHit.getBlockPos());
+            if (hitState.isOf(PortalCubedBlocks.LASER_CATCHER) && finalHit.getSide() != hitState.get(LaserCatcherBlock.FACING)) continue;
+            final Target target = new Target(
+                finalHit.getBlockPos(),
+                hitState.isOf(PortalCubedBlocks.LASER_RELAY) ? null : finalHit.getSide()
+            );
+            newTargets.add(target);
+            if (targets.add(target)) {
+                changes.put(target.pos, changes.getOrDefault(target.pos, 0) + 1);
             }
-            return;
         }
-        final BlockState targetState = world.getBlockState(finalHit.getBlockPos());
-        final boolean singleSide = targetState.isOf(PortalCubedBlocks.LASER_CATCHER);
-        if (!singleSide && finalHit.getBlockPos().equals(target)) return;
-        if (finalHit.getSide() == targetSide && finalHit.getBlockPos().equals(target)) return;
-        if (target != null) {
-            world.getBlockEntity(target, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
-            target = null;
-            targetSide = null;
+        for (final Target target : targets) {
+            if (!newTargets.contains(target)) {
+                changes.put(target.pos, changes.getOrDefault(target.pos, 0) - 1);
+            }
         }
-        if (singleSide && finalHit.getSide() != targetState.get(LaserCatcherBlock.FACING)) return;
-        world.getBlockEntity(finalHit.getBlockPos(), PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::addLaser);
-        target = finalHit.getBlockPos();
-        targetSide = finalHit.getSide();
+        targets.retainAll(newTargets);
+        for (final var entry : changes.object2IntEntrySet()) {
+            if (entry.getIntValue() == 0) continue;
+            final LaserNodeBlockEntity entity = world.getBlockEntity(entry.getKey(), PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).orElse(null);
+            if (entity == null) continue;
+            if (entry.getIntValue() > 0) {
+                for (int i = 0; i < entry.getIntValue(); i++) {
+                    entity.addLaser();
+                }
+            } else {
+                for (int i = 0; i < -entry.getIntValue(); i++) {
+                    entity.removeLaser();
+                }
+            }
+        }
+        if (!changes.isEmpty()) {
+            markDirty();
+        }
     }
 
-    @Nullable
-    public AdvancedEntityRaycast.Result getSegments() {
-        return segments;
+    public List<AdvancedEntityRaycast.Result> getMultiSegments() {
+        return multiSegments;
     }
 }

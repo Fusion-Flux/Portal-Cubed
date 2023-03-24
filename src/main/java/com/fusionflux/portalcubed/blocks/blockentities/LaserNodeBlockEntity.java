@@ -29,6 +29,7 @@ public class LaserNodeBlockEntity extends BlockEntity {
         assert world != null;
         world.playSound(null, pos, toggle ? PortalCubedSounds.LASER_NODE_ACTIVATE_EVENT : PortalCubedSounds.LASER_NODE_DEACTIVATE_EVENT, SoundCategory.BLOCKS, 0.5f, 1f);
         world.setBlockState(pos, world.getBlockState(pos).with(Properties.ENABLED, toggle));
+        markDirty();
     }
 
     public void addLaser() {

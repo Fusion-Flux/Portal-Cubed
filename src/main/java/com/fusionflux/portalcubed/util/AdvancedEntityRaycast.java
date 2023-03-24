@@ -1,19 +1,7 @@
 package com.fusionflux.portalcubed.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.fusionflux.portalcubed.mixin.RaycastContextAccessor;
 import com.google.common.base.Suppliers;
-
 import net.minecraft.block.EntityShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -25,6 +13,16 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class AdvancedEntityRaycast {
     public record TransformInfo(
@@ -59,6 +57,10 @@ public class AdvancedEntityRaycast {
             public Ray(Vec3d start, HitResult hit) {
                 this(start, hit.getPos(), hit);
             }
+
+            public Vec3d relative() {
+                return end.subtract(start);
+            }
         }
 
         public Result {
@@ -66,8 +68,12 @@ public class AdvancedEntityRaycast {
             Validate.isTrue(rays.get(rays.size() - 1).hit instanceof BlockHitResult, "AdvancedEntityRaycast.Result.finalHit must be a BlockHitResult.");
         }
 
+        public Ray finalRay() {
+            return rays.get(rays.size() - 1);
+        }
+
         public BlockHitResult finalHit() {
-            return (BlockHitResult)rays.get(rays.size() - 1).hit;
+            return (BlockHitResult)finalRay().hit;
         }
 
         @Nullable
@@ -79,6 +85,14 @@ public class AdvancedEntityRaycast {
                 if (hit != null) return hit;
             }
             return null;
+        }
+
+        public double length() {
+            double length = 0;
+            for (final Ray ray : rays) {
+                length += ray.start.distanceTo(ray.end);
+            }
+            return length;
         }
     }
 

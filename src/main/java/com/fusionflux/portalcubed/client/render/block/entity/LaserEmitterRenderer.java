@@ -17,7 +17,7 @@ public class LaserEmitterRenderer implements BlockEntityRenderer<LaserEmitterBlo
 
     @Override
     public boolean rendersOutsideBoundingBox(LaserEmitterBlockEntity blockEntity) {
-        return blockEntity.getSegments() != null;
+        return blockEntity.getMultiSegments() != null;
     }
 
     @Override
@@ -27,24 +27,27 @@ public class LaserEmitterRenderer implements BlockEntityRenderer<LaserEmitterBlo
 
     @Override
     public void render(LaserEmitterBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getSegments() == null) return;
+        if (entity.getMultiSegments() == null) return;
         final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getLines());
         final MatrixStack.Entry matrix = matrices.peek();
-        for (final var aimDestInfo : entity.getSegments().rays()) {
-            final Vec3f origin = new Vec3f(aimDestInfo.start().subtract(Vec3d.of(entity.getPos())));
-            final Vec3f offset = new Vec3f(aimDestInfo.end().subtract(Vec3d.of(entity.getPos())));
-            final Vec3f normal = offset.copy();
-            normal.normalize();
-            vertexConsumer
-                .vertex(matrix.getModel(), origin.getX(), origin.getY(), origin.getZ())
-                .color(1f, 0f, 0f, 1f)
-                .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
-                .next();
-            vertexConsumer
-                .vertex(matrix.getModel(), offset.getX(), offset.getY(), offset.getZ())
-                .color(1f, 0f, 0f, 1f)
-                .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
-                .next();
+        for (final var segments : entity.getMultiSegments()) {
+            for (final var aimDestInfo : segments.rays()) {
+                final Vec3f origin = new Vec3f(aimDestInfo.start().subtract(Vec3d.of(entity.getPos())));
+                final Vec3f offset = new Vec3f(aimDestInfo.end().subtract(Vec3d.of(entity.getPos())));
+                final Vec3f normal = offset.copy();
+                normal.subtract(origin);
+                normal.normalize();
+                vertexConsumer
+                    .vertex(matrix.getModel(), origin.getX(), origin.getY(), origin.getZ())
+                    .color(1f, 0f, 0f, 1f)
+                    .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
+                    .next();
+                vertexConsumer
+                    .vertex(matrix.getModel(), offset.getX(), offset.getY(), offset.getZ())
+                    .color(1f, 0f, 0f, 1f)
+                    .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
+                    .next();
+            }
         }
     }
 }
