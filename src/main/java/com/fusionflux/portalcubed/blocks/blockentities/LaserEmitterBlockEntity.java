@@ -6,6 +6,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.GeneralUtil;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
@@ -13,6 +14,9 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.MovingSoundInstance;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -20,6 +24,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -30,6 +35,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,6 +48,9 @@ public class LaserEmitterBlockEntity extends BlockEntity {
 
     private final List<AdvancedEntityRaycast.Result> multiSegments = new ArrayList<>();
     private final Set<Target> targets = new HashSet<>();
+
+    @ClientOnly
+    private SoundInstance musicInstance;
 
     public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, pos, state);
@@ -126,7 +135,11 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             segments.finalHit().getType() == HitResult.Type.BLOCK &&
                 world.getBlockState(segments.finalHit().getBlockPos()).isOf(PortalCubedBlocks.LASER_RELAY)
         );
-        if (world.isClient) return;
+
+        if (world.isClient) {
+            clientTick();
+            return;
+        }
 
         Entity owner = EntityType.MARKER.create(world);
         assert owner != null;
@@ -201,5 +214,57 @@ public class LaserEmitterBlockEntity extends BlockEntity {
 
     public List<AdvancedEntityRaycast.Result> getMultiSegments() {
         return multiSegments;
+    }
+
+    @ClientOnly
+    protected void clientTick() {
+        if (musicInstance == null && world != null && world.getBlockState(pos).get(LaserEmitterBlock.POWERED)) {
+            musicInstance = new MovingSoundInstance(PortalCubedSounds.LASER_BEAM_MUSIC_EVENT, SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
+                {
+                    volume = 0.25f;
+                    repeat = true;
+                }
+
+                @Override
+                public void tick() {
+                    if (isRemoved() || world == null || !world.getBlockState(pos).get(LaserEmitterBlock.POWERED)) {
+                        musicInstance = null;
+                        setDone();
+                        return;
+                    }
+                    final Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+                    Vec3d usePos = null;
+                    double distanceSq = Double.POSITIVE_INFINITY;
+                    for (final AdvancedEntityRaycast.Result segments : multiSegments) {
+                        for (final AdvancedEntityRaycast.Result.Ray ray : segments.rays()) {
+                            Vec3d tryPos = GeneralUtil.nearestPointOnLine(
+                                ray.start(), ray.end().subtract(ray.start()), cameraPos
+                            );
+                            double tryDistance = tryPos.squaredDistanceTo(cameraPos);
+                            if (tryPos.squaredDistanceTo(ray.start()) > ray.end().squaredDistanceTo(ray.start())) {
+                                tryPos = ray.end();
+                                tryDistance = tryPos.squaredDistanceTo(cameraPos);
+                            } else if (tryPos.squaredDistanceTo(ray.end()) > ray.end().squaredDistanceTo(ray.start())) {
+                                tryPos = ray.start();
+                                tryDistance = tryPos.squaredDistanceTo(cameraPos);
+                            }
+                            if (tryDistance < distanceSq) {
+                                usePos = tryPos;
+                                distanceSq = tryDistance;
+                            }
+                        }
+                    }
+                    if (usePos == null) {
+                        musicInstance = null;
+                        setDone();
+                        return;
+                    }
+                    x = usePos.x;
+                    y = usePos.y;
+                    z = usePos.z;
+                }
+            };
+            MinecraftClient.getInstance().getSoundManager().play(musicInstance);
+        }
     }
 }

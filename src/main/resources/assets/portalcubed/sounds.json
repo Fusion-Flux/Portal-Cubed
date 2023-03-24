@@ -226,6 +226,11 @@
 			"portalcubed:laser/laser_activation_01"
 		]
 	},
+	"laser/beam_music": {
+		"sounds": [
+			"portalcubed:laser/laser_beam_lp_02"
+		]
+	},
 	"laser/node_music": {
 		"sounds": [
 			"portalcubed:laser/laser_node_lp_01"

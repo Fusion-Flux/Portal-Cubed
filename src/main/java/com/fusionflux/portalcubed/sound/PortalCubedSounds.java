@@ -46,6 +46,7 @@ public class PortalCubedSounds {
     public static final Identifier ROCKET_GOO = id("rocket_goo");
 
     public static final Identifier LASER_EMITTER_ACTIVATE = id("laser/emitter_activate");
+    public static final Identifier LASER_BEAM_MUSIC = id("laser/beam_music");
     public static final Identifier LASER_NODE_MUSIC = id("laser/node_music");
     public static final Identifier LASER_NODE_ACTIVATE = id("laser/node_activate");
     public static final Identifier LASER_NODE_DEACTIVATE = id("laser/node_deactivate");
@@ -107,6 +108,7 @@ public class PortalCubedSounds {
     public static final SoundEvent ROCKET_GOO_EVENT = new SoundEvent(ROCKET_GOO);
 
     public static final SoundEvent LASER_EMITTER_ACTIVATE_EVENT = new SoundEvent(LASER_EMITTER_ACTIVATE);
+    public static final SoundEvent LASER_BEAM_MUSIC_EVENT = new SoundEvent(LASER_BEAM_MUSIC);
     public static final SoundEvent LASER_NODE_MUSIC_EVENT = new SoundEvent(LASER_NODE_MUSIC);
     public static final SoundEvent LASER_NODE_ACTIVATE_EVENT = new SoundEvent(LASER_NODE_ACTIVATE);
     public static final SoundEvent LASER_NODE_DEACTIVATE_EVENT = new SoundEvent(LASER_NODE_DEACTIVATE);
@@ -169,6 +171,7 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, ROCKET_GOO, ROCKET_GOO_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, LASER_EMITTER_ACTIVATE, LASER_EMITTER_ACTIVATE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_BEAM_MUSIC, LASER_BEAM_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_MUSIC, LASER_NODE_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_ACTIVATE, LASER_NODE_ACTIVATE_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_DEACTIVATE, LASER_NODE_DEACTIVATE_EVENT);

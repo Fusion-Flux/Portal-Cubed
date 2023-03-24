@@ -57,4 +57,12 @@ public class GeneralUtil {
             case ENTITY -> ((EntityHitResult)a).getEntity() == ((EntityHitResult)b).getEntity();
         };
     }
+
+    // Based on https://forum.unity.com/threads/how-do-i-find-the-closest-point-on-a-line.340058/
+    public static Vec3d nearestPointOnLine(Vec3d linePnt, Vec3d lineDir, Vec3d pnt) {
+        lineDir = lineDir.normalize();
+        final Vec3d v = pnt.subtract(linePnt);
+        final double d = v.dotProduct(lineDir);
+        return linePnt.add(lineDir.multiply(d));
+    }
 }
