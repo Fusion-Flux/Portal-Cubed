@@ -19,7 +19,8 @@ public class ClientWorldMixin {
         at = @At(
             value = "INVOKE",
             target = "Ljava/util/Set;contains(Ljava/lang/Object;)Z"
-        )
+        ),
+        require = 0
     )
     private static boolean specialHiddenBlocks(Set<Item> instance, Object item, Operation<Boolean> original) {
         if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof SpecialHiddenBlock) {
