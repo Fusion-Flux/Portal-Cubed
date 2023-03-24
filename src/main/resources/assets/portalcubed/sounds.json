@@ -246,6 +246,21 @@
 			"portalcubed:laser/laser_node_power_off"
 		]
 	},
+	"laser/triple_laser_sound_demo_1": {
+		"sounds": [
+			"portalcubed:laser/sp_a2_triple_laser_l1_01"
+		]
+	},
+	"laser/triple_laser_sound_demo_2": {
+		"sounds": [
+			"portalcubed:laser/sp_a2_triple_laser_l2_01"
+		]
+	},
+	"laser/triple_laser_sound_demo_3": {
+		"sounds": [
+			"portalcubed:laser/sp_a2_triple_laser_l3_01"
+		]
+	},
 
 	"pellet/bounce": {
 		"sounds": [

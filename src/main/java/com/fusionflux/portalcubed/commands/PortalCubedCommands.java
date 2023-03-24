@@ -11,5 +11,6 @@ public class PortalCubedCommands implements CommandRegistrationCallback {
     public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandBuildContext buildContext, CommandManager.RegistrationEnvironment environment) {
         FizzleCommand.register(dispatcher);
         FireRocketCommand.register(dispatcher);
+        LaserSongCommand.register(dispatcher);
     }
 }

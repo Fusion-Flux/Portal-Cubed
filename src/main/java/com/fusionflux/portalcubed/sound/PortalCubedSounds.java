@@ -50,6 +50,9 @@ public class PortalCubedSounds {
     public static final Identifier LASER_NODE_MUSIC = id("laser/node_music");
     public static final Identifier LASER_NODE_ACTIVATE = id("laser/node_activate");
     public static final Identifier LASER_NODE_DEACTIVATE = id("laser/node_deactivate");
+    public static final Identifier LASER_TRIPLE_LASER_SOUND_DEMO_1 = id("laser/triple_laser_sound_demo_1");
+    public static final Identifier LASER_TRIPLE_LASER_SOUND_DEMO_2 = id("laser/triple_laser_sound_demo_2");
+    public static final Identifier LASER_TRIPLE_LASER_SOUND_DEMO_3 = id("laser/triple_laser_sound_demo_3");
 
     public static final Identifier PELLET_BOUNCE = id("pellet/bounce");
     public static final Identifier PELLET_EXPLODE = id("pellet/explode");
@@ -112,6 +115,9 @@ public class PortalCubedSounds {
     public static final SoundEvent LASER_NODE_MUSIC_EVENT = new SoundEvent(LASER_NODE_MUSIC);
     public static final SoundEvent LASER_NODE_ACTIVATE_EVENT = new SoundEvent(LASER_NODE_ACTIVATE);
     public static final SoundEvent LASER_NODE_DEACTIVATE_EVENT = new SoundEvent(LASER_NODE_DEACTIVATE);
+    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_1_EVENT = new SoundEvent(LASER_TRIPLE_LASER_SOUND_DEMO_1);
+    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_2_EVENT = new SoundEvent(LASER_TRIPLE_LASER_SOUND_DEMO_2);
+    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_3_EVENT = new SoundEvent(LASER_TRIPLE_LASER_SOUND_DEMO_3);
 
     public static final SoundEvent PELLET_BOUNCE_EVENT = new SoundEvent(PELLET_BOUNCE);
     public static final SoundEvent PELLET_EXPLODE_EVENT = new SoundEvent(PELLET_EXPLODE);
@@ -175,6 +181,9 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_MUSIC, LASER_NODE_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_ACTIVATE, LASER_NODE_ACTIVATE_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_DEACTIVATE, LASER_NODE_DEACTIVATE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_1, LASER_TRIPLE_LASER_SOUND_DEMO_1_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_2, LASER_TRIPLE_LASER_SOUND_DEMO_2_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_3, LASER_TRIPLE_LASER_SOUND_DEMO_3_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, PELLET_BOUNCE, PELLET_BOUNCE_EVENT);
         Registry.register(Registry.SOUND_EVENT, PELLET_EXPLODE, PELLET_EXPLODE_EVENT);

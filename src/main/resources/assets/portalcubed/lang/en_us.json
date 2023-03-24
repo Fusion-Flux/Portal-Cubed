@@ -305,6 +305,8 @@
   "item.portalcubed.block_item_icon": "Blocks Group Icon",
 
   "portalcubed.command.fizzle.success": "Successfully fizzled %s physics objects",
+  "portalcubed.command.lasersong.failed": "Block at %s is not a laser node.",
+  "portalcubed.command.lasersong.success": "Successfully changed node song at %s to %s.",
 
   "gamerule.category.portalcubed": "Portal\u00b3",
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
