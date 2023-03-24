@@ -1,5 +1,6 @@
-package com.fusionflux.portalcubed.accessor;
+package com.fusionflux.portalcubed.listeners;
 
+import com.fusionflux.portalcubed.accessor.CustomBlockCollisionSpliterator;
 import com.google.common.collect.Iterables;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;

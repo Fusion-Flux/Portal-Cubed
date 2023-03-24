@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.accessor;
 
+import com.fusionflux.portalcubed.listeners.CustomCollisionView;
 import com.google.common.collect.AbstractIterator;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

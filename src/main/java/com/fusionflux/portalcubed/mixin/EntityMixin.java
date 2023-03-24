@@ -2,7 +2,10 @@ package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
-import com.fusionflux.portalcubed.accessor.*;
+import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
+import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.accessor.ClientTeleportCheck;
+import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
@@ -10,12 +13,15 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
+import com.fusionflux.portalcubed.listeners.CustomCollisionView;
+import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
@@ -235,8 +241,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
                     if (otherDirec != null) {
 
-
-                        entityVelocity = entityVelocity.add(0, .08, 0);
+                        //noinspection ConstantValue
+                        if ((Object)this instanceof LivingEntity) {
+                            entityVelocity = entityVelocity.add(0, .08, 0);
+                        }
 
                         Vec3d entityEyePos = thisEntity.getEyePos();
 
@@ -326,10 +334,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         rotatedVel = (rotationH.rotate(rotationW.rotate(rotatedVel)));
         rotatedOffsets = (rotationH.rotate(rotationW.rotate(rotatedOffsets)));
 
-        if (otherDirec == Direction.UP && rotatedVel.y < 0.48) {
-            rotatedVel = new Vec3d(rotatedVel.x, 0.48, rotatedVel.z);
-        }
-
         rotatedOffsets = rotatedOffsets.subtract(0, thisEntity.getEyeY() - thisEntity.getY(), 0);
         if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
             if (rotatedOffsets.y < -0.95) {
@@ -364,6 +368,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             for (final ServerPlayerEntity player : serverWorld.getPlayers()) {
                 serverWorld.sendToPlayerIfNearby(player, true, destPos.x, destPos.y, destPos.z, packet);
             }
+        }
+        if (this instanceof WentThroughPortalListener listener) {
+            listener.wentThroughPortal(portal);
         }
     }
 

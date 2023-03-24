@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.*;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class EnergyPelletEntity extends Entity implements FlyingItemEntity {
+public class EnergyPelletEntity extends Entity implements FlyingItemEntity, WentThroughPortalListener {
     private static final Identifier DECAL = id("textures/entity/scorch.png");
 
     private static final TrackedData<Integer> STARTING_LIFE = DataTracker.registerData(EnergyPelletEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -187,5 +188,10 @@ public class EnergyPelletEntity extends Entity implements FlyingItemEntity {
     @Override
     public ItemStack getStack() {
         return new ItemStack(getLife() < 0 ? PortalCubedItems.SUPER_PELLET : PortalCubedItems.ENERGY_PELLET);
+    }
+
+    @Override
+    public void wentThroughPortal(ExperimentalPortal portal) {
+        setLife(getStartingLife());
     }
 }
