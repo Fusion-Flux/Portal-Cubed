@@ -61,6 +61,13 @@ public class AdvancedEntityRaycast {
             public Vec3d relative() {
                 return end.subtract(start);
             }
+
+            @Nullable
+            public EntityHitResult entityRaycast(@NotNull Entity owner, Predicate<Entity> predicate) {
+                return ProjectileUtil.raycast(
+                    owner, start, end, new Box(start, end).expand(1), predicate, start.squaredDistanceTo(end)
+                );
+            }
         }
 
         public Result {
@@ -79,9 +86,7 @@ public class AdvancedEntityRaycast {
         @Nullable
         public EntityHitResult entityRaycast(@NotNull Entity owner, Predicate<Entity> predicate) {
             for (final Ray ray : rays) {
-                final EntityHitResult hit = ProjectileUtil.raycast(
-                    owner, ray.start, ray.end, new Box(ray.start, ray.end).expand(1), predicate, ray.start.squaredDistanceTo(ray.end)
-                );
+                final EntityHitResult hit = ray.entityRaycast(owner, predicate);
                 if (hit != null) return hit;
             }
             return null;

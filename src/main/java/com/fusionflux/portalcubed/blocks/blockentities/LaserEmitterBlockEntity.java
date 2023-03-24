@@ -4,18 +4,24 @@ import com.fusionflux.portalcubed.blocks.LaserCatcherBlock;
 import com.fusionflux.portalcubed.blocks.LaserEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
+import com.fusionflux.portalcubed.util.GeneralUtil;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -92,7 +98,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                 world,
                 new RaycastContext(
                     start, start.add(direction.multiply(lengthRemaining)),
-                    RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, null
+                    RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, null
                 ),
                 PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
                 new AdvancedEntityRaycast.TransformInfo(
@@ -121,6 +127,35 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                 world.getBlockState(segments.finalHit().getBlockPos()).isOf(PortalCubedBlocks.LASER_RELAY)
         );
         if (world.isClient) return;
+
+        Entity owner = EntityType.MARKER.create(world);
+        assert owner != null;
+        for (final AdvancedEntityRaycast.Result result : multiSegments) {
+            for (final AdvancedEntityRaycast.Result.Ray ray : result.rays()) {
+                Vec3d rayStart = ray.start();
+                EntityHitResult hit;
+                do {
+                    hit = new AdvancedEntityRaycast.Result.Ray(rayStart, ray.end(), null).entityRaycast(owner, e -> e instanceof LivingEntity);
+                    if (hit != null) {
+                        rayStart = hit.getPos();
+                        final Entity hitEntity = hit.getEntity();
+                        owner = hitEntity;
+                        if (hitEntity instanceof CorePhysicsEntity) {
+                            continue; // TODO: Turrets and chairs burn
+                        }
+                        hitEntity.damage(DamageSource.IN_FIRE, 5);
+                        final Vec3d velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.getPos())
+                            .normalize()
+                            .multiply(hitEntity.isOnGround() ? 1.25 : 0.25);
+                        hitEntity.addVelocity(velocity.x, velocity.y, velocity.z);
+                    }
+                } while (hit != null && !GeneralUtil.targetsEqual(hit, ray.hit()));
+                if (ray.hit() instanceof EntityHitResult entityHitResult) {
+                    owner = entityHitResult.getEntity();
+                }
+            }
+        }
+
         final Set<Target> newTargets = new HashSet<>();
         final Object2IntMap<BlockPos> changes = new Object2IntOpenHashMap<>(targets.size() + multiSegments.size());
         for (final AdvancedEntityRaycast.Result result : multiSegments) {
@@ -137,12 +172,14 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                 changes.put(target.pos, changes.getOrDefault(target.pos, 0) + 1);
             }
         }
+
         for (final Target target : targets) {
             if (!newTargets.contains(target)) {
                 changes.put(target.pos, changes.getOrDefault(target.pos, 0) - 1);
             }
         }
         targets.retainAll(newTargets);
+
         for (final var entry : changes.object2IntEntrySet()) {
             if (entry.getIntValue() == 0) continue;
             final LaserNodeBlockEntity entity = world.getBlockEntity(entry.getKey(), PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).orElse(null);

@@ -1,6 +1,10 @@
 package com.fusionflux.portalcubed.util;
 
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -29,5 +33,28 @@ public class GeneralUtil {
     public static double calculateVelocity(double x, double y, double a, double g) {
         a = Math.toRadians(a);
         return sqrt(x * x * g / (2 * cos(-a) * (x * sin(-a) + y * cos(-a))));
+    }
+
+    // Code based off of code from ChatGPT
+    public static Vec3d calculatePerpendicularVector(Vec3d lineStart, Vec3d lineEnd, Vec3d point) {
+        // Calculate direction vector of line
+        final Vec3d d = lineEnd.subtract(lineStart);
+
+        // Calculate vector from point to line
+        final Vec3d p = point.subtract(lineStart);
+
+        // Calculate projection of point vector onto line vector
+        final double t = p.dotProduct(d) / d.dotProduct(d);
+
+        // Calculate perpendicular vector
+        return p.subtract(d.multiply(t));
+    }
+
+    public static boolean targetsEqual(HitResult a, HitResult b) {
+        return a.getType() == b.getType() && switch (a.getType()) {
+            case MISS -> true;
+            case BLOCK -> ((BlockHitResult)a).getBlockPos().equals(((BlockHitResult)b).getBlockPos());
+            case ENTITY -> ((EntityHitResult)a).getEntity() == ((EntityHitResult)b).getEntity();
+        };
     }
 }
