@@ -156,10 +156,11 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                         if (hitEntity instanceof CorePhysicsEntity) {
                             continue; // TODO: Turrets and chairs burn
                         }
+                        if (!hitEntity.isOnGround()) continue;
                         hitEntity.damage(DamageSource.IN_FIRE, 5);
                         final Vec3d velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.getPos())
                             .normalize()
-                            .multiply(hitEntity.isOnGround() ? 1.25 : 0.25);
+                            .multiply(1.25);
                         hitEntity.addVelocity(velocity.x, velocity.y, velocity.z);
                     }
                 } while (hit != null && !GeneralUtil.targetsEqual(hit, ray.hit()));
