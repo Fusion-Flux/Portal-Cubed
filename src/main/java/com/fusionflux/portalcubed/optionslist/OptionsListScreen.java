@@ -65,22 +65,13 @@ public class OptionsListScreen extends HandledScreen<OptionsListScreenHandler> {
         backgroundHeight = height;
         super.init();
 
-        this.addDrawableChild(new ButtonWidget(
-            this.width / 2 - 154, this.height - 28, 150, 20, ScreenTexts.CANCEL,
-            button -> closeScreen()
-        ));
-
-        ButtonWidget done = this.addDrawableChild(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, (button) -> {
+        ButtonWidget done = this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height - 28, 150, 20, ScreenTexts.DONE, (button) -> {
             for (EntryInfo info : OptionsListData.getEntries(target)) {
                 try {
                     info.field.set(target, info.value);
                 } catch (IllegalAccessException ignored) {
                 }
             }
-            final PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeBlockPos(handler.getAt());
-            buf.writeString(OptionsListData.write(target));
-            ClientPlayNetworking.send(PortalCubedServerPackets.OPTIONS_LIST_CONFIGURE, buf);
             closeScreen();
         }));
 
@@ -169,6 +160,15 @@ public class OptionsListScreen extends HandledScreen<OptionsListScreenHandler> {
             }
         }
         super.render(matrices, mouseX, mouseY, delta);
+    }
+
+    @Override
+    public void closeScreen() {
+        final PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeBlockPos(handler.getAt());
+        buf.writeString(OptionsListData.write(target));
+        ClientPlayNetworking.send(PortalCubedServerPackets.OPTIONS_LIST_CONFIGURE, buf);
+        super.closeScreen();
     }
 
     @Override
