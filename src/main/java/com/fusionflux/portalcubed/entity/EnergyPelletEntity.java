@@ -1,17 +1,16 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -28,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class EnergyPelletEntity extends Entity {
+public class EnergyPelletEntity extends Entity implements FlyingItemEntity {
     private static final Identifier DECAL = id("textures/entity/scorch.png");
 
     private static final TrackedData<Integer> STARTING_LIFE = DataTracker.registerData(EnergyPelletEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -183,5 +182,10 @@ public class EnergyPelletEntity extends Entity {
     @Override
     public boolean shouldRender(double distance) {
         return true;
+    }
+
+    @Override
+    public ItemStack getStack() {
+        return new ItemStack(getLife() < 0 ? PortalCubedItems.SUPER_PELLET : PortalCubedItems.ENERGY_PELLET);
     }
 }

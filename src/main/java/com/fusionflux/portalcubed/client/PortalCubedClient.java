@@ -47,6 +47,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.texture.TextureManager;
@@ -493,7 +494,7 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(RocketRenderer.ROCKET_LAYER, RocketModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.ROCKET, RocketRenderer::new);
 
-        EntityRendererRegistry.register(PortalCubedEntities.ENERGY_PELLET, EnergyPelletRenderer::new);
+        EntityRendererRegistry.register(PortalCubedEntities.ENERGY_PELLET, ctx -> new FlyingItemEntityRenderer<>(ctx, 1f, true));
 
         EntityRendererRegistry.register(PortalCubedEntities.DECAL, DecalRenderer::new);
 

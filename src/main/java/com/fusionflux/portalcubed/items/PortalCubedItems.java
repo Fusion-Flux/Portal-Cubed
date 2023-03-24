@@ -1,18 +1,12 @@
 package com.fusionflux.portalcubed.items;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.entity.EnergyPelletEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.math.BlockPointer;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Position;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
@@ -62,7 +56,8 @@ public class PortalCubedItems {
 
     public static final Item HAMMER = new Item(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP).maxCount(1));
 
-    public static final Item ENERGY_PELLET = new EnergyPelletItem(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP));
+    public static final EnergyPelletItem ENERGY_PELLET = new EnergyPelletItem(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP), false);
+    public static final EnergyPelletItem SUPER_PELLET = new EnergyPelletItem(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP), true);
 
     public static final Item STILL_ALIVE = new MusicDiscItem(15, new SoundEvent(id("disc/still_alive")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 177);
     public static final Item CARA_MIA_ADDIO = new MusicDiscItem(15, new SoundEvent(id("disc/cara_mia_addio")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 154);
@@ -108,32 +103,14 @@ public class PortalCubedItems {
 
         Registry.register(Registry.ITEM, id("hammer"), HAMMER);
         Registry.register(Registry.ITEM, id("energy_pellet"), ENERGY_PELLET);
+        Registry.register(Registry.ITEM, id("super_pellet"), SUPER_PELLET);
 
         Registry.register(Registry.ITEM, id("music_disc_still_alive"), STILL_ALIVE);
         Registry.register(Registry.ITEM, id("music_disc_cara_mia_addio"), CARA_MIA_ADDIO);
         Registry.register(Registry.ITEM, id("music_disc_want_you_gone"), WANT_YOU_GONE);
         Registry.register(Registry.ITEM, id("music_disc_reconstructing_more_science"), RECONSTRUCTING_MORE_SCIENCE);
 
-        DispenserBlock.registerBehavior(ENERGY_PELLET, new ItemDispenserBehavior() {
-            @Override
-            protected ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
-                final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(pointer.getWorld());
-                if (pellet == null) return stack;
-                final Position pos = DispenserBlock.getOutputLocation(pointer);
-                pellet.setPosition(pos.getX(), pos.getY(), pos.getZ());
-                pellet.setVelocity(Vec3d.of(pointer.getBlockState().get(DispenserBlock.FACING).getVector()));
-                pointer.getWorld().spawnEntity(pellet);
-                stack.decrement(1);
-                return stack;
-            }
-
-            @Override
-            protected void playSound(BlockPointer pointer) {
-            }
-
-            @Override
-            protected void spawnParticles(BlockPointer pointer, Direction side) {
-            }
-        });
+        DispenserBlock.registerBehavior(ENERGY_PELLET, ENERGY_PELLET.createDispenserBehavior());
+        DispenserBlock.registerBehavior(SUPER_PELLET, SUPER_PELLET.createDispenserBehavior());
     }
 }

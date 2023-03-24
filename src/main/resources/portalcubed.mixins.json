@@ -41,8 +41,7 @@
     "client.ParticleManagerMixin",
     "client.PlayerEntityRendererMixin",
     "client.RenderSystemMixin",
-    "client.SoundSystemMixin",
-    "client.VertexConsumerMixin"
+    "client.SoundSystemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
