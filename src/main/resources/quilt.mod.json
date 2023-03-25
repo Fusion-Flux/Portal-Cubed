@@ -6,9 +6,9 @@
     "provides": [],
     "version": "${version}",
     "entrypoints": {
-      "pre_launch": "com.llamalad7.mixinextras.MixinExtrasBootstrap::init",
       "init": "com.fusionflux.portalcubed.PortalCubed",
       "client_init": "com.fusionflux.portalcubed.client.PortalCubedClient",
+      "pre_launch": "com.fusionflux.portalcubed.PortalCubedPreLaunch",
       "modmenu": "com.fusionflux.portalcubed.compat.ModMenuIntegration",
       "cardinal-components": "com.fusionflux.portalcubed.util.PortalCubedComponents",
       "dynamiclights": "com.fusionflux.portalcubed.compat.LambDynamicLightsIntegration"
