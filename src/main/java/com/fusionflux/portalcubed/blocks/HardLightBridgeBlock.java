@@ -66,8 +66,8 @@ public class HardLightBridgeBlock extends BlockWithEntity {
         WEST = Properties.WEST;
         UP = Properties.UP;
         DOWN = Properties.DOWN;
-        VERT_FACING_UP = CustomProperties.H_FACING_UP;
-        VERT_FACING_DOWN = CustomProperties.H_FACING_DOWN;
+        VERT_FACING_UP = CustomProperties.HFACINGUP;
+        VERT_FACING_DOWN = CustomProperties.HFACINGDOWN;
         PROPERTY_MAP = new HashMap<>();
         PROPERTY_MAP.put(Direction.NORTH, Properties.NORTH);
         PROPERTY_MAP.put(Direction.SOUTH, Properties.SOUTH);

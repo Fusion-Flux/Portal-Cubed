@@ -74,12 +74,12 @@ public class ExcursionFunnelMain extends BlockWithEntity {
         WEST = Properties.WEST;
         UP = Properties.UP;
         DOWN = Properties.DOWN;
-        R_NORTH = CustomProperties.R_NORTH;
-        R_EAST = CustomProperties.R_EAST;
-        R_SOUTH = CustomProperties.R_SOUTH;
-        R_WEST = CustomProperties.R_WEST;
-        R_UP = CustomProperties.R_UP;
-        R_DOWN = CustomProperties.R_DOWN;
+        R_NORTH = CustomProperties.RNORTH;
+        R_EAST = CustomProperties.REAST;
+        R_SOUTH = CustomProperties.RSOUTH;
+        R_WEST = CustomProperties.RWEST;
+        R_UP = CustomProperties.RUP;
+        R_DOWN = CustomProperties.RDOWN;
     }
 
 
@@ -157,32 +157,32 @@ public class ExcursionFunnelMain extends BlockWithEntity {
             modifyY = true;
         }
 
-        if (state.get(CustomProperties.R_SOUTH)) {
+        if (state.get(CustomProperties.RSOUTH)) {
             result = result.subtract(0, 0, 1);
         }
-        if (state.get(CustomProperties.R_NORTH)) {
+        if (state.get(CustomProperties.RNORTH)) {
             result = result.add(0, 0, 1);
         }
-        if (state.get(CustomProperties.R_WEST)) {
+        if (state.get(CustomProperties.RWEST)) {
             result = result.add(1, 0, 0);
         }
-        if (state.get(CustomProperties.R_EAST)) {
+        if (state.get(CustomProperties.REAST)) {
             result = result.subtract(1, 0, 0);
         }
-        if (state.get(CustomProperties.R_UP)) {
+        if (state.get(CustomProperties.RUP)) {
             result = result.subtract(0, 1, 0);
         }
-        if (state.get(CustomProperties.R_DOWN)) {
+        if (state.get(CustomProperties.RDOWN)) {
             result = result.add(0, 1, 0);
         }
 
-        if (state.get(CustomProperties.R_NORTH) && state.get(CustomProperties.R_SOUTH)) {
+        if (state.get(CustomProperties.RNORTH) && state.get(CustomProperties.RSOUTH)) {
             modifyZ = true;
         }
-        if (state.get(CustomProperties.R_EAST) && state.get(CustomProperties.R_WEST)) {
+        if (state.get(CustomProperties.REAST) && state.get(CustomProperties.RWEST)) {
             modifyX = true;
         }
-        if (state.get(CustomProperties.R_UP) && state.get(CustomProperties.R_DOWN)) {
+        if (state.get(CustomProperties.RUP) && state.get(CustomProperties.RDOWN)) {
             modifyY = true;
         }
 

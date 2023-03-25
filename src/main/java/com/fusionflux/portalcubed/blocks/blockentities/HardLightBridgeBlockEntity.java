@@ -143,7 +143,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
             }
 
             state = state.with(Properties.NORTH, mNorth).with(Properties.EAST, mEast).with(Properties.SOUTH, mSouth).with(Properties.WEST, mWest).with(Properties.UP, mUp).with(Properties.DOWN, mDown)
-                    .with(CustomProperties.H_FACING_UP, resultUp).with(CustomProperties.H_FACING_DOWN, resultDown);
+                    .with(CustomProperties.HFACINGUP, resultUp).with(CustomProperties.HFACINGDOWN, resultDown);
         }
         world.setBlockState(pos, state, 3);
     }

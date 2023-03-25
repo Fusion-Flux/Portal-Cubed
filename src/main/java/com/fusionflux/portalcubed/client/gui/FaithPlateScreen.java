@@ -1,11 +1,9 @@
 package com.fusionflux.portalcubed.client.gui;
 
-import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -152,16 +150,11 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
             World world = MinecraftClient.getInstance().world;
 
             if (world != null) {
-                BlockEntity entity = world.getBlockEntity(pos);
-                if (entity instanceof FaithPlateBlockEntity faith) {
-                    faith.setVelX(sendX);
-                    faith.setVelY(sendY);
-                    faith.setVelZ(sendZ);
-                }
-                if (entity instanceof BetaFaithPlateBlockEntity faith) {
-                    faith.setVelX(sendX);
-                    faith.setVelY(sendY);
-                    faith.setVelZ(sendZ);
+                final var entity = world.getBlockEntity(pos, PortalCubedBlocks.FAITH_PLATE_BLOCK_ENTITY);
+                if (entity.isPresent()) {
+                    entity.get().setVelX(sendX);
+                    entity.get().setVelY(sendY);
+                    entity.get().setVelZ(sendZ);
                 }
             }
 

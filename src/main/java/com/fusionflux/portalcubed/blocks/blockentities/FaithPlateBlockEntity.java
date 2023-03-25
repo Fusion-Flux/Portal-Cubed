@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
@@ -30,27 +29,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/**
- * @author sailKite
- * @author FusionFlux
- * <p>
- * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
- */
 public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
-
     private double velX = 0;
     private double velY = 0;
     private double velZ = 0;
 
-    private  double timer = 0;
-    private  double animationTimer = 0;
+    private double timer = 0;
+    private double animationTimer = 0;
 
     public FaithPlateBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.FAITH_PLATE_ENTITY, pos, state);
-
+        super(PortalCubedBlocks.FAITH_PLATE_BLOCK_ENTITY, pos, state);
     }
 
-    public static void tick1(World world, BlockPos pos, BlockState state, FaithPlateBlockEntity blockEntity) {
+    public static void tick(World world, BlockPos pos, BlockState state, FaithPlateBlockEntity blockEntity) {
         Box checkBox = new Box(pos).offset(state.get(Properties.FACING).getOffsetX(), state.get(Properties.FACING).getOffsetY(), state.get(Properties.FACING).getOffsetZ());
 
         List<Entity> list = world.getNonSpectatingEntities(Entity.class, checkBox);
@@ -82,11 +73,10 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
                 );
             }
         }
-        if (blockEntity.timer > 0)
+        if (blockEntity.timer > 0) {
             blockEntity.timer -= 1;
-
+        }
     }
-
 
     public void setVelX(double velX) {
         this.velX = velX;

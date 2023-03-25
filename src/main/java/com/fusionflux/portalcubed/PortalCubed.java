@@ -7,8 +7,6 @@ import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.TallButtonVariant;
-import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
@@ -32,7 +30,6 @@ import com.mojang.logging.LogUtils;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -195,19 +192,11 @@ public class PortalCubed implements ModInitializer {
             double x =  buf.readDouble();
             double y =  buf.readDouble();
             double z =  buf.readDouble();
-            server.execute(() -> {
-                BlockEntity entity = player.world.getBlockEntity(target);
-                if (entity instanceof FaithPlateBlockEntity plate) {
-                    plate.setVelX(x);
-                    plate.setVelY(y);
-                    plate.setVelZ(z);
-                }
-                if (entity instanceof BetaFaithPlateBlockEntity plate) {
-                    plate.setVelX(x);
-                    plate.setVelY(y);
-                    plate.setVelZ(z);
-                }
-            });
+            server.execute(() -> player.world.getBlockEntity(target, PortalCubedBlocks.FAITH_PLATE_BLOCK_ENTITY).ifPresent(entity -> {
+                entity.setVelX(x);
+                entity.setVelY(y);
+                entity.setVelZ(z);
+            }));
         });
 
         ServerPlayNetworking.registerGlobalReceiver(id("client_teleport_update"), (server, player, handler, buf, responseSender) ->
