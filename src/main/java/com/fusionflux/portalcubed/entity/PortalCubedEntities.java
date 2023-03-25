@@ -112,7 +112,7 @@ public class PortalCubedEntities {
         PortalCubedBlocks.CONVERSION_GEL, id("textures/block/gel.png")
     );
     public static final EntityType<? extends GelBlobEntity> REFLECTION_GEL_BLOB = createGelBlob(
-        PortalCubedBlocks.ADHESION_GEL, id("textures/block/reflection_gel.png")
+        PortalCubedBlocks.REFLECTION_GEL, id("textures/block/reflection_gel.png")
     );
 
     public static final EntityType<RocketEntity> ROCKET = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, RocketEntity::new)
