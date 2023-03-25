@@ -23,6 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.EntitySetHeadYawS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -258,6 +259,14 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                     remove(RemovalReason.KILLED);
                 }
             }
+        }
+        if (getHolderUUID().isEmpty() && !world.isClient) {
+            //noinspection DataFlowIssue
+            world.getServer().getPlayerManager().sendToAround(
+                null, getX(), getY(), getZ(), 64,
+                getWorld().getRegistryKey(),
+                new EntitySetHeadYawS2CPacket(this, (byte)MathHelper.floor(getHeadYaw() * 256f / 360f))
+            );
         }
     }
 
