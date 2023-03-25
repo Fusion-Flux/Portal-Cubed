@@ -96,7 +96,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             }
             return;
         }
-        Vec3d direction = Vec3d.of(state.get(LaserEmitterBlock.FACING).getVector());
+        Vec3d direction = state.get(LaserEmitterBlock.FACING).getVector();
         Vec3d start = Vec3d.ofCenter(pos).add(direction.multiply(0.5));
         double lengthRemaining = PortalCubedConfig.maxBridgeLength;
         final Set<Entity> alreadyHit = new HashSet<>();

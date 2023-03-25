@@ -1,20 +1,36 @@
 {
   "variants": {
+    "facing=north,powered=true": {
+      "model": "portalcubed:block/laser_emitter_active",
+      "y": 90
+    },
+    "facing=northeast,powered=true": {
+      "model": "portalcubed:block/laser_emitter_active",
+      "y": 135
+    },
     "facing=east,powered=true": {
       "model": "portalcubed:block/laser_emitter_active",
       "y": 180
     },
-    "facing=north,powered=true": {
+    "facing=southeast,powered=true": {
       "model": "portalcubed:block/laser_emitter_active",
-      "y": 90
+      "y": 225
     },
     "facing=south,powered=true": {
       "model": "portalcubed:block/laser_emitter_active",
       "y": 270
     },
+    "facing=southwest,powered=true": {
+      "model": "portalcubed:block/laser_emitter_active",
+      "y": 315
+    },
     "facing=west,powered=true": {
       "model": "portalcubed:block/laser_emitter_active",
       "y": 0
+    },
+    "facing=northwest,powered=true": {
+      "model": "portalcubed:block/laser_emitter_active",
+      "y": 45
     },
     "facing=up,powered=true": {
       "model": "portalcubed:block/laser_emitter_active_upward"
@@ -22,21 +38,38 @@
     "facing=down,powered=true": {
       "model": "portalcubed:block/laser_emitter_active_downward"
     },
+
+    "facing=north,powered=false": {
+      "model": "portalcubed:block/laser_emitter",
+      "y": 90
+    },
+    "facing=northeast,powered=false": {
+      "model": "portalcubed:block/laser_emitter",
+      "y": 135
+    },
     "facing=east,powered=false": {
       "model": "portalcubed:block/laser_emitter",
       "y": 180
     },
-    "facing=north,powered=false": {
+    "facing=southeast,powered=false": {
       "model": "portalcubed:block/laser_emitter",
-      "y": 90
+      "y": 225
     },
     "facing=south,powered=false": {
       "model": "portalcubed:block/laser_emitter",
       "y": 270
     },
+    "facing=southwest,powered=false": {
+      "model": "portalcubed:block/laser_emitter",
+      "y": 315
+    },
     "facing=west,powered=false": {
       "model": "portalcubed:block/laser_emitter",
       "y": 0
+    },
+    "facing=northwest,powered=false": {
+      "model": "portalcubed:block/laser_emitter",
+      "y": 45
     },
     "facing=up,powered=false": {
       "model": "portalcubed:block/laser_emitter_upward"

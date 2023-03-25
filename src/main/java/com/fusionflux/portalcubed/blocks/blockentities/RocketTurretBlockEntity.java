@@ -260,7 +260,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
                         .add(getGunOffset(0))
                 );
             destAngle = new Vec2f(
-                (float)Math.toDegrees(-MathHelper.atan2(offset.y, Math.sqrt(offset.x * offset.x + offset.z * offset.z))),
+                (float)Math.toDegrees(-MathHelper.atan2(offset.y, offset.horizontalLength())),
                 (float)Math.toDegrees(MathHelper.atan2(offset.z, offset.x))
             );
         } else if (destAngle != null) {
