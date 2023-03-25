@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.blocks.FaithPlateBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
@@ -7,7 +8,8 @@ import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -19,52 +21,62 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
+public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements ExtendedScreenHandlerFactory {
     private double velX = 0;
     private double velY = 0;
     private double velZ = 0;
 
     private double timer = 0;
-    private double animationTimer = 0;
+    public final AnimationState flingState = new AnimationState();
 
-    public FaithPlateBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.FAITH_PLATE_BLOCK_ENTITY, pos, state);
+    public FaithPlateBlockEntity(BlockEntityType<? extends FaithPlateBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, FaithPlateBlockEntity blockEntity) {
-        Box checkBox = new Box(pos).offset(state.get(Properties.FACING).getOffsetX(), state.get(Properties.FACING).getOffsetY(), state.get(Properties.FACING).getOffsetZ());
+    public FaithPlateBlockEntity(BlockPos pos, BlockState state) {
+        this(PortalCubedBlocks.FAITH_PLATE_BLOCK_ENTITY, pos, state);
+    }
+
+    @Override
+    public void tick(World world, BlockPos pos, BlockState state) {
+        super.tick(world, pos, state);
+        if (state.get(FaithPlateBlock.FACING).getAxis().isVertical()) {
+            setYaw(directionToAngle(state.get(FaithPlateBlock.HORIFACING)));
+            setPitch(0f);
+        } else {
+            setYaw(directionToAngle(state.get(FaithPlateBlock.FACING)) + 180);
+            setPitch(90f);
+        }
+
+        Box checkBox = new Box(pos).offset(
+            state.get(FaithPlateBlock.FACING).getOffsetX(),
+            state.get(FaithPlateBlock.FACING).getOffsetY(),
+            state.get(FaithPlateBlock.FACING).getOffsetZ()
+        );
 
         List<Entity> list = world.getNonSpectatingEntities(Entity.class, checkBox);
 
-        if (blockEntity.animationTimer > 0) {
-            blockEntity.animationTimer -= 1;
-            world.setBlockState(pos, state.with(Properties.ENABLED, true), 3);
-        } else {
-            world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
-        }
-
-        final boolean launch = new Vec3d(blockEntity.velX, blockEntity.velY, blockEntity.velZ).lengthSquared() > 1e-7;
+        final boolean launch = new Vec3d(velX, velY, velZ).lengthSquared() > 1e-7;
         for (Entity liver : list) {
-            if (blockEntity.timer <= 0) {
+            if (timer <= 0) {
                 if (liver instanceof CorePhysicsEntity physEn && physEn.getHolderUUID().isPresent()) {
                     continue;
                 }
                 if (launch) {
-                    RayonIntegration.INSTANCE.setVelocity(liver, new Vec3d(blockEntity.velX, blockEntity.velY, blockEntity.velZ));
+                    RayonIntegration.INSTANCE.setVelocity(liver, new Vec3d(velX, velY, velZ));
                 }
-                blockEntity.timer = 5;
-                blockEntity.animationTimer = 50;
-                world.setBlockState(pos, state.with(Properties.ENABLED, false), 3);
+                timer = 5;
+                flingState.restart(getAge());
                 world.playSound(
                     null,
                     pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
@@ -73,9 +85,19 @@ public class FaithPlateBlockEntity extends BlockEntity implements ExtendedScreen
                 );
             }
         }
-        if (blockEntity.timer > 0) {
-            blockEntity.timer -= 1;
+        if (timer > 0) {
+            timer--;
         }
+    }
+
+    private static float directionToAngle(Direction dir) {
+        return switch (dir) {
+            case EAST -> 90f;
+            case SOUTH -> 180f;
+            case WEST -> -90f;
+            case NORTH -> 0f;
+            default -> throw new AssertionError("FaithPlateBlockEntity.directionToAngle called with non-horizontal direction " + dir);
+        };
     }
 
     public void setVelX(double velX) {

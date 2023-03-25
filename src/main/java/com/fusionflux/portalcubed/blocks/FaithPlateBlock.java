@@ -9,11 +9,12 @@ import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -27,14 +28,22 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
+import java.util.function.Supplier;
+
 public class FaithPlateBlock extends BlockWithEntity {
     public static final DirectionProperty FACING = Properties.FACING;
     public static final DirectionProperty HORIFACING = CustomProperties.HORIFACING;
-    public static final BooleanProperty ENABLED = Properties.ENABLED;
 
-    public FaithPlateBlock(Settings settings) {
+    private final Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType;
+
+    public FaithPlateBlock(Settings settings, Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLED, false));
+        this.setDefaultState(
+            stateManager.getDefaultState()
+                .with(FACING, Direction.UP)
+                .with(HORIFACING, Direction.NORTH)
+        );
+        this.blockEntityType = blockEntityType;
     }
 
     @Override
@@ -72,15 +81,19 @@ public class FaithPlateBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, HORIFACING, ENABLED);
+        builder.add(FACING, HORIFACING);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        if (ctx.getPlayerLookDirection() == Direction.DOWN || ctx.getPlayerLookDirection() == Direction.UP) {
-            return PortalCubedBlocks.FAITH_PLATE.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite()).with(HORIFACING, ctx.getPlayerFacing().getOpposite());
+        final Direction look = ctx.getPlayerLookDirection();
+        if (look.getAxis().isVertical()) {
+            return getDefaultState()
+                .with(FACING, look.getOpposite())
+                .with(HORIFACING, ctx.getPlayerFacing());
         }
-        return PortalCubedBlocks.FAITH_PLATE.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
+        return getDefaultState()
+            .with(FACING, look.getOpposite());
     }
 
     @Override
@@ -90,13 +103,24 @@ public class FaithPlateBlock extends BlockWithEntity {
     }
 
     @Override
-    @Nullable
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        world.getBlockEntity(pos, blockEntityType.get()).ifPresent(entity -> {
+            entity.setVelY(1.25);
+            final Direction facing = state.get(FACING).getAxis().isVertical() ? state.get(HORIFACING) : state.get(FACING);
+            entity.setVelX(facing.getOffsetX() * 0.75);
+            entity.setVelZ(facing.getOffsetZ() * 0.75);
+        });
+    }
+
+    @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FaithPlateBlockEntity(pos, state);
+        return blockEntityType.get().instantiate(pos, state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.FAITH_PLATE_BLOCK_ENTITY, FaithPlateBlockEntity::tick);
+        return type == blockEntityType.get()
+            ? (world1, pos, state1, entity) -> ((FaithPlateBlockEntity)entity).tick(world1, pos, state1)
+            : null;
     }
 }

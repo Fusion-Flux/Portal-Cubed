@@ -58,9 +58,10 @@ public class PortalCubedBlocks {
 
     public static final BlockEntityType<AutoPortalBlockEntity> AUTO_PORTAL_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(AutoPortalBlockEntity::new, AUTO_PORTAL_BLOCK).build();
 
-    public static final Block FAITH_PLATE = new FaithPlateBlock(QuiltBlockSettings.of(Material.STONE).hardness(999999f).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)));
-    public static final Block BETA_FAITH_PLATE = new FaithPlateBlock(QuiltBlockSettings.copyOf(FAITH_PLATE));
-    public static final BlockEntityType<FaithPlateBlockEntity> FAITH_PLATE_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(FaithPlateBlockEntity::new, FAITH_PLATE, BETA_FAITH_PLATE).build();
+    public static final Block FAITH_PLATE = new FaithPlateBlock(QuiltBlockSettings.of(Material.STONE).hardness(999999f).resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)), PortalCubedBlocks::getFaithPlateBlockEntity);
+    public static final Block BETA_FAITH_PLATE = new FaithPlateBlock(QuiltBlockSettings.copyOf(FAITH_PLATE), PortalCubedBlocks::getBetaFaithPlateBlockEntity);
+    public static final BlockEntityType<FaithPlateBlockEntity> FAITH_PLATE_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(FaithPlateBlockEntity::new, FAITH_PLATE).build();
+    public static final BlockEntityType<BetaFaithPlateBlockEntity> BETA_FAITH_PLATE_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(BetaFaithPlateBlockEntity::new, BETA_FAITH_PLATE).build();
 
     public static final Block FAITH_PLATE_TARGET = new FaithPlateTargetBlock(QuiltBlockSettings.of(Material.PLANT).hardness(0).nonOpaque().noCollision());
 
@@ -177,6 +178,7 @@ public class PortalCubedBlocks {
         Registry.register(Registry.ITEM, id("duel_excursion_funnel_emitter"), new BlockItem(DUEL_EXCURSION_FUNNEL_EMITTER, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, id("faith_plate"), FAITH_PLATE_BLOCK_ENTITY);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("beta_faith_plate"), BETA_FAITH_PLATE_BLOCK_ENTITY);
 
         Registry.register(Registry.BLOCK, id("faith_plate"), FAITH_PLATE);
         Registry.register(Registry.ITEM, id("faith_plate"), new BlockItem(FAITH_PLATE, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
@@ -263,5 +265,11 @@ public class PortalCubedBlocks {
         PortalBlocksLoader.initCommon();
     }
 
+    private static BlockEntityType<FaithPlateBlockEntity> getFaithPlateBlockEntity() {
+        return FAITH_PLATE_BLOCK_ENTITY;
+    }
 
+    private static BlockEntityType<BetaFaithPlateBlockEntity> getBetaFaithPlateBlockEntity() {
+        return BETA_FAITH_PLATE_BLOCK_ENTITY;
+    }
 }

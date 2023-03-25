@@ -59,6 +59,8 @@ public class  ExperimentalPortal extends Entity {
     public static final TrackedData<Vec3d> FACING = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
     public static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
+    private boolean disableValidation;
+
     public Vec3d getNormal() {
         return (getAxisW().orElseThrow(NOT_INIT).crossProduct(getAxisH().orElseThrow(NOT_INIT)));
     }
@@ -88,30 +90,32 @@ public class  ExperimentalPortal extends Entity {
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound compoundTag) {
-        this.setColor(compoundTag.getInt("color"));
-        this.setRoll(compoundTag.getFloat("roll"));
-        if (compoundTag.containsUuid("linkedPortalUUID")) this.setLinkedPortalUUID(Optional.of(compoundTag.getUuid("linkedPortalUUID")));
-        if (compoundTag.contains("axisW")) this.setOrientation(IPHelperDuplicate.getVec3d(compoundTag, "axisW"), IPHelperDuplicate.getVec3d(compoundTag, "axisH"));
-        this.setOtherAxisH(IPHelperDuplicate.getVec3d(compoundTag, "axisOH"));
-        this.setOtherAxisW(IPHelperDuplicate.getVec3d(compoundTag, "axisOW"));
-        if (compoundTag.contains("destination")) this.setDestination(Optional.of(IPHelperDuplicate.getVec3d(compoundTag, "destination")));
-        this.setOtherFacing(IPHelperDuplicate.getVec3d(compoundTag, "facing"));
-        if (compoundTag.containsUuid("ownerUUID")) this.setOwnerUUID(Optional.of(compoundTag.getUuid("ownerUUID")));
+    protected void readCustomDataFromNbt(NbtCompound nbt) {
+        this.setColor(nbt.getInt("color"));
+        this.setRoll(nbt.getFloat("roll"));
+        if (nbt.containsUuid("linkedPortalUUID")) this.setLinkedPortalUUID(Optional.of(nbt.getUuid("linkedPortalUUID")));
+        if (nbt.contains("axisW")) this.setOrientation(IPHelperDuplicate.getVec3d(nbt, "axisW"), IPHelperDuplicate.getVec3d(nbt, "axisH"));
+        this.setOtherAxisH(IPHelperDuplicate.getVec3d(nbt, "axisOH"));
+        this.setOtherAxisW(IPHelperDuplicate.getVec3d(nbt, "axisOW"));
+        if (nbt.contains("destination")) this.setDestination(Optional.of(IPHelperDuplicate.getVec3d(nbt, "destination")));
+        this.setOtherFacing(IPHelperDuplicate.getVec3d(nbt, "facing"));
+        if (nbt.containsUuid("ownerUUID")) this.setOwnerUUID(Optional.of(nbt.getUuid("ownerUUID")));
+        disableValidation = nbt.getBoolean("DisableValidation");
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound compoundTag) {
-        compoundTag.putFloat("color", this.getColor());
-        compoundTag.putFloat("roll", this.getRoll());
-        this.getLinkedPortalUUID().ifPresent(uuid -> compoundTag.putUuid("linkedPortalUUID", uuid));
-        this.getAxisW().ifPresent(axisW -> IPHelperDuplicate.putVec3d(compoundTag, "axisW", axisW));
-        this.getAxisH().ifPresent(axisH -> IPHelperDuplicate.putVec3d(compoundTag, "axisH", axisH));
-        IPHelperDuplicate.putVec3d(compoundTag, "axisOH", this.getOtherAxisH());
-        IPHelperDuplicate.putVec3d(compoundTag, "axisOW", this.getOtherAxisW());
-        this.getDestination().ifPresent(destination -> IPHelperDuplicate.putVec3d(compoundTag, "destination", destination));
-        IPHelperDuplicate.putVec3d(compoundTag, "facing", this.getOtherFacing());
-        this.getOwnerUUID().ifPresent(uuid -> compoundTag.putUuid("ownerUUID", uuid));
+    protected void writeCustomDataToNbt(NbtCompound nbt) {
+        nbt.putFloat("color", this.getColor());
+        nbt.putFloat("roll", this.getRoll());
+        this.getLinkedPortalUUID().ifPresent(uuid -> nbt.putUuid("linkedPortalUUID", uuid));
+        this.getAxisW().ifPresent(axisW -> IPHelperDuplicate.putVec3d(nbt, "axisW", axisW));
+        this.getAxisH().ifPresent(axisH -> IPHelperDuplicate.putVec3d(nbt, "axisH", axisH));
+        IPHelperDuplicate.putVec3d(nbt, "axisOH", this.getOtherAxisH());
+        IPHelperDuplicate.putVec3d(nbt, "axisOW", this.getOtherAxisW());
+        this.getDestination().ifPresent(destination -> IPHelperDuplicate.putVec3d(nbt, "destination", destination));
+        IPHelperDuplicate.putVec3d(nbt, "facing", this.getOtherFacing());
+        this.getOwnerUUID().ifPresent(uuid -> nbt.putUuid("ownerUUID", uuid));
+        nbt.putBoolean("DisableValidation", disableValidation);
     }
 
     public float getRoll() {
@@ -253,6 +257,9 @@ public class  ExperimentalPortal extends Entity {
     }
 
     public boolean validate() {
+        if (disableValidation) {
+            return true;
+        }
         return validateBehind() && validateFront();
     }
 
