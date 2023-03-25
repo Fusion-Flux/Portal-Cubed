@@ -5,13 +5,12 @@ import com.fusionflux.portalcubed.util.BlockEntityWrapperEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperEntity<RocketTurretBlockEntity>> {
+public class RocketTurretModel extends EntityLikeBlockEntityModel<RocketTurretBlockEntity> {
     public static final Identifier TEXTURE_ACTIVE = id("textures/block/rocket_turret_active.png");
     public static final Identifier TEXTURE_ACTIVE_E = id("textures/block/rocket_turret_active_e.png");
     public static final Identifier TEXTURE_INACTIVE = id("textures/block/rocket_turret_inactive.png");
@@ -156,6 +155,7 @@ public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperE
         turret.render(matrices, vertices, light, overlay, red, green, blue, alpha);
     }
 
+    @Override
     public Identifier getTexture(RocketTurretBlockEntity entity) {
         if (entity.deactivatingAnimation.isAnimating() && entity.deactivatingAnimation.m_hkidhtpg() >= 2000) {
             return TEXTURE_INACTIVE;
@@ -167,7 +167,11 @@ public class RocketTurretModel extends SinglePartEntityModel<BlockEntityWrapperE
         };
     }
 
+    @Override
     public Identifier getEmissiveTexture(RocketTurretBlockEntity entity) {
+        if (entity.deactivatingAnimation.isAnimating() && entity.deactivatingAnimation.m_hkidhtpg() >= 2000) {
+            return null;
+        }
         return switch (entity.getState()) {
             case SEARCHING -> TEXTURE_ACTIVE_E;
             case LOCKED -> TEXTURE_LOCK_ON_E;

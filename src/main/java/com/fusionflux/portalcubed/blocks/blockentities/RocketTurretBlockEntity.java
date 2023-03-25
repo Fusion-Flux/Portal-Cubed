@@ -9,7 +9,6 @@ import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.LivingEntity;
@@ -33,7 +32,7 @@ import java.util.UUID;
 
 import static com.fusionflux.portalcubed.blocks.RocketTurretBlock.POWERED;
 
-public class RocketTurretBlockEntity extends BlockEntity {
+public class RocketTurretBlockEntity extends EntityLikeBlockEntity {
     public static final int UPDATE_ANGLE = 0;
     public static final int UPDATE_LOCKED_TICKS = 1;
 
@@ -41,20 +40,17 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     private static final Vec3d GUN_OFFSET = new Vec3d(0.5, 1.71875, 0.09375);
 
-    private float yaw, pitch;
-    private int age, lockedTicks;
+    private int lockedTicks;
     private UUID rocketUuid = Util.NIL_UUID;
 
     private Vec2f destAngle;
     private Boolean powered;
     private int opening = -1;
     private boolean closing;
-    public float lastYaw, lastPitch;
     public List<Pair<Vec3d, Vec3d>> aimDests;
 
     public final AnimationState activatingAnimation = new AnimationState();
     public final AnimationState deactivatingAnimation = new AnimationState();
-
 
     public RocketTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -66,9 +62,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        nbt.putInt("Age", age);
-        nbt.putFloat("Yaw", yaw);
-        nbt.putFloat("Pitch", pitch);
+        super.writeNbt(nbt);
         nbt.putFloat("LockedTicks", lockedTicks);
         nbt.putUuid("RocketUUID", rocketUuid);
         nbt.putBoolean("Closing", closing);
@@ -79,9 +73,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        age = nbt.getInt("Age");
-        yaw = nbt.getFloat("Yaw");
-        pitch = nbt.getFloat("Pitch");
+        super.readNbt(nbt);
         lockedTicks = nbt.getInt("LockedTicks");
         rocketUuid = nbt.getUuid("RocketUUID");
         closing = nbt.getBoolean("Closing");
@@ -160,21 +152,20 @@ public class RocketTurretBlockEntity extends BlockEntity {
         return State.FIRING;
     }
 
+    @Override
     public void tick(World world, BlockPos pos, BlockState state) {
-        age++;
-        lastYaw = yaw;
-        lastPitch = pitch;
+        super.tick(world, pos, state);
         if (powered == null) {
             powered = state.get(POWERED);
             if (!powered) {
-                deactivatingAnimation.restart(age - 41);
+                deactivatingAnimation.restart(getAge() - 41);
             }
         } else if (powered != state.get(POWERED)) {
             powered = !powered;
             if (powered) {
                 opening = 0;
                 deactivatingAnimation.stop();
-                activatingAnimation.restart(age);
+                activatingAnimation.restart(getAge());
                 closing = false;
             } else {
                 lockedTicks = 0;
@@ -193,7 +184,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
                 yaw = 0;
                 pitch = 0;
                 activatingAnimation.stop();
-                deactivatingAnimation.restart(age);
+                deactivatingAnimation.restart(getAge());
                 closing = false;
             }
         }
@@ -279,35 +270,10 @@ public class RocketTurretBlockEntity extends BlockEntity {
     public Vec3d getGunOffset(float tickDelta) {
         return GUN_OFFSET
             .add(-0.3, -1.475, -0.5)
-            .rotateZ((float)Math.toRadians(MathHelper.lerpAngleDegrees(tickDelta, lastPitch, pitch)))
+            .rotateZ((float)Math.toRadians(MathHelper.lerpAngleDegrees(tickDelta, prevPitch, pitch)))
             .add(-0.2, -0.025, 0.0)
-            .rotateY((float)Math.toRadians(-MathHelper.lerpAngleDegrees(tickDelta, lastYaw, yaw)))
+            .rotateY((float)Math.toRadians(-MathHelper.lerpAngleDegrees(tickDelta, prevYaw, yaw)))
             .add(0.5, 1.5, 0.5);
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return toNbt();
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public float getYaw() {
-        return yaw;
-    }
-
-    public void setYaw(float yaw) {
-        this.yaw = MathHelper.wrapDegrees(yaw);
-    }
-
-    public float getPitch() {
-        return pitch;
-    }
-
-    public void setPitch(float pitch) {
-        this.pitch = MathHelper.wrapDegrees(pitch);
     }
 
     public enum State {

@@ -17,6 +17,8 @@ import java.util.function.Function;
 public final class EntityEmissiveRendering {
 
     public static <T extends Entity, M extends EntityModel<T>> void renderEmissive(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, M model, Function<T, Identifier> emissiveTextureGetter) {
+        final Identifier texture = emissiveTextureGetter.apply(entity);
+        if (texture == null) return;
         var brightness = 1f;
         if (entity instanceof Fizzleable fizzleable) {
             brightness -= Math.min(fizzleable.getFizzleProgress(), 1f);
