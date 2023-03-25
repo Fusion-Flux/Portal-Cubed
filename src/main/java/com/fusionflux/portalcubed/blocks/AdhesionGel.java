@@ -4,38 +4,22 @@ import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class AdhesionGel extends GelFlat {
-
+public class AdhesionGel extends BaseGel {
     public AdhesionGel(Settings settings) {
         super(settings);
     }
-
-    public static final BiMap<Direction, BooleanProperty> DIR_TO_PROPERTY = ImmutableBiMap.of(
-            Direction.NORTH, Properties.NORTH,
-            Direction.SOUTH, Properties.SOUTH,
-            Direction.EAST, Properties.EAST,
-            Direction.WEST, Properties.WEST,
-            Direction.UP, Properties.UP,
-            Direction.DOWN, Properties.DOWN
-    );
 
     @Override
     @SuppressWarnings("deprecation")
@@ -61,7 +45,7 @@ public class AdhesionGel extends GelFlat {
                         break;
                     }
                 }
-                for (Direction direc : getDirections(state)) {
+                for (Direction direc : getOpenFaces(state)) {
                     if (direc != current) {
                         Box gravbox = getGravityEffectBox(pos, direc, delta);
                         if (gravbox.intersects(entity.getBoundingBox())) {
@@ -87,16 +71,6 @@ public class AdhesionGel extends GelFlat {
             if (!(entity instanceof PlayerEntity) && !world.isClient)
                 GravityChangerAPI.addGravity(entity, new Gravity(GravityChangerAPI.getGravityDirection(entity), 10, 2, "adhesion_gel"));
         }
-    }
-
-    public static ArrayList<Direction> getDirections(BlockState blockState) {
-        ArrayList<Direction> list = new ArrayList<>();
-        for (Direction direction : Direction.values()) {
-            if (blockState.get(AdhesionGel.DIR_TO_PROPERTY.get(direction))) {
-                list.add(direction);
-            }
-        }
-        return list;
     }
 
     public Box getGravityEffectBox(BlockPos blockPos, Direction direction, double delta) {
@@ -133,16 +107,5 @@ public class AdhesionGel extends GelFlat {
             case EAST -> minX -= delta;
         }
         return new Box(minX, minY, minZ, maxX, maxY, maxZ);
-    }
-
-    @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 }

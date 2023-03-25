@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.blocks.GelFlat;
+import com.fusionflux.portalcubed.blocks.BaseGel;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -105,11 +105,14 @@ public class PortalCubedEntities {
     public static final EntityType<? extends GelBlobEntity> REPULSION_GEL_BLOB = createGelBlob(
         PortalCubedBlocks.REPULSION_GEL, id("textures/block/repulsion_gel.png")
     );
+    public static final EntityType<? extends GelBlobEntity> ADHESION_GEL_BLOB = createGelBlob(
+        PortalCubedBlocks.ADHESION_GEL, id("textures/block/adhesion_gel.png")
+    );
     public static final EntityType<? extends GelBlobEntity> CONVERSION_GEL_BLOB = createGelBlob(
         PortalCubedBlocks.CONVERSION_GEL, id("textures/block/gel.png")
     );
-    public static final EntityType<? extends GelBlobEntity> ADHESION_GEL_BLOB = createGelBlob(
-        PortalCubedBlocks.ADHESION_GEL, id("textures/block/adhesion_gel.png")
+    public static final EntityType<? extends GelBlobEntity> REFLECTION_GEL_BLOB = createGelBlob(
+        PortalCubedBlocks.ADHESION_GEL, id("textures/block/reflection_gel.png")
     );
 
     public static final EntityType<RocketEntity> ROCKET = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, RocketEntity::new)
@@ -151,8 +154,9 @@ public class PortalCubedEntities {
 
         Registry.register(Registry.ENTITY_TYPE, id("propulsion_gel_blob"), PROPULSION_GEL_BLOB);
         Registry.register(Registry.ENTITY_TYPE, id("repulsion_gel_blob"), REPULSION_GEL_BLOB);
-        Registry.register(Registry.ENTITY_TYPE, id("conversion_gel_blob"), CONVERSION_GEL_BLOB);
         Registry.register(Registry.ENTITY_TYPE, id("adhesion_gel_blob"), ADHESION_GEL_BLOB);
+        Registry.register(Registry.ENTITY_TYPE, id("conversion_gel_blob"), CONVERSION_GEL_BLOB);
+        Registry.register(Registry.ENTITY_TYPE, id("reflection_gel_blob"), REFLECTION_GEL_BLOB);
 
         Registry.register(Registry.ENTITY_TYPE, id("rocket"), ROCKET);
 
@@ -186,7 +190,7 @@ public class PortalCubedEntities {
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(FACT_CORE, HoopyEntity.createMobAttributes().build());
     }
 
-    public static EntityType<? extends GelBlobEntity> createGelBlob(GelFlat gel, Identifier texture) {
+    public static EntityType<? extends GelBlobEntity> createGelBlob(BaseGel gel, Identifier texture) {
         return QuiltEntityTypeBuilder.create()
             .<GelBlobEntity>entityFactory((type, world) -> new GelBlobEntity(type, world) {
                 @Override
@@ -195,7 +199,7 @@ public class PortalCubedEntities {
                 }
 
                 @Override
-                public GelFlat getGel() {
+                public BaseGel getGel() {
                     return gel;
                 }
             })

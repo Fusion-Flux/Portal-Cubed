@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.blocks.GelFlat;
+import com.fusionflux.portalcubed.blocks.BaseGel;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.AbstractLichenBlock;
@@ -234,7 +234,7 @@ public abstract class GelBlobEntity extends ProjectileEntity {
         final BooleanProperty property = AbstractLichenBlock.getProperty(hit.getSide().getOpposite());
         if (sideState.isOf(getGel())) {
             world.setBlockState(sidePos, sideState.with(property, true));
-        } else if (sideState.getMaterial().isReplaceable() || sideState.getBlock() instanceof GelFlat) {
+        } else if (sideState.getMaterial().isReplaceable() || sideState.getBlock() instanceof BaseGel) {
             world.setBlockState(sidePos, getGel().getDefaultState().with(property, true));
         }
     }
@@ -253,5 +253,5 @@ public abstract class GelBlobEntity extends ProjectileEntity {
 
     public abstract Identifier getTexture();
 
-    public abstract GelFlat getGel();
+    public abstract BaseGel getGel();
 }

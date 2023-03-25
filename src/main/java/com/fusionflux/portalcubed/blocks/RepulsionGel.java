@@ -5,7 +5,6 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -13,10 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class RepulsionGel extends GelFlat {
+public class RepulsionGel extends BaseGel {
 
     public RepulsionGel(Settings settings) {
         super(settings);
@@ -63,8 +61,6 @@ public class RepulsionGel extends GelFlat {
         if (state.get(Properties.UP) && state.get(Properties.DOWN)) {
             result = result.add(0, 2, 0);
         }
-
-
 
         return result;
     }
@@ -209,16 +205,5 @@ public class RepulsionGel extends GelFlat {
         } else {
             entity.handleFallDamage(fallDistance, 0.0F, DamageSource.FALL);
         }
-    }
-
-    @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 }

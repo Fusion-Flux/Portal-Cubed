@@ -100,10 +100,10 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         Vec3d start = Vec3d.ofCenter(pos).add(direction.multiply(0.5));
         double lengthRemaining = PortalCubedConfig.maxBridgeLength;
         final Set<Entity> alreadyHit = new HashSet<>();
-        AdvancedEntityRaycast.Result segments;
+        BlockState hitState;
         do {
             //noinspection DataFlowIssue
-            segments = AdvancedEntityRaycast.raycast(
+            final AdvancedEntityRaycast.Result segments = AdvancedEntityRaycast.raycast(
                 world,
                 new RaycastContext(
                     start, start.add(direction.multiply(lengthRemaining)),
@@ -131,10 +131,16 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             start = segments.finalRay().end();
             lengthRemaining -= segments.length();
             multiSegments.add(segments);
-        } while (
-            segments.finalHit().getType() == HitResult.Type.BLOCK &&
-                world.getBlockState(segments.finalHit().getBlockPos()).isOf(PortalCubedBlocks.LASER_RELAY)
-        );
+            if (segments.finalHit().getType() == HitResult.Type.BLOCK) {
+                hitState = world.getBlockState(segments.finalHit().getBlockPos());
+                if (hitState.isOf(PortalCubedBlocks.REFLECTION_GEL)) {
+                    final Direction.Axis axis = segments.finalHit().getSide().getAxis();
+                    direction = direction.withAxis(axis, -direction.getComponentAlongAxis(axis));
+                }
+            } else {
+                hitState = null;
+            }
+        } while (hitState != null && (hitState.isOf(PortalCubedBlocks.LASER_RELAY) || hitState.isOf(PortalCubedBlocks.REFLECTION_GEL)));
 
         if (world.isClient) {
             clientTick();
@@ -175,11 +181,11 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         for (final AdvancedEntityRaycast.Result result : multiSegments) {
             final BlockHitResult finalHit = result.finalHit();
             if (finalHit.getType() == HitResult.Type.MISS) continue;
-            final BlockState hitState = world.getBlockState(finalHit.getBlockPos());
-            if (hitState.isOf(PortalCubedBlocks.LASER_CATCHER) && finalHit.getSide() != hitState.get(LaserCatcherBlock.FACING)) continue;
+            final BlockState hitState1 = world.getBlockState(finalHit.getBlockPos());
+            if (hitState1.isOf(PortalCubedBlocks.LASER_CATCHER) && finalHit.getSide() != hitState1.get(LaserCatcherBlock.FACING)) continue;
             final Target target = new Target(
                 finalHit.getBlockPos(),
-                hitState.isOf(PortalCubedBlocks.LASER_RELAY) ? null : finalHit.getSide()
+                hitState1.isOf(PortalCubedBlocks.LASER_RELAY) ? null : finalHit.getSide()
             );
             newTargets.add(target);
             if (targets.add(target)) {

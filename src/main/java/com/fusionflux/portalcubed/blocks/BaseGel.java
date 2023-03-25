@@ -5,9 +5,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.random.RandomGenerator;
+import net.minecraft.world.BlockView;
 
-public class GelFlat extends SimpleMultiSidedBlock {
-    public GelFlat(Settings settings) {
+public class BaseGel extends SimpleMultiSidedBlock {
+    public BaseGel(Settings settings) {
         super(settings);
     }
 
@@ -17,5 +18,10 @@ public class GelFlat extends SimpleMultiSidedBlock {
         if (world.hasRain(pos.up())) {
             world.setBlockState(pos, Blocks.AIR.getDefaultState());
         }
+    }
+
+    @Override
+    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+        return true;
     }
 }

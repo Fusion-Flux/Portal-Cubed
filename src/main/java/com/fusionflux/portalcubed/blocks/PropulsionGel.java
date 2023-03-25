@@ -3,18 +3,15 @@ package com.fusionflux.portalcubed.blocks;
 import com.fusionflux.portalcubed.entity.BlockCollisionLimiter;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class PropulsionGel extends GelFlat {
-
+public class PropulsionGel extends BaseGel {
     private final BlockCollisionLimiter limiter = new BlockCollisionLimiter();
 
     public PropulsionGel(Settings settings) {
@@ -26,7 +23,6 @@ public class PropulsionGel extends GelFlat {
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         this.addCollisionEffects(world, entity);
     }
-
 
     private void addCollisionEffects(World world, Entity entity) {
         if (entity.getType().equals(EntityType.BOAT)) {
@@ -48,15 +44,5 @@ public class PropulsionGel extends GelFlat {
                 }
             }
         }
-    }
-    @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 }

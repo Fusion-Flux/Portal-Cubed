@@ -337,6 +337,10 @@
     "type": "provided",
     "render_layer": "translucent"
   },
+  "reflection_gel": {
+    "type": "provided",
+    "render_layer": "translucent"
+  },
   "propulsion_gel": {
     "type": "provided",
     "render_layer": "translucent"

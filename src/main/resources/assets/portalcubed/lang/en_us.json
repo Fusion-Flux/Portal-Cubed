@@ -73,6 +73,7 @@
   "block.portalcubed.repulsion_gel": "Repulsion Gel Glob",
   "block.portalcubed.adhesion_gel": "Adhesion Gel Glob",
   "block.portalcubed.conversion_gel": "Conversion Gel Glob",
+  "block.portalcubed.reflection_gel": "Reflection Gel Glob",
 
   "block.portalcubed.auto_portal": "Auto Portal",
   "block.portalcubed.velocity_helper": "Velocity Helper",

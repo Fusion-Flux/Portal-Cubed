@@ -24,11 +24,12 @@ import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedBlocks {
-    public static final Item BASE_GEL = new Item(new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64).fireproof());
+    public static final Item BASE_GEL = new Item(new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).fireproof());
     public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(QuiltBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
-    public static final RepulsionGel REPULSION_GEL = new RepulsionGel(QuiltBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
-    public static final GelFlat CONVERSION_GEL = new GelFlat(QuiltBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
-    public static final AdhesionGel ADHESION_GEL = new AdhesionGel(QuiltBlockSettings.of(Material.PLANT).ticksRandomly().hardness(0f).nonOpaque().noCollision().sounds(new BlockSoundGroup(1, -1, SoundEvents.BLOCK_HONEY_BLOCK_BREAK, SoundEvents.BLOCK_HONEY_BLOCK_STEP, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundEvents.BLOCK_HONEY_BLOCK_HIT, SoundEvents.BLOCK_HONEY_BLOCK_FALL)));
+    public static final RepulsionGel REPULSION_GEL = new RepulsionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
+    public static final AdhesionGel ADHESION_GEL = new AdhesionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
+    public static final BaseGel CONVERSION_GEL = new BaseGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
+    public static final BaseGel REFLECTION_GEL = new ReflectionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
 
     public static final HardLightBridgeEmitterBlock HLB_EMITTER_BLOCK = new HardLightBridgeEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(QuiltBlockSettings.of(Material.AIR).hardness(999999f).nonOpaque().resistance(9999999999f).sounds(new BlockSoundGroup(1, 1, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)));
@@ -123,15 +124,19 @@ public class PortalCubedBlocks {
         Registry.register(Registry.ITEM, id("base_gel"), BASE_GEL);
 
         Registry.register(Registry.BLOCK, id("propulsion_gel"), PROPULSION_GEL);
-        Registry.register(Registry.ITEM, id("propulsion_gel"), new GelBlobItem(PROPULSION_GEL, PortalCubedEntities.PROPULSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64)));
+        Registry.register(Registry.ITEM, id("propulsion_gel"), new GelBlobItem(PROPULSION_GEL, PortalCubedEntities.PROPULSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
+
         Registry.register(Registry.BLOCK, id("repulsion_gel"), REPULSION_GEL);
-        Registry.register(Registry.ITEM, id("repulsion_gel"), new GelBlobItem(REPULSION_GEL, PortalCubedEntities.REPULSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64)));
+        Registry.register(Registry.ITEM, id("repulsion_gel"), new GelBlobItem(REPULSION_GEL, PortalCubedEntities.REPULSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
 
         Registry.register(Registry.BLOCK, id("adhesion_gel"), ADHESION_GEL);
-        Registry.register(Registry.ITEM, id("adhesion_gel"), new GelBlobItem(ADHESION_GEL, PortalCubedEntities.ADHESION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64)));
+        Registry.register(Registry.ITEM, id("adhesion_gel"), new GelBlobItem(ADHESION_GEL, PortalCubedEntities.ADHESION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
 
         Registry.register(Registry.BLOCK, id("conversion_gel"), CONVERSION_GEL);
-        Registry.register(Registry.ITEM, id("conversion_gel"), new GelBlobItem(CONVERSION_GEL, PortalCubedEntities.CONVERSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP).maxCount(64)));
+        Registry.register(Registry.ITEM, id("conversion_gel"), new GelBlobItem(CONVERSION_GEL, PortalCubedEntities.CONVERSION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
+
+        Registry.register(Registry.BLOCK, id("reflection_gel"), REFLECTION_GEL);
+        Registry.register(Registry.ITEM, id("reflection_gel"), new GelBlobItem(REFLECTION_GEL, PortalCubedEntities.REFLECTION_GEL_BLOB, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
 
         Registry.register(Registry.BLOCK, id("portal_2_door"), PORTAL2DOOR);
         Registry.register(Registry.ITEM, id("portal_2_door"), new BlockItem(PORTAL2DOOR, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
