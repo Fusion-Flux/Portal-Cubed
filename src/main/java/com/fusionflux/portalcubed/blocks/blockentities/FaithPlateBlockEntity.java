@@ -2,9 +2,11 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.FaithPlateBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
+import com.fusionflux.portalcubed.listeners.ServerAnimatable;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
@@ -29,10 +31,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.List;
 
-public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements ExtendedScreenHandlerFactory {
+public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements ExtendedScreenHandlerFactory, ServerAnimatable {
     private double velX = 0;
     private double velY = 0;
     private double velZ = 0;
@@ -78,7 +82,20 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
                     RayonIntegration.INSTANCE.setVelocity(liver, new Vec3d(velX, velY, velZ));
                 }
                 timer = 5;
-                flingState.restart(getAge());
+                if (!world.isClient) {
+                    final PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeBlockPos(pos);
+                    buf.writeString("fling");
+                    //noinspection DataFlowIssue
+                    world.getServer()
+                        .getPlayerManager()
+                        .sendToAround(
+                            null,
+                            pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
+                            96, world.getRegistryKey(),
+                            ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.SERVER_ANIMATE, buf)
+                        );
+                }
                 world.playSound(
                     null,
                     pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
@@ -176,5 +193,11 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
         markDirty();
         assert world != null;
         world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+    }
+
+    @Override
+    @Nullable
+    public AnimationState getAnimation(String name) {
+        return name.equals("fling") ? flingState : null;
     }
 }

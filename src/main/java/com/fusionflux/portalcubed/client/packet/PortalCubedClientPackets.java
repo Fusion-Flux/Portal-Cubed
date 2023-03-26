@@ -6,10 +6,13 @@ import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.Fizzleable;
+import com.fusionflux.portalcubed.listeners.ServerAnimatable;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -32,6 +35,7 @@ public class PortalCubedClientPackets {
     public static final Identifier ENABLE_CFG = id("enable_cfg");
     public static final Identifier ENABLE_PORTAL_HUD = id("enable_portal_hud");
     public static final Identifier REFRESH_POS = id("refresh_pos");
+    public static final Identifier SERVER_ANIMATE = id("server_animate");
 
     @ClientOnly
     public static void registerPackets() {
@@ -42,6 +46,7 @@ public class PortalCubedClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(ENABLE_CFG, PortalCubedClientPackets::onEnableCfg);
         ClientPlayNetworking.registerGlobalReceiver(ENABLE_PORTAL_HUD, PortalCubedClientPackets::onEnablePortalHud);
         ClientPlayNetworking.registerGlobalReceiver(REFRESH_POS, PortalCubedClientPackets::onRefreshPos);
+        ClientPlayNetworking.registerGlobalReceiver(SERVER_ANIMATE, PortalCubedClientPackets::onServerAnimate);
     }
 
     @ClientOnly
@@ -130,4 +135,23 @@ public class PortalCubedClientPackets {
         });
     }
 
+    @ClientOnly
+    public static void onServerAnimate(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        final BlockPos pos = buf.readBlockPos();
+        final String animation = buf.readString();
+        client.execute(() -> {
+            assert client.world != null;
+            final BlockEntity blockEntity = client.world.getBlockEntity(pos);
+            AnimationState state = null;
+            if (blockEntity instanceof ServerAnimatable serverAnimatable) {
+                state = serverAnimatable.getAnimation(animation);
+            }
+            if (state != null) {
+                // state can only ever be non-null if blockEntity instanceof ServerAnimatable
+                state.restart(((ServerAnimatable)blockEntity).getAge());
+            } else {
+                PortalCubed.LOGGER.warn("Unknown animation from {}: {} for {}", SERVER_ANIMATE, animation, blockEntity);
+            }
+        });
+    }
 }
