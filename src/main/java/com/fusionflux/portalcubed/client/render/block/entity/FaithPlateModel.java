@@ -20,6 +20,7 @@ public class FaithPlateModel extends EntityLikeBlockEntityModel<FaithPlateBlockE
         this.root = root;
     }
 
+    @SuppressWarnings("checkstyle:LocalVariableName")
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
@@ -36,6 +37,19 @@ public class FaithPlateModel extends EntityLikeBlockEntityModel<FaithPlateBlockE
             .uv(50, 53).cuboid(2.25F, -1.5F, -1.3333F, 0.0F, 3.0F, 7.0F, new Dilation(0.0F)), ModelTransform.pivot(8.0F, 8.25F, -15.4167F));
 
         bone.addChild("cube_r2", ModelPartBuilder.create().uv(16, 61).cuboid(-4.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.1667F, 0.7854F, 0.0F, 0.0F));
+
+        ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 30).cuboid(-8.0F, -17.0F, -8.0F, 4.0F, 1.0F, 16.0F, new Dilation(0.0F))
+            .uv(20, 18).cuboid(-4.0F, -17.0F, -8.0F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(21, 16).cuboid(-4.0F, -17.0F, 7.0F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(22, 29).cuboid(4.0F, -17.0F, -8.0F, 4.0F, 1.0F, 16.0F, new Dilation(0.0F))
+            .uv(0, 11).cuboid(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+
+        bb_main.addChild("cubeinverted_r1", ModelPartBuilder.create().uv(-8, 25).cuboid(-7.0F, -9.0F, -4.0F, 14.0F, 0.0F, 8.0F, new Dilation(0.0F))
+            .uv(6, 17).cuboid(-7.0F, -16.0F, -4.0F, 0.0F, 7.0F, 8.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+
+        bb_main.addChild("cubeinverted_r2", ModelPartBuilder.create().uv(6, 17).cuboid(0.0F, -3.5F, -4.0F, 0.0F, 7.0F, 8.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -12.5F, 7.0F, 0.0F, 1.5708F, 0.0F));
+
+        bb_main.addChild("cubeinverted_r3", ModelPartBuilder.create().uv(0, 11).cuboid(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
         return TexturedModelData.of(modelData, 64, 64);
     }
 

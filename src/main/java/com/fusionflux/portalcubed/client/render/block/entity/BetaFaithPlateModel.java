@@ -15,6 +15,7 @@ public class BetaFaithPlateModel extends FaithPlateModel {
         super(root);
     }
 
+    @SuppressWarnings("checkstyle:LocalVariableName")
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
@@ -34,8 +35,20 @@ public class BetaFaithPlateModel extends FaithPlateModel {
             .uv(30, 18).cuboid(-1.1167F, -1.3333F, -1.5F, 0.0F, 3.0F, 3.0F, new Dilation(0.0F))
             .uv(30, 18).cuboid(1.1333F, -1.3333F, -1.5F, 0.0F, 3.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0167F, -2.3651F, -4.7061F));
 
-        modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(21, 16).cuboid(-2.65F, -10.75F, -4.75F, 0.0F, 5.0F, 4.0F, new Dilation(0.0F))
-            .uv(21, 16).cuboid(2.65F, -10.75F, -4.75F, 0.0F, 5.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+        ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(21, 16).cuboid(-2.65F, -10.75F, -4.75F, 0.0F, 5.0F, 4.0F, new Dilation(0.0F))
+            .uv(21, 16).cuboid(2.65F, -10.75F, -4.75F, 0.0F, 5.0F, 4.0F, new Dilation(0.0F))
+            .uv(12, 31).cuboid(-8.01F, -17.01F, -8.01F, 1.0F, 1.0F, 16.0F, new Dilation(0.0F))
+            .uv(15, 18).cuboid(-7.01F, -17.01F, -8.01F, 14.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(30, 32).cuboid(6.99F, -17.01F, -8.01F, 1.0F, 1.0F, 16.0F, new Dilation(0.0F))
+            .uv(15, 16).cuboid(-7.01F, -17.01F, 6.99F, 14.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 11).cuboid(7.0F, -16.0F, -7.0F, 0.0F, 10.0F, 14.0F, new Dilation(0.0F))
+            .uv(-14, 25).cuboid(-7.0F, -6.0F, -7.0F, 14.0F, 0.0F, 14.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+
+        bb_main.addChild("cubeinverted_r1", ModelPartBuilder.create().uv(0, 11).cuboid(7.0F, -16.0F, -7.0F, 0.0F, 10.0F, 14.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+
+        bb_main.addChild("cubeinverted_r2", ModelPartBuilder.create().uv(0, 11).cuboid(7.0F, -16.0F, -7.0F, 0.0F, 10.0F, 14.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+
+        bb_main.addChild("cubeinverted_r3", ModelPartBuilder.create().uv(0, 11).cuboid(7.0F, -16.0F, -7.0F, 0.0F, 10.0F, 14.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
         return TexturedModelData.of(modelData, 64, 64);
     }
 

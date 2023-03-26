@@ -243,28 +243,28 @@ public class FaithPlateAnimations {
                 new AnimationKeyframe(0.14f, Animator.rotate(0f, 0f, 0f),
                                       PartAnimation.Interpolators.LINEAR
                 ),
-                new AnimationKeyframe(0.26f, Animator.rotate(-60f, 0f, 0f),
+                new AnimationKeyframe(0.26f, Animator.rotate(0f, 0f, 0f),
                                       PartAnimation.Interpolators.SPLINE
                 ),
-                new AnimationKeyframe(0.48f, Animator.rotate(-32.5f, 0f, 0f),
+                new AnimationKeyframe(0.48f, Animator.rotate(0f, 0f, 0f),
                                       PartAnimation.Interpolators.SPLINE
                 ),
-                new AnimationKeyframe(0.68f, Animator.rotate(-60f, 0f, 0f),
+                new AnimationKeyframe(0.68f, Animator.rotate(0f, 0f, 0f),
                                       PartAnimation.Interpolators.SPLINE
                 ),
-                new AnimationKeyframe(0.84f, Animator.rotate(-47.5f, 0f, 0f),
+                new AnimationKeyframe(0.84f, Animator.rotate(0f, 0f, 0f),
                                       PartAnimation.Interpolators.SPLINE
                 ),
-                new AnimationKeyframe(0.96f, Animator.rotate(-60f, 0f, 0f),
+                new AnimationKeyframe(0.96f, Animator.rotate(0f, 0f, 0f),
                                       PartAnimation.Interpolators.SPLINE
                 ),
-                new AnimationKeyframe(1.12f, Animator.rotate(-52.5f, 0f, 0f),
+                new AnimationKeyframe(1.12f, Animator.rotate(0f, 0f, 0f),
                                       PartAnimation.Interpolators.SPLINE
                 ),
-                new AnimationKeyframe(1.22f, Animator.rotate(-60f, 0f, 0f),
+                new AnimationKeyframe(1.22f, Animator.rotate(0f, 0f, 0f),
                                       PartAnimation.Interpolators.LINEAR
                 ),
-                new AnimationKeyframe(1.56f, Animator.rotate(-60f, 0f, 0f),
+                new AnimationKeyframe(1.56f, Animator.rotate(0f, 0f, 0f),
                                       PartAnimation.Interpolators.LINEAR
                 ),
                 new AnimationKeyframe(2.34f, Animator.rotate(0f, 0f, 0f),
