@@ -7,6 +7,7 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.AnimationState;
@@ -51,10 +52,11 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
     public void tick(World world, BlockPos pos, BlockState state) {
         super.tick(world, pos, state);
         if (state.get(FaithPlateBlock.FACING).getAxis().isVertical()) {
-            setYaw(directionToAngle(state.get(FaithPlateBlock.HORIFACING)));
-            setPitch(0f);
+            final boolean isFlipped = state.get(FaithPlateBlock.FACING) == Direction.DOWN;
+            setYaw(directionToAngle(state.get(FaithPlateBlock.HORIFACING)) * (isFlipped ? -1 : 1));
+            setPitch(isFlipped ? 180f : 0f);
         } else {
-            setYaw(directionToAngle(state.get(FaithPlateBlock.FACING)) + 180);
+            setYaw(directionToAngle(state.get(FaithPlateBlock.FACING)) + 180f);
             setPitch(90f);
         }
 
@@ -100,12 +102,26 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
         };
     }
 
+    public double getVelX() {
+        return velX;
+    }
+
     public void setVelX(double velX) {
         this.velX = velX;
     }
+
+    public double getVelY() {
+        return velY;
+    }
+
     public void setVelY(double velY) {
         this.velY = velY;
     }
+
+    public double getVelZ() {
+        return velZ;
+    }
+
     public void setVelZ(double velZ) {
         this.velZ = velZ;
     }
@@ -154,5 +170,11 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
     @Override
     public ScreenHandler createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return new FaithPlateScreenHandler(i);
+    }
+
+    public void updateListeners() {
+        markDirty();
+        assert world != null;
+        world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
     }
 }

@@ -193,6 +193,7 @@ public class PortalCubed implements ModInitializer {
                     faithPlateBlockEntity.setVelX(x);
                     faithPlateBlockEntity.setVelY(y);
                     faithPlateBlockEntity.setVelZ(z);
+                    faithPlateBlockEntity.updateListeners();
                 }
             });
         });

@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.client.render.block.entity;
 
+import com.fusionflux.portalcubed.blocks.FaithPlateBlock;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.util.BlockEntityWrapperEntity;
 import net.minecraft.client.model.*;
@@ -62,15 +63,17 @@ public class FaithPlateModel extends EntityLikeBlockEntityModel<FaithPlateBlockE
     public void setAngles(BlockEntityWrapperEntity<FaithPlateBlockEntity> entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
         getPart().traverse().forEach(ModelPart::resetTransform);
         root.setAngles((float)Math.toRadians(headPitch), (float)Math.toRadians(headYaw), 0);
-        if (entity.getBlockEntity().pitch != 0) {
+        if (entity.getBlockEntity().pitch == 90f) {
             final float radians = (float)Math.toRadians(entity.getBlockEntity().yaw);
-            root.setPivot(-(float)Math.sin(radians) * 16, 16f, -(float)Math.cos(radians) * 16);
+            root.setPivot(-(float)Math.sin(radians) * 16f, 16f, -(float)Math.cos(radians) * 16f);
+        } else if (entity.getBlockEntity().pitch == -180f) {
+            root.setPivot(0f, 32f, 0f);
         }
-        m_rrbozhsc(
-            entity.getBlockEntity().flingState,
-            entity.getBlockEntity().pitch != 0 ? getForwardAnimation() : getUpwardAnimation(),
-            animationProgress
-        );
+        final FaithPlateBlockEntity faithPlate = entity.getBlockEntity();
+        final boolean upward =
+            faithPlate.getCachedState().get(FaithPlateBlock.FACING).getAxis().isVertical() &&
+                faithPlate.getVelX() == 0 && faithPlate.getVelZ() == 0 && faithPlate.getVelY() != 0;
+        m_rrbozhsc(faithPlate.flingState, upward ? getUpwardAnimation() : getForwardAnimation(), animationProgress);
     }
 
     protected Animation getForwardAnimation() {
