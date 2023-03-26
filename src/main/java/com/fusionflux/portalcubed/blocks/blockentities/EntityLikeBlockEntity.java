@@ -19,14 +19,12 @@ public abstract class EntityLikeBlockEntity extends BlockEntity {
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        nbt.putInt("Age", age);
         nbt.putFloat("Yaw", yaw);
         nbt.putFloat("Pitch", pitch);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        age = nbt.getInt("Age");
         yaw = nbt.getFloat("Yaw");
         pitch = nbt.getFloat("Pitch");
     }
