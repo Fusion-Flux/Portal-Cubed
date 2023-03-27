@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "portalcubed:block/old_ap_white_checkered_panel",
-		"1": "portalcubed:block/old_ap_white_checkered_panel"
+		"particle": "portalcubed:block/portal_1_smooth_tiles",
+		"1": "portalcubed:block/portal_1_smooth_tiles"
 	},
 	"elements": [
 		{   "from": [ 0, 0, 0 ],
