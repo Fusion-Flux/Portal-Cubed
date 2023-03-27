@@ -6,6 +6,7 @@ import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.Fizzleable;
+import com.fusionflux.portalcubed.fog.FogSettings;
 import com.fusionflux.portalcubed.listeners.ServerAnimatable;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
@@ -36,7 +37,7 @@ public class PortalCubedClientPackets {
     public static final Identifier ENABLE_PORTAL_HUD = id("enable_portal_hud");
     public static final Identifier REFRESH_POS = id("refresh_pos");
     public static final Identifier SERVER_ANIMATE = id("server_animate");
-    public static final Identifier ENABLE_PORTAL_FOG = id("enable_portal_fog");
+    public static final Identifier SET_CUSTOM_FOG = id("set_custom_fog");
 
     @ClientOnly
     public static void registerPackets() {
@@ -48,7 +49,7 @@ public class PortalCubedClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(ENABLE_PORTAL_HUD, PortalCubedClientPackets::onEnablePortalHud);
         ClientPlayNetworking.registerGlobalReceiver(REFRESH_POS, PortalCubedClientPackets::onRefreshPos);
         ClientPlayNetworking.registerGlobalReceiver(SERVER_ANIMATE, PortalCubedClientPackets::onServerAnimate);
-        ClientPlayNetworking.registerGlobalReceiver(ENABLE_PORTAL_FOG, PortalCubedClientPackets::onEnablePortalFog);
+        ClientPlayNetworking.registerGlobalReceiver(SET_CUSTOM_FOG, PortalCubedClientPackets::onSetCustomFog);
     }
 
     @ClientOnly
@@ -158,7 +159,7 @@ public class PortalCubedClientPackets {
     }
 
     @ClientOnly
-    public static void onEnablePortalFog(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        PortalCubedClient.usePortalFog = buf.readBoolean();
+    public static void onSetCustomFog(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        PortalCubedClient.customFog = FogSettings.decodeOptional(buf);
     }
 }

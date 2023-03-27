@@ -5,8 +5,6 @@ import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.minecraft.command.argument.PosArgument;
 import net.minecraft.command.argument.RotationArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -14,11 +12,14 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Vec2f;
 import org.jetbrains.annotations.Nullable;
 
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
+
 public class FireRocketCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("firerocket")
+        dispatcher.register(literal("firerocket")
             .executes(ctx -> fireRocket(ctx.getSource(), null))
-            .then(RequiredArgumentBuilder.<ServerCommandSource, PosArgument>argument("rotation", RotationArgumentType.rotation())
+            .then(argument("rotation", RotationArgumentType.rotation())
                 .executes(ctx -> fireRocket(ctx.getSource(), RotationArgumentType.getRotation(ctx, "rotation")))
             )
         );

@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.mixin.client;
 import com.fusionflux.portalcubed.accessor.CameraExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.fluids.ToxicGooFluid;
+import com.fusionflux.portalcubed.fog.FogSettings;
 import com.mojang.blaze3d.shader.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.BackgroundRenderer;
@@ -55,12 +56,13 @@ public abstract class BackgroundRendererMixin {
         cancellable = true
     )
     private static void renderPortalFog(Camera camera, float tickDelta, ClientWorld world, int viewDistance, float skyDarkness, CallbackInfo ci) {
-        if (PortalCubedClient.usePortalFog) {
+        final FogSettings fog = PortalCubedClient.customFog;
+        if (fog != null) {
             ci.cancel();
 
-            red = 58 / 255f;
-            green = 82 / 255f;
-            blue = 101 / 255f;
+            red = fog.color().r() / 255f;
+            green = fog.color().g() / 255f;
+            blue = fog.color().b() / 255f;
 
             RenderSystem.clearColor(red, green, blue, 0f);
         }
@@ -94,13 +96,30 @@ public abstract class BackgroundRendererMixin {
         ),
         cancellable = true
     )
-    private static void applyPortalFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
-        if (PortalCubedClient.usePortalFog) {
+    private static void applyPortalFog1(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
+        applyPortalFog0(ci);
+    }
+
+    @Inject(
+        method = "applyFog",
+        at = @At(
+            value = "INVOKE",
+            target = "Ljava/lang/Math;min(FF)F"
+        ),
+        cancellable = true
+    )
+    private static void applyPortalFog2(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
+        applyPortalFog0(ci);
+    }
+
+    private static void applyPortalFog0(CallbackInfo ci) {
+        final FogSettings fog = PortalCubedClient.customFog;
+        if (fog != null) {
             ci.cancel();
 
-            RenderSystem.setShaderFogStart(1f);
-            RenderSystem.setShaderFogEnd(3500f / 64f);
-            RenderSystem.setShaderFogShape(FogShape.SPHERE);
+            RenderSystem.setShaderFogStart(fog.start());
+            RenderSystem.setShaderFogEnd(fog.end());
+            RenderSystem.setShaderFogShape(fog.shape().toBlaze3d());
         }
     }
 }

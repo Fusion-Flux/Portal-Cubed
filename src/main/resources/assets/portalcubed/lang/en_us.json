@@ -346,6 +346,10 @@
   "portalcubed.command.fizzle.success": "Successfully fizzled %s physics objects",
   "portalcubed.command.lasersong.failed": "Block at %s is not a laser node.",
   "portalcubed.command.lasersong.success": "Successfully changed node song at %s to %s.",
+  "portalcubed.command.fog.success": "Current fog in %s is set to %s.",
+  "portalcubed.command.fog.reset.success": "Reset fog to default in %s.",
+  "portalcubed.command.fog.set.success": "Set fog in %s to %s.",
+  "portalcubed.command.fog.preset.success": "Set fog in %s to %s.",
 
   "gamerule.category.portalcubed": "Portal\u00b3",
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",

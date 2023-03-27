@@ -324,7 +324,3 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
         return PortalCubedClient.isPortalHudModeServer();
     }
 }
-
-
-
-

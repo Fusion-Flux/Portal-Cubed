@@ -20,6 +20,8 @@ import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.PortalCubedTrackedDataHandlers;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
+import com.fusionflux.portalcubed.fog.FogPersistentState;
+import com.fusionflux.portalcubed.fog.FogSettings;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -37,6 +39,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -51,6 +55,8 @@ import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
+import org.quiltmc.qsl.entity_events.api.EntityWorldChangeEvents;
+import org.quiltmc.qsl.entity_events.api.ServerPlayerEntityCopyCallback;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
@@ -261,12 +267,12 @@ public class PortalCubed implements ModInitializer {
                 buf.writeBoolean(true);
                 handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_PORTAL_HUD, buf));
             }
-            if (handler.player.world.getGameRules().getBoolean(PortalCubedGameRules.USE_PORTAL_FOG)) {
-                final PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeBoolean(true);
-                handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_PORTAL_FOG, buf));
-            }
+            syncFog(handler.player);
         });
+
+        EntityWorldChangeEvents.AFTER_PLAYER_WORLD_CHANGE.register((player, origin, destination) -> syncFog(player));
+
+        ServerPlayerEntityCopyCallback.EVENT.register((copy, original, wasDeath) -> syncFog(copy));
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) ->
             PortalCubedClient.isPortalHudMode() &&
@@ -295,6 +301,21 @@ public class PortalCubed implements ModInitializer {
         }
 
         RayonIntegration.INSTANCE.init();
+    }
+
+    public static void syncFog(ServerPlayerEntity player) {
+        final PacketByteBuf buf = PacketByteBufs.create();
+        FogSettings.encodeOptional(FogPersistentState.getOrCreate((ServerWorld)player.world).getSettings(), buf);
+        ServerPlayNetworking.send(player, PortalCubedClientPackets.SET_CUSTOM_FOG, buf);
+    }
+
+    public static void syncFog(ServerWorld world) {
+        final PacketByteBuf buf = PacketByteBufs.create();
+        FogSettings.encodeOptional(FogPersistentState.getOrCreate(world).getSettings(), buf);
+        world.getServer().getPlayerManager().sendToDimension(
+            ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.SET_CUSTOM_FOG, buf),
+            world.getRegistryKey()
+        );
     }
 
     public static void playBounceSound(Entity entity) {

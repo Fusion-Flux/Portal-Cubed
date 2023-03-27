@@ -20,6 +20,7 @@ import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
+import com.fusionflux.portalcubed.fog.FogSettings;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
@@ -94,7 +95,7 @@ public class PortalCubedClient implements ClientModInitializer {
     public static boolean allowCfg;
     private static SoundInstance excursionFunnelMusic;
     private static boolean portalHudMode = false;
-    public static boolean usePortalFog = false;
+    public static FogSettings customFog = null;
 
     public static int zoomTimer;
     public static int zoomDir;
@@ -280,7 +281,7 @@ public class PortalCubedClient implements ClientModInitializer {
         ClientLoginConnectionEvents.INIT.register((handler, client) -> {
             allowCfg = true;
             portalHudMode = false;
-            usePortalFog = false;
+            customFog = null;
         });
 
         ClientTickEvents.START.register(client -> {
