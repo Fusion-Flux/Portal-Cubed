@@ -321,6 +321,9 @@
   "portal_1_smooth_gray_panel_facade": {
     "type": "multiface"
   },
+  "portal_1_smooth_tile_facade": {
+    "type": "multiface"
+  },
   "white_half_panel_facade": {
     "type": "multiface"
   },
@@ -370,6 +373,12 @@
     "type": "multiface"
   },
   "portal_1_rusted_plating_facade": {
+    "type": "multiface"
+  },
+  "portal_1_rusted_tread_plating_side_facade": {
+    "type": "multiface"
+  },
+  "portal_1_rusted_tread_plating_top_facade": {
     "type": "multiface"
   },
   "exposed_panel_facade": {
