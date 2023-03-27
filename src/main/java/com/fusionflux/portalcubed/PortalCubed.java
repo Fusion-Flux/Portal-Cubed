@@ -261,6 +261,11 @@ public class PortalCubed implements ModInitializer {
                 buf.writeBoolean(true);
                 handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_PORTAL_HUD, buf));
             }
+            if (handler.player.world.getGameRules().getBoolean(PortalCubedGameRules.USE_PORTAL_FOG)) {
+                final PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBoolean(true);
+                handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_PORTAL_FOG, buf));
+            }
         });
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) ->

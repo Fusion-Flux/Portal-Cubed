@@ -94,6 +94,7 @@ public class PortalCubedClient implements ClientModInitializer {
     public static boolean allowCfg;
     private static SoundInstance excursionFunnelMusic;
     private static boolean portalHudMode = false;
+    public static boolean usePortalFog = false;
 
     public static int zoomTimer;
     public static int zoomDir;
@@ -279,6 +280,7 @@ public class PortalCubedClient implements ClientModInitializer {
         ClientLoginConnectionEvents.INIT.register((handler, client) -> {
             allowCfg = true;
             portalHudMode = false;
+            usePortalFog = false;
         });
 
         ClientTickEvents.START.register(client -> {

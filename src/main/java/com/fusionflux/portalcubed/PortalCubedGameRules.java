@@ -37,6 +37,13 @@ public class PortalCubedGameRules {
             server.getPlayerManager().sendToAll(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_PORTAL_HUD, buf));
         })
     );
+    public static final GameRules.Key<GameRules.BooleanRule> USE_PORTAL_FOG = GameRuleRegistry.register(
+        "usePortalFog", CATEGORY, GameRuleFactory.createBooleanRule(false, (server, rule) -> {
+            final PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeBoolean(rule.get());
+            server.getPlayerManager().sendToAll(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_PORTAL_FOG, buf));
+        })
+    );
 
     public static void register() {
     }

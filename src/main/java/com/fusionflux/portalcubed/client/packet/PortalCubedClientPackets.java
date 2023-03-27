@@ -36,6 +36,7 @@ public class PortalCubedClientPackets {
     public static final Identifier ENABLE_PORTAL_HUD = id("enable_portal_hud");
     public static final Identifier REFRESH_POS = id("refresh_pos");
     public static final Identifier SERVER_ANIMATE = id("server_animate");
+    public static final Identifier ENABLE_PORTAL_FOG = id("enable_portal_fog");
 
     @ClientOnly
     public static void registerPackets() {
@@ -47,6 +48,7 @@ public class PortalCubedClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(ENABLE_PORTAL_HUD, PortalCubedClientPackets::onEnablePortalHud);
         ClientPlayNetworking.registerGlobalReceiver(REFRESH_POS, PortalCubedClientPackets::onRefreshPos);
         ClientPlayNetworking.registerGlobalReceiver(SERVER_ANIMATE, PortalCubedClientPackets::onServerAnimate);
+        ClientPlayNetworking.registerGlobalReceiver(ENABLE_PORTAL_FOG, PortalCubedClientPackets::onEnablePortalFog);
     }
 
     @ClientOnly
@@ -153,5 +155,10 @@ public class PortalCubedClientPackets {
                 PortalCubed.LOGGER.warn("Unknown animation from {}: {} for {}", SERVER_ANIMATE, animation, blockEntity);
             }
         });
+    }
+
+    @ClientOnly
+    public static void onEnablePortalFog(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        PortalCubedClient.usePortalFog = buf.readBoolean();
     }
 }
