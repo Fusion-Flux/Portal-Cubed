@@ -9,14 +9,14 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public class SimpleMultiSidedBlock extends AbstractLichenBlock {    
+public class SimpleMultiSidedBlock extends AbstractLichenBlock {
     public SimpleMultiSidedBlock(Settings settings) {
         super(settings);
     }
-    
+
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-	return VoxelShapes.empty();
+         return VoxelShapes.empty();
     }
 
     @Override
