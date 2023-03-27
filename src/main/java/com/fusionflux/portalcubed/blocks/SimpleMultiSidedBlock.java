@@ -17,9 +17,9 @@ public class SimpleMultiSidedBlock extends AbstractLichenBlock {
     }
     
     @Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-		return NO_COLLISION;
-	}
+    public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+	return NO_COLLISION;
+    }
 
     @Override
     public LichenSpreadBehavior getLichenSpreadBehavior() {
