@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "portalcubed:block/dirty_portal_1_white_panel"
+  }
+}

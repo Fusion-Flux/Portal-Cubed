@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "portalcubed:block/smooth_gray_half_panel"
+  }
+}
