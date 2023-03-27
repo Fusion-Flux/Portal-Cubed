@@ -1,6 +1,17 @@
 {
   "replace": false,
   "values" : [
-    "portalcubed:conversion_gel"
+    "portalcubed:conversion_gel",
+    "portalcubed:portal_1_white_panel_facade",
+    "portalcubed:portal_1_white_half_panel_facade",
+    "portalcubed:dirty_portal_1_white_panel_facade",
+    "portalcubed:dirty_portal_1_white_half_panel_facade",
+    "portalcubed:dirty_borderless_panel_facade",
+    "portalcubed:white_panel_facade",
+    "portalcubed:white_half_panel_facade",
+    "portalcubed:aged_white_panel_facade",
+    "portalcubed:aged_white_half_panel_facade",
+    "portalcubed:old_ap_white_panel_facade",
+    "portalcubed:old_ap_white_checkered_panel_facade"
   ]
 }

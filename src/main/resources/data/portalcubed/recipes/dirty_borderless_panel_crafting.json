@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XY",
+        "YX"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:coarse_dirt"
+        },
+        "Y": {
+            "item": "minecraft:white_concrete"
+        }
+    },
+    "result": {
+        "item": "portalcubed:dirty_borderless_panel",
+        "count": 8
+    }
+}
