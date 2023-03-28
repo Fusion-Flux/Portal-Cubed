@@ -1,6 +1,5 @@
 {
 	"credit": "Made by Cart3r using Blockbench.",
-	"ambientocclusion": false,
 	"textures": {
 		"1": "portalcubed:block/aged_padded_gray_panel_1",
 		"particle": "portalcubed:block/aged_padded_gray_panel_1"

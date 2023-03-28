@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"particle": "portalcubed:block/insulation",
 		"1": "portalcubed:block/insulation"

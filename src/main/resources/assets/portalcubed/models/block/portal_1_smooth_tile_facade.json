@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"particle": "portalcubed:block/portal_1_smooth_tiles",
 		"1": "portalcubed:block/portal_1_smooth_tiles"

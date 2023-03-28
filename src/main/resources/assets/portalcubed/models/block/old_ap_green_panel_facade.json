@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"particle": "portalcubed:block/old_ap_green_panel",
 		"1": "portalcubed:block/old_ap_green_panel"

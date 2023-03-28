@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"particle": "portalcubed:block/padded_gray_half_panel",
 		"1": "portalcubed:block/padded_gray_half_panel"

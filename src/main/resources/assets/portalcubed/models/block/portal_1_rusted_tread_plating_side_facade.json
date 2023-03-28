@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"particle": "portalcubed:block/portal_1_rusted_tread_plating_side",
 		"1": "portalcubed:block/portal_1_rusted_tread_plating_side"

@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"particle": "portalcubed:block/portal_2_exposed_panel",
 		"1": "portalcubed:block/portal_2_exposed_panel"
