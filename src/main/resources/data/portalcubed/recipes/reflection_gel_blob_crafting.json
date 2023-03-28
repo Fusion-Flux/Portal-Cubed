@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "portalcubed:base_gel"
+        },
+        {
+            "item": "minecraft:gray_dye"
+        },
+        {
+            "item": "minecraft:phantom_membrane"
+        }
+    ],
+    "result": {
+        "item": "portalcubed:reflection_gel",
+        "count": 2
+    }
+}

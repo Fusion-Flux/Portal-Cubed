@@ -64,7 +64,7 @@ dependencies {
 		exclude group: "net.fabricmc"
 	}
 
-	modApi include("maven.modrinth:stonecutter_recipe_tags:4.0.0-fabric")
+	modApi include("maven.modrinth:stonecutter_recipe_tags:4.2.1-fabric")
 
 	modApi include("com.unascribed:lib39-core:1.4.2")
 	modApi include("com.unascribed:lib39-recoil:1.4.2")
