@@ -198,7 +198,7 @@ public class PortalCubedClient implements ClientModInitializer {
                 if (excursionFunnelMusic == null) {
                     excursionFunnelMusic = new PositionedSoundInstance(
                         PortalCubedSounds.TBEAM_TRAVEL, SoundCategory.BLOCKS,
-                        0.1f, 1f, SoundInstance.m_mglvabhn(),
+                        0.1f, 1f, SoundInstance.createUnseededRandom(),
                         true, 0, SoundInstance.AttenuationType.NONE,
                         0.0, 0.0, 0.0, true
                     );

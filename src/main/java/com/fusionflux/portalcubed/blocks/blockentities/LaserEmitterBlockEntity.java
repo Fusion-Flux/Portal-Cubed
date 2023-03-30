@@ -226,7 +226,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
     @ClientOnly
     protected void clientTick() {
         if (musicInstance == null && world != null && world.getBlockState(pos).get(LaserEmitterBlock.POWERED)) {
-            musicInstance = new MovingSoundInstance(PortalCubedSounds.LASER_BEAM_MUSIC_EVENT, SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
+            musicInstance = new MovingSoundInstance(PortalCubedSounds.LASER_BEAM_MUSIC_EVENT, SoundCategory.BLOCKS, SoundInstance.createUnseededRandom()) {
                 {
                     volume = 0.1875f;
                     repeat = true;

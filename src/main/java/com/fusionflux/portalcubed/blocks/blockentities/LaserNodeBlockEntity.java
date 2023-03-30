@@ -104,7 +104,7 @@ public class LaserNodeBlockEntity extends BlockEntity {
     protected void clientTick() {
         if (musicInstance == null && world != null && world.getBlockState(pos).get(Properties.ENABLED)) {
             // The sounds played here may actually be stereo, so we may need to handle our own fadeout
-            musicInstance = new MovingSoundInstance(new SoundEvent(sound), SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
+            musicInstance = new MovingSoundInstance(new SoundEvent(sound), SoundCategory.BLOCKS, SoundInstance.createUnseededRandom()) {
                 final Identifier soundId = LaserNodeBlockEntity.this.sound;
                 final boolean isCustomSound = !soundId.equals(PortalCubedSounds.LASER_NODE_MUSIC);
 

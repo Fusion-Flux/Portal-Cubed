@@ -54,7 +54,10 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:$project.minecraft_version"
-	mappings "org.quiltmc:quilt-mappings:${minecraft_version}+build.${mappings_version}:intermediary-v2"
+	mappings loom.layered({
+		officialMojangMappings()
+		mappings "org.quiltmc:quilt-mappings:${minecraft_version}+build.${mappings_version}:intermediary-v2"
+	})
 
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 	modImplementation "org.quiltmc.quilted-fabric-api:quilted-fabric-api:${project.quilted_version}-${minecraft_version}"
@@ -123,7 +126,7 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 
 	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 17
+	it.options.release.set(17)
 }
 
 java {

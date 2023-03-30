@@ -73,7 +73,7 @@ public class FaithPlateModel extends EntityLikeBlockEntityModel<FaithPlateBlockE
         final boolean upward =
             faithPlate.getCachedState().get(FaithPlateBlock.FACING).getAxis().isVertical() &&
                 faithPlate.getVelX() == 0 && faithPlate.getVelZ() == 0 && faithPlate.getVelY() != 0;
-        m_rrbozhsc(faithPlate.flingState, upward ? getUpwardAnimation() : getForwardAnimation(), animationProgress);
+        animate(faithPlate.flingState, upward ? getUpwardAnimation() : getForwardAnimation(), animationProgress);
     }
 
     protected Animation getForwardAnimation() {

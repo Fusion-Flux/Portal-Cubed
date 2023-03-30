@@ -66,11 +66,6 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
     private final Vec3d offsetHeight = new Vec3d(0, this.getHeight() / 2, 0);
 
     @Override
-    public boolean collides() {
-        return !this.isRemoved();
-    }
-
-    @Override
     public boolean isCollidable() {
         return canUsePortals;
     }
@@ -130,21 +125,8 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        double d = packet.getX();
-        double e = packet.getY();
-        double f = packet.getZ();
-        float g = packet.m_tyquxhdv();
-        float h = packet.m_iypubkgo();
-        this.syncPacketPositionCodec(d, e, f);
-        this.bodyYaw = 0;
-        this.headYaw = 0;
-        this.prevBodyYaw = this.bodyYaw;
-        this.prevHeadYaw = this.headYaw;
+        super.onSpawnPacket(packet);
         this.setNoDrag(true);
-        this.setId(packet.getId());
-        this.setUuid(packet.getUuid());
-        this.updatePositionAndAngles(d, e, f, g, h);
-        this.setVelocity((float)packet.getVelocityX(), (float)packet.getVelocityY(), (float)packet.getVelocityZ());
     }
 
     private static final TrackedData<Optional<UUID>> HOLDER_UUID = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
