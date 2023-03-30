@@ -149,15 +149,17 @@ public class LaserEmitterBlockEntity extends BlockEntity {
 
         Entity owner = EntityType.MARKER.create(world);
         assert owner != null;
+        alreadyHit.clear();
         for (final AdvancedEntityRaycast.Result result : multiSegments) {
             for (final AdvancedEntityRaycast.Result.Ray ray : result.rays()) {
                 Vec3d rayStart = ray.start();
                 EntityHitResult hit;
                 do {
-                    hit = new AdvancedEntityRaycast.Result.Ray(rayStart, ray.end(), null).entityRaycast(owner, e -> e instanceof LivingEntity);
+                    hit = new AdvancedEntityRaycast.Result.Ray(rayStart, ray.end(), null).entityRaycast(owner, e -> e instanceof LivingEntity && !alreadyHit.contains(e));
                     if (hit != null) {
                         rayStart = hit.getPos();
                         final Entity hitEntity = hit.getEntity();
+                        alreadyHit.add(hitEntity);
                         owner = hitEntity;
                         if (hitEntity instanceof CorePhysicsEntity) {
                             continue; // TODO: Turrets and chairs burn
