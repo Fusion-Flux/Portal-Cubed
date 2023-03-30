@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.GeneralUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
@@ -20,7 +21,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -74,12 +74,10 @@ public class RadioEntity extends CorePhysicsEntity  {
 
     @Override
     protected Box calculateBoundingBox() {
-        Vec3d movedPos = getPos().add(0, .3125 / 2, 0);
-        if ((headYaw > -45 && headYaw <= 45) || headYaw > 135 || headYaw <= -45) {
-            return new Box(movedPos.subtract(0.4375 / 2, .3125 / 2, .1875 / 2), movedPos.add(0.4375 / 2, .3125 / 2, .1875 / 2));
-        } else {
-            return new Box(movedPos.subtract(.1875 / 2, .3125 / 2, 0.4375 / 2), movedPos.add(.1875 / 2, .3125 / 2, 0.4375 / 2));
-        }
+        return GeneralUtil.rotate(
+            new Box(-0.21875, 0, -0.09375, 0.21875, 0.3125, 0.09375),
+            headYaw
+        ).offset(getPos());
     }
 
     public boolean isMuted() {

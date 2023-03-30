@@ -3,7 +3,9 @@ package com.fusionflux.portalcubed.util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -64,5 +66,14 @@ public class GeneralUtil {
         final Vec3d v = pnt.subtract(linePnt);
         final double d = v.dotProduct(lineDir);
         return linePnt.add(lineDir.multiply(d));
+    }
+
+    public static Box rotate(Box box, float yaw) {
+        yaw = MathHelper.wrapDegrees(yaw);
+        if ((yaw > -45 && yaw <= 45) || yaw > 135 || yaw <= -135) {
+            return box;
+        } else {
+            return new Box(box.minZ, box.minY, box.minX, box.maxZ, box.maxY, box.maxX);
+        }
     }
 }
