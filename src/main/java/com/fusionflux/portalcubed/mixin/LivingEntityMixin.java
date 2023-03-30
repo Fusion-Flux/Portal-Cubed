@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
 import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import com.fusionflux.portalcubed.client.gui.ExpressionFieldWidget;
+import com.fusionflux.portalcubed.compat.pehkui.PehkuiApi;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -123,7 +124,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         final double relH = block.getRelH(getPos().x, getPos().z);
         final double relY = block.getRelY(getPos().y);
         final double angle = block.getAngle();
-        final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08);
+        final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08 * PehkuiApi.INSTANCE.getFallingScale(this));
         if (!Double.isFinite(speed)) return;
         setNoDrag(getEquippedStack(EquipmentSlot.FEET).isOf(PortalCubedItems.LONG_FALL_BOOTS));
         RayonIntegration.INSTANCE.setVelocity(this, block.getLaunchDir(getPos().x, getPos().z).multiply(Math.min(speed, 10)));

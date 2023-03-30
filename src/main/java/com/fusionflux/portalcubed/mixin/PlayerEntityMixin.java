@@ -79,7 +79,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void portalCubed$letYouFallLonger(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         ItemStack itemStack5 = this.getEquippedStack(EquipmentSlot.FEET);
-        if (damageSource == DamageSource.FALL && (itemStack5.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS))) {
+        if (damageSource == DamageSource.FALL && (itemStack5.isOf(PortalCubedItems.LONG_FALL_BOOTS))) {
             cir.setReturnValue(true);
         }
     }

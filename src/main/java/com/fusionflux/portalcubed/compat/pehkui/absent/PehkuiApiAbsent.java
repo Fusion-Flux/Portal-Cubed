@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.compat.pehkui.absent;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiApi;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleModifier;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleType;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 public enum PehkuiApiAbsent implements PehkuiApi {
@@ -21,5 +22,10 @@ public enum PehkuiApiAbsent implements PehkuiApi {
     @Override
     public PehkuiScaleType registerScaleType(Identifier id, PehkuiScaleModifier valueModifier) {
         return PehkuiScaleTypeAbsent.INSTANCE;
+    }
+
+    @Override
+    public float getFallingScale(Entity entity) {
+        return 1f;
     }
 }

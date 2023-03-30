@@ -3,10 +3,12 @@ package com.fusionflux.portalcubed.compat.pehkui.present;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiApi;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleModifier;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleType;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import virtuoel.pehkui.api.ScaleModifier;
 import virtuoel.pehkui.api.ScaleRegistries;
 import virtuoel.pehkui.api.ScaleType;
+import virtuoel.pehkui.api.ScaleTypes;
 
 public class PehkuiApiPresent implements PehkuiApi {
     @Override
@@ -29,5 +31,10 @@ public class PehkuiApiPresent implements PehkuiApi {
                 .addBaseValueModifier(((PehkuiScaleModifierPresent)valueModifier).inner())
                 .build()
         ));
+    }
+
+    @Override
+    public float getFallingScale(Entity entity) {
+        return ScaleTypes.FALLING.getScaleData(entity).getScale();
     }
 }
