@@ -6,6 +6,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
+import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.GeneralUtil;
@@ -20,7 +21,6 @@ import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -163,7 +163,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                             continue; // TODO: Turrets and chairs burn
                         }
                         if (!hitEntity.isOnGround()) continue;
-                        hitEntity.damage(DamageSource.IN_FIRE, 5);
+                        hitEntity.damage(PortalCubedDamageSources.LASER, PortalCubedConfig.laserDamage);
                         final Vec3d velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.getPos())
                             .normalize()
                             .multiply(1.25);

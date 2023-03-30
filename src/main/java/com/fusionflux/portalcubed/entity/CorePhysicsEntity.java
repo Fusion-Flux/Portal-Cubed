@@ -125,7 +125,14 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        super.onSpawnPacket(packet);
+        double d = packet.getX();
+        double e = packet.getY();
+        double f = packet.getZ();
+        this.syncPacketPositionCodec(d, e, f);
+        this.bodyYaw = 0;
+        this.headYaw = 0;
+        this.prevBodyYaw = this.bodyYaw;
+        this.prevHeadYaw = this.headYaw;
         this.setNoDrag(true);
     }
 

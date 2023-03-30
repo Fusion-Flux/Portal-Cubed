@@ -11,6 +11,7 @@ public class PortalCubedConfig extends MidnightConfig {
     @Entry public static float fizzlerDamage = 35;
     @Entry public static float rocketDamage = 35;
     @Entry public static float pelletDamage = 35;
+    @Entry public static float laserDamage = 3;
     @Entry @Client public static boolean portalHudMode = false;
     @Entry(min = 0, max = 100, isSlider = true) @Client public static int gelOverlayOpacity = 100;
 }

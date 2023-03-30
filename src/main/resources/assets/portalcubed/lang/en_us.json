@@ -305,12 +305,14 @@
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
   "portalcubed.midnightconfig.pelletDamage": "Energy Pellet Damage",
+  "portalcubed.midnightconfig.laserDamage": "Discouragement Beam Damage",
   "portalcubed.midnightconfig.portalHudMode": "Use Portal HUD",
   "portalcubed.midnightconfig.gelOverlayOpacity": "Gel Overlay Opacity",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
   "death.attack.portalcubed.vaporization": "%s was vaporized",
+  "death.attack.portalcubed.laser": "%s was thermally discouraged",
   "death.attack.portalcubed.cube": "%s was hit on the head by a weighted cube",
 
   "key.portalcubed.category" : "Portal\u00b3",
