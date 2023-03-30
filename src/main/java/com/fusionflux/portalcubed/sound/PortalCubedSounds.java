@@ -8,6 +8,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedSounds {
     public static final Identifier ERROR = id("error");
+    public static final Identifier EMPTY = id("empty");
 
     public static final Identifier GEL_BOUNCE = id("gel_bounce");
     public static final Identifier GEL_RUN = id("gel_run");

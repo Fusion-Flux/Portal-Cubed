@@ -75,7 +75,7 @@ public class RadioEntity extends CorePhysicsEntity  {
     @Override
     protected Box calculateBoundingBox() {
         Vec3d movedPos = getPos().add(0, .3125 / 2, 0);
-        if (this.bodyYaw == 0 || this.bodyYaw == 180) {
+        if ((headYaw > -45 && headYaw <= 45) || headYaw > 135 || headYaw <= -45) {
             return new Box(movedPos.subtract(0.4375 / 2, .3125 / 2, .1875 / 2), movedPos.add(0.4375 / 2, .3125 / 2, .1875 / 2));
         } else {
             return new Box(movedPos.subtract(.1875 / 2, .3125 / 2, 0.4375 / 2), movedPos.add(.1875 / 2, .3125 / 2, 0.4375 / 2));

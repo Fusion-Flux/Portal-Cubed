@@ -24,7 +24,11 @@ public abstract class SoundSystemMixin {
         )
     )
     private void ohFiddlesticks(SoundInstance sound, CallbackInfo ci) {
-        if (!sound.getId().getNamespace().equals(PortalCubed.MOD_ID) || sound.getId().equals(PortalCubedSounds.ERROR)) return;
+        if (
+            !sound.getId().getNamespace().equals(PortalCubed.MOD_ID) ||
+                sound.getId().equals(PortalCubedSounds.ERROR) ||
+                sound.getId().equals(PortalCubedSounds.EMPTY)
+        ) return;
         play(PositionedSoundInstance.master(PortalCubedSounds.ERROR_EVENT, 1f));
     }
 }
