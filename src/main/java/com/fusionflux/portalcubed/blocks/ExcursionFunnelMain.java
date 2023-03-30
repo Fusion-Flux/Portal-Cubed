@@ -219,7 +219,7 @@ public class ExcursionFunnelMain extends BlockWithEntity {
                     ((EntityAttachments) entity).setInFunnel(true);
                     entity.setVelocity(0, 0, 0);
                     MinecraftClient.getInstance().getSoundManager().play(
-                            new MovingSoundInstance(PortalCubedSounds.TBEAM_ENTER_EVENT, SoundCategory.BLOCKS, SoundInstance.createUnseededRandom()) {
+                            new MovingSoundInstance(PortalCubedSounds.TBEAM_ENTER_EVENT, SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
                                 int ticks;
 
                                 {

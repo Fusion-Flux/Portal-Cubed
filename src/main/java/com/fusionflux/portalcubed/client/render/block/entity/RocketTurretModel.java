@@ -146,8 +146,8 @@ public class RocketTurretModel extends EntityLikeBlockEntityModel<RocketTurretBl
         getPart().traverse().forEach(ModelPart::resetTransform);
         chassis.setAngles(0, (float)Math.toRadians(headYaw - 90), 0);
         neck.setAngles((float)Math.toRadians(headPitch - 30), (float)Math.toRadians(-0.5105f), 0);
-        animate(entity.getBlockEntity().activatingAnimation, RocketTurretAnimations.ACTIVATE, animationProgress);
-        animate(entity.getBlockEntity().deactivatingAnimation, RocketTurretAnimations.DEACTIVATE, animationProgress);
+        m_rrbozhsc(entity.getBlockEntity().activatingAnimation, RocketTurretAnimations.ACTIVATE, animationProgress);
+        m_rrbozhsc(entity.getBlockEntity().deactivatingAnimation, RocketTurretAnimations.DEACTIVATE, animationProgress);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class RocketTurretModel extends EntityLikeBlockEntityModel<RocketTurretBl
 
     @Override
     public Identifier getTexture(RocketTurretBlockEntity entity) {
-        if (entity.deactivatingAnimation.isAnimating() && entity.deactivatingAnimation.getAccumulatedTime() >= 2000) {
+        if (entity.deactivatingAnimation.isAnimating() && entity.deactivatingAnimation.m_hkidhtpg() >= 2000) {
             return TEXTURE_INACTIVE;
         }
         return switch (entity.getState()) {
@@ -169,7 +169,7 @@ public class RocketTurretModel extends EntityLikeBlockEntityModel<RocketTurretBl
 
     @Override
     public Identifier getEmissiveTexture(RocketTurretBlockEntity entity) {
-        if (entity.deactivatingAnimation.isAnimating() && entity.deactivatingAnimation.getAccumulatedTime() >= 2000) {
+        if (entity.deactivatingAnimation.isAnimating() && entity.deactivatingAnimation.m_hkidhtpg() >= 2000) {
             return null;
         }
         return switch (entity.getState()) {
