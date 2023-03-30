@@ -35,8 +35,8 @@
   "item.portalcubed.portal_1_storage_cube": "Portal 1 Weighted Storage Cube",
   "item.portalcubed.companion_cube": "Companion Cube",
   "item.portalcubed.portal_1_companion_cube": "Portal 1 Companion Cube",
-  "item.portalcubed.redirection_cube": "Redirection Cube",
-  "item.portalcubed.old_ap_cube": "Old Aperture Cube",
+  "item.portalcubed.redirection_cube": "Discouragement Redirection Cube",
+  "item.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
 
   "item.portalcubed.radio": "Radio",
   "item.portalcubed.beans": "Beans",
@@ -336,6 +336,44 @@
 
   "portalcubed.radio.allow_mute": "Muting Allowed",
   "portalcubed.radio.disallow_mute": "Muting Disallowed",
+
+  "entity.portalcubed.adhesion_gel_blob": "Adhesion Gel Blob",
+  "entity.portalcubed.conversion_gel_blob": "Conversion Gel Blob",
+  "entity.portalcubed.propulsion_gel_blob": "Propulsion Gel Blob",
+  "entity.portalcubed.reflection_gel_blob": "Reflection Gel Blob",
+  "entity.portalcubed.repulsion_gel_blob": "Repulsion Gel Blob",
+
+  "entity.portalcubed.adventure_core": "Adventure Core",
+  "entity.portalcubed.anger_core": "Anger Core",
+  "entity.portalcubed.core_frame": "Core Frame",
+  "entity.portalcubed.curiosity_core": "Curiosity Core",
+  "entity.portalcubed.fact_core": "Fact Core",
+  "entity.portalcubed.intelligence_core": "Intelligence Core",
+  "entity.portalcubed.morality_core": "Morality Core",
+  "entity.portalcubed.space_core": "Space Core",
+
+  "entity.portalcubed.beans": "Bean Can",
+  "entity.portalcubed.chair": "Office Chair",
+  "entity.portalcubed.computer": "Computer",
+  "entity.portalcubed.hoopy": "Hoopy",
+  "entity.portalcubed.jug": "Water Jug",
+  "entity.portalcubed.lil_pineapple": "Lil' Pineapple",
+  "entity.portalcubed.mug": "Mug",
+  "entity.portalcubed.radio": "Radio",
+
+  "entity.portalcubed.portal_1_companion_cube": "Portal 1 Weighted Companion Cube",
+  "entity.portalcubed.portal_1_storage_cube": "Portal 1 Weighted Storage Cube",
+  "entity.portalcubed.companion_cube": "Weighted Companion Cube",
+  "entity.portalcubed.storage_cube": "Weighted Storage Cube",
+  "entity.portalcubed.redirection_cube": "Discouragement Redirection Cube",
+  "entity.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
+
+  "entity.portalcubed.decal": "Energy Pellet Scorch Mark",
+  "entity.portalcubed.energy_pellet": "High Energy Pellet",
+
+  "entity.portalcubed.rocket": "Rocket",
+
+  "entity.portalcubed.experimental_portal": "Portal",
 
   "item.portalcubed.music_disc_still_alive": "Music Disc",
   "item.portalcubed.music_disc_still_alive.desc": "John Coulton - Still Alive",
