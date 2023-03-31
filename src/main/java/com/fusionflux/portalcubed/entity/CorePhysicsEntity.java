@@ -30,6 +30,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Arm;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
@@ -352,5 +353,9 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     @Override
     public void checkDespawn() {
+    }
+
+    protected static Box createFootBox(double x, double y, double z) {
+        return new Box(-x / 2, 0, -z / 2, x / 2, y, z / 2);
     }
 }

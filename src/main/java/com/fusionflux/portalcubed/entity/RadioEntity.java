@@ -21,6 +21,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +31,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class RadioEntity extends CorePhysicsEntity  {
+    private static final Box BASE_BOX = createFootBox(0.4375, 0.3125, 0.1875);
+
     private static final TrackedData<Boolean> MUTED = DataTracker.registerData(RadioEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> ALLOW_MUTE = DataTracker.registerData(RadioEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
@@ -74,10 +77,7 @@ public class RadioEntity extends CorePhysicsEntity  {
 
     @Override
     protected Box calculateBoundingBox() {
-        return GeneralUtil.rotate(
-            new Box(-0.21875, 0, -0.09375, 0.21875, 0.3125, 0.09375),
-            headYaw
-        ).offset(getPos());
+        return GeneralUtil.rotate(BASE_BOX, headYaw, Direction.Axis.Y).offset(getPos());
     }
 
     public boolean isMuted() {

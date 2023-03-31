@@ -68,12 +68,17 @@ public class GeneralUtil {
         return linePnt.add(lineDir.multiply(d));
     }
 
-    public static Box rotate(Box box, float yaw) {
-        yaw = MathHelper.wrapDegrees(yaw);
-        if ((yaw > -45 && yaw <= 45) || yaw > 135 || yaw <= -135) {
+    @SuppressWarnings("SuspiciousNameCombination")
+    public static Box rotate(Box box, float angle, Direction.Axis axis) {
+        angle = MathHelper.wrapDegrees(angle);
+        if ((angle > -45 && angle <= 45) || angle > 135 || angle <= -135) {
             return box;
         } else {
-            return new Box(box.minZ, box.minY, box.minX, box.maxZ, box.maxY, box.maxX);
+            return switch (axis) {
+                case X -> new Box(box.minX, box.minZ, box.minY, box.maxX, box.maxZ, box.maxY);
+                case Y -> new Box(box.minZ, box.minY, box.minX, box.maxZ, box.maxY, box.maxX);
+                case Z -> new Box(box.minY, box.minX, box.minZ, box.maxY, box.maxX, box.maxZ);
+            };
         }
     }
 }
