@@ -38,6 +38,7 @@ public final class PortalBlocksLoader {
             .put("old_ap", OldApBlock::new)
             .put("old_ap_directional", OldApDirectionalBlock::new)
             .put("facade", FacadeBlock::new)
+            .put("multiface", SimpleMultiSidedBlock::new)
             .build();
     @ClientOnly
     private static Map<String, RenderLayer> renderLayers;
