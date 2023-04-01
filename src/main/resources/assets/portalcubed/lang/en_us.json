@@ -270,6 +270,11 @@
   "block.portalcubed.exposed_panel_facade": "Exposed Panel Fa\u00E7ade",
   "block.portalcubed.partially_exposed_panel_facade": "Partially Exposed Panel Fa\u00E7ade",
 
+  "block.portalcubed.portal_1_mesh_grating_facade": "Portal 1 Mesh Grating Fa\u00E7ade",
+  "block.portalcubed.portal_1_metal_grating_facade": "Portal 1 Metal Grating Fa\u00E7ade",
+  "block.portalcubed.portal_2_metal_grating_facade": "Portal 2 Metal Grating Fa\u00E7ade",
+  "block.portalcubed.old_ap_metal_grating_facade": "Old Aperture Metal Grating Fa\u00E7ade",
+
 
 
   "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",

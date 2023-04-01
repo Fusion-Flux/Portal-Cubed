@@ -105,7 +105,11 @@
     "portalcubed:portal_1_door",
     "portalcubed:octopus_door",
     "portalcubed:old_ap_door",
-    "portalcubed:toxic_goo"
+    "portalcubed:toxic_goo",
+    "portalcubed:old_ap_metal_grating_facade",
+    "portalcubed:portal_1_metal_grating_facade",
+    "portalcubed:portal_2_metal_grating_facade",
+    "portalcubed:portal_1_mesh_grating_facade"
 
   ]
 }

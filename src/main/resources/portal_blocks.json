@@ -381,6 +381,27 @@
   "portal_1_rusted_tread_plating_top_facade": {
     "type": "facade"
   },
+  "portal_1_mesh_grating_facade": {
+    "type": "multiface",
+    "render_layer": "cutout",
+    "opaque": "false"
+  },
+  "portal_1_metal_grating_facade": {
+    "type": "multiface",
+    "render_layer": "cutout",
+    "opaque": "false"
+  },
+  "portal_2_metal_grating_facade": {
+    "type": "multiface",
+    "render_layer": "cutout",
+    "opaque": "false"
+  },
+  "old_ap_metal_grating_facade": {
+    "type": "multiface",
+    "render_layer": "cutout",
+    "opaque": "false"
+  },
+
   "exposed_panel_facade": {
     "type": "facade"
   },
