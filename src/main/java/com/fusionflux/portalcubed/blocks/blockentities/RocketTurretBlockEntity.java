@@ -178,7 +178,7 @@ public class RocketTurretBlockEntity extends EntityLikeBlockEntity {
             }
             return;
         }
-        if (opening >= 0 && opening < 60) {
+        if (opening >= 0 && opening < 80) {
             opening++;
             return;
         } else if (closing) {
