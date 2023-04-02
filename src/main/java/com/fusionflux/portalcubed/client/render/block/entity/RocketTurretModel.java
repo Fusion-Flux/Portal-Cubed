@@ -24,6 +24,7 @@ public class RocketTurretModel extends EntityLikeBlockEntityModel<RocketTurretBl
 
     public static final Identifier ANIMATION_ACTIVATE = id("rocket_turret/activate");
     public static final Identifier ANIMATION_DEACTIVATE = id("rocket_turret/deactivate");
+    public static final Identifier ANIMATION_SHOOT = id("rocket_turret/shoot");
 
     private final ModelPart root, turret, chassis, neck;
     private final JsonAnimator animator = new JsonAnimator(this);
@@ -108,6 +109,7 @@ public class RocketTurretModel extends EntityLikeBlockEntityModel<RocketTurretBl
         neck.setAngles((float)Math.toRadians(headPitch - 30), (float)Math.toRadians(-0.5105f), 0);
         animator.animate(entity.getBlockEntity().activatingAnimation, ANIMATION_ACTIVATE, animationProgress);
         animator.animate(entity.getBlockEntity().deactivatingAnimation, ANIMATION_DEACTIVATE, animationProgress);
+        animator.animate(entity.getBlockEntity().shootAnimation, ANIMATION_SHOOT, animationProgress);
     }
 
     @Override

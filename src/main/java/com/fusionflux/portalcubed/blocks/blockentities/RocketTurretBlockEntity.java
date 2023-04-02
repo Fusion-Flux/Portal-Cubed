@@ -51,6 +51,7 @@ public class RocketTurretBlockEntity extends EntityLikeBlockEntity {
 
     public final AnimationState activatingAnimation = new AnimationState();
     public final AnimationState deactivatingAnimation = new AnimationState();
+    public final AnimationState shootAnimation = new AnimationState();
 
     public RocketTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -92,7 +93,11 @@ public class RocketTurretBlockEntity extends EntityLikeBlockEntity {
     }
 
     public void setLockedTicks(int lockedTicks) {
+        final boolean wasFiring = getState() == State.FIRING;
         this.lockedTicks = lockedTicks;
+        if (!wasFiring && getState() == State.FIRING) {
+            shootAnimation.restart(getAge());
+        }
     }
 
     public void fire() {
