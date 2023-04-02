@@ -3,9 +3,9 @@ package com.fusionflux.portalcubed.client.render.block.entity;
 import com.fusionflux.portalcubed.blocks.FaithPlateBlock;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.util.BlockEntityWrapperEntity;
+import io.github.gaming32.jsonentityanimation.api.JsonAnimator;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.animation.Animation;
 import net.minecraft.util.Identifier;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
@@ -14,7 +14,11 @@ public class FaithPlateModel extends EntityLikeBlockEntityModel<FaithPlateBlockE
     public static final Identifier TEXTURE = id("textures/block/faith_plate.png");
     public static final Identifier TEXTURE_E = id("textures/block/faith_plate_e.png");
 
+    public static final Identifier ANIMATION_FORWARD = id("faith_plate/forward");
+    public static final Identifier ANIMATION_UPWARD = id("faith_plate/upward");
+
     private final ModelPart root;
+    private final JsonAnimator animator = new JsonAnimator(this);
 
     public FaithPlateModel(ModelPart root) {
         super(RenderLayer::getEntityTranslucent);
@@ -37,20 +41,20 @@ public class FaithPlateModel extends EntityLikeBlockEntityModel<FaithPlateBlockE
         ModelPartData bone = group.addChild("bone", ModelPartBuilder.create().uv(50, 50).cuboid(-2.25F, -1.5F, -1.3333F, 0.0F, 3.0F, 7.0F, new Dilation(0.0F))
             .uv(50, 53).cuboid(2.25F, -1.5F, -1.3333F, 0.0F, 3.0F, 7.0F, new Dilation(0.0F)), ModelTransform.pivot(8.0F, 8.25F, -15.4167F));
 
-        bone.addChild("cube_r2", ModelPartBuilder.create().uv(16, 61).cuboid(-4.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.1667F, 0.7854F, 0.0F, 0.0F));
+        bone.addChild("cube_r2", ModelPartBuilder.create().uv(16, 61).cuboid(-4.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(-0.01F)), ModelTransform.of(0.0F, 0.0F, 0.1667F, 0.7854F, 0.0F, 0.0F));
 
-        ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 30).cuboid(-8.0F, -17.0F, -8.0F, 4.0F, 1.0F, 16.0F, new Dilation(0.0F))
-            .uv(20, 18).cuboid(-4.0F, -17.0F, -8.0F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F))
-            .uv(21, 16).cuboid(-4.0F, -17.0F, 7.0F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F))
+        ModelPartData base = modelPartData.addChild("base", ModelPartBuilder.create().uv(36, 6).cuboid(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new Dilation(0.0F))
             .uv(22, 29).cuboid(4.0F, -17.0F, -8.0F, 4.0F, 1.0F, 16.0F, new Dilation(0.0F))
-            .uv(0, 11).cuboid(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+            .uv(0, 28).cuboid(-4.0F, -17.0F, -8.0F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 30).cuboid(-8.0F, -17.0F, -8.0F, 4.0F, 1.0F, 16.0F, new Dilation(0.0F))
+            .uv(0, 26).cuboid(-4.0F, -17.0F, 7.0F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-        bb_main.addChild("cubeinverted_r1", ModelPartBuilder.create().uv(-8, 25).cuboid(-7.0F, -9.0F, -4.0F, 14.0F, 0.0F, 8.0F, new Dilation(0.0F))
-            .uv(6, 17).cuboid(-7.0F, -16.0F, -4.0F, 0.0F, 7.0F, 8.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+        base.addChild("cubeinverted_r1", ModelPartBuilder.create().uv(36, 6).cuboid(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new Dilation(0.0F))
+            .uv(28, 15).cuboid(-4.0F, -9.0F, -7.0F, 8.0F, 0.0F, 14.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
-        bb_main.addChild("cubeinverted_r2", ModelPartBuilder.create().uv(6, 17).cuboid(0.0F, -3.5F, -4.0F, 0.0F, 7.0F, 8.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -12.5F, 7.0F, 0.0F, 1.5708F, 0.0F));
+        base.addChild("cubeinverted_r2", ModelPartBuilder.create().uv(42, 14).cuboid(0.0F, -3.5F, -4.0F, 0.0F, 7.0F, 8.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -12.5F, 7.0F, 0.0F, 1.5708F, 0.0F));
 
-        bb_main.addChild("cubeinverted_r3", ModelPartBuilder.create().uv(0, 11).cuboid(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+        base.addChild("cubeinverted_r3", ModelPartBuilder.create().uv(42, 14).cuboid(-7.0F, -16.0F, -4.0F, 0.0F, 7.0F, 8.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
         return TexturedModelData.of(modelData, 64, 64);
     }
 
@@ -73,15 +77,15 @@ public class FaithPlateModel extends EntityLikeBlockEntityModel<FaithPlateBlockE
         final boolean upward =
             faithPlate.getCachedState().get(FaithPlateBlock.FACING).getAxis().isVertical() &&
                 faithPlate.getVelX() == 0 && faithPlate.getVelZ() == 0 && faithPlate.getVelY() != 0;
-        m_rrbozhsc(faithPlate.flingState, upward ? getUpwardAnimation() : getForwardAnimation(), animationProgress);
+        animator.animate(faithPlate.flingState, upward ? getUpwardAnimation() : getForwardAnimation(), animationProgress);
     }
 
-    protected Animation getForwardAnimation() {
-        return FaithPlateAnimations.FP_FORWARD;
+    protected Identifier getForwardAnimation() {
+        return ANIMATION_FORWARD;
     }
 
-    protected Animation getUpwardAnimation() {
-        return FaithPlateAnimations.FP_UPWARD;
+    protected Identifier getUpwardAnimation() {
+        return ANIMATION_UPWARD;
     }
 
     @Override
