@@ -43,6 +43,7 @@
     "client.PlayerEntityRendererMixin",
     "client.RenderSystemMixin",
     "client.SoundSystemMixin",
+    "client.TitleScreenMixin",
     "client.VertexConsumerMixin"
   ],
   "injectors": {

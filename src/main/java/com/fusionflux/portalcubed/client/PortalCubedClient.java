@@ -574,4 +574,8 @@ public class PortalCubedClient implements ClientModInitializer {
             }
         }
     }
+
+    public static int globalAdvancementsSize() {
+        return GLOBAL_ADVANCEMENTS.size();
+    }
 }

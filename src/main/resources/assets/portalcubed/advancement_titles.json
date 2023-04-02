@@ -2,7 +2,7 @@
   "p1": {
     "minecraft:end/kill_dragon": {
       "panorama": "portalcubed:panoramas/beat_game/panorama",
-      "angle": [115.5, 18]
+      "angle": [160.5, 18]
     }
   },
   "p2": {
@@ -16,7 +16,7 @@
     },
     "minecraft:end/kill_dragon": {
       "panorama": "portalcubed:panoramas/beat_game/panorama",
-      "angle": [115.5, 18]
+      "angle": [160.5, 18]
     }
   }
 }
