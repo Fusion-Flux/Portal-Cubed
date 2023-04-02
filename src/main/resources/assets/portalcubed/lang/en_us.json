@@ -313,6 +313,10 @@
   "portalcubed.midnightconfig.laserDamage": "Discouragement Beam Damage",
   "portalcubed.midnightconfig.portalHudMode": "Use Portal HUD",
   "portalcubed.midnightconfig.gelOverlayOpacity": "Gel Overlay Opacity",
+  "portalcubed.midnightconfig.titleScreenMode": "Title Screen Panorama Mode",
+  "portalcubed.midnightconfig.enum.TitleScreenMode.DEFAULT": "Minecraft",
+  "portalcubed.midnightconfig.enum.TitleScreenMode.P1": "Portal 1",
+  "portalcubed.midnightconfig.enum.TitleScreenMode.P2": "Portal 2",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",

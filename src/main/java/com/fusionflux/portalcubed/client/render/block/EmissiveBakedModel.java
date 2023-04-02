@@ -43,7 +43,6 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
         return Optional.empty();
     }
 
-
     private static final RenderMaterial DEFAULT_MATERIAL = RendererAccess.INSTANCE.getRenderer().materialById(RenderMaterial.MATERIAL_STANDARD);
     private static final RenderMaterial[] EMISSIVE_MATERIALS;
     static {

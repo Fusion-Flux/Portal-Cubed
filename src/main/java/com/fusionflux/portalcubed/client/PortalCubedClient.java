@@ -51,6 +51,8 @@ import net.minecraft.client.texture.TextureManager;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.*;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
@@ -70,13 +72,18 @@ import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientLoginConnectionEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
+import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
+import static com.fusionflux.portalcubed.PortalCubed.LOGGER;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 @ClientOnly
@@ -89,6 +96,9 @@ public class PortalCubedClient implements ClientModInitializer {
         Items.AIR
     };
     public static final int ZOOM_TIME = 2;
+
+    private static final File GLOBAL_ADVANCEMENTS_FILE = QuiltLoader.getGameDir().resolve("portal_cubed_global_advancements.dat").toFile();
+    private static final Set<Identifier> GLOBAL_ADVANCEMENTS = new HashSet<>();
 
     public static long shakeStart;
     @Nullable public static BlockPos velocityHelperDragStart;
@@ -388,6 +398,17 @@ public class PortalCubedClient implements ClientModInitializer {
                 value.set(MathHelper.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get() / 2, value.get()));
             }
         });
+
+        try {
+            final NbtCompound compound = NbtIo.readCompressed(GLOBAL_ADVANCEMENTS_FILE);
+            for (final NbtElement element : compound.getList("Advancements", NbtElement.STRING_TYPE)) {
+                GLOBAL_ADVANCEMENTS.add(new Identifier(element.asString()));
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Failed to load global advancements", e);
+        }
+
+        ResourceLoader.get(ResourceType.CLIENT_RESOURCES).registerReloader(AdvancementTitles.createResourceReloader());
     }
 
     private void registerEmissiveModels(ModContainer mod) {
@@ -532,5 +553,25 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static void setPortalHudMode(boolean portalHudMode) {
         PortalCubedClient.portalHudMode = portalHudMode;
+    }
+
+    public static boolean hasGlobalAdvancement(Identifier advancement) {
+        return GLOBAL_ADVANCEMENTS.contains(advancement);
+    }
+
+    public static void addGlobalAdvancement(Identifier advancement) {
+        if (GLOBAL_ADVANCEMENTS.add(advancement)) {
+            try {
+                final NbtCompound compound = new NbtCompound();
+                final NbtList list = new NbtList();
+                for (final Identifier id : GLOBAL_ADVANCEMENTS) {
+                    list.add(NbtString.of(id.toString()));
+                }
+                compound.put("Advancements", list);
+                NbtIo.writeCompressed(compound, GLOBAL_ADVANCEMENTS_FILE);
+            } catch (Exception e) {
+                LOGGER.error("Failed to save global advancements", e);
+            }
+        }
     }
 }

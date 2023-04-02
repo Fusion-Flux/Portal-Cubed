@@ -25,7 +25,7 @@ public class LambDynamicLightsIntegration implements DynamicLightsInitializer {
         DynamicLightHandlers.registerDynamicLightHandler(PortalCubedEntities.ADVENTURE_CORE, e -> CORE_LIGHT);
 
         DynamicLightHandlers.registerDynamicLightHandler(PortalCubedEntities.ENERGY_PELLET, e ->
-            Math.round((e.getStartingLife() > 0 ? MathHelper.clamp(MathHelper.lerp((float)e.getLife() / e.getStartingLife(), 0.25f, 1f), 0f, 1f) : 1f) * 10)
+            Math.round((e.getStartingLife() > 0 ? MathHelper.clamp(MathHelper.lerp((float)e.getLife() / e.getStartingLife(), 0.25f, 1f), 0f, 1f) : 1f) * 15)
         );
 
         DynamicLightHandlers.registerDynamicLightHandler(PortalCubedEntities.EXPERIMENTAL_PORTAL, e -> 2);

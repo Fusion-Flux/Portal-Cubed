@@ -45,6 +45,10 @@
         "id": "fabric",
         "reason": "This mod uses QSL for its content, please use Quilted Fabric API instead of Fabric API to allow for this.",
         "unless": "quilted_fabric_api"
+      },
+      {
+        "id": "sodium",
+        "unless": "indium"
       }
     ],
 

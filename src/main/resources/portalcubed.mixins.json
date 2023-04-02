@@ -20,6 +20,7 @@
     "client.AbstractSoundInstanceAccessor",
     "client.BackgroundRendererMixin",
     "client.CameraMixin",
+    "client.ClientAdvancementManagerMixin",
     "client.ClientPlayerEntityMixin",
     "client.ClientPlayerInteractionManagerMixin",
     "client.ClientPlayNetworkHandlerMixin",
