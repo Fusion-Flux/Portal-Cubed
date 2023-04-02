@@ -85,6 +85,7 @@ public class PortalCubedClient implements ClientModInitializer {
         PortalCubedItems.PORTAL_GUN,
         PortalCubedItems.PORTAL_GUN_PRIMARY,
         PortalCubedItems.PORTAL_GUN_SECONDARY,
+        PortalCubedItems.PAINT_GUN,
         Items.AIR
     };
     public static final int ZOOM_TIME = 2;

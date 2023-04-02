@@ -1,10 +1,18 @@
 package com.fusionflux.portalcubed.mixin.client;
 
+import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.items.PaintGun;
 import com.fusionflux.portalcubed.items.PortalGun;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.KeyBind;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,6 +45,45 @@ public abstract class MinecraftClientMixin {
         if (player.getMainHandStack().getItem() instanceof PaintGun && options.attackKey.isPressed()) {
             doAttack();
         }
+    }
+
+    @WrapOperation(
+        method = "handleInputEvents",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/option/KeyBind;wasPressed()Z"
+        )
+    )
+    private boolean portalHudDisableKeys(KeyBind instance, Operation<Boolean> original) {
+        final boolean result = original.call(instance);
+        if (!PortalCubedClient.isPortalHudMode()) {
+            return result;
+        }
+        for (final KeyBind bind : options.hotbarKeys) {
+            if (instance == bind) {
+                return false;
+            }
+        }
+        if (
+            instance == options.inventoryKey ||
+                instance == options.swapHandsKey ||
+                instance == options.dropKey
+        ) {
+            return false;
+        }
+        return result;
+    }
+
+    @WrapOperation(
+        method = {"doAttack", "handleBlockBreaking"},
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/world/ClientWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;",
+            ordinal = 0
+        )
+    )
+    private BlockState noMineInPortalHud(ClientWorld instance, BlockPos pos, Operation<BlockState> original) {
+        return PortalCubedClient.isPortalHudMode() ? Blocks.AIR.getDefaultState() : original.call(instance, pos);
     }
 
 }
