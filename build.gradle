@@ -1,5 +1,5 @@
 plugins {
-	id 'org.quiltmc.loom' version '1.1.+'
+	id 'org.quiltmc.loom' version '1.0.+'
 	id 'org.ajoberstar.grgit' version '4.1.0'
 	id 'checkstyle'
 }
@@ -85,9 +85,7 @@ dependencies {
 
 	include modImplementation("maven.modrinth:midnightlib:1.0.0-quilt")
 
-	modCompileOnly "com.simibubi.create:create-fabric-1.19.2:0.5.0.i-961+1.19.2"
-	modCompileOnly "com.tterrag.registrate_fabric:Registrate:1.1.50-MC1.19.2" // *Only* for use in Create integration code
-
+	modCompileOnly "com.simibubi.create:create-fabric-1.19.2:0.5.0.i-930+1.19.2"
 	modCompileOnly "amymialee:visible-barriers:1.5.3+1.19.x"
 
 	include implementation("net.objecthunter:exp4j:0.4.8")
@@ -116,13 +114,6 @@ processResources {
 
 	filesMatching("quilt.mod.json") {
 		expand "version": project.version
-	}
-}
-
-configurations.configureEach {
-	resolutionStrategy.dependencySubstitution {
-		substitute(module("org.quiltmc.unpick:unpick-cli:3.0.1-SNAPSHOT"))
-				.using(module("org.quiltmc.unpick:unpick-cli:3.0.6"))
 	}
 }
 
