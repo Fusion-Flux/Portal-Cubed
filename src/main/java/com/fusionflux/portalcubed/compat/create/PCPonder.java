@@ -32,12 +32,7 @@ public class PCPonder {
     private static final boolean GENERATE_TRANSLATIONS = false;
 
     public static void register() {
-        HELPER.addStoryBoard(
-            id("auto_portal"),
-            "auto_portal",
-            PCPonder::autoPortal,
-            PORTAL_CUBED
-        );
+        HELPER.addStoryBoard(id("auto_portal"), "auto_portal", PCPonder::autoPortal, PORTAL_CUBED);
 
         if (GENERATE_TRANSLATIONS) {
             PonderLocalization.generateSceneLang();

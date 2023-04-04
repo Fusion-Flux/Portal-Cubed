@@ -85,7 +85,9 @@ dependencies {
 
 	include modImplementation("maven.modrinth:midnightlib:1.0.0-quilt")
 
-	modCompileOnly "com.simibubi.create:create-fabric-1.19.2:0.5.0.i-930+1.19.2"
+	modCompileOnly "com.simibubi.create:create-fabric-1.19.2:0.5.0.i-961+1.19.2"
+	modCompileOnly "com.tterrag.registrate_fabric:Registrate:1.1.50-MC1.19.2" // *Only* for use in Create integration code
+
 	modCompileOnly "amymialee:visible-barriers:1.5.3+1.19.x"
 
 	include implementation("net.objecthunter:exp4j:0.4.8")
