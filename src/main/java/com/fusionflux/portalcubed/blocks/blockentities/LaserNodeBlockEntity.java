@@ -96,13 +96,13 @@ public class LaserNodeBlockEntity extends BlockEntity {
 
     public static void tick(World world, BlockPos pos, BlockState state, LaserNodeBlockEntity blockEntity) {
         if (world.isClient) {
-            blockEntity.clientTick();
+            blockEntity.clientTick(state);
         }
     }
 
     @ClientOnly
-    protected void clientTick() {
-        if (musicInstance == null && world != null && world.getBlockState(pos).get(Properties.ENABLED)) {
+    protected void clientTick(BlockState state) {
+        if (musicInstance == null && world != null && state.get(Properties.ENABLED)) {
             // The sounds played here may actually be stereo, so we may need to handle our own fadeout
             musicInstance = new MovingSoundInstance(new SoundEvent(sound), SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
                 final Identifier soundId = LaserNodeBlockEntity.this.sound;
