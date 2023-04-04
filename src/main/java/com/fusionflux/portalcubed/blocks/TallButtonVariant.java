@@ -1,13 +1,12 @@
 package com.fusionflux.portalcubed.blocks;
 
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.WallMountedBlock;
 import net.minecraft.block.enums.WallMountLocation;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -19,6 +18,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -26,73 +26,94 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class TallButtonVariant extends WallMountedBlock {
-    public static final BooleanProperty POWERED;
-    protected static final VoxelShape CEILING_X_SHAPE;
-    protected static final VoxelShape CEILING_Z_SHAPE;
-    protected static final VoxelShape FLOOR_X_SHAPE;
-    protected static final VoxelShape FLOOR_Z_SHAPE;
-    protected static final VoxelShape NORTH_SHAPE;
-    protected static final VoxelShape SOUTH_SHAPE;
-    protected static final VoxelShape WEST_SHAPE;
-    protected static final VoxelShape EAST_SHAPE;
-    protected static final VoxelShape CEILING_X_PRESSED_SHAPE;
-    protected static final VoxelShape CEILING_Z_PRESSED_SHAPE;
-    protected static final VoxelShape FLOOR_X_PRESSED_SHAPE;
-    protected static final VoxelShape FLOOR_Z_PRESSED_SHAPE;
-    protected static final VoxelShape NORTH_PRESSED_SHAPE;
-    protected static final VoxelShape SOUTH_PRESSED_SHAPE;
-    protected static final VoxelShape WEST_PRESSED_SHAPE;
-    protected static final VoxelShape EAST_PRESSED_SHAPE;
-    private final boolean wooden;
+    public static final BooleanProperty POWERED = Properties.POWERED;
+    public static final BooleanProperty OFFSET = BooleanProperty.of("offset");
 
-    protected TallButtonVariant(boolean wooden, Settings settings) {
+    private static final VoxelShape[] CEILING_X_SHAPE = createShapePair(5.5, -4, 5.5, 10.5, 16, 10.5);
+    private static final VoxelShape[] CEILING_Z_SHAPE = createShapePair(5.5, -4, 5.5, 10.5, 16, 10.5);
+    private static final VoxelShape[] FLOOR_X_SHAPE = createShapePair(5.5, 0, 5.5, 10.5, 20, 10.5);
+    private static final VoxelShape[] FLOOR_Z_SHAPE = createShapePair(5.5, 0, 5.5, 10.5, 20, 10.5);
+    private static final VoxelShape[] NORTH_SHAPE = createShapePair(5.5, 5.5, -4, 10.5, 10.5, 16);
+    private static final VoxelShape[] SOUTH_SHAPE = createShapePair(5.5, 5.5, 0, 10.5, 10.5, 20);
+    private static final VoxelShape[] WEST_SHAPE = createShapePair(-4, 5.5, 5.5, 16, 10.5, 10.5);
+    private static final VoxelShape[] EAST_SHAPE = createShapePair(0, 5.5, 5.5, 20, 10.5, 10.5);
+
+    protected static final Map<BlockState, VoxelShape> SHAPE_CACHE = new HashMap<>();
+
+    protected TallButtonVariant(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false).with(FACE, WallMountLocation.WALL));
-        this.wooden = wooden;
+        setDefaultState(
+            stateManager.getDefaultState()
+                .with(FACING, Direction.NORTH)
+                .with(POWERED, false)
+                .with(FACE, WallMountLocation.WALL)
+                .with(OFFSET, false)
+        );
     }
 
     private int getPressTicks() {
-        return  20;
+        return 30;
+    }
+
+    private static VoxelShape[] createShapePair(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        return new VoxelShape[] {
+            createCuboidShape(minX, minY, minZ, maxX, maxY, maxZ),
+            createCuboidShape(
+                maybeShrink(minX), maybeShrink(minY), maybeShrink(minZ),
+                maybeShrink(maxX), maybeShrink(maxY), maybeShrink(maxZ)
+            )
+        };
+    }
+
+    private static double maybeShrink(double v) {
+        return v == 20 ? 18 : v == -4 ? -2 : v;
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction direction = state.get(FACING);
-        boolean bl = state.get(POWERED);
-        switch (state.get(FACE)) {
-            case FLOOR -> {
-                if (direction.getAxis() == Direction.Axis.X) {
-                    return bl ? FLOOR_X_PRESSED_SHAPE : FLOOR_X_SHAPE;
-                }
-                return bl ? FLOOR_Z_PRESSED_SHAPE : FLOOR_Z_SHAPE;
+        final VoxelShape[] baseShape = getBaseShape(state);
+        VoxelShape shape = SHAPE_CACHE.get(state);
+        if (shape == null) {
+            if (state.get(OFFSET)) {
+                final Vec3d offsetDir = Vec3d.of(getOffsetDir(state).getVector()).multiply(0.25);
+                shape = baseShape[1].offset(offsetDir.x, offsetDir.y, offsetDir.z);
+            } else {
+                shape = baseShape[0];
             }
-            case WALL -> {
-                return switch (direction) {
-                    case EAST -> bl ? EAST_PRESSED_SHAPE : EAST_SHAPE;
-                    case WEST -> bl ? WEST_PRESSED_SHAPE : WEST_SHAPE;
-                    case SOUTH -> bl ? SOUTH_PRESSED_SHAPE : SOUTH_SHAPE;
-                    default -> bl ? NORTH_PRESSED_SHAPE : NORTH_SHAPE;
-                };
-            }
-            default -> {
-                if (direction.getAxis() == Direction.Axis.X) {
-                    return bl ? CEILING_X_PRESSED_SHAPE : CEILING_X_SHAPE;
-                } else {
-                    return bl ? CEILING_Z_PRESSED_SHAPE : CEILING_Z_SHAPE;
-                }
-            }
+            SHAPE_CACHE.put(state, shape);
         }
+        return shape;
+    }
+
+    private VoxelShape[] getBaseShape(BlockState state) {
+        Direction direction = state.get(FACING);
+        return switch (state.get(FACE)) {
+            case FLOOR -> direction.getAxis() == Direction.Axis.X ? FLOOR_X_SHAPE : FLOOR_Z_SHAPE;
+            case WALL -> switch (direction) {
+                case EAST -> EAST_SHAPE;
+                case WEST -> WEST_SHAPE;
+                case SOUTH -> SOUTH_SHAPE;
+                case NORTH -> NORTH_SHAPE;
+                default -> throw new AssertionError();
+            };
+            case CEILING -> direction.getAxis() == Direction.Axis.X ? CEILING_X_SHAPE : CEILING_Z_SHAPE;
+        };
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (player.getStackInHand(hand).isOf(PortalCubedItems.HAMMER)) {
+            world.setBlockState(pos, state.cycle(OFFSET));
+            return ActionResult.success(world.isClient);
+        }
         if (state.get(POWERED)) {
-            return ActionResult.CONSUME;
+            return ActionResult.PASS;
         } else {
             this.powerOn(state, world, pos);
             this.playClickSound(player, world, pos, true);
@@ -107,10 +128,10 @@ public abstract class TallButtonVariant extends WallMountedBlock {
     }
 
     protected void playClickSound(@Nullable PlayerEntity player, WorldAccess world, BlockPos pos, boolean powered) {
-        world.playSound(powered ? player : null, pos, this.getClickSound(powered), SoundCategory.BLOCKS, 0.3F, powered ? 0.6F : 0.5F);
+        world.playSound(powered ? player : null, pos, this.getClickSound(powered), SoundCategory.BLOCKS, 0.8f, 1f);
     }
 
-    protected abstract SoundEvent getClickSound(boolean powered);
+    public abstract SoundEvent getClickSound(boolean powered);
 
     @Override
     @SuppressWarnings("deprecation")
@@ -146,39 +167,10 @@ public abstract class TallButtonVariant extends WallMountedBlock {
     @SuppressWarnings("deprecation")
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
         if (state.get(POWERED)) {
-            if (this.wooden) {
-                this.tryPowerWithProjectiles(state, world, pos);
-            } else {
-                world.setBlockState(pos, state.with(POWERED, false), 3);
-                this.updateNeighbors(state, world, pos);
-                this.playClickSound(null, world, pos, false);
-            }
-
-        }
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!world.isClient && this.wooden && !(Boolean)state.get(POWERED)) {
-            this.tryPowerWithProjectiles(state, world, pos);
-        }
-    }
-
-    private void tryPowerWithProjectiles(BlockState state, World world, BlockPos pos) {
-        List<? extends Entity> list = world.getNonSpectatingEntities(PersistentProjectileEntity.class, state.getOutlineShape(world, pos).getBoundingBox().offset(pos));
-        boolean bl = !list.isEmpty();
-        boolean bl2 = state.get(POWERED);
-        if (bl != bl2) {
-            world.setBlockState(pos, state.with(POWERED, bl), 3);
+            world.setBlockState(pos, state.with(POWERED, false), 3);
             this.updateNeighbors(state, world, pos);
-            this.playClickSound(null, world, pos, bl);
+            this.playClickSound(null, world, pos, false);
         }
-
-        if (bl) {
-            world.scheduleBlockTick(new BlockPos(pos), this, this.getPressTicks());
-        }
-
     }
 
     private void updateNeighbors(BlockState state, World world, BlockPos pos) {
@@ -188,26 +180,14 @@ public abstract class TallButtonVariant extends WallMountedBlock {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POWERED, FACE);
+        builder.add(FACING, POWERED, FACE, OFFSET);
     }
 
-    static {
-        POWERED = Properties.POWERED;
-        CEILING_X_SHAPE = Block.createCuboidShape(5.5D, -4.0D, 5.5D, 10.5D, 16.0D, 10.5D);
-        CEILING_Z_SHAPE = Block.createCuboidShape(5.5D, -4.0D, 5.5D, 10.5D, 16.0D, 10.5D);
-        FLOOR_X_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 20.0D, 10.5D);
-        FLOOR_Z_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 20.0D, 10.5D);
-        NORTH_SHAPE = Block.createCuboidShape(5.5D, 5.5D, -4.0D, 10.5D, 10.5D, 16.0D);
-        SOUTH_SHAPE = Block.createCuboidShape(5.5D, 5.5D, 0.0D, 10.5D, 10.5D, 20.0D);
-        WEST_SHAPE = Block.createCuboidShape(-4.0D, 5.5D, 5.5D, 16.0D, 10.5D, 10.5D);
-        EAST_SHAPE = Block.createCuboidShape(0.0D, 5.5D, 5.5D, 20.0D, 10.5D, 10.5D);
-        CEILING_X_PRESSED_SHAPE = Block.createCuboidShape(5.5D, -4.0D, 5.5D, 10.5D, 16.0D, 10.5D);
-        CEILING_Z_PRESSED_SHAPE = Block.createCuboidShape(5.5D, -4.0D, 5.5D, 10.5D, 16.0D, 10.5D);
-        FLOOR_X_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 20.0D, 10.5D);
-        FLOOR_Z_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 0.0D, 5.5D, 10.5D, 20.0D, 10.5D);
-        NORTH_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 5.5D, -4.0D, 10.5D, 10.5D, 16.0D);
-        SOUTH_PRESSED_SHAPE = Block.createCuboidShape(5.5D, 5.5D, 0.0D, 10.5D, 10.5D, 20.0D);
-        WEST_PRESSED_SHAPE = Block.createCuboidShape(-4.0D, 5.5D, 5.5D, 16.0D, 10.5D, 10.5D);
-        EAST_PRESSED_SHAPE = Block.createCuboidShape(0.0D, 5.5D, 5.5D, 20.0D, 10.5D, 10.5D);
+    public static Direction getOffsetDir(BlockState state) {
+        if (state.get(FACE) == WallMountLocation.WALL) {
+            return Direction.UP;
+        }
+        return state.get(FACING);
     }
+
 }

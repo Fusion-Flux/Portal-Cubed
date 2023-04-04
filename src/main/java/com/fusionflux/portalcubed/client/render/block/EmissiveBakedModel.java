@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.client.render.block;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
@@ -43,9 +43,21 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
         return Optional.empty();
     }
 
-
-    @SuppressWarnings("DataFlowIssue")
-    private static final MaterialFinder MATERIAL_FINDER = RendererAccess.INSTANCE.getRenderer().materialFinder();
+    private static final RenderMaterial DEFAULT_MATERIAL = RendererAccess.INSTANCE.getRenderer().materialById(RenderMaterial.MATERIAL_STANDARD);
+    private static final RenderMaterial[] EMISSIVE_MATERIALS;
+    static {
+        BlendMode[] blendModes = BlendMode.values();
+        EMISSIVE_MATERIALS = new RenderMaterial[blendModes.length];
+        final var materialFinder = RendererAccess.INSTANCE.getRenderer().materialFinder();
+        for (BlendMode blendMode : blendModes) {
+            EMISSIVE_MATERIALS[blendMode.ordinal()] = materialFinder
+                .emissive(0, true)
+                .disableDiffuse(0, true)
+                .disableAo(0, true)
+                .blendMode(0, blendMode)
+                .find();
+        }
+    }
 
     private Pair<BlockState, Mesh> cachedMesh = Pair.of(null, null);
 
@@ -89,18 +101,14 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
 
             for (BakedQuad quad : quads) {
                 boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().getId());
-                MATERIAL_FINDER.emissive(0, isQuadEmissive);
-                MATERIAL_FINDER.disableDiffuse(0, isQuadEmissive);
-                MATERIAL_FINDER.disableAo(0, isQuadEmissive);
 
                 BlendMode blendMode = BlendMode.DEFAULT;
                 if (state != null) {
                     blendMode = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(state));
                     if (blendMode == BlendMode.SOLID) blendMode = BlendMode.CUTOUT_MIPPED;
                 }
-                MATERIAL_FINDER.blendMode(0, blendMode);
 
-                emitter.fromVanilla(quad, MATERIAL_FINDER.find(), cullFace);
+                emitter.fromVanilla(quad, isQuadEmissive ? EMISSIVE_MATERIALS[blendMode.ordinal()] : DEFAULT_MATERIAL, cullFace);
                 emitter.cullFace(cullFace);
                 emitter.emit();
             }

@@ -4,16 +4,16 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.MoralityCoreEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class MoralityCoreModel extends FizzleableModel<MoralityCoreEntity> {
-    public static final EntityModelLayer MORTALITY_CORE_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "mortality_core"), "main");
+    public static final EntityModelLayer MORTALITY_CORE_LAYER = new EntityModelLayer(id("mortality_core"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 

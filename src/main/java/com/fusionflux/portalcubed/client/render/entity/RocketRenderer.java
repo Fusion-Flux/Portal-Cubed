@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.client.render.block.entity.RocketTurretModel;
 import com.fusionflux.portalcubed.client.render.entity.model.RocketModel;
 import com.fusionflux.portalcubed.entity.RocketEntity;
@@ -16,8 +15,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 public class RocketRenderer extends EntityRenderer<RocketEntity> {
-    public static final EntityModelLayer ROCKET_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "rocket"), "main");
+    public static final EntityModelLayer ROCKET_LAYER = new EntityModelLayer(id("rocket"), "main");
 
     private final RocketModel model;
 
@@ -35,7 +36,7 @@ public class RocketRenderer extends EntityRenderer<RocketEntity> {
         final float yaw = MathHelper.lerpAngleDegrees(tickDelta, entity.prevYaw, entity.getYaw());
         final float pitch = MathHelper.lerpAngleDegrees(tickDelta, entity.prevPitch, entity.getPitch());
 
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(2 * pitch));
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-pitch));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180 - yaw));
         matrices.scale(-1, -1, 1);
         matrices.translate(0.0, -1.501, 0.0);

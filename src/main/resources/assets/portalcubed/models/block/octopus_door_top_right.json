@@ -4,7 +4,8 @@
 	"textures": {
 		"0": "portalcubed:block/octopus_door",
 		"1": "portalcubed:block/octopus_door_e",
-		"particle": "portalcubed:block/padded_gray_panel"	},
+		"particle": "portalcubed:block/padded_gray_panel"
+	},
 	"elements": [
 		{
 			"from": [1, 0, 0],

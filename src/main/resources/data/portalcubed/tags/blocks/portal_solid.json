@@ -6,6 +6,27 @@
     "portalcubed:old_aperture_fizzler",
     "portalcubed:death_fizzler",
     "portalcubed:old_aperture_death_fizzler",
-    "portalcubed:matter_inquisition_field"
+    "portalcubed:matter_inquisition_field",
+    "portalcubed:toxic_goo",
+    "portalcubed:portal_1_smooth_gray_panel_facade",
+    "portalcubed:portal_1_smooth_gray_half_panel_facade",
+    "portalcubed:portal_1_smooth_tile_facade",
+    "portalcubed:smooth_gray_panel_facade",
+    "portalcubed:smooth_gray_half_panel_facade",
+    "portalcubed:padded_gray_panel_facade",
+    "portalcubed:padded_gray_half_panel_facade",
+    "portalcubed:aged_smooth_gray_panel_facade",
+    "portalcubed:aged_smooth_gray_half_panel_facade",
+    "portalcubed:aged_padded_gray_panel_facade",
+    "portalcubed:aged_padded_gray_half_panel_facade",
+    "portalcubed:portal_1_rusted_plating_facade",
+    "portalcubed:portal_1_rusted_tread_plating_side_facade",
+    "portalcubed:portal_1_rusted_tread_plating_top_facade",
+    "portalcubed:exposed_panel_facade",
+    "portalcubed:partially_exposed_panel_facade",
+    "portalcubed:insulation_facade",
+    "portalcubed:old_ap_green_panel_facade",
+    "portalcubed:old_ap_blue_panel_facade"
+
   ]
 }

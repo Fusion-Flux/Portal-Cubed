@@ -1,8 +1,9 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.blocks.GelFlat;
+import com.fusionflux.portalcubed.blocks.BaseGel;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import net.minecraft.block.AbstractLichenBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,6 +17,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.BooleanProperty;
@@ -27,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -161,6 +164,15 @@ public abstract class GelBlobEntity extends ProjectileEntity {
         if (hitResult.getType() == HitResult.Type.MISS) return;
         kill();
         if (!world.isClient) {
+            if (hitResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof ServerPlayerEntity serverPlayer) {
+                final PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeIdentifier(Registry.BLOCK.getId(getGel()));
+                ServerPlayNetworking.send(
+                    serverPlayer,
+                    PortalCubedClientPackets.GEL_OVERLAY_PACKET,
+                    buf
+                );
+            }
             explode();
         }
     }
@@ -176,14 +188,17 @@ public abstract class GelBlobEntity extends ProjectileEntity {
 
     public void explode() {
         world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.GEL_SPLAT_EVENT, SoundCategory.NEUTRAL, 0.5f, 1f);
+        final PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeIdentifier(Registry.BLOCK.getId(getGel()));
+        final int overlayDiameter = getSize() + 1;
         world.getEntitiesByType(
             EntityType.PLAYER,
-            Box.of(getPos(), 1, 1, 1),
+            Box.of(getPos(), overlayDiameter, overlayDiameter, overlayDiameter),
             p -> p instanceof ServerPlayerEntity
         ).forEach(p -> ServerPlayNetworking.send(
             (ServerPlayerEntity)p,
             PortalCubedClientPackets.GEL_OVERLAY_PACKET,
-            PacketByteBufs.create()
+            buf
         ));
         final int radius = getExplosionRadius();
         final Vec3d origin = getBoundingBox().getCenter();
@@ -216,10 +231,10 @@ public abstract class GelBlobEntity extends ProjectileEntity {
         if (!hitState.isSideSolidFullSquare(world, hit.getBlockPos(), hit.getSide())) return;
         final BlockPos sidePos = hit.getBlockPos().offset(hit.getSide());
         final BlockState sideState = world.getBlockState(sidePos);
-        final BooleanProperty property = GelFlat.getFacingProperty(hit.getSide().getOpposite());
+        final BooleanProperty property = AbstractLichenBlock.getProperty(hit.getSide().getOpposite());
         if (sideState.isOf(getGel())) {
             world.setBlockState(sidePos, sideState.with(property, true));
-        } else if (sideState.getMaterial().isReplaceable() || sideState.getBlock() instanceof GelFlat) {
+        } else if (sideState.getMaterial().isReplaceable() || sideState.getBlock() instanceof BaseGel) {
             world.setBlockState(sidePos, getGel().getDefaultState().with(property, true));
         }
     }
@@ -238,5 +253,5 @@ public abstract class GelBlobEntity extends ProjectileEntity {
 
     public abstract Identifier getTexture();
 
-    public abstract GelFlat getGel();
+    public abstract BaseGel getGel();
 }

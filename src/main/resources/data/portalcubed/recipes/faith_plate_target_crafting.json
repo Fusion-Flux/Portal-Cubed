@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " X ",
+        "XYX",
+        " X "
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:cyan_dye"
+        },
+        "Y": {
+            "item": "minecraft:paper"
+        }
+    },
+    "result": {
+        "item": "portalcubed:faith_plate_target",
+        "count": 4
+    }
+}

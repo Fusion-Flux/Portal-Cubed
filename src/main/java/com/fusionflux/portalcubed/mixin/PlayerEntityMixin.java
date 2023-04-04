@@ -1,18 +1,19 @@
 package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.PortalCubedGameRules;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.MixinPCClientAccessor;
+import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,6 +29,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,7 +42,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements EntityAttachments {
@@ -74,11 +79,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void portalCubed$letYouFallLonger(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         ItemStack itemStack5 = this.getEquippedStack(EquipmentSlot.FEET);
-        if (damageSource == DamageSource.FALL && (itemStack5.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS))) {
+        if (damageSource == DamageSource.FALL && (itemStack5.isOf(PortalCubedItems.LONG_FALL_BOOTS))) {
             cir.setReturnValue(true);
         }
     }
-
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3d portalCubed$what(Vec3d travelVectorOriginal) {
         if (!this.hasNoGravity()) {
@@ -171,64 +175,70 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
 
 
             List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
-            ExperimentalPortal portal;
+
+            Set<ExperimentalPortal> possiblePortals = new HashSet<>();
+
+
             for (ExperimentalPortal portalCheck : list) {
-                portal = portalCheck;
-                if (this.canUsePortals() && portal.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
-                    Direction portalFacing = portal.getFacingDirection();
-                    Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
-
+                if (this.canUsePortals() && portalCheck.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
+                    Direction portalFacing = portalCheck.getFacingDirection();
+                    Direction otherDirec = Direction.fromVector((int) portalCheck.getOtherFacing().getX(), (int) portalCheck.getOtherFacing().getY(), (int) portalCheck.getOtherFacing().getZ());
                     if (otherDirec != null) {
-
+                        entityVelocity = thisEntity.getVelocity();
 
                         if (thisEntity.hasNoDrag()) {
                             entityVelocity = entityVelocity.add(0, .08, 0);
                         } else {
                             entityVelocity = entityVelocity.add(0, .08 * .98, 0);
                         }
-
                         Vec3d entityEyePos = thisEntity.getEyePos();
-
                         if (portalFacing.getUnitVector().getX() < 0) {
-                            if (entityEyePos.getX() >= portal.getPos().getX() && entityVelocity.getX() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
+                            if (entityEyePos.getX() + entityVelocity.x >= portalCheck.getPos().getX() && entityVelocity.getX() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(portalCheck);
                             }
                         }
                         if (portalFacing.getUnitVector().getY() < 0) {
-                            if (entityEyePos.getY() >= portal.getPos().getY() && entityVelocity.getY() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
+                            if (entityEyePos.getY() + entityVelocity.y >= portalCheck.getPos().getY() && entityVelocity.getY() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(portalCheck);
                             }
                         }
                         if (portalFacing.getUnitVector().getZ() < 0) {
-                            if (entityEyePos.getZ() >= portal.getPos().getZ() && entityVelocity.getZ() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
+                            if (entityEyePos.getZ() + entityVelocity.z >= portalCheck.getPos().getZ() && entityVelocity.getZ() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(portalCheck);
                             }
                         }
                         if (portalFacing.getUnitVector().getX() > 0) {
-                            if (entityEyePos.getX() <= portal.getPos().getX() && entityVelocity.getX() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
+                            if (entityEyePos.getX() + entityVelocity.x <= portalCheck.getPos().getX() && entityVelocity.getX() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(portalCheck);
                             }
                         }
                         if (portalFacing.getUnitVector().getY() > 0) {
-                            if (entityEyePos.getY() <= portal.getPos().getY() && entityVelocity.getY() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
+                            if (entityEyePos.getY() + entityVelocity.y <= portalCheck.getPos().getY() && entityVelocity.getY() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(portalCheck);
                             }
                         }
                         if (portalFacing.getUnitVector().getZ() > 0) {
-                            if (entityEyePos.getZ() <= portal.getPos().getZ() && entityVelocity.getZ() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
+                            if (entityEyePos.getZ() + entityVelocity.z <= portalCheck.getPos().getZ() && entityVelocity.getZ() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(portalCheck);
                             }
                         }
 
                     }
                 }
             }
+            ExperimentalPortal portal = null;
+            double distance = 100;
+            for (ExperimentalPortal portals : possiblePortals) {
+                double checkDistance = portals.getPos().distanceTo(thisEntity.getBoundingBox().getCenter());
+                if (checkDistance < distance) {
+                    distance = checkDistance;
+                    portal = portals;
+                }
+            }
+            if (portal != null) {
+                performTeleport(thisEntity, portal, entityVelocity);
+            }
+
         }
     }
 
@@ -238,18 +248,27 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
             Vec3d entityVelocity
     ) {
         if (this.world.isClient && thisEntity.isMainPlayer()) {
+            Vec3d invert = (portal.getNormal().multiply(portal.getNormal())).multiply(-1);
+            if (invert.x != 0) {
+                invert = invert.add(0, 1, 1);
+            } else if (invert.y != 0) {
+                invert = invert.add(1, 0, 1);
+            } else if (invert.z != 0) {
+                invert = invert.add(1, 1, 0);
+            }
             var byteBuf = PacketByteBufs.create();
             byteBuf.writeVarInt(portal.getId());
-            byteBuf.writeFloat(this.getYaw());
+            byteBuf.writeFloat(thisEntity.getYaw());
             byteBuf.writeFloat(thisEntity.getPitch());
             byteBuf.writeDouble(entityVelocity.x);
             byteBuf.writeDouble(entityVelocity.y);
             byteBuf.writeDouble(entityVelocity.z);
-            byteBuf.writeDouble((thisEntity.getEyePos().getX()) - portal.getPos().getX());
-            byteBuf.writeDouble((thisEntity.getEyePos().getY()) - portal.getPos().getY());
-            byteBuf.writeDouble((thisEntity.getEyePos().getZ()) - portal.getPos().getZ());
+            byteBuf.writeDouble(((thisEntity.getEyePos().getX()) - portal.getPos().getX()) * invert.x);
+            byteBuf.writeDouble(((thisEntity.getEyePos().getY()) - portal.getPos().getY()) * invert.y);
+            byteBuf.writeDouble(((thisEntity.getEyePos().getZ()) - portal.getPos().getZ()) * invert.z);
             NetworkingSafetyWrapper.sendFromClient("use_portal", byteBuf);
             CalledValues.setIsTeleporting(thisEntity, true);
+            thisEntity.setVelocity(0, 0, 0);
         }
     }
 
@@ -284,8 +303,24 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EntityAt
     public void setCFG() {
         cfg = true;
     }
+
+    @WrapOperation(
+        method = "updatePose",
+        at = @At(
+            value = "FIELD",
+            target = "Lnet/minecraft/entity/EntityPose;CROUCHING:Lnet/minecraft/entity/EntityPose;",
+            opcode = Opcodes.GETSTATIC
+        )
+    )
+    private EntityPose playerCrouching(Operation<EntityPose> original) {
+        if (world.getGameRules().get(PortalCubedGameRules.USE_PORTAL_HUD).get() || (world.isClient && isPortalHudModeServerClient())) {
+            return EntityPose.SWIMMING;
+        }
+        return original.call();
+    }
+
+    @ClientOnly
+    private boolean isPortalHudModeServerClient() {
+        return PortalCubedClient.isPortalHudModeServer();
+    }
 }
-
-
-
-

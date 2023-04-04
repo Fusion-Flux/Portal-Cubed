@@ -1,0 +1,16 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "portalcubed:block/reflection_gel",
+		"reflection_gel": "portalcubed:block/reflection_gel"
+	},
+	"elements": [
+		{   "from": [ 0, 0, 0.1 ],
+			"to": [ 16, 16, 0.1 ],
+			"faces": {
+				"north": { "uv": [ 0, 0, 16, 16 ], "texture": "#reflection_gel" },
+				"south": { "uv": [ 0, 0, 16, 16 ], "texture": "#reflection_gel" }
+			}
+		}
+	]
+}

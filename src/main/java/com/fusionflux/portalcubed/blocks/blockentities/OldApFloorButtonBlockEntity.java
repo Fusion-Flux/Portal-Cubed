@@ -2,15 +2,14 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.OldApCubeEntity;
-import com.fusionflux.portalcubed.entity.Portal1CompanionCubeEntity;
-import com.fusionflux.portalcubed.entity.Portal1StorageCubeEntity;
-import com.fusionflux.portalcubed.entity.StorageCubeEntity;
+import com.fusionflux.portalcubed.entity.*;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -47,12 +46,24 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
             boolean isPowered = false;
             for (LivingEntity living : entities) {
                 if (living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity) {
-                    isPowered = true;
-                    break;
+                    if (living instanceof CorePhysicsEntity physicsEntity) {
+                        if (physicsEntity.fizzling()) {
+                            physicsEntity.addVelocity(0, 0.015, 0);
+                        } else {
+                            isPowered = true;
+                            if (living instanceof StorageCubeEntity cube) {
+                                cube.setButtonTimer(1);
+                            }
+                        }
+                    } else {
+                        isPowered = true;
+                    }
                 }
             }
 
-            blockEntity.updateState(state, isPowered);
+            if (state.get(Properties.ENABLED) != isPowered) {
+                blockEntity.updateState(state, isPowered);
+            }
 
         }
 
@@ -62,6 +73,13 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
     public void updateState(BlockState state, boolean toggle) {
         if (world != null) {
             world.setBlockState(pos, state.with(Properties.ENABLED, toggle), 3);
+            if (!world.isClient) {
+                world.playSound(
+                    null, pos,
+                    toggle ? PortalCubedSounds.OLD_AP_FLOOR_BUTTON_PRESS_EVENT : PortalCubedSounds.OLD_AP_FLOOR_BUTTON_RELEASE_EVENT,
+                    SoundCategory.BLOCKS, 0.8f, 1f
+                );
+            }
         }
     }
 

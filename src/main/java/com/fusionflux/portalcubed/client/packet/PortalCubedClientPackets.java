@@ -5,25 +5,39 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.entity.Fizzleable;
+import com.fusionflux.portalcubed.fog.FogSettings;
+import com.fusionflux.portalcubed.listeners.ServerAnimatable;
+import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.AnimationState;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 
 public class PortalCubedClientPackets {
-    public static final Identifier FIZZLE_PACKET = new Identifier(PortalCubed.MOD_ID, "fizzle");
-    public static final Identifier HAND_SHAKE_PACKET = new Identifier(PortalCubed.MOD_ID, "hand_shake");
-    public static final Identifier GEL_OVERLAY_PACKET = new Identifier(PortalCubed.MOD_ID, "gel_overlay");
-    public static final Identifier ROCKET_TURRET_UPDATE_PACKET = new Identifier(PortalCubed.MOD_ID, "rocket_turret_update");
-    public static final Identifier ENABLE_CFG = new Identifier(PortalCubed.MOD_ID, "enable_cfg");
+    public static final Identifier FIZZLE_PACKET = id("fizzle");
+    public static final Identifier HAND_SHAKE_PACKET = id("hand_shake");
+    public static final Identifier GEL_OVERLAY_PACKET = id("gel_overlay");
+    public static final Identifier ROCKET_TURRET_UPDATE_PACKET = id("rocket_turret_update");
+    public static final Identifier ENABLE_CFG = id("enable_cfg");
+    public static final Identifier ENABLE_PORTAL_HUD = id("enable_portal_hud");
+    public static final Identifier REFRESH_POS = id("refresh_pos");
+    public static final Identifier SERVER_ANIMATE = id("server_animate");
+    public static final Identifier SET_CUSTOM_FOG = id("set_custom_fog");
 
     @ClientOnly
     public static void registerPackets() {
@@ -32,17 +46,25 @@ public class PortalCubedClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(GEL_OVERLAY_PACKET, PortalCubedClientPackets::onGelOverlay);
         ClientPlayNetworking.registerGlobalReceiver(ROCKET_TURRET_UPDATE_PACKET, PortalCubedClientPackets::onRocketTurretUpdate);
         ClientPlayNetworking.registerGlobalReceiver(ENABLE_CFG, PortalCubedClientPackets::onEnableCfg);
+        ClientPlayNetworking.registerGlobalReceiver(ENABLE_PORTAL_HUD, PortalCubedClientPackets::onEnablePortalHud);
+        ClientPlayNetworking.registerGlobalReceiver(REFRESH_POS, PortalCubedClientPackets::onRefreshPos);
+        ClientPlayNetworking.registerGlobalReceiver(SERVER_ANIMATE, PortalCubedClientPackets::onServerAnimate);
+        ClientPlayNetworking.registerGlobalReceiver(SET_CUSTOM_FOG, PortalCubedClientPackets::onSetCustomFog);
     }
 
     @ClientOnly
     public static void onFizzle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         final int entityId = buf.readVarInt();
         client.execute(() -> {
-            if (client.world.getEntityById(entityId) instanceof CorePhysicsEntity physicsEntity) {
-                physicsEntity.getHolderUUID().ifPresent(value -> {
-                    if (client.player.getUuid().equals(value)) PortalCubedComponents.HOLDER_COMPONENT.get(client.player).stopHolding();
-                });
-                physicsEntity.startFizzlingProgress();
+            assert client.world != null;
+            final Entity entity = client.world.getEntityById(entityId);
+            if (entity instanceof Fizzleable fizzleable) {
+                fizzleable.startFizzlingProgress();
+            }
+            assert client.player != null;
+            if (entity instanceof CorePhysicsEntity prop && client.player.getUuid().equals(prop.getHolderUUID().orElse(null))) {
+                PortalCubedComponents.HOLDER_COMPONENT.get(client.player).stopHolding();
+                ClientPlayNetworking.send(PortalCubedServerPackets.GRAB_KEY_PRESSED, PacketByteBufs.create());
             }
         });
     }
@@ -54,7 +76,11 @@ public class PortalCubedClientPackets {
 
     @ClientOnly
     public static void onGelOverlay(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        // TODO: Implement
+        final Identifier blockId = buf.readIdentifier();
+        PortalCubedClient.gelOverlayTimer = 0;
+        PortalCubedClient.gelOverlayTexture = new Identifier(
+            blockId.getNamespace(), "textures/block/" + blockId.getPath() + ".png"
+        );
     }
 
     @ClientOnly
@@ -90,4 +116,50 @@ public class PortalCubedClientPackets {
         PortalCubedClient.allowCfg = buf.readBoolean();
     }
 
+    @ClientOnly
+    public static void onEnablePortalHud(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        PortalCubedClient.setPortalHudMode(buf.readBoolean());
+    }
+
+    @ClientOnly
+    public static void onRefreshPos(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        final int entityId = buf.readVarInt();
+        final double x = buf.readDouble();
+        final double y = buf.readDouble();
+        final double z = buf.readDouble();
+        final float yaw = buf.readFloat();
+        final float pitch = buf.readFloat();
+        client.execute(() -> {
+            assert client.world != null;
+            final Entity entity = client.world.getEntityById(entityId);
+            if (entity != null) {
+                entity.refreshPositionAndAngles(x, y, z, yaw, pitch);
+            }
+        });
+    }
+
+    @ClientOnly
+    public static void onServerAnimate(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        final BlockPos pos = buf.readBlockPos();
+        final String animation = buf.readString();
+        client.execute(() -> {
+            assert client.world != null;
+            final BlockEntity blockEntity = client.world.getBlockEntity(pos);
+            AnimationState state = null;
+            if (blockEntity instanceof ServerAnimatable serverAnimatable) {
+                state = serverAnimatable.getAnimation(animation);
+            }
+            if (state != null) {
+                // state can only ever be non-null if blockEntity instanceof ServerAnimatable
+                state.restart(((ServerAnimatable)blockEntity).getAge());
+            } else {
+                PortalCubed.LOGGER.warn("Unknown animation from {}: {} for {}", SERVER_ANIMATE, animation, blockEntity);
+            }
+        });
+    }
+
+    @ClientOnly
+    public static void onSetCustomFog(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+        PortalCubedClient.customFog = FogSettings.decodeOptional(buf);
+    }
 }

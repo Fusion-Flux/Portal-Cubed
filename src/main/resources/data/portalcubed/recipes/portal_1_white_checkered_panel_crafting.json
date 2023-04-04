@@ -6,10 +6,10 @@
     ],
     "key": {
         "X": {
-            "item": "portalcubed:portal_1_white_panel"
+            "item": "portalcubed:portal_1_white_half_panel"
         },
         "Y": {
-            "item": "minecraft:gray_dye"
+            "item": "minecraft:light_gray_dye"
         }
     },
     "result": {

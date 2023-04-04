@@ -4,16 +4,16 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.ComputerEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class ComputerModel extends FizzleableModel<ComputerEntity> {
-    public static final EntityModelLayer COMPUTER_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "computer"), "main");
+    public static final EntityModelLayer COMPUTER_LAYER = new EntityModelLayer(id("computer"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 

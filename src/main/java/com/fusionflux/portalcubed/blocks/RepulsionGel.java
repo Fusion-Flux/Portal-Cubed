@@ -2,27 +2,23 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
-import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class RepulsionGel extends GelFlat {
+public class RepulsionGel extends BaseGel {
 
     public RepulsionGel(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
     }
-
 
     @Override
     @SuppressWarnings("deprecation")
@@ -66,8 +62,6 @@ public class RepulsionGel extends GelFlat {
             result = result.add(0, 2, 0);
         }
 
-
-
         return result;
     }
 
@@ -84,9 +78,10 @@ public class RepulsionGel extends GelFlat {
         if (!entity.bypassesLandingEffects()) {
             final boolean jumping = entity instanceof LivingEntityAccessor living && living.isJumping();
             if (entity.verticalCollision || jumping) {
-                if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.getY() < 0 || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6 || jumping)) {
+                final boolean speedGel = Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6;
+                if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.getY() < 0 || speedGel || jumping)) {
                     double fall = ((EntityAttachments) entity).getMaxFallHeight();
-                    if (fall != rotatedPos.y || Math.abs(vec3d.getX()) + Math.abs(vec3d.getZ()) > 0.6) {
+                    if (fall != rotatedPos.y || speedGel) {
 
                         fall = fall - rotatedPos.y;
                         if (fall < 5) {
@@ -96,12 +91,15 @@ public class RepulsionGel extends GelFlat {
                         entity.setOnGround(false);
                         entity.setVelocity(vec3d.x, velocity, vec3d.z);
                         ((EntityAttachments) entity).setMaxFallHeight(rotatedPos.y);
-                        world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                        PortalCubed.playBounceSound(entity);
+                        if (entity instanceof PlayerEntity && world.isClient && (jumping || speedGel)) {
+                            PortalCubed.playBounceSoundRemotely();
+                        }
                     }
                 }
                 if (direction.y == 1 || Math.abs(direction.y) == 2 && vec3dLast.getY() > 0) {
                     entity.setVelocity(vec3d.x, -vec3dLast.y, vec3d.z);
-                    world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    PortalCubed.playBounceSound(entity);
                 }
             }
 
@@ -130,7 +128,7 @@ public class RepulsionGel extends GelFlat {
                         }
                     }
 
-                    world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    PortalCubed.playBounceSound(entity);
                 }
                 if (direction.z == 1 || Math.abs(direction.z) == 2 && vec3dLast.getZ() > 0) {
                     if (Math.abs(vec3dLast.z) < defaultVelocity) {
@@ -151,7 +149,7 @@ public class RepulsionGel extends GelFlat {
                             ((EntityAttachments)entity).setMaxFallHeight(rotatedPos.y);
                         }
                     }
-                    world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    PortalCubed.playBounceSound(entity);
                 }
                 if (direction.x == 1 || Math.abs(direction.x) == 2 && vec3dLast.getX() > 0) {
 
@@ -173,7 +171,7 @@ public class RepulsionGel extends GelFlat {
                             ((EntityAttachments)entity).setMaxFallHeight(rotatedPos.y);
                         }
                     }
-                    world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    PortalCubed.playBounceSound(entity);
                 }
                 if (direction.x == -1 || Math.abs(direction.x) == 2 && vec3dLast.getX() < 0) {
                     if (Math.abs(vec3dLast.x) < defaultVelocity) {
@@ -194,7 +192,7 @@ public class RepulsionGel extends GelFlat {
                             ((EntityAttachments)entity).setMaxFallHeight(rotatedPos.y);
                         }
                     }
-                    world.playSound(null, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS, .3F, 1F);
+                    PortalCubed.playBounceSound(entity);
                 }
             }
         }
@@ -207,15 +205,5 @@ public class RepulsionGel extends GelFlat {
         } else {
             entity.handleFallDamage(fallDistance, 0.0F, DamageSource.FALL);
         }
-    }
-
-    @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 }

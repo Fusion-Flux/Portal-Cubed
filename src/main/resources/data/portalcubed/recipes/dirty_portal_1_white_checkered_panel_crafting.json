@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YX",
+        "XY"
+    ],
+    "key": {
+        "X": {
+            "item": "portalcubed:dirty_portal_1_white_half_panel"
+        },
+        "Y": {
+            "item": "minecraft:light_gray_dye"
+        }
+    },
+    "result": {
+        "item": "portalcubed:dirty_portal_1_white_checkered_panel",
+        "count": 4
+    }
+}

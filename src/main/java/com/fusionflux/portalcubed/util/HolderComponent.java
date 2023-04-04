@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.accessor.Accessors;
+import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,9 +30,11 @@ public final class HolderComponent implements AutoSyncedComponent {
     }
 
     public boolean hold(CorePhysicsEntity entityToHold) {
-        if (entityBeingHeld() == null) {
+        Objects.requireNonNull(entityToHold, "The entity to hold can not be null!");
+        if (entityBeingHeld() == null && !entityToHold.fizzling()) {
             entityToHold.setHolderUUID(Optional.of(owner.getUuid()));
             this.heldEntity = entityToHold;
+            RayonIntegration.INSTANCE.setNoGravity(heldEntity, true);
             this.heldEntityUUID = Optional.of(entityToHold.getUuid());
             PortalCubedComponents.HOLDER_COMPONENT.sync(owner);
             return true;
@@ -46,6 +50,9 @@ public final class HolderComponent implements AutoSyncedComponent {
     public boolean stopHolding() {
         if (this.heldEntity != null) {
             heldEntity.setHolderUUID(Optional.empty());
+            if (!heldEntity.fizzling()) {
+                RayonIntegration.INSTANCE.setNoGravity(heldEntity, false);
+            }
             if (owner.world.isClient && !heldEntity.isRemoved()) {
                 var buf = PacketByteBufs.create();
                 buf.writeDouble(heldEntity.getPos().x);

@@ -5,27 +5,10 @@
 		"0": "portalcubed:block/laser_emitter",
 		"1": "portalcubed:block/laser_emitter_e",
 		"2": "portalcubed:block/padded_gray_panel",
+		"3": "portalcubed:block/laser_catcher_active",
 		"particle": "portalcubed:block/padded_gray_panel"
 	},
 	"elements": [
-		{
-			"from": [4.5, -6.95711, 7.825],
-			"to": [11.5, -1.95711, 8.15],
-			"rotation": {"angle": -45, "axis": "y", "origin": [8, 2.54289, 8]},
-			"faces": {
-				"north": {"uv": [8.258, 1.742, 9.492, 0.008], "rotation": 90, "texture": "#1"},
-				"south": {"uv": [9.492, 1.742, 8.258, 0.008], "rotation": 270, "texture": "#1"}
-			}
-		},
-		{
-			"from": [7.85, -6.95711, 4.5],
-			"to": [8.2, -1.95711, 11.5],
-			"rotation": {"angle": -45, "axis": "y", "origin": [8, 0.54289, 8]},
-			"faces": {
-				"east": {"uv": [9.492, 1.742, 8.258, 0.008], "rotation": 270, "texture": "#1"},
-				"west": {"uv": [8.258, 1.742, 9.492, 0.008], "rotation": 90, "texture": "#1"}
-			}
-		},
 		{
 			"from": [0.14289, -0.85711, 15.925],
 			"to": [15.94289, 8.94289, 0.1],
@@ -70,12 +53,11 @@
 			"to": [11.29289, -0.95711, 11],
 			"rotation": {"angle": -45, "axis": "y", "origin": [7.29289, -1.45711, 8]},
 			"faces": {
-				"north": {"uv": [9.758, 3.492, 9.992, 1.758], "rotation": 270, "texture": "#0"},
-				"east": {"uv": [9.758, 3.492, 9.992, 1.758], "rotation": 90, "texture": "#0"},
-				"south": {"uv": [9.758, 3.492, 9.992, 1.758], "rotation": 90, "texture": "#0"},
-				"west": {"uv": [9.758, 3.492, 9.992, 1.758], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [0, 0, 0, 0], "rotation": 90, "texture": "#0"},
-				"down": {"uv": [9.742, 1.758, 8.008, 3.492], "rotation": 90, "texture": "#0"}
+				"north": {"uv": [7, 0, 7.984, 6.984], "rotation": 90, "texture": "#3"},
+				"east": {"uv": [7, 0, 7.984, 6.984], "rotation": 90, "texture": "#3"},
+				"south": {"uv": [7, 0, 7.984, 6.984], "rotation": 90, "texture": "#3"},
+				"west": {"uv": [7, 0, 7.984, 6.984], "rotation": 90, "texture": "#3"},
+				"down": {"uv": [6.992, 0, 0.008, 6.984], "texture": "#3"}
 			}
 		},
 		{

@@ -13,19 +13,30 @@
   "subtitles.portalcubed.portal_fizzle": "Portal Fizzles",
   "subtitles.portalcubed.material_emancipation": "Object Disintegrates",
 
+  "subtitles.portalcubed.pedestal_button_press": "Switch Activated",
+  "subtitles.portalcubed.pedestal_button_release": "Switch Deactivated",
+  "subtitles.portalcubed.floor_button_press": "Button Activated",
+  "subtitles.portalcubed.floor_button_release": "Button Deactivated",
+
   "subtitles.portalcubed.rocket_fire": "Rocket Launched",
   "subtitles.portalcubed.rocket_locked": "Rocket Locked",
   "subtitles.portalcubed.rocket_locking": "Rocket Locking",
 
+  "subtitles.portalcubed.pellet.bounce": "Energy Ball Bounce",
+  "subtitles.portalcubed.pellet.explode": "Energy Ball Explosion",
+  "subtitles.portalcubed.pellet.spawn": "Energy Ball Launch",
+
   "item.portalcubed.long_fall_boots": "Long Fall Boots",
   "item.portalcubed.hammer": "Hammer",
+  "item.portalcubed.energy_pellet": "High Energy Pellet",
+  "item.portalcubed.super_pellet": "Super High Energy Pellet",
 
   "item.portalcubed.storage_cube": "Weighted Storage Cube",
   "item.portalcubed.portal_1_storage_cube": "Portal 1 Weighted Storage Cube",
   "item.portalcubed.companion_cube": "Companion Cube",
   "item.portalcubed.portal_1_companion_cube": "Portal 1 Companion Cube",
-  "item.portalcubed.redirection_cube": "Redirection Cube",
-  "item.portalcubed.old_ap_cube": "Old Aperture Cube",
+  "item.portalcubed.redirection_cube": "Discouragement Redirection Cube",
+  "item.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
 
   "item.portalcubed.radio": "Radio",
   "item.portalcubed.beans": "Beans",
@@ -62,9 +73,12 @@
   "block.portalcubed.repulsion_gel": "Repulsion Gel Glob",
   "block.portalcubed.adhesion_gel": "Adhesion Gel Glob",
   "block.portalcubed.conversion_gel": "Conversion Gel Glob",
+  "block.portalcubed.reflection_gel": "Reflection Gel Glob",
 
   "block.portalcubed.auto_portal": "Auto Portal",
   "block.portalcubed.velocity_helper": "Velocity Helper",
+  "block.portalcubed.catapult": "Catapult",
+
   "block.portalcubed.rocket_turret": "Rocket Turret",
 
   "block.portalcubed.fizzler": "Fizzler",
@@ -109,6 +123,7 @@
   "block.portalcubed.aged_white_2x2_panel_bottom_left": "Aged White 2x2 Panel Bottom Left",
   "block.portalcubed.aged_white_2x2_panel_bottom_right": "Aged White 2x2 Panel Bottom Right",
   "block.portalcubed.aged_white_half_panel": "Aged White Half Panel",
+  "block.portalcubed.aged_white_checkered_panel": "Aged White Checkered Panel",
   "block.portalcubed.aged_white_panel": "Aged White Panel",
 
   "block.portalcubed.padded_gray_2x1_panel_bottom": "Padded Gray 2x1 Panel Bottom",
@@ -161,7 +176,7 @@
   "block.portalcubed.old_ap_white_2x2_panel_top_right": "Old Aperture White 2x2 Panel Top Right",
   "block.portalcubed.old_ap_white_2x2_panel_bottom_left": "Old Aperture White 2x2 Panel Bottom Left",
   "block.portalcubed.old_ap_white_2x2_panel_bottom_right": "Old Aperture White 2x2 Panel Bottom Right",
-  "block.portalcubed.old_ap_white_checkered_panel": "Old Aperture White Half Panel",
+  "block.portalcubed.old_ap_white_checkered_panel": "Old Aperture White Checkered Panel",
   "block.portalcubed.old_ap_white_panel": "Old Aperture White Panel",
 
   "block.portalcubed.2x2_double_crossbar_top_left": "2x2 Double Crossbar Top Left",
@@ -180,15 +195,18 @@
 
   "block.portalcubed.old_ap_metal_grating": "Old Aperture Metal Grating",
   "block.portalcubed.portal_1_mesh_grating": "Portal 1 Mesh Grating",
-  "block.portalcubed.portal_1_metal_grating": "Portal 1 Mesh Grating",
+  "block.portalcubed.portal_1_metal_grating": "Portal 1 Metal Grating",
+  "block.portalcubed.portal_2_metal_grating": "Portal 2 Metal Grating",
 
   "block.portalcubed.office_concrete": "Horizontal Office Concrete + Orange Tiling",
   "block.portalcubed.solid_office_concrete": "Vertical Office Concrete + Blue Tiling",
   "block.portalcubed.bordered_office_concrete": "Bordered Office Concrete + Brown Tiling",
   "block.portalcubed.blue_office_concrete": "Blue Horizontal Office Concrete + Tread Plating",
+  "block.portalcubed.striped_office_concrete": "Striped Horizontal Office Concrete + Gray Tiling",
 
   "block.portalcubed.insulation": "Insulation",
   "block.portalcubed.portal_2_panel_frame": "Panel Frame",
+  "block.portalcubed.portal_2_panel_wireframe": "Panel Wireframe",
   "block.portalcubed.portal_2_exposed_panel": "Exposed Panel",
   "block.portalcubed.portal_2_partially_exposed_panel": "Partially Exposed Panel",
 
@@ -202,14 +220,62 @@
   "block.portalcubed.portal_1_white_checkered_panel": "Portal 1 White Checkered Panel",
   "block.portalcubed.portal_1_white_panel": "Portal 1 White Panel",
 
+  "block.portalcubed.dirty_portal_1_white_2x1_panel_bottom": "Dirty Portal 1 White 2x1 Panel Bottom",
+  "block.portalcubed.dirty_portal_1_white_2x1_panel_top": "Dirty Portal 1 White 2x1 Panel Top",
+  "block.portalcubed.dirty_portal_1_white_half_panel": "Dirty Portal 1 White Half Panel",
+  "block.portalcubed.dirty_portal_1_white_checkered_panel": "Dirty Portal 1 White Checkered Panel",
+  "block.portalcubed.dirty_portal_1_white_panel": "Dirty Portal 1 White Panel",
+
+  "block.portalcubed.dirty_borderless_panel": "Dirty Borderless Panel",
+
   "block.portalcubed.portal_1_smooth_gray_2x1_panel_bottom": "Portal 1 Metal 2x1 Panel Bottom",
   "block.portalcubed.portal_1_smooth_gray_2x1_panel_top": "Portal 1 Metal 2x1 Panel Top",
+  "block.portalcubed.portal_1_smooth_gray_2x1_joiner": "Portal 1 Metal 2x1 Joiner",
   "block.portalcubed.portal_1_smooth_gray_2x2_panel_top_left": "Portal 1 Metal 2x2 Panel Top Left",
   "block.portalcubed.portal_1_smooth_gray_2x2_panel_top_right": "Portal 1 Metal 2x2 Panel Top Right",
   "block.portalcubed.portal_1_smooth_gray_2x2_panel_bottom_left": "Portal 1 Metal 2x2 Panel Bottom Left",
   "block.portalcubed.portal_1_smooth_gray_2x2_panel_bottom_right": "Portal 1 Metal 2x2 Panel Bottom Right",
   "block.portalcubed.portal_1_smooth_gray_half_panel": "Portal 1 Metal Half Panel",
   "block.portalcubed.portal_1_smooth_gray_panel": "Portal 1 Metal Panel",
+  "block.portalcubed.portal_1_smooth_tiles": "Portal 1 Smooth Tiles",
+
+  "block.portalcubed.portal_1_white_panel_facade": "Portal 1 White Panel Fa\u00E7ade",
+  "block.portalcubed.portal_1_white_half_panel_facade": "Portal 1 White Half Panel Fa\u00E7ade",
+  "block.portalcubed.dirty_portal_1_white_panel_facade": "Dirty Portal 1 White Panel Fa\u00E7ade",
+  "block.portalcubed.dirty_portal_1_white_half_panel_facade": "Dirty Portal 1 White Half Panel Fa\u00E7ade",
+  "block.portalcubed.portal_1_smooth_gray_panel_facade": "Portal 1 Metal Panel Fa\u00E7ade",
+  "block.portalcubed.portal_1_smooth_gray_half_panel_facade": "Portal 1 Metal Half Panel Fa\u00E7ade",
+  "block.portalcubed.portal_1_smooth_tile_facade": "Portal 1 Smooth Tile Fa\u00E7ade",
+  "block.portalcubed.dirty_borderless_panel_facade": "Dirty Borderless Panel Fa\u00E7ade",
+  "block.portalcubed.portal_1_rusted_plating_facade": "Portal 1 Rusted Plating Fa\u00E7ade",
+  "block.portalcubed.portal_1_rusted_tread_plating_side_facade": "Portal 1 Rusted Tread Plating Side Fa\u00E7ade",
+  "block.portalcubed.portal_1_rusted_tread_plating_top_facade": "Portal 1 Rusted Tread Plating Top Fa\u00E7ade",
+  "block.portalcubed.white_panel_facade": "White Panel Fa\u00E7ade",
+  "block.portalcubed.white_half_panel_facade": "White Half Panel Fa\u00E7ade",
+  "block.portalcubed.aged_white_panel_facade": "Aged White Panel Fa\u00E7ade",
+  "block.portalcubed.aged_white_half_panel_facade": "Aged White Half Panel Fa\u00E7ade",
+  "block.portalcubed.padded_gray_panel_facade": "Padded Gray Panel Fa\u00E7ade",
+  "block.portalcubed.padded_gray_half_panel_facade": "Padded Gray Half Panel Fa\u00E7ade",
+  "block.portalcubed.aged_padded_gray_panel_facade": "Aged Padded Gray Panel Fa\u00E7ade",
+  "block.portalcubed.aged_padded_gray_half_panel_facade": "Aged Padded Gray Half Panel Fa\u00E7ade",
+  "block.portalcubed.smooth_gray_panel_facade": "Smooth Gray Panel Fa\u00E7ade",
+  "block.portalcubed.smooth_gray_half_panel_facade": "Smooth Gray Half Panel Fa\u00E7ade",
+  "block.portalcubed.aged_smooth_gray_panel_facade": "Aged Smooth Gray Panel Fa\u00E7ade",
+  "block.portalcubed.aged_smooth_gray_half_panel_facade": "Aged Smooth Gray Half Panel Fa\u00E7ade",
+  "block.portalcubed.old_ap_white_panel_facade": "Old Ap White Panel Fa\u00E7ade",
+  "block.portalcubed.old_ap_white_checkered_panel_facade": "Old Ap White Checkered Panel Fa\u00E7ade",
+  "block.portalcubed.old_ap_green_panel_facade": "Old Ap Green Panel Fa\u00E7ade",
+  "block.portalcubed.old_ap_blue_panel_facade": "Old Ap Blue Panel Fa\u00E7ade",
+  "block.portalcubed.insulation_facade": "Insulation Fa\u00E7ade",
+  "block.portalcubed.exposed_panel_facade": "Exposed Panel Fa\u00E7ade",
+  "block.portalcubed.partially_exposed_panel_facade": "Partially Exposed Panel Fa\u00E7ade",
+
+  "block.portalcubed.portal_1_mesh_grating_facade": "Portal 1 Mesh Grating Fa\u00E7ade",
+  "block.portalcubed.portal_1_metal_grating_facade": "Portal 1 Metal Grating Fa\u00E7ade",
+  "block.portalcubed.portal_2_metal_grating_facade": "Portal 2 Metal Grating Fa\u00E7ade",
+  "block.portalcubed.old_ap_metal_grating_facade": "Old Aperture Metal Grating Fa\u00E7ade",
+
+
 
   "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",
   "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",
@@ -224,6 +290,7 @@
   "block.portalcubed.old_ap_pedestal_button": "Old Aperture Pedestal Button",
 
   "block.portalcubed.floor_button": "Floor Button",
+  "block.portalcubed.floor_button.easter_egg": "Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button",
   "block.portalcubed.old_ap_floor_button": "Old Aperture Floor Button",
 
   "block.portalcubed.laser_relay": "Laser Relay",
@@ -232,6 +299,7 @@
 
   "block.portalcubed.faith_plate": "Aerial Faith Plate",
   "block.portalcubed.beta_faith_plate": "Beta Aerial Faith Plate",
+  "block.portalcubed.faith_plate_target": "Faith Plate Target",
 
   "block.portalcubed.light_bridge_emitter": "Hard Light Bridge Emitter",
 
@@ -241,9 +309,20 @@
   "portalcubed.midnightconfig.enableAccurateMovement": "Enable Accurate Movement",
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
+  "portalcubed.midnightconfig.pelletDamage": "Energy Pellet Damage",
+  "portalcubed.midnightconfig.laserDamage": "Discouragement Beam Damage",
+  "portalcubed.midnightconfig.portalHudMode": "Use Portal HUD",
+  "portalcubed.midnightconfig.gelOverlayOpacity": "Gel Overlay Opacity",
+  "portalcubed.midnightconfig.titleScreenMode": "Title Screen Panorama Mode",
+  "portalcubed.midnightconfig.enum.TitleScreenMode.DEFAULT": "Minecraft",
+  "portalcubed.midnightconfig.enum.TitleScreenMode.P1": "Portal 1",
+  "portalcubed.midnightconfig.enum.TitleScreenMode.P2": "Portal 2",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
+  "death.attack.portalcubed.vaporization": "%s was vaporized",
+  "death.attack.portalcubed.laser": "%s was thermally discouraged",
+  "death.attack.portalcubed.cube": "%s was hit on the head by a weighted cube",
 
   "key.portalcubed.category" : "Portal\u00b3",
   "key.portalcubed.grab" : "Grab",
@@ -264,6 +343,47 @@
   "portalcubed.velocity_helper.condition_expression": "condition",
   "portalcubed.velocity_helper.curve_expression": "interpolation curve",
 
+  "portalcubed.radio.allow_mute": "Muting Allowed",
+  "portalcubed.radio.disallow_mute": "Muting Disallowed",
+
+  "entity.portalcubed.adhesion_gel_blob": "Adhesion Gel Blob",
+  "entity.portalcubed.conversion_gel_blob": "Conversion Gel Blob",
+  "entity.portalcubed.propulsion_gel_blob": "Propulsion Gel Blob",
+  "entity.portalcubed.reflection_gel_blob": "Reflection Gel Blob",
+  "entity.portalcubed.repulsion_gel_blob": "Repulsion Gel Blob",
+
+  "entity.portalcubed.adventure_core": "Adventure Core",
+  "entity.portalcubed.anger_core": "Anger Core",
+  "entity.portalcubed.core_frame": "Core Frame",
+  "entity.portalcubed.curiosity_core": "Curiosity Core",
+  "entity.portalcubed.fact_core": "Fact Core",
+  "entity.portalcubed.intelligence_core": "Intelligence Core",
+  "entity.portalcubed.morality_core": "Morality Core",
+  "entity.portalcubed.space_core": "Space Core",
+
+  "entity.portalcubed.beans": "Bean Can",
+  "entity.portalcubed.chair": "Office Chair",
+  "entity.portalcubed.computer": "Computer",
+  "entity.portalcubed.hoopy": "Hoopy",
+  "entity.portalcubed.jug": "Water Jug",
+  "entity.portalcubed.lil_pineapple": "Lil' Pineapple",
+  "entity.portalcubed.mug": "Mug",
+  "entity.portalcubed.radio": "Radio",
+
+  "entity.portalcubed.portal_1_companion_cube": "Portal 1 Weighted Companion Cube",
+  "entity.portalcubed.portal_1_storage_cube": "Portal 1 Weighted Storage Cube",
+  "entity.portalcubed.companion_cube": "Weighted Companion Cube",
+  "entity.portalcubed.storage_cube": "Weighted Storage Cube",
+  "entity.portalcubed.redirection_cube": "Discouragement Redirection Cube",
+  "entity.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
+
+  "entity.portalcubed.decal": "Energy Pellet Scorch Mark",
+  "entity.portalcubed.energy_pellet": "High Energy Pellet",
+
+  "entity.portalcubed.rocket": "Rocket",
+
+  "entity.portalcubed.experimental_portal": "Portal",
+
   "item.portalcubed.music_disc_still_alive": "Music Disc",
   "item.portalcubed.music_disc_still_alive.desc": "John Coulton - Still Alive",
   "item.portalcubed.music_disc_cara_mia_addio": "Music Disc",
@@ -273,10 +393,21 @@
   "item.portalcubed.music_disc_reconstructing_more_science": "Music Disc",
   "item.portalcubed.music_disc_reconstructing_more_science.desc": "Mike Morasky - Reconstructing More Science",
 
+  "item.portalcubed.block_item_icon": "Blocks Group Icon",
+
   "portalcubed.command.fizzle.success": "Successfully fizzled %s physics objects",
+  "portalcubed.command.lasersong.failed": "Block at %s is not a laser node.",
+  "portalcubed.command.lasersong.success": "Successfully changed node song at %s to %s.",
+  "portalcubed.command.fog.success": "Current fog in %s is set to %s.",
+  "portalcubed.command.fog.reset.success": "Reset fog to default in %s.",
+  "portalcubed.command.fog.set.success": "Set fog in %s to %s.",
+  "portalcubed.command.fog.preset.success": "Set fog in %s to %s.",
 
   "gamerule.category.portalcubed": "Portal\u00b3",
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
+  "gamerule.portalAlignment": "Portal Alignment (1/xth of a block, 0 to disable)",
+  "gamerule.usePortalHud": "Use Portal HUD",
+  "gamerule.usePortalFog": "Use Portal Cinematic Fog",
 
   "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
   "portalcubed.ponder.auto_portal.text_1": "Power an Auto Portal with redstone to open it.",
@@ -284,5 +415,10 @@
   "portalcubed.ponder.auto_portal.text_3": "Right-click with a hammer to switch between primary and secondary modes.",
   "portalcubed.ponder.auto_portal.text_4": "Right-click with dye to change the portal\u0027s base color.",
   "portalcubed.ponder.auto_portal.text_5": "This portal is green because the Auto Portal is still set to secondary.",
-  "portalcubed.ponder.auto_portal.text_6": "Sneak right-click with a hammer to reset the portal\u0027s base color."
+  "portalcubed.ponder.auto_portal.text_6": "Sneak right-click with a hammer to reset the portal\u0027s base color.",
+
+  "optionslist.portalcubed.catapult.destX": "Destination X",
+  "optionslist.portalcubed.catapult.destY": "Destination Y",
+  "optionslist.portalcubed.catapult.destZ": "Destination Z",
+  "optionslist.portalcubed.catapult.angle": "Launch Angle"
 }

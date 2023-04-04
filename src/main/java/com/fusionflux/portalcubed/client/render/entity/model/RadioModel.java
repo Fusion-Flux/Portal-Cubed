@@ -4,16 +4,16 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.RadioEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class RadioModel extends FizzleableModel<RadioEntity> {
-    public static final EntityModelLayer RADIO_MAIN_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "radio"), "main");
+    public static final EntityModelLayer RADIO_MAIN_LAYER = new EntityModelLayer(id("radio"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 

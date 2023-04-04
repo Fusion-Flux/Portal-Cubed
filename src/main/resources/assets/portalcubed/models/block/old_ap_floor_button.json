@@ -2,14 +2,14 @@
 	"credit": "Made with Blockbench by Cart3r.  ",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "portalcubed:block/aged_smooth_gray_panel",
+		"0": "portalcubed:block/aged_smooth_gray_panel_1",
 		"3": "portalcubed:block/aged_smooth_gray_2x2_panel_bottom_left",
 		"4": "portalcubed:block/aged_smooth_gray_2x2_panel_bottom_right",
 		"5": "portalcubed:block/aged_smooth_gray_2x2_panel_top_left",
 		"6": "portalcubed:block/aged_smooth_gray_2x2_panel_top_right",
 		"7": "portalcubed:block/old_ap_floor_button",
 		"8": "portalcubed:block/old_ap_floor_button_e",
-		"particle": "portalcubed:block/aged_smooth_gray_panel"
+		"particle": "portalcubed:block/aged_smooth_gray_panel_1"
 	},
 	"elements": [
 		{
@@ -84,10 +84,6 @@
 			"to": [18.52, 19.845, 18.52],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 18.075, 8]},
 			"faces": {
-				"north": {"uv": [0.016, 11.516, 10.484, 11.984], "texture": "#8"},
-				"east": {"uv": [0.016, 11.516, 10.484, 11.984], "texture": "#8"},
-				"south": {"uv": [0.016, 11.516, 10.484, 11.984], "texture": "#8"},
-				"west": {"uv": [0.016, 11.516, 10.484, 11.984], "texture": "#8"},
 				"up": {"uv": [10.484, 10.484, 0.016, 0.016], "texture": "#8"}
 			}
 		},

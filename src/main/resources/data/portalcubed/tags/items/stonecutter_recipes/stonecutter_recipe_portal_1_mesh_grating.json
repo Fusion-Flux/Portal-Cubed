@@ -1,0 +1,7 @@
+{
+  "replace": true,
+  "values": [
+    "portalcubed:portal_1_mesh_grating",
+    "portalcubed:portal_1_mesh_grating_facade"
+  ]
+}

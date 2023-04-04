@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.blocks.GelFlat;
+import com.fusionflux.portalcubed.blocks.BaseGel;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -101,57 +100,69 @@ public class PortalCubedEntities {
             .build();
 
     public static final EntityType<? extends GelBlobEntity> PROPULSION_GEL_BLOB = createGelBlob(
-        PortalCubedBlocks.PROPULSION_GEL,
-        new Identifier("portalcubed:textures/block/propulsion_gel.png")
+        PortalCubedBlocks.PROPULSION_GEL, id("textures/block/propulsion_gel.png")
     );
     public static final EntityType<? extends GelBlobEntity> REPULSION_GEL_BLOB = createGelBlob(
-        PortalCubedBlocks.REPULSION_GEL,
-        new Identifier("portalcubed:textures/block/repulsion_gel.png")
-    );
-    public static final EntityType<? extends GelBlobEntity> CONVERSION_GEL_BLOB = createGelBlob(
-        PortalCubedBlocks.CONVERSION_GEL,
-        new Identifier("portalcubed:textures/block/gel.png")
+        PortalCubedBlocks.REPULSION_GEL, id("textures/block/repulsion_gel.png")
     );
     public static final EntityType<? extends GelBlobEntity> ADHESION_GEL_BLOB = createGelBlob(
-        PortalCubedBlocks.ADHESION_GEL,
-        new Identifier("portalcubed:textures/block/adhesion_gel.png")
+        PortalCubedBlocks.ADHESION_GEL, id("textures/block/adhesion_gel.png")
+    );
+    public static final EntityType<? extends GelBlobEntity> CONVERSION_GEL_BLOB = createGelBlob(
+        PortalCubedBlocks.CONVERSION_GEL, id("textures/block/gel.png")
+    );
+    public static final EntityType<? extends GelBlobEntity> REFLECTION_GEL_BLOB = createGelBlob(
+        PortalCubedBlocks.REFLECTION_GEL, id("textures/block/reflection_gel.png")
     );
 
     public static final EntityType<RocketEntity> ROCKET = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, RocketEntity::new)
         .setDimensions(EntityDimensions.changing(0.1875f, 0.1875f))
         .build();
 
-    public static void registerEntities() {
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "experimental_portal"), EXPERIMENTAL_PORTAL);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "storage_cube"), STORAGE_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "companion_cube"), COMPANION_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "radio"), RADIO);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "redirection_cube"), REDIRECTION_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "old_ap_cube"), OLD_AP_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "portal_1_companion_cube"), PORTAL_1_COMPANION_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "portal_1_storage_cube"), PORTAL_1_STORAGE_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "beans"), BEANS);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "mug"), MUG);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "jug"), JUG);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "computer"), COMPUTER);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "chair"), CHAIR);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "lil_pineapple"), LIL_PINEAPPLE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "hoopy"), HOOPY);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "core_frame"), CORE_FRAME);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "anger_core"), ANGER_CORE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "intelligence_core"), CAKE_CORE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "curiosity_core"), CURIOSITY_CORE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "morality_core"), MORALITY_CORE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "space_core"), SPACE_CORE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "adventure_core"), ADVENTURE_CORE);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "fact_core"), FACT_CORE);
+    public static final EntityType<EnergyPelletEntity> ENERGY_PELLET = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, EnergyPelletEntity::new)
+        .setDimensions(EntityDimensions.changing(0.25f, 0.25f))
+        .build();
 
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "propulsion_gel_blob"), PROPULSION_GEL_BLOB);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "repulsion_gel_blob"), REPULSION_GEL_BLOB);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "conversion_gel_blob"), CONVERSION_GEL_BLOB);
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PortalCubed.MOD_ID, "adhesion_gel_blob"), ADHESION_GEL_BLOB);
+    public static final EntityType<DecalEntity> DECAL = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, DecalEntity::new)
+        .setDimensions(EntityDimensions.fixed(0f, 0f))
+        .build();
+
+    public static void registerEntities() {
+        Registry.register(Registry.ENTITY_TYPE, id("experimental_portal"), EXPERIMENTAL_PORTAL);
+        Registry.register(Registry.ENTITY_TYPE, id("storage_cube"), STORAGE_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, id("companion_cube"), COMPANION_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, id("radio"), RADIO);
+        Registry.register(Registry.ENTITY_TYPE, id("redirection_cube"), REDIRECTION_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, id("old_ap_cube"), OLD_AP_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, id("portal_1_companion_cube"), PORTAL_1_COMPANION_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, id("portal_1_storage_cube"), PORTAL_1_STORAGE_CUBE);
+        Registry.register(Registry.ENTITY_TYPE, id("beans"), BEANS);
+        Registry.register(Registry.ENTITY_TYPE, id("mug"), MUG);
+        Registry.register(Registry.ENTITY_TYPE, id("jug"), JUG);
+        Registry.register(Registry.ENTITY_TYPE, id("computer"), COMPUTER);
+        Registry.register(Registry.ENTITY_TYPE, id("chair"), CHAIR);
+        Registry.register(Registry.ENTITY_TYPE, id("lil_pineapple"), LIL_PINEAPPLE);
+        Registry.register(Registry.ENTITY_TYPE, id("hoopy"), HOOPY);
+        Registry.register(Registry.ENTITY_TYPE, id("core_frame"), CORE_FRAME);
+        Registry.register(Registry.ENTITY_TYPE, id("anger_core"), ANGER_CORE);
+        Registry.register(Registry.ENTITY_TYPE, id("intelligence_core"), CAKE_CORE);
+        Registry.register(Registry.ENTITY_TYPE, id("curiosity_core"), CURIOSITY_CORE);
+        Registry.register(Registry.ENTITY_TYPE, id("morality_core"), MORALITY_CORE);
+        Registry.register(Registry.ENTITY_TYPE, id("space_core"), SPACE_CORE);
+        Registry.register(Registry.ENTITY_TYPE, id("adventure_core"), ADVENTURE_CORE);
+        Registry.register(Registry.ENTITY_TYPE, id("fact_core"), FACT_CORE);
+
+        Registry.register(Registry.ENTITY_TYPE, id("propulsion_gel_blob"), PROPULSION_GEL_BLOB);
+        Registry.register(Registry.ENTITY_TYPE, id("repulsion_gel_blob"), REPULSION_GEL_BLOB);
+        Registry.register(Registry.ENTITY_TYPE, id("adhesion_gel_blob"), ADHESION_GEL_BLOB);
+        Registry.register(Registry.ENTITY_TYPE, id("conversion_gel_blob"), CONVERSION_GEL_BLOB);
+        Registry.register(Registry.ENTITY_TYPE, id("reflection_gel_blob"), REFLECTION_GEL_BLOB);
 
         Registry.register(Registry.ENTITY_TYPE, id("rocket"), ROCKET);
+
+        Registry.register(Registry.ENTITY_TYPE, id("energy_pellet"), ENERGY_PELLET);
+
+        Registry.register(Registry.ENTITY_TYPE, id("decal"), DECAL);
 
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(STORAGE_CUBE, StorageCubeEntity.createMobAttributes().build());
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes().build());
@@ -179,7 +190,7 @@ public class PortalCubedEntities {
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(FACT_CORE, HoopyEntity.createMobAttributes().build());
     }
 
-    public static EntityType<? extends GelBlobEntity> createGelBlob(GelFlat gel, Identifier texture) {
+    public static EntityType<? extends GelBlobEntity> createGelBlob(BaseGel gel, Identifier texture) {
         return QuiltEntityTypeBuilder.create()
             .<GelBlobEntity>entityFactory((type, world) -> new GelBlobEntity(type, world) {
                 @Override
@@ -188,7 +199,7 @@ public class PortalCubedEntities {
                 }
 
                 @Override
-                public GelFlat getGel() {
+                public BaseGel getGel() {
                     return gel;
                 }
             })

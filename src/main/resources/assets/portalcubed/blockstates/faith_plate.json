@@ -1,115 +1,58 @@
 {
   "variants": {
-    "facing=east,enabled=false": {
+    "facing=east": {
       "model": "portalcubed:block/faith_plate",
       "y": 90,
       "x": 90
     },
-    "facing=north,enabled=false": {
+    "facing=north": {
       "model": "portalcubed:block/faith_plate",
       "y": 0,
       "x": 90
     },
-    "facing=south,enabled=false": {
+    "facing=south": {
       "model": "portalcubed:block/faith_plate",
       "y": 180,
       "x": 90
     },
-    "facing=west,enabled=false": {
+    "facing=west": {
       "model": "portalcubed:block/faith_plate",
       "y": 270,
       "x": 90
     },
-    "facing=up,horifacing=south,enabled=false": {
+    "facing=up,horifacing=south": {
       "model": "portalcubed:block/faith_plate"
     },
-    "facing=up,horifacing=west,enabled=false": {
+    "facing=up,horifacing=west": {
       "model": "portalcubed:block/faith_plate",
       "y": 90
     },
-    "facing=up,horifacing=north,enabled=false": {
+    "facing=up,horifacing=north": {
       "model": "portalcubed:block/faith_plate",
       "y": 180
     },
-    "facing=up,horifacing=east,enabled=false": {
+    "facing=up,horifacing=east": {
       "model": "portalcubed:block/faith_plate",
       "y": 270
     },
 
 
-    "facing=down,horifacing=south,enabled=false": {
+    "facing=down,horifacing=south": {
       "model": "portalcubed:block/faith_plate",
       "y": 180,
       "x": 180
     },
-    "facing=down,horifacing=west,enabled=false": {
+    "facing=down,horifacing=west": {
       "model": "portalcubed:block/faith_plate",
       "y": 270,
       "x": 180
     },
-    "facing=down,horifacing=north,enabled=false": {
+    "facing=down,horifacing=north": {
       "model": "portalcubed:block/faith_plate",
       "x": 180
     },
-    "facing=down,horifacing=east,enabled=false": {
+    "facing=down,horifacing=east": {
       "model": "portalcubed:block/faith_plate",
-      "y": 90,
-      "x": 180
-    },
-
-    "facing=east,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "y": 90,
-      "x": 90
-    },
-    "facing=north,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "y": 0,
-      "x": 90
-    },
-    "facing=south,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "y": 180,
-      "x": 90
-    },
-    "facing=west,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "y": 270,
-      "x": 90
-    },
-    "facing=up,horifacing=south,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active"
-    },
-    "facing=up,horifacing=west,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "y": 90
-    },
-    "facing=up,horifacing=north,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "y": 180
-    },
-    "facing=up,horifacing=east,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "y": 270
-    },
-
-
-    "facing=down,horifacing=south,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "y": 180,
-      "x": 180
-    },
-    "facing=down,horifacing=west,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "y": 270,
-      "x": 180
-    },
-    "facing=down,horifacing=north,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
-      "x": 180
-    },
-    "facing=down,horifacing=east,enabled=true": {
-      "model": "portalcubed:block/faith_plate_active",
       "y": 90,
       "x": 180
     }

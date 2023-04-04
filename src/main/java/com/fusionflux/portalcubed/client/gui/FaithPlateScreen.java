@@ -1,12 +1,8 @@
 package com.fusionflux.portalcubed.client.gui;
 
-import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -18,12 +14,13 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
 
-    private static final Identifier TEXTURE = new Identifier("portalcubed", "textures/gui/container/faith_plate.png");
+    private static final Identifier TEXTURE = id("textures/gui/container/faith_plate.png");
 
     private final BlockPos pos;
     private final double x;
@@ -145,22 +142,6 @@ public class FaithPlateScreen extends HandledScreen<ScreenHandler> {
             }
             if (sendZ > 4) {
                 sendZ = 4;
-            }
-
-            World world = MinecraftClient.getInstance().world;
-
-            if (world != null) {
-                BlockEntity entity = world.getBlockEntity(pos);
-                if (entity instanceof FaithPlateBlockEntity faith) {
-                    faith.setVelX(sendX);
-                    faith.setVelY(sendY);
-                    faith.setVelZ(sendZ);
-                }
-                if (entity instanceof BetaFaithPlateBlockEntity faith) {
-                    faith.setVelX(sendX);
-                    faith.setVelY(sendY);
-                    faith.setVelZ(sendZ);
-                }
             }
 
             buf.writeDouble(sendX);

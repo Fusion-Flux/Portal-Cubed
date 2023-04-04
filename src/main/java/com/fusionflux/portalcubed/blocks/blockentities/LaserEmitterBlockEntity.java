@@ -1,254 +1,279 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.blocks.LaserCatcherBlock;
+import com.fusionflux.portalcubed.blocks.LaserEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
+import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.block.AbstractGlassBlock;
+import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
+import com.fusionflux.portalcubed.util.GeneralUtil;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.TintedGlassBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.MovingSoundInstance;
+import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.property.Properties;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 public class LaserEmitterBlockEntity extends BlockEntity {
-
-    public final int maxRange = PortalCubedConfig.maxBridgeLength;
-
-    public List<BlockPos> funnels;
-    public List<BlockPos> portalFunnels;
-
-
-    public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.LASER_EMITTER_ENTITY, pos, state);
-        this.funnels = new ArrayList<>();
-        this.portalFunnels = new ArrayList<>();
+    private record Target(@NotNull BlockPos pos, @Nullable Direction side) {
     }
 
-    public static void tick1(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, LaserEmitterBlockEntity blockEntity) {
-        if (!world.isClient) {
-            boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
+    private final List<AdvancedEntityRaycast.Result> multiSegments = new ArrayList<>();
+    private final Set<Target> targets = new HashSet<>();
 
-            if (redstonePowered) {
+    @ClientOnly
+    private SoundInstance musicInstance;
 
-                if (!world.getBlockState(pos).get(Properties.POWERED)) {
-                    blockEntity.togglePowered(world.getBlockState(pos));
-                }
-
-                BlockPos translatedPos = pos;
-                BlockPos savedPos = pos;
-                if (blockEntity.funnels != null) {
-                    List<BlockPos> modFunnels = new ArrayList<>();
-                    List<BlockPos> portalFunnels = new ArrayList<>();
-                    boolean teleported = false;
-                    Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
-                    for (int i = 0; i <= blockEntity.maxRange; i++) {
-                        if (!teleported) {
-                            translatedPos = translatedPos.offset(storedDirection);
-                        } else {
-                            teleported = false;
-                        }
-                        if (translatedPos.getY() < world.getTopY() && translatedPos.getY() > world.getBottomY() && (world.isAir(translatedPos) || (world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F && world.getBlockState(translatedPos).getHardness(world, translatedPos) != -1F) || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.LASER)) && !world.getBlockState(translatedPos).getBlock().equals(Blocks.BARRIER)) {
-                            world.setBlockState(translatedPos, PortalCubedBlocks.LASER.getDefaultState());
-
-                            LaserBlockEntity funnel = ((LaserBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
-
-                            modFunnels.add(funnel.getPos());
-                            blockEntity.funnels.add(funnel.getPos());
-                            if (!savedPos.equals(pos)) {
-                                portalFunnels.add(funnel.getPos());
-                                blockEntity.portalFunnels.add(funnel.getPos());
-                            }
-
-                            if (!funnel.facing.contains(storedDirection)) {
-                                funnel.facing.add(storedDirection);
-                                funnel.emitters.add(funnel.facing.indexOf(storedDirection), pos);
-                                funnel.portalEmitters.add(funnel.facing.indexOf(storedDirection), savedPos);
-                            }
-
-                            funnel.updateState(world.getBlockState(translatedPos), world, translatedPos, funnel);
-
-                            Box portalCheckBox = new Box(translatedPos).contract(.25);
-
-                            List<RedirectionCubeEntity> reflectCubes = world.getNonSpectatingEntities(RedirectionCubeEntity.class, portalCheckBox);
-                            boolean isCube = false;
-                            for (RedirectionCubeEntity cubes : reflectCubes) {
-                                if (cubes != null) {
-                                    savedPos = translatedPos;
-                                    storedDirection = Direction.fromRotation(cubes.getRotYaw());
-                                    isCube = true;
-                                    cubes.setButtonTimer(1);
-                                    break;
-                                }
-                            }
-
-                            List<CorePhysicsEntity> blockCube = world.getNonSpectatingEntities(CorePhysicsEntity.class, portalCheckBox);
-                            boolean blocked = false;
-                            for (CorePhysicsEntity cubes : blockCube) {
-                                if (!(cubes instanceof RedirectionCubeEntity)) {
-                                    blocked = true;
-                                    break;
-                                }
-                            }
-
-                            if (blocked) {
-                                blockEntity.funnels = modFunnels;
-                                blockEntity.portalFunnels = portalFunnels;
-                                break;
-                            }
-                            portalCheckBox = new Box(translatedPos);
-                            List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
-
-                            if (!isCube) {
-                                for (ExperimentalPortal portal : list) {
-                                    if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
-                                        if (portal.getActive()) {
-                                            Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
-                                            int offset = (int)(((portal.getBlockPos().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.getBlockPos().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.getBlockPos().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
-                                            Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
-                                            assert mainPortalVertFacing != null;
-                                            if (mainPortalVertFacing.equals(Direction.SOUTH)) {
-                                                offset = (Math.abs(offset) - 1) * -1;
-                                            }
-                                            if (mainPortalVertFacing.equals(Direction.EAST)) {
-                                                offset = (Math.abs(offset) - 1) * -1;
-                                            }
-
-                                            translatedPos = new BlockPos(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).offset(otherPortalVertFacing, offset);
-                                            savedPos = translatedPos;
-                                            assert otherPortalVertFacing != null;
-                                            if (otherPortalVertFacing.equals(Direction.SOUTH)) {
-                                                translatedPos = translatedPos.offset(Direction.NORTH, 1);
-                                            }
-                                            if (otherPortalVertFacing.equals(Direction.EAST)) {
-                                                translatedPos = translatedPos.offset(Direction.WEST, 1);
-                                            }
-
-                                            storedDirection = Direction.fromVector((int)portal.getOtherFacing().x, (int)portal.getOtherFacing().y, (int)portal.getOtherFacing().z);
-                                            teleported = true;
-                                            blockEntity.funnels = modFunnels;
-                                            blockEntity.portalFunnels = portalFunnels;
-                                        }
-                                    }
-                                }
-                            }
-                        } else if (world.getBlockState(translatedPos).getBlock() instanceof AbstractGlassBlock && !(world.getBlockState(translatedPos).getBlock() instanceof TintedGlassBlock)) {
-                            blockEntity.funnels = modFunnels;
-                            blockEntity.portalFunnels = portalFunnels;
-                        } else {
-                            blockEntity.funnels = modFunnels;
-                            blockEntity.portalFunnels = portalFunnels;
-                            break;
-                        }
-                    }
-                }
-
-            }
-
-            if (!redstonePowered) {
-                if (world.getBlockState(pos).get(Properties.POWERED)) {
-                    blockEntity.togglePowered(world.getBlockState(pos));
-                }
-            }
-
-        }
-
-
+    public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
+        super(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, pos, state);
     }
 
     @Override
     public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
-
-        List<Integer> posXList = new ArrayList<>();
-        List<Integer> posYList = new ArrayList<>();
-        List<Integer> posZList = new ArrayList<>();
-
-        for (BlockPos pos : funnels) {
-            posXList.add(pos.getX());
-            posYList.add(pos.getY());
-            posZList.add(pos.getZ());
+        final NbtList list = new NbtList();
+        for (final Target target : targets) {
+            final NbtCompound targetNbt = new NbtCompound();
+            targetNbt.putIntArray("Target", new int[] {target.pos.getX(), target.pos.getY(), target.pos.getZ()});
+            if (target.side != null) {
+                targetNbt.putString("TargetSide", target.side.getName());
+            }
+            list.add(targetNbt);
         }
-
-        tag.putIntArray("xList", posXList);
-        tag.putIntArray("yList", posYList);
-        tag.putIntArray("zList", posZList);
-
-        List<Integer> portalXList = new ArrayList<>();
-        List<Integer> portalYList = new ArrayList<>();
-        List<Integer> portalZList = new ArrayList<>();
-
-        for (BlockPos pos : portalFunnels) {
-            portalXList.add(pos.getX());
-            portalYList.add(pos.getY());
-            portalZList.add(pos.getZ());
-        }
-
-        tag.putIntArray("portalxList", portalXList);
-        tag.putIntArray("portalyList", portalYList);
-        tag.putIntArray("portalzList", portalZList);
-
-        tag.putInt("pSize", portalFunnels.size());
-        tag.putInt("size", funnels.size());
+        tag.put("Targets", list);
     }
 
     @Override
     public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        List<Integer> posXList;
-        List<Integer> posYList;
-        List<Integer> posZList;
-
-        posXList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("xList")));
-        posYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("yList")));
-        posZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("zList")));
-
-        int size = tag.getInt("size");
-
-        if (!funnels.isEmpty())
-            funnels.clear();
-
-        for (int i = 0; i < size; i++) {
-            funnels.add(new BlockPos.Mutable(posXList.get(i), posYList.get(i), posZList.get(i)));
-        }
-
-        List<Integer> portalXList;
-        List<Integer> portalYList;
-        List<Integer> portalZList;
-
-        portalXList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalxList")));
-        portalYList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalyList")));
-        portalZList = Arrays.asList(ArrayUtils.toObject(tag.getIntArray("portalzList")));
-
-        int pSize = tag.getInt("pSize");
-
-        if (!portalFunnels.isEmpty())
-            portalFunnels.clear();
-
-        for (int i = 0; i < pSize; i++) {
-            portalFunnels.add(new BlockPos.Mutable(portalXList.get(i), portalYList.get(i), portalZList.get(i)));
+        targets.clear();
+        for (final NbtElement elem : tag.getList("Targets", NbtElement.COMPOUND_TYPE)) {
+            final NbtCompound targetNbt = (NbtCompound)elem;
+            final int[] targetA = targetNbt.getIntArray("Target");
+            if (targetA.length >= 3) {
+                targets.add(new Target(
+                    new BlockPos(targetA[0], targetA[1], targetA[2]),
+                    Direction.byName(tag.getString("TargetSide"))
+                ));
+            }
         }
     }
 
-    public void togglePowered(BlockState state) {
-        assert world != null;
-        world.setBlockState(pos, state.cycle(Properties.POWERED));
-        if (world.getBlockState(pos).get(Properties.POWERED)) {
-            world.playSound(null, this.pos, PortalCubedSounds.LASER_EMITTER_ACTIVATE_EVENT, SoundCategory.BLOCKS, 0.25f, 1f);
+    public void tick(World world, BlockPos pos, BlockState state) {
+        multiSegments.clear();
+        if (!state.get(LaserEmitterBlock.POWERED)) {
+            if (!world.isClient) {
+                for (final Target target : targets) {
+                    world.getBlockEntity(target.pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
+                }
+                targets.clear();
+            }
+            return;
+        }
+        Vec3d direction = Vec3d.of(state.get(LaserEmitterBlock.FACING).getVector());
+        Vec3d start = Vec3d.ofCenter(pos).add(direction.multiply(0.5));
+        double lengthRemaining = PortalCubedConfig.maxBridgeLength;
+        final Set<Entity> alreadyHit = new HashSet<>();
+        BlockState hitState;
+        do {
+            //noinspection DataFlowIssue
+            final AdvancedEntityRaycast.Result segments = AdvancedEntityRaycast.raycast(
+                world,
+                new RaycastContext(
+                    start, start.add(direction.multiply(lengthRemaining)),
+                    RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, null
+                ),
+                PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
+                new AdvancedEntityRaycast.TransformInfo(
+                    e -> e instanceof RedirectionCubeEntity && !alreadyHit.contains(e),
+                    (context, blockHit, entityHit) -> {
+                        final var entity = (RedirectionCubeEntity)entityHit.getEntity();
+                        alreadyHit.add(entity);
+                        final double distance = context.getStart().distanceTo(context.getEnd());
+                        final Vec3d offset = entityHit.getPos().subtract(context.getStart());
+                        final Vec3d newOffset = Vec3d.fromPolar(entity.getPitch(), entity.getYaw())
+                            .multiply(distance - offset.length());
+                        final Vec3d origin = entity.getPos().add(new Vec3d(0, entity.getHeight() / 2, 0));
+                        return new AdvancedEntityRaycast.TransformResult(
+                            entityHit.getPos().add(offset.multiply(0.25 / offset.length())),
+                            AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
+                        );
+                    }
+                )
+            );
+            direction = segments.finalRay().relative().normalize();
+            start = segments.finalRay().end();
+            lengthRemaining -= segments.length();
+            multiSegments.add(segments);
+            if (segments.finalHit().getType() == HitResult.Type.BLOCK) {
+                hitState = world.getBlockState(segments.finalHit().getBlockPos());
+                if (hitState.isOf(PortalCubedBlocks.REFLECTION_GEL)) {
+                    final Direction.Axis axis = segments.finalHit().getSide().getAxis();
+                    direction = direction.withAxis(axis, -direction.getComponentAlongAxis(axis));
+                }
+            } else {
+                hitState = null;
+            }
+        } while (hitState != null && (hitState.isOf(PortalCubedBlocks.LASER_RELAY) || hitState.isOf(PortalCubedBlocks.REFLECTION_GEL)));
+
+        if (world.isClient) {
+            clientTick();
+            return;
+        }
+
+        Entity owner = EntityType.MARKER.create(world);
+        assert owner != null;
+        alreadyHit.clear();
+        for (final AdvancedEntityRaycast.Result result : multiSegments) {
+            for (final AdvancedEntityRaycast.Result.Ray ray : result.rays()) {
+                Vec3d rayStart = ray.start();
+                EntityHitResult hit;
+                do {
+                    hit = new AdvancedEntityRaycast.Result.Ray(rayStart, ray.end(), null).entityRaycast(owner, e -> e instanceof LivingEntity && !alreadyHit.contains(e));
+                    if (hit != null) {
+                        rayStart = hit.getPos();
+                        final Entity hitEntity = hit.getEntity();
+                        alreadyHit.add(hitEntity);
+                        owner = hitEntity;
+                        if (hitEntity instanceof CorePhysicsEntity) {
+                            continue; // TODO: Turrets and chairs burn
+                        }
+                        if (!hitEntity.isOnGround()) continue;
+                        hitEntity.damage(PortalCubedDamageSources.LASER, PortalCubedConfig.laserDamage);
+                        final Vec3d velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.getPos())
+                            .normalize()
+                            .multiply(1.25);
+                        hitEntity.addVelocity(velocity.x, velocity.y, velocity.z);
+                    }
+                } while (hit != null && !GeneralUtil.targetsEqual(hit, ray.hit()));
+                if (ray.hit() instanceof EntityHitResult entityHitResult) {
+                    owner = entityHitResult.getEntity();
+                }
+            }
+        }
+
+        final Set<Target> newTargets = new HashSet<>();
+        final Object2IntMap<BlockPos> changes = new Object2IntOpenHashMap<>(targets.size() + multiSegments.size());
+        for (final AdvancedEntityRaycast.Result result : multiSegments) {
+            final BlockHitResult finalHit = result.finalHit();
+            if (finalHit.getType() == HitResult.Type.MISS) continue;
+            final BlockState hitState1 = world.getBlockState(finalHit.getBlockPos());
+            if (hitState1.isOf(PortalCubedBlocks.LASER_CATCHER) && finalHit.getSide() != hitState1.get(LaserCatcherBlock.FACING)) continue;
+            final Target target = new Target(
+                finalHit.getBlockPos(),
+                hitState1.isOf(PortalCubedBlocks.LASER_RELAY) ? null : finalHit.getSide()
+            );
+            newTargets.add(target);
+            if (targets.add(target)) {
+                changes.put(target.pos, changes.getOrDefault(target.pos, 0) + 1);
+            }
+        }
+
+        for (final Target target : targets) {
+            if (!newTargets.contains(target)) {
+                changes.put(target.pos, changes.getOrDefault(target.pos, 0) - 1);
+            }
+        }
+        targets.retainAll(newTargets);
+
+        for (final var entry : changes.object2IntEntrySet()) {
+            if (entry.getIntValue() == 0) continue;
+            final LaserNodeBlockEntity entity = world.getBlockEntity(entry.getKey(), PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).orElse(null);
+            if (entity == null) continue;
+            if (entry.getIntValue() > 0) {
+                for (int i = 0; i < entry.getIntValue(); i++) {
+                    entity.addLaser();
+                }
+            } else {
+                for (int i = 0; i < -entry.getIntValue(); i++) {
+                    entity.removeLaser();
+                }
+            }
+        }
+        if (!changes.isEmpty()) {
+            markDirty();
+        }
+    }
+
+    public List<AdvancedEntityRaycast.Result> getMultiSegments() {
+        return multiSegments;
+    }
+
+    @ClientOnly
+    protected void clientTick() {
+        if (musicInstance == null && world != null && world.getBlockState(pos).get(LaserEmitterBlock.POWERED)) {
+            musicInstance = new MovingSoundInstance(PortalCubedSounds.LASER_BEAM_MUSIC_EVENT, SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
+                {
+                    volume = 0.1875f;
+                    repeat = true;
+                }
+
+                @Override
+                public void tick() {
+                    if (isRemoved() || world == null || !world.getBlockState(pos).get(LaserEmitterBlock.POWERED)) {
+                        musicInstance = null;
+                        setDone();
+                        return;
+                    }
+                    final Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+                    Vec3d usePos = null;
+                    double distanceSq = Double.POSITIVE_INFINITY;
+                    for (final AdvancedEntityRaycast.Result segments : multiSegments) {
+                        for (final AdvancedEntityRaycast.Result.Ray ray : segments.rays()) {
+                            Vec3d tryPos = GeneralUtil.nearestPointOnLine(
+                                ray.start(), ray.end().subtract(ray.start()), cameraPos
+                            );
+                            double tryDistance = tryPos.squaredDistanceTo(cameraPos);
+                            if (tryPos.squaredDistanceTo(ray.start()) > ray.end().squaredDistanceTo(ray.start())) {
+                                tryPos = ray.end();
+                                tryDistance = tryPos.squaredDistanceTo(cameraPos);
+                            } else if (tryPos.squaredDistanceTo(ray.end()) > ray.end().squaredDistanceTo(ray.start())) {
+                                tryPos = ray.start();
+                                tryDistance = tryPos.squaredDistanceTo(cameraPos);
+                            }
+                            if (tryDistance < distanceSq) {
+                                usePos = tryPos;
+                                distanceSq = tryDistance;
+                            }
+                        }
+                    }
+                    if (usePos == null) {
+                        musicInstance = null;
+                        setDone();
+                        return;
+                    }
+                    x = usePos.x;
+                    y = usePos.y;
+                    z = usePos.z;
+                }
+            };
+            MinecraftClient.getInstance().getSoundManager().play(musicInstance);
         }
     }
 }

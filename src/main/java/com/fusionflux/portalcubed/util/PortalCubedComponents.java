@@ -6,11 +6,12 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedComponents implements EntityComponentInitializer {
-    public static final ComponentKey<PortalCubedComponent> ENTITY_COMPONENT = ComponentRegistry.getOrCreate(new Identifier("portalcubed", "entity_component"), PortalCubedComponent.class);
-    public static final ComponentKey<HolderComponent> HOLDER_COMPONENT = ComponentRegistry.getOrCreate(new Identifier("portalcubed", "holder_component"), HolderComponent.class);
+    public static final ComponentKey<PortalCubedComponent> ENTITY_COMPONENT = ComponentRegistry.getOrCreate(id("entity_component"), PortalCubedComponent.class);
+    public static final ComponentKey<HolderComponent> HOLDER_COMPONENT = ComponentRegistry.getOrCreate(id("holder_component"), HolderComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {

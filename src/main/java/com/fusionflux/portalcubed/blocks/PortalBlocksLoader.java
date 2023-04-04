@@ -37,6 +37,8 @@ public final class PortalBlocksLoader {
             .put("directional", DirectionalBlock::new)
             .put("old_ap", OldApBlock::new)
             .put("old_ap_directional", OldApDirectionalBlock::new)
+            .put("facade", FacadeBlock::new)
+            .put("multiface", SimpleMultiSidedBlock::new)
             .build();
     @ClientOnly
     private static Map<String, RenderLayer> renderLayers;
@@ -88,7 +90,7 @@ public final class PortalBlocksLoader {
                 BlockRenderLayerMap.put(
                     renderLayer,
                     Registry.BLOCK.getOrEmpty(id)
-                        .orElseThrow(() -> new IllegalArgumentException("Unknown block " + id))
+                        .orElseThrow(() -> new IllegalArgumentException("Unknown block in portal_blocks.json " + id))
                 );
             }
         });

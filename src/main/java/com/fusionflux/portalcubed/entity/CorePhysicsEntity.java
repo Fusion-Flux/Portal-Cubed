@@ -6,36 +6,48 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.EntitySetHeadYawS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Arm;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class CorePhysicsEntity extends PathAwareEntity  {
+// TODO: Extend LivingEntity
+public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     private float fizzleProgress = 0f;
     private boolean fizzling = false;
@@ -48,18 +60,20 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     private boolean hasCollided;
     private int timeSinceLastSound;
 
+    private List<UUID> intermediaryPortals = List.of();
+
     public Vec3d lastPos = this.getPos();
 
     private final Vec3d offsetHeight = new Vec3d(0, this.getHeight() / 2, 0);
 
     @Override
-    public boolean collides() {
-        return !this.isRemoved();
+    public boolean isCollidable() {
+        return canUsePortals;
     }
 
     @Override
-    public boolean isCollidable() {
-        return canUsePortals;
+    public boolean collidesWith(Entity other) {
+        return isCollidable() && other instanceof LivingEntity && other.isAlive();
     }
 
     @Override
@@ -112,21 +126,8 @@ public class CorePhysicsEntity extends PathAwareEntity  {
 
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        double d = packet.getX();
-        double e = packet.getY();
-        double f = packet.getZ();
-        float g = packet.m_tyquxhdv();
-        float h = packet.m_iypubkgo();
-        this.syncPacketPositionCodec(d, e, f);
-        this.bodyYaw = 0;
-        this.headYaw = 0;
-        this.prevBodyYaw = this.bodyYaw;
-        this.prevHeadYaw = this.headYaw;
+        super.onSpawnPacket(packet);
         this.setNoDrag(true);
-        this.setId(packet.getId());
-        this.setUuid(packet.getUuid());
-        this.updatePositionAndAngles(d, e, f, g, h);
-        this.setVelocity((float)packet.getVelocityX(), (float)packet.getVelocityY(), (float)packet.getVelocityZ());
     }
 
     private static final TrackedData<Optional<UUID>> HOLDER_UUID = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
@@ -159,10 +160,6 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         this.bodyYaw = yaw;
     }
 
-    public float getRotYaw() {
-        return this.bodyYaw;
-    }
-
     @Override
     public boolean canUsePortals() {
         return canUsePortals;
@@ -171,56 +168,67 @@ public class CorePhysicsEntity extends PathAwareEntity  {
     @Override
     public void tick() {
         super.tick();
+        final boolean isBeingHeld = getHolderUUID().isPresent() && !fizzling;
         timeSinceLastSound++;
-        this.headYaw = this.bodyYaw;
+        this.velocityDirty = true;
         canUsePortals = getHolderUUID().isEmpty();
         Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.getPos();
-        if (!world.isClient) {
-            this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
-            if (getHolderUUID().isPresent()) {
-                PlayerEntity player = (PlayerEntity) ((ServerWorld) world).getEntity(getHolderUUID().get());
-                if (player != null && player.isAlive()) {
-                    Vec3d vec3d = player.getCameraPosVec(0);
-                    double d = 2;
-                    canUsePortals = false;
-                    Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(), player.getYaw());
-                    Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
+        this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
+        if (isBeingHeld) {
+            PlayerEntity player = (PlayerEntity) ((Accessors) world).getEntity(getHolderUUID().get());
+            if (player != null && player.isAlive()) {
+                Vec3d vec3d = player.getCameraPosVec(0);
+                double d = 1.5;
+                canUsePortals = false;
+                Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(), player.getYaw());
+                Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
+                final AdvancedEntityRaycast.Result raycastResult = PortalDirectionUtils.raycast(world, new RaycastContext(
+                    vec3d, vec3d3, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this
+                ));
+                final Vec3d holdPos = raycastResult.finalHit().getPos();
+                if (!world.isClient) {
                     GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
-                    this.fallDistance = 0;
-                    this.bodyYaw = player.headYaw;
-
-                    move(
-                        MovementType.PLAYER,
-                        RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
+                }
+                this.fallDistance = 0;
+                if (RayonIntegration.INSTANCE.isPresent()) {
+                    final float wrappedPlayerYaw = MathHelper.wrapDegrees(player.headYaw);
+                    final float multiplier = (wrappedPlayerYaw > 120 || wrappedPlayerYaw < 0) ? -1 : 1;
+                    final float yawDelta = MathHelper.wrapDegrees(
+                        MathHelper.wrapDegrees(RayonIntegration.INSTANCE.getYaw(this) * multiplier) - wrappedPlayerYaw
                     );
+                    RayonIntegration.INSTANCE.rotateYaw(this, yawDelta);
+                    RayonIntegration.INSTANCE.setAngularVelocityYaw(this, new Vec3f(0, yawDelta, 0));
                 } else {
-                    if (player != null) {
-                        setHolderUUID(Optional.empty());
+                    setYaw(player.headYaw);
+                    setHeadYaw(player.headYaw);
+                    setBodyYaw(player.headYaw);
+                }
+                final List<UUID> portals = raycastResult.rays()
+                    .stream()
+                    .map(AdvancedEntityRaycast.Result.Ray::hit)
+                    .filter(h -> h instanceof EntityHitResult)
+                    .map(h -> ((EntityHitResult)h).getEntity().getUuid())
+                    .toList();
+                if (!portals.equals(intermediaryPortals)) {
+                    intermediaryPortals = portals;
+                    refreshPositionAfterTeleport(holdPos);
+                } else {
+                    final Vec3d movement = RotationUtil.vecWorldToPlayer(holdPos.subtract(getPos()), GravityChangerAPI.getGravityDirection(player));
+                    if (RayonIntegration.INSTANCE.isPresent()) {
+                        RayonIntegration.INSTANCE.setVelocity(this, movement);
                     }
-                    canUsePortals = true;
+                    RayonIntegration.INSTANCE.simpleMove(this, MovementType.PLAYER, movement);
                 }
-                this.setNoGravity(true);
             } else {
-                if (this.hasNoGravity()) {
-                    this.setNoGravity(false);
+                if (player != null) {
+                    setHolderUUID(Optional.empty());
                 }
+                canUsePortals = true;
             }
-        } else {
-            if (getHolderUUID().isPresent()) {
-                PlayerEntity player = (PlayerEntity)((Accessors) world).getEntity(getHolderUUID().get());
-                if (player != null && player.isAlive()) {
-                    Vec3d vec3d = player.getCameraPosVec(0);
-                    double d = 2;
-                    Vec3d vec3d2 = player.getRotationVec(1.0F);
-                    this.bodyYaw = player.headYaw;
-                    Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
-                    move(
-                        MovementType.PLAYER,
-                        RotationUtil.vecWorldToPlayer(vec3d3.subtract(getPos()), GravityChangerAPI.getGravityDirection(player))
-                    );
-                }
-            }
+            RayonIntegration.INSTANCE.setNoGravity(this, true);
+        } else if (this.hasNoGravity() && !fizzling && !((EntityAttachments)this).isInFunnel()) {
+            RayonIntegration.INSTANCE.setNoGravity(this, false);
         }
         if (this.getVelocity().y < -3.92) {
             this.setVelocity(this.getVelocity().add(0, .81d, 0));
@@ -235,25 +243,75 @@ public class CorePhysicsEntity extends PathAwareEntity  {
                 }
             }
         }
+        if (getHolderUUID().isEmpty() && !world.isClient) {
+            //noinspection DataFlowIssue
+            world.getServer().getPlayerManager().sendToAround(
+                null, getX(), getY(), getZ(), 64,
+                getWorld().getRegistryKey(),
+                new EntitySetHeadYawS2CPacket(this, (byte)MathHelper.floor(getHeadYaw() * 256f / 360f))
+            );
+        }
     }
 
+    @Override
+    public boolean isLogicalSideForUpdatingMovement() {
+        return !world.isClient || getHolderUUID().isPresent();
+    }
+
+    @Override
+    public Iterable<ItemStack> getArmorItems() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public ItemStack getEquippedStack(EquipmentSlot slot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+    }
+
+    @Override
+    public Arm getMainArm() {
+        return Arm.RIGHT;
+    }
+
+    @Override
     public void startFizzlingProgress() {
         fizzling = true;
     }
 
+    @Override
     public void fizzle() {
         if (fizzling) return;
-        world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
-        setNoGravity(true);
         fizzling = true;
+        world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
+        RayonIntegration.INSTANCE.setNoGravity(this, true);
         final PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(getId());
         final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);
         PlayerLookup.tracking(this).forEach(player -> player.networkHandler.sendPacket(packet));
     }
 
+    @Override
     public float getFizzleProgress() {
         return fizzleProgress;
+    }
+
+    @Override
+    public boolean fizzling() {
+        return fizzling;
+    }
+
+    @Override
+    public boolean fizzlesInGoo() {
+        return true;
+    }
+
+    @Override
+    public FizzleType getFizzleType() {
+        return FizzleType.OBJECT;
     }
 
     protected final Vec3d getPlayerRotationVector(float pitch, float yaw) {
@@ -293,4 +351,11 @@ public class CorePhysicsEntity extends PathAwareEntity  {
         super.remove(reason);
     }
 
+    @Override
+    public void checkDespawn() {
+    }
+
+    protected static Box createFootBox(double x, double y, double z) {
+        return new Box(-x / 2, 0, -z / 2, x / 2, y, z / 2);
+    }
 }

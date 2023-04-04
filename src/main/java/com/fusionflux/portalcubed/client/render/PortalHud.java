@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.client.render;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -16,9 +15,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameMode;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 public class PortalHud {
-    private static final Identifier ROUND_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/gui/active_portal_indicator.png");
-    private static final Identifier SQUARE_TEXTURE = new Identifier(PortalCubed.MOD_ID, "textures/gui/active_portal_indicator_square.png");
+    private static final Identifier ROUND_TEXTURE = id("textures/gui/active_portal_indicator.png");
+    private static final Identifier SQUARE_TEXTURE = id("textures/gui/active_portal_indicator_square.png");
 
     public static void renderPortalLeft(@SuppressWarnings("unused") MatrixStack matrices, @SuppressWarnings("unused") float tickDelta) {
         //noinspection DataFlowIssue

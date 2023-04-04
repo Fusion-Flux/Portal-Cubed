@@ -6,48 +6,62 @@ import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
+import com.fusionflux.portalcubed.blocks.TallButtonVariant;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
+import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.commands.PortalCubedCommands;
-import com.fusionflux.portalcubed.compatability.create.CreateIntegration;
+import com.fusionflux.portalcubed.compat.create.CreateIntegration;
+import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.PortalCubedTrackedDataHandlers;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
+import com.fusionflux.portalcubed.fog.FogPersistentState;
+import com.fusionflux.portalcubed.fog.FogSettings;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.optionslist.OptionsListScreenHandler;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.PortalVelocityHelper;
+import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.mojang.logging.LogUtils;
 import eu.midnightdust.lib.config.MidnightConfig;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
+import org.quiltmc.qsl.entity_events.api.EntityWorldChangeEvents;
+import org.quiltmc.qsl.entity_events.api.ServerPlayerEntityCopyCallback;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -74,7 +88,10 @@ public class PortalCubed implements ModInitializer {
         Registry.SCREEN_HANDLER, id("velocity_helper"),
         new ExtendedScreenHandlerType<>(VelocityHelperScreenHandler::new)
     );
-
+    public static final ScreenHandlerType<OptionsListScreenHandler> OPTIONS_LIST_SCREEN_HANDLER = Registry.register(
+        Registry.SCREEN_HANDLER, id("options_list"),
+        new ExtendedScreenHandlerType<>(OptionsListScreenHandler::new)
+    );
 
     @Override
     public void onInitialize(ModContainer mod) {
@@ -114,97 +131,75 @@ public class PortalCubed implements ModInitializer {
                     return;
                 }
                 Direction portalFacing = portal.getFacingDirection();
-                Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
-
                 Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
-                Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
+                Direction portalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().orElseThrow().x, portal.getAxisH().orElseThrow().y, portal.getAxisH().orElseThrow().z));
 
+                IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().multiply(-1), portal.getOtherAxisW(), (portal.getAxisH().orElseThrow()));
+                IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow().multiply(-1));
+
+                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
+                    if (otherDirec.equals(portalFacing) || (portalVertFacing  != otherDirec && portalVertFacing != otherDirec.getOpposite())) {
+                        rotationW = IPQuaternion.getRotationBetween(portal.getNormal().multiply(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
+                        rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().multiply(-1));
+                    }
+                }
+
+                Vec3d rotatedYaw = Vec3d.fromPolar(pitchSet, yawSet);
+                Vec3d rotatedPitch = Vec3d.fromPolar(pitchSet, yawSet);
+                Vec3d rotatedVel = entityVelocity;
                 Vec3d rotatedOffsets = new Vec3d(teleportXOffset, teleportYOffset, teleportZOffset);
 
-                double heightOffset = (player.getEyeY() - player.getY()) / 2;
+                rotatedYaw = (rotationH.rotate(rotationW.rotate(rotatedYaw)));
+                rotatedPitch = (rotationH.rotate(rotationW.rotate(rotatedPitch)));
+                rotatedVel = (rotationH.rotate(rotationW.rotate(rotatedVel)));
+                rotatedOffsets = (rotationH.rotate(rotationW.rotate(rotatedOffsets)));
 
-                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-                    if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                        rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherDirec);
+
+                if (otherDirec == Direction.UP && rotatedVel.y < 0.48) {
+                    rotatedVel = new Vec3d(rotatedVel.x, 0.48, rotatedVel.z);
+                }
+
+                rotatedOffsets = rotatedOffsets.subtract(0, player.getEyeY() - player.getY(), 0);
+
+                if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+                    if (rotatedOffsets.y < -0.95) {
+                        rotatedOffsets = new Vec3d(rotatedOffsets.x, -0.95, rotatedOffsets.z);
+                    } else if (rotatedOffsets.y > -0.85) {
+                        rotatedOffsets = new Vec3d(rotatedOffsets.x, -0.85, rotatedOffsets.z);
                     }
                 }
 
-                if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                    if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                        rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherPortalVertFacing);
-                    }
-                }
+                Vec2f lookAnglePitch = new Vec2f(
+                        (float)Math.toDegrees(-MathHelper.atan2(rotatedPitch.y, Math.sqrt(rotatedPitch.x * rotatedPitch.x + rotatedPitch.z * rotatedPitch.z))),
+                        (float)Math.toDegrees(MathHelper.atan2(rotatedPitch.z, rotatedPitch.x))
+                );
 
-                System.out.println(portalVertFacing);
-
-
-                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-                    if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                        if (portalVertFacing != otherPortalVertFacing)
-                            rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalVertFacing, otherPortalVertFacing);
-                    }
-                }
-
-                rotatedOffsets = PortalVelocityHelper.rotatePosition(rotatedOffsets, heightOffset, portalFacing, otherDirec);
-
-                //System.out.println(rotatedOffsets);
-
-                Vec3d rotatedVel = entityVelocity;
-
-                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-                    if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                        rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherDirec);
-                    }
-                }
-
-                if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                    if (portalFacing != Direction.UP && portalFacing != Direction.DOWN) {
-                        rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherPortalVertFacing);
-                    }
-                }
-
-
-                if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-                    if (otherDirec == Direction.UP || otherDirec == Direction.DOWN) {
-                        if (portalFacing.getOpposite() != otherDirec)
-                            rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalVertFacing, otherPortalVertFacing);
-                    }
-                }
-
-                rotatedVel = PortalVelocityHelper.rotateVelocity(rotatedVel, portalFacing, otherDirec);
-
-
+                Vec2f lookAngleYaw = new Vec2f(
+                        (float)Math.toDegrees(-MathHelper.atan2(rotatedYaw.y, Math.sqrt(rotatedYaw.x * rotatedYaw.x + rotatedYaw.z * rotatedYaw.z))),
+                        (float)Math.toDegrees(MathHelper.atan2(rotatedYaw.z, rotatedYaw.x))
+                );
                 CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
-
-                float yawValue = yawSet + PortalVelocityHelper.yawAddition(portal.getFacingDirection(), otherDirec);
-                player.setYaw(yawValue);
-                player.setPitch(pitchSet);
-                player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets).subtract(0, player.getEyeY() - player.getY(), 0));
+                player.setYaw(lookAngleYaw.y - 90);
+                player.setPitch(lookAnglePitch.x);
+                player.refreshPositionAfterTeleport(portal.getDestination().get().add(rotatedOffsets));
                 CalledValues.setHasTeleportationHappened(player, true);
                 GravityChangerAPI.clearGravity(player);
             });
         });
 
-
-
-
         ServerPlayNetworking.registerGlobalReceiver(id("configure_faith_plate"), (server, player, handler, buf, responseSender) -> {
             // read the velocity from the byte buf
             BlockPos target = buf.readBlockPos();
-            double x =  buf.readDouble();
-            double y =  buf.readDouble();
-            double z =  buf.readDouble();
+            double x = buf.readDouble();
+            double y = buf.readDouble();
+            double z = buf.readDouble();
             server.execute(() -> {
-                BlockEntity entity = player.world.getBlockEntity(target);
-                if (entity instanceof FaithPlateBlockEntity plate) {
-                    plate.setVelX(x);
-                    plate.setVelY(y);
-                    plate.setVelZ(z);
-                }
-                if (entity instanceof BetaFaithPlateBlockEntity plate) {
-                    plate.setVelX(x);
-                    plate.setVelY(y);
-                    plate.setVelZ(z);
+                final BlockEntity entity = player.world.getBlockEntity(target);
+                if (entity instanceof FaithPlateBlockEntity faithPlateBlockEntity) {
+                    faithPlateBlockEntity.setVelX(x);
+                    faithPlateBlockEntity.setVelY(y);
+                    faithPlateBlockEntity.setVelZ(z);
+                    faithPlateBlockEntity.updateListeners();
                 }
             });
         });
@@ -260,10 +255,31 @@ public class PortalCubed implements ModInitializer {
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            final PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeBoolean(handler.player.world.getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH));
-            handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_CFG, buf));
+            if (!handler.player.world.getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH)) {
+                // Default is true on the client, so we don't need to send in that case
+                final PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBoolean(false);
+                handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_CFG, buf));
+            }
+            if (handler.player.world.getGameRules().getBoolean(PortalCubedGameRules.USE_PORTAL_HUD)) {
+                // Same as above, but false
+                final PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBoolean(true);
+                handler.sendPacket(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_PORTAL_HUD, buf));
+            }
+            syncFog(handler.player);
         });
+
+        EntityWorldChangeEvents.AFTER_PLAYER_WORLD_CHANGE.register((player, origin, destination) -> syncFog(player));
+
+        ServerPlayerEntityCopyCallback.EVENT.register((copy, original, wasDeath) -> syncFog(copy));
+
+        UseBlockCallback.EVENT.register((player, world, hand, hitResult) ->
+            PortalCubedClient.isPortalHudMode() &&
+                (!(world.getBlockState(hitResult.getBlockPos()).getBlock() instanceof TallButtonVariant) ||
+                    hand != Hand.OFF_HAND)
+                ? ActionResult.FAIL : ActionResult.PASS
+        );
 
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
         PortalBlocksLoader.init(mod);
@@ -283,6 +299,37 @@ public class PortalCubed implements ModInitializer {
         if (QuiltLoader.isModLoaded("create")) {
             CreateIntegration.init();
         }
+
+        RayonIntegration.INSTANCE.init();
+    }
+
+    public static void syncFog(ServerPlayerEntity player) {
+        final PacketByteBuf buf = PacketByteBufs.create();
+        FogSettings.encodeOptional(FogPersistentState.getOrCreate((ServerWorld)player.world).getSettings(), buf);
+        ServerPlayNetworking.send(player, PortalCubedClientPackets.SET_CUSTOM_FOG, buf);
+    }
+
+    public static void syncFog(ServerWorld world) {
+        final PacketByteBuf buf = PacketByteBufs.create();
+        FogSettings.encodeOptional(FogPersistentState.getOrCreate(world).getSettings(), buf);
+        world.getServer().getPlayerManager().sendToDimension(
+            ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.SET_CUSTOM_FOG, buf),
+            world.getRegistryKey()
+        );
+    }
+
+    public static void playBounceSound(Entity entity) {
+        entity.world.playSound(
+            null,
+            entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(),
+            PortalCubedSounds.GEL_BOUNCE_EVENT, SoundCategory.BLOCKS,
+            1f, 0.95f + entity.world.random.nextFloat() * 0.1f
+        );
+    }
+
+    @ClientOnly
+    public static void playBounceSoundRemotely() {
+        ClientPlayNetworking.send(PortalCubedServerPackets.PLAY_BOUNCE_SOUND, PacketByteBufs.empty());
     }
 
     public static Identifier id(String path) {

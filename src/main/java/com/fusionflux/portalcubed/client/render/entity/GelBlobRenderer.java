@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.client.render.entity;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -53,7 +54,7 @@ public class GelBlobRenderer extends EntityRenderer<GelBlobEntity> {
 
         cube.renderCuboid(
             matrices.peek(), consumer,
-            light, 0, 1, 1, 1, 1
+            light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1
         );
         matrices.pop();
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);

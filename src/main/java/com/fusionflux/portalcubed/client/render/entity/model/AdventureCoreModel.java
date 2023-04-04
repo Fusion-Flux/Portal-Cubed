@@ -4,16 +4,16 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.entity.AdventureCoreEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class AdventureCoreModel extends FizzleableModel<AdventureCoreEntity> {
-    public static final EntityModelLayer ADVENTURE_CORE_LAYER = new EntityModelLayer(new Identifier(PortalCubed.MOD_ID, "adventure_core"), "main");
+    public static final EntityModelLayer ADVENTURE_CORE_LAYER = new EntityModelLayer(id("adventure_core"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 

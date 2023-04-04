@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YY",
+        "YY"
+    ],
+    "key": {
+        "Y": {
+            "item": "portalcubed:portal_1_smooth_gray_half_panel"
+        }
+    },
+    "result": {
+        "item": "portalcubed:portal_1_smooth_tiles",
+        "count": 4
+    }
+}

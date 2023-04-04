@@ -4,49 +4,76 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 public class PortalCubedSounds {
-    public static final Identifier GEL_BOUNCE = new Identifier("portalcubed:gel_bounce");
-    public static final Identifier GEL_RUN = new Identifier("portalcubed:gel_run");
-    public static final Identifier GEL_SPLAT = new Identifier("portalcubed:gel_splat");
-    public static final Identifier PORTAL_GUN_PRIMARY = new Identifier("portalcubed:portal_gun_primary");
-    public static final Identifier PORTAL_GUN_SECONDARY = new Identifier("portalcubed:portal_gun_secondary");
-    public static final Identifier PORTAL_INVALID_SURFACE = new Identifier("portalcubed:portal_invalid_surface");
-    public static final Identifier NOTHING_TO_GRAB = new Identifier("portalcubed:nothing_to_grab");
-    public static final Identifier PORTAL_AMBIANCE = new Identifier("portalcubed:portal_ambience");
-    public static final Identifier PORTAL_ENTER = new Identifier("portalcubed:portal_enter");
-    public static final Identifier PORTAL_EXIT = new Identifier("portalcubed:portal_exit");
-    public static final Identifier PORTAL_OPEN = new Identifier("portalcubed:portal_open");
-    public static final Identifier PORTAL_CLOSE = new Identifier("portalcubed:portal_close");
-    public static final Identifier PORTAL_FIZZLE = new Identifier("portalcubed:portal_fizzle");
-    public static final Identifier CUBE_HIT_HIGH = new Identifier("portalcubed:cube_hit_high");
-    public static final Identifier CUBE_HIT_LOW = new Identifier("portalcubed:cube_hit_low");
-    public static final Identifier CUBE_SCRAPE = new Identifier("portalcubed:cube_scrape");
-    public static final Identifier COMPANION_CUBE_AMBIANCE = new Identifier("portalcubed:companion_cube_ambiance");
-    public static final Identifier MATERIAL_EMANCIPATION = new Identifier("portalcubed:material_emancipation");
+    public static final Identifier ERROR = id("error");
+    public static final Identifier EMPTY = id("empty");
 
-    public static final Identifier ROCKET_FIRE = new Identifier("portalcubed:rocket_fire");
-    public static final Identifier ROCKET_FLY = new Identifier("portalcubed:rocket_fly");
-    public static final Identifier ROCKET_LOCKED = new Identifier("portalcubed:rocket_locked");
-    public static final Identifier ROCKET_LOCKING = new Identifier("portalcubed:rocket_locking");
-    public static final Identifier ROCKET_EXPLODE = new Identifier("portalcubed:rocket_explode");
+    public static final Identifier GEL_BOUNCE = id("gel_bounce");
+    public static final Identifier GEL_RUN = id("gel_run");
+    public static final Identifier GEL_SPLAT = id("gel_splat");
+    public static final Identifier PORTAL_GUN_PRIMARY = id("portal_gun_primary");
+    public static final Identifier PORTAL_GUN_SECONDARY = id("portal_gun_secondary");
+    public static final Identifier PORTAL_INVALID_SURFACE = id("portal_invalid_surface");
+    public static final Identifier NOTHING_TO_GRAB = id("nothing_to_grab");
+    public static final Identifier PORTAL_AMBIANCE = id("portal_ambience");
+    public static final Identifier PORTAL_ENTER = id("portal_enter");
+    public static final Identifier PORTAL_EXIT = id("portal_exit");
+    public static final Identifier PORTAL_OPEN = id("portal_open");
+    public static final Identifier PORTAL_CLOSE = id("portal_close");
+    public static final Identifier PORTAL_FIZZLE = id("portal_fizzle");
+    public static final Identifier CUBE_HIT_HIGH = id("cube_hit_high");
+    public static final Identifier CUBE_HIT_LOW = id("cube_hit_low");
+    public static final Identifier CUBE_SCRAPE = id("cube_scrape");
+    public static final Identifier COMPANION_CUBE_AMBIANCE = id("companion_cube_ambiance");
+    public static final Identifier MATERIAL_EMANCIPATION = id("material_emancipation");
+    public static final Identifier CATAPULT_LAUNCH = id("catapult_launch");
 
-    public static final Identifier LASER_EMITTER_ACTIVATE = new Identifier("portalcubed:laser/emitter_activate");
-    public static final Identifier LASER_NODE_MUSIC = new Identifier("portalcubed:laser/node_music");
-    public static final Identifier LASER_NODE_ACTIVATE = new Identifier("portalcubed:laser/node_activate");
-    public static final Identifier LASER_NODE_DEACTIVATE = new Identifier("portalcubed:laser/node_deactivate");
+    public static final Identifier PEDESTAL_BUTTON_PRESS = id("pedestal_button_press");
+    public static final Identifier PEDESTAL_BUTTON_RELEASE = id("pedestal_button_release");
+    public static final Identifier OLD_AP_PEDESTAL_BUTTON_PRESS = id("old_ap_pedestal_button_press");
+    public static final Identifier OLD_AP_PEDESTAL_BUTTON_RELEASE = id("old_ap_pedestal_button_release");
+    public static final Identifier FLOOR_BUTTON_PRESS = id("floor_button_press");
+    public static final Identifier FLOOR_BUTTON_RELEASE = id("floor_button_release");
+    public static final Identifier OLD_AP_FLOOR_BUTTON_PRESS = id("old_ap_floor_button_press");
+    public static final Identifier OLD_AP_FLOOR_BUTTON_RELEASE = id("old_ap_floor_button_release");
 
-    public static final Identifier TBEAM_ENTER = new Identifier("portalcubed:tbeam/enter");
-    public static final Identifier TBEAM_TRAVEL = new Identifier("portalcubed:tbeam/travel");
+    public static final Identifier ROCKET_FIRE = id("rocket_fire");
+    public static final Identifier ROCKET_FLY = id("rocket_fly");
+    public static final Identifier ROCKET_LOCKED = id("rocket_locked");
+    public static final Identifier ROCKET_LOCKING = id("rocket_locking");
+    public static final Identifier ROCKET_EXPLODE = id("rocket_explode");
+    public static final Identifier ROCKET_GOO = id("rocket_goo");
 
-    public static final Identifier RADIO_MUSIC = new Identifier("portalcubed:radio");
-    public static final Identifier EXILE_SONG = new Identifier("portalcubed:exile_vilify");
-    public static final Identifier CURIOSITY_CORE_SOUND = new Identifier("portalcubed:curiosity_core");
-    public static final Identifier ANGER_CORE_SOUND = new Identifier("portalcubed:anger_core");
-    public static final Identifier CAKE_CORE_SOUND = new Identifier("portalcubed:cake_core");
+    public static final Identifier LASER_EMITTER_ACTIVATE = id("laser/emitter_activate");
+    public static final Identifier LASER_BEAM_MUSIC = id("laser/beam_music");
+    public static final Identifier LASER_NODE_MUSIC = id("laser/node_music");
+    public static final Identifier LASER_NODE_ACTIVATE = id("laser/node_activate");
+    public static final Identifier LASER_NODE_DEACTIVATE = id("laser/node_deactivate");
+    public static final Identifier LASER_TRIPLE_LASER_SOUND_DEMO_1 = id("laser/triple_laser_sound_demo_1");
+    public static final Identifier LASER_TRIPLE_LASER_SOUND_DEMO_2 = id("laser/triple_laser_sound_demo_2");
+    public static final Identifier LASER_TRIPLE_LASER_SOUND_DEMO_3 = id("laser/triple_laser_sound_demo_3");
 
-    public static final Identifier SPACE_CORE_SOUND = new Identifier("portalcubed:space_core");
-    public static final Identifier FACT_CORE_SOUND = new Identifier("portalcubed:fact_core");
-    public static final Identifier ADVENTURE_CORE_SOUND = new Identifier("portalcubed:adventure_core");
+    public static final Identifier PELLET_BOUNCE = id("pellet/bounce");
+    public static final Identifier PELLET_EXPLODE = id("pellet/explode");
+    public static final Identifier PELLET_SPAWN = id("pellet/spawn");
+    public static final Identifier PELLET_TRAVEL = id("pellet/travel");
+
+    public static final Identifier TBEAM_ENTER = id("tbeam/enter");
+    public static final Identifier TBEAM_TRAVEL = id("tbeam/travel");
+
+    public static final Identifier RADIO_MUSIC = id("radio");
+    public static final Identifier EXILE_SONG = id("exile_vilify");
+    public static final Identifier CURIOSITY_CORE_SOUND = id("curiosity_core");
+    public static final Identifier ANGER_CORE_SOUND = id("anger_core");
+    public static final Identifier CAKE_CORE_SOUND = id("cake_core");
+
+    public static final Identifier SPACE_CORE_SOUND = id("space_core");
+    public static final Identifier FACT_CORE_SOUND = id("fact_core");
+    public static final Identifier ADVENTURE_CORE_SOUND = id("adventure_core");
+
+    public static final SoundEvent ERROR_EVENT = new SoundEvent(ERROR);
 
     public static final SoundEvent GEL_BOUNCE_EVENT = new SoundEvent(GEL_BOUNCE);
     public static final SoundEvent GEL_RUN_EVENT = new SoundEvent(GEL_RUN);
@@ -66,17 +93,37 @@ public class PortalCubedSounds {
     public static final SoundEvent CUBE_SCRAPE_EVENT = new SoundEvent(CUBE_SCRAPE);
     public static final SoundEvent COMPANION_CUBE_AMBIANCE_EVENT = new SoundEvent(COMPANION_CUBE_AMBIANCE);
     public static final SoundEvent MATERIAL_EMANCIPATION_EVENT = new SoundEvent(MATERIAL_EMANCIPATION);
+    public static final SoundEvent CATAPULT_LAUNCH_EVENT = new SoundEvent(CATAPULT_LAUNCH);
+
+    public static final SoundEvent PEDESTAL_BUTTON_PRESS_EVENT = new SoundEvent(PEDESTAL_BUTTON_PRESS);
+    public static final SoundEvent PEDESTAL_BUTTON_RELEASE_EVENT = new SoundEvent(PEDESTAL_BUTTON_RELEASE);
+    public static final SoundEvent OLD_AP_PEDESTAL_BUTTON_PRESS_EVENT = new SoundEvent(OLD_AP_PEDESTAL_BUTTON_PRESS);
+    public static final SoundEvent OLD_AP_PEDESTAL_BUTTON_RELEASE_EVENT = new SoundEvent(OLD_AP_PEDESTAL_BUTTON_RELEASE);
+    public static final SoundEvent FLOOR_BUTTON_PRESS_EVENT = new SoundEvent(FLOOR_BUTTON_PRESS);
+    public static final SoundEvent FLOOR_BUTTON_RELEASE_EVENT = new SoundEvent(FLOOR_BUTTON_RELEASE);
+    public static final SoundEvent OLD_AP_FLOOR_BUTTON_PRESS_EVENT = new SoundEvent(OLD_AP_FLOOR_BUTTON_PRESS);
+    public static final SoundEvent OLD_AP_FLOOR_BUTTON_RELEASE_EVENT = new SoundEvent(OLD_AP_FLOOR_BUTTON_RELEASE);
 
     public static final SoundEvent ROCKET_FIRE_EVENT = new SoundEvent(ROCKET_FIRE);
     public static final SoundEvent ROCKET_FLY_EVENT = new SoundEvent(ROCKET_FLY);
     public static final SoundEvent ROCKET_LOCKED_EVENT = new SoundEvent(ROCKET_LOCKED);
     public static final SoundEvent ROCKET_LOCKING_EVENT = new SoundEvent(ROCKET_LOCKING);
     public static final SoundEvent ROCKET_EXPLODE_EVENT = new SoundEvent(ROCKET_EXPLODE);
+    public static final SoundEvent ROCKET_GOO_EVENT = new SoundEvent(ROCKET_GOO);
 
     public static final SoundEvent LASER_EMITTER_ACTIVATE_EVENT = new SoundEvent(LASER_EMITTER_ACTIVATE);
+    public static final SoundEvent LASER_BEAM_MUSIC_EVENT = new SoundEvent(LASER_BEAM_MUSIC);
     public static final SoundEvent LASER_NODE_MUSIC_EVENT = new SoundEvent(LASER_NODE_MUSIC);
     public static final SoundEvent LASER_NODE_ACTIVATE_EVENT = new SoundEvent(LASER_NODE_ACTIVATE);
     public static final SoundEvent LASER_NODE_DEACTIVATE_EVENT = new SoundEvent(LASER_NODE_DEACTIVATE);
+    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_1_EVENT = new SoundEvent(LASER_TRIPLE_LASER_SOUND_DEMO_1);
+    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_2_EVENT = new SoundEvent(LASER_TRIPLE_LASER_SOUND_DEMO_2);
+    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_3_EVENT = new SoundEvent(LASER_TRIPLE_LASER_SOUND_DEMO_3);
+
+    public static final SoundEvent PELLET_BOUNCE_EVENT = new SoundEvent(PELLET_BOUNCE);
+    public static final SoundEvent PELLET_EXPLODE_EVENT = new SoundEvent(PELLET_EXPLODE);
+    public static final SoundEvent PELLET_SPAWN_EVENT = new SoundEvent(PELLET_SPAWN);
+    public static final SoundEvent PELLET_TRAVEL_EVENT = new SoundEvent(PELLET_TRAVEL);
 
     public static final SoundEvent TBEAM_ENTER_EVENT = new SoundEvent(TBEAM_ENTER);
     public static final SoundEvent TBEAM_TRAVEL_EVENT = new SoundEvent(TBEAM_TRAVEL);
@@ -91,6 +138,8 @@ public class PortalCubedSounds {
     public static final SoundEvent ADVENTURE_CORE_EVENT = new SoundEvent(ADVENTURE_CORE_SOUND);
 
     public static void registerSounds() {
+        Registry.register(Registry.SOUND_EVENT, ERROR, ERROR_EVENT);
+
         Registry.register(Registry.SOUND_EVENT, GEL_BOUNCE, GEL_BOUNCE_EVENT);
         Registry.register(Registry.SOUND_EVENT, GEL_RUN, GEL_RUN_EVENT);
         Registry.register(Registry.SOUND_EVENT, GEL_SPLAT, GEL_SPLAT_EVENT);
@@ -110,17 +159,37 @@ public class PortalCubedSounds {
 
         Registry.register(Registry.SOUND_EVENT, COMPANION_CUBE_AMBIANCE, COMPANION_CUBE_AMBIANCE_EVENT);
         Registry.register(Registry.SOUND_EVENT, MATERIAL_EMANCIPATION, MATERIAL_EMANCIPATION_EVENT);
+        Registry.register(Registry.SOUND_EVENT, CATAPULT_LAUNCH, CATAPULT_LAUNCH_EVENT);
+
+        Registry.register(Registry.SOUND_EVENT, PEDESTAL_BUTTON_PRESS, PEDESTAL_BUTTON_PRESS_EVENT);
+        Registry.register(Registry.SOUND_EVENT, PEDESTAL_BUTTON_RELEASE, PEDESTAL_BUTTON_RELEASE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, OLD_AP_PEDESTAL_BUTTON_PRESS, OLD_AP_PEDESTAL_BUTTON_PRESS_EVENT);
+        Registry.register(Registry.SOUND_EVENT, OLD_AP_PEDESTAL_BUTTON_RELEASE, OLD_AP_PEDESTAL_BUTTON_RELEASE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, FLOOR_BUTTON_PRESS, FLOOR_BUTTON_PRESS_EVENT);
+        Registry.register(Registry.SOUND_EVENT, FLOOR_BUTTON_RELEASE, FLOOR_BUTTON_RELEASE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, OLD_AP_FLOOR_BUTTON_PRESS, OLD_AP_FLOOR_BUTTON_PRESS_EVENT);
+        Registry.register(Registry.SOUND_EVENT, OLD_AP_FLOOR_BUTTON_RELEASE, OLD_AP_FLOOR_BUTTON_RELEASE_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, ROCKET_FIRE, ROCKET_FIRE_EVENT);
         Registry.register(Registry.SOUND_EVENT, ROCKET_FLY, ROCKET_FLY_EVENT);
         Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKED, ROCKET_LOCKED_EVENT);
         Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKING, ROCKET_LOCKING_EVENT);
         Registry.register(Registry.SOUND_EVENT, ROCKET_EXPLODE, ROCKET_EXPLODE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, ROCKET_GOO, ROCKET_GOO_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, LASER_EMITTER_ACTIVATE, LASER_EMITTER_ACTIVATE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_BEAM_MUSIC, LASER_BEAM_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_MUSIC, LASER_NODE_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_ACTIVATE, LASER_NODE_ACTIVATE_EVENT);
         Registry.register(Registry.SOUND_EVENT, LASER_NODE_DEACTIVATE, LASER_NODE_DEACTIVATE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_1, LASER_TRIPLE_LASER_SOUND_DEMO_1_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_2, LASER_TRIPLE_LASER_SOUND_DEMO_2_EVENT);
+        Registry.register(Registry.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_3, LASER_TRIPLE_LASER_SOUND_DEMO_3_EVENT);
+
+        Registry.register(Registry.SOUND_EVENT, PELLET_BOUNCE, PELLET_BOUNCE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, PELLET_EXPLODE, PELLET_EXPLODE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, PELLET_SPAWN, PELLET_SPAWN_EVENT);
+        Registry.register(Registry.SOUND_EVENT, PELLET_TRAVEL, PELLET_TRAVEL_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, TBEAM_ENTER, TBEAM_ENTER_EVENT);
         Registry.register(Registry.SOUND_EVENT, TBEAM_TRAVEL, TBEAM_TRAVEL_EVENT);

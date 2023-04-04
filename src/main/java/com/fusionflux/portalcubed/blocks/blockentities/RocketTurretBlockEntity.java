@@ -3,15 +3,16 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.AnimationState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -26,11 +27,12 @@ import net.minecraft.world.World;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.fusionflux.portalcubed.blocks.RocketTurretBlock.POWERED;
 
-public class RocketTurretBlockEntity extends BlockEntity {
+public class RocketTurretBlockEntity extends EntityLikeBlockEntity {
     public static final int UPDATE_ANGLE = 0;
     public static final int UPDATE_LOCKED_TICKS = 1;
 
@@ -38,19 +40,18 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     private static final Vec3d GUN_OFFSET = new Vec3d(0.5, 1.71875, 0.09375);
 
-    private float yaw, pitch;
-    private int age, lockedTicks;
+    private int lockedTicks;
     private UUID rocketUuid = Util.NIL_UUID;
 
     private Vec2f destAngle;
     private Boolean powered;
     private int opening = -1;
     private boolean closing;
-    public float lastYaw, lastPitch;
-    public Vec3d aimDest;
+    public List<Pair<Vec3d, Vec3d>> aimDests;
 
     public final AnimationState activatingAnimation = new AnimationState();
     public final AnimationState deactivatingAnimation = new AnimationState();
+    public final AnimationState shootAnimation = new AnimationState();
 
     public RocketTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -62,9 +63,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        nbt.putInt("Age", age);
-        nbt.putFloat("Yaw", yaw);
-        nbt.putFloat("Pitch", pitch);
+        super.writeNbt(nbt);
         nbt.putFloat("LockedTicks", lockedTicks);
         nbt.putUuid("RocketUUID", rocketUuid);
         nbt.putBoolean("Closing", closing);
@@ -75,9 +74,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        age = nbt.getInt("Age");
-        yaw = nbt.getFloat("Yaw");
-        pitch = nbt.getFloat("Pitch");
+        super.readNbt(nbt);
         lockedTicks = nbt.getInt("LockedTicks");
         rocketUuid = nbt.getUuid("RocketUUID");
         closing = nbt.getBoolean("Closing");
@@ -96,7 +93,11 @@ public class RocketTurretBlockEntity extends BlockEntity {
     }
 
     public void setLockedTicks(int lockedTicks) {
+        final boolean wasFiring = getState() == State.FIRING;
         this.lockedTicks = lockedTicks;
+        if (!wasFiring && getState() == State.FIRING) {
+            shootAnimation.restart(getAge());
+        }
     }
 
     public void fire() {
@@ -156,21 +157,20 @@ public class RocketTurretBlockEntity extends BlockEntity {
         return State.FIRING;
     }
 
+    @Override
     public void tick(World world, BlockPos pos, BlockState state) {
-        age++;
-        lastYaw = yaw;
-        lastPitch = pitch;
+        super.tick(world, pos, state);
         if (powered == null) {
             powered = state.get(POWERED);
             if (!powered) {
-                deactivatingAnimation.restart(age - 41);
+                deactivatingAnimation.restart(getAge() - 41);
             }
         } else if (powered != state.get(POWERED)) {
             powered = !powered;
             if (powered) {
                 opening = 0;
                 deactivatingAnimation.stop();
-                activatingAnimation.restart(age);
+                activatingAnimation.restart(getAge());
                 closing = false;
             } else {
                 lockedTicks = 0;
@@ -178,7 +178,7 @@ public class RocketTurretBlockEntity extends BlockEntity {
             }
             return;
         }
-        if (opening >= 0 && opening < 60) {
+        if (opening >= 0 && opening < 80) {
             opening++;
             return;
         } else if (closing) {
@@ -189,25 +189,27 @@ public class RocketTurretBlockEntity extends BlockEntity {
                 yaw = 0;
                 pitch = 0;
                 activatingAnimation.stop();
-                deactivatingAnimation.restart(age);
+                deactivatingAnimation.restart(getAge());
                 closing = false;
             }
         }
         if (!powered) {
             if (world.isClient) {
-                aimDest = null;
+                aimDests = null;
             }
+            setYaw(0);
+            setPitch(0);
             return;
         }
         if (world.isClient) {
             final Vec3d gunPos = Vec3d.of(getPos()).add(getGunOffset(0));
             //noinspection DataFlowIssue
-            aimDest = world.raycast(new RaycastContext(
+            aimDests = PortalDirectionUtils.raycast(world, new RaycastContext(
                 gunPos, gunPos.add(Vec3d.fromPolar(pitch, yaw - 90).multiply(127)),
                 RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE,
                 // We can pass null here because of ShapeContextMixin
                 null
-            )).getPos();
+            )).rays().stream().map(r -> new Pair<>(r.start(), r.end())).toList();
             return;
         }
         if (lockedTicks > 0) {
@@ -237,11 +239,14 @@ public class RocketTurretBlockEntity extends BlockEntity {
         final BlockPos actualBody = getPos().up();
         final Vec3d eye = Vec3d.ofCenter(actualBody, GUN_OFFSET.y - 1);
         //noinspection DataFlowIssue
-        final PlayerEntity player = world.getClosestPlayer(
-            TargetPredicate.createNonAttackable().setPredicate(p -> p.world.raycast(new RaycastContext(
-                eye, p.getPos().withAxis(Direction.Axis.Y, p.getBodyY(0.5)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, null
+        final LivingEntity player = world.getClosestEntity(
+            LivingEntity.class,
+            TargetPredicate.createAttackable().setPredicate(e -> !(e instanceof CorePhysicsEntity) && e.world.raycast(new RaycastContext(
+                eye, e.getPos().withAxis(Direction.Axis.Y, e.getBodyY(0.5)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, null
             )).getType() == HitResult.Type.MISS),
-            pos.getX(), pos.getY(), pos.getZ()
+            null,
+            pos.getX(), pos.getY(), pos.getZ(),
+            Box.of(eye, 128, 128, 128)
         );
         if (player != null) {
             final Vec3d offset = player.getPos()
@@ -270,35 +275,10 @@ public class RocketTurretBlockEntity extends BlockEntity {
     public Vec3d getGunOffset(float tickDelta) {
         return GUN_OFFSET
             .add(-0.3, -1.475, -0.5)
-            .rotateZ((float)Math.toRadians(MathHelper.lerpAngleDegrees(tickDelta, lastPitch, pitch)))
+            .rotateZ((float)Math.toRadians(MathHelper.lerpAngleDegrees(tickDelta, prevPitch, pitch)))
             .add(-0.2, -0.025, 0.0)
-            .rotateY((float)Math.toRadians(-MathHelper.lerpAngleDegrees(tickDelta, lastYaw, yaw)))
+            .rotateY((float)Math.toRadians(-MathHelper.lerpAngleDegrees(tickDelta, prevYaw, yaw)))
             .add(0.5, 1.5, 0.5);
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return toNbt();
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public float getYaw() {
-        return yaw;
-    }
-
-    public void setYaw(float yaw) {
-        this.yaw = MathHelper.wrapDegrees(yaw);
-    }
-
-    public float getPitch() {
-        return pitch;
-    }
-
-    public void setPitch(float pitch) {
-        this.pitch = MathHelper.wrapDegrees(pitch);
     }
 
     public enum State {

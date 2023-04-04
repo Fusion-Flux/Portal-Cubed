@@ -6,30 +6,30 @@ import net.minecraft.util.math.Direction;
 
 public class CustomProperties {
 
-    public static final BooleanProperty R_UP;
-    public static final BooleanProperty R_DOWN;
-    public static final BooleanProperty R_NORTH;
-    public static final BooleanProperty R_EAST;
-    public static final BooleanProperty R_SOUTH;
-    public static final BooleanProperty R_WEST;
+    public static final BooleanProperty RUP;
+    public static final BooleanProperty RDOWN;
+    public static final BooleanProperty RNORTH;
+    public static final BooleanProperty REAST;
+    public static final BooleanProperty RSOUTH;
+    public static final BooleanProperty RWEST;
     public static final BooleanProperty REVERSED;
     public static final BooleanProperty REFLECT;
-    public static final DirectionProperty H_FACING_UP;
-    public static final DirectionProperty H_FACING_DOWN;
-    public static final DirectionProperty HORIZONTAL_FACING;
+    public static final DirectionProperty HFACINGUP;
+    public static final DirectionProperty HFACINGDOWN;
+    public static final DirectionProperty HORIFACING;
 
     static {
-        R_UP = BooleanProperty.of("rup");
-        R_DOWN = BooleanProperty.of("rdown");
-        R_NORTH = BooleanProperty.of("rnorth");
-        R_EAST = BooleanProperty.of("reast");
-        R_SOUTH = BooleanProperty.of("rsouth");
-        R_WEST = BooleanProperty.of("rwest");
+        RUP = BooleanProperty.of("rup");
+        RDOWN = BooleanProperty.of("rdown");
+        RNORTH = BooleanProperty.of("rnorth");
+        REAST = BooleanProperty.of("reast");
+        RSOUTH = BooleanProperty.of("rsouth");
+        RWEST = BooleanProperty.of("rwest");
         REVERSED = BooleanProperty.of("reversed");
         REFLECT = BooleanProperty.of("reflect");
-        H_FACING_UP = DirectionProperty.of("hfacingup", Direction.Type.HORIZONTAL);
-        H_FACING_DOWN = DirectionProperty.of("hfacingdown", Direction.Type.HORIZONTAL);
-        HORIZONTAL_FACING = DirectionProperty.of("horifacing", Direction.Type.HORIZONTAL);
+        HFACINGUP = DirectionProperty.of("hfacingup", Direction.Type.HORIZONTAL);
+        HFACINGDOWN = DirectionProperty.of("hfacingdown", Direction.Type.HORIZONTAL);
+        HORIFACING = DirectionProperty.of("horifacing", Direction.Type.HORIZONTAL);
     }
 
 }

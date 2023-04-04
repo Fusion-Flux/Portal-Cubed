@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+
+      "portalcubed:2x2_double_crossbar_bottom_left_crafting",
+      "portalcubed:2x2_double_crossbar_bottom_right_crafting",
+      "portalcubed:2x2_double_crossbar_top_left_crafting",
+      "portalcubed:2x2_double_crossbar_top_right_crafting",
+      "portalcubed:1x1_single_crossbar_crafting",
+      "portalcubed:1x1_double_crossbar_crafting",
+      "portalcubed:old_ap_metal_grating_crafting",
+      "portalcubed:portal_1_metal_grating_crafting",
+      "portalcubed:portal_2_metal_grating_crafting",
+      "portalcubed:portal_1_mesh_grating_crafting"
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+"minecraft:scaffolding",
+"minecraft:iron_nugget"
+]
+          }
+        ]
+      }
+    }
+  }
+}

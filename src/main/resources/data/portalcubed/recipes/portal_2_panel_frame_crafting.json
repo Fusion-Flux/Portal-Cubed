@@ -7,11 +7,11 @@
     ],
     "key": {
         "Y": {
-            "item": "minecraft:iron_bars"
+            "item": "minecraft:iron_nugget"
         }
     },
     "result": {
-        "item": "portalcubed:insulation",
-        "count": 16
+        "item": "portalcubed:portal_2_panel_frame",
+        "count": 8
     }
 }

@@ -6,11 +6,11 @@
     "provides": [],
     "version": "${version}",
     "entrypoints": {
-      "preLaunch": "com.llamalad7.mixinextras.MixinExtrasBootstrap::init",
       "init": "com.fusionflux.portalcubed.PortalCubed",
       "client_init": "com.fusionflux.portalcubed.client.PortalCubedClient",
-      "modmenu": "com.fusionflux.portalcubed.compatability.ModMenuIntegration",
-      "cardinal-components": "com.fusionflux.portalcubed.util.PortalCubedComponents"
+      "modmenu": "com.fusionflux.portalcubed.compat.ModMenuIntegration",
+      "cardinal-components": "com.fusionflux.portalcubed.util.PortalCubedComponents",
+      "dynamiclights": "com.fusionflux.portalcubed.compat.LambDynamicLightsIntegration"
     },
 
     "depends": [
@@ -45,6 +45,10 @@
         "id": "fabric",
         "reason": "This mod uses QSL for its content, please use Quilted Fabric API instead of Fabric API to allow for this.",
         "unless": "quilted_fabric_api"
+      },
+      {
+        "id": "sodium",
+        "unless": "indium"
       }
     ],
 
@@ -53,15 +57,20 @@
       "description": "A portal gun mod for Quilt",
       "contributors": {
         "Fusion Flux": "Developer",
-        "sailKite": "ADD CONTRIBUTIONS HERE",
+        "Gaming32": "Developer",
+        "Maximum": "Developer",
         "Platymemo": "Developer",
-        "Siuolplex": "Quilt Porter"
+        "sailKite": "Cheerleader",
+        "Siuolplex": "Quilt Porter",
+        "Cart3r": "Artist",
+        "LudoCrypt": "Audio",
+        "asojidev": "Audio"
       },
       "license": "MIT",
       "contact": {
-        "homepage": "https://www.curseforge.com/minecraft/mc-mods/portalcubed",
-        "sources": "https://github.com/Fusion-Flux/Thinking-With-Portatos",
-        "issues": "https://github.com/Fusion-Flux/Thinking-With-Portatos/issues"
+        "homepage": "https://modrinth.com/mod/portal-cubed",
+        "sources": "https://github.com/Fusion-Flux/Portal-Cubed",
+        "issues": "https://github.com/Fusion-Flux/Portal-Cubed/issues"
       },
       "icon": "assets/portalcubed/icon.png"
     },
@@ -70,7 +79,8 @@
 
   },
   "mixin": [
-    "portalcubed.mixins.json"
+    "portalcubed.mixins.json",
+    "portalcubed.rayon.mixins.json"
   ],
   "cardinal-components": [
     "portalcubed:entity_component",
