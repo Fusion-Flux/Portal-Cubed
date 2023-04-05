@@ -127,6 +127,10 @@ public class PortalCubedEntities {
         .setDimensions(EntityDimensions.fixed(0f, 0f))
         .build();
 
+    public static final EntityType<TurretEntity> TURRET = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, TurretEntity::new)
+        .setDimensions(EntityDimensions.fixed(1f, 1f))
+        .build();
+
     public static void registerEntities() {
         Registry.register(Registry.ENTITY_TYPE, id("experimental_portal"), EXPERIMENTAL_PORTAL);
         Registry.register(Registry.ENTITY_TYPE, id("storage_cube"), STORAGE_CUBE);
@@ -164,6 +168,8 @@ public class PortalCubedEntities {
 
         Registry.register(Registry.ENTITY_TYPE, id("decal"), DECAL);
 
+        Registry.register(Registry.ENTITY_TYPE, id("turret"), TURRET);
+
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(STORAGE_CUBE, StorageCubeEntity.createMobAttributes().build());
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes().build());
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(RADIO, RadioEntity.createMobAttributes().build());
@@ -188,6 +194,8 @@ public class PortalCubedEntities {
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(SPACE_CORE, HoopyEntity.createMobAttributes().build());
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(ADVENTURE_CORE, HoopyEntity.createMobAttributes().build());
         DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(FACT_CORE, HoopyEntity.createMobAttributes().build());
+
+        DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(TURRET, TurretEntity.createMobAttributes().build());
     }
 
     public static EntityType<? extends GelBlobEntity> createGelBlob(BaseGel gel, Identifier texture) {

@@ -67,6 +67,8 @@
 
   "item.portalcubed.base_gel": "Base Gel Glob",
 
+  "item.portalcubed.turret": "Turret",
+
   "block.portalcubed.power_block": "Power Block",
 
   "block.portalcubed.propulsion_gel": "Propulsion Gel Glob",
@@ -383,6 +385,8 @@
   "entity.portalcubed.rocket": "Rocket",
 
   "entity.portalcubed.experimental_portal": "Portal",
+
+  "entity.portalcubed.turret": "Turret",
 
   "item.portalcubed.music_disc_still_alive": "Music Disc",
   "item.portalcubed.music_disc_still_alive.desc": "John Coulton - Still Alive",

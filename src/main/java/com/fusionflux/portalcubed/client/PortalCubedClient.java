@@ -527,6 +527,9 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(BetaFaithPlateRenderer.BETA_FAITH_PLATE_LAYER, BetaFaithPlateModel::getTexturedModelData);
         BlockEntityRendererFactories.register(PortalCubedBlocks.BETA_FAITH_PLATE_BLOCK_ENTITY, BetaFaithPlateRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(TurretRenderer.TURRET_LAYER, TurretModel::getTexturedModelData);
+        EntityRendererRegistry.register(PortalCubedEntities.TURRET, TurretRenderer::new);
     }
 
     private static final class VisibleBarriersCompat {

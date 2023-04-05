@@ -53,6 +53,8 @@ public class PortalCubedItems {
     public static final SpawnEggItem SPACE_CORE = new SpawnEggItem(PortalCubedEntities.SPACE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP));
     public static final SpawnEggItem FACT_CORE = new SpawnEggItem(PortalCubedEntities.FACT_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP));
     public static final SpawnEggItem ADVENTURE_CORE = new SpawnEggItem(PortalCubedEntities.ADVENTURE_CORE, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP));
+    public static final SpawnEggItem TURRET = new SpawnEggItem(PortalCubedEntities.TURRET, 1, 1, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP));
+
 
     public static final Item HAMMER = new Item(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP).maxCount(1));
 
@@ -98,6 +100,7 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, id("space_core"), SPACE_CORE);
         Registry.register(Registry.ITEM, id("fact_core"), FACT_CORE);
         Registry.register(Registry.ITEM, id("adventure_core"), ADVENTURE_CORE);
+        Registry.register(Registry.ITEM, id("turret"), TURRET);
 
         Registry.register(Registry.ITEM, id("block_item_icon"), BLOCK_ITEM_ICON);
 
