@@ -399,5 +399,15 @@
 				"stream": true
 			}
 		]
+	},
+
+	"sewage_step": {
+		"sounds": [
+			"portalcubed:mud1",
+			"portalcubed:mud2",
+			"portalcubed:mud3",
+			"portalcubed:mud4"
+		],
+		"subtitle": "subtitles.block.generic.footsteps"
 	}
 }

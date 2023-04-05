@@ -5,7 +5,9 @@ import com.fusionflux.portalcubed.blocks.blockentities.*;
 import com.fusionflux.portalcubed.blocks.fizzler.*;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.GelBlobItem;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
@@ -113,6 +115,20 @@ public class PortalCubedBlocks {
     public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static final BlockEntityType<RocketTurretBlockEntity> ROCKET_TURRET_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build();
 
+    public static final Block SEWAGE = new Block(
+        QuiltBlockSettings.copyOf(Blocks.MUD)
+            .jumpVelocityMultiplier(0.05f)
+            .slipperiness(0.999f)
+            .sounds(new BlockSoundGroup(
+                1f, 1f,
+                SoundEvents.BLOCK_MUD_BREAK,
+                PortalCubedSounds.SEWAGE_STEP_EVENT,
+                SoundEvents.BLOCK_MUD_PLACE,
+                SoundEvents.BLOCK_MUD_HIT,
+                SoundEvents.BLOCK_MUD_FALL
+            ))
+    );
+
     public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY, id("cant_place_portal_on"));
     public static final TagKey<Block> PORTAL_NONSOLID = TagKey.of(Registry.BLOCK_KEY, id("portal_nonsolid"));
     public static final TagKey<Block> PORTAL_SOLID = TagKey.of(Registry.BLOCK_KEY, id("portal_solid"));
@@ -212,6 +228,9 @@ public class PortalCubedBlocks {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, id("rocket_turret"), ROCKET_TURRET_BLOCK_ENTITY);
         Registry.register(Registry.BLOCK, id("rocket_turret"), ROCKET_TURRET);
         Registry.register(Registry.ITEM, id("rocket_turret"), new BlockItem(ROCKET_TURRET, new Item.Settings().group(PortalCubed.TESTING_ELEMENTS_GROUP)));
+
+        Registry.register(Registry.BLOCK, id("sewage"), SEWAGE);
+        Registry.register(Registry.ITEM, id("sewage"), new BlockItem(SEWAGE, new Item.Settings().group(PortalCubed.PORTAL_BLOCKS_GROUP)));
 
         Registry.register(Registry.BLOCK, id("power_block"), POWER_BLOCK);
         Registry.register(Registry.ITEM, id("power_block"), new BlockItem(POWER_BLOCK, new Item.Settings().rarity(Rarity.EPIC).group(PortalCubed.TESTING_ELEMENTS_GROUP)));
