@@ -6,12 +6,16 @@ import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalArmor implements ArmorMaterial {
-
+    private static final Identifier TEXTURE = id("textures/models/armor/portal_armor");
     private static final int[] BASE_DURABILITY = new int[]{13, 15, 16, 11};
     private static final int[] PROTECTION_VALUES = new int[]{3, 6, 8, 3};
-
 
     @Override
     public int getDurability(EquipmentSlot slot) {
@@ -51,5 +55,12 @@ public class PortalArmor implements ArmorMaterial {
     @Override
     public float getKnockbackResistance() {
         return 0F;
+    }
+
+    @NotNull
+    @Override
+    @ClientOnly
+    public Identifier getTexture() {
+        return TEXTURE;
     }
 }
