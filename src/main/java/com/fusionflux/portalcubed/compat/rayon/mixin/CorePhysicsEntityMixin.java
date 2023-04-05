@@ -35,7 +35,7 @@ public abstract class CorePhysicsEntityMixin extends PathAwareEntity implements 
         rigidBody.setDragType(ElementRigidBody.DragType.NONE);
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(method = {"tick", "method_5773"}, at = @At("TAIL"))
     private void checkBlockCollisions(CallbackInfo ci) {
         // Rayon normally prevents this call, as it's called in move() and Rayon yeets move()
         tryCheckBlockCollision();
