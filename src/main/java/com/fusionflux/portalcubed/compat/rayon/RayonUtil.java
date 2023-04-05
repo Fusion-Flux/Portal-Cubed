@@ -63,4 +63,8 @@ public class RayonUtil {
 
         return triangles;
     }
+
+    public static List<Triangle> getShiftedMeshOf(BoundingBox box) {
+        return getMeshOf(box, new Vector3f(0, box.getYExtent() / 2, 0));
+    }
 }

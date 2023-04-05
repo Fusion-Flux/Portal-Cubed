@@ -48,9 +48,8 @@ public abstract class CorePhysicsEntityMixin extends PathAwareEntity implements 
 
     @Override
     public MinecraftShape.Convex createShape() {
-        return new MinecraftShape.Convex(RayonUtil.getMeshOf(
-            Convert.toBullet(getBoundingBox().shrink(0, 0.1, 0)),
-            new Vector3f(0, getHeight() / 2, 0)
+        return new MinecraftShape.Convex(RayonUtil.getShiftedMeshOf(
+            Convert.toBullet(getBoundingBox().shrink(0, 0.1, 0))
         ));
     }
 

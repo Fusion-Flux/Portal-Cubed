@@ -10,16 +10,14 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
+import static com.fusionflux.portalcubed.entity.TurretEntity.MODEL_SCALE;
 
 public class TurretModel extends FizzleableModel<TurretEntity> {
     public static final EntityModelLayer TURRET_MAIN_LAYER = new EntityModelLayer(id("turret"), "main");
 
     public static final Identifier DEFAULT_TEXTURE = id("textures/entity/default_turret.png");
-
-    public static final float MODEL_SCALE = MathHelper.lerp(0.875f, 1 / 1.62f, 1f);
 
     private final ModelPart turret;
 

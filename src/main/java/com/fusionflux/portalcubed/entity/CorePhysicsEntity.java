@@ -192,10 +192,10 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                 }
                 this.fallDistance = 0;
                 if (RayonIntegration.INSTANCE.isPresent()) {
-                    final float wrappedPlayerYaw = MathHelper.wrapDegrees(player.headYaw);
-                    final float multiplier = (wrappedPlayerYaw > 120 || wrappedPlayerYaw < 0) ? -1 : 1;
+                    final float destYaw = MathHelper.wrapDegrees(player.headYaw + 180);
+                    final float multiplier = (destYaw > 120 || destYaw < 0) ? -1 : 1;
                     final float yawDelta = MathHelper.wrapDegrees(
-                        MathHelper.wrapDegrees(RayonIntegration.INSTANCE.getYaw(this) * multiplier) - wrappedPlayerYaw
+                        MathHelper.wrapDegrees(RayonIntegration.INSTANCE.getYaw(this) * multiplier) - destYaw
                     );
                     RayonIntegration.INSTANCE.rotateYaw(this, yawDelta);
                     RayonIntegration.INSTANCE.setAngularVelocityYaw(this, new Vec3f(0, yawDelta, 0));

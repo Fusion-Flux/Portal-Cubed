@@ -128,7 +128,7 @@ public class PortalCubedEntities {
         .build();
 
     public static final EntityType<TurretEntity> TURRET = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, TurretEntity::new)
-        .setDimensions(EntityDimensions.fixed(1f, 1f))
+        .setDimensions(EntityDimensions.changing(0.75f * TurretEntity.MODEL_SCALE, 1.5f * TurretEntity.MODEL_SCALE))
         .build();
 
     public static void registerEntities() {
