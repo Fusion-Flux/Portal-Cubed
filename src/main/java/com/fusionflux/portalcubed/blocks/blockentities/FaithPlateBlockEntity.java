@@ -159,11 +159,6 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
         velZ = tag.getDouble("velZ");
     }
 
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return toNbt();
-    }
-
     @Nullable
     @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
