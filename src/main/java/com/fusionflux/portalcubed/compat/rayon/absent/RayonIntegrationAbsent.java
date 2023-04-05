@@ -55,4 +55,5 @@ public enum RayonIntegrationAbsent implements RayonIntegration {
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180f - entity.getYaw(tickDelta)));
         matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getPitch(tickDelta)));
     }
+
 }
