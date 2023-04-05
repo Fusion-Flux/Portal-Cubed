@@ -76,10 +76,6 @@ public class PortalCubed implements ModInitializer {
             id("testing_elements"),
             () -> new ItemStack(PortalCubedItems.PORTAL_GUN));
 
-    public static final ItemGroup PORTAL_BLOCKS_GROUP = QuiltItemGroup.createWithIcon(
-            id("portal_blocks"),
-            () -> new ItemStack(PortalCubedItems.BLOCK_ITEM_ICON));
-
     public static final ScreenHandlerType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = Registry.register(
         Registry.SCREEN_HANDLER, id("faith_plate_screen"),
         new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new)

@@ -412,6 +412,19 @@
     "type": "facade"
   },
 
+  "sewage": {
+    "inherit": "minecraft:mud",
+    "jump_velocity_multiplier": 0.05,
+    "slipperiness": 0.999,
+    "sounds": {
+      "break": "minecraft:block.mud.break",
+      "step": "portalcubed:sewage_step",
+      "place": "minecraft:block.mud.place",
+      "hit": "minecraft:block.mud.hit",
+      "fall": "minecraft:block.mud.fall"
+    }
+  },
+
   "light_bridge": {
     "type": "provided",
     "render_layer": "translucent"
