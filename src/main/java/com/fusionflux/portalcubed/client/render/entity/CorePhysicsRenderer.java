@@ -14,6 +14,6 @@ public abstract class CorePhysicsRenderer<T extends CorePhysicsEntity, M extends
 
     @Override
     protected void setupTransforms(T entity, MatrixStack matrices, float animationProgress, float bodyYaw, float tickDelta) {
-        matrices.multiply(RayonIntegration.INSTANCE.getVisualRotation(entity, tickDelta));
+        RayonIntegration.INSTANCE.multiplyMatrices(matrices, entity, tickDelta);
     }
 }

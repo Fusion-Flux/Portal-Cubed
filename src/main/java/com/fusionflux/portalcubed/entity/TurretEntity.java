@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 public class TurretEntity extends CorePhysicsEntity {
     public static final float MODEL_SCALE = MathHelper.lerp(0.875f, 1 / 1.62f, 1f);
     private static final Box BASE_BOX = createFootBox(0.5f * MODEL_SCALE, 1.5f * MODEL_SCALE, MODEL_SCALE);
+    public static final double ROTATE_HEIGHT = 0.1;
 
     public TurretEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
@@ -19,5 +20,10 @@ public class TurretEntity extends CorePhysicsEntity {
     @Override
     protected Box calculateBoundingBox() {
         return GeneralUtil.rotate(BASE_BOX, headYaw, Direction.Axis.Y).offset(getPos());
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
     }
 }

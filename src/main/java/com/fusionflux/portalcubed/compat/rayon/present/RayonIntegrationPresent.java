@@ -5,11 +5,12 @@ import com.fusionflux.portalcubed.compat.rayon.absent.RayonIntegrationAbsent;
 import com.jme3.math.Vector3f;
 import dev.lazurite.rayon.api.EntityPhysicsElement;
 import dev.lazurite.rayon.impl.bullet.math.Convert;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MovementType;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class RayonIntegrationPresent implements RayonIntegration {
     private static final Vector3f UP = new Vector3f(0, 1, 0);
@@ -30,13 +31,6 @@ public class RayonIntegrationPresent implements RayonIntegration {
         } else {
             entity.setVelocity(velocity);
         }
-    }
-
-    @Override
-    public Quaternion getVisualRotation(Entity entity, float tickDelta) {
-        return entity instanceof EntityPhysicsElement physicsElement
-            ? Convert.toMinecraft(physicsElement.getPhysicsRotation(new com.jme3.math.Quaternion(), tickDelta))
-            : RayonIntegrationAbsent.INSTANCE.getVisualRotation(entity, tickDelta);
     }
 
     @Override
@@ -87,6 +81,16 @@ public class RayonIntegrationPresent implements RayonIntegration {
     public void setAngularVelocityYaw(Entity entity, Vec3f angle) {
         if (entity instanceof EntityPhysicsElement physicsElement) {
             physicsElement.getRigidBody().setAngularVelocity(Convert.toBullet(angle));
+        }
+    }
+
+    @Override
+    @ClientOnly
+    public void multiplyMatrices(MatrixStack matrices, Entity entity, float tickDelta) {
+        if (entity instanceof EntityPhysicsElement physicsElement) {
+            matrices.multiply(Convert.toMinecraft(physicsElement.getPhysicsRotation(new com.jme3.math.Quaternion(), tickDelta)));
+        } else {
+            RayonIntegrationAbsent.INSTANCE.multiplyMatrices(matrices, entity, tickDelta);
         }
     }
 }

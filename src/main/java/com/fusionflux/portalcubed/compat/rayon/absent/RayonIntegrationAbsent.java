@@ -1,11 +1,12 @@
 package com.fusionflux.portalcubed.compat.rayon.absent;
 
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MovementType;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public enum RayonIntegrationAbsent implements RayonIntegration {
     INSTANCE;
@@ -22,12 +23,6 @@ public enum RayonIntegrationAbsent implements RayonIntegration {
     @Override
     public void setVelocity(Entity entity, Vec3d velocity) {
         entity.setVelocity(velocity);
-    }
-
-    @Override
-    public Quaternion getVisualRotation(Entity entity, float tickDelta) {
-        // TODO: include pitch as well
-        return Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - entity.getYaw(tickDelta));
     }
 
     @Override
@@ -52,5 +47,12 @@ public enum RayonIntegrationAbsent implements RayonIntegration {
 
     @Override
     public void setAngularVelocityYaw(Entity entity, Vec3f angle) {
+    }
+
+    @Override
+    @ClientOnly
+    public void multiplyMatrices(MatrixStack matrices, Entity entity, float tickDelta) {
+        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180f - entity.getYaw(tickDelta)));
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getPitch(tickDelta)));
     }
 }
