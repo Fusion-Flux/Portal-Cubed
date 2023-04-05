@@ -342,7 +342,10 @@ public class PortalCubedClient implements ClientModInitializer {
             final float red = fadeOut ? 0f : 1f;
             final float alpha = fadeOut
                 ? Math.min(((DeathScreenAccessor)client.currentScreen).getTicksSinceDeath() / 40f, 1f)
-                : 1f - MathHelper.clamp(MathHelper.lerp(client.player.getHealth() / client.player.getMaxHealth(), 0.5f, 1f), 0f, 1f);
+                : client.player.isDead()
+                    ? 0.5f : 1f - MathHelper.clamp(MathHelper.lerp(
+                        client.player.getHealth() / client.player.getMaxHealth(), 0.65f, 1f
+                    ), 0f, 1f);
             BufferBuilder bufferBuilder = Tessellator.getInstance().getBufferBuilder();
             final Matrix4f matrix = matrixStack.peek().getModel();
             final float w = client.getWindow().getScaledWidth();
