@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:mud"
+        },
+        {
+            "item": "minecraft:ice"
+        },
+        {
+            "item": "minecraft:honey_block"
+        }
+    ],
+    "result": {
+        "item": "portalcubed:sewage",
+        "count": 8
+    }
+}

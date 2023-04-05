@@ -33,19 +33,19 @@
 
   "item.portalcubed.storage_cube": "Weighted Storage Cube",
   "item.portalcubed.portal_1_storage_cube": "Portal 1 Weighted Storage Cube",
-  "item.portalcubed.companion_cube": "Companion Cube",
-  "item.portalcubed.portal_1_companion_cube": "Portal 1 Companion Cube",
+  "item.portalcubed.companion_cube": "Weighted Companion Cube",
+  "item.portalcubed.portal_1_companion_cube": "Portal 1 Weighted Companion Cube",
   "item.portalcubed.redirection_cube": "Discouragement Redirection Cube",
   "item.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
 
   "item.portalcubed.radio": "Radio",
-  "item.portalcubed.beans": "Beans",
-  "item.portalcubed.jug": "Jug",
+  "item.portalcubed.beans": "Bean Can",
+  "item.portalcubed.jug": "Water Jug",
   "item.portalcubed.computer": "Computer",
-  "item.portalcubed.chair": "Chair",
+  "item.portalcubed.chair": "Office Chair",
   "item.portalcubed.mug": "Mug",
   "item.portalcubed.hoopy": "Hoopy",
-  "item.portalcubed.lil_pineapple": "Lil Pineapple",
+  "item.portalcubed.lil_pineapple": "Lil\u0027 Pineapple",
   "item.portalcubed.core_frame": "Core Frame",
   "item.portalcubed.anger_core": "Anger Core",
   "item.portalcubed.intelligence_core": "Intelligence Core",
@@ -59,23 +59,23 @@
   "item.portalcubed.portal_gun": "Portal Gun",
   "item.portalcubed.portal_gun_primary": "Primary Portal Gun",
   "item.portalcubed.portal_gun_secondary": "Secondary Portal Gun",
-  "item.portalcubed.portal_gun_frame": "Portal Gun Frame",
+  "item.portalcubed.portal_gun_frame": "Portal Gun Barrel",
   "item.portalcubed.portal_gun_casing": "Portal Gun Casing",
   "item.portalcubed.paint_gun": "Paint Gun",
   "item.portalcubed.mini_blackhole": "Miniature Black Hole",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
 
-  "item.portalcubed.base_gel": "Base Gel Glob",
+  "item.portalcubed.base_gel": "Base Gel Blob",
 
-  "item.portalcubed.turret": "Turret",
+  "item.portalcubed.turret": "Sentry Turret",
 
   "block.portalcubed.power_block": "Power Block",
 
-  "block.portalcubed.propulsion_gel": "Propulsion Gel Glob",
-  "block.portalcubed.repulsion_gel": "Repulsion Gel Glob",
-  "block.portalcubed.adhesion_gel": "Adhesion Gel Glob",
-  "block.portalcubed.conversion_gel": "Conversion Gel Glob",
-  "block.portalcubed.reflection_gel": "Reflection Gel Glob",
+  "block.portalcubed.propulsion_gel": "Propulsion Gel Blob",
+  "block.portalcubed.repulsion_gel": "Repulsion Gel Blob",
+  "block.portalcubed.adhesion_gel": "Adhesion Gel Blob",
+  "block.portalcubed.conversion_gel": "Conversion Gel Blob",
+  "block.portalcubed.reflection_gel": "Reflection Gel Blob",
 
   "block.portalcubed.auto_portal": "Auto Portal",
   "block.portalcubed.velocity_helper": "Velocity Helper",
@@ -285,6 +285,7 @@
   "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",
   "block.portalcubed.reversed_excursion_funnel_emitter": "Reversed Excursion Funnel Emitter",
   "block.portalcubed.duel_excursion_funnel_emitter": "Dual Excursion Funnel Emitter",
+  "block.portalcubed.excursion_funnel": "Excursion Funnel",
   "block.portalcubed.portal_1_door": "Portal 1 Door",
   "block.portalcubed.portal_2_door": "Portal 2 Door",
   "block.portalcubed.octopus_door": "Octopus Door",
@@ -293,19 +294,20 @@
   "block.portalcubed.pedestal_button": "Pedestal Button",
   "block.portalcubed.old_ap_pedestal_button": "Old Aperture Pedestal Button",
 
-  "block.portalcubed.floor_button": "Floor Button",
+  "block.portalcubed.floor_button": "Surface Button",
   "block.portalcubed.floor_button.easter_egg": "Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button",
-  "block.portalcubed.old_ap_floor_button": "Old Aperture Floor Button",
+  "block.portalcubed.old_ap_floor_button": "Old Aperture Surface Button",
 
-  "block.portalcubed.laser_relay": "Laser Relay",
-  "block.portalcubed.laser_emitter": "Laser Emitter",
-  "block.portalcubed.laser_catcher": "Laser Catcher",
+  "block.portalcubed.laser_relay": "Thermal Discouragement Beam Relay",
+  "block.portalcubed.laser_emitter": "Thermal Discouragement Beam Emitter",
+  "block.portalcubed.laser_catcher": "Thermal Discouragement Beam Receptacle",
 
   "block.portalcubed.faith_plate": "Aerial Faith Plate",
   "block.portalcubed.beta_faith_plate": "Beta Aerial Faith Plate",
   "block.portalcubed.faith_plate_target": "Faith Plate Target",
 
   "block.portalcubed.light_bridge_emitter": "Hard Light Bridge Emitter",
+  "block.portalcubed.light_bridge": "Hard Light Bridge Emitter",
 
   "portalcubed.midnightconfig.title": "Portal Cubed Config",
   "portalcubed.midnightconfig.maxBridgeLength": "Max Emitter Range",
@@ -314,7 +316,7 @@
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
   "portalcubed.midnightconfig.pelletDamage": "Energy Pellet Damage",
-  "portalcubed.midnightconfig.laserDamage": "Discouragement Beam Damage",
+  "portalcubed.midnightconfig.laserDamage": "Thermal Discouragement Beam Damage",
   "portalcubed.midnightconfig.portalHudMode": "Use Portal HUD",
   "portalcubed.midnightconfig.gelOverlayOpacity": "Gel Overlay Opacity",
   "portalcubed.midnightconfig.titleScreenMode": "Title Screen Panorama Mode",
@@ -370,7 +372,7 @@
   "entity.portalcubed.computer": "Computer",
   "entity.portalcubed.hoopy": "Hoopy",
   "entity.portalcubed.jug": "Water Jug",
-  "entity.portalcubed.lil_pineapple": "Lil' Pineapple",
+  "entity.portalcubed.lil_pineapple": "Lil\u0027 Pineapple",
   "entity.portalcubed.mug": "Mug",
   "entity.portalcubed.radio": "Radio",
 
@@ -388,7 +390,7 @@
 
   "entity.portalcubed.experimental_portal": "Portal",
 
-  "entity.portalcubed.turret": "Turret",
+  "entity.portalcubed.turret": "Sentry Turret",
 
   "item.portalcubed.music_disc_still_alive": "Music Disc",
   "item.portalcubed.music_disc_still_alive.desc": "John Coulton - Still Alive",
@@ -399,7 +401,7 @@
   "item.portalcubed.music_disc_reconstructing_more_science": "Music Disc",
   "item.portalcubed.music_disc_reconstructing_more_science.desc": "Mike Morasky - Reconstructing More Science",
 
-  "item.portalcubed.block_item_icon": "Blocks Group Icon",
+  "item.portalcubed.block_item_icon": "Block Group Icon",
 
   "portalcubed.command.fizzle.success": "Successfully fizzled %s physics objects",
   "portalcubed.command.lasersong.failed": "Block at %s is not a laser node.",

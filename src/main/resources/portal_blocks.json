@@ -69,7 +69,19 @@
   "type": "directional"
   },
   "portal_1_2x2_exposed_panel_top_right": {
-  "type": "directional"
+    "type": "directional"
+  },
+  "sewage": {
+    "inherit": "minecraft:mud",
+    "jump_velocity_multiplier": 0.05,
+    "slipperiness": 0.999,
+    "sounds": {
+      "break": "minecraft:block.mud.break",
+      "step": "portalcubed:sewage_step",
+      "place": "minecraft:block.mud.place",
+      "hit": "minecraft:block.mud.hit",
+      "fall": "minecraft:block.mud.fall"
+    }
   },
   "white_checkered_panel": {},
   "white_half_panel": {},
@@ -412,18 +424,7 @@
     "type": "facade"
   },
 
-  "sewage": {
-    "inherit": "minecraft:mud",
-    "jump_velocity_multiplier": 0.05,
-    "slipperiness": 0.999,
-    "sounds": {
-      "break": "minecraft:block.mud.break",
-      "step": "portalcubed:sewage_step",
-      "place": "minecraft:block.mud.place",
-      "hit": "minecraft:block.mud.hit",
-      "fall": "minecraft:block.mud.fall"
-    }
-  },
+
 
   "light_bridge": {
     "type": "provided",

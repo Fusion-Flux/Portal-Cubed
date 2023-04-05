@@ -9,13 +9,14 @@
       "portalcubed:dirty_portal_1_white_panel_crafting_from_end_stone",
       "portalcubed:dirty_portal_1_white_checkered_panel_crafting",
       "portalcubed:dirty_portal_1_white_half_panel_crafting",
-      "portalcubed:dirty_portal_1_white_2x1_panel_top_crafting_from_plants",
-      "portalcubed:dirty_portal_1_white_2x1_panel_bottom_crafting_from_plants",
-      "portalcubed:dirty_portal_1_white_panel_crafting_from_diorite_from_plants",
-      "portalcubed:dirty_portal_1_white_panel_crafting_from_end_stone_from_plants",
-      "portalcubed:dirty_portal_1_white_checkered_panel_crafting_from_plants",
-      "portalcubed:dirty_portal_1_white_half_panel_crafting_from_plants",
-      "portalcubed:dirty_borderless_panel_crafting"
+      "portalcubed:dirty_portal_1_white_2x1_panel_top_crafting_from_sewage",
+      "portalcubed:dirty_portal_1_white_2x1_panel_bottom_crafting_from_sewage",
+      "portalcubed:dirty_portal_1_white_panel_crafting_from_diorite_from_sewage",
+      "portalcubed:dirty_portal_1_white_panel_crafting_from_end_stone_from_sewage",
+      "portalcubed:dirty_portal_1_white_checkered_panel_crafting_from_sewage",
+      "portalcubed:dirty_portal_1_white_half_panel_crafting_from_sewage",
+      "portalcubed:dirty_borderless_panel_crafting",
+      "portalcubed:sewage_crafting"
 
     ]
   },
