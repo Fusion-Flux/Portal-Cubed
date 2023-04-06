@@ -41,6 +41,11 @@
     "portalcubed:portal_1_2x2_exposed_panel_top_left",
     "portalcubed:portal_1_2x2_exposed_panel_bottom_left",
     "portalcubed:portal_1_2x2_exposed_panel_top_right",
-    "portalcubed:portal_1_2x2_exposed_panel_bottom_right"
+    "portalcubed:portal_1_2x2_exposed_panel_bottom_right",
+
+    "portalcubed:portal_1_fizzler_emitter",
+    "portalcubed:old_aperture_fizzler_emitter",
+    "portalcubed:old_aperture_death_fizzler_emitter"
+
   ]
 }
