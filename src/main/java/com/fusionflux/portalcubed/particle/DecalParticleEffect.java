@@ -16,6 +16,7 @@ import net.minecraft.util.registry.Registry;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class DecalParticleEffect implements ParticleEffect {
+    public static final Identifier SCORCH = id("particle/scorch");
     public static final Identifier BULLET_HOLE_CONCRETE = id("particle/bullet_hole_concrete");
 
     @SuppressWarnings("deprecation")

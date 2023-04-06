@@ -123,10 +123,6 @@ public class PortalCubedEntities {
         .setDimensions(EntityDimensions.changing(0.25f, 0.25f))
         .build();
 
-    public static final EntityType<DecalEntity> DECAL = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, DecalEntity::new)
-        .setDimensions(EntityDimensions.fixed(0f, 0f))
-        .build();
-
     public static final EntityType<TurretEntity> TURRET = QuiltEntityTypeBuilder.create(SpawnGroup.MISC, TurretEntity::new)
         .setDimensions(EntityDimensions.changing(0.75f * TurretEntity.MODEL_SCALE, 1.5f * TurretEntity.MODEL_SCALE))
         .build();
@@ -165,8 +161,6 @@ public class PortalCubedEntities {
         Registry.register(Registry.ENTITY_TYPE, id("rocket"), ROCKET);
 
         Registry.register(Registry.ENTITY_TYPE, id("energy_pellet"), ENERGY_PELLET);
-
-        Registry.register(Registry.ENTITY_TYPE, id("decal"), DECAL);
 
         Registry.register(Registry.ENTITY_TYPE, id("turret"), TURRET);
 

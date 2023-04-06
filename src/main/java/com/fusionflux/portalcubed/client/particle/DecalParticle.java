@@ -43,10 +43,10 @@ public class DecalParticle extends Particle {
         final Quaternion rotation = direction.getRotationQuaternion();
 
         final Vec3f[] vertices = {
-            new Vec3f(-1f, 0f, -1f),
-            new Vec3f(-1f, 0f, 1f),
-            new Vec3f(1f, 0f, 1f),
-            new Vec3f(1f, 0f, -1f)
+            new Vec3f(-0.5f, 0f, -0.5f),
+            new Vec3f(-0.5f, 0f, 0.5f),
+            new Vec3f(0.5f, 0f, 0.5f),
+            new Vec3f(0.5f, 0f, -0.5f)
         };
 
         for (final Vec3f vertex : vertices) {

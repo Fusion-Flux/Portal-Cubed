@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
+import com.fusionflux.portalcubed.particle.DecalParticleEffect;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.TargetPredicate;
@@ -17,7 +18,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
@@ -26,11 +26,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import static com.fusionflux.portalcubed.PortalCubed.id;
-
 public class EnergyPelletEntity extends Entity implements FlyingItemEntity, WentThroughPortalListener {
-    private static final Identifier DECAL = id("textures/entity/scorch.png");
-
     private static final TrackedData<Integer> STARTING_LIFE = DataTracker.registerData(EnergyPelletEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> LIFE = DataTracker.registerData(EnergyPelletEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
@@ -100,30 +96,34 @@ public class EnergyPelletEntity extends Entity implements FlyingItemEntity, Went
         if (age == 1) {
             world.playSound(null, getPos().x, getPos().y, getPos().z, PortalCubedSounds.PELLET_SPAWN_EVENT, SoundCategory.HOSTILE, 1f, 1f);
         }
-        Direction.Axis bouncedAxis = null;
+        Direction bouncedDir = null;
         if (verticalCollision) {
             vel = vel.withAxis(Direction.Axis.Y, -vel.y);
-            bouncedAxis = Direction.Axis.Y;
+            bouncedDir = vel.y < 0 ? Direction.DOWN : Direction.UP;
         }
         if (horizontalCollision) {
             if (getVelocity().x == 0) {
                 vel = vel.withAxis(Direction.Axis.X, -vel.x);
-                bouncedAxis = Direction.Axis.X;
+                bouncedDir = vel.x < 0 ? Direction.WEST : Direction.EAST;
             }
             if (getVelocity().z == 0) {
                 vel = vel.withAxis(Direction.Axis.Z, -vel.z);
-                bouncedAxis = Direction.Axis.Z;
+                bouncedDir = vel.z < 0 ? Direction.NORTH : Direction.SOUTH;
             }
         }
-        if (bouncedAxis != null) {
+        if (bouncedDir != null) {
             setVelocity(vel);
             world.playSoundFromEntity(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundCategory.HOSTILE, 0.4f, 1f);
             if (world instanceof ServerWorld serverWorld) {
                 Vec3d spawnPos = getPos();
-                if (bouncedAxis == Direction.Axis.Y) {
+                if (bouncedDir.getAxis() == Direction.Axis.Y) {
                     spawnPos = spawnPos.withAxis(Direction.Axis.Y, spawnPos.y + 0.1);
                 }
-                DecalEntity.spawn(serverWorld, spawnPos, bouncedAxis, DECAL, 1200);
+                serverWorld.spawnParticles(
+                    new DecalParticleEffect(DecalParticleEffect.SCORCH, bouncedDir),
+                    spawnPos.x, spawnPos.y, spawnPos.z,
+                    0, 0, 0, 0, 0
+                );
             }
         }
         if ((age - 1) % 34 == 0) {

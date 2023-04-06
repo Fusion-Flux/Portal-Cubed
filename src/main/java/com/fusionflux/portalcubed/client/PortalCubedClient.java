@@ -523,8 +523,6 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(PortalCubedEntities.ENERGY_PELLET, EnergyPelletRenderer::new);
 
-        EntityRendererRegistry.register(PortalCubedEntities.DECAL, DecalRenderer::new);
-
         BlockEntityRendererFactories.register(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, LaserEmitterRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(FaithPlateRenderer.FAITH_PLATE_LAYER, FaithPlateModel::getTexturedModelData);
