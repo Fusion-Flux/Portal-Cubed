@@ -305,7 +305,7 @@
 
   "block.portalcubed.faith_plate": "Aerial Faith Plate",
   "block.portalcubed.beta_faith_plate": "Beta Aerial Faith Plate",
-  "block.portalcubed.faith_plate_target": "Faith Plate Target",
+  "block.portalcubed.faith_plate_target": "Aerial Faith Plate Target",
 
   "block.portalcubed.light_bridge_emitter": "Hard Light Bridge Emitter",
   "block.portalcubed.light_bridge": "Hard Light Bridge Emitter",
@@ -336,7 +336,7 @@
   "key.portalcubed.remove_portals" : "Remove Portals",
   "key.portalcubed.toggle_hidden_blocks" : "Toggle Hidden Blocks",
 
-  "portalcubed.auto_portal.tooltip": "Right click with Hammer to change portal type",
+  "portalcubed.auto_portal.tooltip": "Right click with Hammer to change portal type.",
   "portalcubed.auto_portal.set_portal_type": "Set portal type to %s",
   "portalcubed.portal_type.primary": "Primary",
   "portalcubed.portal_type.secondary": "Secondary",
