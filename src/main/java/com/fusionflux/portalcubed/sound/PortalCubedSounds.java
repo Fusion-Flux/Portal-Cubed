@@ -79,6 +79,8 @@ public class PortalCubedSounds {
 
     public static final Identifier SEWAGE_STEP = id("sewage_step");
 
+    public static final Identifier CROWBAR_SWOOSH = id("crowbar_swoosh");
+
     public static final SoundEvent ERROR_EVENT = new SoundEvent(ERROR);
 
     public static final SoundEvent GEL_BOUNCE_EVENT = new SoundEvent(GEL_BOUNCE);
@@ -148,6 +150,8 @@ public class PortalCubedSounds {
     public static final SoundEvent ADVENTURE_CORE_EVENT = new SoundEvent(ADVENTURE_CORE_SOUND);
 
     public static final SoundEvent SEWAGE_STEP_EVENT = new SoundEvent(SEWAGE_STEP);
+
+    public static final SoundEvent CROWBAR_SWOOSH_EVENT = new SoundEvent(CROWBAR_SWOOSH);
 
     public static void registerSounds() {
         Registry.register(Registry.SOUND_EVENT, ERROR, ERROR_EVENT);
@@ -221,5 +225,7 @@ public class PortalCubedSounds {
         Registry.register(Registry.SOUND_EVENT, ADVENTURE_CORE_SOUND, ADVENTURE_CORE_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, SEWAGE_STEP, SEWAGE_STEP_EVENT);
+
+        Registry.register(Registry.SOUND_EVENT, CROWBAR_SWOOSH, CROWBAR_SWOOSH_EVENT);
     }
 }

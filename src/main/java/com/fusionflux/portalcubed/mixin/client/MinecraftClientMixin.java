@@ -85,6 +85,19 @@ public abstract class MinecraftClientMixin {
     }
 
     @WrapOperation(
+        method = {"doAttack", "handleBlockBreaking"},
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/world/ClientWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;",
+            ordinal = 0
+        )
+    )
+    private BlockState noMineInPortalHud(ClientWorld instance, BlockPos pos, Operation<BlockState> original) {
+        return PortalCubedClient.isPortalHudMode() || player.getMainHandStack().isOf(PortalCubedItems.CROWBAR)
+            ? Blocks.AIR.getDefaultState() : original.call(instance, pos);
+    }
+
+    @WrapOperation(
         method = "doAttack",
         at = @At(
             value = "INVOKE",
@@ -97,21 +110,7 @@ public abstract class MinecraftClientMixin {
             final PacketByteBuf buf = PacketByteBufs.create();
             buf.writeBlockHitResult((BlockHitResult)crosshairTarget);
             ClientPlayNetworking.send(PortalCubedServerPackets.CROWBAR_ATTACK, buf);
-            return Blocks.AIR.getDefaultState();
         }
         return original.call(instance, pos);
     }
-
-    @WrapOperation(
-        method = {"doAttack", "handleBlockBreaking"},
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/world/ClientWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;",
-            ordinal = 0
-        )
-    )
-    private BlockState noMineInPortalHud(ClientWorld instance, BlockPos pos, Operation<BlockState> original) {
-        return PortalCubedClient.isPortalHudMode() ? Blocks.AIR.getDefaultState() : original.call(instance, pos);
-    }
-
 }

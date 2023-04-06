@@ -9,13 +9,16 @@ import com.fusionflux.portalcubed.compat.pehkui.PehkuiApi;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.GeneralUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -43,6 +46,8 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Shadow public abstract void setNoDrag(boolean noDrag);
 
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
+
+    @Shadow public abstract ItemStack getStackInHand(Hand hand);
 
     @Unique
     private VelocityHelperBlockEntity velocityHelper;
@@ -183,5 +188,18 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
             "portalcubed.velocity_helper.failed_expression",
             Text.translatable("portalcubed.velocity_helper." + type + "_expression")
         ).formatted(Formatting.RED);
+    }
+
+    @Inject(method = "swingHand(Lnet/minecraft/util/Hand;)V", at = @At("HEAD"))
+    private void crowbarSwoosh(Hand hand, CallbackInfo ci) {
+        //noinspection ConstantValue
+        if ((Object)this instanceof PlayerEntity player && getStackInHand(hand).isOf(PortalCubedItems.CROWBAR)) {
+            world.playSound(
+                player,
+                player.getX(), player.getY(), player.getZ(),
+                PortalCubedSounds.CROWBAR_SWOOSH_EVENT, SoundCategory.PLAYERS,
+                0.7f, 1f
+            );
+        }
     }
 }

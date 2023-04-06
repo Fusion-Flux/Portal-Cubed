@@ -434,5 +434,12 @@
 			"portalcubed:mud4"
 		],
 		"subtitle": "subtitles.block.generic.footsteps"
+	},
+
+	"crowbar_swoosh": {
+		"sounds": [
+			"portalcubed:iceaxe_swing1"
+		],
+		"subtitle": "subtitles.portalcubed.crowbar_swoosh"
 	}
 }
