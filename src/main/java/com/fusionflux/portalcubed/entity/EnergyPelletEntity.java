@@ -23,6 +23,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -115,10 +116,13 @@ public class EnergyPelletEntity extends Entity implements FlyingItemEntity, Went
             setVelocity(vel);
             world.playSoundFromEntity(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundCategory.HOSTILE, 0.4f, 1f);
             if (world instanceof ServerWorld serverWorld) {
-                Vec3d spawnPos = getPos();
-                if (bouncedDir.getAxis() == Direction.Axis.Y) {
-                    spawnPos = spawnPos.withAxis(Direction.Axis.Y, spawnPos.y + 0.1);
-                }
+                final Vec3d spawnPos = serverWorld.raycast(new RaycastContext(
+                    getPos(),
+                    getPos().add(vel.withAxis(bouncedDir.getAxis(), -vel.getComponentAlongAxis(bouncedDir.getAxis()))),
+                    RaycastContext.ShapeType.COLLIDER,
+                    RaycastContext.FluidHandling.NONE,
+                    this
+                )).getPos().add(Vec3d.of(bouncedDir.getVector()).multiply(0.01));
                 serverWorld.spawnParticles(
                     new DecalParticleEffect(DecalParticleEffect.SCORCH, bouncedDir),
                     spawnPos.x, spawnPos.y, spawnPos.z,
