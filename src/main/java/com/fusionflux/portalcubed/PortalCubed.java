@@ -27,6 +27,7 @@ import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.optionslist.OptionsListScreenHandler;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
+import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.mojang.logging.LogUtils;
@@ -287,6 +288,7 @@ public class PortalCubed implements ModInitializer {
         PortalCubedServerPackets.registerPackets();
         PortalCubedSounds.registerSounds();
         PortalCubedGameRules.register();
+        PortalCubedParticleTypes.register();
         BlockContentRegistries.FLAMMABLE_BLOCK.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
         GravityChannel.UPDATE_GRAVITY.getVerifierRegistry().register(AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, AdhesionGravityVerifier::check);
 

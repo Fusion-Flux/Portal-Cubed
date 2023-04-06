@@ -1,17 +1,23 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
+import com.fusionflux.portalcubed.particle.DecalParticleEffect;
 import com.fusionflux.portalcubed.util.GeneralUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class TurretEntity extends CorePhysicsEntity {
@@ -88,6 +94,19 @@ public class TurretEntity extends CorePhysicsEntity {
         getDataTracker().set(PITCH_SPEED, pitchSpeed);
     }
 
-    public static void spawnBulletHole(World world, BlockHitResult hit) {
+    public static void makeBulletHole(ServerWorld world, BlockHitResult hit) {
+        final BlockState block = world.getBlockState(hit.getBlockPos());
+        final Identifier particleTexture;
+        if (block.isIn(PortalCubedBlocks.BULLET_HOLE_LARGE)) {
+            particleTexture = DecalParticleEffect.BULLET_HOLE_LARGE;
+        } else {
+            particleTexture = null;
+        }
+        if (particleTexture == null) return;
+        final Vec3d pos = hit.getPos().add(Vec3d.of(hit.getSide().getVector()).multiply(0.01));
+        world.spawnParticles(
+            new DecalParticleEffect(particleTexture, hit.getSide()),
+            pos.x, pos.y, pos.z, 0, 0, 0, 0, 0
+        );
     }
 }

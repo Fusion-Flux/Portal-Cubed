@@ -10,6 +10,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.gui.FaithPlateScreen;
 import com.fusionflux.portalcubed.client.gui.VelocityHelperScreen;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.client.particle.PortalCubedParticleFactories;
 import com.fusionflux.portalcubed.client.render.PortalHud;
 import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.block.entity.*;
@@ -126,6 +127,7 @@ public class PortalCubedClient implements ClientModInitializer {
         registerEmissiveModels(mod);
         PortalCubedClientPackets.registerPackets();
         PortalCubedKeyBindings.register();
+        PortalCubedParticleFactories.register();
 
         HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
         HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
