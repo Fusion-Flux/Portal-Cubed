@@ -63,6 +63,10 @@ public class PortalCubedSounds {
     public static final Identifier TBEAM_ENTER = id("tbeam/enter");
     public static final Identifier TBEAM_TRAVEL = id("tbeam/travel");
 
+    public static final Identifier BULLET_CONCRETE = id("bullet/concrete");
+    public static final Identifier BULLET_GLASS = id("bullet/glass");
+    public static final Identifier BULLET_METAL = id("bullet/metal");
+
     public static final Identifier RADIO_MUSIC = id("radio");
     public static final Identifier EXILE_SONG = id("exile_vilify");
     public static final Identifier CURIOSITY_CORE_SOUND = id("curiosity_core");
@@ -129,6 +133,10 @@ public class PortalCubedSounds {
 
     public static final SoundEvent TBEAM_ENTER_EVENT = new SoundEvent(TBEAM_ENTER);
     public static final SoundEvent TBEAM_TRAVEL_EVENT = new SoundEvent(TBEAM_TRAVEL);
+
+    public static final SoundEvent BULLET_CONCRETE_EVENT = new SoundEvent(BULLET_CONCRETE);
+    public static final SoundEvent BULLET_GLASS_EVENT = new SoundEvent(BULLET_GLASS);
+    public static final SoundEvent BULLET_METAL_EVENT = new SoundEvent(BULLET_METAL);
 
     public static final SoundEvent RADIO_MUSIC_EVENT = new SoundEvent(RADIO_MUSIC);
     public static final SoundEvent EXILE_MUSIC_EVENT = new SoundEvent(EXILE_SONG);
@@ -197,6 +205,10 @@ public class PortalCubedSounds {
 
         Registry.register(Registry.SOUND_EVENT, TBEAM_ENTER, TBEAM_ENTER_EVENT);
         Registry.register(Registry.SOUND_EVENT, TBEAM_TRAVEL, TBEAM_TRAVEL_EVENT);
+
+        Registry.register(Registry.SOUND_EVENT, BULLET_CONCRETE, BULLET_CONCRETE_EVENT);
+        Registry.register(Registry.SOUND_EVENT, BULLET_GLASS, BULLET_GLASS_EVENT);
+        Registry.register(Registry.SOUND_EVENT, BULLET_METAL, BULLET_METAL_EVENT);
 
         Registry.register(Registry.SOUND_EVENT, RADIO_MUSIC, RADIO_MUSIC_EVENT);
         Registry.register(Registry.SOUND_EVENT, EXILE_SONG, EXILE_MUSIC_EVENT);

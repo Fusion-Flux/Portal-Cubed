@@ -301,6 +301,31 @@
 		]
 	},
 
+	"bullet/concrete": {
+		"sounds": [
+			"portalcubed:bullet/concrete_impact_bullet1",
+			"portalcubed:bullet/concrete_impact_bullet2",
+			"portalcubed:bullet/concrete_impact_bullet3",
+			"portalcubed:bullet/concrete_impact_bullet4"
+		]
+	},
+	"bullet/glass": {
+		"sounds": [
+			"portalcubed:bullet/glass_impact_bullet1",
+			"portalcubed:bullet/glass_impact_bullet2",
+			"portalcubed:bullet/glass_impact_bullet3",
+			"portalcubed:bullet/glass_impact_bullet4"
+		]
+	},
+	"bullet/metal": {
+		"sounds": [
+			"portalcubed:bullet/metal_solid_impact_bullet1",
+			"portalcubed:bullet/metal_solid_impact_bullet2",
+			"portalcubed:bullet/metal_solid_impact_bullet3",
+			"portalcubed:bullet/metal_solid_impact_bullet4"
+		]
+	},
+
 	"radio": {
 		"sounds": [
 			{

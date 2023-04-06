@@ -170,7 +170,7 @@ public class PortalCubedServerPackets {
                     player, hit.getPos().distanceTo(player.getPos())
                 );
             }
-            server.execute(() -> TurretEntity.makeBulletHole((ServerWorld)player.world, hit));
+            server.execute(() -> TurretEntity.makeBulletHole((ServerWorld)player.world, hit, SoundCategory.PLAYERS));
         });
     }
 }

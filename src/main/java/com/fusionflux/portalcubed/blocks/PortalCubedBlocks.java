@@ -113,9 +113,9 @@ public class PortalCubedBlocks {
     public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresTool().sounds(BlockSoundGroup.STONE));
     public static final BlockEntityType<RocketTurretBlockEntity> ROCKET_TURRET_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build();
 
-    public static final TagKey<Block> BULLET_HOLE_CRACKS = TagKey.of(Registry.BLOCK_KEY, id("bullet_hole_cracks"));
-    public static final TagKey<Block> BULLET_HOLE_LARGE = TagKey.of(Registry.BLOCK_KEY, id("bullet_hole_large"));
-    public static final TagKey<Block> BULLET_HOLE_SMALL = TagKey.of(Registry.BLOCK_KEY, id("bullet_hole_small"));
+    public static final TagKey<Block> BULLET_HOLE_CONCRETE = TagKey.of(Registry.BLOCK_KEY, id("bullet_hole_concrete"));
+    public static final TagKey<Block> BULLET_HOLE_GLASS = TagKey.of(Registry.BLOCK_KEY, id("bullet_hole_glass"));
+    public static final TagKey<Block> BULLET_HOLE_METAL = TagKey.of(Registry.BLOCK_KEY, id("bullet_hole_metal"));
     public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.of(Registry.BLOCK_KEY, id("cant_place_portal_on"));
     public static final TagKey<Block> PORTAL_NONSOLID = TagKey.of(Registry.BLOCK_KEY, id("portal_nonsolid"));
     public static final TagKey<Block> PORTAL_SOLID = TagKey.of(Registry.BLOCK_KEY, id("portal_solid"));

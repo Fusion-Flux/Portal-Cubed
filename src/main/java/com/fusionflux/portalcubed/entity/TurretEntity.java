@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.particle.DecalParticleEffect;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.GeneralUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -12,6 +13,8 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Box;
@@ -94,19 +97,32 @@ public class TurretEntity extends CorePhysicsEntity {
         getDataTracker().set(PITCH_SPEED, pitchSpeed);
     }
 
-    public static void makeBulletHole(ServerWorld world, BlockHitResult hit) {
+    public static void makeBulletHole(ServerWorld world, BlockHitResult hit, SoundCategory soundCategory) {
         final BlockState block = world.getBlockState(hit.getBlockPos());
+        final SoundEvent soundEffect;
         final Identifier particleTexture;
-        if (block.isIn(PortalCubedBlocks.BULLET_HOLE_LARGE)) {
-            particleTexture = DecalParticleEffect.BULLET_HOLE_LARGE;
+        if (block.isIn(PortalCubedBlocks.BULLET_HOLE_CONCRETE)) {
+            soundEffect = PortalCubedSounds.BULLET_CONCRETE_EVENT;
+            particleTexture = DecalParticleEffect.BULLET_HOLE_CONCRETE;
+        } else if (block.isIn(PortalCubedBlocks.BULLET_HOLE_GLASS)) {
+            soundEffect = PortalCubedSounds.BULLET_GLASS_EVENT;
+            particleTexture = null;
+        } else if (block.isIn(PortalCubedBlocks.BULLET_HOLE_METAL)) {
+            soundEffect = PortalCubedSounds.BULLET_METAL_EVENT;
+            particleTexture = null;
         } else {
+            soundEffect = null;
             particleTexture = null;
         }
-        if (particleTexture == null) return;
         final Vec3d pos = hit.getPos().add(Vec3d.of(hit.getSide().getVector()).multiply(0.01));
-        world.spawnParticles(
-            new DecalParticleEffect(particleTexture, hit.getSide()),
-            pos.x, pos.y, pos.z, 0, 0, 0, 0, 0
-        );
+        if (soundEffect != null) {
+            world.playSound(null, pos.x, pos.y, pos.z, soundEffect, soundCategory, 0.3f, 1f);
+        }
+        if (particleTexture != null) {
+            world.spawnParticles(
+                new DecalParticleEffect(particleTexture, hit.getSide()),
+                pos.x, pos.y, pos.z, 0, 0, 0, 0, 0
+            );
+        }
     }
 }
