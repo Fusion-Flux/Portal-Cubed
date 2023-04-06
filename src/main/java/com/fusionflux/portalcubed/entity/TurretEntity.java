@@ -8,6 +8,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -85,5 +86,8 @@ public class TurretEntity extends CorePhysicsEntity {
 
     public void setPitchSpeed(float pitchSpeed) {
         getDataTracker().set(PITCH_SPEED, pitchSpeed);
+    }
+
+    public static void spawnBulletHole(World world, BlockHitResult hit) {
     }
 }

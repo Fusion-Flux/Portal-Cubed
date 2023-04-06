@@ -8,6 +8,7 @@ import com.fusionflux.portalcubed.blocks.VelocityHelperBlock;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.entity.TurretEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.optionslist.OptionsListBlockEntity;
 import com.fusionflux.portalcubed.optionslist.OptionsListData;
@@ -50,6 +51,7 @@ public class PortalCubedServerPackets {
     public static final Identifier VELOCITY_HELPER_CONFIGURE = id("velocity_helper_configure");
     public static final Identifier OPTIONS_LIST_CONFIGURE = id("options_list_configure");
     public static final Identifier PLAY_BOUNCE_SOUND = id("play_bounce_sound");
+    public static final Identifier CROWBAR_ATTACK = id("crowbar_attack");
 
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayerEntity player, @SuppressWarnings("unused") ServerPlayNetworkHandler handler, @SuppressWarnings("unused") PacketByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
@@ -160,5 +162,15 @@ public class PortalCubedServerPackets {
         ServerPlayNetworking.registerGlobalReceiver(
             PLAY_BOUNCE_SOUND, (server, player, handler, buf, responseSender) -> PortalCubed.playBounceSound(player)
         );
+        ServerPlayNetworking.registerGlobalReceiver(CROWBAR_ATTACK, (server, player, handler, buf, responseSender) -> {
+            final BlockHitResult hit = buf.readBlockHitResult();
+            if (hit.getPos().squaredDistanceTo(player.getPos()) > 100) {
+                PortalCubed.LOGGER.warn(
+                    "Player {} tried to use a crowbar to attack a distant block ({})",
+                    player, hit.getPos().distanceTo(player.getPos())
+                );
+            }
+            server.execute(() -> TurretEntity.spawnBulletHole(player.world, hit));
+        });
     }
 }

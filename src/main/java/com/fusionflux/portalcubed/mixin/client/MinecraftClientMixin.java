@@ -2,7 +2,9 @@ package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.items.PaintGun;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
+import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.BlockState;
@@ -12,7 +14,13 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBind;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,6 +40,8 @@ public abstract class MinecraftClientMixin {
     @Shadow private boolean doAttack() {
         throw new UnsupportedOperationException();
     }
+
+    @Shadow @Nullable public HitResult crosshairTarget;
 
     @Redirect(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doItemUse()V", ordinal = 1))
     private void portalCubed$stopPortalSpamming(MinecraftClient self) {
@@ -83,6 +93,12 @@ public abstract class MinecraftClientMixin {
         )
     )
     private BlockState noMineInPortalHud(ClientWorld instance, BlockPos pos, Operation<BlockState> original) {
+        if (player.getMainHandStack().isOf(PortalCubedItems.CROWBAR)) {
+            final PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeBlockHitResult((BlockHitResult)crosshairTarget);
+            ClientPlayNetworking.send(PortalCubedServerPackets.CROWBAR_ATTACK, buf);
+            return Blocks.AIR.getDefaultState(); // Always disable further interaction calls
+        }
         return PortalCubedClient.isPortalHudMode() ? Blocks.AIR.getDefaultState() : original.call(instance, pos);
     }
 

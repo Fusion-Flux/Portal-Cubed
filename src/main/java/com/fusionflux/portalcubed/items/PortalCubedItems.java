@@ -61,6 +61,8 @@ public class PortalCubedItems {
     public static final EnergyPelletItem ENERGY_PELLET = new EnergyPelletItem(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP), false);
     public static final EnergyPelletItem SUPER_PELLET = new EnergyPelletItem(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP), true);
 
+    public static final CrowbarItem CROWBAR = new CrowbarItem(new QuiltItemSettings().group(TESTING_ELEMENTS_GROUP));
+
     public static final Item STILL_ALIVE = new MusicDiscItem(15, new SoundEvent(id("disc/still_alive")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 177);
     public static final Item CARA_MIA_ADDIO = new MusicDiscItem(15, new SoundEvent(id("disc/cara_mia_addio")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 154);
     public static final Item WANT_YOU_GONE = new MusicDiscItem(15, new SoundEvent(id("disc/want_you_gone")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 142);
@@ -107,6 +109,7 @@ public class PortalCubedItems {
         Registry.register(Registry.ITEM, id("hammer"), HAMMER);
         Registry.register(Registry.ITEM, id("energy_pellet"), ENERGY_PELLET);
         Registry.register(Registry.ITEM, id("super_pellet"), SUPER_PELLET);
+        Registry.register(Registry.ITEM, id("crowbar"), CROWBAR);
 
         Registry.register(Registry.ITEM, id("music_disc_still_alive"), STILL_ALIVE);
         Registry.register(Registry.ITEM, id("music_disc_cara_mia_addio"), CARA_MIA_ADDIO);
