@@ -6,9 +6,12 @@ import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
+import org.quiltmc.qsl.tag.api.QuiltTagKey;
+import org.quiltmc.qsl.tag.api.TagType;
 
 import static com.fusionflux.portalcubed.PortalCubed.TESTING_ELEMENTS_GROUP;
 import static com.fusionflux.portalcubed.PortalCubed.id;
@@ -67,6 +70,8 @@ public class PortalCubedItems {
     public static final Item CARA_MIA_ADDIO = new MusicDiscItem(15, new SoundEvent(id("disc/cara_mia_addio")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 154);
     public static final Item WANT_YOU_GONE = new MusicDiscItem(15, new SoundEvent(id("disc/want_you_gone")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 142);
     public static final Item RECONSTRUCTING_MORE_SCIENCE = new MusicDiscItem(15, new SoundEvent(id("disc/reconstructing_more_science")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 157);
+
+    public static final TagKey<Item> LAYS_ON_FLOOR = QuiltTagKey.of(Registry.ITEM_KEY, id("lays_on_floor"), TagType.CLIENT_ONLY);
 
     public static void registerItems() {
         Registry.register(Registry.ITEM, id("long_fall_boots"), LONG_FALL_BOOTS);

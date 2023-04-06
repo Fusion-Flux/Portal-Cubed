@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "portalcubed:portal_gun",
+    "portalcubed:portal_gun_primary",
+    "portalcubed:portal_gun_secondary",
+    "portalcubed:paint_gun",
+    "portalcubed:crowbar"
+  ]
+}

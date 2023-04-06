@@ -32,6 +32,7 @@
     "client.HeldItemRendererMixin",
     "client.InGameHudMixin",
     "client.InGameOverlayRendererMixin",
+    "client.ItemEntityRendererMixin",
     "client.KeyBindAccessor",
     "client.KeyboardInputMixin",
     "client.KeyboardMixin",
