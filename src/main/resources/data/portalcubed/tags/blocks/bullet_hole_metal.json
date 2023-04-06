@@ -45,7 +45,9 @@
 
     "portalcubed:portal_1_fizzler_emitter",
     "portalcubed:old_aperture_fizzler_emitter",
-    "portalcubed:old_aperture_death_fizzler_emitter"
+    "portalcubed:old_aperture_death_fizzler_emitter",
+
+    "minecraft:iron_block"
 
   ]
 }
