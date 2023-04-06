@@ -2,13 +2,17 @@ package com.fusionflux.portalcubed.client.particle;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.particle.DecalParticleEffect;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.fabricmc.fabric.api.client.particle.v1.FabricSpriteProvider;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
@@ -20,17 +24,41 @@ import java.util.Map;
 
 @ClientOnly
 public class DecalParticle extends Particle {
+    public static final ParticleTextureSheet PARTICLE_SHEET_MULTIPLY = new ParticleTextureSheet() {
+        @Override
+        @SuppressWarnings("deprecation")
+        public void begin(BufferBuilder bufferBuilder, TextureManager textureManager) {
+            RenderSystem.depthMask(true);
+            RenderSystem.setShaderTexture(0, SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE);
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.SRC_COLOR);
+            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_LIGHT);
+        }
+
+        @Override
+        public void draw(Tessellator tessellator) {
+            tessellator.draw();
+        }
+
+        public String toString() {
+            return "PARTICLE_SHEET_MULTIPLY";
+        }
+    };
+
     private final Sprite sprite;
     private final Direction direction;
+    private final boolean multiply;
 
     public DecalParticle(
         ClientWorld world,
         double x, double y, double z,
-        Sprite sprite, Direction direction
+        Sprite sprite, Direction direction,
+        boolean multiply
     ) {
         super(world, x, y, z);
         this.sprite = sprite;
         this.direction = direction;
+        this.multiply = multiply;
         maxAge = 1400;
     }
 
@@ -89,7 +117,7 @@ public class DecalParticle extends Particle {
 
     @Override
     public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+        return multiply ? PARTICLE_SHEET_MULTIPLY : ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     @ClientOnly
@@ -110,7 +138,7 @@ public class DecalParticle extends Particle {
                 PortalCubed.LOGGER.warn("Unknown decal particle texture {}", parameters.getTexture());
                 return null;
             }
-            return new DecalParticle(world, x, y, z, sprite, parameters.getDirection());
+            return new DecalParticle(world, x, y, z, sprite, parameters.getDirection(), parameters.isMultiply());
         }
 
         private Map<Identifier, Sprite> getSpriteCache() {
