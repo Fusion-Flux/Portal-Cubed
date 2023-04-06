@@ -17,6 +17,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class DecalParticleEffect implements ParticleEffect {
     public static final Identifier BULLET_HOLE_CONCRETE = id("particle/bullet_hole_concrete");
+    public static final Identifier BULLET_HOLE_GLASS = id("particle/bullet_hole_glass");
     public static final Identifier BULLET_HOLE_METAL = id("particle/bullet_hole_metal");
     public static final Identifier SCORCH = id("particle/scorch");
 

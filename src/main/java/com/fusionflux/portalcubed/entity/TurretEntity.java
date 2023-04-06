@@ -106,7 +106,7 @@ public class TurretEntity extends CorePhysicsEntity {
             particleTexture = DecalParticleEffect.BULLET_HOLE_CONCRETE;
         } else if (block.isIn(PortalCubedBlocks.BULLET_HOLE_GLASS)) {
             soundEffect = PortalCubedSounds.BULLET_GLASS_EVENT;
-            particleTexture = null;
+            particleTexture = DecalParticleEffect.BULLET_HOLE_GLASS;
         } else if (block.isIn(PortalCubedBlocks.BULLET_HOLE_METAL)) {
             soundEffect = PortalCubedSounds.BULLET_METAL_EVENT;
             particleTexture = DecalParticleEffect.BULLET_HOLE_METAL;
