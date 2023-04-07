@@ -1,14 +1,16 @@
 package com.fusionflux.portalcubed.sound;
 
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.qsl.tag.api.QuiltTagKey;
+import org.quiltmc.qsl.tag.api.TagType;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedSounds {
     public static final Identifier ERROR = id("error");
-    public static final Identifier EMPTY = id("empty");
 
     public static final Identifier GEL_BOUNCE = id("gel_bounce");
     public static final Identifier GEL_RUN = id("gel_run");
@@ -152,6 +154,8 @@ public class PortalCubedSounds {
     public static final SoundEvent SEWAGE_STEP_EVENT = new SoundEvent(SEWAGE_STEP);
 
     public static final SoundEvent CROWBAR_SWOOSH_EVENT = new SoundEvent(CROWBAR_SWOOSH);
+
+    public static final TagKey<SoundEvent> NO_ERROR_SOUND = QuiltTagKey.of(Registry.SOUND_EVENT_KEY, id("no_error_sound"), TagType.CLIENT_ONLY);
 
     public static void registerSounds() {
         Registry.register(Registry.SOUND_EVENT, ERROR, ERROR_EVENT);
