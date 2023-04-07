@@ -101,12 +101,14 @@ public class TurretEntity extends CorePhysicsEntity {
         final BlockState block = world.getBlockState(hit.getBlockPos());
         final SoundEvent soundEffect;
         final Identifier particleTexture;
+        boolean multiplyTexture = true;
         if (block.isIn(PortalCubedBlocks.BULLET_HOLE_CONCRETE)) {
             soundEffect = PortalCubedSounds.BULLET_CONCRETE_EVENT;
             particleTexture = DecalParticleEffect.BULLET_HOLE_CONCRETE;
         } else if (block.isIn(PortalCubedBlocks.BULLET_HOLE_GLASS)) {
             soundEffect = PortalCubedSounds.BULLET_GLASS_EVENT;
             particleTexture = DecalParticleEffect.BULLET_HOLE_GLASS;
+            multiplyTexture = false;
         } else if (block.isIn(PortalCubedBlocks.BULLET_HOLE_METAL)) {
             soundEffect = PortalCubedSounds.BULLET_METAL_EVENT;
             particleTexture = DecalParticleEffect.BULLET_HOLE_METAL;
@@ -120,7 +122,7 @@ public class TurretEntity extends CorePhysicsEntity {
         }
         if (particleTexture != null) {
             world.spawnParticles(
-                new DecalParticleEffect(particleTexture, hit.getSide(), true),
+                new DecalParticleEffect(particleTexture, hit.getSide(), multiplyTexture),
                 pos.x, pos.y, pos.z, 0, 0, 0, 0, 0
             );
         }
