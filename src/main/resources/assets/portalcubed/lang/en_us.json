@@ -18,9 +18,9 @@
   "subtitles.portalcubed.floor_button_press": "Button Activated",
   "subtitles.portalcubed.floor_button_release": "Button Deactivated",
 
-  "subtitles.portalcubed.rocket_fire": "Rocket Launched",
-  "subtitles.portalcubed.rocket_locked": "Rocket Locked",
-  "subtitles.portalcubed.rocket_locking": "Rocket Locking",
+  "subtitles.portalcubed.rocket.fire": "Rocket Launched",
+  "subtitles.portalcubed.rocket.locked": "Rocket Locked",
+  "subtitles.portalcubed.rocket.locking": "Rocket Locking",
 
   "subtitles.portalcubed.pellet.bounce": "Energy Ball Bounce",
   "subtitles.portalcubed.pellet.explode": "Energy Ball Explosion",

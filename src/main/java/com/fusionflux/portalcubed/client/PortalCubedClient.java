@@ -31,6 +31,7 @@ import com.fusionflux.portalcubed.optionslist.OptionsListScreen;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
@@ -81,11 +82,13 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
-import static com.fusionflux.portalcubed.PortalCubed.LOGGER;
-import static com.fusionflux.portalcubed.PortalCubed.id;
+import static com.fusionflux.portalcubed.PortalCubed.*;
 
 @ClientOnly
 public class PortalCubedClient implements ClientModInitializer {
@@ -115,6 +118,28 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static int gelOverlayTimer = -1;
     public static Identifier gelOverlayTexture = TextureManager.MISSING_IDENTIFIER;
+
+    public static final Set<Identifier> NO_ERROR_SOUND = QuiltLoader.getModContainer(MOD_ID)
+        .map(m -> m.getPath("no_error_sound.json"))
+        .filter(Files::exists)
+        .map(p -> {
+            try (Reader reader = Files.newBufferedReader(p)) {
+                return JsonHelper.deserialize(reader);
+            } catch (IOException e) {
+                return null;
+            }
+        })
+        .map(j -> JsonHelper.getArray(j, "sounds"))
+        .map(Iterable::spliterator)
+        .map(s -> StreamSupport.stream(s, false))
+        .orElseGet(() -> {
+            LOGGER.error("Failed to load no_error_sound.json");
+            return Stream.of();
+        })
+        .map(e -> JsonHelper.asString(e, "sound"))
+        .map(Identifier::tryParse)
+        .filter(Objects::nonNull)
+        .collect(ImmutableSet.toImmutableSet());
 
     @Override
     public void onInitializeClient(ModContainer mod) {

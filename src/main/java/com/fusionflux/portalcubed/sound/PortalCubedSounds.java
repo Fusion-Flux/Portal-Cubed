@@ -1,11 +1,8 @@
 package com.fusionflux.portalcubed.sound;
 
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.quiltmc.qsl.tag.api.QuiltTagKey;
-import org.quiltmc.qsl.tag.api.TagType;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -41,12 +38,12 @@ public class PortalCubedSounds {
     public static final Identifier OLD_AP_FLOOR_BUTTON_PRESS = id("old_ap_floor_button_press");
     public static final Identifier OLD_AP_FLOOR_BUTTON_RELEASE = id("old_ap_floor_button_release");
 
-    public static final Identifier ROCKET_FIRE = id("rocket_fire");
-    public static final Identifier ROCKET_FLY = id("rocket_fly");
-    public static final Identifier ROCKET_LOCKED = id("rocket_locked");
-    public static final Identifier ROCKET_LOCKING = id("rocket_locking");
-    public static final Identifier ROCKET_EXPLODE = id("rocket_explode");
-    public static final Identifier ROCKET_GOO = id("rocket_goo");
+    public static final Identifier ROCKET_FIRE = id("rocket/fire");
+    public static final Identifier ROCKET_FLY = id("rocket/fly");
+    public static final Identifier ROCKET_LOCKED = id("rocket/locked");
+    public static final Identifier ROCKET_LOCKING = id("rocket/locking");
+    public static final Identifier ROCKET_EXPLODE = id("rocket/explode");
+    public static final Identifier ROCKET_GOO = id("rocket/goo");
 
     public static final Identifier LASER_EMITTER_ACTIVATE = id("laser/emitter_activate");
     public static final Identifier LASER_BEAM_MUSIC = id("laser/beam_music");
@@ -154,8 +151,6 @@ public class PortalCubedSounds {
     public static final SoundEvent SEWAGE_STEP_EVENT = new SoundEvent(SEWAGE_STEP);
 
     public static final SoundEvent CROWBAR_SWOOSH_EVENT = new SoundEvent(CROWBAR_SWOOSH);
-
-    public static final TagKey<SoundEvent> NO_ERROR_SOUND = QuiltTagKey.of(Registry.SOUND_EVENT_KEY, id("no_error_sound"), TagType.CLIENT_ONLY);
 
     public static void registerSounds() {
         Registry.register(Registry.SOUND_EVENT, ERROR, ERROR_EVENT);
