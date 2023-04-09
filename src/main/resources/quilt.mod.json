@@ -76,7 +76,6 @@
     },
 
     "intermediate_mappings": "net.fabricmc:intermediary"
-
   },
   "mixin": [
     "portalcubed.mixins.json",

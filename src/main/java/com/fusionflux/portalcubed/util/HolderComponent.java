@@ -1,10 +1,13 @@
 package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.accessor.Accessors;
+import com.fusionflux.portalcubed.accessor.HeldItemRendererExt;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -67,8 +70,8 @@ public final class HolderComponent implements AutoSyncedComponent {
             }
 
             this.heldEntityUUID = Optional.empty();
-            PortalCubedComponents.HOLDER_COMPONENT.sync(owner);
             this.heldEntity = null;
+            PortalCubedComponents.HOLDER_COMPONENT.sync(owner);
             return true;
         }
         return false;
@@ -98,11 +101,18 @@ public final class HolderComponent implements AutoSyncedComponent {
         } else if (syncedHeldEntityUUID.isEmpty() && heldEntity != null) {
             stopHolding();
         }
+        handHideRefresh();
     }
 
     @Override
     public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
         TrackedDataHandlerRegistry.OPTIONAL_UUID.write(buf, this.heldEntityUUID);
+    }
+
+    private void handHideRefresh() {
+        if (owner.getMainHandStack().isIn(PortalCubedItems.HOLDS_OBJECT)) return;
+        owner.resetLastAttackedTicks();
+        ((HeldItemRendererExt)MinecraftClient.getInstance().gameRenderer.firstPersonRenderer).startHandFaker();
     }
 
 }

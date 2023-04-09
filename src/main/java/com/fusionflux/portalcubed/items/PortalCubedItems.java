@@ -71,6 +71,7 @@ public class PortalCubedItems {
     public static final Item WANT_YOU_GONE = new MusicDiscItem(15, new SoundEvent(id("disc/want_you_gone")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 142);
     public static final Item RECONSTRUCTING_MORE_SCIENCE = new MusicDiscItem(15, new SoundEvent(id("disc/reconstructing_more_science")), new Item.Settings().maxCount(1).group(ItemGroup.MISC).rarity(Rarity.RARE), 157);
 
+    public static final TagKey<Item> HOLDS_OBJECT = QuiltTagKey.of(Registry.ITEM_KEY, id("holds_object"), TagType.CLIENT_ONLY);
     public static final TagKey<Item> LAYS_ON_FLOOR = QuiltTagKey.of(Registry.ITEM_KEY, id("lays_on_floor"), TagType.CLIENT_ONLY);
 
     public static void registerItems() {
