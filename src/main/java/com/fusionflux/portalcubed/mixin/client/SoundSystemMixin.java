@@ -1,11 +1,12 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,7 +28,8 @@ public abstract class SoundSystemMixin {
     private void ohFiddlesticks(SoundInstance sound, CallbackInfo ci) {
         if (
             !sound.getId().getNamespace().equals(PortalCubed.MOD_ID) ||
-                PortalCubedClient.NO_ERROR_SOUND.contains(sound.getId())
+                Registry.SOUND_EVENT.getOrCreateTag(PortalCubedSounds.NO_ERROR_SOUND)
+                    .contains(Registry.SOUND_EVENT.getHolderOrThrow(RegistryKey.of(Registry.SOUND_EVENT_KEY, sound.getId())))
         ) return;
         play(PositionedSoundInstance.master(PortalCubedSounds.ERROR_EVENT, 1f));
     }

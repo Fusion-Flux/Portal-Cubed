@@ -342,54 +342,29 @@
 			}
 		]
 	},
+
 	"curiosity_core": {
 		"sounds": [
-			{
-				"name": "portalcubed:core/curiosity",
-				"stream": true
-			}
 		]
 	},
 	"anger_core": {
 		"sounds": [
-			{
-				"name": "portalcubed:core/anger",
-				"stream": true
-			}
 		]
 	},
-
 	"cake_core": {
 		"sounds": [
-			{
-				"name": "portalcubed:core/cakemix",
-				"stream": true
-			}
 		]
 	},
 	"space_core": {
 		"sounds": [
-			{
-				"name": "portalcubed:core/space_core",
-				"stream": true
-			}
 		]
 	},
-
 	"adventure_core": {
 		"sounds": [
-			{
-				"name": "portalcubed:core/adventure_core",
-				"stream": true
-			}
 		]
 	},
 	"fact_core": {
 		"sounds": [
-			{
-				"name": "portalcubed:core/fact_core",
-				"stream": true
-			}
 		]
 	},
 

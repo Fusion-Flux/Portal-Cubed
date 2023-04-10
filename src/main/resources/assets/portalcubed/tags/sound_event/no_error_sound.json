@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "portalcubed:error",
+    "portalcubed:curiosity_core",
+    "portalcubed:anger_core",
+    "portalcubed:cake_core",
+    "portalcubed:space_core",
+    "portalcubed:adventure_core",
+    "portalcubed:fact_core"
+  ]
+}
