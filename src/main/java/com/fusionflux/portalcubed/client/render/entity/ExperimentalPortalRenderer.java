@@ -1,10 +1,13 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
+import com.fusionflux.portalcubed.accessor.CameraExt;
 import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalModel;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -16,8 +19,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
+import static org.lwjgl.opengl.GL11.*;
 
 public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPortal> {
+    private static final int MAX_PORTAL_LAYER = 0; // 1; // No recursive rendering yet
+    private static int portalLayer = 0;
 
     private static final Identifier SQUARE_TEXTURE = id("textures/entity/portal_square_outline_closed.png");
     private static final Identifier ROUND_TEXTURE  = id("textures/entity/portal_oval_outline_closed.png");
@@ -54,18 +60,66 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         if (progress <= 1) {
             matrices.scale(progress, progress, progress);
         }
-        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+
+        renderPortal(matrices, vertexConsumers, entity, light, r, g, b, tickDelta);
+
         matrices.pop();
+
         if (MinecraftClient.getInstance().getEntityRenderDispatcher().shouldRenderHitboxes() && !entity.isInvisible() && !MinecraftClient.getInstance().hasReducedDebugInfo()) {
             renderAxes(entity, matrices, vertexConsumers.getBuffer(RenderLayer.getLines()));
+        }
+    }
+
+    private void renderPortal(
+        MatrixStack matrices,
+        VertexConsumerProvider vertexConsumers,
+        ExperimentalPortal entity,
+        int light,
+        int r,
+        int g,
+        int b,
+        float tickDelta
+    ) {
+        final boolean renderPortal = portalLayer < MAX_PORTAL_LAYER && entity.getActive();
+        if (renderPortal) {
+            RenderSystem.colorMask(false, false, false, false);
+            RenderSystem.depthMask(false);
+            RenderSystem.stencilFunc(GL_NEVER, 0, 0xff);
+            RenderSystem.stencilOp(GL_INCR, GL_KEEP, GL_KEEP);
+            RenderSystem.clear(GL_STENCIL_BUFFER_BIT, false);
+        }
+        model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+        if (renderPortal) {
+            RenderSystem.colorMask(true, true, true, true);
+            RenderSystem.depthMask(true);
+            RenderSystem.stencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+            RenderSystem.stencilFunc(GL_LEQUAL, 1, 0xff);
+
+            portalLayer++;
+            final MinecraftClient minecraft = MinecraftClient.getInstance();
+            final Camera camera = new Camera();
+            ((CameraExt)camera).updateSimple(entity.world, entity);
+            minecraft.worldRenderer.render(
+                new MatrixStack(),
+                tickDelta,
+                0,
+                false,
+                camera,
+                minecraft.gameRenderer,
+                minecraft.gameRenderer.getLightmapTextureManager(),
+                matrices.peek().getModel()
+            );
+            portalLayer--;
+
+            RenderSystem.stencilFunc(GL_ALWAYS, 1, 0xff);
         }
     }
 
     private void renderAxes(ExperimentalPortal entity, MatrixStack matrices, VertexConsumer vertices) {
         final MatrixStack.Entry entry = matrices.peek();
         renderAxis(entry, vertices, entity.getNormal());
-        entity.getAxisW().ifPresent(axisW -> renderAxis(entry, vertices, axisW));
-        entity.getAxisH().ifPresent(axisH -> renderAxis(entry, vertices, axisH));
+//        entity.getAxisW().ifPresent(axisW -> renderAxis(entry, vertices, axisW));
+//        entity.getAxisH().ifPresent(axisH -> renderAxis(entry, vertices, axisH));
     }
 
     private void renderAxis(MatrixStack.Entry entry, VertexConsumer vertices, Vec3d axis) {
