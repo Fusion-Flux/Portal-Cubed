@@ -31,6 +31,7 @@ import com.fusionflux.portalcubed.optionslist.OptionsListScreen;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
@@ -39,6 +40,7 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
@@ -63,6 +65,7 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
@@ -402,6 +405,22 @@ public class PortalCubedClient implements ClientModInitializer {
                 }
             } else {
                 value.set(MathHelper.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get() / 2, value.get()));
+            }
+        });
+
+        RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
+            final MinecraftClient client = MinecraftClient.getInstance();
+            if (PortalCubedClient.isPortalHudMode() && client.currentScreen instanceof DeathScreen) {
+                ctrl.setPos(ctrl.getPos().add(0, -1, 0));
+            }
+        });
+
+        RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
+            final Vec3d startPos = cameraEntity.getLerpedPos(tickDelta);
+            final Vec3d endPos = ctrl.getPos();
+            final Vec3d transformed = PortalDirectionUtils.simpleTransformPassingVector(cameraEntity, startPos, endPos);
+            if (transformed != null) {
+                ctrl.setPos(transformed);
             }
         });
 

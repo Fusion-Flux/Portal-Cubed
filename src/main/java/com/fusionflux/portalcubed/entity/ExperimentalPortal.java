@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -224,6 +225,11 @@ public class  ExperimentalPortal extends Entity {
 
     @Override
     public void tick() {
+        if (getAxisH().isEmpty()) {
+            PortalCubed.LOGGER.warn("Invalid portal {} found: axisH is absent. Removing.", this);
+            discard();
+            return;
+        }
         this.calculateBoundingBox();
         this.calculateCuttoutBox();
         this.calculateBoundsCheckBox();

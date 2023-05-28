@@ -17,6 +17,8 @@ import com.fusionflux.portalcubed.listeners.CustomCollisionView;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
@@ -135,6 +137,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Shadow public abstract float getYaw(float tickDelta);
 
     @Shadow public abstract float getPitch();
+
+    @Shadow public abstract Vec3d getLerpedPos(float delta);
 
     private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
 
@@ -526,5 +530,11 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Override
     public void setCFG() {
+    }
+
+    @ModifyReturnValue(method = "getCameraPosVec", at = @At("RETURN"))
+    private Vec3d transformViaPortal(Vec3d original, float tickDelta) {
+        final Vec3d newPos = PortalDirectionUtils.simpleTransformPassingVector((Entity)(Object)this, getLerpedPos(tickDelta), original);
+        return newPos != null ? newPos : original;
     }
 }

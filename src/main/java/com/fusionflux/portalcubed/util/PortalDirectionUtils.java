@@ -2,11 +2,16 @@ package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -30,7 +35,6 @@ public class PortalDirectionUtils {
         vector = (rotationH.rotate(rotationW.rotate(vector)));
         return vector;
     }
-
 
     public static final AdvancedEntityRaycast.TransformInfo PORTAL_RAYCAST_TRANSFORM = new AdvancedEntityRaycast.TransformInfo(
         e -> e instanceof ExperimentalPortal,
@@ -61,6 +65,32 @@ public class PortalDirectionUtils {
 
     public static AdvancedEntityRaycast.Result raycast(World world, RaycastContext context) {
         return AdvancedEntityRaycast.raycast(world, context, PORTAL_RAYCAST_TRANSFORM);
+    }
+
+    /**
+     * @param originEntity The entity responsible for the raycast
+     * @return New vector after transformation. If null, there was no portal between {@code startPos} and {@code endPos}.
+     *         Usually this is interpreted as a return value of {@code endPos}, but that's not a requirement.
+     */
+    @Nullable
+    public static Vec3d simpleTransformPassingVector(Entity originEntity, Vec3d startPos, Vec3d endPos) {
+        final EntityHitResult hit = ProjectileUtil.raycast(
+            originEntity, startPos, endPos,
+            new Box(startPos, endPos).expand(1),
+            e -> e instanceof ExperimentalPortal,
+            startPos.squaredDistanceTo(endPos)
+        );
+        if (hit == null) return null;
+        final ExperimentalPortal portal = (ExperimentalPortal)hit.getEntity();
+        final Direction facing = portal.getFacingDirection();
+        final double yOffset = endPos.distanceTo(startPos) - hit.getPos().distanceTo(startPos);
+        final Vec3d hitRelative = PortalDirectionUtils.rotateVector(
+            portal,
+            hit.getPos()
+                .subtract(portal.getOriginPos())
+                .withAxis(facing.getAxis(), facing.getDirection().offset() * -1 * yOffset)
+        );
+        return portal.getDestination().orElseThrow().add(hitRelative);
     }
 
 }
