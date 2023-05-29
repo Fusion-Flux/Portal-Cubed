@@ -27,6 +27,7 @@
     "client.ClientWorldMixin",
     "client.DeathScreenAccessor",
     "client.DeathScreenMixin",
+    "client.FramebufferMixin",
     "client.GameRendererMixin",
     "client.HandledScreenMixin",
     "client.HeldItemRendererMixin",

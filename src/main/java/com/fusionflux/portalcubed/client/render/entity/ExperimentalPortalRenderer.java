@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
 import com.fusionflux.portalcubed.accessor.CameraExt;
+import com.fusionflux.portalcubed.accessor.FramebufferExt;
 import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalModel;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -22,7 +23,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 import static org.lwjgl.opengl.GL11.*;
 
 public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPortal> {
-    private static final int MAX_PORTAL_LAYER = 0; // 1; // No recursive rendering yet
+    private static final int MAX_PORTAL_LAYER = 0; // Change to 1 to work on rendering // No recursive rendering yet
     private static int portalLayer = 0;
 
     private static final Identifier SQUARE_TEXTURE = id("textures/entity/portal_square_outline_closed.png");
@@ -82,18 +83,22 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
     ) {
         final boolean renderPortal = portalLayer < MAX_PORTAL_LAYER && entity.getActive();
         if (renderPortal) {
+            // TODO: PortingLib compat
+            ((FramebufferExt)MinecraftClient.getInstance().getFramebuffer()).setStencilBufferEnabled(true);
+            glEnable(GL_STENCIL_TEST);
             RenderSystem.colorMask(false, false, false, false);
             RenderSystem.depthMask(false);
-            RenderSystem.stencilFunc(GL_NEVER, 0, 0xff);
+            RenderSystem.stencilMask(0xff);
+            RenderSystem.stencilFunc(GL_GREATER, 0, 0xff);
             RenderSystem.stencilOp(GL_INCR, GL_KEEP, GL_KEEP);
-            RenderSystem.clear(GL_STENCIL_BUFFER_BIT, false);
+            RenderSystem.clear(GL_STENCIL_BUFFER_BIT, MinecraftClient.IS_SYSTEM_MAC);
         }
         model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
         if (renderPortal) {
             RenderSystem.colorMask(true, true, true, true);
             RenderSystem.depthMask(true);
             RenderSystem.stencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-            RenderSystem.stencilFunc(GL_LEQUAL, 1, 0xff);
+            RenderSystem.stencilFunc(GL_NEVER, 123, 0xff);
 
             portalLayer++;
             final MinecraftClient minecraft = MinecraftClient.getInstance();
@@ -111,7 +116,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
             );
             portalLayer--;
 
-            RenderSystem.stencilFunc(GL_ALWAYS, 1, 0xff);
+            glDisable(GL_STENCIL_TEST);
         }
     }
 
