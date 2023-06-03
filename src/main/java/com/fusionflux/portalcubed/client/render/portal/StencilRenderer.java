@@ -37,7 +37,7 @@ public class StencilRenderer extends PortalRenderer {
         RenderSystem.stencilFunc(GL_NEVER, 123, 0xff);
 
         portalLayer++;
-        renderWorld(portal, tickDelta, poseStack);
+        renderWorld(portal, tickDelta);
         portalLayer--;
 
         glDisable(GL_STENCIL_TEST);
