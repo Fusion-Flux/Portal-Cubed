@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -154,7 +155,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    public void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         List<Integer> posXList = new ArrayList<>();
         List<Integer> posYList = new ArrayList<>();
@@ -189,7 +190,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         List<Integer> posXList;
         List<Integer> posYList;

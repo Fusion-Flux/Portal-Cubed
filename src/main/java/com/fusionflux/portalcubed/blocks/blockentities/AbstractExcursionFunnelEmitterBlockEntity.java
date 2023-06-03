@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -41,7 +42,7 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    public void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
 
         List<Integer> posXList = new ArrayList<>();
@@ -77,7 +78,7 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         List<Integer> posXList;
         List<Integer> posYList;

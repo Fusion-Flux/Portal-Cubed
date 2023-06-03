@@ -1,15 +1,13 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
-import com.fusionflux.portalcubed.accessor.CameraExt;
-import com.fusionflux.portalcubed.accessor.RenderTargetExt;
+import com.fusionflux.portalcubed.PortalCubedConfig;
+import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalModel;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.client.render.portal.PortalRenderer;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -21,12 +19,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
-import static org.lwjgl.opengl.GL11.*;
 
 public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPortal> {
-    private static final int MAX_PORTAL_LAYER = 0; // Change to 1 to work on rendering // No recursive rendering yet
-    private static int portalLayer = 0;
-
     private static final ResourceLocation SQUARE_TEXTURE = id("textures/entity/portal_square_outline_closed.png");
     private static final ResourceLocation ROUND_TEXTURE  = id("textures/entity/portal_oval_outline_closed.png");
     private static final ResourceLocation SQUARE_TEXTURE_TRACER = id("textures/entity/portal_tracer_square.png");
@@ -73,7 +67,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
     }
 
     private void renderPortal(
-        PoseStack matrices,
+        PoseStack poseStack,
         MultiBufferSource vertexConsumers,
         ExperimentalPortal entity,
         int light,
@@ -82,50 +76,22 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         int b,
         float tickDelta
     ) {
-        final boolean renderPortal = portalLayer < MAX_PORTAL_LAYER && entity.getActive();
+        final PortalRenderer renderer = PortalCubedClient.getRenderer();
+        final boolean renderPortal = renderer.enabled(entity);
         if (renderPortal) {
-            // TODO: PortingLib compat
-            ((RenderTargetExt)Minecraft.getInstance().getMainRenderTarget()).setStencilBufferEnabled(true);
-            glEnable(GL_STENCIL_TEST);
-            RenderSystem.colorMask(false, false, false, false);
-            RenderSystem.depthMask(false);
-            RenderSystem.stencilMask(0xff);
-            RenderSystem.stencilFunc(GL_GREATER, 0, 0xff);
-            RenderSystem.stencilOp(GL_INCR, GL_KEEP, GL_KEEP);
-            RenderSystem.clear(GL_STENCIL_BUFFER_BIT, Minecraft.ON_OSX);
+            renderer.preRender(entity, tickDelta, poseStack);
         }
-        model.renderToBuffer(matrices, vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity))), light, OverlayTexture.NO_OVERLAY, r, g, b, 1F);
+        model.renderToBuffer(poseStack, vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity))), light, OverlayTexture.NO_OVERLAY, r, g, b, 1F);
         if (renderPortal) {
-            RenderSystem.colorMask(true, true, true, true);
-            RenderSystem.depthMask(true);
-            RenderSystem.stencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-            RenderSystem.stencilFunc(GL_NEVER, 123, 0xff);
-
-            portalLayer++;
-            final Minecraft minecraft = Minecraft.getInstance();
-            final Camera camera = new Camera();
-            ((CameraExt)camera).updateSimple(entity.level, entity);
-            minecraft.levelRenderer.renderLevel(
-                new PoseStack(),
-                tickDelta,
-                0,
-                false,
-                camera,
-                minecraft.gameRenderer,
-                minecraft.gameRenderer.lightTexture(),
-                matrices.last().pose()
-            );
-            portalLayer--;
-
-            glDisable(GL_STENCIL_TEST);
+            renderer.postRender(entity, tickDelta, poseStack);
         }
     }
 
     private void renderAxes(ExperimentalPortal entity, PoseStack matrices, VertexConsumer vertices) {
         final PoseStack.Pose entry = matrices.last();
         renderAxis(entry, vertices, entity.getNormal());
-//        entity.getAxisW().ifPresent(axisW -> renderAxis(entry, vertices, axisW));
-//        entity.getAxisH().ifPresent(axisH -> renderAxis(entry, vertices, axisH));
+        entity.getAxisW().ifPresent(axisW -> renderAxis(entry, vertices, axisW));
+        entity.getAxisH().ifPresent(axisH -> renderAxis(entry, vertices, axisH));
     }
 
     private void renderAxis(PoseStack.Pose entry, VertexConsumer vertices, Vec3 axis) {

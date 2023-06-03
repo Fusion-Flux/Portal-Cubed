@@ -16,7 +16,9 @@ import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.block.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedConfig;
+import com.fusionflux.portalcubed.client.render.portal.PortalRenderer;
+import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
@@ -64,6 +66,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
@@ -116,6 +119,9 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static int gelOverlayTimer = -1;
     public static ResourceLocation gelOverlayTexture = TextureManager.INTENTIONAL_MISSING_TEXTURE;
+
+    private static PortalRenderer renderer;
+    private static PortalRenderers rendererType;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -601,5 +607,14 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static int globalAdvancementsSize() {
         return GLOBAL_ADVANCEMENTS.size();
+    }
+
+    @NotNull
+    public static PortalRenderer getRenderer() {
+        if (rendererType != PortalCubedConfig.renderer) {
+            rendererType = PortalCubedConfig.renderer;
+            renderer = rendererType.creator.get();
+        }
+        return renderer;
     }
 }

@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.client.render;
 
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;

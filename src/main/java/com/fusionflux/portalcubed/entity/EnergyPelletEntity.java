@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
@@ -29,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThroughPortalListener {
@@ -55,6 +56,7 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
         nbt.putInt("Life", getLife());
     }
 
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this);
@@ -193,6 +195,7 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
         return true;
     }
 
+    @NotNull
     @Override
     public ItemStack getItem() {
         return new ItemStack(getLife() < 0 ? PortalCubedItems.SUPER_PELLET : PortalCubedItems.ENERGY_PELLET);

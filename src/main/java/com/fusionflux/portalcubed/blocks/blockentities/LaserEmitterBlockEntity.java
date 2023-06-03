@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.blocks.LaserCatcherBlock;
 import com.fusionflux.portalcubed.blocks.LaserEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
@@ -57,7 +57,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    public void saveAdditional(@NotNull CompoundTag tag) {
         final ListTag list = new ListTag();
         for (final Target target : targets) {
             final CompoundTag targetNbt = new CompoundTag();

@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.client.render.block.entity;
 
 import com.fusionflux.portalcubed.blocks.blockentities.LaserEmitterBlockEntity;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class LaserEmitterRenderer implements BlockEntityRenderer<LaserEmitterBlockEntity> {
     public LaserEmitterRenderer(BlockEntityRendererProvider.Context ctx) {
@@ -26,7 +27,7 @@ public class LaserEmitterRenderer implements BlockEntityRenderer<LaserEmitterBlo
     }
 
     @Override
-    public void render(LaserEmitterBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+    public void render(LaserEmitterBlockEntity entity, float tickDelta, @NotNull PoseStack matrices, @NotNull MultiBufferSource vertexConsumers, int light, int overlay) {
         if (entity.getMultiSegments() == null) return;
         final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.lightning());
         final PoseStack.Pose matrix = matrices.last();

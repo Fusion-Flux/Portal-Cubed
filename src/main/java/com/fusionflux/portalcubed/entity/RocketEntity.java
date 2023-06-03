@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.Minecraft;
@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
@@ -44,13 +45,14 @@ public class RocketEntity extends Entity implements Fizzleable {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag nbt) {
+    protected void readAdditionalSaveData(@NotNull CompoundTag nbt) {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag nbt) {
+    protected void addAdditionalSaveData(@NotNull CompoundTag nbt) {
     }
 
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this);
@@ -186,7 +188,7 @@ public class RocketEntity extends Entity implements Fizzleable {
     }
 
     @Override
-    public void remove(RemovalReason reason) {
+    public void remove(@NotNull RemovalReason reason) {
         if (reason == RemovalReason.UNLOADED_TO_CHUNK) {
             reason = RemovalReason.DISCARDED;
         }

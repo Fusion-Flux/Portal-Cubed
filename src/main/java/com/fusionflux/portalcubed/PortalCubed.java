@@ -14,7 +14,6 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.commands.PortalCubedCommands;
 import com.fusionflux.portalcubed.compat.create.CreateIntegration;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;

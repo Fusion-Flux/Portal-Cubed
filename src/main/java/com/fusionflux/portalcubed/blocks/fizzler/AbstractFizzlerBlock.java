@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.blocks.fizzler;
 import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.Fizzleable;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
@@ -58,9 +59,10 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
         return !state.getValue(NS) && !state.getValue(EW);
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         if (state.getValue(NS) && state.getValue(EW)) {
             return BOTH_SHAPE;
         }
@@ -80,18 +82,18 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
 
     @Override
     @SuppressWarnings("deprecation")
-    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
+    public float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos) {
         return 1;
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+    public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos) {
         return true;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
+    public boolean skipRendering(@NotNull BlockState state, BlockState stateFrom, @NotNull Direction direction) {
         return stateFrom.is(this) || super.skipRendering(state, stateFrom, direction);
     }
 

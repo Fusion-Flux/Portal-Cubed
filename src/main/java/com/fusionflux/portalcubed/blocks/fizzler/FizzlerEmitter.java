@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.blocks.fizzler;
 
-import com.fusionflux.portalcubed.config.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FizzlerEmitter extends HorizontalDirectionalBlock {
@@ -42,9 +43,10 @@ public class FizzlerEmitter extends HorizontalDirectionalBlock {
         builder.add(FACING, HALF, POWERED);
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, Direction direction, @NotNull BlockState neighborState, @NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull BlockPos neighborPos) {
         final DoubleBlockHalf half = state.getValue(HALF);
         if (direction.getAxis() != Direction.Axis.Y || half == DoubleBlockHalf.LOWER != (direction == Direction.UP)) {
             return half == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canSurvive(world, pos)
@@ -58,7 +60,7 @@ public class FizzlerEmitter extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+    public void playerWillDestroy(@NotNull Level world, @NotNull BlockPos pos, BlockState state, @NotNull Player player) {
         if (state.getValue(POWERED)) {
             updateGrill(world, pos.immutable(), state, false);
             updateGrill(world, state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos.above(), state.cycle(HALF), false);
@@ -100,7 +102,7 @@ public class FizzlerEmitter extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, @NotNull ItemStack itemStack) {
         final BlockPos otherPos = pos.above();
         final BlockState otherState = state.setValue(HALF, DoubleBlockHalf.UPPER);
         world.setBlockAndUpdate(otherPos, otherState);
@@ -112,7 +114,7 @@ public class FizzlerEmitter extends HorizontalDirectionalBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, @NotNull Block block, @NotNull BlockPos fromPos, boolean notify) {
         final BlockPos otherPos = pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN);
         final boolean powered = world.hasNeighborSignal(pos) || world.hasNeighborSignal(otherPos);
         if (!defaultBlockState().is(block) && powered != state.getValue(POWERED)) {
