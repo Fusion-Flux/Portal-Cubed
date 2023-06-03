@@ -34,3 +34,19 @@ jobs:
       with:
         name: Artifact
         path: build/libs/
+
+    # The following is based off of https://github.com/Cannoneers-of-Create/CreateBigCannons/blob/1.18.2/dev/.github/workflows/gradle.yml
+    - name: Send building message to discord
+      if: github.event_name == 'push' && github.repository_id == '344617531'
+      uses: realRobotix/action-discord-notifier@release-master
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        message-title: Building mod from branch ${{ steps.get_branch.outputs.branch }}
+
+    - name: Send built file to discord
+      if: github.event_name == 'push' && github.repository_id == '344617531'
+      uses: sinshutu/upload-to-discord@master
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      with:
+        args: build/libs/
