@@ -15,7 +15,6 @@ import static com.mojang.blaze3d.platform.GlConst.GL_COLOR_BUFFER_BIT;
 import static com.mojang.blaze3d.platform.GlConst.GL_DEPTH_BUFFER_BIT;
 
 public class FramebufferRenderer extends PortalRenderer {
-    // Nice setup, fastutil (IntArrayFIFOQueue isn't a priority queue)
     private static final Queue<RenderTarget> FREE_TARGETS = new ArrayDeque<>();
 
     private int portalLayer = 0;
@@ -60,7 +59,7 @@ public class FramebufferRenderer extends PortalRenderer {
         GlStateManager._clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
 
         portalLayer++;
-        renderWorld(portal, tickDelta, poseStack);
+        renderWorld(portal, tickDelta);
         portalLayer--;
 
         ((MinecraftAccessor)minecraft).setMainRenderTarget(oldTarget);

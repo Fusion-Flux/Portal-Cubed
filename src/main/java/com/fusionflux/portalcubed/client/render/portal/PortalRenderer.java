@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.client.render.portal;
 import com.fusionflux.portalcubed.accessor.CameraExt;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.Util;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 
@@ -15,19 +16,12 @@ public abstract class PortalRenderer {
 
     public abstract void postRender(ExperimentalPortal portal, float tickDelta, PoseStack poseStack);
 
-    protected void renderWorld(ExperimentalPortal portal, float tickDelta, PoseStack poseStack) {
+    protected void renderWorld(ExperimentalPortal portal, float tickDelta) {
         final Minecraft minecraft = Minecraft.getInstance();
+        minecraft.getProfiler().push("pc_portal_render");
         final Camera camera = new Camera();
         ((CameraExt)camera).updateSimple(portal.level, portal);
-        minecraft.levelRenderer.renderLevel(
-            new PoseStack(),
-            tickDelta,
-            0,
-            false,
-            camera,
-            minecraft.gameRenderer,
-            minecraft.gameRenderer.lightTexture(),
-            poseStack.last().pose()
-        );
+        minecraft.gameRenderer.renderLevel(tickDelta, Util.getNanos(), new PoseStack());
+        minecraft.getProfiler().pop();
     }
 }
