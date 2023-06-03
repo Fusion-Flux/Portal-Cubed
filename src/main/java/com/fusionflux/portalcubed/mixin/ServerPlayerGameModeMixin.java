@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = ServerPlayerGameMode.class, priority = 1001)
-public abstract class ServerPlayerInteractionManagerMixin {
+public abstract class ServerPlayerGameModeMixin {
 
     @Shadow @Final protected ServerPlayer player;
 

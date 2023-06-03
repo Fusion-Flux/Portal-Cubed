@@ -26,7 +26,7 @@ import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
 import com.fusionflux.portalcubed.mixin.client.DeathScreenAccessor;
-import com.fusionflux.portalcubed.mixin.client.MusicTrackerAccessor;
+import com.fusionflux.portalcubed.mixin.client.MusicManagerAccessor;
 import com.fusionflux.portalcubed.optionslist.OptionsListScreen;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -220,7 +220,7 @@ public class PortalCubedClient implements ClientModInitializer {
                     client.getSoundManager().play(excursionFunnelMusic);
                 } else if (excursionFunnelMusic.getVolume() < 1f && excursionFunnelMusic instanceof AbstractSoundInstanceAccessor access) {
                     access.setVolume(excursionFunnelMusic.getVolume() + 0.05f);
-                    if (((MusicTrackerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor cAccess) {
+                    if (((MusicManagerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor cAccess) {
                         cAccess.setVolume(1f - excursionFunnelMusic.getVolume() / 2);
                     }
                     client.getSoundManager().updateSourceVolume(null, 0); // If first argument is null, all it does is refresh SoundInstance volumes
@@ -229,13 +229,13 @@ public class PortalCubedClient implements ClientModInitializer {
                 if (excursionFunnelMusic.getVolume() <= 0f) {
                     client.getSoundManager().stop(excursionFunnelMusic);
                     excursionFunnelMusic = null;
-                    if (((MusicTrackerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor access) {
+                    if (((MusicManagerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor access) {
                         access.setVolume(1f);
                         client.getSoundManager().updateSourceVolume(null, 0); // See above
                     }
                 } else if (excursionFunnelMusic instanceof AbstractSoundInstanceAccessor access) {
                     access.setVolume(excursionFunnelMusic.getVolume() - 0.05f);
-                    if (((MusicTrackerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor cAccess) {
+                    if (((MusicManagerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor cAccess) {
                         cAccess.setVolume(1f - excursionFunnelMusic.getVolume() / 2);
                     }
                     client.getSoundManager().updateSourceVolume(null, 0); // See above

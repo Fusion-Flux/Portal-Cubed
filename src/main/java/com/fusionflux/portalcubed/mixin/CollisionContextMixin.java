@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CollisionContext.class)
-public interface ShapeContextMixin {
+public interface CollisionContextMixin {
     @Inject(method = "of", at = @At("HEAD"), cancellable = true)
     private static void ofNullable(Entity entity, CallbackInfoReturnable<CollisionContext> cir) {
         if (entity == null) {

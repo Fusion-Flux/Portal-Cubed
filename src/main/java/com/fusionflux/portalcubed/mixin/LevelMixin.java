@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.UUID;
 
 @Mixin(Level.class)
-public abstract class WorldMixin implements Accessors {
+public abstract class LevelMixin implements Accessors {
 
     @Shadow
     protected abstract LevelEntityGetter<Entity> getEntities();

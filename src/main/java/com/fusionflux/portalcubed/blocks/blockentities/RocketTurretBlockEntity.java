@@ -212,7 +212,7 @@ public class RocketTurretBlockEntity extends EntityLikeBlockEntity {
             aimDests = PortalDirectionUtils.raycast(world, new ClipContext(
                 gunPos, gunPos.add(Vec3.directionFromRotation(pitch, yaw - 90).scale(127)),
                 ClipContext.Block.VISUAL, ClipContext.Fluid.NONE,
-                // We can pass null here because of ShapeContextMixin
+                // We can pass null here because of CollisionContextMixin
                 null
             )).rays().stream().map(r -> new Tuple<>(r.start(), r.end())).toList();
             return;

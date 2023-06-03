@@ -1,5 +1,5 @@
 package com.fusionflux.portalcubed.accessor;
 
-public interface HeldItemRendererExt {
+public interface ItemInHandRendererExt {
     void startHandFaker();
 }

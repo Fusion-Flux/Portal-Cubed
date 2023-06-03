@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.accessor;
 
-public interface FramebufferExt {
+public interface RenderTargetExt {
     boolean isStencilBufferEnabled();
 
     void setStencilBufferEnabled(boolean enabled);

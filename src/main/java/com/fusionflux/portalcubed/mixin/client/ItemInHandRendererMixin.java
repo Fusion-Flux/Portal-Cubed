@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import com.fusionflux.portalcubed.accessor.HeldItemRendererExt;
+import com.fusionflux.portalcubed.accessor.ItemInHandRendererExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
-public class HeldItemRendererMixin implements HeldItemRendererExt {
+public class ItemInHandRendererMixin implements ItemInHandRendererExt {
     @Shadow @Final private Minecraft minecraft;
     private boolean isHoldingInvisible;
     private boolean handFaker;

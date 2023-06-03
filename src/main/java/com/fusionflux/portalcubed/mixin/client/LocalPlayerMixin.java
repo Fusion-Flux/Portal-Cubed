@@ -26,13 +26,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
-public class ClientPlayerEntityMixin extends AbstractClientPlayer implements HasMovementInputAccessor {
+public class LocalPlayerMixin extends AbstractClientPlayer implements HasMovementInputAccessor {
 
     @Shadow @Final protected Minecraft minecraft;
 
     @Shadow public Input input;
 
-    public ClientPlayerEntityMixin(ClientLevel clientWorld, GameProfile gameProfile, @Nullable ProfilePublicKey playerPublicKey) {
+    public LocalPlayerMixin(ClientLevel clientWorld, GameProfile gameProfile, @Nullable ProfilePublicKey playerPublicKey) {
         super(clientWorld, gameProfile, playerPublicKey);
     }
 

@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import com.fusionflux.portalcubed.accessor.FramebufferExt;
+import com.fusionflux.portalcubed.accessor.RenderTargetExt;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.ARBFramebufferObject;
@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 // Based on https://github.com/iPortalTeam/ImmersivePortalsMod/blob/55c9c1e7e298e09d8d43b0114e64e30271aa43b6/imm_ptl_core/src/main/java/qouteall/imm_ptl/core/mixin/client/render/framebuffer/MixinRenderTarget.java#L3
 @Mixin(RenderTarget.class)
-public abstract class FramebufferMixin implements FramebufferExt {
+public abstract class RenderTargetMixin implements RenderTargetExt {
     @Shadow public abstract void resize(int width, int height, boolean getError);
 
     @Shadow public int width;

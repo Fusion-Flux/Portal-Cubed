@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ClipContext.class)
-public interface RaycastContextAccessor {
+public interface ClipContextAccessor {
     @Accessor
     ClipContext.Block getBlock();
 

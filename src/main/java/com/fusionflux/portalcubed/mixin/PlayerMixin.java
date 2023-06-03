@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.mixin;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedGameRules;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -32,6 +31,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -51,25 +51,22 @@ import java.util.List;
 import java.util.Set;
 
 @Mixin(Player.class)
-public abstract class PlayerEntityMixin extends LivingEntity implements EntityAttachments {
+public abstract class PlayerMixin extends LivingEntity implements EntityAttachments {
     @Unique
     private boolean cfg;
 
-    protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
+    protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
-        throw new AssertionError(
-                PortalCubed.MOD_ID + "'s PlayerEntityMixin dummy constructor was called, " +
-                        "something is very wrong here!"
-        );
     }
 
+    @NotNull
     @Shadow
     @Override
-    public abstract ItemStack getItemBySlot(EquipmentSlot slot);
+    public abstract ItemStack getItemBySlot(@NotNull EquipmentSlot slot);
 
     @Shadow
     @Override
-    public abstract void playSound(SoundEvent sound, float volume, float pitch);
+    public abstract void playSound(@NotNull SoundEvent sound, float volume, float pitch);
 
     @Shadow
     @Override

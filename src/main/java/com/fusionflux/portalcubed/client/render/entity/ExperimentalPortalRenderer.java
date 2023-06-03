@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
 import com.fusionflux.portalcubed.accessor.CameraExt;
-import com.fusionflux.portalcubed.accessor.FramebufferExt;
+import com.fusionflux.portalcubed.accessor.RenderTargetExt;
 import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalModel;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 import static org.lwjgl.opengl.GL11.*;
@@ -39,7 +40,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
     }
 
     @Override
-    public void render(ExperimentalPortal entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+    public void render(@NotNull ExperimentalPortal entity, float yaw, float tickDelta, @NotNull PoseStack matrices, @NotNull MultiBufferSource vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.pushPose();
         matrices.mulPose(Vector3f.XP.rotationDegrees(entity.getYRot()));
@@ -84,7 +85,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         final boolean renderPortal = portalLayer < MAX_PORTAL_LAYER && entity.getActive();
         if (renderPortal) {
             // TODO: PortingLib compat
-            ((FramebufferExt)Minecraft.getInstance().getMainRenderTarget()).setStencilBufferEnabled(true);
+            ((RenderTargetExt)Minecraft.getInstance().getMainRenderTarget()).setStencilBufferEnabled(true);
             glEnable(GL_STENCIL_TEST);
             RenderSystem.colorMask(false, false, false, false);
             RenderSystem.depthMask(false);
@@ -140,8 +141,9 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
             .endVertex();
     }
 
+    @NotNull
     @Override
-    public ResourceLocation getTextureLocation(ExperimentalPortal entity) {
+    public ResourceLocation getTextureLocation(@NotNull ExperimentalPortal entity) {
         if (PortalCubedConfig.enableRoundPortals) {
             return !renderingTracers ? ROUND_TEXTURE : ROUND_TEXTURE_TRACER;
         } else {

@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.accessor.Accessors;
-import com.fusionflux.portalcubed.accessor.HeldItemRendererExt;
+import com.fusionflux.portalcubed.accessor.ItemInHandRendererExt;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -112,7 +112,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     private void handHideRefresh() {
         if (owner.getMainHandItem().is(PortalCubedItems.HOLDS_OBJECT)) return;
         owner.resetAttackStrengthTicker();
-        ((HeldItemRendererExt)Minecraft.getInstance().gameRenderer.itemInHandRenderer).startHandFaker();
+        ((ItemInHandRendererExt)Minecraft.getInstance().gameRenderer.itemInHandRenderer).startHandFaker();
     }
 
 }

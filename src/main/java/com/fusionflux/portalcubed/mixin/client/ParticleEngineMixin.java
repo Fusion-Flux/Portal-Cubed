@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.stream.Stream;
 
 @Mixin(ParticleEngine.class)
-public class ParticleManagerMixin {
+public class ParticleEngineMixin {
     @WrapOperation(
         method = "crack",
         at = @At(

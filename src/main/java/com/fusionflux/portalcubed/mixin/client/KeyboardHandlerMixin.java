@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 
 @Mixin(KeyboardHandler.class)
-public class KeyboardMixin {
+public class KeyboardHandlerMixin {
     @Shadow @Final private Minecraft minecraft;
 
     @WrapWithCondition(
@@ -29,7 +29,7 @@ public class KeyboardMixin {
         if (action != GLFW_REPEAT) {
             return true;
         }
-        final KeyMapping keybind = KeyBindAccessor.getMAP().get(instance);
+        final KeyMapping keybind = KeyMappingAccessor.getMAP().get(instance);
         return keybind != PortalCubedKeyBindings.GRAB && (!PortalCubedClient.isPortalHudMode() || keybind != minecraft.options.keyInventory);
     }
 }

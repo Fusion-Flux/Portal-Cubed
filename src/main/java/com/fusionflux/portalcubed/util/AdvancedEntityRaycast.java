@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.util;
 
-import com.fusionflux.portalcubed.mixin.RaycastContextAccessor;
+import com.fusionflux.portalcubed.mixin.ClipContextAccessor;
 import com.google.common.base.Suppliers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -138,9 +138,9 @@ public class AdvancedEntityRaycast {
         //noinspection DataFlowIssue
         return new ClipContext(
             start, end,
-            ((RaycastContextAccessor)context).getBlock(),
-            ((RaycastContextAccessor)context).getFluid(),
-            ((RaycastContextAccessor)context).getCollisionContext() instanceof EntityCollisionContext esc
+            ((ClipContextAccessor)context).getBlock(),
+            ((ClipContextAccessor)context).getFluid(),
+            ((ClipContextAccessor)context).getCollisionContext() instanceof EntityCollisionContext esc
                 ? esc.getEntity() : null
         );
     }

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.Set;
 
 @Mixin(ClientLevel.class)
-public class ClientWorldMixin {
+public class ClientLevelMixin {
     @WrapOperation(
         method = "getMarkerParticleTarget",
         at = @At(

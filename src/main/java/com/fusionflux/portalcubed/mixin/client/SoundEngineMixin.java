@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SoundEngine.class)
-public abstract class SoundSystemMixin {
+public abstract class SoundEngineMixin {
     @Shadow public abstract void play(SoundInstance sound);
 
     @Inject(

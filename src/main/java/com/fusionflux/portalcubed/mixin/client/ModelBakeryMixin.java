@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Map;
 
 @Mixin(ModelBakery.class)
-public abstract class ModelLoaderMixin {
+public abstract class ModelBakeryMixin {
 
     @Shadow
     @Final

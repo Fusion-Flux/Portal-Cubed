@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
-public class HandledScreenMixin {
+public class AbstractContainerScreenMixin {
     @Inject(method = "onClose", at = @At("HEAD"))
     private void floorButtonEasterEgg(CallbackInfo ci) {
         //noinspection ConstantValue

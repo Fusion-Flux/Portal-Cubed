@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FogRenderer.class)
-public abstract class BackgroundRendererMixin {
+public abstract class FogRendererMixin {
     @Shadow
     private static float fogRed;
     @Shadow

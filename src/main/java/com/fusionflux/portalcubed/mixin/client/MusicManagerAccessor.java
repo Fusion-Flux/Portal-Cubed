@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(MusicManager.class)
-public interface MusicTrackerAccessor {
+public interface MusicManagerAccessor {
     @Accessor
     @Nullable
     SoundInstance getCurrentMusic();
