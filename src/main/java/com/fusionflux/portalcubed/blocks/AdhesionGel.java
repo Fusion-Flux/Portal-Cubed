@@ -4,35 +4,35 @@ import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 
 public class AdhesionGel extends BaseGel {
-    public AdhesionGel(Settings settings) {
+    public AdhesionGel(Properties settings) {
         super(settings);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        Box block = new Box(pos);
-        Box player = getPlayerBox(entity.getBoundingBox(), GravityChangerAPI.getGravityDirection(entity), -(entity.getHeight() - 1));
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+        AABB block = new AABB(pos);
+        AABB player = getPlayerBox(entity.getBoundingBox(), GravityChangerAPI.getGravityDirection(entity), -(entity.getBbHeight() - 1));
         if (block.intersects(player)) {
             this.addCollisionEffects(world, entity, pos, state);
         }
     }
 
-    private void addCollisionEffects(World world, Entity entity, BlockPos pos, BlockState state) {
-        PacketByteBuf info = AdhesionGravityVerifier.packInfo(pos);
+    private void addCollisionEffects(Level world, Entity entity, BlockPos pos, BlockState state) {
+        FriendlyByteBuf info = AdhesionGravityVerifier.packInfo(pos);
         if ((entity.isOnGround() && entity.horizontalCollision) || (!entity.isOnGround() && entity.horizontalCollision) || (!entity.isOnGround() && !entity.horizontalCollision)) {
             if (((EntityAttachments) entity).getGelTimer() == 0) {
                 Direction current = GravityChangerAPI.getGravityDirection(entity);
@@ -45,16 +45,16 @@ public class AdhesionGel extends BaseGel {
                         break;
                     }
                 }
-                for (Direction direc : getOpenFaces(state)) {
+                for (Direction direc : availableFaces(state)) {
                     if (direc != current) {
-                        Box gravbox = getGravityEffectBox(pos, direc, delta);
+                        AABB gravbox = getGravityEffectBox(pos, direc, delta);
                         if (gravbox.intersects(entity.getBoundingBox())) {
-                            if (world.isClient && entity instanceof PlayerEntity) {
-                                GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(direc), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
+                            if (world.isClientSide && entity instanceof Player) {
+                                GravityChangerAPI.addGravityClient((LocalPlayer) entity, AdhesionGravityVerifier.newFieldGravity(direc), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
                                 ((EntityAttachments) entity).setGelTimer(10);
                                 break;
                             } else {
-                                if (!(entity instanceof PlayerEntity) && !world.isClient) {
+                                if (!(entity instanceof Player) && !world.isClientSide) {
                                     GravityChangerAPI.addGravity(entity, new Gravity(direc, 10, 2, "adhesion_gel"));
                                     ((EntityAttachments) entity).setGelTimer(10);
                                     break;
@@ -65,15 +65,15 @@ public class AdhesionGel extends BaseGel {
                 }
             }
         }
-        if (world.isClient && entity instanceof PlayerEntity) {
-            GravityChangerAPI.addGravityClient((ClientPlayerEntity) entity, AdhesionGravityVerifier.newFieldGravity(GravityChangerAPI.getGravityDirection(entity)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
+        if (world.isClientSide && entity instanceof Player) {
+            GravityChangerAPI.addGravityClient((LocalPlayer) entity, AdhesionGravityVerifier.newFieldGravity(GravityChangerAPI.getGravityDirection(entity)), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
         } else {
-            if (!(entity instanceof PlayerEntity) && !world.isClient)
+            if (!(entity instanceof Player) && !world.isClientSide)
                 GravityChangerAPI.addGravity(entity, new Gravity(GravityChangerAPI.getGravityDirection(entity), 10, 2, "adhesion_gel"));
         }
     }
 
-    public Box getGravityEffectBox(BlockPos blockPos, Direction direction, double delta) {
+    public AABB getGravityEffectBox(BlockPos blockPos, Direction direction, double delta) {
         double minX = blockPos.getX();
         double minY = blockPos.getY();
         double minZ = blockPos.getZ();
@@ -88,10 +88,10 @@ public class AdhesionGel extends BaseGel {
             case WEST -> maxX += delta;
             case EAST -> minX -= delta;
         }
-        return new Box(minX, minY, minZ, maxX, maxY, maxZ);
+        return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    public Box getPlayerBox(Box playerBox, Direction direction, double delta) {
+    public AABB getPlayerBox(AABB playerBox, Direction direction, double delta) {
         double minX = playerBox.minX;
         double minY = playerBox.minY;
         double minZ = playerBox.minZ;
@@ -106,6 +106,6 @@ public class AdhesionGel extends BaseGel {
             case WEST -> maxX += delta;
             case EAST -> minX -= delta;
         }
-        return new Box(minX, minY, minZ, maxX, maxY, maxZ);
+        return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 }

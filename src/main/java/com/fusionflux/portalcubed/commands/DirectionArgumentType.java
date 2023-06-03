@@ -1,20 +1,20 @@
 package com.fusionflux.portalcubed.commands;
 
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.command.argument.EnumArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.math.Direction;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.StringRepresentableArgument;
+import net.minecraft.core.Direction;
 
-public class DirectionArgumentType extends EnumArgumentType<Direction> {
+public class DirectionArgumentType extends StringRepresentableArgument<Direction> {
     private DirectionArgumentType() {
         super(Direction.CODEC, Direction::values);
     }
 
-    public static EnumArgumentType<Direction> direction() {
+    public static StringRepresentableArgument<Direction> direction() {
         return new DirectionArgumentType();
     }
 
-    public static Direction getDirection(CommandContext<ServerCommandSource> context, String name) {
+    public static Direction getDirection(CommandContext<CommandSourceStack> context, String name) {
         return context.getArgument(name, Direction.class);
     }
 }

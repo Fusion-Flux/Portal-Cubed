@@ -5,15 +5,17 @@
 package com.fusionflux.portalcubed.client.render.entity.model;
 
 import com.fusionflux.portalcubed.entity.RadioEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class RadioModel extends FizzleableModel<RadioEntity> {
-    public static final EntityModelLayer RADIO_MAIN_LAYER = new EntityModelLayer(id("radio"), "main");
+    public static final ModelLayerLocation RADIO_MAIN_LAYER = new ModelLayerLocation(id("radio"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 
@@ -21,20 +23,20 @@ public class RadioModel extends FizzleableModel<RadioEntity> {
         this.bb_main = root.getChild("bb_main");
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData bone = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 4).mirrored().cuboid(-12.0F, -1.0F, 6.0F, 8.0F, 1.0F, 4.0F, new Dilation(0.0F)).mirrored(false)
-                .uv(0, 13).mirrored().cuboid(-11.5F, -5.0F, 6.5F, 7.0F, 4.0F, 3.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(8.0F, 24.0F, -8.0F));
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        PartDefinition bone = modelPartData.addOrReplaceChild("bb_main", CubeListBuilder.create().texOffs(0, 4).mirror().addBox(-12.0F, -1.0F, 6.0F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false)
+                .texOffs(0, 13).mirror().addBox(-11.5F, -5.0F, 6.5F, 7.0F, 4.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(8.0F, 24.0F, -8.0F));
 
-        bone.addChild("cube_r1", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, -2.0F, -0.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-6.5F, -7.0F, 8.0F, 0.0F, 0.7854F, 0.0F));
+        bone.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, -2.0F, -0.5F, 0.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-6.5F, -7.0F, 8.0F, 0.0F, 0.7854F, 0.0F));
 
-        bone.addChild("cube_r2", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, -2.0F, -0.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-6.5F, -7.0F, 8.0F, 0.0F, -0.7854F, 0.0F));
-        return TexturedModelData.of(modelData, 32, 32);
+        bone.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, -2.0F, -0.5F, 0.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-6.5F, -7.0F, 8.0F, 0.0F, -0.7854F, 0.0F));
+        return LayerDefinition.create(modelData, 32, 32);
     }
 
     @Override
-    public void renderFizzled(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderFizzled(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         bb_main.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }

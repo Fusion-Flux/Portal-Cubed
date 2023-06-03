@@ -5,28 +5,28 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.command.argument.IdentifierArgumentType;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class DecalParticleEffect implements ParticleEffect {
-    public static final Identifier BULLET_HOLE_CONCRETE = id("particle/bullet_hole_concrete");
-    public static final Identifier BULLET_HOLE_GLASS = id("particle/bullet_hole_glass");
-    public static final Identifier BULLET_HOLE_METAL = id("particle/bullet_hole_metal");
-    public static final Identifier SCORCH = id("particle/scorch");
+public class DecalParticleEffect implements ParticleOptions {
+    public static final ResourceLocation BULLET_HOLE_CONCRETE = id("particle/bullet_hole_concrete");
+    public static final ResourceLocation BULLET_HOLE_GLASS = id("particle/bullet_hole_glass");
+    public static final ResourceLocation BULLET_HOLE_METAL = id("particle/bullet_hole_metal");
+    public static final ResourceLocation SCORCH = id("particle/scorch");
 
     @SuppressWarnings("deprecation")
-    public static final ParticleEffect.Factory<DecalParticleEffect> PARAMETERS_FACTORY = new Factory<>() {
+    public static final ParticleOptions.Deserializer<DecalParticleEffect> PARAMETERS_FACTORY = new Deserializer<>() {
         @Override
-        public DecalParticleEffect read(ParticleType<DecalParticleEffect> type, StringReader reader) throws CommandSyntaxException {
+        public DecalParticleEffect fromCommand(ParticleType<DecalParticleEffect> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
-            final Identifier texture = IdentifierArgumentType.identifier().parse(reader);
+            final ResourceLocation texture = ResourceLocationArgument.id().parse(reader);
             reader.expect(' ');
             final Direction direction = DirectionArgumentType.direction().parse(reader);
             final boolean multiply;
@@ -40,33 +40,33 @@ public class DecalParticleEffect implements ParticleEffect {
         }
 
         @Override
-        public DecalParticleEffect read(ParticleType<DecalParticleEffect> type, PacketByteBuf buf) {
+        public DecalParticleEffect fromNetwork(ParticleType<DecalParticleEffect> type, FriendlyByteBuf buf) {
             return new DecalParticleEffect(
                 type,
-                buf.readIdentifier(),
-                buf.readEnumConstant(Direction.class),
+                buf.readResourceLocation(),
+                buf.readEnum(Direction.class),
                 buf.readBoolean()
             );
         }
     };
 
     private final ParticleType<DecalParticleEffect> particleType;
-    private final Identifier texture;
+    private final ResourceLocation texture;
     private final Direction direction;
     private final boolean multiply;
 
-    public DecalParticleEffect(ParticleType<DecalParticleEffect> particleType, Identifier texture, Direction direction, boolean multiply) {
+    public DecalParticleEffect(ParticleType<DecalParticleEffect> particleType, ResourceLocation texture, Direction direction, boolean multiply) {
         this.particleType = particleType;
         this.texture = texture;
         this.direction = direction;
         this.multiply = multiply;
     }
 
-    public DecalParticleEffect(Identifier texture, Direction direction, boolean multiply) {
+    public DecalParticleEffect(ResourceLocation texture, Direction direction, boolean multiply) {
         this(PortalCubedParticleTypes.DECAL, texture, direction, multiply);
     }
 
-    public DecalParticleEffect(Identifier texture, Direction direction) {
+    public DecalParticleEffect(ResourceLocation texture, Direction direction) {
         this(texture, direction, false);
     }
 
@@ -76,16 +76,16 @@ public class DecalParticleEffect implements ParticleEffect {
     }
 
     @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeIdentifier(texture);
+    public void writeToNetwork(FriendlyByteBuf buf) {
+        buf.writeResourceLocation(texture);
     }
 
     @Override
-    public String asString() {
-        return Registry.PARTICLE_TYPE.getId(particleType) + " " + texture;
+    public String writeToString() {
+        return Registry.PARTICLE_TYPE.getKey(particleType) + " " + texture;
     }
 
-    public Identifier getTexture() {
+    public ResourceLocation getTexture() {
         return texture;
     }
 
@@ -100,7 +100,7 @@ public class DecalParticleEffect implements ParticleEffect {
     public static Codec<DecalParticleEffect> codec(ParticleType<DecalParticleEffect> particleType) {
         return RecordCodecBuilder.create(
             instance -> instance.group(
-                Identifier.CODEC.fieldOf("texture").forGetter(DecalParticleEffect::getTexture),
+                ResourceLocation.CODEC.fieldOf("texture").forGetter(DecalParticleEffect::getTexture),
                 Direction.CODEC.fieldOf("direction").forGetter(DecalParticleEffect::getDirection),
                 Codec.BOOL.fieldOf("multiply").forGetter(DecalParticleEffect::isMultiply)
             ).apply(instance, (texture, direction, multiply) ->

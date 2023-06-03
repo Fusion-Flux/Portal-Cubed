@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.fog;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -14,13 +14,13 @@ public record FogSettings(float start, float end, Color color, Shape shape) {
     public record Color(int r, int g, int b) {
     }
 
-    public enum Shape implements StringIdentifiable {
+    public enum Shape implements StringRepresentable {
         SPHERE, CYLINDER;
 
         private final String id = name().toLowerCase(Locale.ROOT);
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return id;
         }
 
@@ -30,12 +30,12 @@ public record FogSettings(float start, float end, Color color, Shape shape) {
         }
 
         @ClientOnly
-        public com.mojang.blaze3d.shader.FogShape toBlaze3d() {
-            return com.mojang.blaze3d.shader.FogShape.values()[ordinal()];
+        public com.mojang.blaze3d.shaders.FogShape toBlaze3d() {
+            return com.mojang.blaze3d.shaders.FogShape.values()[ordinal()];
         }
     }
 
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public CompoundTag writeNbt(CompoundTag nbt) {
         nbt.putFloat("Start", start);
         nbt.putFloat("End", end);
         nbt.putByteArray("Color", new byte[] {(byte)color.r, (byte)color.g, (byte)color.b});
@@ -43,7 +43,7 @@ public record FogSettings(float start, float end, Color color, Shape shape) {
         return nbt;
     }
 
-    public static FogSettings readNbt(NbtCompound nbt) {
+    public static FogSettings readNbt(CompoundTag nbt) {
         if (nbt.isEmpty()) {
             return null;
         }
@@ -56,31 +56,31 @@ public record FogSettings(float start, float end, Color color, Shape shape) {
         );
     }
 
-    public void encode(PacketByteBuf buf) {
+    public void encode(FriendlyByteBuf buf) {
         buf.writeFloat(start);
         buf.writeFloat(end);
         buf.writeByte(color.r);
         buf.writeByte(color.g);
         buf.writeByte(color.b);
-        buf.writeEnumConstant(shape);
+        buf.writeEnum(shape);
     }
 
-    public static void encodeOptional(@Nullable FogSettings settings, PacketByteBuf buf) {
+    public static void encodeOptional(@Nullable FogSettings settings, FriendlyByteBuf buf) {
         buf.writeOptional(Optional.ofNullable(settings), (buf1, settings1) -> settings1.encode(buf1));
     }
 
     @NotNull
-    public static FogSettings decode(PacketByteBuf buf) {
+    public static FogSettings decode(FriendlyByteBuf buf) {
         return new FogSettings(
             buf.readFloat(),
             buf.readFloat(),
             new Color(buf.readByte() & 0xff, buf.readByte() & 0xff, buf.readByte() & 0xff),
-            buf.readEnumConstant(Shape.class)
+            buf.readEnum(Shape.class)
         );
     }
 
     @Nullable
-    public static FogSettings decodeOptional(PacketByteBuf buf) {
+    public static FogSettings decodeOptional(FriendlyByteBuf buf) {
         return buf.readOptional(FogSettings::decode).orElse(null);
     }
 }

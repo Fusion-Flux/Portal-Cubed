@@ -2,13 +2,13 @@ package com.fusionflux.portalcubed.fluids;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.google.common.base.Suppliers;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.material.FlowingFluid;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
@@ -24,8 +24,8 @@ public class PortalCubedFluids {
         still -> new ToxicGooFluid.Block(still, QuiltBlockSettings.copy(Blocks.WATER))
     );
 
-    private static FluidRegistryContainer createFluid(String name, FlowableFluid flowing, FlowableFluid still, Function<FlowableFluid, FluidBlock> blockSupplier) {
-        return new FluidRegistryContainer(name, flowing, still, blockSupplier, new BucketItem(still, new QuiltItemSettings().group(PortalCubed.TESTING_ELEMENTS_GROUP).recipeRemainder(Items.BUCKET).maxCount(1)));
+    private static FluidRegistryContainer createFluid(String name, FlowingFluid flowing, FlowingFluid still, Function<FlowingFluid, LiquidBlock> blockSupplier) {
+        return new FluidRegistryContainer(name, flowing, still, blockSupplier, new BucketItem(still, new QuiltItemSettings().tab(PortalCubed.TESTING_ELEMENTS_GROUP).craftRemainder(Items.BUCKET).stacksTo(1)));
     }
 
     public static void registerFluids() {
@@ -34,13 +34,13 @@ public class PortalCubedFluids {
 
     public static class FluidRegistryContainer {
         public final String name;
-        public final FlowableFluid flowing;
-        public final FlowableFluid still;
+        public final FlowingFluid flowing;
+        public final FlowingFluid still;
         public final Item bucket;
 
-        private final Supplier<FluidBlock> block;
+        private final Supplier<LiquidBlock> block;
 
-        private FluidRegistryContainer(String name, FlowableFluid flowing, FlowableFluid still, Function<FlowableFluid, FluidBlock> blockSupplier, Item bucket) {
+        private FluidRegistryContainer(String name, FlowingFluid flowing, FlowingFluid still, Function<FlowingFluid, LiquidBlock> blockSupplier, Item bucket) {
             this.name = name;
             this.flowing = flowing;
             this.still = still;
@@ -55,7 +55,7 @@ public class PortalCubedFluids {
             if (bucket != null) Registry.register(Registry.ITEM, id(name + "_bucket"), bucket);
         }
 
-        public FluidBlock getBlock() {
+        public LiquidBlock getBlock() {
             return block.get();
         }
     }

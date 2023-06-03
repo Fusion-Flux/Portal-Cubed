@@ -1,10 +1,10 @@
 package com.fusionflux.portalcubed.fog;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.Locale;
 
-public enum FogPreset implements StringIdentifiable {
+public enum FogPreset implements StringRepresentable {
     PORTAL_ESCAPE(64, 3500, 58, 82, 101),
     PORTAL_2_FAN(128, 3600, 16, 19, 22),
     PORTAL_2_GLADOS_INTRO(0, 3500, 39, 54, 63),
@@ -34,7 +34,7 @@ public enum FogPreset implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return id;
     }
 

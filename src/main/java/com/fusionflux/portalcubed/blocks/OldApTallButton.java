@@ -1,10 +1,10 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
 
 public class OldApTallButton extends TallButtonVariant {
-    public OldApTallButton(Settings settings) {
+    public OldApTallButton(Properties settings) {
         super(settings);
     }
 

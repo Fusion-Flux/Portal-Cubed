@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.util;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Set;
 import java.util.UUID;
@@ -27,16 +27,16 @@ public interface PortalCubedComponent extends Component {
 
     void setWasInfiniteFalling(boolean infFall);
 
-    Vec3d getVelocityUpdateAfterTeleport();
+    Vec3 getVelocityUpdateAfterTeleport();
 
-    void setVelocityUpdateAfterTeleport(Vec3d velocity);
+    void setVelocityUpdateAfterTeleport(Vec3 velocity);
 
     boolean getCanFireGel();
 
     void setCanFireGel(boolean canGel);
 
-    Vec3d getServerVelForGel();
+    Vec3 getServerVelForGel();
 
-    void setServerVelForGel(Vec3d velocity);
+    void setServerVelForGel(Vec3 velocity);
 
 }

@@ -3,13 +3,12 @@ package com.fusionflux.portalcubed.compat.rayon.present;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.compat.rayon.absent.RayonIntegrationAbsent;
 import com.jme3.math.Vector3f;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.lazurite.rayon.api.EntityPhysicsElement;
 import dev.lazurite.rayon.impl.bullet.math.Convert;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.phys.Vec3;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class RayonIntegrationPresent implements RayonIntegration {
@@ -25,16 +24,16 @@ public class RayonIntegrationPresent implements RayonIntegration {
     }
 
     @Override
-    public void setVelocity(Entity entity, Vec3d velocity) {
+    public void setVelocity(Entity entity, Vec3 velocity) {
         if (entity instanceof EntityPhysicsElement physicsElement) {
-            physicsElement.getRigidBody().setLinearVelocity(Convert.toBullet(velocity.multiply(14.5)));
+            physicsElement.getRigidBody().setLinearVelocity(Convert.toBullet(velocity.scale(14.5)));
         } else {
-            entity.setVelocity(velocity);
+            entity.setDeltaMovement(velocity);
         }
     }
 
     @Override
-    public void simpleMove(Entity entity, MovementType movementType, Vec3d movement) {
+    public void simpleMove(Entity entity, MoverType movementType, Vec3 movement) {
         if (entity instanceof EntityPhysicsElement physicsElement) {
             physicsElement.getRigidBody().setPhysicsLocation(
                 physicsElement.getRigidBody()
@@ -61,7 +60,7 @@ public class RayonIntegrationPresent implements RayonIntegration {
             https://stackoverflow.com/a/5783030/8840278
             return (float)Math.toDegrees(2 * Math.acos(q.getW()));
         }
-        return entity.getYaw();
+        return entity.getYRot();
     }
 
     @Override
@@ -73,12 +72,12 @@ public class RayonIntegrationPresent implements RayonIntegration {
                     .mult(new com.jme3.math.Quaternion().fromAngleNormalAxis((float)Math.toRadians(amount), UP))
             );
         } else {
-            entity.setYaw(entity.getYaw() + amount);
+            entity.setYRot(entity.getYRot() + amount);
         }
     }
 
     @Override
-    public void setAngularVelocityYaw(Entity entity, Vec3f angle) {
+    public void setAngularVelocityYaw(Entity entity, com.mojang.math.Vector3f angle) {
         if (entity instanceof EntityPhysicsElement physicsElement) {
             physicsElement.getRigidBody().setAngularVelocity(Convert.toBullet(angle));
         }
@@ -86,9 +85,9 @@ public class RayonIntegrationPresent implements RayonIntegration {
 
     @Override
     @ClientOnly
-    public void multiplyMatrices(MatrixStack matrices, Entity entity, float tickDelta) {
+    public void multiplyMatrices(PoseStack matrices, Entity entity, float tickDelta) {
         if (entity instanceof EntityPhysicsElement physicsElement) {
-            matrices.multiply(Convert.toMinecraft(physicsElement.getPhysicsRotation(new com.jme3.math.Quaternion(), tickDelta)));
+            matrices.mulPose(Convert.toMinecraft(physicsElement.getPhysicsRotation(new com.jme3.math.Quaternion(), tickDelta)));
         } else {
             RayonIntegrationAbsent.INSTANCE.multiplyMatrices(matrices, entity, tickDelta);
         }

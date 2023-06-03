@@ -2,34 +2,34 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 
 public class StorageCubeEntity extends CorePhysicsEntity  {
 
-    public StorageCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
+    public StorageCubeEntity(EntityType<? extends PathfinderMob> type, Level world) {
         super(type, world);
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (!this.world.isClient && !this.isRemoved()) {
-            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
-            if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
-                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+    public boolean hurt(DamageSource source, float amount) {
+        if (!this.level.isClientSide && !this.isRemoved()) {
+            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
+            if (source.getEntity() instanceof Player || source == DamageSource.OUT_OF_WORLD) {
+                if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(PortalCubedItems.STORAGE_CUBE);
                     }
                     this.discard();
                 }
-                if (!(source.getAttacker() instanceof PlayerEntity)) {
-                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+                if (!(source.getEntity() instanceof Player)) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(PortalCubedItems.STORAGE_CUBE);
                     }
                     this.discard();
                 }
@@ -40,8 +40,8 @@ public class StorageCubeEntity extends CorePhysicsEntity  {
     }
 
     @Override
-    public LivingEntity.FallSounds getFallSounds() {
-        return new LivingEntity.FallSounds(PortalCubedSounds.CUBE_LOW_HIT_EVENT, PortalCubedSounds.CUBE_HIGH_HIT_EVENT);
+    public LivingEntity.Fallsounds getFallSounds() {
+        return new LivingEntity.Fallsounds(PortalCubedSounds.CUBE_LOW_HIT_EVENT, PortalCubedSounds.CUBE_HIGH_HIT_EVENT);
     }
 
     private int buttonTimer = 0;
@@ -53,7 +53,7 @@ public class StorageCubeEntity extends CorePhysicsEntity  {
     @Override
     public void tick() {
         super.tick();
-        if (!world.isClient) {
+        if (!level.isClientSide) {
             if (buttonTimer <= 0) {
                 setOnButton(false);
             } else {

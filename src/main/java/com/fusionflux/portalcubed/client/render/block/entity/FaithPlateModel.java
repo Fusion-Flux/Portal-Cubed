@@ -4,97 +4,99 @@ import com.fusionflux.portalcubed.blocks.FaithPlateBlock;
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.util.BlockEntityWrapperEntity;
 import io.github.gaming32.jsonentityanimation.api.JsonAnimator;
-import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class FaithPlateModel extends EntityLikeBlockEntityModel<FaithPlateBlockEntity> {
-    public static final Identifier TEXTURE = id("textures/block/faith_plate.png");
-    public static final Identifier TEXTURE_E = id("textures/block/faith_plate_e.png");
+    public static final ResourceLocation TEXTURE = id("textures/block/faith_plate.png");
+    public static final ResourceLocation TEXTURE_E = id("textures/block/faith_plate_e.png");
 
-    public static final Identifier ANIMATION_FORWARD = id("faith_plate/forward");
-    public static final Identifier ANIMATION_UPWARD = id("faith_plate/upward");
+    public static final ResourceLocation ANIMATION_FORWARD = id("faith_plate/forward");
+    public static final ResourceLocation ANIMATION_UPWARD = id("faith_plate/upward");
 
     private final ModelPart root;
     private final JsonAnimator animator = new JsonAnimator(this);
 
     public FaithPlateModel(ModelPart root) {
-        super(RenderLayer::getEntityTranslucent);
+        super(RenderType::entityTranslucent);
         this.root = root;
     }
 
     @SuppressWarnings("checkstyle:LocalVariableName")
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData group = modelPartData.addChild("group", ModelPartBuilder.create(), ModelTransform.pivot(-8.0F, 2.0F, 11.5F));
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        PartDefinition group = modelPartData.addOrReplaceChild("group", CubeListBuilder.create(), PartPose.offset(-8.0F, 2.0F, 11.5F));
 
-        group.addChild("bone3", ModelPartBuilder.create().uv(20, 49).cuboid(-4.0F, -0.5F, -16.0F, 8.0F, 1.0F, 14.0F, new Dilation(0.0F))
-            .uv(2, 42).cuboid(0.0F, 0.5F, -11.0F, 0.0F, 4.0F, 9.0F, new Dilation(0.0F)), ModelTransform.pivot(8.0F, 4.5F, -2.5F));
+        group.addOrReplaceChild("bone3", CubeListBuilder.create().texOffs(20, 49).addBox(-4.0F, -0.5F, -16.0F, 8.0F, 1.0F, 14.0F, new CubeDeformation(0.0F))
+            .texOffs(2, 42).addBox(0.0F, 0.5F, -11.0F, 0.0F, 4.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 4.5F, -2.5F));
 
-        ModelPartData bone2 = group.addChild("bone2", ModelPartBuilder.create(), ModelTransform.pivot(8.0F, 7.2675F, -6.8446F));
+        PartDefinition bone2 = group.addOrReplaceChild("bone2", CubeListBuilder.create(), PartPose.offset(8.0F, 7.2675F, -6.8446F));
 
-        bone2.addChild("cube_r1", ModelPartBuilder.create().uv(14, 49).mirrored().cuboid(-2.0F, -3.0F, -3.0F, 4.0F, 6.0F, 6.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.0F, 1.0F, -2.0F, 0.7854F, 0.0F, 0.0F));
+        bone2.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(14, 49).mirror().addBox(-2.0F, -3.0F, -3.0F, 4.0F, 6.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.0F, 1.0F, -2.0F, 0.7854F, 0.0F, 0.0F));
 
-        ModelPartData bone = group.addChild("bone", ModelPartBuilder.create().uv(50, 50).cuboid(-2.25F, -1.5F, -1.3333F, 0.0F, 3.0F, 7.0F, new Dilation(0.0F))
-            .uv(50, 53).cuboid(2.25F, -1.5F, -1.3333F, 0.0F, 3.0F, 7.0F, new Dilation(0.0F)), ModelTransform.pivot(8.0F, 8.25F, -15.4167F));
+        PartDefinition bone = group.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(50, 50).addBox(-2.25F, -1.5F, -1.3333F, 0.0F, 3.0F, 7.0F, new CubeDeformation(0.0F))
+            .texOffs(50, 53).addBox(2.25F, -1.5F, -1.3333F, 0.0F, 3.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 8.25F, -15.4167F));
 
-        bone.addChild("cube_r2", ModelPartBuilder.create().uv(16, 61).cuboid(-4.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(-0.01F)), ModelTransform.of(0.0F, 0.0F, 0.1667F, 0.7854F, 0.0F, 0.0F));
+        bone.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(16, 61).addBox(-4.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F, new CubeDeformation(-0.01F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.1667F, 0.7854F, 0.0F, 0.0F));
 
-        ModelPartData base = modelPartData.addChild("base", ModelPartBuilder.create().uv(36, 6).cuboid(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new Dilation(0.0F))
-            .uv(22, 29).cuboid(4.0F, -17.0F, -8.0F, 4.0F, 1.0F, 16.0F, new Dilation(0.0F))
-            .uv(0, 28).cuboid(-4.0F, -17.0F, -8.0F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F))
-            .uv(0, 30).cuboid(-8.0F, -17.0F, -8.0F, 4.0F, 1.0F, 16.0F, new Dilation(0.0F))
-            .uv(0, 26).cuboid(-4.0F, -17.0F, 7.0F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+        PartDefinition base = modelPartData.addOrReplaceChild("base", CubeListBuilder.create().texOffs(36, 6).addBox(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new CubeDeformation(0.0F))
+            .texOffs(22, 29).addBox(4.0F, -17.0F, -8.0F, 4.0F, 1.0F, 16.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 28).addBox(-4.0F, -17.0F, -8.0F, 8.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 30).addBox(-8.0F, -17.0F, -8.0F, 4.0F, 1.0F, 16.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 26).addBox(-4.0F, -17.0F, 7.0F, 8.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        base.addChild("cubeinverted_r1", ModelPartBuilder.create().uv(36, 6).cuboid(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new Dilation(0.0F))
-            .uv(28, 15).cuboid(-4.0F, -9.0F, -7.0F, 8.0F, 0.0F, 14.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+        base.addOrReplaceChild("cubeinverted_r1", CubeListBuilder.create().texOffs(36, 6).addBox(-4.0F, -16.0F, -7.0F, 0.0F, 7.0F, 14.0F, new CubeDeformation(0.0F))
+            .texOffs(28, 15).addBox(-4.0F, -9.0F, -7.0F, 8.0F, 0.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
-        base.addChild("cubeinverted_r2", ModelPartBuilder.create().uv(42, 14).cuboid(0.0F, -3.5F, -4.0F, 0.0F, 7.0F, 8.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -12.5F, 7.0F, 0.0F, 1.5708F, 0.0F));
+        base.addOrReplaceChild("cubeinverted_r2", CubeListBuilder.create().texOffs(42, 14).addBox(0.0F, -3.5F, -4.0F, 0.0F, 7.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -12.5F, 7.0F, 0.0F, 1.5708F, 0.0F));
 
-        base.addChild("cubeinverted_r3", ModelPartBuilder.create().uv(42, 14).cuboid(-7.0F, -16.0F, -4.0F, 0.0F, 7.0F, 8.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
-        return TexturedModelData.of(modelData, 64, 64);
+        base.addOrReplaceChild("cubeinverted_r3", CubeListBuilder.create().texOffs(42, 14).addBox(-7.0F, -16.0F, -4.0F, 0.0F, 7.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+        return LayerDefinition.create(modelData, 64, 64);
     }
 
     @Override
-    public ModelPart getPart() {
+    public ModelPart root() {
         return root;
     }
 
     @Override
-    public void setAngles(BlockEntityWrapperEntity<FaithPlateBlockEntity> entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        getPart().traverse().forEach(ModelPart::resetTransform);
-        root.setAngles((float)Math.toRadians(headPitch), (float)Math.toRadians(headYaw), 0);
+    public void setupAnim(BlockEntityWrapperEntity<FaithPlateBlockEntity> entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+        root().getAllParts().forEach(ModelPart::resetPose);
+        root.setRotation((float)Math.toRadians(headPitch), (float)Math.toRadians(headYaw), 0);
         if (entity.getBlockEntity().pitch == 90f) {
             final float radians = (float)Math.toRadians(entity.getBlockEntity().yaw);
-            root.setPivot(-(float)Math.sin(radians) * 16f, 16f, -(float)Math.cos(radians) * 16f);
+            root.setPos(-(float)Math.sin(radians) * 16f, 16f, -(float)Math.cos(radians) * 16f);
         } else if (entity.getBlockEntity().pitch == -180f) {
-            root.setPivot(0f, 32f, 0f);
+            root.setPos(0f, 32f, 0f);
         }
         final FaithPlateBlockEntity faithPlate = entity.getBlockEntity();
         final boolean upward =
-            faithPlate.getCachedState().get(FaithPlateBlock.FACING).getAxis().isVertical() &&
+            faithPlate.getBlockState().getValue(FaithPlateBlock.FACING).getAxis().isVertical() &&
                 faithPlate.getVelX() == 0 && faithPlate.getVelZ() == 0 && faithPlate.getVelY() != 0;
         animator.animate(faithPlate.flingState, upward ? getUpwardAnimation() : getForwardAnimation(), animationProgress);
     }
 
-    protected Identifier getForwardAnimation() {
+    protected ResourceLocation getForwardAnimation() {
         return ANIMATION_FORWARD;
     }
 
-    protected Identifier getUpwardAnimation() {
+    protected ResourceLocation getUpwardAnimation() {
         return ANIMATION_UPWARD;
     }
 
     @Override
-    public Identifier getTexture(FaithPlateBlockEntity entity) {
+    public ResourceLocation getTexture(FaithPlateBlockEntity entity) {
         return TEXTURE;
     }
 
     @Override
-    public Identifier getEmissiveTexture(FaithPlateBlockEntity entity) {
+    public ResourceLocation getEmissiveTexture(FaithPlateBlockEntity entity) {
         return TEXTURE_E;
     }
 }

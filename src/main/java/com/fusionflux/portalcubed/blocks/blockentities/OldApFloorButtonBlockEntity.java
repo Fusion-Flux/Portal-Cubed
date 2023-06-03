@@ -4,17 +4,17 @@ import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.*;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
@@ -32,23 +32,23 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
 
     }
 
-    public static void tick1(World world, BlockPos pos, BlockState state, OldApFloorButtonBlockEntity blockEntity) {
-        if (!world.isClient) {
-            Direction storedDirec = blockEntity.getCachedState().get(Properties.FACING);
+    public static void tick1(Level world, BlockPos pos, BlockState state, OldApFloorButtonBlockEntity blockEntity) {
+        if (!world.isClientSide) {
+            Direction storedDirec = blockEntity.getBlockState().getValue(BlockStateProperties.FACING);
             Direction storedDirecOpp = storedDirec.getOpposite();
-            BlockPos transPos = pos.offset(storedDirec);
+            BlockPos transPos = pos.relative(storedDirec);
 
-            Box portalCheckBox = new Box(transPos);
+            AABB portalCheckBox = new AABB(transPos);
 
-            portalCheckBox = portalCheckBox.contract(Math.abs(storedDirecOpp.getOffsetX()) * .75, Math.abs(storedDirecOpp.getOffsetY()) * .75, Math.abs(storedDirecOpp.getOffsetZ()) * .75).offset(storedDirecOpp.getOffsetX() * .5, storedDirecOpp.getOffsetY() * .5, storedDirecOpp.getOffsetZ() * .5);
-            List<LivingEntity> entities = world.getNonSpectatingEntities(LivingEntity.class, portalCheckBox);
+            portalCheckBox = portalCheckBox.deflate(Math.abs(storedDirecOpp.getStepX()) * .75, Math.abs(storedDirecOpp.getStepY()) * .75, Math.abs(storedDirecOpp.getStepZ()) * .75).move(storedDirecOpp.getStepX() * .5, storedDirecOpp.getStepY() * .5, storedDirecOpp.getStepZ() * .5);
+            List<LivingEntity> entities = world.getEntitiesOfClass(LivingEntity.class, portalCheckBox);
 
             boolean isPowered = false;
             for (LivingEntity living : entities) {
-                if (living instanceof PlayerEntity || living instanceof StorageCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity) {
+                if (living instanceof Player || living instanceof StorageCubeEntity || living instanceof Portal1CompanionCubeEntity || living instanceof Portal1StorageCubeEntity || living instanceof OldApCubeEntity) {
                     if (living instanceof CorePhysicsEntity physicsEntity) {
                         if (physicsEntity.fizzling()) {
-                            physicsEntity.addVelocity(0, 0.015, 0);
+                            physicsEntity.push(0, 0.015, 0);
                         } else {
                             isPowered = true;
                             if (living instanceof StorageCubeEntity cube) {
@@ -61,7 +61,7 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
                 }
             }
 
-            if (state.get(Properties.ENABLED) != isPowered) {
+            if (state.getValue(BlockStateProperties.ENABLED) != isPowered) {
                 blockEntity.updateState(state, isPowered);
             }
 
@@ -71,26 +71,26 @@ public class OldApFloorButtonBlockEntity extends BlockEntity {
     }
 
     public void updateState(BlockState state, boolean toggle) {
-        if (world != null) {
-            world.setBlockState(pos, state.with(Properties.ENABLED, toggle), 3);
-            if (!world.isClient) {
-                world.playSound(
-                    null, pos,
+        if (level != null) {
+            level.setBlock(worldPosition, state.setValue(BlockStateProperties.ENABLED, toggle), 3);
+            if (!level.isClientSide) {
+                level.playSound(
+                    null, worldPosition,
                     toggle ? PortalCubedSounds.OLD_AP_FLOOR_BUTTON_PRESS_EVENT : PortalCubedSounds.OLD_AP_FLOOR_BUTTON_RELEASE_EVENT,
-                    SoundCategory.BLOCKS, 0.8f, 1f
+                    SoundSource.BLOCKS, 0.8f, 1f
                 );
             }
         }
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
     }
 
 }

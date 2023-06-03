@@ -1,21 +1,21 @@
 package com.fusionflux.portalcubed.items;
 
 
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
 public class PortalGunPrimary extends PortalGun {
-    public PortalGunPrimary(Settings settings) {
+    public PortalGunPrimary(Properties settings) {
         super(settings);
     }
 
     @Override
-    protected void shoot(World world, PlayerEntity user, Hand hand, boolean leftClick) {
+    protected void shoot(Level world, Player user, InteractionHand hand, boolean leftClick) {
         super.shoot(world, user, hand, true);
     }
 
@@ -31,7 +31,7 @@ public class PortalGunPrimary extends PortalGun {
 
     @Override
     @ClientOnly
-    public boolean isSideActive(ClientWorld world, ItemStack stack, boolean rightSide) {
+    public boolean isSideActive(ClientLevel world, ItemStack stack, boolean rightSide) {
         return super.isSideActive(world, stack, false);
     }
 

@@ -1,34 +1,34 @@
 package com.fusionflux.portalcubed.blocks;
 
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class SpecialHiddenBlockWithEntity extends SpecialHiddenBlock implements BlockEntityProvider {
-    public SpecialHiddenBlockWithEntity(Settings settings) {
+public abstract class SpecialHiddenBlockWithEntity extends SpecialHiddenBlock implements EntityBlock {
+    public SpecialHiddenBlockWithEntity(Properties settings) {
         super(settings);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data) {
-        super.onSyncedBlockEvent(state, world, pos, type, data);
+    public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int type, int data) {
+        super.triggerEvent(state, world, pos, type, data);
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        return blockEntity != null && blockEntity.onSyncedBlockEvent(type, data);
+        return blockEntity != null && blockEntity.triggerEvent(type, data);
     }
 
     @Nullable
     @Override
     @SuppressWarnings("deprecation")
-    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
+    public MenuProvider getMenuProvider(BlockState state, Level world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        return blockEntity instanceof NamedScreenHandlerFactory ? (NamedScreenHandlerFactory)blockEntity : null;
+        return blockEntity instanceof MenuProvider ? (MenuProvider)blockEntity : null;
     }
 
     /**

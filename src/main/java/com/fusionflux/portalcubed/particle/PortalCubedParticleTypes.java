@@ -1,9 +1,9 @@
 package com.fusionflux.portalcubed.particle;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 
 import java.util.function.Function;
 
@@ -15,12 +15,12 @@ public class PortalCubedParticleTypes {
     );
 
     @SuppressWarnings("deprecation")
-    private static <T extends ParticleEffect> ParticleType<T> register(
-        String name, boolean alwaysShow, ParticleEffect.Factory<T> parameterFactory, Function<ParticleType<T>, Codec<T>> codecProvider
+    private static <T extends ParticleOptions> ParticleType<T> register(
+        String name, boolean alwaysShow, ParticleOptions.Deserializer<T> parameterFactory, Function<ParticleType<T>, Codec<T>> codecProvider
     ) {
         return Registry.register(Registry.PARTICLE_TYPE, id(name), new ParticleType<T>(alwaysShow, parameterFactory) {
             @Override
-            public Codec<T> getCodec() {
+            public Codec<T> codec() {
                 return codecProvider.apply(this);
             }
         });

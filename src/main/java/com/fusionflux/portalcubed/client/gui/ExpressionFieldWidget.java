@@ -1,11 +1,11 @@
 package com.fusionflux.portalcubed.client.gui;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.ValidationResult;
@@ -16,7 +16,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class ExpressionFieldWidget extends TextFieldWidget {
+public class ExpressionFieldWidget extends EditBox {
     @Nullable
     private Expression expression;
     @Nullable
@@ -24,18 +24,18 @@ public class ExpressionFieldWidget extends TextFieldWidget {
     private Function<String, Expression> parser = s -> new ExpressionBuilder(s).build();
     private Consumer<String> changedListener2 = s -> {};
 
-    public ExpressionFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, Text text) {
+    public ExpressionFieldWidget(Font textRenderer, int x, int y, int width, int height, Component text) {
         super(textRenderer, x, y, width, height, text);
-        super.setChangedListener(s -> {
+        super.setResponder(s -> {
             changedListener2.accept(s);
-            onChanged(s);
+            onValueChange(s);
         });
-        super.setRenderTextProvider(this::getTextToRender);
+        super.setFormatter(this::getTextToRender);
         setMaxLength(256);
     }
 
     public void setExpression(String expression) {
-        setText(expression);
+        setValue(expression);
         setExpression0(expression);
     }
 
@@ -49,25 +49,25 @@ public class ExpressionFieldWidget extends TextFieldWidget {
     }
 
     @Override
-    public void setChangedListener(Consumer<String> changedListener) {
+    public void setResponder(Consumer<String> changedListener) {
         changedListener2 = changedListener;
     }
 
-    private void onChanged(String text) {
+    private void onValueChange(String text) {
         setExpression0(text);
     }
 
     @Override
-    public void setRenderTextProvider(BiFunction<String, Integer, OrderedText> renderTextProvider) {
+    public void setFormatter(BiFunction<String, Integer, FormattedCharSequence> renderTextProvider) {
         throw new UnsupportedOperationException("Cannot set renderTextProvider for ExpressionFieldWidget.");
     }
 
-    private OrderedText getTextToRender(String text, int cursor) {
+    private FormattedCharSequence getTextToRender(String text, int cursor) {
         Style style = Style.EMPTY;
         if (error != null) {
-            style = style.withFormatting(Formatting.RED);
+            style = style.applyFormat(ChatFormatting.RED);
         }
-        return OrderedText.forward(text, style);
+        return FormattedCharSequence.forward(text, style);
     }
 
     private void setExpression0(String expression) {

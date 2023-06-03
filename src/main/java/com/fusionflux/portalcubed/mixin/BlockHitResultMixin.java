@@ -1,13 +1,11 @@
 package com.fusionflux.portalcubed.mixin;
 
-import java.util.Optional;
-
-import org.spongepowered.asm.mixin.Mixin;
-
 import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
+import net.minecraft.world.phys.BlockHitResult;
+import org.spongepowered.asm.mixin.Mixin;
 
-import net.minecraft.util.hit.BlockHitResult;
+import java.util.Optional;
 
 @Mixin(BlockHitResult.class)
 public abstract class BlockHitResultMixin implements AdvancedRaycastResultHolder {

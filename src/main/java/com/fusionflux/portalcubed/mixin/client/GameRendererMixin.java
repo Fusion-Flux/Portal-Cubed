@@ -1,33 +1,37 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import java.util.function.Predicate;
-
+import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
+import com.fusionflux.portalcubed.client.PortalCubedClient;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
-import com.fusionflux.portalcubed.client.PortalCubedClient;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import java.util.function.Predicate;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
     @Shadow
     @Final
-    private MinecraftClient client;
+    private Minecraft minecraft;
 
-    @WrapOperation(method = "updateTargetedEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/ProjectileUtil;raycast(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Ljava/util/function/Predicate;D)Lnet/minecraft/util/hit/EntityHitResult;"))
-    private EntityHitResult portalCubed$portalCompatibleEntityRaycast(Entity entity, Vec3d min, Vec3d max, Box box, Predicate<Entity> predicate, double d, Operation<EntityHitResult> original) {
-        if (client.crosshairTarget instanceof AdvancedRaycastResultHolder resultHolder && resultHolder.getResult().isPresent()) {
+    @WrapOperation(
+        method = "pick",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"
+        )
+    )
+    private EntityHitResult portalCubed$portalCompatibleEntityRaycast(Entity entity, Vec3 min, Vec3 max, AABB box, Predicate<Entity> predicate, double d, Operation<EntityHitResult> original) {
+        if (minecraft.hitResult instanceof AdvancedRaycastResultHolder resultHolder && resultHolder.getResult().isPresent()) {
             return resultHolder.getResult().get().entityRaycast(entity, predicate);
         } else {
             return original.call(entity, min, max, box, predicate, d);

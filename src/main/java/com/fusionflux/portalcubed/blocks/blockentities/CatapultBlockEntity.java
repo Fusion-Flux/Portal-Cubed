@@ -6,21 +6,21 @@ import com.fusionflux.portalcubed.optionslist.OptionsListData;
 import com.fusionflux.portalcubed.optionslist.OptionsListScreenHandler;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class CatapultBlockEntity extends OptionsListBlockEntity implements ExtendedScreenHandlerFactory {
@@ -48,40 +48,40 @@ public class CatapultBlockEntity extends OptionsListBlockEntity implements Exten
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void load(CompoundTag nbt) {
         OptionsListData.read(nbt, this);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
+    protected void saveAdditional(CompoundTag nbt) {
         OptionsListData.write(nbt, this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return toNbt();
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
     }
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.of(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public Text getDisplayName() {
-        return Text.translatable(getCachedState().getBlock().getTranslationKey());
+    public Component getDisplayName() {
+        return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new OptionsListScreenHandler(i, pos);
+    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
+        return new OptionsListScreenHandler(i, worldPosition);
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        buf.writeBlockPos(pos);
+    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+        buf.writeBlockPos(worldPosition);
     }
 
     private double getRelX(double startX) {
@@ -93,7 +93,7 @@ public class CatapultBlockEntity extends OptionsListBlockEntity implements Exten
     }
 
     public double getRelH(double startX, double startZ) {
-        return Math.sqrt(MathHelper.square(getRelX(startX)) + MathHelper.square(getRelZ(startZ)));
+        return Math.sqrt(Mth.square(getRelX(startX)) + Mth.square(getRelZ(startZ)));
     }
 
     public double getRelY(double startY) {
@@ -104,11 +104,11 @@ public class CatapultBlockEntity extends OptionsListBlockEntity implements Exten
         return angle;
     }
 
-    public Vec3d getLaunchDir(double startX, double startZ) {
+    public Vec3 getLaunchDir(double startX, double startZ) {
         final double a = Math.toRadians(angle);
-        return new Vec3d(getRelX(startX), 0, getRelZ(startZ))
+        return new Vec3(getRelX(startX), 0, getRelZ(startZ))
             .normalize()
-            .multiply(Math.cos(a))
+            .scale(Math.cos(a))
             .add(0, Math.sin(a), 0);
     }
 }

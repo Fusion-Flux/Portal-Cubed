@@ -5,16 +5,18 @@
 package com.fusionflux.portalcubed.client.render.entity.model;
 
 import com.fusionflux.portalcubed.entity.CompanionCubeEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class CompanionCubeModel extends FizzleableModel<CompanionCubeEntity> {
 
-    public static final EntityModelLayer COMPANION_CUBE_MAIN_LAYER = new EntityModelLayer(id("companion_cube"), "main");
+    public static final ModelLayerLocation COMPANION_CUBE_MAIN_LAYER = new ModelLayerLocation(id("companion_cube"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 
@@ -23,28 +25,28 @@ public class CompanionCubeModel extends FizzleableModel<CompanionCubeEntity> {
     }
 
     @SuppressWarnings("checkstyle:LocalVariableName")
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.0F))
-                .uv(0, 20).cuboid(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new Dilation(0.5F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        PartDefinition bb_main = modelPartData.addOrReplaceChild("bb_main", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 20).addBox(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new CubeDeformation(0.5F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, -2.3562F, 0.0436F, -1.5708F));
+        bb_main.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, 0).addBox(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, -2.3562F, 0.0436F, -1.5708F));
 
-        bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 0.7854F, 0.0F, 1.5708F));
+        bb_main.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(0, 0).addBox(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, 0.7854F, 0.0F, 1.5708F));
 
-        bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, -0.7854F, 0.0F, 0.0F));
+        bb_main.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(0, 0).addBox(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, -0.7854F, 0.0F, 0.0F));
 
-        bb_main.addChild("cube_r4", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
+        bb_main.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(0, 0).addBox(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
 
-        bb_main.addChild("cube_r5", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 2.3562F, 0.0436F, -3.1416F));
+        bb_main.addOrReplaceChild("cube_r5", CubeListBuilder.create().texOffs(0, 0).addBox(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, 2.3562F, 0.0436F, -3.1416F));
 
-        bb_main.addChild("cube_r6", ModelPartBuilder.create().uv(0, 0).cuboid(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
-        return TexturedModelData.of(modelData, 64, 64);
+        bb_main.addOrReplaceChild("cube_r6", CubeListBuilder.create().texOffs(0, 0).addBox(-5.25F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
+        return LayerDefinition.create(modelData, 64, 64);
     }
 
     @Override
-    public void renderFizzled(MatrixStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderFizzled(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         bb_main.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }

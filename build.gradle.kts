@@ -24,6 +24,7 @@ repositories {
 	maven("https://maven.tterrag.com/")
 	maven("https://mvn.devos.one/snapshots/")
 	maven("https://maven.willbl.dev/releases/")
+	maven("https://lazurite.dev/maven")
 
 	maven {
 		name = "Ladysnake Mods"
@@ -43,22 +44,32 @@ repositories {
 			includeGroup("com.jamieswhiteshirt")
 		}
 	}
+
 	maven {
 		name = "AlexIIL"
 		url = uri("https://maven.alexiil.uk/")
 	}
+
 	maven {
 		name = "Gegy"
 		url = uri("https://maven.gegy.dev")
 	}
 
-	maven("https://lazurite.dev/maven")
+	maven {
+		name = "ParchmentMC"
+		url = uri("https://maven.parchmentmc.org")
+	}
 	maven("https://jitpack.io/")
 }
 
 dependencies {
 	minecraft("com.mojang:minecraft:$minecraftVersion")
-	mappings("org.quiltmc:quilt-mappings:$minecraftVersion+build.${prop("mappings_version")}:intermediary-v2")
+
+	@Suppress("UnstableApiUsage")
+	mappings(loom.layered {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-${prop("parchment_version")}@zip")
+	})
 
 	modImplementation("org.quiltmc:quilt-loader:${prop("loader_version")}")
 	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${prop("quilted_version")}-$minecraftVersion")

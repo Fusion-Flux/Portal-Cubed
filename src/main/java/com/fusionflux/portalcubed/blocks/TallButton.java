@@ -1,10 +1,10 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
 
 public class TallButton extends TallButtonVariant {
-    public TallButton(Settings settings) {
+    public TallButton(Properties settings) {
         super(settings);
     }
 

@@ -1,79 +1,83 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.OldApFloorButtonBlockEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
-public class OldApFloorButtonBlock extends BlockWithEntity {
+public class OldApFloorButtonBlock extends BaseEntityBlock {
     public static final BooleanProperty ENABLE;
 
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
-    protected static final VoxelShape SHAPE_UP = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 18.0D, 15.0D);
+    protected static final VoxelShape SHAPE_UP = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 18.0D, 15.0D);
 
-    protected static final VoxelShape SHAPE_UP_2 = Block.createCuboidShape(-1.0D, 16.0D, -1.0D, 17.0D, 17.0D, 17.0D);
-
-
-    protected static final VoxelShape SHAPE_DOWN = Block.createCuboidShape(1.0D, -2.0D, 1.0D, 15.0D, 15.0D, 15.0D);
-
-    protected static final VoxelShape SHAPE_DOWN_2 = Block.createCuboidShape(-1.0D, -1.0D, -1.0D, 17.0D, 0.0D, 17.0D);
+    protected static final VoxelShape SHAPE_UP_2 = Block.box(-1.0D, 16.0D, -1.0D, 17.0D, 17.0D, 17.0D);
 
 
-    protected static final VoxelShape SHAPE_NORTH = Block.createCuboidShape(1.0D, 1.0D, -2.0D, 15.0D, 15.0D, 15.0D);
+    protected static final VoxelShape SHAPE_DOWN = Block.box(1.0D, -2.0D, 1.0D, 15.0D, 15.0D, 15.0D);
 
-    protected static final VoxelShape SHAPE_NORTH_2 = Block.createCuboidShape(-1.0D, -1.0D, -1.0D, 17.0D, 17.0D, 0.0D);
-
-
-    protected static final VoxelShape SHAPE_SOUTH = Block.createCuboidShape(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 18.0D);
-
-    protected static final VoxelShape SHAPE_SOUTH_2 = Block.createCuboidShape(-1.0D, -1.0D, 16.0D, 17.0D, 17.0D, 17.0D);
+    protected static final VoxelShape SHAPE_DOWN_2 = Block.box(-1.0D, -1.0D, -1.0D, 17.0D, 0.0D, 17.0D);
 
 
-    protected static final VoxelShape SHAPE_WEST = Block.createCuboidShape(-2.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D);
+    protected static final VoxelShape SHAPE_NORTH = Block.box(1.0D, 1.0D, -2.0D, 15.0D, 15.0D, 15.0D);
 
-    protected static final VoxelShape SHAPE_WEST_2 = Block.createCuboidShape(-1.0D, -1.0D, -1.0D, 0.0D, 17.0D, 17.0D);
-
-
-    protected static final VoxelShape SHAPE_EAST = Block.createCuboidShape(0.0D, 1.0D, 1.0D, 18.0D, 15.0D, 15.0D);
-
-    protected static final VoxelShape SHAPE_EAST_2 = Block.createCuboidShape(16.0D, -1.0D, -1.0D, 17.0D, 17.0D, 17.0D);
+    protected static final VoxelShape SHAPE_NORTH_2 = Block.box(-1.0D, -1.0D, -1.0D, 17.0D, 17.0D, 0.0D);
 
 
-    public OldApFloorButtonBlock(Settings settings) {
+    protected static final VoxelShape SHAPE_SOUTH = Block.box(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 18.0D);
+
+    protected static final VoxelShape SHAPE_SOUTH_2 = Block.box(-1.0D, -1.0D, 16.0D, 17.0D, 17.0D, 17.0D);
+
+
+    protected static final VoxelShape SHAPE_WEST = Block.box(-2.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D);
+
+    protected static final VoxelShape SHAPE_WEST_2 = Block.box(-1.0D, -1.0D, -1.0D, 0.0D, 17.0D, 17.0D);
+
+
+    protected static final VoxelShape SHAPE_EAST = Block.box(0.0D, 1.0D, 1.0D, 18.0D, 15.0D, 15.0D);
+
+    protected static final VoxelShape SHAPE_EAST_2 = Block.box(16.0D, -1.0D, -1.0D, 17.0D, 17.0D, 17.0D);
+
+
+    public OldApFloorButtonBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(ENABLE, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(ENABLE, false));
     }
 
     static {
-        ENABLE = Properties.ENABLED;
+        ENABLE = BlockStateProperties.ENABLED;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean emitsRedstonePower(BlockState state) {
-        return state.get(Properties.ENABLED);
+    public boolean isSignalSource(BlockState state) {
+        return state.getValue(BlockStateProperties.ENABLED);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        if (state.get(Properties.ENABLED)) {
+    public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
+        if (state.getValue(BlockStateProperties.ENABLED)) {
             return 15;
         }
         return 0;
@@ -81,61 +85,61 @@ public class OldApFloorButtonBlock extends BlockWithEntity {
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction facing = state.get(Properties.FACING);
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction facing = state.getValue(BlockStateProperties.FACING);
 
-        VoxelShape voxelShape = VoxelShapes.empty();
+        VoxelShape voxelShape = Shapes.empty();
 
         if (facing == Direction.UP)
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_UP);
+            voxelShape = Shapes.or(voxelShape, SHAPE_UP);
         if (facing == Direction.DOWN)
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_DOWN);
+            voxelShape = Shapes.or(voxelShape, SHAPE_DOWN);
         if (facing == Direction.NORTH)
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_NORTH);
+            voxelShape = Shapes.or(voxelShape, SHAPE_NORTH);
         if (facing == Direction.SOUTH)
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_SOUTH);
+            voxelShape = Shapes.or(voxelShape, SHAPE_SOUTH);
         if (facing == Direction.EAST)
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_EAST);
+            voxelShape = Shapes.or(voxelShape, SHAPE_EAST);
         if (facing == Direction.WEST)
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_WEST);
+            voxelShape = Shapes.or(voxelShape, SHAPE_WEST);
 
-        voxelShape = VoxelShapes.union(voxelShape, SHAPE);
+        voxelShape = Shapes.or(voxelShape, SHAPE);
         return voxelShape;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction facing = state.get(Properties.FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction facing = state.getValue(BlockStateProperties.FACING);
 
-        VoxelShape voxelShape = VoxelShapes.empty();
+        VoxelShape voxelShape = Shapes.empty();
 
         if (facing == Direction.UP) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_UP);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_UP_2);
+            voxelShape = Shapes.or(voxelShape, SHAPE_UP);
+            voxelShape = Shapes.or(voxelShape, SHAPE_UP_2);
         }
         if (facing == Direction.DOWN) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_DOWN);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_DOWN_2);
+            voxelShape = Shapes.or(voxelShape, SHAPE_DOWN);
+            voxelShape = Shapes.or(voxelShape, SHAPE_DOWN_2);
         }
         if (facing == Direction.NORTH) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_NORTH);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_NORTH_2);
+            voxelShape = Shapes.or(voxelShape, SHAPE_NORTH);
+            voxelShape = Shapes.or(voxelShape, SHAPE_NORTH_2);
         }
         if (facing == Direction.SOUTH) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_SOUTH);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_SOUTH_2);
+            voxelShape = Shapes.or(voxelShape, SHAPE_SOUTH);
+            voxelShape = Shapes.or(voxelShape, SHAPE_SOUTH_2);
         }
         if (facing == Direction.EAST) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_EAST);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_EAST_2);
+            voxelShape = Shapes.or(voxelShape, SHAPE_EAST);
+            voxelShape = Shapes.or(voxelShape, SHAPE_EAST_2);
         }
         if (facing == Direction.WEST) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_WEST);
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_WEST_2);
+            voxelShape = Shapes.or(voxelShape, SHAPE_WEST);
+            voxelShape = Shapes.or(voxelShape, SHAPE_WEST_2);
         }
 
-        voxelShape = VoxelShapes.union(voxelShape, SHAPE);
+        voxelShape = Shapes.or(voxelShape, SHAPE);
 
         return voxelShape;
     }
@@ -143,46 +147,46 @@ public class OldApFloorButtonBlock extends BlockWithEntity {
     @Override
     @ClientOnly
     @SuppressWarnings("deprecation")
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
 
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, Properties.ENABLED);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.FACING, BlockStateProperties.ENABLED);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.OLD_AP_FLOOR_BUTTON.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return PortalCubedBlocks.OLD_AP_FLOOR_BUTTON.defaultBlockState().setValue(BlockStateProperties.FACING, ctx.getNearestLookingDirection().getOpposite());
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(BlockStateProperties.FACING, rotation.rotate(state.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new OldApFloorButtonBlockEntity(pos, state);
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY, OldApFloorButtonBlockEntity::tick1);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, PortalCubedBlocks.OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY, OldApFloorButtonBlockEntity::tick1);
     }
 
 }

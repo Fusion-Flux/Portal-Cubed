@@ -1,31 +1,31 @@
 package com.fusionflux.portalcubed.optionslist;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.network.chat.Component;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.List;
 import java.util.Optional;
 
 @ClientOnly
-class OptionsListListWidget extends ElementListWidget<ButtonEntry> {
-    TextRenderer textRenderer;
+class OptionsListListWidget extends ContainerObjectSelectionList<ButtonEntry> {
+    Font textRenderer;
 
-    OptionsListListWidget(MinecraftClient minecraftClient, int i, int j, int k, int l, int m) {
+    OptionsListListWidget(Minecraft minecraftClient, int i, int j, int k, int l, int m) {
         super(minecraftClient, i, j, k, l, m);
         this.centerListVertically = false;
-        textRenderer = minecraftClient.textRenderer;
+        textRenderer = minecraftClient.font;
     }
 
     @Override
-    public int getScrollbarPositionX() {
+    public int getScrollbarPosition() {
         return this.width - 7;
     }
 
-    public void addButton(List<ClickableWidget> buttons, Text text, EntryInfo info) {
+    public void addButton(List<AbstractWidget> buttons, Component text, EntryInfo info) {
         this.addEntry(new ButtonEntry(buttons, text, info));
     }
 
@@ -34,7 +34,7 @@ class OptionsListListWidget extends ElementListWidget<ButtonEntry> {
         return 10000;
     }
 
-    public Optional<ClickableWidget> getHoveredButton(double mouseX, double mouseY) {
+    public Optional<AbstractWidget> getHoveredButton(double mouseX, double mouseY) {
         for (ButtonEntry buttonEntry : this.children()) {
             if (!buttonEntry.buttons.isEmpty() && buttonEntry.buttons.get(0).isMouseOver(mouseX, mouseY)) {
                 return Optional.of(buttonEntry.buttons.get(0));

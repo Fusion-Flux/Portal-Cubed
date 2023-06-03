@@ -10,16 +10,16 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,14 +31,14 @@ import java.util.function.Supplier;
 
 public final class EmissiveBakedModel extends ForwardingBakedModel {
 
-    private static final Map<Identifier, Function<BakedModel, EmissiveBakedModel>> WRAPPERS = new Object2ObjectOpenHashMap<>();
+    private static final Map<ResourceLocation, Function<BakedModel, EmissiveBakedModel>> WRAPPERS = new Object2ObjectOpenHashMap<>();
 
-    public static void register(Identifier modelId) {
+    public static void register(ResourceLocation modelId) {
         WRAPPERS.put(modelId, EmissiveBakedModel::new);
     }
 
-    public static Optional<BakedModel> wrap(Identifier modelId, BakedModel model) {
-        final Function<BakedModel, EmissiveBakedModel> wrapper = WRAPPERS.get(new Identifier(modelId.getNamespace(), modelId.getPath()));
+    public static Optional<BakedModel> wrap(ResourceLocation modelId, BakedModel model) {
+        final Function<BakedModel, EmissiveBakedModel> wrapper = WRAPPERS.get(new ResourceLocation(modelId.getNamespace(), modelId.getPath()));
         if (wrapper != null) return Optional.of(wrapper.apply(model));
         return Optional.empty();
     }
@@ -71,7 +71,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         final ModelObjects objects = ModelObjects.get();
         objects.cullingCache.prepare(pos, state);
         buildMesh(objects, state, randomSupplier);
@@ -81,14 +81,14 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         final ModelObjects objects = ModelObjects.get();
         buildMesh(objects, null, randomSupplier);
         context.meshConsumer().accept(cachedMesh.getValue());
     }
 
 
-    private void buildMesh(ModelObjects objects, @Nullable BlockState state, Supplier<RandomGenerator> randomSupplier) {
+    private void buildMesh(ModelObjects objects, @Nullable BlockState state, Supplier<RandomSource> randomSupplier) {
         boolean shouldBuild = true;
         if (state != null) shouldBuild = cachedMesh.getKey() != state;
         if (!shouldBuild) return;
@@ -100,11 +100,11 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
             final List<BakedQuad> quads = wrapped.getQuads(state, cullFace, randomSupplier.get());
 
             for (BakedQuad quad : quads) {
-                boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().getId());
+                boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().getName());
 
                 BlendMode blendMode = BlendMode.DEFAULT;
                 if (state != null) {
-                    blendMode = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(state));
+                    blendMode = BlendMode.fromRenderLayer(ItemBlockRenderTypes.getChunkRenderType(state));
                     if (blendMode == BlendMode.SOLID) blendMode = BlendMode.CUTOUT_MIPPED;
                 }
 

@@ -12,31 +12,29 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.EntitySetHeadYawS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Arm;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -47,12 +45,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 // TODO: Extend LivingEntity
-public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
+public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     private float fizzleProgress = 0f;
     private boolean fizzling = false;
 
-    public CorePhysicsEntity(EntityType<? extends PathAwareEntity> type, World world) {
+    public CorePhysicsEntity(EntityType<? extends PathfinderMob> type, Level world) {
         super(type, world);
     }
 
@@ -62,18 +60,18 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     private List<UUID> intermediaryPortals = List.of();
 
-    public Vec3d lastPos = this.getPos();
+    public Vec3 lastPos = this.position();
 
-    private final Vec3d offsetHeight = new Vec3d(0, this.getHeight() / 2, 0);
+    private final Vec3 offsetHeight = new Vec3(0, this.getBbHeight() / 2, 0);
 
     @Override
-    public boolean isCollidable() {
+    public boolean canBeCollidedWith() {
         return canUsePortals;
     }
 
     @Override
-    public boolean collidesWith(Entity other) {
-        return isCollidable() && other instanceof LivingEntity && other.isAlive();
+    public boolean canCollideWith(Entity other) {
+        return canBeCollidedWith() && other instanceof LivingEntity && other.isAlive();
     }
 
     @Override
@@ -83,23 +81,23 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
-        return  damageSource != DamageSource.OUT_OF_WORLD && !damageSource.isSourceCreativePlayer();
+        return  damageSource != DamageSource.OUT_OF_WORLD && !damageSource.isCreativePlayer();
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (!this.world.isClient && !this.isRemoved()) {
-            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
-            if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
-                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+    public boolean hurt(DamageSource source, float amount) {
+        if (!this.level.isClientSide && !this.isRemoved()) {
+            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
+            if (source.getEntity() instanceof Player || source == DamageSource.OUT_OF_WORLD) {
+                if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(PortalCubedItems.STORAGE_CUBE);
                     }
                     this.discard();
                 }
-                if (!(source.getAttacker() instanceof PlayerEntity)) {
-                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.STORAGE_CUBE);
+                if (!(source.getEntity() instanceof Player)) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(PortalCubedItems.STORAGE_CUBE);
                     }
                     this.discard();
                 }
@@ -110,7 +108,7 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
     }
 
     @Override
-    public boolean shouldRenderName() {
+    public boolean shouldShowName() {
         return false;
     }
     @Override
@@ -125,43 +123,43 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
     }
 
     @Override
-    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        super.onSpawnPacket(packet);
-        this.setNoDrag(true);
+    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
+        super.recreateFromPacket(packet);
+        this.setDiscardFriction(true);
     }
 
-    private static final TrackedData<Optional<UUID>> HOLDER_UUID = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-    private static final TrackedData<Boolean> ON_BUTTON = DataTracker.registerData(CorePhysicsEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final EntityDataAccessor<Optional<UUID>> HOLDER_UUID = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Boolean> ON_BUTTON = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.BOOLEAN);
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(HOLDER_UUID, Optional.empty());
-        this.getDataTracker().startTracking(ON_BUTTON, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.getEntityData().define(HOLDER_UUID, Optional.empty());
+        this.getEntityData().define(ON_BUTTON, false);
     }
 
     public Optional<UUID> getHolderUUID() {
-        return getDataTracker().get(HOLDER_UUID);
+        return getEntityData().get(HOLDER_UUID);
     }
 
     public void setHolderUUID(Optional<UUID> uuid) {
-        this.getDataTracker().set(HOLDER_UUID, uuid);
+        this.getEntityData().set(HOLDER_UUID, uuid);
     }
 
     public boolean isOnButton() {
-        return getDataTracker().get(ON_BUTTON);
+        return getEntityData().get(ON_BUTTON);
     }
 
     public void setOnButton(boolean on) {
-        getDataTracker().set(ON_BUTTON, on);
+        getEntityData().set(ON_BUTTON, on);
     }
 
     public void setRotYaw(float yaw) {
-        this.bodyYaw = yaw;
+        this.yBodyRot = yaw;
     }
 
     @Override
-    public boolean canUsePortals() {
+    public boolean canChangeDimensions() {
         return canUsePortals;
     }
 
@@ -170,55 +168,55 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
         super.tick();
         final boolean isBeingHeld = getHolderUUID().isPresent() && !fizzling;
         timeSinceLastSound++;
-        this.velocityDirty = true;
+        this.hasImpulse = true;
         canUsePortals = getHolderUUID().isEmpty();
-        Vec3d rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
-        this.lastPos = this.getPos();
-        this.setNoDrag(!this.isOnGround() && !this.world.getBlockState(this.getBlockPos()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
+        Vec3 rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
+        this.lastPos = this.position();
+        this.setDiscardFriction(!this.isOnGround() && !this.level.getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
         if (isBeingHeld) {
-            PlayerEntity player = (PlayerEntity) ((Accessors) world).getEntity(getHolderUUID().get());
+            Player player = (Player) ((Accessors) level).getEntity(getHolderUUID().get());
             if (player != null && player.isAlive()) {
-                Vec3d vec3d = player.getCameraPosVec(0);
+                Vec3 vec3d = player.getEyePosition(0);
                 double d = 1.5;
                 canUsePortals = false;
-                Vec3d vec3d2 = this.getPlayerRotationVector(player.getPitch(), player.getYaw());
-                Vec3d vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
-                final AdvancedEntityRaycast.Result raycastResult = PortalDirectionUtils.raycast(world, new RaycastContext(
-                    vec3d, vec3d3, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this
+                Vec3 vec3d2 = this.getPlayerRotationVector(player.getXRot(), player.getYRot());
+                Vec3 vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
+                final AdvancedEntityRaycast.Result raycastResult = PortalDirectionUtils.raycast(level, new ClipContext(
+                    vec3d, vec3d3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this
                 ));
-                final Vec3d holdPos = raycastResult.finalHit().getPos();
-                if (!world.isClient) {
+                final Vec3 holdPos = raycastResult.finalHit().getLocation();
+                if (!level.isClientSide) {
                     GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
                 }
                 this.fallDistance = 0;
                 if (RayonIntegration.INSTANCE.isPresent()) {
-                    final float destYaw = MathHelper.wrapDegrees(player.headYaw + 180);
+                    final float destYaw = Mth.wrapDegrees(player.yHeadRot + 180);
                     final float multiplier = (destYaw > 120 || destYaw < 0) ? -1 : 1;
-                    final float yawDelta = MathHelper.wrapDegrees(
-                        MathHelper.wrapDegrees(RayonIntegration.INSTANCE.getYaw(this) * multiplier) - destYaw
+                    final float yawDelta = Mth.wrapDegrees(
+                        Mth.wrapDegrees(RayonIntegration.INSTANCE.getYaw(this) * multiplier) - destYaw
                     );
                     RayonIntegration.INSTANCE.rotateYaw(this, yawDelta);
-                    RayonIntegration.INSTANCE.setAngularVelocityYaw(this, new Vec3f(0, yawDelta, 0));
+                    RayonIntegration.INSTANCE.setAngularVelocityYaw(this, new Vector3f(0, yawDelta, 0));
                 } else {
-                    setYaw(player.headYaw);
-                    setHeadYaw(player.headYaw);
-                    setBodyYaw(player.headYaw);
+                    setYRot(player.yHeadRot);
+                    setYHeadRot(player.yHeadRot);
+                    setYBodyRot(player.yHeadRot);
                 }
                 final List<UUID> portals = raycastResult.rays()
                     .stream()
                     .map(AdvancedEntityRaycast.Result.Ray::hit)
                     .filter(h -> h instanceof EntityHitResult)
-                    .map(h -> ((EntityHitResult)h).getEntity().getUuid())
+                    .map(h -> ((EntityHitResult)h).getEntity().getUUID())
                     .toList();
                 if (!portals.equals(intermediaryPortals)) {
                     intermediaryPortals = portals;
-                    refreshPositionAfterTeleport(holdPos);
+                    moveTo(holdPos);
                 } else {
-                    final Vec3d movement = RotationUtil.vecWorldToPlayer(holdPos.subtract(getPos()), GravityChangerAPI.getGravityDirection(player));
+                    final Vec3 movement = RotationUtil.vecWorldToPlayer(holdPos.subtract(position()), GravityChangerAPI.getGravityDirection(player));
                     if (RayonIntegration.INSTANCE.isPresent()) {
                         RayonIntegration.INSTANCE.setVelocity(this, movement);
                     }
-                    RayonIntegration.INSTANCE.simpleMove(this, MovementType.PLAYER, movement);
+                    RayonIntegration.INSTANCE.simpleMove(this, MoverType.PLAYER, movement);
                 }
             } else {
                 if (player != null) {
@@ -227,15 +225,15 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                 canUsePortals = true;
             }
             RayonIntegration.INSTANCE.setNoGravity(this, true);
-        } else if (this.hasNoGravity() && !fizzling && !((EntityAttachments)this).isInFunnel()) {
+        } else if (this.isNoGravity() && !fizzling && !((EntityAttachments)this).isInFunnel()) {
             RayonIntegration.INSTANCE.setNoGravity(this, false);
         }
-        if (this.getVelocity().y < -3.92) {
-            this.setVelocity(this.getVelocity().add(0, .81d, 0));
+        if (this.getDeltaMovement().y < -3.92) {
+            this.setDeltaMovement(this.getDeltaMovement().add(0, .81d, 0));
         }
         if (fizzling) {
-            if (world.isClient) {
-                fizzleProgress += MinecraftClient.getInstance().getTickDelta();
+            if (level.isClientSide) {
+                fizzleProgress += Minecraft.getInstance().getFrameTime();
             } else {
                 fizzleProgress += 0.05f;
                 if (fizzleProgress >= 1f) {
@@ -243,38 +241,38 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
                 }
             }
         }
-        if (getHolderUUID().isEmpty() && !world.isClient) {
+        if (getHolderUUID().isEmpty() && !level.isClientSide) {
             //noinspection DataFlowIssue
-            world.getServer().getPlayerManager().sendToAround(
+            level.getServer().getPlayerList().broadcast(
                 null, getX(), getY(), getZ(), 64,
-                getWorld().getRegistryKey(),
-                new EntitySetHeadYawS2CPacket(this, (byte)MathHelper.floor(getHeadYaw() * 256f / 360f))
+                getLevel().dimension(),
+                new ClientboundRotateHeadPacket(this, (byte)Mth.floor(getYHeadRot() * 256f / 360f))
             );
         }
     }
 
     @Override
-    public boolean isLogicalSideForUpdatingMovement() {
-        return !world.isClient || getHolderUUID().isPresent();
+    public boolean isControlledByLocalInstance() {
+        return !level.isClientSide || getHolderUUID().isPresent();
     }
 
     @Override
-    public Iterable<ItemStack> getArmorItems() {
+    public Iterable<ItemStack> getArmorSlots() {
         return Collections.emptyList();
     }
 
     @Override
-    public ItemStack getEquippedStack(EquipmentSlot slot) {
+    public ItemStack getItemBySlot(EquipmentSlot slot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
     }
 
     @Override
-    public Arm getMainArm() {
-        return Arm.RIGHT;
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
     }
 
     @Override
@@ -286,12 +284,12 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
     public void fizzle() {
         if (fizzling) return;
         fizzling = true;
-        world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundCategory.NEUTRAL, 0.1f, 1f);
+        level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundSource.NEUTRAL, 0.1f, 1f);
         RayonIntegration.INSTANCE.setNoGravity(this, true);
-        final PacketByteBuf buf = PacketByteBufs.create();
+        final FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(getId());
         final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);
-        PlayerLookup.tracking(this).forEach(player -> player.networkHandler.sendPacket(packet));
+        PlayerLookup.tracking(this).forEach(player -> player.connection.send(packet));
     }
 
     @Override
@@ -314,24 +312,24 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
         return FizzleType.OBJECT;
     }
 
-    protected final Vec3d getPlayerRotationVector(float pitch, float yaw) {
+    protected final Vec3 getPlayerRotationVector(float pitch, float yaw) {
         float f = pitch * (float) (Math.PI / 180.0);
         float g = -yaw * (float) (Math.PI / 180.0);
-        float h = MathHelper.cos(g);
-        float i = MathHelper.sin(g);
-        float j = MathHelper.cos(f);
-        float k = MathHelper.sin(f);
-        return RotationUtil.vecPlayerToWorld(new Vec3d(i * j, -k, h * j), GravityChangerAPI.getGravityDirection(this));
+        float h = Mth.cos(g);
+        float i = Mth.sin(g);
+        float j = Mth.cos(f);
+        float k = Mth.sin(f);
+        return RotationUtil.vecPlayerToWorld(new Vec3(i * j, -k, h * j), GravityChangerAPI.getGravityDirection(this));
     }
 
     @Override
-    public void move(MovementType movementType, Vec3d movement) {
+    public void move(MoverType movementType, Vec3 movement) {
         super.move(movementType, movement);
         if (horizontalCollision) {
             if (!hasCollided) {
                 hasCollided = true;
-                if (!world.isClient && timeSinceLastSound >= 20) {
-                    world.playSoundFromEntity(null, this, getCollisionSound(), SoundCategory.NEUTRAL, 1f, 1f);
+                if (!level.isClientSide && timeSinceLastSound >= 20) {
+                    level.playSound(null, this, getCollisionSound(), SoundSource.NEUTRAL, 1f, 1f);
                     timeSinceLastSound = 0;
                 }
             }
@@ -346,8 +344,8 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
 
     @Override
     public void remove(RemovalReason reason) {
-        if (!world.isClient) //noinspection DataFlowIssue
-            getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get(((ServerWorld) world).getEntity(value)).stopHolding());
+        if (!level.isClientSide) //noinspection DataFlowIssue
+            getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get(((ServerLevel) level).getEntity(value)).stopHolding());
         super.remove(reason);
     }
 
@@ -355,7 +353,7 @@ public class CorePhysicsEntity extends PathAwareEntity implements Fizzleable {
     public void checkDespawn() {
     }
 
-    protected static Box createFootBox(double x, double y, double z) {
-        return new Box(-x / 2, 0, -z / 2, x / 2, y, z / 2);
+    protected static AABB createFootBox(double x, double y, double z) {
+        return new AABB(-x / 2, 0, -z / 2, x / 2, y, z / 2);
     }
 }

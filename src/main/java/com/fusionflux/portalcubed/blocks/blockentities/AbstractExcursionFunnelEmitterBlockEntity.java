@@ -2,15 +2,15 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
@@ -36,13 +36,13 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
 
 
     public void playSound(SoundEvent soundEvent) {
-        assert this.world != null;
-        this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
+        assert this.level != null;
+        this.level.playSound(null, this.worldPosition, soundEvent, SoundSource.BLOCKS, 0.1F, 3.0F);
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
 
         List<Integer> posXList = new ArrayList<>();
         List<Integer> posYList = new ArrayList<>();
@@ -77,8 +77,8 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         List<Integer> posXList;
         List<Integer> posYList;
         List<Integer> posZList;
@@ -93,7 +93,7 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
             funnels.clear();
 
         for (int i = 0; i < size; i++) {
-            funnels.add(new BlockPos.Mutable(posXList.get(i), posYList.get(i), posZList.get(i)));
+            funnels.add(new BlockPos.MutableBlockPos(posXList.get(i), posYList.get(i), posZList.get(i)));
         }
 
         List<Integer> portalXList;
@@ -110,18 +110,18 @@ public abstract class AbstractExcursionFunnelEmitterBlockEntity extends BlockEnt
             portalFunnels.clear();
 
         for (int i = 0; i < pSize; i++) {
-            portalFunnels.add(new BlockPos.Mutable(portalXList.get(i), portalYList.get(i), portalZList.get(i)));
+            portalFunnels.add(new BlockPos.MutableBlockPos(portalXList.get(i), portalYList.get(i), portalZList.get(i)));
         }
     }
 
     public void togglePowered(BlockState state) {
-        assert world != null;
-        world.setBlockState(pos, state.cycle(Properties.POWERED));
-        if (world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_ACTIVATE);
+        assert level != null;
+        level.setBlockAndUpdate(worldPosition, state.cycle(BlockStateProperties.POWERED));
+        if (level.getBlockState(worldPosition).getValue(BlockStateProperties.POWERED)) {
+            this.playSound(SoundEvents.BEACON_ACTIVATE);
         }
-        if (!world.getBlockState(pos).get(Properties.POWERED)) {
-            this.playSound(SoundEvents.BLOCK_BEACON_DEACTIVATE);
+        if (!level.getBlockState(worldPosition).getValue(BlockStateProperties.POWERED)) {
+            this.playSound(SoundEvents.BEACON_DEACTIVATE);
         }
     }
 }

@@ -1,11 +1,11 @@
 package com.fusionflux.portalcubed.compat.rayon.absent;
 
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.phys.Vec3;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public enum RayonIntegrationAbsent implements RayonIntegration {
@@ -21,12 +21,12 @@ public enum RayonIntegrationAbsent implements RayonIntegration {
     }
 
     @Override
-    public void setVelocity(Entity entity, Vec3d velocity) {
-        entity.setVelocity(velocity);
+    public void setVelocity(Entity entity, Vec3 velocity) {
+        entity.setDeltaMovement(velocity);
     }
 
     @Override
-    public void simpleMove(Entity entity, MovementType movementType, Vec3d movement) {
+    public void simpleMove(Entity entity, MoverType movementType, Vec3 movement) {
         entity.move(movementType, movement);
     }
 
@@ -37,23 +37,23 @@ public enum RayonIntegrationAbsent implements RayonIntegration {
 
     @Override
     public float getYaw(Entity entity) {
-        return entity.getYaw();
+        return entity.getYRot();
     }
 
     @Override
     public void rotateYaw(Entity entity, float amount) {
-        entity.setYaw(entity.getYaw() + amount);
+        entity.setYRot(entity.getYRot() + amount);
     }
 
     @Override
-    public void setAngularVelocityYaw(Entity entity, Vec3f angle) {
+    public void setAngularVelocityYaw(Entity entity, Vector3f angle) {
     }
 
     @Override
     @ClientOnly
-    public void multiplyMatrices(MatrixStack matrices, Entity entity, float tickDelta) {
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180f - entity.getYaw(tickDelta)));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getPitch(tickDelta)));
+    public void multiplyMatrices(PoseStack matrices, Entity entity, float tickDelta) {
+        matrices.mulPose(Vector3f.YP.rotationDegrees(180f - entity.getViewYRot(tickDelta)));
+        matrices.mulPose(Vector3f.XP.rotationDegrees(entity.getViewXRot(tickDelta)));
     }
 
 }

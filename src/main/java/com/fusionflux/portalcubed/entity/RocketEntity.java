@@ -4,26 +4,26 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.damage.ProjectileDamageSource;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
@@ -35,33 +35,33 @@ public class RocketEntity extends Entity implements Fizzleable {
     private float fizzleProgress = 0f;
     private boolean fizzling = false;
 
-    public RocketEntity(EntityType<?> type, World world) {
+    public RocketEntity(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     @Override
-    protected void initDataTracker() {
+    protected void defineSynchedData() {
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    protected void readAdditionalSaveData(CompoundTag nbt) {
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    protected void addAdditionalSaveData(CompoundTag nbt) {
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
-        return new EntitySpawnS2CPacket(this);
+    public Packet<?> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 
     @Override
     public void tick() {
         super.tick();
         if (fizzling) {
-            if (world.isClient) {
-                fizzleProgress += MinecraftClient.getInstance().getTickDelta();
+            if (level.isClientSide) {
+                fizzleProgress += Minecraft.getInstance().getFrameTime();
             } else {
                 fizzleProgress += 0.05f;
                 if (fizzleProgress >= 1f) {
@@ -69,22 +69,22 @@ public class RocketEntity extends Entity implements Fizzleable {
                 }
             }
         } else {
-            setVelocity(Vec3d.fromPolar(getPitch(), getYaw()).multiply(SPEED));
+            setDeltaMovement(Vec3.directionFromRotation(getXRot(), getYRot()).scale(SPEED));
         }
-        move(MovementType.SELF, getVelocity());
-        if (!world.isClient && age > 0 && age % 13 == 0) {
-            world.playSoundFromEntity(null, this, PortalCubedSounds.ROCKET_FLY_EVENT, SoundCategory.HOSTILE, 1, 1);
+        move(MoverType.SELF, getDeltaMovement());
+        if (!level.isClientSide && tickCount > 0 && tickCount % 13 == 0) {
+            level.playSound(null, this, PortalCubedSounds.ROCKET_FLY_EVENT, SoundSource.HOSTILE, 1, 1);
         }
         if (fizzling) return;
-        if (world.isClient) {
-            world.addParticle(
+        if (level.isClientSide) {
+            level.addParticle(
                 ParticleTypes.SMOKE,
                 getX() + random.nextGaussian() * 0.1,
                 getY() + random.nextGaussian() * 0.1,
                 getZ() + random.nextGaussian() * 0.1,
                 0, 0, 0
             );
-            world.addParticle(
+            level.addParticle(
                 ParticleTypes.SMALL_FLAME,
                 getX() + random.nextGaussian() * 0.1,
                 getY() + random.nextGaussian() * 0.1,
@@ -93,13 +93,13 @@ public class RocketEntity extends Entity implements Fizzleable {
             );
             return;
         }
-        final HitResult hit = ProjectileUtil.getCollision(this, this::canHit);
+        final HitResult hit = ProjectileUtil.getHitResult(this, this::canHit);
         if (hit.getType() == HitResult.Type.ENTITY) {
             explode((LivingEntity)((EntityHitResult)hit).getEntity());
         } else {
-            final LivingEntity hit2 = world.getClosestEntity(
+            final LivingEntity hit2 = level.getNearestEntity(
                 LivingEntity.class,
-                TargetPredicate.createNonAttackable().setPredicate(this::canHit),
+                TargetingConditions.forNonCombat().selector(this::canHit),
                 null, getX(), getY(), getZ(),
                 getBoundingBox()
             );
@@ -109,36 +109,36 @@ public class RocketEntity extends Entity implements Fizzleable {
                 explode(null);
             }
         }
-        if (age > 200) {
+        if (tickCount > 200) {
             explode(null);
         }
     }
 
     @Override
-    protected void onBlockCollision(BlockState state) {
+    protected void onInsideBlock(BlockState state) {
         if (
-            state.getFluidState().isOf(PortalCubedFluids.TOXIC_GOO.still) ||
-                state.getFluidState().isOf(PortalCubedFluids.TOXIC_GOO.flowing)
+            state.getFluidState().is(PortalCubedFluids.TOXIC_GOO.still) ||
+                state.getFluidState().is(PortalCubedFluids.TOXIC_GOO.flowing)
         ) {
-            world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_GOO_EVENT, SoundCategory.HOSTILE, 1, 1);
+            level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_GOO_EVENT, SoundSource.HOSTILE, 1, 1);
             kill();
         }
     }
 
     protected boolean canHit(Entity entity) {
-        return entity instanceof LivingEntity && !entity.isSpectator() && entity.isAlive() && entity.collides();
+        return entity instanceof LivingEntity && !entity.isSpectator() && entity.isAlive() && entity.isPickable();
     }
 
     public void explode(@Nullable LivingEntity entity) {
         if (entity != null) {
-            entity.damage(
-                new ProjectileDamageSource("fireworks", this, null).setExplosive(),
+            entity.hurt(
+                new IndirectEntityDamageSource("fireworks", this, null).setExplosion(),
                 PortalCubedConfig.rocketDamage
             );
         }
-        world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_EXPLODE_EVENT, SoundCategory.HOSTILE, 1, 1);
-        if (world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(
+        level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_EXPLODE_EVENT, SoundSource.HOSTILE, 1, 1);
+        if (level instanceof ServerLevel serverWorld) {
+            serverWorld.sendParticles(
                 ParticleTypes.EXPLOSION,
                 getX(), getY(), getZ(),
                 8,
@@ -152,17 +152,17 @@ public class RocketEntity extends Entity implements Fizzleable {
     @Override
     public void startFizzlingProgress() {
         fizzling = true;
-        setVelocity(getVelocity().multiply(0.2));
+        setDeltaMovement(getDeltaMovement().scale(0.2));
     }
 
     @Override
     public void fizzle() {
         if (fizzling) return;
         startFizzlingProgress();
-        final PacketByteBuf buf = PacketByteBufs.create();
+        final FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(getId());
         final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);
-        PlayerLookup.tracking(this).forEach(player -> player.networkHandler.sendPacket(packet));
+        PlayerLookup.tracking(this).forEach(player -> player.connection.send(packet));
     }
 
     @Override

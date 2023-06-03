@@ -1,14 +1,10 @@
 package com.fusionflux.portalcubed.util;
 
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +18,14 @@ public class GeneralUtil {
     public static VoxelShape rotate(VoxelShape shape, Direction dir) {
         List<VoxelShape> shapes = new ArrayList<>();
 
-        shape.forEachBox((x1, y1, z1, x2, y2, z2) -> shapes.add(switch (dir) {
-            case WEST -> VoxelShapes.cuboid(z1, y1, x1, z2, y2, x2);
-            case SOUTH -> VoxelShapes.cuboid(1 - x2, y1, 1 - z2, 1 - x1, y2, 1 - z1);
-            case EAST -> VoxelShapes.cuboid(1 - z2, y1, 1 - x2, 1 - z1, y2, 1 - x1);
-            default -> VoxelShapes.cuboid(x1, y1, z1, x2, y2, z2);
+        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> shapes.add(switch (dir) {
+            case WEST -> Shapes.box(z1, y1, x1, z2, y2, x2);
+            case SOUTH -> Shapes.box(1 - x2, y1, 1 - z2, 1 - x1, y2, 1 - z1);
+            case EAST -> Shapes.box(1 - z2, y1, 1 - x2, 1 - z1, y2, 1 - x1);
+            default -> Shapes.box(x1, y1, z1, x2, y2, z2);
         }));
 
-        return VoxelShapes.union(VoxelShapes.empty(), shapes.toArray(new VoxelShape[0]));
+        return Shapes.or(Shapes.empty(), shapes.toArray(new VoxelShape[0]));
     }
 
     public static double calculateVelocity(double x, double y, double a, double g) {
@@ -38,18 +34,18 @@ public class GeneralUtil {
     }
 
     // Code based off of code from ChatGPT
-    public static Vec3d calculatePerpendicularVector(Vec3d lineStart, Vec3d lineEnd, Vec3d point) {
+    public static Vec3 calculatePerpendicularVector(Vec3 lineStart, Vec3 lineEnd, Vec3 point) {
         // Calculate direction vector of line
-        final Vec3d d = lineEnd.subtract(lineStart);
+        final Vec3 d = lineEnd.subtract(lineStart);
 
         // Calculate vector from point to line
-        final Vec3d p = point.subtract(lineStart);
+        final Vec3 p = point.subtract(lineStart);
 
         // Calculate projection of point vector onto line vector
-        final double t = p.dotProduct(d) / d.dotProduct(d);
+        final double t = p.dot(d) / d.dot(d);
 
         // Calculate perpendicular vector
-        return p.subtract(d.multiply(t));
+        return p.subtract(d.scale(t));
     }
 
     public static boolean targetsEqual(HitResult a, HitResult b) {
@@ -61,23 +57,23 @@ public class GeneralUtil {
     }
 
     // Based on https://forum.unity.com/threads/how-do-i-find-the-closest-point-on-a-line.340058/
-    public static Vec3d nearestPointOnLine(Vec3d linePnt, Vec3d lineDir, Vec3d pnt) {
+    public static Vec3 nearestPointOnLine(Vec3 linePnt, Vec3 lineDir, Vec3 pnt) {
         lineDir = lineDir.normalize();
-        final Vec3d v = pnt.subtract(linePnt);
-        final double d = v.dotProduct(lineDir);
-        return linePnt.add(lineDir.multiply(d));
+        final Vec3 v = pnt.subtract(linePnt);
+        final double d = v.dot(lineDir);
+        return linePnt.add(lineDir.scale(d));
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
-    public static Box rotate(Box box, float angle, Direction.Axis axis) {
-        angle = MathHelper.wrapDegrees(angle);
+    public static AABB rotate(AABB box, float angle, Direction.Axis axis) {
+        angle = Mth.wrapDegrees(angle);
         if ((angle > -45 && angle <= 45) || angle > 135 || angle <= -135) {
             return box;
         } else {
             return switch (axis) {
-                case X -> new Box(box.minX, box.minZ, box.minY, box.maxX, box.maxZ, box.maxY);
-                case Y -> new Box(box.minZ, box.minY, box.minX, box.maxZ, box.maxY, box.maxX);
-                case Z -> new Box(box.minY, box.minX, box.minZ, box.maxY, box.maxX, box.maxZ);
+                case X -> new AABB(box.minX, box.minZ, box.minY, box.maxX, box.maxZ, box.maxY);
+                case Y -> new AABB(box.minZ, box.minY, box.minX, box.maxZ, box.maxY, box.maxX);
+                case Z -> new AABB(box.minY, box.minX, box.minZ, box.maxY, box.maxX, box.maxZ);
             };
         }
     }

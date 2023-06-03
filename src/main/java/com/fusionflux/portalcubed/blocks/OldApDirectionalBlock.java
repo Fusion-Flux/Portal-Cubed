@@ -1,33 +1,33 @@
 package com.fusionflux.portalcubed.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class OldApDirectionalBlock extends OldApBlock {
-    public OldApDirectionalBlock(Settings settings) {
+    public OldApDirectionalBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(this.getDefaultState());
+        this.registerDefaultState(this.defaultBlockState());
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.HORIZONTAL_FACING);
     }
 
     @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite());
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
     @Override
     @ClientOnly
-    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+    public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
         return stateFrom.getBlock() instanceof OldApBlock;
     }
 

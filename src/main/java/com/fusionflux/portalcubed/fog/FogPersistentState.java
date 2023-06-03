@@ -1,11 +1,11 @@
 package com.fusionflux.portalcubed.fog;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.PersistentState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.Nullable;
 
-public class FogPersistentState extends PersistentState {
+public class FogPersistentState extends SavedData {
     @Nullable
     private FogSettings settings = null;
 
@@ -17,14 +17,14 @@ public class FogPersistentState extends PersistentState {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public CompoundTag save(CompoundTag nbt) {
         if (settings != null) {
-            nbt.put("Settings", settings.writeNbt(new NbtCompound()));
+            nbt.put("Settings", settings.writeNbt(new CompoundTag()));
         }
         return nbt;
     }
 
-    public static FogPersistentState readNbt(NbtCompound nbt) {
+    public static FogPersistentState readNbt(CompoundTag nbt) {
         return new FogPersistentState(FogSettings.readNbt(nbt.getCompound("Settings")));
     }
 
@@ -35,11 +35,11 @@ public class FogPersistentState extends PersistentState {
 
     public void setSettings(@Nullable FogSettings settings) {
         this.settings = settings;
-        markDirty();
+        setDirty();
     }
 
-    public static FogPersistentState getOrCreate(ServerWorld world) {
-        return world.getPersistentStateManager().getOrCreate(
+    public static FogPersistentState getOrCreate(ServerLevel world) {
+        return world.getDataStorage().computeIfAbsent(
             FogPersistentState::readNbt, FogPersistentState::new, "pc_custom_fog"
         );
     }

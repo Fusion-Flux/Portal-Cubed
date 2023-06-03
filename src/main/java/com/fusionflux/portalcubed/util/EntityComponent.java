@@ -1,11 +1,11 @@
 package com.fusionflux.portalcubed.util;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
-    VoxelShape portalCutout = VoxelShapes.empty();
+    VoxelShape portalCutout = Shapes.empty();
     boolean hasTeleportationHappened = false;
     public Set<UUID> portals = new HashSet<>();
     private final Entity entity;
@@ -22,9 +22,9 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     boolean canFireGel;
 
-    Vec3d teleportVelocity = Vec3d.ZERO;
+    Vec3 teleportVelocity = Vec3.ZERO;
 
-    Vec3d serverVelForGel = Vec3d.ZERO;
+    Vec3 serverVelForGel = Vec3.ZERO;
 
     public EntityComponent(Entity entity) {
         this.entity = entity;
@@ -63,12 +63,12 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public Vec3d getVelocityUpdateAfterTeleport() {
+    public Vec3 getVelocityUpdateAfterTeleport() {
         return teleportVelocity;
     }
 
     @Override
-    public void setVelocityUpdateAfterTeleport(Vec3d velocity) {
+    public void setVelocityUpdateAfterTeleport(Vec3 velocity) {
         teleportVelocity = velocity;
         PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
@@ -87,12 +87,12 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public Vec3d getServerVelForGel() {
+    public Vec3 getServerVelForGel() {
         return serverVelForGel;
     }
 
     @Override
-    public void setServerVelForGel(Vec3d velocity) {
+    public void setServerVelForGel(Vec3 velocity) {
         serverVelForGel = velocity;
         PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
@@ -115,14 +115,14 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(CompoundTag tag) {
         int size = tag.getInt("size");
 
         if (!portals.isEmpty())
             portals.clear();
 
         for (int i = 0; i < size; i++) {
-            portals.add(tag.getUuid("portals" + i));
+            portals.add(tag.getUUID("portals" + i));
         }
 
         hasTeleportationHappened = tag.getBoolean("hasTpHappened");
@@ -137,10 +137,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
+    public void writeToNbt(@NotNull CompoundTag tag) {
         int number = 0;
         for (UUID portal : portals) {
-            tag.putUuid("portals" + number, portal);
+            tag.putUUID("portals" + number, portal);
             number++;
         }
         tag.putInt("size", portals.size());

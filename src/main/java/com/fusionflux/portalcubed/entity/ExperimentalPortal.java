@@ -7,24 +7,29 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
-import net.minecraft.block.AbstractLichenBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.CuboidBlockIterator;
-import net.minecraft.util.math.*;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Cursor3D;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.MultifaceBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -36,189 +41,189 @@ public class  ExperimentalPortal extends Entity {
     public static final Supplier<IllegalStateException> NOT_INIT =
         () -> new IllegalStateException("Portal data accessed before initialized");
 
-    private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
+    private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
 
     private static final double WIDTH = 0.9, HEIGHT = 1.9;
     private static final double EPSILON = 1.0E-7;
 
-    private Box cutoutBoundingBox = NULL_BOX;
+    private AABB cutoutBoundingBox = NULL_BOX;
 
-    public static final TrackedData<Optional<UUID>> LINKED_PORTAL_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-    public static final TrackedData<Boolean> IS_ACTIVE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public static final TrackedData<String> STORED_OUTLINE = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.STRING);
-    public static final TrackedData<Float> ROLL = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.FLOAT);
-    public static final TrackedData<Integer> COLOR = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.INTEGER);
+    public static final EntityDataAccessor<Optional<UUID>> LINKED_PORTAL_UUID = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.OPTIONAL_UUID);
+    public static final EntityDataAccessor<Boolean> IS_ACTIVE = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<String> STORED_OUTLINE = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Float> ROLL = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.INT);
     /**
      * getAxisW() and getAxisH() define the orientation of the portal
      * They should be normalized and should be perpendicular to each other
      */
-    public static final TrackedData<Optional<Vec3d>> AXIS_W = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
-    public static final TrackedData<Optional<Vec3d>> AXIS_H = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
-    public static final TrackedData<Vec3d> AXIS_OH = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
-    public static final TrackedData<Vec3d> AXIS_OW = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
-    public static final TrackedData<Optional<Vec3d>> DESTINATION = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
-    public static final TrackedData<Vec3d> FACING = DataTracker.registerData(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
-    public static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(ExperimentalPortal.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    public static final EntityDataAccessor<Optional<Vec3>> AXIS_W = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
+    public static final EntityDataAccessor<Optional<Vec3>> AXIS_H = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
+    public static final EntityDataAccessor<Vec3> AXIS_OH = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
+    public static final EntityDataAccessor<Vec3> AXIS_OW = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
+    public static final EntityDataAccessor<Optional<Vec3>> DESTINATION = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
+    public static final EntityDataAccessor<Vec3> FACING = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
+    public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.OPTIONAL_UUID);
 
     private boolean disableValidation;
 
-    public Vec3d getNormal() {
-        return (getAxisW().orElseThrow(NOT_INIT).crossProduct(getAxisH().orElseThrow(NOT_INIT)));
+    public Vec3 getNormal() {
+        return (getAxisW().orElseThrow(NOT_INIT).cross(getAxisH().orElseThrow(NOT_INIT)));
     }
 
-    public Vec3d getOtherNormal() {
-        return (getOtherAxisW().crossProduct(getOtherAxisH()));
+    public Vec3 getOtherNormal() {
+        return (getOtherAxisW().cross(getOtherAxisH()));
     }
 
-    public ExperimentalPortal(EntityType<?> entityType, World world) {
+    public ExperimentalPortal(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initDataTracker() {
-        this.getDataTracker().startTracking(LINKED_PORTAL_UUID, Optional.empty());
-        this.getDataTracker().startTracking(STORED_OUTLINE, "null");
-        this.getDataTracker().startTracking(IS_ACTIVE, false);
-        this.getDataTracker().startTracking(ROLL, 0f);
-        this.getDataTracker().startTracking(COLOR, 0);
-        this.getDataTracker().startTracking(AXIS_W, Optional.empty());
-        this.getDataTracker().startTracking(AXIS_H, Optional.empty());
-        this.getDataTracker().startTracking(AXIS_OH, Vec3d.ZERO);
-        this.getDataTracker().startTracking(AXIS_OW, Vec3d.ZERO);
-        this.getDataTracker().startTracking(DESTINATION, Optional.empty());
-        this.getDataTracker().startTracking(FACING, Vec3d.ZERO);
-        this.getDataTracker().startTracking(OWNER_UUID, Optional.empty());
+    protected void defineSynchedData() {
+        this.getEntityData().define(LINKED_PORTAL_UUID, Optional.empty());
+        this.getEntityData().define(STORED_OUTLINE, "null");
+        this.getEntityData().define(IS_ACTIVE, false);
+        this.getEntityData().define(ROLL, 0f);
+        this.getEntityData().define(COLOR, 0);
+        this.getEntityData().define(AXIS_W, Optional.empty());
+        this.getEntityData().define(AXIS_H, Optional.empty());
+        this.getEntityData().define(AXIS_OH, Vec3.ZERO);
+        this.getEntityData().define(AXIS_OW, Vec3.ZERO);
+        this.getEntityData().define(DESTINATION, Optional.empty());
+        this.getEntityData().define(FACING, Vec3.ZERO);
+        this.getEntityData().define(OWNER_UUID, Optional.empty());
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    protected void readAdditionalSaveData(CompoundTag nbt) {
         this.setColor(nbt.getInt("color"));
         this.setRoll(nbt.getFloat("roll"));
-        if (nbt.containsUuid("linkedPortalUUID")) this.setLinkedPortalUUID(Optional.of(nbt.getUuid("linkedPortalUUID")));
+        if (nbt.hasUUID("linkedPortalUUID")) this.setLinkedPortalUUID(Optional.of(nbt.getUUID("linkedPortalUUID")));
         if (nbt.contains("axisW")) this.setOrientation(IPHelperDuplicate.getVec3d(nbt, "axisW"), IPHelperDuplicate.getVec3d(nbt, "axisH"));
         this.setOtherAxisH(IPHelperDuplicate.getVec3d(nbt, "axisOH"));
         this.setOtherAxisW(IPHelperDuplicate.getVec3d(nbt, "axisOW"));
         if (nbt.contains("destination")) this.setDestination(Optional.of(IPHelperDuplicate.getVec3d(nbt, "destination")));
         this.setOtherFacing(IPHelperDuplicate.getVec3d(nbt, "facing"));
-        if (nbt.containsUuid("ownerUUID")) this.setOwnerUUID(Optional.of(nbt.getUuid("ownerUUID")));
+        if (nbt.hasUUID("ownerUUID")) this.setOwnerUUID(Optional.of(nbt.getUUID("ownerUUID")));
         disableValidation = nbt.getBoolean("DisableValidation");
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putFloat("color", this.getColor());
         nbt.putFloat("roll", this.getRoll());
-        this.getLinkedPortalUUID().ifPresent(uuid -> nbt.putUuid("linkedPortalUUID", uuid));
+        this.getLinkedPortalUUID().ifPresent(uuid -> nbt.putUUID("linkedPortalUUID", uuid));
         this.getAxisW().ifPresent(axisW -> IPHelperDuplicate.putVec3d(nbt, "axisW", axisW));
         this.getAxisH().ifPresent(axisH -> IPHelperDuplicate.putVec3d(nbt, "axisH", axisH));
         IPHelperDuplicate.putVec3d(nbt, "axisOH", this.getOtherAxisH());
         IPHelperDuplicate.putVec3d(nbt, "axisOW", this.getOtherAxisW());
         this.getDestination().ifPresent(destination -> IPHelperDuplicate.putVec3d(nbt, "destination", destination));
         IPHelperDuplicate.putVec3d(nbt, "facing", this.getOtherFacing());
-        this.getOwnerUUID().ifPresent(uuid -> nbt.putUuid("ownerUUID", uuid));
+        this.getOwnerUUID().ifPresent(uuid -> nbt.putUUID("ownerUUID", uuid));
         nbt.putBoolean("DisableValidation", disableValidation);
     }
 
     public float getRoll() {
-        return getDataTracker().get(ROLL);
+        return getEntityData().get(ROLL);
     }
 
     public void setRoll(float roll) {
-        this.getDataTracker().set(ROLL, roll);
+        this.getEntityData().set(ROLL, roll);
     }
 
     public int getColor() {
-        return getDataTracker().get(COLOR);
+        return getEntityData().get(COLOR);
     }
 
     public void setColor(int color) {
-        this.getDataTracker().set(COLOR, color);
+        this.getEntityData().set(COLOR, color);
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
-        return new EntitySpawnS2CPacket(this);
+    public Packet<?> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 
     public Optional<UUID> getLinkedPortalUUID() {
-        return getDataTracker().get(LINKED_PORTAL_UUID);
+        return getEntityData().get(LINKED_PORTAL_UUID);
     }
 
     public void setLinkedPortalUUID(Optional<UUID> uuid) {
-        this.getDataTracker().set(LINKED_PORTAL_UUID, uuid);
+        this.getEntityData().set(LINKED_PORTAL_UUID, uuid);
     }
 
     public Optional<UUID> getOwnerUUID() {
-        return getDataTracker().get(OWNER_UUID);
+        return getEntityData().get(OWNER_UUID);
     }
 
     public void setOwnerUUID(Optional<UUID> uuid) {
-        this.getDataTracker().set(OWNER_UUID, uuid);
+        this.getEntityData().set(OWNER_UUID, uuid);
     }
 
     public boolean getActive() {
-        return getDataTracker().get(IS_ACTIVE);
+        return getEntityData().get(IS_ACTIVE);
     }
 
     private void setActive(boolean active) {
-        this.getDataTracker().set(IS_ACTIVE, active);
+        this.getEntityData().set(IS_ACTIVE, active);
     }
 
     public Direction getFacingDirection() {
-        return Direction.fromVector((int) this.getNormal().getX(), (int) this.getNormal().getY(), (int) this.getNormal().getZ());
+        return Direction.fromNormal((int) this.getNormal().x(), (int) this.getNormal().y(), (int) this.getNormal().z());
     }
 
-    public Optional<Vec3d> getAxisW() {
-        return getDataTracker().get(AXIS_W);
+    public Optional<Vec3> getAxisW() {
+        return getEntityData().get(AXIS_W);
     }
 
-    public Optional<Vec3d> getAxisH() {
-        return getDataTracker().get(AXIS_H);
+    public Optional<Vec3> getAxisH() {
+        return getEntityData().get(AXIS_H);
     }
 
-    public Vec3d getOtherAxisH() {
-        return getDataTracker().get(AXIS_OH);
+    public Vec3 getOtherAxisH() {
+        return getEntityData().get(AXIS_OH);
     }
 
-    public Vec3d getOtherAxisW() {
-        return getDataTracker().get(AXIS_OW);
+    public Vec3 getOtherAxisW() {
+        return getEntityData().get(AXIS_OW);
     }
 
-    public void setOtherAxisH(Vec3d h) {
-        this.getDataTracker().set(AXIS_OH, h);
+    public void setOtherAxisH(Vec3 h) {
+        this.getEntityData().set(AXIS_OH, h);
     }
 
-    public void setOtherAxisW(Vec3d w) {
-        this.getDataTracker().set(AXIS_OW, w);
+    public void setOtherAxisW(Vec3 w) {
+        this.getEntityData().set(AXIS_OW, w);
     }
 
-    public Optional<Vec3d> getDestination() {
-        return getDataTracker().get(DESTINATION);
+    public Optional<Vec3> getDestination() {
+        return getEntityData().get(DESTINATION);
     }
 
-    public void setDestination(Optional<Vec3d> destination) {
-        this.getDataTracker().set(DESTINATION, destination);
+    public void setDestination(Optional<Vec3> destination) {
+        this.getEntityData().set(DESTINATION, destination);
     }
 
-    public Vec3d getOtherFacing() {
-        return getDataTracker().get(FACING);
+    public Vec3 getOtherFacing() {
+        return getEntityData().get(FACING);
     }
 
-    public void setOtherFacing(Vec3d facing) {
-        this.getDataTracker().set(FACING, facing);
+    public void setOtherFacing(Vec3 facing) {
+        this.getEntityData().set(FACING, facing);
     }
 
-    public void setOrientation(Vec3d axisW, Vec3d axisH) {
-        this.getDataTracker().set(AXIS_W, Optional.of(axisW));
-        this.getDataTracker().set(AXIS_H, Optional.of(axisH));
+    public void setOrientation(Vec3 axisW, Vec3 axisH) {
+        this.getEntityData().set(AXIS_W, Optional.of(axisW));
+        this.getEntityData().set(AXIS_H, Optional.of(axisH));
         syncRotations();
     }
 
     @Override
     public void kill() {
         getOwnerUUID().ifPresent(uuid -> {
-            Entity player = ((ServerWorld) world).getEntity(uuid);
-            CalledValues.removePortals(player, this.getUuid());
+            Entity player = ((ServerLevel) level).getEntity(uuid);
+            CalledValues.removePortals(player, this.getUUID());
         });
         super.kill();
     }
@@ -230,25 +235,25 @@ public class  ExperimentalPortal extends Entity {
             discard();
             return;
         }
-        this.calculateBoundingBox();
+        this.makeBoundingBox();
         this.calculateCuttoutBox();
         this.calculateBoundsCheckBox();
-        if (!this.world.isClient)
-            ((ServerWorld)(this.world)).setChunkForced(getChunkPos().x, getChunkPos().z, true);
+        if (!this.level.isClientSide)
+            ((ServerLevel)(this.level)).setChunkForced(chunkPosition().x, chunkPosition().z, true);
 
-        if (!world.isClient) {
+        if (!level.isClientSide) {
             getOwnerUUID().ifPresent(uuid -> {
-                Entity player = ((ServerWorld) world).getEntity(uuid);
+                Entity player = ((ServerLevel) level).getEntity(uuid);
                 if (player == null || !player.isAlive()) {
                     this.kill();
                 }
             });
         }
 
-        if (!this.world.isClient && getAxisW().isPresent()) {
+        if (!this.level.isClientSide && getAxisW().isPresent()) {
             ExperimentalPortal otherPortal =
                 this.getLinkedPortalUUID().isPresent()
-                    ? (ExperimentalPortal)((Accessors) world).getEntity(this.getLinkedPortalUUID().get())
+                    ? (ExperimentalPortal)((Accessors) level).getEntity(this.getLinkedPortalUUID().get())
                     : null;
 
             setActive(otherPortal != null);
@@ -256,7 +261,7 @@ public class  ExperimentalPortal extends Entity {
 
             if (!validate()) {
                 this.kill();
-                world.playSound(null, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
+                level.playSound(null, this.position().x(), this.position().y(), this.position().z(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
             }
         }
         super.tick();
@@ -270,42 +275,42 @@ public class  ExperimentalPortal extends Entity {
     }
 
     private boolean validateBehind() {
-        final Box portalBox = new Box(
+        final AABB portalBox = new AABB(
             getPointInPlane(width() / 2, height() / 2)
-                .add(getNormal().multiply(-0.01)),
+                .add(getNormal().scale(-0.01)),
             getPointInPlane(-width() / 2, -height() / 2)
-                .add(getNormal().multiply(-0.2))
-        ).union(new Box(
+                .add(getNormal().scale(-0.2))
+        ).minmax(new AABB(
             getPointInPlane(-width() / 2, height() / 2)
-                .add(getNormal().multiply(-0.01)),
+                .add(getNormal().scale(-0.01)),
             getPointInPlane(width() / 2, -height() / 2)
-                .add(getNormal().multiply(-0.2))
+                .add(getNormal().scale(-0.2))
         ));
-        final CuboidBlockIterator iter = new CuboidBlockIterator(
-            MathHelper.floor(portalBox.minX - EPSILON) - 1,
-            MathHelper.floor(portalBox.minY - EPSILON) - 1,
-            MathHelper.floor(portalBox.minZ - EPSILON) - 1,
-            MathHelper.floor(portalBox.maxX + EPSILON) + 1,
-            MathHelper.floor(portalBox.maxY + EPSILON) + 1,
-            MathHelper.floor(portalBox.maxZ + EPSILON) + 1
+        final Cursor3D iter = new Cursor3D(
+            Mth.floor(portalBox.minX - EPSILON) - 1,
+            Mth.floor(portalBox.minY - EPSILON) - 1,
+            Mth.floor(portalBox.minZ - EPSILON) - 1,
+            Mth.floor(portalBox.maxX + EPSILON) + 1,
+            Mth.floor(portalBox.maxY + EPSILON) + 1,
+            Mth.floor(portalBox.maxZ + EPSILON) + 1
         );
-        final Direction forward = Direction.fromVector(new BlockPos(getNormal()));
+        final Direction forward = Direction.fromNormal(new BlockPos(getNormal()));
         assert forward != null;
-        while (iter.step()) {
-            final BlockPos pos = new BlockPos(iter.getX(), iter.getY(), iter.getZ());
-            if (!Box.from(BlockBox.create(pos, pos)).intersects(portalBox)) continue;
-            final BlockState state = world.getBlockState(pos);
-            if (state.isIn(PortalCubedBlocks.PORTAL_NONSOLID) || state.isIn(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-                final BlockState gelState = world.getBlockState(pos.offset(forward));
-                final BooleanProperty property = AbstractLichenBlock.getProperty(forward.getOpposite());
-                if (!gelState.isIn(PortalCubedBlocks.PORTALABLE_GELS) || !gelState.getOrEmpty(property).orElse(false)) {
+        while (iter.advance()) {
+            final BlockPos pos = new BlockPos(iter.nextX(), iter.nextY(), iter.nextZ());
+            if (!AABB.of(BoundingBox.fromCorners(pos, pos)).intersects(portalBox)) continue;
+            final BlockState state = level.getBlockState(pos);
+            if (state.is(PortalCubedBlocks.PORTAL_NONSOLID) || state.is(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
+                final BlockState gelState = level.getBlockState(pos.relative(forward));
+                final BooleanProperty property = MultifaceBlock.getFaceProperty(forward.getOpposite());
+                if (!gelState.is(PortalCubedBlocks.PORTALABLE_GELS) || !gelState.getOptionalValue(property).orElse(false)) {
                     return false;
                 }
             }
-            final VoxelShape shape = state.getCollisionShape(world, pos, ShapeContext.of(this));
+            final VoxelShape shape = state.getCollisionShape(level, pos, CollisionContext.of(this));
             if (
-                shape.offset(pos.getX(), pos.getY(), pos.getZ())
-                    .getBoundingBoxes()
+                shape.move(pos.getX(), pos.getY(), pos.getZ())
+                    .toAabbs()
                     .stream()
                     .noneMatch(portalBox::intersects)
             ) return false;
@@ -314,35 +319,35 @@ public class  ExperimentalPortal extends Entity {
     }
 
     private boolean validateFront() {
-        final Box portalBox = new Box(
+        final AABB portalBox = new AABB(
             getPointInPlane(width() / 2, height() / 2)
-                .add(getNormal().multiply(0.2)),
+                .add(getNormal().scale(0.2)),
             getPointInPlane(-width() / 2, -height() / 2)
-        ).union(new Box(
+        ).minmax(new AABB(
             getPointInPlane(-width() / 2, height() / 2)
-                .add(getNormal().multiply(0.2)),
+                .add(getNormal().scale(0.2)),
             getPointInPlane(width() / 2, -height() / 2)
         ));
-        final CuboidBlockIterator iter = new CuboidBlockIterator(
-            MathHelper.floor(portalBox.minX - EPSILON) - 1,
-            MathHelper.floor(portalBox.minY - EPSILON) - 1,
-            MathHelper.floor(portalBox.minZ - EPSILON) - 1,
-            MathHelper.floor(portalBox.maxX + EPSILON) + 1,
-            MathHelper.floor(portalBox.maxY + EPSILON) + 1,
-            MathHelper.floor(portalBox.maxZ + EPSILON) + 1
+        final Cursor3D iter = new Cursor3D(
+            Mth.floor(portalBox.minX - EPSILON) - 1,
+            Mth.floor(portalBox.minY - EPSILON) - 1,
+            Mth.floor(portalBox.minZ - EPSILON) - 1,
+            Mth.floor(portalBox.maxX + EPSILON) + 1,
+            Mth.floor(portalBox.maxY + EPSILON) + 1,
+            Mth.floor(portalBox.maxZ + EPSILON) + 1
         );
-        while (iter.step()) {
-            final BlockPos pos = new BlockPos(iter.getX(), iter.getY(), iter.getZ());
-            if (!Box.from(BlockBox.create(pos, pos)).intersects(portalBox)) continue;
-            final BlockState state = world.getBlockState(pos);
-            if (state.isIn(PortalCubedBlocks.PORTAL_NONSOLID)) continue;
-            if (state.isIn(PortalCubedBlocks.PORTAL_SOLID)) {
+        while (iter.advance()) {
+            final BlockPos pos = new BlockPos(iter.nextX(), iter.nextY(), iter.nextZ());
+            if (!AABB.of(BoundingBox.fromCorners(pos, pos)).intersects(portalBox)) continue;
+            final BlockState state = level.getBlockState(pos);
+            if (state.is(PortalCubedBlocks.PORTAL_NONSOLID)) continue;
+            if (state.is(PortalCubedBlocks.PORTAL_SOLID)) {
                 return false;
             }
-            final VoxelShape shape = state.getCollisionShape(world, pos, ShapeContext.of(this));
+            final VoxelShape shape = state.getCollisionShape(level, pos, CollisionContext.of(this));
             if (
-                shape.offset(pos.getX(), pos.getY(), pos.getZ())
-                    .getBoundingBoxes()
+                shape.move(pos.getX(), pos.getY(), pos.getZ())
+                    .toAabbs()
                     .stream()
                     .anyMatch(portalBox::intersects)
             ) return false;
@@ -353,105 +358,105 @@ public class  ExperimentalPortal extends Entity {
     public void syncRotations() {
         this.setBoundingBox(NULL_BOX);
         this.setCutoutBoundingBox(NULL_BOX);
-        this.calculateBoundingBox();
+        this.makeBoundingBox();
         this.calculateCuttoutBox();
         this.calculateBoundsCheckBox();
     }
 
     @Override
-    protected Box calculateBoundingBox() {
+    protected AABB makeBoundingBox() {
         if (getAxisW().isEmpty()) {
             // it may be called when the portal is not yet initialized
             setBoundingBox(NULL_BOX);
             return NULL_BOX;
         }
 
-        Box portalBox = new Box(
+        AABB portalBox = new AABB(
                 getPointInPlane(width() / 2, height() / 2)
-                        .add(getNormal().multiply(.2)),
+                        .add(getNormal().scale(.2)),
                 getPointInPlane(-width() / 2, -height() / 2)
-                        .add(getNormal().multiply(-.2))
-        ).union(new Box(
+                        .add(getNormal().scale(-.2))
+        ).minmax(new AABB(
                 getPointInPlane(-width() / 2, height() / 2)
-                        .add(getNormal().multiply(.2)),
+                        .add(getNormal().scale(.2)),
                 getPointInPlane(width() / 2, -height() / 2)
-                        .add(getNormal().multiply(-.2))
+                        .add(getNormal().scale(-.2))
         ));
         setBoundingBox(portalBox);
         return portalBox;
     }
 
 
-    public Box calculateCuttoutBox() {
+    public AABB calculateCuttoutBox() {
         if (getAxisW().isEmpty()) {
             setCutoutBoundingBox(NULL_BOX);
             return NULL_BOX;
         }
 
-        Box portalBox = new Box(
+        AABB portalBox = new AABB(
                 getCutoutPointInPlane(width() / 2, height() / 2)
-                        .add(getNormal().multiply(5)),
+                        .add(getNormal().scale(5)),
                 getCutoutPointInPlane(-width() / 2, -height() / 2)
-                        .add(getNormal().multiply(-5))
-        ).union(new Box(
+                        .add(getNormal().scale(-5))
+        ).minmax(new AABB(
                 getCutoutPointInPlane(-width() / 2, height() / 2)
-                        .add(getNormal().multiply(5)),
+                        .add(getNormal().scale(5)),
                 getCutoutPointInPlane(width() / 2, -height() / 2)
-                        .add(getNormal().multiply(-5))
+                        .add(getNormal().scale(-5))
         ));
         setCutoutBoundingBox(portalBox);
         return portalBox;
     }
 
 
-    public Box calculateBoundsCheckBox() {
+    public AABB calculateBoundsCheckBox() {
         if (getAxisW().isEmpty()) {
             return NULL_BOX;
         }
 
-        return new Box(
+        return new AABB(
                 getBoundsCheckPointInPlane(width() / 2, height() / 2)
-                        .add(getNormal().multiply(2.5)),
+                        .add(getNormal().scale(2.5)),
                 getBoundsCheckPointInPlane(-width() / 2, -height() / 2)
-                        .add(getNormal().multiply(-2.5))
-        ).union(new Box(
+                        .add(getNormal().scale(-2.5))
+        ).minmax(new AABB(
                 getBoundsCheckPointInPlane(-width() / 2, height() / 2)
-                        .add(getNormal().multiply(2.5)),
+                        .add(getNormal().scale(2.5)),
                 getBoundsCheckPointInPlane(width() / 2, -height() / 2)
-                        .add(getNormal().multiply(-2.5))
+                        .add(getNormal().scale(-2.5))
         ));
     }
 
-    public final Box getCutoutBoundingBox() {
+    public final AABB getCutoutBoundingBox() {
         return this.cutoutBoundingBox;
     }
 
-    public final void setCutoutBoundingBox(Box boundingBox) {
+    public final void setCutoutBoundingBox(AABB boundingBox) {
         this.cutoutBoundingBox = boundingBox;
     }
 
-    public Vec3d getCutoutPointInPlane(double xInPlane, double yInPlane) {
-        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX() * -5, getFacingDirection().getUnitVector().getY() * -5, getFacingDirection().getUnitVector().getZ() * -5);
+    public Vec3 getCutoutPointInPlane(double xInPlane, double yInPlane) {
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().step().x() * -5, getFacingDirection().step().y() * -5, getFacingDirection().step().z() * -5);
     }
 
-    public Vec3d getBoundsCheckPointInPlane(double xInPlane, double yInPlane) {
-        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().getUnitVector().getX() * 2.5, getFacingDirection().getUnitVector().getY() * 2.5, getFacingDirection().getUnitVector().getZ() * 2.5);
+    public Vec3 getBoundsCheckPointInPlane(double xInPlane, double yInPlane) {
+        return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane)).add(getFacingDirection().step().x() * 2.5, getFacingDirection().step().y() * 2.5, getFacingDirection().step().z() * 2.5);
     }
 
-    public Vec3d getPointInPlane(double xInPlane, double yInPlane) {
+    public Vec3 getPointInPlane(double xInPlane, double yInPlane) {
         return getOriginPos().add(getPointInPlaneLocal(xInPlane, yInPlane));
     }
 
-    public Vec3d getPointInPlaneLocal(double xInPlane, double yInPlane) {
-        return getAxisW().orElseThrow(NOT_INIT).multiply(xInPlane).add(getAxisH().orElseThrow(NOT_INIT).multiply(yInPlane));
+    public Vec3 getPointInPlaneLocal(double xInPlane, double yInPlane) {
+        return getAxisW().orElseThrow(NOT_INIT).scale(xInPlane).add(getAxisH().orElseThrow(NOT_INIT).scale(yInPlane));
     }
 
-    public Vec3d getOriginPos() {
-        return getPos();
+    public Vec3 getOriginPos() {
+        return position();
     }
 
-    public void setOriginPos(Vec3d pos) {
-        setPosition(pos);
+    public void setOriginPos(Vec3 pos) {
+        setPos(pos);
     }
 
     private double width() {

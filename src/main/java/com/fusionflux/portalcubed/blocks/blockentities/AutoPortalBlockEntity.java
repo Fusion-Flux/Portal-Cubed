@@ -1,12 +1,12 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class AutoPortalBlockEntity extends BlockEntity {
     private int color = 0x1d86db;
@@ -28,12 +28,12 @@ public class AutoPortalBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        color = nbt.contains("Color", NbtElement.INT_TYPE) ? nbt.getInt("Color") : 0x1d86db;
+    public void load(CompoundTag nbt) {
+        color = nbt.contains("Color", Tag.TAG_INT) ? nbt.getInt("Color") : 0x1d86db;
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
+    protected void saveAdditional(CompoundTag nbt) {
         nbt.putInt("Color", color);
     }
 }

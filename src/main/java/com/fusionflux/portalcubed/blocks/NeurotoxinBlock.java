@@ -1,68 +1,72 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.NeurotoxinBlockEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class NeurotoxinBlock extends BlockWithEntity {
+public class NeurotoxinBlock extends BaseEntityBlock {
 
-    public NeurotoxinBlock(Settings settings) {
+    public NeurotoxinBlock(Properties settings) {
         super(settings);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return VoxelShapes.empty();
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
-        if (state.isOf(this)) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        if (state.is(this)) {
             if (random.nextInt(10) == 0) {
-                world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+                world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
             }
         }
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!world.isClient) {
-            entity.damage(DamageSource.DROWN, 1);
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+        if (!world.isClientSide) {
+            entity.hurt(DamageSource.DROWN, 1);
         }
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new NeurotoxinBlockEntity(pos, state);
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.NEUROTOXIN_BLOCK_ENTITY, NeurotoxinBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, PortalCubedBlocks.NEUROTOXIN_BLOCK_ENTITY, NeurotoxinBlockEntity::tick);
     }
 }

@@ -1,25 +1,25 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class GelBlobRenderer extends EntityRenderer<GelBlobEntity> {
-    private final ModelPart.Cuboid cube;
+    private final ModelPart.Cube cube;
 
-    public GelBlobRenderer(EntityRendererFactory.Context context) {
+    public GelBlobRenderer(EntityRendererProvider.Context context) {
         super(context);
-        cube = new ModelPart.Cuboid(
+        cube = new ModelPart.Cube(
             0, 0, // U, V
             -8, 0, -8, // X, Y, Z
             16, 16, 16, // XS, YS, ZS
@@ -31,20 +31,20 @@ public class GelBlobRenderer extends EntityRenderer<GelBlobEntity> {
 
     // Math from https://github.com/Tectato/Vectorientation/blob/2bfe2fc2d2c36f8af3550df09d1b5d7938869a70/src/main/java/vectorientation/mixin/FallingBlockRendererMixin.java
     @Override
-    public void render(GelBlobEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        final VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
-        matrices.push();
+    public void render(GelBlobEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+        final VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entitySolid(getTextureLocation(entity)));
+        matrices.pushPose();
 
-        final Vec3f vel = new Vec3f(entity.getVelocity());
-        final float y = (vel.getY() - 0.04f * tickDelta) * 0.98f;
-        float speed = (float)Math.sqrt(vel.getX() * vel.getX() + y * y + vel.getZ() * vel.getZ());
+        final Vector3f vel = new Vector3f(entity.getDeltaMovement());
+        final float y = (vel.y() - 0.04f * tickDelta) * 0.98f;
+        float speed = (float)Math.sqrt(vel.x() * vel.x() + y * y + vel.z() * vel.z());
         vel.normalize();
-        final float angle = (float)Math.acos(MathHelper.clamp(y, -1, 1));
-        vel.set(-1 * vel.getZ(), 0, vel.getX());
+        final float angle = (float)Math.acos(Mth.clamp(y, -1, 1));
+        vel.set(-1 * vel.z(), 0, vel.x());
         vel.normalize();
         final Quaternion rot = new Quaternion(vel, -angle, false);
         matrices.translate(0, 0.5, 0);
-        matrices.multiply(rot);
+        matrices.mulPose(rot);
         speed += 0.75f;
         matrices.scale(1 / speed, speed, 1 / speed);
         matrices.translate(0, -0.5, 0);
@@ -52,16 +52,16 @@ public class GelBlobRenderer extends EntityRenderer<GelBlobEntity> {
         final float scale = entity.getScale();
         matrices.scale(scale, scale, scale);
 
-        cube.renderCuboid(
-            matrices.peek(), consumer,
-            light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1
+        cube.compile(
+            matrices.last(), consumer,
+            light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1
         );
-        matrices.pop();
+        matrices.popPose();
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
     @Override
-    public Identifier getTexture(GelBlobEntity entity) {
+    public ResourceLocation getTextureLocation(GelBlobEntity entity) {
         return entity.getTexture();
     }
 }

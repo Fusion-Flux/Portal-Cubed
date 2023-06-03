@@ -2,85 +2,89 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.DualExcursionFunnelEmitterBlockEntity;
 import com.fusionflux.portalcubed.util.CustomProperties;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
-public class DuelExcursionFunnelEmitter extends BlockWithEntity {
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+public class DuelExcursionFunnelEmitter extends BaseEntityBlock {
+    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
-    public DuelExcursionFunnelEmitter(Settings settings) {
+    public DuelExcursionFunnelEmitter(Properties settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(CustomProperties.REVERSED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(CustomProperties.REVERSED, false));
     }
 
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
     @ClientOnly
     @SuppressWarnings("deprecation")
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, Properties.POWERED, CustomProperties.REVERSED);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED, CustomProperties.REVERSED);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(BlockStateProperties.FACING, rotation.rotate(state.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER.getDefaultState().with(Properties.FACING, ctx.getPlayerLookDirection().getOpposite()).with(Properties.POWERED, false).with(CustomProperties.REVERSED, false);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER.defaultBlockState().setValue(BlockStateProperties.FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(BlockStateProperties.POWERED, false).setValue(CustomProperties.REVERSED, false);
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new DualExcursionFunnelEmitterBlockEntity(pos, state);
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY, DualExcursionFunnelEmitterBlockEntity::tick2);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, PortalCubedBlocks.DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY, DualExcursionFunnelEmitterBlockEntity::tick2);
     }
 
 }

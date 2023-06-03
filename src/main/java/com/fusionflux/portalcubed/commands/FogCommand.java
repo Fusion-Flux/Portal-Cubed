@@ -11,26 +11,26 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.argument.DimensionArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.DimensionArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import org.quiltmc.qsl.command.api.EnumArgumentType;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class FogCommand {
     @FunctionalInterface
     private interface DefaultDimensionAction {
-        int run(CommandContext<ServerCommandSource> ctx, boolean defaultDimension) throws CommandSyntaxException;
+        int run(CommandContext<CommandSourceStack> ctx, boolean defaultDimension) throws CommandSyntaxException;
     }
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(buildDefaultDimension(literal("fog"), FogCommand::getFog)
             .then(buildDefaultDimension(literal("reset"), FogCommand::resetFog))
             .then(buildSet(literal("set"), true)
-                .then(buildSet(argument("dimension", DimensionArgumentType.dimension()), false))
+                .then(buildSet(argument("dimension", DimensionArgument.dimension()), false))
             )
             .then(literal("preset")
                 .then(buildDefaultDimension(argument("preset", EnumArgumentType.enumConstant(FogPreset.class)), FogCommand::presetFog))
@@ -38,17 +38,17 @@ public class FogCommand {
         );
     }
 
-    private static <T extends ArgumentBuilder<ServerCommandSource, T>> ArgumentBuilder<ServerCommandSource, T> buildDefaultDimension(
-        ArgumentBuilder<ServerCommandSource, T> builder,
+    private static <T extends ArgumentBuilder<CommandSourceStack, T>> ArgumentBuilder<CommandSourceStack, T> buildDefaultDimension(
+        ArgumentBuilder<CommandSourceStack, T> builder,
         DefaultDimensionAction action
     ) {
         return builder.executes(ctx -> action.run(ctx, true))
-            .then(argument("dimension", DimensionArgumentType.dimension())
+            .then(argument("dimension", DimensionArgument.dimension())
                 .executes(ctx -> action.run(ctx, false))
             );
     }
 
-    private static ArgumentBuilder<ServerCommandSource, ?> buildSet(ArgumentBuilder<ServerCommandSource, ?> builder, boolean defaultDimension) {
+    private static ArgumentBuilder<CommandSourceStack, ?> buildSet(ArgumentBuilder<CommandSourceStack, ?> builder, boolean defaultDimension) {
         return builder.then(argument("near", FloatArgumentType.floatArg())
             .then(argument("far", FloatArgumentType.floatArg(0))
                 .then(argument("red", IntegerArgumentType.integer(0, 255))
@@ -65,29 +65,29 @@ public class FogCommand {
         );
     }
 
-    public static int getFog(CommandContext<ServerCommandSource> ctx, boolean defaultDimension) throws CommandSyntaxException {
-        final ServerWorld dimension = getDimension(ctx, defaultDimension);
-        ctx.getSource().sendFeedback(Text.translatable(
+    public static int getFog(CommandContext<CommandSourceStack> ctx, boolean defaultDimension) throws CommandSyntaxException {
+        final ServerLevel dimension = getDimension(ctx, defaultDimension);
+        ctx.getSource().sendSuccess(Component.translatable(
             "portalcubed.command.fog.success",
-            dimension.getRegistryKey().getValue(),
+            dimension.dimension().location(),
             FogPersistentState.getOrCreate(dimension).getSettings()
         ), false);
         return Command.SINGLE_SUCCESS;
     }
 
-    public static int resetFog(CommandContext<ServerCommandSource> ctx, boolean defaultDimension) throws CommandSyntaxException {
-        final ServerWorld dimension = getDimension(ctx, defaultDimension);
+    public static int resetFog(CommandContext<CommandSourceStack> ctx, boolean defaultDimension) throws CommandSyntaxException {
+        final ServerLevel dimension = getDimension(ctx, defaultDimension);
         FogPersistentState.getOrCreate(dimension).setSettings(null);
         PortalCubed.syncFog(dimension);
-        ctx.getSource().sendFeedback(Text.translatable(
+        ctx.getSource().sendSuccess(Component.translatable(
             "portalcubed.command.fog.reset.success",
-            dimension.getRegistryKey().getValue()
+            dimension.dimension().location()
         ), true);
         return Command.SINGLE_SUCCESS;
     }
 
-    public static int setFog(CommandContext<ServerCommandSource> ctx, boolean defaultDimension, boolean defaultShape) throws CommandSyntaxException {
-        final ServerWorld dimension = getDimension(ctx, defaultDimension);
+    public static int setFog(CommandContext<CommandSourceStack> ctx, boolean defaultDimension, boolean defaultShape) throws CommandSyntaxException {
+        final ServerLevel dimension = getDimension(ctx, defaultDimension);
         final FogSettings settings = new FogSettings(
             FloatArgumentType.getFloat(ctx, "near"),
             FloatArgumentType.getFloat(ctx, "far"),
@@ -102,31 +102,31 @@ public class FogCommand {
         );
         FogPersistentState.getOrCreate(dimension).setSettings(settings);
         PortalCubed.syncFog(dimension);
-        ctx.getSource().sendFeedback(Text.translatable(
+        ctx.getSource().sendSuccess(Component.translatable(
             "portalcubed.command.fog.set.success",
-            dimension.getRegistryKey().getValue(),
+            dimension.dimension().location(),
             settings
         ), true);
         return Command.SINGLE_SUCCESS;
     }
 
-    public static int presetFog(CommandContext<ServerCommandSource> ctx, boolean defaultDimension) throws CommandSyntaxException {
-        final ServerWorld dimension = getDimension(ctx, defaultDimension);
+    public static int presetFog(CommandContext<CommandSourceStack> ctx, boolean defaultDimension) throws CommandSyntaxException {
+        final ServerLevel dimension = getDimension(ctx, defaultDimension);
         final FogPreset preset = getEnumConstant(ctx, "preset", FogPreset.class);
         FogPersistentState.getOrCreate(dimension).setSettings(preset.getSettings());
         PortalCubed.syncFog(dimension);
-        ctx.getSource().sendFeedback(Text.translatable(
+        ctx.getSource().sendSuccess(Component.translatable(
             "portalcubed.command.fog.preset.success",
-            dimension.getRegistryKey().getValue(),
+            dimension.dimension().location(),
             preset
         ), true);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static ServerWorld getDimension(CommandContext<ServerCommandSource> ctx, boolean defaultDimension) throws CommandSyntaxException {
+    private static ServerLevel getDimension(CommandContext<CommandSourceStack> ctx, boolean defaultDimension) throws CommandSyntaxException {
         return defaultDimension
-            ? ctx.getSource().getWorld()
-            : DimensionArgumentType.getDimensionArgument(ctx, "dimension");
+            ? ctx.getSource().getLevel()
+            : DimensionArgument.getDimension(ctx, "dimension");
     }
 
     // Reimplemented here because QSL implements a validation that's also bugged and throws exceptions when it shouldn't

@@ -3,27 +3,27 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.GeneralUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.MovingSoundInstance;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -31,41 +31,41 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class RadioEntity extends CorePhysicsEntity  {
-    private static final Box BASE_BOX = createFootBox(0.4375, 0.3125, 0.1875);
+    private static final AABB BASE_BOX = createFootBox(0.4375, 0.3125, 0.1875);
 
-    private static final TrackedData<Boolean> MUTED = DataTracker.registerData(RadioEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Boolean> ALLOW_MUTE = DataTracker.registerData(RadioEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> MUTED = SynchedEntityData.defineId(RadioEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> ALLOW_MUTE = SynchedEntityData.defineId(RadioEntity.class, EntityDataSerializers.BOOLEAN);
 
     @Nullable
     private SoundEvent song = PortalCubedSounds.RADIO_MUSIC_EVENT;
     @Nullable
     private SoundEvent lastSong = song;
 
-    public RadioEntity(EntityType<? extends PathAwareEntity> type, World world) {
+    public RadioEntity(EntityType<? extends PathfinderMob> type, Level world) {
         super(type, world);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(MUTED, false);
-        dataTracker.startTracking(ALLOW_MUTE, true);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(MUTED, false);
+        entityData.define(ALLOW_MUTE, true);
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (!this.world.isClient && !this.isRemoved()) {
-            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
-            if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
-                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.RADIO);
+    public boolean hurt(DamageSource source, float amount) {
+        if (!this.level.isClientSide && !this.isRemoved()) {
+            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
+            if (source.getEntity() instanceof Player || source == DamageSource.OUT_OF_WORLD) {
+                if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(PortalCubedItems.RADIO);
                     }
                     this.discard();
                 }
-                if (!(source.getAttacker() instanceof PlayerEntity)) {
-                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.RADIO);
+                if (!(source.getEntity() instanceof Player)) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(PortalCubedItems.RADIO);
                     }
                     this.discard();
                 }
@@ -76,35 +76,35 @@ public class RadioEntity extends CorePhysicsEntity  {
     }
 
     @Override
-    protected Box calculateBoundingBox() {
-        return GeneralUtil.rotate(BASE_BOX, headYaw, Direction.Axis.Y).offset(getPos());
+    protected AABB makeBoundingBox() {
+        return GeneralUtil.rotate(BASE_BOX, yHeadRot, Direction.Axis.Y).move(position());
     }
 
     public boolean isMuted() {
-        return dataTracker.get(MUTED);
+        return entityData.get(MUTED);
     }
 
     public void setMuted(boolean notPlaying) {
-        dataTracker.set(MUTED, notPlaying);
+        entityData.set(MUTED, notPlaying);
     }
 
     public boolean isAllowMute() {
-        return dataTracker.get(ALLOW_MUTE);
+        return entityData.get(ALLOW_MUTE);
     }
 
     public void setAllowMute(boolean allowMute) {
-        dataTracker.set(ALLOW_MUTE, allowMute);
+        entityData.set(ALLOW_MUTE, allowMute);
     }
 
     @ClientOnly
     private void performPlay() {
         if (song == null) return;
-        MinecraftClient.getInstance().getSoundManager().play(new RadioSoundInstance(song));
+        Minecraft.getInstance().getSoundManager().play(new RadioSoundInstance(song));
     }
 
     @Override
-    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        super.onSpawnPacket(packet);
+    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
+        super.recreateFromPacket(packet);
         performPlay();
     }
 
@@ -138,44 +138,44 @@ public class RadioEntity extends CorePhysicsEntity  {
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (!world.isClient && player.getStackInHand(hand).isOf(PortalCubedItems.HAMMER)) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (!level.isClientSide && player.getItemInHand(hand).is(PortalCubedItems.HAMMER)) {
             setAllowMute(!isAllowMute());
             if (isAllowMute()) {
-                player.sendMessage(Text.translatable("portalcubed.radio.allow_mute"), true);
+                player.displayClientMessage(Component.translatable("portalcubed.radio.allow_mute"), true);
             } else {
                 setMuted(false);
-                player.sendMessage(Text.translatable("portalcubed.radio.disallow_mute"), true);
+                player.displayClientMessage(Component.translatable("portalcubed.radio.disallow_mute"), true);
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Muted", isMuted());
         nbt.putBoolean("AllowMute", isAllowMute());
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         setMuted(nbt.getBoolean("Muted"));
         setAllowMute(nbt.getBoolean("AllowMute"));
     }
 
     @ClientOnly
-    private class RadioSoundInstance extends MovingSoundInstance {
+    private class RadioSoundInstance extends AbstractTickableSoundInstance {
         private final SoundEvent song;
 
         RadioSoundInstance(SoundEvent song) {
-            super(song, SoundCategory.RECORDS, SoundInstance.m_mglvabhn());
+            super(song, SoundSource.RECORDS, SoundInstance.createUnseededRandom());
             this.song = song;
             volume = 1f;
             pitch = 1f;
-            repeat = true;
+            looping = true;
             x = RadioEntity.this.getX();
             y = RadioEntity.this.getY();
             z = RadioEntity.this.getZ();
@@ -184,7 +184,7 @@ public class RadioEntity extends CorePhysicsEntity  {
         @Override
         public void tick() {
             if (isRemoved() || song != RadioEntity.this.song) {
-                setDone();
+                stop();
                 return;
             }
             volume = isMuted() ? 0f : 1f;

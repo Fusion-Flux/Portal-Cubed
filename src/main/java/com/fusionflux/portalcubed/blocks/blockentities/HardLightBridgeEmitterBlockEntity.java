@@ -3,16 +3,16 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -36,13 +36,13 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
         this.bridges = new ArrayList<>();
         this.portalBridges = new ArrayList<>();
     }
-    public static void tick(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, HardLightBridgeEmitterBlockEntity blockEntity) {
-        if (!world.isClient) {
-            boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
+    public static void tick(Level world, BlockPos pos, @SuppressWarnings("unused") BlockState state, HardLightBridgeEmitterBlockEntity blockEntity) {
+        if (!world.isClientSide) {
+            boolean redstonePowered = world.hasNeighborSignal(blockEntity.getBlockPos());
 
             if (redstonePowered) {
 
-                if (!world.getBlockState(pos).get(Properties.POWERED)) {
+                if (!world.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
                     blockEntity.togglePowered(world.getBlockState(pos));
                 }
 
@@ -52,27 +52,27 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
                     List<BlockPos> modFunnels = new ArrayList<>();
                     List<BlockPos> portalFunnels = new ArrayList<>();
                     boolean teleported = false;
-                    Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
+                    Direction storedDirection = blockEntity.getBlockState().getValue(BlockStateProperties.FACING);
                     Direction vertDirection = Direction.NORTH;
                     for (int i = 0; i <= blockEntity.maxRange; i++) {
                         if (!teleported) {
-                            translatedPos = translatedPos.offset(storedDirection);
+                            translatedPos = translatedPos.relative(storedDirection);
                         } else {
                             teleported = false;
                         }
-                        if (translatedPos.getY() < world.getTopY() && translatedPos.getY() > world.getBottomY() && (world.isAir(translatedPos) || (world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F && world.getBlockState(translatedPos).getHardness(world, translatedPos) != -1F) || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) && !world.getBlockState(translatedPos).getBlock().equals(Blocks.BARRIER)) {
+                        if (translatedPos.getY() < world.getMaxBuildHeight() && translatedPos.getY() > world.getMinBuildHeight() && (world.isEmptyBlock(translatedPos) || (world.getBlockState(translatedPos).getDestroySpeed(world, translatedPos) <= 0.1F && world.getBlockState(translatedPos).getDestroySpeed(world, translatedPos) != -1F) || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) && !world.getBlockState(translatedPos).getBlock().equals(Blocks.BARRIER)) {
 
                             if (!world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.HLB_BLOCK)) {
-                                world.setBlockState(translatedPos, PortalCubedBlocks.HLB_BLOCK.getDefaultState());
+                                world.setBlockAndUpdate(translatedPos, PortalCubedBlocks.HLB_BLOCK.defaultBlockState());
                             }
 
                             HardLightBridgeBlockEntity bridge = ((HardLightBridgeBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modFunnels.add(bridge.getPos());
-                            blockEntity.bridges.add(bridge.getPos());
+                            modFunnels.add(bridge.getBlockPos());
+                            blockEntity.bridges.add(bridge.getBlockPos());
                             if (!savedPos.equals(pos)) {
-                                portalFunnels.add(bridge.getPos());
-                                blockEntity.portalBridges.add(bridge.getPos());
+                                portalFunnels.add(bridge.getBlockPos());
+                                blockEntity.portalBridges.add(bridge.getBlockPos());
                             }
 
                             if (!bridge.facing.contains(storedDirection)) {
@@ -84,18 +84,18 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
 
                             bridge.updateState(world.getBlockState(translatedPos), world, translatedPos, bridge);
 
-                            Box portalCheckBox = new Box(translatedPos);
+                            AABB portalCheckBox = new AABB(translatedPos);
 
-                            List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+                            List<ExperimentalPortal> list = world.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
 
 
                             for (ExperimentalPortal portal : list) {
                                 if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
                                     if (portal.getActive()) {
-                                        Direction otherPortalFacing = Direction.fromVector(new BlockPos(portal.getOtherFacing().x, portal.getOtherFacing().y, portal.getOtherFacing().z));
-                                        Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
-                                        int offset = (int)(((portal.getBlockPos().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.getBlockPos().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.getBlockPos().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
-                                        Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
+                                        Direction otherPortalFacing = Direction.fromNormal(new BlockPos(portal.getOtherFacing().x, portal.getOtherFacing().y, portal.getOtherFacing().z));
+                                        Direction otherPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
+                                        int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
+                                        Direction mainPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
                                         assert mainPortalVertFacing != null;
                                         if (mainPortalVertFacing.equals(Direction.SOUTH)) {
                                             offset = (Math.abs(offset) - 1) * -1;
@@ -104,14 +104,14 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
                                             offset = (Math.abs(offset) - 1) * -1;
                                         }
 
-                                        translatedPos = new BlockPos(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).offset(otherPortalVertFacing, offset);
+                                        translatedPos = new BlockPos(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
                                         savedPos = translatedPos;
                                         assert otherPortalVertFacing != null;
                                         if (otherPortalVertFacing.equals(Direction.SOUTH)) {
-                                            translatedPos = translatedPos.offset(Direction.NORTH, 1);
+                                            translatedPos = translatedPos.relative(Direction.NORTH, 1);
                                         }
                                         if (otherPortalVertFacing.equals(Direction.EAST)) {
-                                            translatedPos = translatedPos.offset(Direction.WEST, 1);
+                                            translatedPos = translatedPos.relative(Direction.WEST, 1);
                                         }
 
                                         assert otherPortalFacing != null;
@@ -119,7 +119,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
                                             vertDirection = otherPortalVertFacing;
                                         }
 
-                                        storedDirection = Direction.fromVector((int)portal.getOtherFacing().x, (int)portal.getOtherFacing().y, (int)portal.getOtherFacing().z);
+                                        storedDirection = Direction.fromNormal((int)portal.getOtherFacing().x, (int)portal.getOtherFacing().y, (int)portal.getOtherFacing().z);
                                         teleported = true;
                                         blockEntity.bridges = modFunnels;
                                         blockEntity.portalBridges = portalFunnels;
@@ -137,7 +137,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
             }
 
             if (!redstonePowered) {
-                if (world.getBlockState(pos).get(Properties.POWERED)) {
+                if (world.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
                     blockEntity.togglePowered(world.getBlockState(pos));
                 }
             }
@@ -149,13 +149,13 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
 
     @Override
     public void playSound(SoundEvent soundEvent) {
-        assert this.world != null;
-        this.world.playSound(null, this.pos, soundEvent, SoundCategory.BLOCKS, 0.1F, 3.0F);
+        assert this.level != null;
+        this.level.playSound(null, this.worldPosition, soundEvent, SoundSource.BLOCKS, 0.1F, 3.0F);
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         List<Integer> posXList = new ArrayList<>();
         List<Integer> posYList = new ArrayList<>();
         List<Integer> posZList = new ArrayList<>();
@@ -189,8 +189,8 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         List<Integer> posXList;
         List<Integer> posYList;
         List<Integer> posZList;
@@ -205,7 +205,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
             bridges.clear();
 
         for (int i = 0; i < size; i++) {
-            bridges.add(new BlockPos.Mutable(posXList.get(i), posYList.get(i), posZList.get(i)));
+            bridges.add(new BlockPos.MutableBlockPos(posXList.get(i), posYList.get(i), posZList.get(i)));
         }
 
         List<Integer> portalXList;
@@ -222,7 +222,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
             portalBridges.clear();
 
         for (int i = 0; i < pSize; i++) {
-            portalBridges.add(new BlockPos.Mutable(portalXList.get(i), portalYList.get(i), portalZList.get(i)));
+            portalBridges.add(new BlockPos.MutableBlockPos(portalXList.get(i), portalYList.get(i), portalZList.get(i)));
         }
     }
 

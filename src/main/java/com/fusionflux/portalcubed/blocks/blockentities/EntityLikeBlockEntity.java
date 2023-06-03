@@ -1,12 +1,12 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class EntityLikeBlockEntity extends BlockEntity {
     private int age;
@@ -18,18 +18,18 @@ public abstract class EntityLikeBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
+    protected void saveAdditional(CompoundTag nbt) {
         nbt.putFloat("Yaw", yaw);
         nbt.putFloat("Pitch", pitch);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void load(CompoundTag nbt) {
         yaw = nbt.getFloat("Yaw");
         pitch = nbt.getFloat("Pitch");
     }
 
-    public void tick(World world, BlockPos pos, BlockState state) {
+    public void tick(Level world, BlockPos pos, BlockState state) {
         age++;
         prevYaw = yaw;
         prevPitch = pitch;
@@ -44,7 +44,7 @@ public abstract class EntityLikeBlockEntity extends BlockEntity {
     }
 
     public void setYaw(float yaw) {
-        this.yaw = MathHelper.wrapDegrees(yaw);
+        this.yaw = Mth.wrapDegrees(yaw);
     }
 
     public float getPitch() {
@@ -52,11 +52,11 @@ public abstract class EntityLikeBlockEntity extends BlockEntity {
     }
 
     public void setPitch(float pitch) {
-        this.pitch = MathHelper.wrapDegrees(pitch);
+        this.pitch = Mth.wrapDegrees(pitch);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return toNbt();
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
     }
 }

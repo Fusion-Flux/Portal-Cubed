@@ -1,12 +1,12 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class NeurotoxinBlockEntity extends BlockEntity {
     private int age = 1;
@@ -15,20 +15,20 @@ public class NeurotoxinBlockEntity extends BlockEntity {
         super(PortalCubedBlocks.NEUROTOXIN_BLOCK_ENTITY, pos, state);
     }
 
-    public static void tick(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, NeurotoxinBlockEntity blockEntity) {
+    public static void tick(Level world, BlockPos pos, @SuppressWarnings("unused") BlockState state, NeurotoxinBlockEntity blockEntity) {
         assert world != null;
 
-        if (!world.isClient) {
+        if (!world.isClientSide) {
             blockEntity.age++;
         }
 
-        if (!world.isClient && blockEntity.age % 5 == 0) {
+        if (!world.isClientSide && blockEntity.age % 5 == 0) {
             for (int i = 0; i < 3; i++) {
-                Direction dir = Direction.random(world.getRandom());
-                if (world.getBlockState(blockEntity.getPos().offset(dir)).isAir()) {
-                    world.setBlockState(blockEntity.getPos().offset(dir), blockEntity.getCachedState());
-                    world.setBlockState(blockEntity.getPos(), Blocks.AIR.getDefaultState());
-                    if (world.getBlockEntity(pos.offset(dir)) instanceof NeurotoxinBlockEntity newBE) {
+                Direction dir = Direction.getRandom(world.getRandom());
+                if (world.getBlockState(blockEntity.getBlockPos().relative(dir)).isAir()) {
+                    world.setBlockAndUpdate(blockEntity.getBlockPos().relative(dir), blockEntity.getBlockState());
+                    world.setBlockAndUpdate(blockEntity.getBlockPos(), Blocks.AIR.defaultBlockState());
+                    if (world.getBlockEntity(pos.relative(dir)) instanceof NeurotoxinBlockEntity newBE) {
                         newBE.age = blockEntity.age;
                     }
                     break;
@@ -37,6 +37,6 @@ public class NeurotoxinBlockEntity extends BlockEntity {
         }
 
         if (world.random.nextInt(blockEntity.age) > 100)
-            world.setBlockState(blockEntity.getPos(), Blocks.AIR.getDefaultState());
+            world.setBlockAndUpdate(blockEntity.getBlockPos(), Blocks.AIR.defaultBlockState());
     }
 }

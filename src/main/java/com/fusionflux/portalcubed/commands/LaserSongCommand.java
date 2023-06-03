@@ -3,42 +3,42 @@ package com.fusionflux.portalcubed.commands;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.LaserNodeBlockEntity;
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.command.argument.BlockPosArgumentType;
-import net.minecraft.command.argument.IdentifierArgumentType;
-import net.minecraft.command.suggestion.SuggestionProviders;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.commands.synchronization.SuggestionProviders;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class LaserSongCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("lasersong")
-            .requires(s -> s.hasPermissionLevel(2))
-            .then(argument("node", BlockPosArgumentType.blockPos())
-                .then(argument("song", IdentifierArgumentType.identifier())
+            .requires(s -> s.hasPermission(2))
+            .then(argument("node", BlockPosArgument.blockPos())
+                .then(argument("song", ResourceLocationArgument.id())
                     .suggests(SuggestionProviders.AVAILABLE_SOUNDS)
                     .executes(ctx -> {
-                        final BlockPos pos = BlockPosArgumentType.getLoadedBlockPos(ctx, "node");
-                        final Identifier song = IdentifierArgumentType.getIdentifier(ctx, "song");
+                        final BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "node");
+                        final ResourceLocation song = ResourceLocationArgument.getId(ctx, "song");
                         final LaserNodeBlockEntity entity = ctx.getSource()
-                            .getWorld()
+                            .getLevel()
                             .getBlockEntity(pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY)
                             .orElse(null);
                         if (entity == null) {
-                            ctx.getSource().sendError(
-                                Text.translatable("portalcubed.command.lasersong.failed", pos)
-                                    .formatted(Formatting.RED)
+                            ctx.getSource().sendFailure(
+                                Component.translatable("portalcubed.command.lasersong.failed", pos)
+                                    .withStyle(ChatFormatting.RED)
                             );
                             return 0;
                         }
                         entity.setSound(song);
-                        ctx.getSource().sendFeedback(
-                            Text.translatable("portalcubed.command.lasersong.success", pos, song),
+                        ctx.getSource().sendSuccess(
+                            Component.translatable("portalcubed.command.lasersong.success", pos, song),
                             true
                         );
                         return 1;

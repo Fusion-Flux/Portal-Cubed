@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.accessor.FramebufferExt;
-import com.mojang.blaze3d.framebuffer.Framebuffer;
-import net.minecraft.client.MinecraftClient;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.ARBFramebufferObject;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,17 +14,17 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL30.*;
 
 // Based on https://github.com/iPortalTeam/ImmersivePortalsMod/blob/55c9c1e7e298e09d8d43b0114e64e30271aa43b6/imm_ptl_core/src/main/java/qouteall/imm_ptl/core/mixin/client/render/framebuffer/MixinRenderTarget.java#L3
-@Mixin(Framebuffer.class)
+@Mixin(RenderTarget.class)
 public abstract class FramebufferMixin implements FramebufferExt {
     @Shadow public abstract void resize(int width, int height, boolean getError);
 
-    @Shadow public int textureWidth;
-    @Shadow public int textureHeight;
+    @Shadow public int width;
+    @Shadow public int height;
 
     private boolean stencilBufferEnabled;
 
     @ModifyArgs(
-        method = "create",
+        method = "createBuffers",
         at = @At(
             value = "INVOKE",
             target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V",
@@ -40,7 +40,7 @@ public abstract class FramebufferMixin implements FramebufferExt {
     }
 
     @ModifyArgs(
-        method = "create",
+        method = "createBuffers",
         at = @At(
             value = "INVOKE",
             target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V",
@@ -62,7 +62,7 @@ public abstract class FramebufferMixin implements FramebufferExt {
     public void setStencilBufferEnabled(boolean enabled) {
         if (enabled != stencilBufferEnabled) {
             stencilBufferEnabled = enabled;
-            resize(textureWidth, textureHeight, MinecraftClient.IS_SYSTEM_MAC);
+            resize(width, height, Minecraft.ON_OSX);
         }
     }
 }

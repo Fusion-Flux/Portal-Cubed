@@ -1,18 +1,18 @@
 package com.fusionflux.portalcubed.mixin;
 
-import net.minecraft.block.ShapeContext;
-import net.minecraft.world.RaycastContext;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(RaycastContext.class)
+@Mixin(ClipContext.class)
 public interface RaycastContextAccessor {
     @Accessor
-    RaycastContext.ShapeType getShapeType();
+    ClipContext.Block getBlock();
 
     @Accessor
-    RaycastContext.FluidHandling getFluid();
+    ClipContext.Fluid getFluid();
 
     @Accessor
-    ShapeContext getEntityPosition();
+    CollisionContext getCollisionContext();
 }

@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.util;
 
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
 public class CustomProperties {
 
@@ -19,17 +19,17 @@ public class CustomProperties {
     public static final DirectionProperty HORIFACING;
 
     static {
-        RUP = BooleanProperty.of("rup");
-        RDOWN = BooleanProperty.of("rdown");
-        RNORTH = BooleanProperty.of("rnorth");
-        REAST = BooleanProperty.of("reast");
-        RSOUTH = BooleanProperty.of("rsouth");
-        RWEST = BooleanProperty.of("rwest");
-        REVERSED = BooleanProperty.of("reversed");
-        REFLECT = BooleanProperty.of("reflect");
-        HFACINGUP = DirectionProperty.of("hfacingup", Direction.Type.HORIZONTAL);
-        HFACINGDOWN = DirectionProperty.of("hfacingdown", Direction.Type.HORIZONTAL);
-        HORIFACING = DirectionProperty.of("horifacing", Direction.Type.HORIZONTAL);
+        RUP = BooleanProperty.create("rup");
+        RDOWN = BooleanProperty.create("rdown");
+        RNORTH = BooleanProperty.create("rnorth");
+        REAST = BooleanProperty.create("reast");
+        RSOUTH = BooleanProperty.create("rsouth");
+        RWEST = BooleanProperty.create("rwest");
+        REVERSED = BooleanProperty.create("reversed");
+        REFLECT = BooleanProperty.create("reflect");
+        HFACINGUP = DirectionProperty.create("hfacingup", Direction.Plane.HORIZONTAL);
+        HFACINGDOWN = DirectionProperty.create("hfacingdown", Direction.Plane.HORIZONTAL);
+        HORIFACING = DirectionProperty.create("horifacing", Direction.Plane.HORIZONTAL);
     }
 
 }

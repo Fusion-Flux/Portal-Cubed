@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.listeners;
 
-import net.minecraft.entity.AnimationState;
+import net.minecraft.world.entity.AnimationState;
 import org.jetbrains.annotations.Nullable;
 
 public interface ServerAnimatable {

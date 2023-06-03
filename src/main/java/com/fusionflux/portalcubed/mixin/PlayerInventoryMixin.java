@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.client.PortalCubedClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,13 +11,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PlayerInventory.class)
+@Mixin(Inventory.class)
 public class PlayerInventoryMixin {
-    @Shadow @Final public PlayerEntity player;
+    @Shadow @Final public Player player;
 
-    @Inject(method = "scrollInHotbar", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "swapPaint", at = @At("HEAD"), cancellable = true)
     private void zoomInPortalMode(double scrollAmount, CallbackInfo ci) {
-        if (player.world.isClient && performZoom((int)Math.signum(scrollAmount))) {
+        if (player.level.isClientSide && performZoom((int)Math.signum(scrollAmount))) {
             ci.cancel();
         }
     }

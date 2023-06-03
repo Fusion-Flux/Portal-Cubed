@@ -5,26 +5,26 @@ import com.fusionflux.portalcubed.client.particle.DecalParticle;
 import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.stream.Stream;
 
-@Mixin(ParticleManager.class)
+@Mixin(ParticleEngine.class)
 public class ParticleManagerMixin {
     @WrapOperation(
-        method = "addBlockBreakingParticles",
+        method = "crack",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/block/BlockState;getRenderType()Lnet/minecraft/block/BlockRenderType;"
+            target = "Lnet/minecraft/world/level/block/state/BlockState;getRenderShape()Lnet/minecraft/world/level/block/RenderShape;"
         )
     )
-    private BlockRenderType fixSpecialHiddenCrash(BlockState blockState, Operation<BlockRenderType> original) {
+    private RenderShape fixSpecialHiddenCrash(BlockState blockState, Operation<RenderShape> original) {
         if (blockState.getBlock() instanceof SpecialHiddenBlock) {
-            return BlockRenderType.INVISIBLE;
+            return RenderShape.INVISIBLE;
         }
         return original.call(blockState);
     }

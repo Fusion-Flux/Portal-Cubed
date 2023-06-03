@@ -1,19 +1,19 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
-import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(HandledScreen.class)
+@Mixin(AbstractContainerScreen.class)
 public class HandledScreenMixin {
-    @Inject(method = "closeScreen", at = @At("HEAD"))
+    @Inject(method = "onClose", at = @At("HEAD"))
     private void floorButtonEasterEgg(CallbackInfo ci) {
         //noinspection ConstantValue
-        if ((Object)this instanceof AbstractInventoryScreen<?>) {
+        if ((Object)this instanceof EffectRenderingInventoryScreen<?>) {
             FloorButtonBlock.enableEasterEgg = false;
         }
     }

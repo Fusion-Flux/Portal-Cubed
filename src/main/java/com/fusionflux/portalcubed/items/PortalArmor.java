@@ -1,45 +1,45 @@
 package com.fusionflux.portalcubed.items;
 
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalArmor implements ArmorMaterial {
-    private static final Identifier TEXTURE = id("textures/models/armor/portal_armor");
+    private static final ResourceLocation TEXTURE = id("textures/models/armor/portal_armor");
     private static final int[] BASE_DURABILITY = new int[]{13, 15, 16, 11};
     private static final int[] PROTECTION_VALUES = new int[]{3, 6, 8, 3};
 
     @Override
-    public int getDurability(EquipmentSlot slot) {
-        return BASE_DURABILITY[slot.getEntitySlotId()] * 37;
+    public int getDurabilityForSlot(EquipmentSlot slot) {
+        return BASE_DURABILITY[slot.getIndex()] * 37;
     }
 
     @Override
-    public int getProtectionAmount(EquipmentSlot slot) {
-        return PROTECTION_VALUES[slot.getEntitySlotId()];
+    public int getDefenseForSlot(EquipmentSlot slot) {
+        return PROTECTION_VALUES[slot.getIndex()];
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return 15;
     }
 
     @Override
     public SoundEvent getEquipSound() {
-        return SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE;
+        return SoundEvents.ARMOR_EQUIP_NETHERITE;
     }
 
     @Override
     public Ingredient getRepairIngredient() {
-        return Ingredient.ofItems(Items.NETHERITE_INGOT);
+        return Ingredient.of(Items.NETHERITE_INGOT);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class PortalArmor implements ArmorMaterial {
     @NotNull
     @Override
     @ClientOnly
-    public Identifier getTexture() {
+    public ResourceLocation getTexture() {
         return TEXTURE;
     }
 }

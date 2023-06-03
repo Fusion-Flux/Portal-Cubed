@@ -6,70 +6,74 @@ import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.particle.DecalParticleEffect;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class EnergyPelletEntity extends Entity implements FlyingItemEntity, WentThroughPortalListener {
-    private static final TrackedData<Integer> STARTING_LIFE = DataTracker.registerData(EnergyPelletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> LIFE = DataTracker.registerData(EnergyPelletEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThroughPortalListener {
+    private static final EntityDataAccessor<Integer> STARTING_LIFE = SynchedEntityData.defineId(EnergyPelletEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> LIFE = SynchedEntityData.defineId(EnergyPelletEntity.class, EntityDataSerializers.INT);
 
-    public EnergyPelletEntity(EntityType<?> type, World world) {
+    public EnergyPelletEntity(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     @Override
-    protected void initDataTracker() {
-        dataTracker.startTracking(STARTING_LIFE, 220);
-        dataTracker.startTracking(LIFE, 220);
+    protected void defineSynchedData() {
+        entityData.define(STARTING_LIFE, 220);
+        entityData.define(LIFE, 220);
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    protected void readAdditionalSaveData(CompoundTag nbt) {
         setLife(nbt.getInt("Life"));
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putInt("Life", getLife());
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
-        return new EntitySpawnS2CPacket(this);
+    public Packet<?> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 
     public int getStartingLife() {
-        return dataTracker.get(STARTING_LIFE);
+        return entityData.get(STARTING_LIFE);
     }
 
     public void setStartingLife(int ticks) {
-        dataTracker.set(STARTING_LIFE, ticks);
+        entityData.set(STARTING_LIFE, ticks);
     }
 
     public int getLife() {
-        return dataTracker.get(LIFE);
+        return entityData.get(LIFE);
     }
 
     public void setLife(int ticks) {
-        dataTracker.set(LIFE, ticks);
+        entityData.set(LIFE, ticks);
     }
 
     public void resetLife(int startingLife) {
@@ -84,62 +88,62 @@ public class EnergyPelletEntity extends Entity implements FlyingItemEntity, Went
     @Override
     public void tick() {
         super.tick();
-        if (world.isClient) return;
-        Vec3d vel = getVelocity();
-        move(MovementType.SELF, vel);
-        velocityDirty = true;
+        if (level.isClientSide) return;
+        Vec3 vel = getDeltaMovement();
+        move(MoverType.SELF, vel);
+        hasImpulse = true;
         int life = getLife();
         if (life > 0) {
             setLife(--life);
         } else if (life == 0) {
             kill(null);
         } // life < 0 means green pellet
-        if (age == 1) {
-            world.playSound(null, getPos().x, getPos().y, getPos().z, PortalCubedSounds.PELLET_SPAWN_EVENT, SoundCategory.HOSTILE, 1f, 1f);
+        if (tickCount == 1) {
+            level.playSound(null, position().x, position().y, position().z, PortalCubedSounds.PELLET_SPAWN_EVENT, SoundSource.HOSTILE, 1f, 1f);
         }
         Direction bouncedDir = null;
         if (verticalCollision) {
-            vel = vel.withAxis(Direction.Axis.Y, -vel.y);
+            vel = vel.with(Direction.Axis.Y, -vel.y);
             bouncedDir = vel.y < 0 ? Direction.DOWN : Direction.UP;
         }
         if (horizontalCollision) {
-            if (getVelocity().x == 0) {
-                vel = vel.withAxis(Direction.Axis.X, -vel.x);
+            if (getDeltaMovement().x == 0) {
+                vel = vel.with(Direction.Axis.X, -vel.x);
                 bouncedDir = vel.x < 0 ? Direction.WEST : Direction.EAST;
             }
-            if (getVelocity().z == 0) {
-                vel = vel.withAxis(Direction.Axis.Z, -vel.z);
+            if (getDeltaMovement().z == 0) {
+                vel = vel.with(Direction.Axis.Z, -vel.z);
                 bouncedDir = vel.z < 0 ? Direction.NORTH : Direction.SOUTH;
             }
         }
         if (bouncedDir != null) {
-            setVelocity(vel);
-            world.playSoundFromEntity(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundCategory.HOSTILE, 0.4f, 1f);
-            if (world instanceof ServerWorld serverWorld) {
-                final Vec3d spawnPos = serverWorld.raycast(new RaycastContext(
-                    getPos(),
-                    getPos().add(vel.withAxis(bouncedDir.getAxis(), -vel.getComponentAlongAxis(bouncedDir.getAxis()))),
-                    RaycastContext.ShapeType.COLLIDER,
-                    RaycastContext.FluidHandling.NONE,
+            setDeltaMovement(vel);
+            level.playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
+            if (level instanceof ServerLevel serverWorld) {
+                final Vec3 spawnPos = serverWorld.clip(new ClipContext(
+                    position(),
+                    position().add(vel.with(bouncedDir.getAxis(), -vel.get(bouncedDir.getAxis()))),
+                    ClipContext.Block.COLLIDER,
+                    ClipContext.Fluid.NONE,
                     this
-                )).getPos().add(Vec3d.of(bouncedDir.getVector()).multiply(0.01));
-                serverWorld.spawnParticles(
+                )).getLocation().add(Vec3.atLowerCornerOf(bouncedDir.getNormal()).scale(0.01));
+                serverWorld.sendParticles(
                     new DecalParticleEffect(DecalParticleEffect.SCORCH, bouncedDir),
                     spawnPos.x, spawnPos.y, spawnPos.z,
                     0, 0, 0, 0, 0
                 );
             }
         }
-        if ((age - 1) % 34 == 0) {
-            world.playSoundFromEntity(null, this, PortalCubedSounds.PELLET_TRAVEL_EVENT, SoundCategory.HOSTILE, 0.4f, 1f);
+        if ((tickCount - 1) % 34 == 0) {
+            level.playSound(null, this, PortalCubedSounds.PELLET_TRAVEL_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
         }
-        final HitResult hit = ProjectileUtil.getCollision(this, this::canHit);
+        final HitResult hit = ProjectileUtil.getHitResult(this, this::canHit);
         if (hit.getType() == HitResult.Type.ENTITY) {
             bounceOrKill((LivingEntity)((EntityHitResult)hit).getEntity());
         } else {
-            final LivingEntity hit2 = world.getClosestEntity(
+            final LivingEntity hit2 = level.getNearestEntity(
                 LivingEntity.class,
-                TargetPredicate.createNonAttackable().setPredicate(this::canHit),
+                TargetingConditions.forNonCombat().selector(this::canHit),
                 null, getX(), getY(), getZ(),
                 getBoundingBox()
             );
@@ -150,7 +154,7 @@ public class EnergyPelletEntity extends Entity implements FlyingItemEntity, Went
     }
 
     protected boolean canHit(Entity entity) {
-        return entity instanceof LivingEntity && !entity.isSpectator() && entity.isAlive() && entity.collides();
+        return entity instanceof LivingEntity && !entity.isSpectator() && entity.isAlive() && entity.isPickable();
     }
 
     private static double getBounceAngle(double inAngle, double propAngle) {
@@ -158,39 +162,39 @@ public class EnergyPelletEntity extends Entity implements FlyingItemEntity, Went
         // Simplifies to
         // -a + b - 180 + b
         // -a - 180 + 2b
-        return MathHelper.wrapDegrees(-inAngle - 180 + 2 * propAngle);
+        return Mth.wrapDegrees(-inAngle - 180 + 2 * propAngle);
     }
 
     private void bounceOrKill(LivingEntity entity) {
         if (entity instanceof CorePhysicsEntity) {
-            final Vec3d vel = getVelocity();
+            final Vec3 vel = getDeltaMovement();
             final double newAngle = Math.toRadians(getBounceAngle(
                 Math.toDegrees(Math.atan2(vel.z, vel.x)),
-                MathHelper.wrapDegrees(entity.getYaw() + 90)
+                Mth.wrapDegrees(entity.getYRot() + 90)
             ));
             final double mag = vel.length();
-            setVelocity(Math.cos(newAngle) * mag, vel.y, Math.sin(newAngle) * mag);
-            world.playSoundFromEntity(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundCategory.HOSTILE, 0.4f, 1f);
+            setDeltaMovement(Math.cos(newAngle) * mag, vel.y, Math.sin(newAngle) * mag);
+            level.playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
         } else {
             kill(entity);
         }
     }
 
     private void kill(@Nullable LivingEntity entity) {
-        world.playSound(null, getPos().x, getPos().y, getPos().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundCategory.HOSTILE, 0.8f, 1f);
+        level.playSound(null, position().x, position().y, position().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundSource.HOSTILE, 0.8f, 1f);
         if (entity != null) {
-            entity.damage(PortalCubedDamageSources.VAPORIZATION, PortalCubedConfig.pelletDamage);
+            entity.hurt(PortalCubedDamageSources.VAPORIZATION, PortalCubedConfig.pelletDamage);
         }
         kill();
     }
 
     @Override
-    public boolean shouldRender(double distance) {
+    public boolean shouldRenderAtSqrDistance(double distance) {
         return true;
     }
 
     @Override
-    public ItemStack getStack() {
+    public ItemStack getItem() {
         return new ItemStack(getLife() < 0 ? PortalCubedItems.SUPER_PELLET : PortalCubedItems.ENERGY_PELLET);
     }
 

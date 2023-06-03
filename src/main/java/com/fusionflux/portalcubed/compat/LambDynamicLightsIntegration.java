@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.compat;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import dev.lambdaurora.lambdynlights.api.DynamicLightHandlers;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsInitializer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class LambDynamicLightsIntegration implements DynamicLightsInitializer {
     public static final int CUBE_LIGHT = 1;
@@ -25,7 +25,7 @@ public class LambDynamicLightsIntegration implements DynamicLightsInitializer {
         DynamicLightHandlers.registerDynamicLightHandler(PortalCubedEntities.ADVENTURE_CORE, e -> CORE_LIGHT);
 
         DynamicLightHandlers.registerDynamicLightHandler(PortalCubedEntities.ENERGY_PELLET, e ->
-            Math.round((e.getStartingLife() > 0 ? MathHelper.clamp(MathHelper.lerp((float)e.getLife() / e.getStartingLife(), 0.25f, 1f), 0f, 1f) : 1f) * 15)
+            Math.round((e.getStartingLife() > 0 ? Mth.clamp(Mth.lerp((float)e.getLife() / e.getStartingLife(), 0.25f, 1f), 0f, 1f) : 1f) * 15)
         );
 
         DynamicLightHandlers.registerDynamicLightHandler(PortalCubedEntities.EXPERIMENTAL_PORTAL, e -> 2);

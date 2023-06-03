@@ -2,11 +2,11 @@ package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.client.render.block.EmissiveBakedModel;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.AffineTransformation;
+import com.mojang.math.Transformation;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.tuple.Triple;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,22 +18,22 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Map;
 
-@Mixin(ModelLoader.class)
+@Mixin(ModelBakery.class)
 public abstract class ModelLoaderMixin {
 
     @Shadow
     @Final
-    private Map<Triple<Identifier, AffineTransformation, Boolean>, BakedModel> bakedModelCache;
+    private Map<Triple<ResourceLocation, Transformation, Boolean>, BakedModel> bakedCache;
 
     @Inject(method = "bake", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void portalcubed$injectEmissiveModels(Identifier id, ModelBakeSettings settings, CallbackInfoReturnable<BakedModel> cir, Triple<Identifier, AffineTransformation, Boolean> triple) {
-        if (bakedModelCache.get(triple) instanceof EmissiveBakedModel || !id.getNamespace().equals(PortalCubed.MOD_ID)) return;
+    private void portalcubed$injectEmissiveModels(ResourceLocation id, ModelState settings, CallbackInfoReturnable<BakedModel> cir, Triple<ResourceLocation, Transformation, Boolean> triple) {
+        if (bakedCache.get(triple) instanceof EmissiveBakedModel || !id.getNamespace().equals(PortalCubed.MOD_ID)) return;
 
         final BakedModel modelToWrap = cir.getReturnValue();
         final BakedModel customModel = EmissiveBakedModel.wrap(id, modelToWrap).orElse(modelToWrap);
         if (customModel == null || customModel == modelToWrap) return;
 
-        bakedModelCache.replace(triple, customModel);
+        bakedCache.replace(triple, customModel);
         cir.setReturnValue(customModel);
     }
 

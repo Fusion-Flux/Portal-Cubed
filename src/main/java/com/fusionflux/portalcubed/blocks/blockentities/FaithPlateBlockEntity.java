@@ -9,27 +9,27 @@ import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.listeners.ServerAnimatable;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -53,53 +53,53 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
     }
 
     @Override
-    public void tick(World world, BlockPos pos, BlockState state) {
+    public void tick(Level world, BlockPos pos, BlockState state) {
         super.tick(world, pos, state);
-        if (state.get(FaithPlateBlock.FACING).getAxis().isVertical()) {
-            final boolean isFlipped = state.get(FaithPlateBlock.FACING) == Direction.DOWN;
-            setYaw(directionToAngle(state.get(FaithPlateBlock.HORIFACING)) * (isFlipped ? -1 : 1));
+        if (state.getValue(FaithPlateBlock.FACING).getAxis().isVertical()) {
+            final boolean isFlipped = state.getValue(FaithPlateBlock.FACING) == Direction.DOWN;
+            setYaw(directionToAngle(state.getValue(FaithPlateBlock.HORIFACING)) * (isFlipped ? -1 : 1));
             setPitch(isFlipped ? 180f : 0f);
         } else {
-            setYaw(directionToAngle(state.get(FaithPlateBlock.FACING)) + 180f);
+            setYaw(directionToAngle(state.getValue(FaithPlateBlock.FACING)) + 180f);
             setPitch(90f);
         }
 
-        Box checkBox = new Box(pos).offset(
-            state.get(FaithPlateBlock.FACING).getOffsetX(),
-            state.get(FaithPlateBlock.FACING).getOffsetY(),
-            state.get(FaithPlateBlock.FACING).getOffsetZ()
+        AABB checkBox = new AABB(pos).move(
+            state.getValue(FaithPlateBlock.FACING).getStepX(),
+            state.getValue(FaithPlateBlock.FACING).getStepY(),
+            state.getValue(FaithPlateBlock.FACING).getStepZ()
         );
 
-        List<Entity> list = world.getNonSpectatingEntities(Entity.class, checkBox);
+        List<Entity> list = world.getEntitiesOfClass(Entity.class, checkBox);
 
-        final boolean launch = new Vec3d(velX, velY, velZ).lengthSquared() > 1e-7;
+        final boolean launch = new Vec3(velX, velY, velZ).lengthSqr() > 1e-7;
         for (Entity liver : list) {
             if (timer <= 0) {
                 if (liver instanceof CorePhysicsEntity physEn && physEn.getHolderUUID().isPresent()) {
                     continue;
                 }
                 if (launch) {
-                    RayonIntegration.INSTANCE.setVelocity(liver, new Vec3d(velX, velY, velZ));
+                    RayonIntegration.INSTANCE.setVelocity(liver, new Vec3(velX, velY, velZ));
                 }
                 timer = 5;
-                if (!world.isClient) {
-                    final PacketByteBuf buf = PacketByteBufs.create();
+                if (!world.isClientSide) {
+                    final FriendlyByteBuf buf = PacketByteBufs.create();
                     buf.writeBlockPos(pos);
-                    buf.writeString("fling");
+                    buf.writeUtf("fling");
                     //noinspection DataFlowIssue
                     world.getServer()
-                        .getPlayerManager()
-                        .sendToAround(
+                        .getPlayerList()
+                        .broadcast(
                             null,
                             pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
-                            96, world.getRegistryKey(),
+                            96, world.dimension(),
                             ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.SERVER_ANIMATE, buf)
                         );
                 }
                 world.playSound(
                     null,
                     pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
-                    PortalCubedSounds.CATAPULT_LAUNCH_EVENT, SoundCategory.BLOCKS,
+                    PortalCubedSounds.CATAPULT_LAUNCH_EVENT, SoundSource.BLOCKS,
                     1f, 1f
                 );
             }
@@ -144,16 +144,16 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putDouble("velX", velX);
         tag.putDouble("velY", velY);
         tag.putDouble("velZ", velZ);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         velX = tag.getDouble("velX");
         velY = tag.getDouble("velY");
         velZ = tag.getDouble("velZ");
@@ -161,33 +161,33 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.of(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        buf.writeBlockPos(this.pos);
+    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+        buf.writeBlockPos(this.worldPosition);
         buf.writeDouble(velX);
         buf.writeDouble(velY);
         buf.writeDouble(velZ);
     }
 
     @Override
-    public Text getDisplayName() {
-        return Text.empty();
+    public Component getDisplayName() {
+        return Component.empty();
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new FaithPlateScreenHandler(i);
     }
 
     public void updateListeners() {
-        markDirty();
-        assert world != null;
-        world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+        setChanged();
+        assert level != null;
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     @Override

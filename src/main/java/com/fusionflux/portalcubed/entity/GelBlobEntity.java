@@ -3,35 +3,31 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.blocks.BaseGel;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.block.AbstractLichenBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.EntityDamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.MultifaceBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -39,49 +35,49 @@ import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class GelBlobEntity extends ProjectileEntity {
-    private static final Vec3d[] ANGLES;
-    private static final TrackedData<Integer> SIZE = DataTracker.registerData(GelBlobEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public abstract class GelBlobEntity extends Projectile {
+    private static final Vec3[] ANGLES;
+    private static final EntityDataAccessor<Integer> SIZE = SynchedEntityData.defineId(GelBlobEntity.class, EntityDataSerializers.INT);
 
     static {
-        final Set<Vec3d> angles = new HashSet<>();
+        final Set<Vec3> angles = new HashSet<>();
         for (int x = 0; x < 128; x++) {
             for (int y = 0; y < 128; y++) {
-                angles.add(Vec3d.fromPolar(360 / 128f * x, 360 / 128f * y - 128));
+                angles.add(Vec3.directionFromRotation(360 / 128f * x, 360 / 128f * y - 128));
             }
         }
-        ANGLES = angles.toArray(new Vec3d[0]);
+        ANGLES = angles.toArray(new Vec3[0]);
     }
 
-    public GelBlobEntity(EntityType<? extends GelBlobEntity> entityType, World world) {
+    public GelBlobEntity(EntityType<? extends GelBlobEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initDataTracker() {
-        dataTracker.startTracking(SIZE, 1);
+    protected void defineSynchedData() {
+        entityData.define(SIZE, 1);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        if (nbt.contains("Size", NbtElement.INT_TYPE)) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        if (nbt.contains("Size", Tag.TAG_INT)) {
             setSize(nbt.getInt("Size"));
         }
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putInt("Size", getSize());
     }
 
     public int getSize() {
-        return dataTracker.get(SIZE);
+        return entityData.get(SIZE);
     }
 
     public void setSize(int size) {
-        dataTracker.set(SIZE, size);
+        entityData.set(SIZE, size);
     }
 
     public float getScale() {
@@ -99,14 +95,14 @@ public abstract class GelBlobEntity extends ProjectileEntity {
         if (fluidHeight.values().doubleStream().anyMatch(d -> d != 0)) {
             kill();
         }
-        boolean bl = this.noClip;
-        Vec3d vec3d = this.getVelocity();
+        boolean bl = this.noPhysics;
+        Vec3 vec3d = this.getDeltaMovement();
 
-        Vec3d vec3d3 = this.getPos();
-        Vec3d vec3d2 = vec3d3.add(vec3d);
-        HitResult hitResult = this.world.raycast(new RaycastContext(vec3d3, vec3d2, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
+        Vec3 vec3d3 = this.position();
+        Vec3 vec3d2 = vec3d3.add(vec3d);
+        HitResult hitResult = this.level.clip(new ClipContext(vec3d3, vec3d2, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
         if (hitResult.getType() != HitResult.Type.MISS) {
-            vec3d2 = hitResult.getPos();
+            vec3d2 = hitResult.getLocation();
         }
 
         EntityHitResult entityHitResult = this.getEntityCollision(vec3d3, vec3d2);
@@ -118,17 +114,17 @@ public abstract class GelBlobEntity extends ProjectileEntity {
             //noinspection DataFlowIssue
             Entity entity = ((EntityHitResult)hitResult).getEntity();
             Entity entity2 = this.getOwner();
-            if (entity instanceof PlayerEntity && entity2 instanceof PlayerEntity && !((PlayerEntity)entity2).shouldDamagePlayer((PlayerEntity)entity)) {
+            if (entity instanceof Player && entity2 instanceof Player && !((Player)entity2).canHarmPlayer((Player)entity)) {
                 hitResult = null;
             }
         }
 
         if (hitResult != null && !bl) {
-            this.onCollision(hitResult);
-            this.velocityDirty = true;
+            this.onHit(hitResult);
+            this.hasImpulse = true;
         }
 
-        vec3d = this.getVelocity();
+        vec3d = this.getDeltaMovement();
         double e = vec3d.x;
         double f = vec3d.y;
         double g = vec3d.z;
@@ -138,35 +134,35 @@ public abstract class GelBlobEntity extends ProjectileEntity {
         double k = this.getZ() + g;
 
         float m = 0.99F;
-        if (this.isTouchingWater()) {
+        if (this.isInWater()) {
             kill();
         }
 
-        this.setVelocity(vec3d.multiply(m));
-        if (!this.hasNoGravity() && !bl) {
-            Vec3d vec3d4 = this.getVelocity();
-            this.setVelocity(vec3d4.x, vec3d4.y - 0.05F, vec3d4.z);
+        this.setDeltaMovement(vec3d.scale(m));
+        if (!this.isNoGravity() && !bl) {
+            Vec3 vec3d4 = this.getDeltaMovement();
+            this.setDeltaMovement(vec3d4.x, vec3d4.y - 0.05F, vec3d4.z);
         }
 
-        this.setPosition(h, j, k);
-        this.checkBlockCollision();
+        this.setPos(h, j, k);
+        this.checkInsideBlocks();
     }
 
     @Nullable
-    protected EntityHitResult getEntityCollision(Vec3d currentPosition, Vec3d nextPosition) {
-        return ProjectileUtil.getEntityCollision(
-            this.world, this, currentPosition, nextPosition, this.getBoundingBox().stretch(this.getVelocity()).expand(1.0), this::canHit
+    protected EntityHitResult getEntityCollision(Vec3 currentPosition, Vec3 nextPosition) {
+        return ProjectileUtil.getEntityHitResult(
+            this.level, this, currentPosition, nextPosition, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), this::canHitEntity
         );
     }
 
     @Override
-    protected void onCollision(HitResult hitResult) {
+    protected void onHit(HitResult hitResult) {
         if (hitResult.getType() == HitResult.Type.MISS) return;
         kill();
-        if (!world.isClient) {
-            if (hitResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof ServerPlayerEntity serverPlayer) {
-                final PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeIdentifier(Registry.BLOCK.getId(getGel()));
+        if (!level.isClientSide) {
+            if (hitResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof ServerPlayer serverPlayer) {
+                final FriendlyByteBuf buf = PacketByteBufs.create();
+                buf.writeResourceLocation(Registry.BLOCK.getKey(getGel()));
                 ServerPlayNetworking.send(
                     serverPlayer,
                     PortalCubedClientPackets.GEL_OVERLAY_PACKET,
@@ -178,47 +174,47 @@ public abstract class GelBlobEntity extends ProjectileEntity {
     }
 
     @Override
-    protected void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition) {
-        super.fall(heightDifference, onGround, landedState, landedPosition);
+    protected void checkFallDamage(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition) {
+        super.checkFallDamage(heightDifference, onGround, landedState, landedPosition);
         kill();
-        if (!world.isClient) {
+        if (!level.isClientSide) {
             explode();
         }
     }
 
     public void explode() {
-        world.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.GEL_SPLAT_EVENT, SoundCategory.NEUTRAL, 0.5f, 1f);
-        final PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeIdentifier(Registry.BLOCK.getId(getGel()));
+        level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.GEL_SPLAT_EVENT, SoundSource.NEUTRAL, 0.5f, 1f);
+        final FriendlyByteBuf buf = PacketByteBufs.create();
+        buf.writeResourceLocation(Registry.BLOCK.getKey(getGel()));
         final int overlayDiameter = getSize() + 1;
-        world.getEntitiesByType(
+        level.getEntities(
             EntityType.PLAYER,
-            Box.of(getPos(), overlayDiameter, overlayDiameter, overlayDiameter),
-            p -> p instanceof ServerPlayerEntity
+            AABB.ofSize(position(), overlayDiameter, overlayDiameter, overlayDiameter),
+            p -> p instanceof ServerPlayer
         ).forEach(p -> ServerPlayNetworking.send(
-            (ServerPlayerEntity)p,
+            (ServerPlayer)p,
             PortalCubedClientPackets.GEL_OVERLAY_PACKET,
             buf
         ));
         final int radius = getExplosionRadius();
-        final Vec3d origin = getBoundingBox().getCenter();
+        final Vec3 origin = getBoundingBox().getCenter();
         if (radius == 0) {
             final BlockPos originPos = new BlockPos(origin);
             for (final Direction dir : Direction.values()) {
                 maybeExplodeAt(new BlockHitResult(
-                    origin.add(Vec3d.of(dir.getVector())),
+                    origin.add(Vec3.atLowerCornerOf(dir.getNormal())),
                     dir.getOpposite(),
-                    originPos.offset(dir),
+                    originPos.relative(dir),
                     false
                 ));
             }
             return;
         }
-        for (final Vec3d angle : ANGLES) {
-            final BlockHitResult hit = world.raycast(new RaycastContext(
-                origin, origin.add(angle.multiply(radius)),
-                RaycastContext.ShapeType.COLLIDER,
-                RaycastContext.FluidHandling.NONE,
+        for (final Vec3 angle : ANGLES) {
+            final BlockHitResult hit = level.clip(new ClipContext(
+                origin, origin.add(angle.scale(radius)),
+                ClipContext.Block.COLLIDER,
+                ClipContext.Fluid.NONE,
                 this
             ));
             if (hit.getType() != HitResult.Type.BLOCK) continue;
@@ -227,23 +223,23 @@ public abstract class GelBlobEntity extends ProjectileEntity {
     }
 
     private void maybeExplodeAt(BlockHitResult hit) {
-        final BlockState hitState = world.getBlockState(hit.getBlockPos());
-        if (!hitState.isSideSolidFullSquare(world, hit.getBlockPos(), hit.getSide())) return;
-        final BlockPos sidePos = hit.getBlockPos().offset(hit.getSide());
-        final BlockState sideState = world.getBlockState(sidePos);
-        final BooleanProperty property = AbstractLichenBlock.getProperty(hit.getSide().getOpposite());
-        if (sideState.isOf(getGel())) {
-            world.setBlockState(sidePos, sideState.with(property, true));
+        final BlockState hitState = level.getBlockState(hit.getBlockPos());
+        if (!hitState.isFaceSturdy(level, hit.getBlockPos(), hit.getDirection())) return;
+        final BlockPos sidePos = hit.getBlockPos().relative(hit.getDirection());
+        final BlockState sideState = level.getBlockState(sidePos);
+        final BooleanProperty property = MultifaceBlock.getFaceProperty(hit.getDirection().getOpposite());
+        if (sideState.is(getGel())) {
+            level.setBlockAndUpdate(sidePos, sideState.setValue(property, true));
         } else if (sideState.getMaterial().isReplaceable() || sideState.getBlock() instanceof BaseGel) {
-            world.setBlockState(sidePos, getGel().getDefaultState().with(property, true));
+            level.setBlockAndUpdate(sidePos, getGel().defaultBlockState().setValue(property, true));
         }
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         if (amount != 0 &&
             (!(source instanceof EntityDamageSource eds) ||
-                (eds.getAttacker() instanceof PlayerEntity player &&
+                (eds.getEntity() instanceof Player player &&
                     player.isCreative()))
         ) {
             remove(RemovalReason.KILLED);
@@ -251,7 +247,7 @@ public abstract class GelBlobEntity extends ProjectileEntity {
         return false;
     }
 
-    public abstract Identifier getTexture();
+    public abstract ResourceLocation getTexture();
 
     public abstract BaseGel getGel();
 }

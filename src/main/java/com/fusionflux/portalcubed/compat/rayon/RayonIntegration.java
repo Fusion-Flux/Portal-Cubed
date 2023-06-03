@@ -2,11 +2,11 @@ package com.fusionflux.portalcubed.compat.rayon;
 
 import com.fusionflux.portalcubed.compat.rayon.absent.RayonIntegrationAbsent;
 import com.fusionflux.portalcubed.compat.rayon.present.RayonIntegrationPresent;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.phys.Vec3;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -17,9 +17,9 @@ public interface RayonIntegration {
 
     boolean isPresent();
 
-    void setVelocity(Entity entity, Vec3d velocity);
+    void setVelocity(Entity entity, Vec3 velocity);
 
-    void simpleMove(Entity entity, MovementType movementType, Vec3d movement);
+    void simpleMove(Entity entity, MoverType movementType, Vec3 movement);
 
     void setNoGravity(Entity entity, boolean noGravity);
 
@@ -27,10 +27,10 @@ public interface RayonIntegration {
 
     void rotateYaw(Entity entity, float amount);
 
-    void setAngularVelocityYaw(Entity entity, Vec3f angle);
+    void setAngularVelocityYaw(Entity entity, Vector3f angle);
 
     @ClientOnly
-    void multiplyMatrices(MatrixStack matrices, Entity entity, float tickDelta);
+    void multiplyMatrices(PoseStack matrices, Entity entity, float tickDelta);
 
     class RayonPresentHolder {
         private static RayonIntegration create() {

@@ -1,25 +1,25 @@
 package com.fusionflux.portalcubed.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.world.entity.Entity;
 import virtuoel.pehkui.api.ScaleTypes;
 
 import java.util.Collection;
 import java.util.Collections;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class ChellScaleCommand {
     public static final float CHELL_SCALE = 1f / 1.62f;
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("chellscale")
             .executes(ctx -> scale(Collections.singleton(ctx.getSource().getEntity())))
-            .then(argument("targets", EntityArgumentType.entities())
-                .executes(ctx -> scale(EntityArgumentType.getEntities(ctx, "targets")))
+            .then(argument("targets", EntityArgument.entities())
+                .executes(ctx -> scale(EntityArgument.getEntities(ctx, "targets")))
             )
         );
     }

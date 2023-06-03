@@ -1,14 +1,14 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import net.minecraft.client.sound.MusicTracker;
-import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.MusicManager;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(MusicTracker.class)
+@Mixin(MusicManager.class)
 public interface MusicTrackerAccessor {
     @Accessor
     @Nullable
-    SoundInstance getCurrent();
+    SoundInstance getCurrentMusic();
 }

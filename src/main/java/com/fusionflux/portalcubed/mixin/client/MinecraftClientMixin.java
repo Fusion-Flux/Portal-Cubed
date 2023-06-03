@@ -7,17 +7,17 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.KeyBind;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
@@ -29,55 +29,60 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MinecraftClient.class)
+@Mixin(Minecraft.class)
 public abstract class MinecraftClientMixin {
 
-    @Shadow @Final public GameOptions options;
-    @Shadow public ClientPlayerEntity player;
-    @Shadow private void doItemUse() {
-        throw new UnsupportedOperationException();
-    }
-    @Shadow private boolean doAttack() {
-        throw new UnsupportedOperationException();
-    }
+    @Shadow @Final public Options options;
+    @Shadow public LocalPlayer player;
+    @Shadow
+    protected abstract void startUseItem();
+    @Shadow
+    protected abstract boolean startAttack();
 
-    @Shadow @Nullable public HitResult crosshairTarget;
+    @Shadow @Nullable public HitResult hitResult;
 
-    @Redirect(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doItemUse()V", ordinal = 1))
-    private void portalCubed$stopPortalSpamming(MinecraftClient self) {
-        if (!(player.getMainHandStack().getItem() instanceof PortalGun)) {
-            doItemUse();
+    @Redirect(
+        method = "handleKeybinds",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
+            ordinal = 1
+        )
+    )
+    private void portalCubed$stopPortalSpamming(Minecraft self) {
+        if (!(player.getMainHandItem().getItem() instanceof PortalGun)) {
+            startUseItem();
         }
     }
 
-    @Inject(method = "handleInputEvents", at = @At("RETURN"))
+    @Inject(method = "handleKeybinds", at = @At("RETURN"))
     private void portalCubed$allowConstantAttack(CallbackInfo ci) {
-        if (player.getMainHandStack().getItem() instanceof PaintGun && options.attackKey.isPressed()) {
-            doAttack();
+        if (player.getMainHandItem().getItem() instanceof PaintGun && options.keyAttack.isDown()) {
+            startAttack();
         }
     }
 
     @WrapOperation(
-        method = "handleInputEvents",
+        method = "handleKeybinds",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/option/KeyBind;wasPressed()Z"
+            target = "Lnet/minecraft/client/KeyMapping;consumeClick()Z"
         )
     )
-    private boolean portalHudDisableKeys(KeyBind instance, Operation<Boolean> original) {
+    private boolean portalHudDisableKeys(KeyMapping instance, Operation<Boolean> original) {
         final boolean result = original.call(instance);
         if (!PortalCubedClient.isPortalHudMode()) {
             return result;
         }
-        for (final KeyBind bind : options.hotbarKeys) {
+        for (final KeyMapping bind : options.keyHotbarSlots) {
             if (instance == bind) {
                 return false;
             }
         }
         if (
-            instance == options.inventoryKey ||
-                instance == options.swapHandsKey ||
-                instance == options.dropKey
+            instance == options.keyInventory ||
+                instance == options.keySwapOffhand ||
+                instance == options.keyDrop
         ) {
             return false;
         }
@@ -85,30 +90,30 @@ public abstract class MinecraftClientMixin {
     }
 
     @WrapOperation(
-        method = {"doAttack", "handleBlockBreaking"},
+        method = {"startAttack", "continueAttack"},
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/world/ClientWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;",
+            target = "Lnet/minecraft/client/multiplayer/ClientLevel;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;",
             ordinal = 0
         )
     )
-    private BlockState noMineInPortalHud(ClientWorld instance, BlockPos pos, Operation<BlockState> original) {
-        return PortalCubedClient.isPortalHudMode() || player.getMainHandStack().isOf(PortalCubedItems.CROWBAR)
-            ? Blocks.AIR.getDefaultState() : original.call(instance, pos);
+    private BlockState noMineInPortalHud(ClientLevel instance, BlockPos pos, Operation<BlockState> original) {
+        return PortalCubedClient.isPortalHudMode() || player.getMainHandItem().is(PortalCubedItems.CROWBAR)
+            ? Blocks.AIR.defaultBlockState() : original.call(instance, pos);
     }
 
     @WrapOperation(
-        method = "doAttack",
+        method = "startAttack",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/world/ClientWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;",
+            target = "Lnet/minecraft/client/multiplayer/ClientLevel;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;",
             ordinal = 0
         )
     )
-    private BlockState crowbarAttack(ClientWorld instance, BlockPos pos, Operation<BlockState> original) {
-        if (player.getMainHandStack().isOf(PortalCubedItems.CROWBAR)) {
-            final PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeBlockHitResult((BlockHitResult)crosshairTarget);
+    private BlockState crowbarAttack(ClientLevel instance, BlockPos pos, Operation<BlockState> original) {
+        if (player.getMainHandItem().is(PortalCubedItems.CROWBAR)) {
+            final FriendlyByteBuf buf = PacketByteBufs.create();
+            buf.writeBlockHitResult((BlockHitResult)hitResult);
             ClientPlayNetworking.send(PortalCubedServerPackets.CROWBAR_ATTACK, buf);
         }
         return original.call(instance, pos);

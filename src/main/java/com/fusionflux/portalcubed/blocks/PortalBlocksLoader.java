@@ -6,19 +6,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.api.EnvType;
-import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -42,7 +42,7 @@ public final class PortalBlocksLoader {
         ImmutableMap.<String, Function<QuiltBlockSettings, Block>>builder()
             .put("default", Block::new)
             .put("provided", settings -> null)
-            .put("pillar", PillarBlock::new)
+            .put("pillar", RotatedPillarBlock::new)
             .put("directional", DirectionalBlock::new)
             .put("old_ap", OldApBlock::new)
             .put("old_ap_directional", OldApDirectionalBlock::new)
@@ -50,9 +50,9 @@ public final class PortalBlocksLoader {
             .put("multiface", SimpleMultiSidedBlock::new)
             .build();
     @ClientOnly
-    private static Map<String, RenderLayer> renderLayers;
+    private static Map<String, RenderType> renderLayers;
     private static final Map<String, BlockData> BLOCK_DATA = new LinkedHashMap<>();
-    private static final ItemGroup ITEM_GROUP = QuiltItemGroup.createWithIcon(
+    private static final CreativeModeTab ITEM_GROUP = QuiltItemGroup.createWithIcon(
         id("portal_blocks"),
         () -> new ItemStack(PortalCubedItems.BLOCK_ITEM_ICON)
     );
@@ -68,15 +68,15 @@ public final class PortalBlocksLoader {
 
     @ClientOnly
     private static void clinitClient() {
-        renderLayers = ImmutableMap.<String, RenderLayer>builder()
-            .put("cutout", RenderLayer.getCutout())
-            .put("translucent", RenderLayer.getTranslucent())
+        renderLayers = ImmutableMap.<String, RenderType>builder()
+            .put("cutout", RenderType.cutout())
+            .put("translucent", RenderType.translucent())
             .build();
     }
 
     public static void init(ModContainer mod) {
         try (Reader reader = Files.newBufferedReader(mod.getPath("portal_blocks.json"), StandardCharsets.UTF_8)) {
-            load(JsonHelper.deserialize(reader));
+            load(GsonHelper.parse(reader));
         } catch (IOException e) {
             PortalCubed.LOGGER.error("Failed to load block data", e);
         }
@@ -85,24 +85,24 @@ public final class PortalBlocksLoader {
     public static void initCommon() {
         BLOCK_DATA.forEach((key, value) -> {
             if (value.block == null) return;
-            final Identifier id = id(key);
+            final ResourceLocation id = id(key);
             Registry.register(Registry.BLOCK, id, value.block);
-            Registry.register(Registry.ITEM, id, new BlockItem(value.block, new Item.Settings().group(ITEM_GROUP)));
+            Registry.register(Registry.ITEM, id, new BlockItem(value.block, new Item.Properties().tab(ITEM_GROUP)));
         });
     }
 
     @ClientOnly
     public static void initClient() {
         BLOCK_DATA.forEach((key, value) -> {
-            final Identifier id = id(key);
+            final ResourceLocation id = id(key);
             if (value.renderLayer != null) {
-                final RenderLayer renderLayer = renderLayers.get(value.renderLayer);
+                final RenderType renderLayer = renderLayers.get(value.renderLayer);
                 if (renderLayer == null) {
                     throw new IllegalArgumentException("Unknown render_layer " + value.renderLayer);
                 }
                 BlockRenderLayerMap.put(
                     renderLayer,
-                    Registry.BLOCK.getOrEmpty(id)
+                    Registry.BLOCK.getOptional(id)
                         .orElseThrow(() -> new IllegalArgumentException("Unknown block in portal_blocks.json " + id))
                 );
             }
@@ -116,13 +116,13 @@ public final class PortalBlocksLoader {
     }
 
     private static BlockData parseBlock(JsonObject json) {
-        final var type = BLOCK_TYPES.get(JsonHelper.getString(json, "type", "default"));
+        final var type = BLOCK_TYPES.get(GsonHelper.getAsString(json, "type", "default"));
         if (type == null) {
             throw new IllegalArgumentException("Unknown type " + json.get("type"));
         }
         json.remove("type");
         final QuiltBlockSettings settings = json.has("inherit")
-            ? Registry.BLOCK.getOrEmpty(new Identifier(JsonHelper.getString(json, "inherit")))
+            ? Registry.BLOCK.getOptional(new ResourceLocation(GsonHelper.getAsString(json, "inherit")))
                 .map(QuiltBlockSettings::copyOf)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown block " + json.get("inherit")))
             : QuiltBlockSettings.of(Material.STONE)
@@ -133,34 +133,34 @@ public final class PortalBlocksLoader {
         for (final var entry : json.entrySet()) {
             final JsonElement value = entry.getValue();
             switch (entry.getKey()) {
-                case "hardness" -> settings.hardness(JsonHelper.asFloat(value, "hardness"));
-                case "blast_resistance" -> settings.resistance(JsonHelper.asFloat(value, "blast_resistance"));
-                case "opaque" -> settings.opaque(JsonHelper.asBoolean(value, "opaque"));
-                case "jump_velocity_multiplier" -> settings.jumpVelocityMultiplier(JsonHelper.asFloat(value, "jump_velocity_multiplier"));
-                case "slipperiness" -> settings.slipperiness(JsonHelper.asFloat(value, "slipperiness"));
-                case "sounds" -> settings.sounds(parseBlockSounds(value));
-                case "render_layer" -> renderLayer = JsonHelper.asString(value, "render_layer");
+                case "hardness" -> settings.destroyTime(GsonHelper.convertToFloat(value, "hardness"));
+                case "blast_resistance" -> settings.explosionResistance(GsonHelper.convertToFloat(value, "blast_resistance"));
+                case "opaque" -> settings.opaque(GsonHelper.convertToBoolean(value, "opaque"));
+                case "jump_velocity_multiplier" -> settings.jumpFactor(GsonHelper.convertToFloat(value, "jump_velocity_multiplier"));
+                case "slipperiness" -> settings.friction(GsonHelper.convertToFloat(value, "slipperiness"));
+                case "sounds" -> settings.sound(parseBlockSounds(value));
+                case "render_layer" -> renderLayer = GsonHelper.convertToString(value, "render_layer");
                 default -> throw new IllegalArgumentException("Unknown Portal Block field " + entry.getKey());
             }
         }
         return new BlockData(type.apply(settings), renderLayer);
     }
 
-    private static BlockSoundGroup parseBlockSounds(JsonElement sounds) {
+    private static SoundType parseBlockSounds(JsonElement sounds) {
         if (sounds.isJsonPrimitive()) {
-            return Registry.BLOCK.getOrEmpty(new Identifier(JsonHelper.asString(sounds, "sounds")))
-                .map(b -> b.getSoundGroup(b.getDefaultState()))
+            return Registry.BLOCK.getOptional(new ResourceLocation(GsonHelper.convertToString(sounds, "sounds")))
+                .map(b -> b.getSoundType(b.defaultBlockState()))
                 .orElseThrow(() -> new IllegalArgumentException("Unknown block " + sounds));
         }
-        final JsonObject object = JsonHelper.asObject(sounds, "sounds");
-        return new BlockSoundGroup(
-            JsonHelper.getFloat(object, "volume", 1f),
-            JsonHelper.getFloat(object, "pitch", 1f),
-            new SoundEvent(new Identifier(JsonHelper.getString(object, "break"))),
-            new SoundEvent(new Identifier(JsonHelper.getString(object, "step"))),
-            new SoundEvent(new Identifier(JsonHelper.getString(object, "place"))),
-            new SoundEvent(new Identifier(JsonHelper.getString(object, "hit"))),
-            new SoundEvent(new Identifier(JsonHelper.getString(object, "fall")))
+        final JsonObject object = GsonHelper.convertToJsonObject(sounds, "sounds");
+        return new SoundType(
+            GsonHelper.getAsFloat(object, "volume", 1f),
+            GsonHelper.getAsFloat(object, "pitch", 1f),
+            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "break"))),
+            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "step"))),
+            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "place"))),
+            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "hit"))),
+            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "fall")))
         );
     }
 

@@ -5,12 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.EnvType;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 
@@ -71,7 +71,7 @@ public class OptionsListData {
         return entries;
     }
 
-    public static void read(NbtCompound nbt, OptionsListBlockEntity target) {
+    public static void read(CompoundTag nbt, OptionsListBlockEntity target) {
         read(nbt.getString("OptionsListData"), target);
     }
 
@@ -100,7 +100,7 @@ public class OptionsListData {
         }
     }
 
-    public static void write(NbtCompound nbt, OptionsListBlockEntity target) {
+    public static void write(CompoundTag nbt, OptionsListBlockEntity target) {
         nbt.putString("OptionsListData", write(target));
     }
 
@@ -115,7 +115,7 @@ public class OptionsListData {
         info.width = e != null ? e.width() : 0;
 
         if (e != null) {
-            if (!e.name().equals("")) info.name = Text.translatable(e.name());
+            if (!e.name().equals("")) info.name = Component.translatable(e.name());
             if (type == int.class) textField(info, Integer::parseInt, INTEGER_ONLY, (int) e.min(), (int) e.max(), true);
             else if (type == float.class) textField(info, Float::parseFloat, DECIMAL_ONLY, (float) e.min(), (float) e.max(), false);
             else if (type == double.class) textField(info, Double::parseDouble, DECIMAL_ONLY, e.min(), e.max(), false);
@@ -123,15 +123,15 @@ public class OptionsListData {
                 info.max = e.max() == Double.MAX_VALUE ? Integer.MAX_VALUE : (int) e.max();
                 textField(info, String::length, null, Math.min(e.min(), 0), Math.max(e.max(), 1), true);
             } else if (type == boolean.class) {
-                Function<Object, Text> func = value -> Text.translatable((Boolean) value ? "gui.yes" : "gui.no").formatted((Boolean) value ? Formatting.GREEN : Formatting.RED);
-                info.widget = new AbstractMap.SimpleEntry<ButtonWidget.PressAction, Function<Object, Text>>(button -> {
+                Function<Object, Component> func = value -> Component.translatable((Boolean) value ? "gui.yes" : "gui.no").withStyle((Boolean) value ? ChatFormatting.GREEN : ChatFormatting.RED);
+                info.widget = new AbstractMap.SimpleEntry<Button.OnPress, Function<Object, Component>>(button -> {
                     info.value = !(Boolean) info.value;
                     button.setMessage(func.apply(info.value));
                 }, func);
             } else if (type.isEnum()) {
                 List<?> values = Arrays.asList(field.getType().getEnumConstants());
-                Function<Object, Text> func = value -> Text.translatable("optionslist.enum." + type.getSimpleName() + "." + info.value.toString());
-                info.widget = new AbstractMap.SimpleEntry<ButtonWidget.PressAction, Function<Object, Text>>(button -> {
+                Function<Object, Component> func = value -> Component.translatable("optionslist.enum." + type.getSimpleName() + "." + info.value.toString());
+                info.widget = new AbstractMap.SimpleEntry<Button.OnPress, Function<Object, Component>>(button -> {
                     int index = values.indexOf(info.value) + 1;
                     info.value = values.get(index >= values.size() ? 0 : index);
                     button.setMessage(func.apply(info.value));
@@ -143,7 +143,7 @@ public class OptionsListData {
     @SuppressWarnings("unchecked")
     private static void textField(EntryInfo info, Function<String, Number> f, Pattern pattern, double min, double max, boolean cast) {
         boolean isNumber = pattern != null;
-        info.widget = (BiFunction<TextFieldWidget, ButtonWidget, Predicate<String>>) (t, b) -> s -> {
+        info.widget = (BiFunction<EditBox, Button, Predicate<String>>) (t, b) -> s -> {
             s = s.trim();
             if (!(s.isEmpty() || !isNumber || pattern.matcher(s).matches())) return false;
 
@@ -157,13 +157,13 @@ public class OptionsListData {
                     return false;
                 }
                 inLimits = value.doubleValue() >= min && value.doubleValue() <= max;
-                info.error = inLimits ? null : new AbstractMap.SimpleEntry<>(t, Text.literal(value.doubleValue() < min ?
+                info.error = inLimits ? null : new AbstractMap.SimpleEntry<>(t, Component.literal(value.doubleValue() < min ?
                                                                                                 "§cMinimum " + (isNumber ? "value" : "length") + (cast ? " is " + (int)min : " is " + min) :
                                                                                                 "§cMaximum " + (isNumber ? "value" : "length") + (cast ? " is " + (int)max : " is " + max)));
             }
 
             info.tempValue = s;
-            t.setEditableColor(inLimits ? 0xFFFFFFFF : 0xFFFF7777);
+            t.setTextColor(inLimits ? 0xFFFFFFFF : 0xFFFF7777);
             info.inLimits = inLimits;
             b.active = ENTRIES.get(info.owner).stream().allMatch(e -> e.inLimits);
 
@@ -178,7 +178,7 @@ public class OptionsListData {
                 if (!s.contains("#")) s = '#' + s;
                 if (!HEXADECIMAL_ONLY.matcher(s).matches()) return false;
                 try {
-                    info.colorButton.setMessage(Text.literal("⬛").setStyle(Style.EMPTY.withColor(Color.decode(info.tempValue).getRGB())));
+                    info.colorButton.setMessage(Component.literal("⬛").setStyle(Style.EMPTY.withColor(Color.decode(info.tempValue).getRGB())));
                 } catch (Exception ignored) {
                 }
             }

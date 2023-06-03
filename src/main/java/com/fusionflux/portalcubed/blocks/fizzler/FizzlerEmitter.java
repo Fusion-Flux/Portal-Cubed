@@ -1,110 +1,110 @@
 package com.fusionflux.portalcubed.blocks.fizzler;
 
 import com.fusionflux.portalcubed.config.PortalCubedConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Nullable;
 
-public class FizzlerEmitter extends HorizontalFacingBlock {
-    public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
-    public static final BooleanProperty POWERED = Properties.POWERED;
+public class FizzlerEmitter extends HorizontalDirectionalBlock {
+    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private final AbstractFizzlerBlock fizzlerBlock;
 
-    public FizzlerEmitter(Settings settings, AbstractFizzlerBlock fizzlerBlock) {
+    public FizzlerEmitter(Properties settings, AbstractFizzlerBlock fizzlerBlock) {
         super(settings);
         this.fizzlerBlock = fizzlerBlock;
-        setDefaultState(
-            getStateManager().getDefaultState()
-                .with(FACING, Direction.NORTH)
-                .with(HALF, DoubleBlockHalf.LOWER)
-                .with(POWERED, false)
+        registerDefaultState(
+            getStateDefinition().any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(HALF, DoubleBlockHalf.LOWER)
+                .setValue(POWERED, false)
         );
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, HALF, POWERED);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        final DoubleBlockHalf half = state.get(HALF);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        final DoubleBlockHalf half = state.getValue(HALF);
         if (direction.getAxis() != Direction.Axis.Y || half == DoubleBlockHalf.LOWER != (direction == Direction.UP)) {
-            return half == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos)
-                ? Blocks.AIR.getDefaultState()
-                : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+            return half == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canSurvive(world, pos)
+                ? Blocks.AIR.defaultBlockState()
+                : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
         }
-        return neighborState.isOf(this) && neighborState.get(HALF) != half
-            ? state.with(FACING, neighborState.get(FACING))
-                .with(POWERED, neighborState.get(POWERED))
-            : Blocks.AIR.getDefaultState();
+        return neighborState.is(this) && neighborState.getValue(HALF) != half
+            ? state.setValue(FACING, neighborState.getValue(FACING))
+                .setValue(POWERED, neighborState.getValue(POWERED))
+            : Blocks.AIR.defaultBlockState();
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (state.get(POWERED)) {
-            updateGrill(world, pos.toImmutable(), state, false);
-            updateGrill(world, state.get(HALF) == DoubleBlockHalf.UPPER ? pos.down() : pos.up(), state.cycle(HALF), false);
+    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        if (state.getValue(POWERED)) {
+            updateGrill(world, pos.immutable(), state, false);
+            updateGrill(world, state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos.above(), state.cycle(HALF), false);
         }
-        if (!world.isClient && player.isCreative()) {
+        if (!world.isClientSide && player.isCreative()) {
             onBreakInCreative(world, pos, state, player);
         }
 
-        super.onBreak(world, pos, state, player);
+        super.playerWillDestroy(world, pos, state, player);
     }
 
-    protected static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
+    protected static void onBreakInCreative(Level world, BlockPos pos, BlockState state, Player player) {
+        DoubleBlockHalf doubleBlockHalf = state.getValue(HALF);
         if (doubleBlockHalf == DoubleBlockHalf.UPPER) {
-            BlockPos blockPos = pos.down();
+            BlockPos blockPos = pos.below();
             BlockState blockState = world.getBlockState(blockPos);
-            if (blockState.isOf(state.getBlock()) && blockState.get(HALF) == DoubleBlockHalf.LOWER) {
-                BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED)
-                    ? Blocks.WATER.getDefaultState()
-                    : Blocks.AIR.getDefaultState();
-                world.setBlockState(blockPos, blockState2, 35);
-                world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
+            if (blockState.is(state.getBlock()) && blockState.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                BlockState blockState2 = blockState.hasProperty(BlockStateProperties.WATERLOGGED) && blockState.getValue(BlockStateProperties.WATERLOGGED)
+                    ? Blocks.WATER.defaultBlockState()
+                    : Blocks.AIR.defaultBlockState();
+                world.setBlock(blockPos, blockState2, 35);
+                world.levelEvent(player, 2001, blockPos, Block.getId(blockState));
             }
         }
     }
 
     @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        final BlockPos pos = ctx.getBlockPos();
-        final World world = ctx.getWorld();
-        if (pos.getY() < world.getTopY() - 1 && world.getBlockState(pos.up()).canReplace(ctx)) {
-            return getDefaultState()
-                .with(FACING, ctx.getPlayerFacing().getOpposite())
-                .with(HALF, DoubleBlockHalf.LOWER)
-                .with(POWERED, world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.up()));
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        final BlockPos pos = ctx.getClickedPos();
+        final Level world = ctx.getLevel();
+        if (pos.getY() < world.getMaxBuildHeight() - 1 && world.getBlockState(pos.above()).canBeReplaced(ctx)) {
+            return defaultBlockState()
+                .setValue(FACING, ctx.getHorizontalDirection().getOpposite())
+                .setValue(HALF, DoubleBlockHalf.LOWER)
+                .setValue(POWERED, world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.above()));
         }
         return null;
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        final BlockPos otherPos = pos.up();
-        final BlockState otherState = state.with(HALF, DoubleBlockHalf.UPPER);
-        world.setBlockState(otherPos, otherState);
-        if (state.get(POWERED)) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        final BlockPos otherPos = pos.above();
+        final BlockState otherState = state.setValue(HALF, DoubleBlockHalf.UPPER);
+        world.setBlockAndUpdate(otherPos, otherState);
+        if (state.getValue(POWERED)) {
             updateGrill(world, pos, state, true);
             updateGrill(world, otherPos, otherState, true);
         }
@@ -112,43 +112,43 @@ public class FizzlerEmitter extends HorizontalFacingBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        final BlockPos otherPos = pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN);
-        final boolean powered = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(otherPos);
-        if (!getDefaultState().isOf(block) && powered != state.get(POWERED)) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        final BlockPos otherPos = pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN);
+        final boolean powered = world.hasNeighborSignal(pos) || world.hasNeighborSignal(otherPos);
+        if (!defaultBlockState().is(block) && powered != state.getValue(POWERED)) {
             updateGrill(world, pos, state, powered);
             updateGrill(world, otherPos, state.cycle(HALF), powered);
-            world.setBlockState(pos, state.with(POWERED, powered), Block.NOTIFY_LISTENERS);
+            world.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_CLIENTS);
         }
     }
 
-    private void updateGrill(World world, BlockPos pos, BlockState state, boolean placed) {
-        if (world.isClient) return;
-        final Direction searchDir = state.get(FACING);
+    private void updateGrill(Level world, BlockPos pos, BlockState state, boolean placed) {
+        if (world.isClientSide) return;
+        final Direction searchDir = state.getValue(FACING);
         final BooleanProperty grillAxis = AbstractFizzlerBlock.getStateForAxis(searchDir.getAxis());
-        final BlockState targetState = state.with(FACING, searchDir.getOpposite()).with(POWERED, placed);
-        BlockPos searchPos = pos.offset(searchDir);
+        final BlockState targetState = state.setValue(FACING, searchDir.getOpposite()).setValue(POWERED, placed);
+        BlockPos searchPos = pos.relative(searchDir);
         int i;
         for (i = 0; i < PortalCubedConfig.maxBridgeLength; i++) {
             final BlockState checkState = world.getBlockState(searchPos);
             if (checkState.equals(targetState)) break;
-            if (placed && !checkState.isAir() && !checkState.isOf(fizzlerBlock)) return;
-            if (!placed && checkState.isOf(fizzlerBlock)) {
-                final BlockState newState = checkState.with(grillAxis, false);
-                world.setBlockState(searchPos, AbstractFizzlerBlock.isEmpty(newState) ? Blocks.AIR.getDefaultState() : newState);
+            if (placed && !checkState.isAir() && !checkState.is(fizzlerBlock)) return;
+            if (!placed && checkState.is(fizzlerBlock)) {
+                final BlockState newState = checkState.setValue(grillAxis, false);
+                world.setBlockAndUpdate(searchPos, AbstractFizzlerBlock.isEmpty(newState) ? Blocks.AIR.defaultBlockState() : newState);
             }
-            searchPos = searchPos.offset(searchDir);
+            searchPos = searchPos.relative(searchDir);
         }
         if (!placed || i == PortalCubedConfig.maxBridgeLength) return;
-        final BlockState placedState = fizzlerBlock.getDefaultState()
-            .with(grillAxis, true)
-            .with(HALF, state.get(HALF));
-        searchPos = pos.offset(searchDir);
+        final BlockState placedState = fizzlerBlock.defaultBlockState()
+            .setValue(grillAxis, true)
+            .setValue(HALF, state.getValue(HALF));
+        searchPos = pos.relative(searchDir);
         for (i = 0; i < PortalCubedConfig.maxBridgeLength; i++) {
             final BlockState checkState = world.getBlockState(searchPos);
             if (checkState.equals(targetState)) break;
-            world.setBlockState(searchPos, checkState.isOf(Blocks.AIR) ? placedState : checkState.with(grillAxis, true));
-            searchPos = searchPos.offset(searchDir);
+            world.setBlockAndUpdate(searchPos, checkState.is(Blocks.AIR) ? placedState : checkState.setValue(grillAxis, true));
+            searchPos = searchPos.relative(searchDir);
         }
     }
 }

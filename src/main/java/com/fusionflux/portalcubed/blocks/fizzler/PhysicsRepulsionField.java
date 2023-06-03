@@ -1,23 +1,23 @@
 package com.fusionflux.portalcubed.blocks.fizzler;
 
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.EntityShapeContext;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class PhysicsRepulsionField extends AbstractFizzlerBlock {
-    public PhysicsRepulsionField(Settings settings) {
+    public PhysicsRepulsionField(Properties settings) {
         super(settings);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return context instanceof EntityShapeContext entityCtx && entityCtx.getEntity() instanceof CorePhysicsEntity
-            ? getOutlineShape(state, world, pos, context)
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return context instanceof EntityCollisionContext entityCtx && entityCtx.getEntity() instanceof CorePhysicsEntity
+            ? getShape(state, world, pos, context)
             : super.getCollisionShape(state, world, pos, context);
     }
 }

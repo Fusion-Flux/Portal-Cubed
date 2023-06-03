@@ -2,123 +2,123 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
 import com.fusionflux.portalcubed.util.CustomProperties;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.function.Supplier;
 
-public class FaithPlateBlock extends BlockWithEntity {
-    public static final DirectionProperty FACING = Properties.FACING;
+public class FaithPlateBlock extends BaseEntityBlock {
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final DirectionProperty HORIFACING = CustomProperties.HORIFACING;
 
     private final Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType;
 
-    public FaithPlateBlock(Settings settings, Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType) {
+    public FaithPlateBlock(Properties settings, Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType) {
         super(settings);
-        this.setDefaultState(
-            stateManager.getDefaultState()
-                .with(FACING, Direction.UP)
-                .with(HORIFACING, Direction.NORTH)
+        this.registerDefaultState(
+            stateDefinition.any()
+                .setValue(FACING, Direction.UP)
+                .setValue(HORIFACING, Direction.NORTH)
         );
         this.blockEntityType = blockEntityType;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!world.isClientSide) {
             //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity cast to
             //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
-            NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
+            MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
 
             if (screenHandlerFactory != null) {
                 //With this call the server will request the client to open the appropriate ScreenHandler
-                player.openHandledScreen(screenHandlerFactory);
+                player.openMenu(screenHandlerFactory);
             }
         }
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
     @ClientOnly
     @SuppressWarnings("deprecation")
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, HORIFACING);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        final Direction look = ctx.getPlayerLookDirection();
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        final Direction look = ctx.getNearestLookingDirection();
         if (look.getAxis().isVertical()) {
-            return getDefaultState()
-                .with(FACING, look.getOpposite())
-                .with(HORIFACING, ctx.getPlayerFacing());
+            return defaultBlockState()
+                .setValue(FACING, look.getOpposite())
+                .setValue(HORIFACING, ctx.getHorizontalDirection());
         }
-        return getDefaultState()
-            .with(FACING, look.getOpposite());
+        return defaultBlockState()
+            .setValue(FACING, look.getOpposite());
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         world.getBlockEntity(pos, blockEntityType.get()).ifPresent(entity -> {
             entity.setVelY(1.25);
-            final Direction facing = state.get(FACING).getAxis().isVertical() ? state.get(HORIFACING) : state.get(FACING);
-            entity.setVelX(facing.getOffsetX() * 0.75);
-            entity.setVelZ(facing.getOffsetZ() * 0.75);
+            final Direction facing = state.getValue(FACING).getAxis().isVertical() ? state.getValue(HORIFACING) : state.getValue(FACING);
+            entity.setVelX(facing.getStepX() * 0.75);
+            entity.setVelZ(facing.getStepZ() * 0.75);
         });
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return blockEntityType.get().instantiate(pos, state);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return blockEntityType.get().create(pos, state);
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         return type == blockEntityType.get()
             ? (world1, pos, state1, entity) -> ((FaithPlateBlockEntity)entity).tick(world1, pos, state1)
             : null;

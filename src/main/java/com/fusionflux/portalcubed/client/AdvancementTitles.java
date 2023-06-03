@@ -3,16 +3,16 @@ package com.fusionflux.portalcubed.client;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.CubeMapRenderer;
-import net.minecraft.client.gui.RotatingCubeMapRenderer;
-import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.renderer.CubeMap;
+import net.minecraft.client.renderer.PanoramaRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Unit;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.resource.loader.api.reloader.IdentifiableResourceReloader;
@@ -31,7 +31,7 @@ public class AdvancementTitles {
     private static final AdvancementTitles NULL = new AdvancementTitles();
     private static AdvancementTitles p1, p2;
 
-    private final Map<Identifier, AdvancementTitle> titles = new LinkedHashMap<>();
+    private final Map<ResourceLocation, AdvancementTitle> titles = new LinkedHashMap<>();
     private AdvancementTitle advancementTitleCache = null;
     private int globalAdvancementsSize = -1;
 
@@ -40,11 +40,11 @@ public class AdvancementTitles {
 
     private AdvancementTitles(JsonObject object) {
         for (final var entry : object.entrySet()) {
-            titles.put(new Identifier(entry.getKey()), new AdvancementTitle(JsonHelper.asObject(entry.getValue(), entry.getKey())));
+            titles.put(new ResourceLocation(entry.getKey()), new AdvancementTitle(GsonHelper.convertToJsonObject(entry.getValue(), entry.getKey())));
         }
     }
 
-    public Map<Identifier, AdvancementTitle> getTitles() {
+    public Map<ResourceLocation, AdvancementTitle> getTitles() {
         return titles;
     }
 
@@ -74,23 +74,23 @@ public class AdvancementTitles {
         return new IdentifiableResourceReloader() {
             @Override
             public CompletableFuture<Void> reload(
-                Synchronizer synchronizer,
+                PreparationBarrier synchronizer,
                 ResourceManager manager,
-                Profiler prepareProfiler,
-                Profiler applyProfiler,
+                ProfilerFiller prepareProfiler,
+                ProfilerFiller applyProfiler,
                 Executor prepareExecutor,
                 Executor applyExecutor
             ) {
-                return synchronizer.whenPrepared(Unit.INSTANCE).thenComposeAsync(ignored -> {
+                return synchronizer.wait(Unit.INSTANCE).thenComposeAsync(ignored -> {
                     applyProfiler.startTick();
                     applyProfiler.push("advancement_titles");
                     p1 = p2 = null;
                     try {
-                        final JsonObject root = JsonHelper.deserialize(
-                            manager.openAsReader(new Identifier("portalcubed:advancement_titles.json"))
+                        final JsonObject root = GsonHelper.parse(
+                            manager.openAsReader(new ResourceLocation("portalcubed:advancement_titles.json"))
                         );
-                        p1 = new AdvancementTitles(JsonHelper.getObject(root, "p1"));
-                        p2 = new AdvancementTitles(JsonHelper.getObject(root, "p2"));
+                        p1 = new AdvancementTitles(GsonHelper.getAsJsonObject(root, "p1"));
+                        p2 = new AdvancementTitles(GsonHelper.getAsJsonObject(root, "p2"));
                     } catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }
@@ -102,7 +102,7 @@ public class AdvancementTitles {
                             .map(Map::values)
                             .flatMap(Collection::stream)
                             .map(AdvancementTitle::getCubemap)
-                            .map(r -> r.loadTexturesAsync(MinecraftClient.getInstance().getTextureManager(), applyExecutor))
+                            .map(r -> r.preload(Minecraft.getInstance().getTextureManager(), applyExecutor))
                             .toArray(CompletableFuture[]::new)
                     );
                 });
@@ -110,44 +110,44 @@ public class AdvancementTitles {
 
             @NotNull
             @Override
-            public Identifier getQuiltId() {
+            public ResourceLocation getQuiltId() {
                 return PortalCubed.id("advancement_titles");
             }
         };
     }
 
     public static final class AdvancementTitle {
-        private final CubeMapRenderer cubemap;
-        private final Vec2f angle;
+        private final CubeMap cubemap;
+        private final Vec2 angle;
 
-        public AdvancementTitle(Identifier panorama, Vec2f angle) {
-            cubemap = new CubeMapRenderer(panorama);
+        public AdvancementTitle(ResourceLocation panorama, Vec2 angle) {
+            cubemap = new CubeMap(panorama);
             this.angle = angle;
         }
 
         private AdvancementTitle(JsonObject object) {
-            this(new Identifier(JsonHelper.getString(object, "panorama")), parseAngle(JsonHelper.getArray(object, "angle")));
+            this(new ResourceLocation(GsonHelper.getAsString(object, "panorama")), parseAngle(GsonHelper.getAsJsonArray(object, "angle")));
         }
 
-        private static Vec2f parseAngle(JsonArray array) {
+        private static Vec2 parseAngle(JsonArray array) {
             // These are in yaw/pitch, so y/x
-            return new Vec2f(JsonHelper.asFloat(array.get(1), "1"), JsonHelper.asFloat(array.get(0), "0"));
+            return new Vec2(GsonHelper.convertToFloat(array.get(1), "1"), GsonHelper.convertToFloat(array.get(0), "0"));
         }
 
-        public CubeMapRenderer getCubemap() {
+        public CubeMap getCubemap() {
             return cubemap;
         }
 
-        public Vec2f getAngle() {
+        public Vec2 getAngle() {
             return angle;
         }
     }
 
-    public static class CustomCubeMapRenderer extends RotatingCubeMapRenderer {
+    public static class CustomCubeMapRenderer extends PanoramaRenderer {
         public boolean p1;
 
         public CustomCubeMapRenderer() {
-            super(TitleScreen.PANORAMA_CUBE_MAP);
+            super(TitleScreen.CUBE_MAP);
         }
 
         @Override
@@ -157,8 +157,8 @@ public class AdvancementTitles {
                 super.render(delta, alpha);
                 return;
             }
-            title.cubemap.draw(
-                MinecraftClient.getInstance(),
+            title.cubemap.render(
+                Minecraft.getInstance(),
                 title.angle.x,
                 title.angle.y + 90,
                 alpha

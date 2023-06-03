@@ -1,10 +1,10 @@
 package com.fusionflux.portalcubed.optionslist;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class OptionsListBlockEntity extends BlockEntity {
     public OptionsListBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -12,8 +12,8 @@ public abstract class OptionsListBlockEntity extends BlockEntity {
     }
 
     public void updateListeners() {
-        markDirty();
-        assert world != null;
-        world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+        setChanged();
+        assert level != null;
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 }

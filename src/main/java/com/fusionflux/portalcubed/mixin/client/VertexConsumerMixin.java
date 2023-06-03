@@ -11,7 +11,7 @@ import java.util.Objects;
 @Mixin(VertexConsumer.class)
 public interface VertexConsumerMixin {
     @ModifyArg(
-        method = "complexBakedQuad",
+        method = "putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFF[IIZ)V",
         at = @At(
             value = "INVOKE",
             target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;vertex(FFFFFFFFFIIFFF)V"

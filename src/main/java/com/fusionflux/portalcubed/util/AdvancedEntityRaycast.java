@@ -2,17 +2,13 @@ package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.mixin.RaycastContextAccessor;
 import com.google.common.base.Suppliers;
-import net.minecraft.block.EntityShapeContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +29,7 @@ public class AdvancedEntityRaycast {
         public interface Transform {
             @Nullable
             TransformResult transform(
-                @NotNull RaycastContext context,
+                @NotNull ClipContext context,
                 @NotNull BlockHitResult blockHit,
                 @NotNull EntityHitResult entityHit
             );
@@ -41,11 +37,11 @@ public class AdvancedEntityRaycast {
     }
 
     public record TransformResult(
-        Vec3d prevHitPos,
-        RaycastContext newContext,
+        Vec3 prevHitPos,
+        ClipContext newContext,
         Set<Entity> ignoredEntities
     ) {
-        public TransformResult(Vec3d prevHitPos, RaycastContext newContext) {
+        public TransformResult(Vec3 prevHitPos, ClipContext newContext) {
             this(prevHitPos, newContext, Set.of());
         }
     }
@@ -53,19 +49,19 @@ public class AdvancedEntityRaycast {
     public record Result(
         List<Ray> rays
     ) {
-        public record Ray(Vec3d start, Vec3d end, HitResult hit) {
-            public Ray(Vec3d start, HitResult hit) {
-                this(start, hit.getPos(), hit);
+        public record Ray(Vec3 start, Vec3 end, HitResult hit) {
+            public Ray(Vec3 start, HitResult hit) {
+                this(start, hit.getLocation(), hit);
             }
 
-            public Vec3d relative() {
+            public Vec3 relative() {
                 return end.subtract(start);
             }
 
             @Nullable
             public EntityHitResult entityRaycast(@NotNull Entity owner, Predicate<Entity> predicate) {
-                return ProjectileUtil.raycast(
-                    owner, start, end, new Box(start, end).expand(1), predicate, start.squaredDistanceTo(end)
+                return ProjectileUtil.getEntityHitResult(
+                    owner, start, end, new AABB(start, end).inflate(1), predicate, start.distanceToSqr(end)
                 );
             }
         }
@@ -101,7 +97,7 @@ public class AdvancedEntityRaycast {
         }
     }
 
-    public static Result raycast(World world, RaycastContext context, TransformInfo... transforms) {
+    public static Result raycast(Level world, ClipContext context, TransformInfo... transforms) {
         final List<Result.Ray> hits = new ArrayList<>();
         final Supplier<Entity> marker = Suppliers.memoize(() -> EntityType.MARKER.create(world));
         @SuppressWarnings("unchecked") Set<Entity>[] ignoredEntities = new Set[] {Set.of()};
@@ -113,12 +109,12 @@ public class AdvancedEntityRaycast {
         BlockHitResult result;
         mainLoop:
         while (true) {
-            result = world.raycast(context);
+            result = world.clip(context);
             if (predicate == null) break;
-            final Vec3d offset = result.getPos().subtract(context.getStart());
-            final EntityHitResult hit = ProjectileUtil.raycast(
-                marker.get(), context.getStart(), result.getPos(), new Box(context.getStart(), result.getPos()).expand(1),
-                predicate, offset.lengthSquared()
+            final Vec3 offset = result.getLocation().subtract(context.getFrom());
+            final EntityHitResult hit = ProjectileUtil.getEntityHitResult(
+                marker.get(), context.getFrom(), result.getLocation(), new AABB(context.getFrom(), result.getLocation()).inflate(1),
+                predicate, offset.lengthSqr()
             );
             if (hit == null) break;
             for (final var transform : transforms) {
@@ -126,7 +122,7 @@ public class AdvancedEntityRaycast {
                     final TransformResult newContext = transform.transform.transform(context, result, hit);
                     if (newContext != null) {
                         ignoredEntities[0] = newContext.ignoredEntities;
-                        hits.add(new Result.Ray(context.getStart(), newContext.prevHitPos, hit));
+                        hits.add(new Result.Ray(context.getFrom(), newContext.prevHitPos, hit));
                         context = newContext.newContext;
                         continue mainLoop;
                     }
@@ -134,17 +130,17 @@ public class AdvancedEntityRaycast {
             }
             break;
         }
-        hits.add(new Result.Ray(context.getStart(), result));
+        hits.add(new Result.Ray(context.getFrom(), result));
         return new Result(hits);
     }
 
-    public static RaycastContext withStartEnd(RaycastContext context, Vec3d start, Vec3d end) {
+    public static ClipContext withStartEnd(ClipContext context, Vec3 start, Vec3 end) {
         //noinspection DataFlowIssue
-        return new RaycastContext(
+        return new ClipContext(
             start, end,
-            ((RaycastContextAccessor)context).getShapeType(),
+            ((RaycastContextAccessor)context).getBlock(),
             ((RaycastContextAccessor)context).getFluid(),
-            ((RaycastContextAccessor)context).getEntityPosition() instanceof EntityShapeContext esc
+            ((RaycastContextAccessor)context).getCollisionContext() instanceof EntityCollisionContext esc
                 ? esc.getEntity() : null
         );
     }

@@ -3,22 +3,22 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtIntArray;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.operator.Operator;
@@ -67,7 +67,7 @@ public class VelocityHelperBlockEntity extends BlockEntity implements ExtendedSc
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void load(CompoundTag nbt) {
         final int[] destinationData = nbt.getIntArray("Destination");
         if (destinationData.length >= 3) {
             destination = new BlockPos(destinationData[0], destinationData[1], destinationData[2]);
@@ -80,9 +80,9 @@ public class VelocityHelperBlockEntity extends BlockEntity implements ExtendedSc
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
+    protected void saveAdditional(CompoundTag nbt) {
         if (destination != null) {
-            nbt.put("Destination", new NbtIntArray(new int[] {
+            nbt.put("Destination", new IntArrayTag(new int[] {
                 destination.getX(),
                 destination.getY(),
                 destination.getZ()
@@ -94,14 +94,14 @@ public class VelocityHelperBlockEntity extends BlockEntity implements ExtendedSc
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return toNbt();
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
     }
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.of(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Nullable
@@ -154,25 +154,25 @@ public class VelocityHelperBlockEntity extends BlockEntity implements ExtendedSc
     }
 
     public void updateListeners() {
-        markDirty();
-        assert world != null;
-        world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+        setChanged();
+        assert level != null;
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     @Override
-    public Text getDisplayName() {
-        return Text.translatable(getCachedState().getBlock().getTranslationKey());
+    public Component getDisplayName() {
+        return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new VelocityHelperScreenHandler(syncId, getPos());
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player playerEntity) {
+        return new VelocityHelperScreenHandler(syncId, getBlockPos());
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        buf.writeBlockPos(getPos());
+    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+        buf.writeBlockPos(getBlockPos());
     }
 
     public static Expression parseExpression(String expression, String... variables) {

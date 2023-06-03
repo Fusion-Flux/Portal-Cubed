@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.accessor;
 
-import java.util.Optional;
-
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
+
+import java.util.Optional;
 
 public interface AdvancedRaycastResultHolder {
     Optional<AdvancedEntityRaycast.Result> getResult();

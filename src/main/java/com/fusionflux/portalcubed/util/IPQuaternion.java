@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.util;
 
 
-import net.minecraft.util.Pair;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.phys.Vec3;
 
 //This is from https://github.com/qouteall/ImmersivePortalsMod/blob/1.18/q_misc_util/src/main/java/qouteall/q_misc_util/my_util/DQuaternion.java,
 public class IPQuaternion {
@@ -37,7 +37,7 @@ public class IPQuaternion {
     }
 
     public static IPQuaternion rotationByRadians(
-            Vec3d axis,
+            Vec3 axis,
             double rotationAngle
     ) {
         double s = Math.sin(rotationAngle / 2.0F);
@@ -52,8 +52,8 @@ public class IPQuaternion {
     /**
      * @return the axis that the rotation is being performed along
      */
-    public Vec3d getRotatingAxis() {
-        return new Vec3d(x, y, z).normalize();
+    public Vec3 getRotatingAxis() {
+        return new Vec3(x, y, z).normalize();
     }
 
     public double getRotatingAngleRadians() {
@@ -77,7 +77,7 @@ public class IPQuaternion {
 
     @Override
     public String toString() {
-        Vec3d rotatingAxis = getRotatingAxis();
+        Vec3 rotatingAxis = getRotatingAxis();
         return String.format("Rotates %.3f degrees along (%.3f %.3f %.3f) Quaternion:(%.3f %.3f %.3f %.3f)",
                              getRotatingAngleDegrees(), rotatingAxis.x, rotatingAxis.y, rotatingAxis.z, x, y, z, w
         );
@@ -98,10 +98,10 @@ public class IPQuaternion {
         );
     }
 
-    public Vec3d rotate(Vec3d vec) {
+    public Vec3 rotate(Vec3 vec) {
         IPQuaternion result = this.hamiltonProduct(new IPQuaternion(vec.x, vec.y, vec.z, 0)).hamiltonProduct(getConjugated());
 
-        return new Vec3d(result.x, result.y, result.z);
+        return new Vec3(result.x, result.y, result.z);
     }
 
     public IPQuaternion getConjugated() {
@@ -127,7 +127,7 @@ public class IPQuaternion {
         );
     }
 
-    public static Pair<Double, Double> getPitchYawFromRotation(IPQuaternion quaternion) {
+    public static Tuple<Double, Double> getPitchYawFromRotation(IPQuaternion quaternion) {
         double x = quaternion.getX();
         double y = quaternion.getY();
         double z = quaternion.getZ();
@@ -139,7 +139,7 @@ public class IPQuaternion {
         double cosPitch = 1 - 2 * (x * x + z * z);
         double sinPitch = (x * w + y * z) * 2;
 
-        return new Pair<>(
+        return new Tuple<>(
             Math.toDegrees(Math.atan2(sinPitch, cosPitch)),
             Math.toDegrees(Math.atan2(sinYaw, cosYaw))
         );
@@ -150,20 +150,20 @@ public class IPQuaternion {
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
     // only works if the matrix is rotation only
     public static IPQuaternion matrixToQuaternion(
-        Vec3d x, Vec3d y, Vec3d z
+        Vec3 x, Vec3 y, Vec3 z
     ) {
-        double m00 = x.getX();
-        double m11 = y.getY();
-        double m22 = z.getZ();
+        double m00 = x.x();
+        double m11 = y.y();
+        double m22 = z.z();
 
-        double m12 = z.getY();
-        double m21 = y.getZ();
+        double m12 = z.y();
+        double m21 = y.z();
 
-        double m20 = x.getZ();
-        double m02 = z.getX();
+        double m20 = x.z();
+        double m02 = z.x();
 
-        double m01 = y.getX();
-        double m10 = x.getY();
+        double m01 = y.x();
+        double m10 = x.y();
 
         double tr = m00 + m11 + m22;
 
@@ -198,11 +198,11 @@ public class IPQuaternion {
         return new IPQuaternion(qx, qy, qz, qw);
     }
 
-    public static IPQuaternion getRotationBetween(Vec3d from, Vec3d to, Vec3d backup) {
+    public static IPQuaternion getRotationBetween(Vec3 from, Vec3 to, Vec3 backup) {
         from = from.normalize();
         to = to.normalize();
-        Vec3d axis = from.crossProduct(to).normalize();
-        double cos = from.dotProduct(to);
+        Vec3 axis = from.cross(to).normalize();
+        double cos = from.dot(to);
         double angle = Math.acos(cos);
 
         if (Math.toDegrees(angle) == 180) {

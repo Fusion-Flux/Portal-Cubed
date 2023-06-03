@@ -2,20 +2,24 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.HardLightBridgeEmitterBlockEntity;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -24,23 +28,23 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
-public class HardLightBridgeEmitterBlock extends BlockWithEntity {
+public class HardLightBridgeEmitterBlock extends BaseEntityBlock {
 
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
     private final Map<BlockState, VoxelShape> stateToShape;
 
 
-    public HardLightBridgeEmitterBlock(Settings settings) {
+    public HardLightBridgeEmitterBlock(Properties settings) {
         super(settings);
-        this.stateToShape = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeEmitterBlock::getShapeForState)));
+        this.stateToShape = ImmutableMap.copyOf(this.stateDefinition.getPossibleStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeEmitterBlock::getShapeForState)));
 
     }
 
     private static VoxelShape getShapeForState(BlockState ignoredBlockState) {
-        VoxelShape voxelShape = VoxelShapes.empty();
-        voxelShape = VoxelShapes.union(voxelShape, SHAPE);
+        VoxelShape voxelShape = Shapes.empty();
+        voxelShape = Shapes.or(voxelShape, SHAPE);
 
         return voxelShape;
     }
@@ -48,69 +52,69 @@ public class HardLightBridgeEmitterBlock extends BlockWithEntity {
     @Override
     @ClientOnly
     @SuppressWarnings("deprecation")
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
 
 
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.FACING, Properties.POWERED);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return PortalCubedBlocks.HLB_EMITTER_BLOCK.getDefaultState().with(Properties.FACING, ctx.getPlayerFacing().getOpposite()).with(Properties.POWERED, false);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return PortalCubedBlocks.HLB_EMITTER_BLOCK.defaultBlockState().setValue(BlockStateProperties.FACING, ctx.getHorizontalDirection().getOpposite()).setValue(BlockStateProperties.POWERED, false);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return this.stateToShape.get(state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return this.stateToShape.get(state);
     }
 
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(BlockStateProperties.FACING, rotation.rotate(state.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
     @ClientOnly
     @SuppressWarnings("deprecation")
-    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-        if (stateFrom.isOf(PortalCubedBlocks.HLB_EMITTER_BLOCK)) {
-            return stateFrom.get(Properties.POWERED);
-        } else return stateFrom.isOf(PortalCubedBlocks.HLB_BLOCK);
+    public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
+        if (stateFrom.is(PortalCubedBlocks.HLB_EMITTER_BLOCK)) {
+            return stateFrom.getValue(BlockStateProperties.POWERED);
+        } else return stateFrom.is(PortalCubedBlocks.HLB_BLOCK);
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new HardLightBridgeEmitterBlockEntity(pos, state);
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.HLB_EMITTER_ENTITY, HardLightBridgeEmitterBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, PortalCubedBlocks.HLB_EMITTER_ENTITY, HardLightBridgeEmitterBlockEntity::tick);
     }
 
 }

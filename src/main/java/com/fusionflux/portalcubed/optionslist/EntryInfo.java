@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.optionslist;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -13,12 +13,12 @@ class EntryInfo {
     int width;
     int max;
     boolean centered;
-    Map.Entry<TextFieldWidget, Text> error;
+    Map.Entry<EditBox, Component> error;
     Object value;
     String tempValue;
     boolean inLimits = true;
     Class<? extends OptionsListBlockEntity> owner;
-    Text name;
+    Component name;
     int index;
-    ClickableWidget colorButton;
+    AbstractWidget colorButton;
 }

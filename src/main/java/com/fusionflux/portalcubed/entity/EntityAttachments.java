@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 
 public interface EntityAttachments {
 
@@ -26,7 +26,7 @@ public interface EntityAttachments {
 
     void setGelTimer(int funnelTimer);
 
-    Vec3d getLastVel();
+    Vec3 getLastVel();
 
     void setMaxFallHeight(double maxFallHeight);
 

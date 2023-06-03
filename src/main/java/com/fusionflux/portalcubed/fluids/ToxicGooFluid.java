@@ -2,25 +2,25 @@ package com.fusionflux.portalcubed.fluids;
 
 import com.fusionflux.portalcubed.entity.Fizzleable;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 
-public abstract class ToxicGooFluid extends FlowableFluid {
+public abstract class ToxicGooFluid extends FlowingFluid {
     @Override
-    public Fluid getStill() {
+    public Fluid getSource() {
         return PortalCubedFluids.TOXIC_GOO.still;
     }
 
@@ -30,65 +30,65 @@ public abstract class ToxicGooFluid extends FlowableFluid {
     }
 
     @Override
-    public Item getBucketItem() {
+    public Item getBucket() {
         return PortalCubedFluids.TOXIC_GOO.bucket;
     }
 
     @Override
-    protected BlockState toBlockState(FluidState state) {
-        return PortalCubedFluids.TOXIC_GOO.getBlock().getDefaultState().with(Properties.LEVEL_15, getBlockStateLevel(state));
+    protected BlockState createLegacyBlock(FluidState state) {
+        return PortalCubedFluids.TOXIC_GOO.getBlock().defaultBlockState().setValue(BlockStateProperties.LEVEL, getLegacyLevel(state));
     }
 
     @Override
-    public boolean matchesType(Fluid fluid) {
-        return fluid == getStill() || fluid == getFlowing();
+    public boolean isSame(Fluid fluid) {
+        return fluid == getSource() || fluid == getFlowing();
     }
 
     @Override
-    protected boolean isInfinite() {
+    protected boolean canConvertToSource() {
         return true;
     }
 
     @Override
-    protected void beforeBreakingBlock(WorldAccess world, BlockPos pos, BlockState state) {
-        Block.dropStacks(state, world, pos, state.hasBlockEntity() ? world.getBlockEntity(pos) : null);
+    protected void beforeDestroyingBlock(LevelAccessor world, BlockPos pos, BlockState state) {
+        Block.dropResources(state, world, pos, state.hasBlockEntity() ? world.getBlockEntity(pos) : null);
     }
 
     @Override
-    protected boolean canBeReplacedWith(FluidState state, BlockView world, BlockPos pos, Fluid fluid,
+    protected boolean canBeReplacedWith(FluidState state, BlockGetter world, BlockPos pos, Fluid fluid,
             Direction direction) {
         return false;
     }
 
     @Override
-    protected int getFlowSpeed(WorldView world) {
+    protected int getSlopeFindDistance(LevelReader world) {
         return 4;
     }
 
     @Override
-    protected int getLevelDecreasePerBlock(WorldView world) {
+    protected int getDropOff(LevelReader world) {
         return 2;
     }
 
     @Override
-    public int getTickRate(WorldView world) {
+    public int getTickDelay(LevelReader world) {
         return 20;
     }
 
     @Override
-    protected float getBlastResistance() {
+    protected float getExplosionResistance() {
         return 100;
     }
 
     public static class Flowing extends ToxicGooFluid {
         @Override
-        protected void appendProperties(Builder<Fluid, FluidState> builder) {
+        protected void createFluidStateDefinition(Builder<Fluid, FluidState> builder) {
             builder.add(FALLING, LEVEL);
         }
 
         @Override
-        public int getLevel(FluidState state) {
-            return state.get(LEVEL);
+        public int getAmount(FluidState state) {
+            return state.getValue(LEVEL);
         }
 
         @Override
@@ -99,7 +99,7 @@ public abstract class ToxicGooFluid extends FlowableFluid {
 
     public static class Still extends ToxicGooFluid {
         @Override
-        public int getLevel(FluidState state) {
+        public int getAmount(FluidState state) {
             return 8;
         }
 
@@ -109,21 +109,21 @@ public abstract class ToxicGooFluid extends FlowableFluid {
         }
     }
 
-    public static class Block extends FluidBlock {
-        public Block(FlowableFluid flowableFluid, Settings settings) {
+    public static class Block extends LiquidBlock {
+        public Block(FlowingFluid flowableFluid, Properties settings) {
             super(flowableFluid, settings);
         }
 
         @Override
         @SuppressWarnings("deprecation")
-        public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
             if (!entity.isAlive()) return;
             if (entity instanceof Fizzleable fizzleable) {
-                if (!world.isClient && fizzleable.fizzlesInGoo()) {
+                if (!world.isClientSide && fizzleable.fizzlesInGoo()) {
                     fizzleable.fizzle();
                 }
             } else {
-                entity.damage(PortalCubedDamageSources.ACID, world.getRandom().range(7, 10));
+                entity.hurt(PortalCubedDamageSources.ACID, world.getRandom().nextIntBetweenInclusive(7, 10));
             }
         }
     }

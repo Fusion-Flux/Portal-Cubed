@@ -3,16 +3,16 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.util.CustomProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
     }
 
 
-    public void updateState(BlockState state, WorldAccess world, BlockPos pos, ExcursionFunnelMainBlockEntity bridge) {
-        if (!world.isClient()) {
+    public void updateState(BlockState state, LevelAccessor world, BlockPos pos, ExcursionFunnelMainBlockEntity bridge) {
+        if (!world.isClientSide()) {
             boolean mNorth = false;
             boolean mSouth = false;
             boolean mEast = false;
@@ -54,9 +54,9 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
             for (Direction facing : bridge.facing) {
                 BlockState emitter = world.getBlockState(bridge.emitters.get(bridge.facing.indexOf(facing)));
 
-                Box portalCheckBox = new Box(bridge.portalEmitters.get(bridge.facing.indexOf(facing)));
+                AABB portalCheckBox = new AABB(bridge.portalEmitters.get(bridge.facing.indexOf(facing)));
 
-                List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+                List<ExperimentalPortal> list = world.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
 
                 boolean portalPresent = false;
                 for (ExperimentalPortal portal : list) {
@@ -68,7 +68,7 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
                 }
                 if (emitter.getBlock() == PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER || emitter.getBlock() == PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMITTER || emitter.getBlock() == PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER || portalPresent) {
 
-                    if (!emitter.get(CustomProperties.REVERSED)) {
+                    if (!emitter.getValue(CustomProperties.REVERSED)) {
                         if (facing.equals(Direction.NORTH)) {
                             mNorth = true;
                         }
@@ -88,7 +88,7 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
                             mDown = true;
                         }
                     }
-                    if (emitter.get(CustomProperties.REVERSED)) {
+                    if (emitter.getValue(CustomProperties.REVERSED)) {
                         if (facing.equals(Direction.NORTH)) {
                             mRNorth = true;
                         }
@@ -113,16 +113,16 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
                 }
             }
 
-            state = state.with(Properties.NORTH, mNorth).with(Properties.EAST, mEast).with(Properties.SOUTH, mSouth).with(Properties.WEST, mWest).with(Properties.UP, mUp).with(Properties.DOWN, mDown)
-                    .with(CustomProperties.RNORTH, mRNorth).with(CustomProperties.REAST, mREast).with(CustomProperties.RSOUTH, mRSouth).with(CustomProperties.RWEST, mRWest).with(CustomProperties.RUP, mRUp).with(CustomProperties.RDOWN, mRDown);
+            state = state.setValue(BlockStateProperties.NORTH, mNorth).setValue(BlockStateProperties.EAST, mEast).setValue(BlockStateProperties.SOUTH, mSouth).setValue(BlockStateProperties.WEST, mWest).setValue(BlockStateProperties.UP, mUp).setValue(BlockStateProperties.DOWN, mDown)
+                    .setValue(CustomProperties.RNORTH, mRNorth).setValue(CustomProperties.REAST, mREast).setValue(CustomProperties.RSOUTH, mRSouth).setValue(CustomProperties.RWEST, mRWest).setValue(CustomProperties.RUP, mRUp).setValue(CustomProperties.RDOWN, mRDown);
         }
 
-        world.setBlockState(pos, state, 3);
+        world.setBlock(pos, state, 3);
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
 
         List<Integer> posXList = new ArrayList<>();
         List<Integer> posYList = new ArrayList<>();
@@ -143,9 +143,9 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
         List<Integer> direcZList = new ArrayList<>();
 
         for (Direction direc : facing) {
-            direcXList.add(direc.getVector().getX());
-            direcYList.add(direc.getVector().getY());
-            direcZList.add(direc.getVector().getZ());
+            direcXList.add(direc.getNormal().getX());
+            direcYList.add(direc.getNormal().getY());
+            direcZList.add(direc.getNormal().getZ());
         }
 
         tag.putIntArray("direcxList", direcXList);
@@ -171,8 +171,8 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
 
         List<Integer> posXList;
         List<Integer> posYList;
@@ -188,7 +188,7 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
             emitters.clear();
 
         for (int i = 0; i < size; i++) {
-            emitters.add(new BlockPos.Mutable(posXList.get(i), posYList.get(i), posZList.get(i)));
+            emitters.add(new BlockPos.MutableBlockPos(posXList.get(i), posYList.get(i), posZList.get(i)));
         }
 
         List<Integer> direcXList;
@@ -203,7 +203,7 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
             facing.clear();
 
         for (int i = 0; i < size; i++) {
-            facing.add(Direction.fromVector(direcXList.get(i), direcYList.get(i), direcZList.get(i)));
+            facing.add(Direction.fromNormal(direcXList.get(i), direcYList.get(i), direcZList.get(i)));
         }
 
         List<Integer> portalXList;
@@ -218,19 +218,19 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
             portalEmitters.clear();
 
         for (int i = 0; i < size; i++) {
-            portalEmitters.add(new BlockPos.Mutable(portalXList.get(i), portalYList.get(i), portalZList.get(i)));
+            portalEmitters.add(new BlockPos.MutableBlockPos(portalXList.get(i), portalYList.get(i), portalZList.get(i)));
         }
     }
 
 
-    public static void tick(World world, BlockPos pos, BlockState state, ExcursionFunnelMainBlockEntity blockEntity) {
+    public static void tick(Level world, BlockPos pos, BlockState state, ExcursionFunnelMainBlockEntity blockEntity) {
         assert world != null;
-        if (!world.isClient) {
+        if (!world.isClientSide) {
             if (!blockEntity.emitters.isEmpty()) {
                 for (int i = blockEntity.emitters.size() - 1; i >= 0; i--) {
-                    Box portalCheckBox = new Box(blockEntity.portalEmitters.get(i)).expand(.1);
+                    AABB portalCheckBox = new AABB(blockEntity.portalEmitters.get(i)).inflate(.1);
 
-                    List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+                    List<ExperimentalPortal> list = world.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
 
                     boolean portalPresent = false;
                     for (ExperimentalPortal portal : list) {
@@ -240,7 +240,7 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
                             }
                         }
                     }
-                    if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof DualExcursionFunnelEmitterBlockEntity) && !(world.isReceivingRedstonePower(blockEntity.emitters.get(i)))) {
+                    if (!(world.getBlockEntity(blockEntity.emitters.get(i)) instanceof DualExcursionFunnelEmitterBlockEntity) && !(world.hasNeighborSignal(blockEntity.emitters.get(i)))) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
@@ -255,12 +255,12 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    } else if (!((AbstractExcursionFunnelEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.pos.mutableCopy())) {
+                    } else if (!((AbstractExcursionFunnelEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).funnels.contains(blockEntity.worldPosition.mutable())) {
                         blockEntity.emitters.remove(i);
                         blockEntity.portalEmitters.remove(i);
                         blockEntity.facing.remove(i);
                         blockEntity.updateState(state, world, pos, blockEntity);
-                    } else if (!((AbstractExcursionFunnelEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.pos.mutableCopy())) {
+                    } else if (!((AbstractExcursionFunnelEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(blockEntity.emitters.get(i)))).portalFunnels.contains(blockEntity.worldPosition.mutable())) {
                         if (portalPresent) {
                             blockEntity.emitters.remove(i);
                             blockEntity.portalEmitters.remove(i);
@@ -270,7 +270,7 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
                     }
                 }
             } else {
-                world.setBlockState(pos, Blocks.AIR.getDefaultState());
+                world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             }
         }
     }

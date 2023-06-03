@@ -2,73 +2,73 @@ package com.fusionflux.portalcubed.items;
 
 import com.fusionflux.portalcubed.entity.EnergyPelletEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.block.dispenser.ItemDispenserBehavior;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPointer;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Position;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.phys.Vec3;
 
 public class EnergyPelletItem extends Item {
     private final boolean isSuper;
 
-    public EnergyPelletItem(Settings settings, boolean isSuper) {
+    public EnergyPelletItem(Properties settings, boolean isSuper) {
         super(settings);
         this.isSuper = isSuper;
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        final ItemStack item = user.getStackInHand(hand);
-        if (world.isClient) return TypedActionResult.pass(item);
-        if (!user.getAbilities().creativeMode) {
-            item.decrement(1);
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        final ItemStack item = user.getItemInHand(hand);
+        if (world.isClientSide) return InteractionResultHolder.pass(item);
+        if (!user.getAbilities().instabuild) {
+            item.shrink(1);
         }
         final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(world);
-        if (pellet == null) return TypedActionResult.pass(item);
-        pellet.setPosition(user.getCameraPosVec(0).add(user.getRotationVector()));
-        Vec3d userVelocity = user.getVelocity();
+        if (pellet == null) return InteractionResultHolder.pass(item);
+        pellet.setPos(user.getEyePosition(0).add(user.getLookAngle()));
+        Vec3 userVelocity = user.getDeltaMovement();
         if (user.isOnGround()) {
-            userVelocity = userVelocity.withAxis(Direction.Axis.Y, 0);
+            userVelocity = userVelocity.with(Direction.Axis.Y, 0);
         }
-        pellet.setVelocity(userVelocity.add(user.getRotationVector().multiply(0.25)));
+        pellet.setDeltaMovement(userVelocity.add(user.getLookAngle().scale(0.25)));
         if (isSuper) {
             pellet.resetLife(-1);
         }
-        world.spawnEntity(pellet);
-        return TypedActionResult.consume(item);
+        world.addFreshEntity(pellet);
+        return InteractionResultHolder.consume(item);
     }
 
-    public DispenserBehavior createDispenserBehavior() {
-        return new ItemDispenserBehavior() {
+    public DispenseItemBehavior createDispenserBehavior() {
+        return new DefaultDispenseItemBehavior() {
             @Override
-            protected ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
-                final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(pointer.getWorld());
+            protected ItemStack execute(BlockSource pointer, ItemStack stack) {
+                final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(pointer.getLevel());
                 if (pellet == null) return stack;
-                final Position pos = DispenserBlock.getOutputLocation(pointer);
-                pellet.setPosition(pos.getX(), pos.getY(), pos.getZ());
-                pellet.setVelocity(Vec3d.of(pointer.getBlockState().get(DispenserBlock.FACING).getVector()));
+                final Position pos = DispenserBlock.getDispensePosition(pointer);
+                pellet.setPos(pos.x(), pos.y(), pos.z());
+                pellet.setDeltaMovement(Vec3.atLowerCornerOf(pointer.getBlockState().getValue(DispenserBlock.FACING).getNormal()));
                 if (isSuper) {
                     pellet.resetLife(-1);
                 }
-                pointer.getWorld().spawnEntity(pellet);
-                stack.decrement(1);
+                pointer.getLevel().addFreshEntity(pellet);
+                stack.shrink(1);
                 return stack;
             }
 
             @Override
-            protected void playSound(BlockPointer pointer) {
+            protected void playSound(BlockSource pointer) {
             }
 
             @Override
-            protected void spawnParticles(BlockPointer pointer, Direction side) {
+            protected void playAnimation(BlockSource pointer, Direction side) {
             }
         };
     }

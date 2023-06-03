@@ -2,23 +2,23 @@ package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.client.sound.SoundSystem;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.SoundEngine;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(SoundSystem.class)
+@Mixin(SoundEngine.class)
 public abstract class SoundSystemMixin {
     @Shadow public abstract void play(SoundInstance sound);
 
     @Inject(
-        method = "play(Lnet/minecraft/client/sound/SoundInstance;)V",
+        method = "play",
         at = @At(
             value = "INVOKE",
             target = "Ljava/util/Set;add(Ljava/lang/Object;)Z",
@@ -27,10 +27,10 @@ public abstract class SoundSystemMixin {
     )
     private void ohFiddlesticks(SoundInstance sound, CallbackInfo ci) {
         if (
-            !sound.getId().getNamespace().equals(PortalCubed.MOD_ID) ||
+            !sound.getLocation().getNamespace().equals(PortalCubed.MOD_ID) ||
                 Registry.SOUND_EVENT.getOrCreateTag(PortalCubedSounds.NO_ERROR_SOUND)
-                    .contains(Registry.SOUND_EVENT.getHolderOrThrow(RegistryKey.of(Registry.SOUND_EVENT_KEY, sound.getId())))
+                    .contains(Registry.SOUND_EVENT.getHolderOrThrow(ResourceKey.create(Registry.SOUND_EVENT_REGISTRY, sound.getLocation())))
         ) return;
-        play(PositionedSoundInstance.master(PortalCubedSounds.ERROR_EVENT, 1f));
+        play(SimpleSoundInstance.forUI(PortalCubedSounds.ERROR_EVENT, 1f));
     }
 }

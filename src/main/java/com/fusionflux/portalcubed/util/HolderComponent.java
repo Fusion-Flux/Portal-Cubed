@@ -7,12 +7,12 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -26,19 +26,19 @@ public final class HolderComponent implements AutoSyncedComponent {
     private CorePhysicsEntity heldEntity = null;
     private Optional<UUID> heldEntityUUID = Optional.empty();
 
-    private final PlayerEntity owner;
+    private final Player owner;
 
-    HolderComponent(PlayerEntity owner) {
+    HolderComponent(Player owner) {
         this.owner = owner;
     }
 
     public boolean hold(CorePhysicsEntity entityToHold) {
         Objects.requireNonNull(entityToHold, "The entity to hold can not be null!");
         if (entityBeingHeld() == null && !entityToHold.fizzling()) {
-            entityToHold.setHolderUUID(Optional.of(owner.getUuid()));
+            entityToHold.setHolderUUID(Optional.of(owner.getUUID()));
             this.heldEntity = entityToHold;
             RayonIntegration.INSTANCE.setNoGravity(heldEntity, true);
-            this.heldEntityUUID = Optional.of(entityToHold.getUuid());
+            this.heldEntityUUID = Optional.of(entityToHold.getUUID());
             PortalCubedComponents.HOLDER_COMPONENT.sync(owner);
             return true;
         }
@@ -46,7 +46,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     }
 
     public @Nullable CorePhysicsEntity entityBeingHeld() {
-        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((Accessors) this.owner.world).getEntity(heldEntityUUID.get());
+        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((Accessors) this.owner.level).getEntity(heldEntityUUID.get());
         return this.heldEntity;
     }
 
@@ -56,16 +56,16 @@ public final class HolderComponent implements AutoSyncedComponent {
             if (!heldEntity.fizzling()) {
                 RayonIntegration.INSTANCE.setNoGravity(heldEntity, false);
             }
-            if (owner.world.isClient && !heldEntity.isRemoved()) {
+            if (owner.level.isClientSide && !heldEntity.isRemoved()) {
                 var buf = PacketByteBufs.create();
-                buf.writeDouble(heldEntity.getPos().x);
-                buf.writeDouble(heldEntity.getPos().y);
-                buf.writeDouble(heldEntity.getPos().z);
+                buf.writeDouble(heldEntity.position().x);
+                buf.writeDouble(heldEntity.position().y);
+                buf.writeDouble(heldEntity.position().z);
                 buf.writeDouble(heldEntity.lastPos.x);
                 buf.writeDouble(heldEntity.lastPos.y);
                 buf.writeDouble(heldEntity.lastPos.z);
-                buf.writeFloat(heldEntity.bodyYaw);
-                buf.writeUuid(heldEntity.getUuid());
+                buf.writeFloat(heldEntity.yBodyRot);
+                buf.writeUUID(heldEntity.getUUID());
                 NetworkingSafetyWrapper.sendFromClient("cube_pos_update", buf);
             }
 
@@ -79,25 +79,25 @@ public final class HolderComponent implements AutoSyncedComponent {
 
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
-        if (tag.contains("heldEntityUUID")) this.heldEntityUUID = Optional.of(tag.getUuid("heldEntityUUID"));
+    public void readFromNbt(CompoundTag tag) {
+        if (tag.contains("heldEntityUUID")) this.heldEntityUUID = Optional.of(tag.getUUID("heldEntityUUID"));
     }
 
     @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
-        this.heldEntityUUID.ifPresent(value -> tag.putUuid("heldEntityUUID", value));
+    public void writeToNbt(@NotNull CompoundTag tag) {
+        this.heldEntityUUID.ifPresent(value -> tag.putUUID("heldEntityUUID", value));
     }
 
     @Override
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         return player == this.owner;
     }
 
     @Override
-    public void applySyncPacket(PacketByteBuf buf) {
-        final var syncedHeldEntityUUID = TrackedDataHandlerRegistry.OPTIONAL_UUID.read(buf);
+    public void applySyncPacket(FriendlyByteBuf buf) {
+        final var syncedHeldEntityUUID = EntityDataSerializers.OPTIONAL_UUID.read(buf);
         if (heldEntity == null && syncedHeldEntityUUID.isPresent()) {
-            hold((CorePhysicsEntity) ((Accessors) this.owner.world).getEntity(syncedHeldEntityUUID.get()));
+            hold((CorePhysicsEntity) ((Accessors) this.owner.level).getEntity(syncedHeldEntityUUID.get()));
         } else if (syncedHeldEntityUUID.isEmpty() && heldEntity != null) {
             stopHolding();
         }
@@ -105,14 +105,14 @@ public final class HolderComponent implements AutoSyncedComponent {
     }
 
     @Override
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
-        TrackedDataHandlerRegistry.OPTIONAL_UUID.write(buf, this.heldEntityUUID);
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
+        EntityDataSerializers.OPTIONAL_UUID.write(buf, this.heldEntityUUID);
     }
 
     private void handHideRefresh() {
-        if (owner.getMainHandStack().isIn(PortalCubedItems.HOLDS_OBJECT)) return;
-        owner.resetLastAttackedTicks();
-        ((HeldItemRendererExt)MinecraftClient.getInstance().gameRenderer.firstPersonRenderer).startHandFaker();
+        if (owner.getMainHandItem().is(PortalCubedItems.HOLDS_OBJECT)) return;
+        owner.resetAttackStrengthTicker();
+        ((HeldItemRendererExt)Minecraft.getInstance().gameRenderer.itemInHandRenderer).startHandFaker();
     }
 
 }

@@ -7,24 +7,24 @@ import com.fusionflux.portalcubed.config.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.Fizzleable;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
@@ -32,21 +32,21 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class AbstractFizzlerBlock extends Block implements BlockCollisionTrigger {
-    public static final BooleanProperty NS = BooleanProperty.of("ns");
-    public static final BooleanProperty EW = BooleanProperty.of("ew");
-    public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
+    public static final BooleanProperty NS = BooleanProperty.create("ns");
+    public static final BooleanProperty EW = BooleanProperty.create("ew");
+    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
-    private static final VoxelShape NS_SHAPE = createCuboidShape(7.5, 0, 0, 8.5, 16, 16);
-    private static final VoxelShape EW_SHAPE = createCuboidShape(0, 0, 7.5, 16, 16, 8.5);
-    private static final VoxelShape BOTH_SHAPE = VoxelShapes.union(NS_SHAPE, EW_SHAPE);
+    private static final VoxelShape NS_SHAPE = box(7.5, 0, 0, 8.5, 16, 16);
+    private static final VoxelShape EW_SHAPE = box(0, 0, 7.5, 16, 16, 8.5);
+    private static final VoxelShape BOTH_SHAPE = Shapes.or(NS_SHAPE, EW_SHAPE);
 
-    public AbstractFizzlerBlock(Settings settings) {
+    public AbstractFizzlerBlock(Properties settings) {
         super(settings);
-        setDefaultState(
-            getStateManager().getDefaultState()
-                .with(NS, false)
-                .with(EW, false)
-                .with(HALF, DoubleBlockHalf.LOWER)
+        registerDefaultState(
+            getStateDefinition().any()
+                .setValue(NS, false)
+                .setValue(EW, false)
+                .setValue(HALF, DoubleBlockHalf.LOWER)
         );
     }
 
@@ -55,79 +55,79 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
     }
 
     public static boolean isEmpty(BlockState state) {
-        return !state.get(NS) && !state.get(EW);
+        return !state.getValue(NS) && !state.getValue(EW);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        if (state.get(NS) && state.get(EW)) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        if (state.getValue(NS) && state.getValue(EW)) {
             return BOTH_SHAPE;
         }
-        if (state.get(NS)) {
+        if (state.getValue(NS)) {
             return NS_SHAPE;
         }
-        if (state.get(EW)) {
+        if (state.getValue(EW)) {
             return EW_SHAPE;
         }
-        return VoxelShapes.empty();
+        return Shapes.empty();
     }
 
     @Override
-    public VoxelShape getTriggerShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return getOutlineShape(state, world, pos, context);
+    public VoxelShape getTriggerShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return getShape(state, world, pos, context);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
         return 1;
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return true;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-        return stateFrom.isOf(this) || super.isSideInvisible(state, stateFrom, direction);
+    public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
+        return stateFrom.is(this) || super.skipRendering(state, stateFrom, direction);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NS, EW, HALF);
     }
 
     protected final void fizzlePortals(Entity entity) {
-        if (entity.world.isClient) return;
+        if (entity.level.isClientSide) return;
         boolean foundPortal = false;
         for (final UUID portal : List.copyOf(CalledValues.getPortals(entity))) {
-            final Entity checkPortal = ((ServerWorld)entity.world).getEntity(portal);
+            final Entity checkPortal = ((ServerLevel)entity.level).getEntity(portal);
             if (checkPortal != null) {
                 foundPortal = true;
                 checkPortal.kill();
             }
         }
-        if (foundPortal && entity instanceof ServerPlayerEntity player) {
-            player.playSound(PortalCubedSounds.ENTITY_PORTAL_FIZZLE, SoundCategory.NEUTRAL, 0.5f, 1f);
+        if (foundPortal && entity instanceof ServerPlayer player) {
+            player.playNotifySound(PortalCubedSounds.ENTITY_PORTAL_FIZZLE, SoundSource.NEUTRAL, 0.5f, 1f);
             ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
         }
     }
 
     protected final void fizzlePhysicsEntity(Entity entity) {
-        if (entity.world.isClient) return;
+        if (entity.level.isClientSide) return;
         if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() == Fizzleable.FizzleType.OBJECT) {
             fizzleable.fizzle();
         }
     }
 
     protected final void fizzleLiving(Entity entity) {
-        if (entity.world.isClient) return;
+        if (entity.level.isClientSide) return;
         // TODO: Fizzle players visually?
         if (entity instanceof LivingEntity || (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() == Fizzleable.FizzleType.LIVING)) {
-            entity.damage(PortalCubedDamageSources.FIZZLE, PortalCubedConfig.fizzlerDamage);
+            entity.hurt(PortalCubedDamageSources.FIZZLE, PortalCubedConfig.fizzlerDamage);
             if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() != Fizzleable.FizzleType.NOT) {
                 fizzleable.fizzle();
             }

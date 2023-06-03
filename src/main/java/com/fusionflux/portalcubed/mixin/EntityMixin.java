@@ -17,24 +17,27 @@ import com.fusionflux.portalcubed.listeners.CustomCollisionView;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.fusionflux.portalcubed.util.IPQuaternion;
-import com.fusionflux.portalcubed.util.PortalDirectionUtils;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.*;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -56,7 +59,7 @@ import java.util.Map;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, EntityPortalsAccess, ClientTeleportCheck {
     @Shadow
-    public World world;
+    public Level level;
 
     @Unique
     private double maxFallSpeed = 0;
@@ -70,7 +73,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     private Direction prevGravDirec = Direction.DOWN;
 
     @Unique
-    private Vec3d lastVel = Vec3d.ZERO;
+    private Vec3 lastVel = Vec3.ZERO;
 
     @Unique
     private int gelTransferTimer = 0;
@@ -95,36 +98,34 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     }
 
     @Shadow
-    public abstract BlockPos getBlockPos();
+    public abstract BlockPos blockPosition();
 
     @Shadow
-    public abstract Vec3d getVelocity();
+    public abstract Vec3 getDeltaMovement();
 
     @Shadow
-    public abstract Box getBoundingBox();
+    public abstract AABB getBoundingBox();
 
     @Shadow
     public abstract boolean equals(Object o);
 
     @Shadow
-    public abstract boolean hasNoGravity();
+    public abstract boolean isNoGravity();
 
     @Shadow
     public abstract boolean isOnGround();
 
     @Shadow
-    private Vec3d pos;
+    private Vec3 position;
 
     @Shadow
-    public abstract boolean canUsePortals();
+    public abstract boolean canChangeDimensions();
 
     @Shadow
-    public abstract void setVelocity(Vec3d velocity);
+    public abstract void setDeltaMovement(Vec3 velocity);
 
     @Shadow
-    public abstract float getYaw();
-
-    @Shadow public abstract float getPitch(float tickDelta);
+    public abstract float getYRot();
 
     @Shadow public abstract double getY();
 
@@ -134,13 +135,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract double getZ();
 
-    @Shadow public abstract float getYaw(float tickDelta);
+    @Shadow public abstract float getXRot();
 
-    @Shadow public abstract float getPitch();
-
-    @Shadow public abstract Vec3d getLerpedPos(float delta);
-
-    private static final Box NULL_BOX = new Box(0, 0, 0, 0, 0, 0);
+    private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
 
     @Unique
     private final Map<BlockState, BlockPos> collidingBlocks = new HashMap<>();
@@ -153,21 +150,21 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
         Entity thisentity = ((Entity) (Object) this);
 
-        Vec3d entityVelocity = this.getVelocity();
+        Vec3 entityVelocity = this.getDeltaMovement();
 
 
-        if (!(thisentity instanceof PlayerEntity)) {
-            Box portalCheckBox = getBoundingBox();
+        if (!(thisentity instanceof Player)) {
+            AABB portalCheckBox = getBoundingBox();
 
-            portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0, .08, 0));
+            portalCheckBox = portalCheckBox.expandTowards(entityVelocity.add(0, .08, 0));
 
-            List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
-            VoxelShape omittedDirections = VoxelShapes.empty();
+            List<ExperimentalPortal> list = ((Entity) (Object) this).level.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
+            VoxelShape omittedDirections = Shapes.empty();
 
             for (ExperimentalPortal portal : list) {
                 if (portal.calculateCuttoutBox() != NULL_BOX && portal.calculateBoundsCheckBox() != NULL_BOX) {
                     if (portal.getActive())
-                        omittedDirections = VoxelShapes.union(omittedDirections, VoxelShapes.cuboid(portal.getCutoutBoundingBox()));
+                        omittedDirections = Shapes.or(omittedDirections, Shapes.create(portal.getCutoutBoundingBox()));
                 }
             }
             CalledValues.setPortalCutout(((Entity) (Object) this), omittedDirections);
@@ -176,7 +173,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         if (this.isInFunnel() && this.getFunnelTimer() != 0) {
             this.setFunnelTimer(this.getFunnelTimer() - 1);
         }
-        if (this.isInFunnel() && this.getFunnelTimer() == 0 && this.hasNoGravity()) {
+        if (this.isInFunnel() && this.getFunnelTimer() == 0 && this.isNoGravity()) {
             RayonIntegration.INSTANCE.setNoGravity((Entity)(Object)this, false);
             setInFunnel(false);
         }
@@ -189,7 +186,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             this.gelTransferChangeTimer -= 1;
         }
 
-        if (maxFallSpeed == 10 && world.getBlockState(this.getBlockPos()).getBlock() == PortalCubedBlocks.PROPULSION_GEL) {
+        if (maxFallSpeed == 10 && level.getBlockState(this.blockPosition()).getBlock() == PortalCubedBlocks.PROPULSION_GEL) {
             maxFallSpeed = 10;
         } else {
             if (maxFallSpeed > 0) {
@@ -198,8 +195,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
 
 
-        Vec3d rotatedPos;
-        rotatedPos = RotationUtil.vecWorldToPlayer(this.pos, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
+        Vec3 rotatedPos;
+        rotatedPos = RotationUtil.vecWorldToPlayer(this.position, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
         if (prevGravDirec != GravityChangerAPI.getGravityDirection(((Entity) (Object) this))) {
             this.maxFallHeight = rotatedPos.y;
         }
@@ -212,9 +209,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             this.maxFallHeight = rotatedPos.y;
         }
 
-        this.lastVel = this.getVelocity();
+        this.lastVel = this.getDeltaMovement();
 
-        if (world.getBlockState(this.getBlockPos()).getBlock() != PortalCubedBlocks.REPULSION_GEL && this.isBounced()) {
+        if (level.getBlockState(this.blockPosition()).getBlock() != PortalCubedBlocks.REPULSION_GEL && this.isBounced()) {
             this.setBounced(false);
         }
 
@@ -226,22 +223,22 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public void tickTail(CallbackInfo ci) {
         Entity thisEntity = ((Entity) (Object) this);
 
-        if (!thisEntity.world.isClient() && !(thisEntity instanceof PlayerEntity) && !(thisEntity instanceof ExperimentalPortal)) {
-            Vec3d entityVelocity = this.getVelocity();
+        if (!thisEntity.level.isClientSide() && !(thisEntity instanceof Player) && !(thisEntity instanceof ExperimentalPortal)) {
+            Vec3 entityVelocity = this.getDeltaMovement();
 
 
-            Box portalCheckBox = getBoundingBox();
+            AABB portalCheckBox = getBoundingBox();
 
-            portalCheckBox = portalCheckBox.stretch(entityVelocity.add(0, .08, 0));
+            portalCheckBox = portalCheckBox.expandTowards(entityVelocity.add(0, .08, 0));
 
 
-            List<ExperimentalPortal> list = ((Entity) (Object) this).world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+            List<ExperimentalPortal> list = ((Entity) (Object) this).level.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
             ExperimentalPortal portal;
             for (ExperimentalPortal portalCheck : list) {
                 portal = portalCheck;
-                if (this.canUsePortals() && portal.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
+                if (this.canChangeDimensions() && portal.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
                     Direction portalFacing = portal.getFacingDirection();
-                    Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
+                    Direction otherDirec = Direction.fromNormal((int) portal.getOtherFacing().x(), (int) portal.getOtherFacing().y(), (int) portal.getOtherFacing().z());
 
                     if (otherDirec != null) {
 
@@ -250,40 +247,40 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
                             entityVelocity = entityVelocity.add(0, .08, 0);
                         }
 
-                        Vec3d entityEyePos = thisEntity.getEyePos();
+                        Vec3 entityEyePos = thisEntity.getEyePosition();
 
-                        if (portalFacing.getUnitVector().getX() < 0) {
-                            if (entityEyePos.getX() + entityVelocity.x >= portal.getPos().getX() && entityVelocity.getX() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                        if (portalFacing.step().x() < 0) {
+                            if (entityEyePos.x() + entityVelocity.x >= portal.position().x() && entityVelocity.x() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
-                        if (portalFacing.getUnitVector().getY() < 0) {
-                            if (entityEyePos.getY() + entityVelocity.y >= portal.getPos().getY() && entityVelocity.getY() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                        if (portalFacing.step().y() < 0) {
+                            if (entityEyePos.y() + entityVelocity.y >= portal.position().y() && entityVelocity.y() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
-                        if (portalFacing.getUnitVector().getZ() < 0) {
-                            if (entityEyePos.getZ() + entityVelocity.z >= portal.getPos().getZ() && entityVelocity.getZ() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                        if (portalFacing.step().z() < 0) {
+                            if (entityEyePos.z() + entityVelocity.z >= portal.position().z() && entityVelocity.z() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
-                        if (portalFacing.getUnitVector().getX() > 0) {
-                            if (entityEyePos.getX() + entityVelocity.x <= portal.getPos().getX() && entityVelocity.getX() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                        if (portalFacing.step().x() > 0) {
+                            if (entityEyePos.x() + entityVelocity.x <= portal.position().x() && entityVelocity.x() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
-                        if (portalFacing.getUnitVector().getY() > 0) {
-                            if (entityEyePos.getY() + entityVelocity.y <= portal.getPos().getY() && entityVelocity.getY() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                        if (portalFacing.step().y() > 0) {
+                            if (entityEyePos.y() + entityVelocity.y <= portal.position().y() && entityVelocity.y() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
                         }
-                        if (portalFacing.getUnitVector().getZ() > 0) {
-                            if (entityEyePos.getZ() + entityVelocity.z <= portal.getPos().getZ() && entityVelocity.getZ() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                        if (portalFacing.step().z() > 0) {
+                            if (entityEyePos.z() + entityVelocity.z <= portal.position().z() && entityVelocity.z() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 performTeleport(thisEntity, portal, entityVelocity);
                                 break;
                             }
@@ -295,7 +292,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
     }
 
-    @Inject(method = "pushAwayFrom", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "push(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
     public void pushAwayFrom(Entity entity, CallbackInfo ci) {
         if (entity instanceof CorePhysicsEntity || entity instanceof GelBlobEntity) {
             ci.cancel();
@@ -305,33 +302,33 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     private void performTeleport(
             Entity thisEntity,
             ExperimentalPortal portal,
-            Vec3d entityVelocity
+            Vec3 entityVelocity
     ) {
-        double teleportXOffset = (thisEntity.getEyePos().getX()) - portal.getPos().getX();
-        double teleportYOffset = (thisEntity.getEyePos().getY()) - portal.getPos().getY();
-        double teleportZOffset = (thisEntity.getEyePos().getZ()) - portal.getPos().getZ();
+        double teleportXOffset = (thisEntity.getEyePosition().x()) - portal.position().x();
+        double teleportYOffset = (thisEntity.getEyePosition().y()) - portal.position().y();
+        double teleportZOffset = (thisEntity.getEyePosition().z()) - portal.position().z();
         Direction portalFacing = portal.getFacingDirection();
-        Direction otherDirec = Direction.fromVector((int) portal.getOtherFacing().getX(), (int) portal.getOtherFacing().getY(), (int) portal.getOtherFacing().getZ());
+        Direction otherDirec = Direction.fromNormal((int) portal.getOtherFacing().x(), (int) portal.getOtherFacing().y(), (int) portal.getOtherFacing().z());
 
-        IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().multiply(-1), portal.getOtherAxisW(), portal.getAxisH().orElseThrow());
+        IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().scale(-1), portal.getOtherAxisW(), portal.getAxisH().orElseThrow());
         IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow());
 
         if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
             if (otherDirec == portalFacing) {
-                rotationW = IPQuaternion.getRotationBetween(portal.getNormal().multiply(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
-                rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().multiply(-1));
+                rotationW = IPQuaternion.getRotationBetween(portal.getNormal().scale(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
+                rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().scale(-1));
             }
         }
 
-        float modPitch = thisEntity.getPitch();
+        float modPitch = thisEntity.getXRot();
         if (modPitch == 90) {
             modPitch = 0;
         }
 
-        Vec3d rotatedYaw = Vec3d.fromPolar(modPitch, thisEntity.getYaw());
-        Vec3d rotatedPitch = Vec3d.fromPolar(thisEntity.getPitch(), thisEntity.getYaw());
-        Vec3d rotatedVel = entityVelocity;
-        Vec3d rotatedOffsets = new Vec3d(teleportXOffset, teleportYOffset, teleportZOffset);
+        Vec3 rotatedYaw = Vec3.directionFromRotation(modPitch, thisEntity.getYRot());
+        Vec3 rotatedPitch = Vec3.directionFromRotation(thisEntity.getXRot(), thisEntity.getYRot());
+        Vec3 rotatedVel = entityVelocity;
+        Vec3 rotatedOffsets = new Vec3(teleportXOffset, teleportYOffset, teleportZOffset);
 
         rotatedYaw = (rotationH.rotate(rotationW.rotate(rotatedYaw)));
         rotatedPitch = (rotationH.rotate(rotationW.rotate(rotatedPitch)));
@@ -341,36 +338,36 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         rotatedOffsets = rotatedOffsets.subtract(0, thisEntity.getEyeY() - thisEntity.getY(), 0);
         if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
             if (rotatedOffsets.y < -0.95) {
-                rotatedOffsets = new Vec3d(rotatedOffsets.x, -0.95, rotatedOffsets.z);
-            } else if (rotatedOffsets.y > (-0.95 + (1.9 - thisEntity.getHeight()))) {
-                rotatedOffsets = new Vec3d(rotatedOffsets.x, (-0.95 + (1.9 - thisEntity.getHeight())), rotatedOffsets.z);
+                rotatedOffsets = new Vec3(rotatedOffsets.x, -0.95, rotatedOffsets.z);
+            } else if (rotatedOffsets.y > (-0.95 + (1.9 - thisEntity.getBbHeight()))) {
+                rotatedOffsets = new Vec3(rotatedOffsets.x, (-0.95 + (1.9 - thisEntity.getBbHeight())), rotatedOffsets.z);
             }
         }
 
-        Vec2f lookAnglePitch = new Vec2f(
-                (float)Math.toDegrees(-MathHelper.atan2(rotatedPitch.y, Math.sqrt(rotatedPitch.x * rotatedPitch.x + rotatedPitch.z * rotatedPitch.z))),
-                (float)Math.toDegrees(MathHelper.atan2(rotatedPitch.z, rotatedPitch.x))
+        Vec2 lookAnglePitch = new Vec2(
+                (float)Math.toDegrees(-Mth.atan2(rotatedPitch.y, Math.sqrt(rotatedPitch.x * rotatedPitch.x + rotatedPitch.z * rotatedPitch.z))),
+                (float)Math.toDegrees(Mth.atan2(rotatedPitch.z, rotatedPitch.x))
         );
 
-        Vec2f lookAngleYaw = new Vec2f(
-                (float)Math.toDegrees(-MathHelper.atan2(rotatedYaw.y, Math.sqrt(rotatedYaw.x * rotatedYaw.x + rotatedYaw.z * rotatedYaw.z))),
-                (float)Math.toDegrees(MathHelper.atan2(rotatedYaw.z, rotatedYaw.x))
+        Vec2 lookAngleYaw = new Vec2(
+                (float)Math.toDegrees(-Mth.atan2(rotatedYaw.y, Math.sqrt(rotatedYaw.x * rotatedYaw.x + rotatedYaw.z * rotatedYaw.z))),
+                (float)Math.toDegrees(Mth.atan2(rotatedYaw.z, rotatedYaw.x))
         );
-        final Vec3d destPos = portal.getDestination().orElseThrow(ExperimentalPortal.NOT_INIT).add(rotatedOffsets);
-        thisEntity.refreshPositionAndAngles(destPos.x, destPos.y, destPos.z, lookAngleYaw.y - 90, lookAnglePitch.x);
-        thisEntity.setVelocity(rotatedVel);
+        final Vec3 destPos = portal.getDestination().orElseThrow(ExperimentalPortal.NOT_INIT).add(rotatedOffsets);
+        thisEntity.moveTo(destPos.x, destPos.y, destPos.z, lookAngleYaw.y - 90, lookAnglePitch.x);
+        thisEntity.setDeltaMovement(rotatedVel);
         GravityChangerAPI.clearGravity(thisEntity);
-        if (world instanceof ServerWorld serverWorld) {
-            final PacketByteBuf buf = PacketByteBufs.create();
+        if (level instanceof ServerLevel serverWorld) {
+            final FriendlyByteBuf buf = PacketByteBufs.create();
             buf.writeVarInt(getId());
             buf.writeDouble(getX());
             buf.writeDouble(getY());
             buf.writeDouble(getZ());
-            buf.writeFloat(getYaw());
-            buf.writeFloat(getPitch());
+            buf.writeFloat(getYRot());
+            buf.writeFloat(getXRot());
             final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.REFRESH_POS, buf);
-            for (final ServerPlayerEntity player : serverWorld.getPlayers()) {
-                serverWorld.sendToPlayerIfNearby(player, true, destPos.x, destPos.y, destPos.z, packet);
+            for (final ServerPlayer player : serverWorld.players()) {
+                serverWorld.sendParticles(player, true, destPos.x, destPos.y, destPos.z, packet);
             }
         }
         if (this instanceof WentThroughPortalListener listener) {
@@ -416,7 +413,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     }
 
     @Override
-    public Vec3d getLastVel() {
+    public Vec3 getLastVel() {
         return this.lastVel;
     }
 
@@ -438,64 +435,69 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
 
     @ModifyArgs(
-            method = "adjustSingleAxisMovementForCollisions(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Lnet/minecraft/world/World;Ljava/util/List;)Lnet/minecraft/util/math/Vec3d;",
-            at = @At(target = "Lcom/google/common/collect/ImmutableList$Builder;addAll(Ljava/lang/Iterable;)Lcom/google/common/collect/ImmutableList$Builder;", value = "INVOKE", ordinal = 1, remap = false)
+            method = "collideBoundingBox",
+            at = @At(
+                target = "Lcom/google/common/collect/ImmutableList$Builder;addAll(Ljava/lang/Iterable;)Lcom/google/common/collect/ImmutableList$Builder;",
+                value = "INVOKE",
+                ordinal = 1,
+                remap = false
+            )
     )
-    private static void addAllModifyArg(Args args, @Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
+    private static void addAllModifyArg(Args args, @Nullable Entity entity, Vec3 movement, AABB entityBoundingBox, Level world, List<VoxelShape> collisions) {
         VoxelShape portalBox = CalledValues.getPortalCutout(entity);
-        if (portalBox != VoxelShapes.empty())
-            args.set(0, ((CustomCollisionView) world).getPortalBlockCollisions(entity, entityBoundingBox.stretch(movement), portalBox));
+        if (portalBox != Shapes.empty())
+            args.set(0, ((CustomCollisionView) world).getPortalBlockCollisions(entity, entityBoundingBox.expandTowards(movement), portalBox));
     }
 
-    @Inject(method = "doesNotCollide(Lnet/minecraft/util/math/Box;)Z", at = @At("RETURN"), cancellable = true)
-    private void doesNotCollide(Box box, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "isFree(Lnet/minecraft/world/phys/AABB;)Z", at = @At("RETURN"), cancellable = true)
+    private void doesNotCollide(AABB box, CallbackInfoReturnable<Boolean> cir) {
         VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
-        if (portalBox != VoxelShapes.empty())
+        if (portalBox != Shapes.empty())
             cir.setReturnValue(true);
     }
 
-    @Inject(method = "wouldPoseNotCollide", at = @At("RETURN"), cancellable = true)
-    public void wouldPoseNotCollide(EntityPose pose, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "canEnterPose", at = @At("RETURN"), cancellable = true)
+    public void wouldPoseNotCollide(Pose pose, CallbackInfoReturnable<Boolean> cir) {
         VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
-        if (portalBox != VoxelShapes.empty())
+        if (portalBox != Shapes.empty())
             cir.setReturnValue(true);
     }
 
-    @Inject(method = "isInsideWall", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isInWall", at = @At("HEAD"), cancellable = true)
     public void isInsideWall(CallbackInfoReturnable<Boolean> cir) {
         VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
-        if (portalBox != VoxelShapes.empty()) cir.setReturnValue(false);
+        if (portalBox != Shapes.empty()) cir.setReturnValue(false);
     }
 
-    @Inject(method = "collidesWithStateAtPos", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isColliding", at = @At("HEAD"), cancellable = true)
     public void collidesWithStateAtPos(BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {
         VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
-        if (portalBox != VoxelShapes.empty())
+        if (portalBox != Shapes.empty())
             cir.setReturnValue(false);
     }
 
-    @Inject(method = "checkBlockCollision", at = @At("HEAD"))
+    @Inject(method = "checkInsideBlocks", at = @At("HEAD"))
     private void beginBlockCheck(CallbackInfo ci) {
         leftBlocks.putAll(collidingBlocks);
     }
 
     @Redirect(
-            method = "checkBlockCollision",
+            method = "checkInsideBlocks",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockState;onEntityCollision(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/Entity;)V"
+                    target = "Lnet/minecraft/world/level/block/state/BlockState;entityInside(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)V"
             )
     )
-    private void midBlockCheck(BlockState instance, World world, BlockPos pos, Entity entity) {
-        instance.onEntityCollision(world, pos, entity);
+    private void midBlockCheck(BlockState instance, Level world, BlockPos pos, Entity entity) {
+        instance.entityInside(world, pos, entity);
         if (
                 instance.getBlock() instanceof BlockCollisionTrigger trigger &&
                         intersects(
-                                entity.getBoundingBox().offset(pos.multiply(-1)),
-                                trigger.getTriggerShape(instance, world, pos, ShapeContext.of(entity))
+                                entity.getBoundingBox().move(pos.multiply(-1)),
+                                trigger.getTriggerShape(instance, world, pos, CollisionContext.of(entity))
                         )
         ) {
-            final BlockPos immutable = pos.toImmutable();
+            final BlockPos immutable = pos.immutable();
             if (collidingBlocks.put(instance, immutable) == null) {
                 trigger.onEntityEnter(instance, world, immutable, entity);
             }
@@ -503,24 +505,30 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
     }
 
-    @Inject(method = "checkBlockCollision", at = @At("TAIL"))
+    @Inject(method = "checkInsideBlocks", at = @At("TAIL"))
     private void endBlockCheck(CallbackInfo ci) {
         for (final var entry : leftBlocks.entrySet()) {
             if (entry.getKey().getBlock() instanceof BlockCollisionTrigger trigger) {
-                trigger.onEntityLeave(entry.getKey(), world, entry.getValue(), (Entity) (Object) this);
+                trigger.onEntityLeave(entry.getKey(), level, entry.getValue(), (Entity) (Object) this);
             }
             collidingBlocks.remove(entry.getKey());
         }
         leftBlocks.clear();
     }
 
-    @Redirect(method = "raycast", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;raycast(Lnet/minecraft/world/RaycastContext;)Lnet/minecraft/util/hit/BlockHitResult;"))
-    private BlockHitResult portalCubed$portalCompatibleRaycast(World world, RaycastContext context) {
+    @Redirect(
+        method = "pick",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/Level;clip(Lnet/minecraft/world/level/ClipContext;)Lnet/minecraft/world/phys/BlockHitResult;"
+        )
+    )
+    private BlockHitResult portalCubed$portalCompatibleRaycast(Level world, ClipContext context) {
         return CrossPortalInteraction.blockInteractionRaycast(world, context);
     }
 
-    private boolean intersects(Box box, VoxelShape shape) {
-        return shape.getBoundingBoxes().stream().anyMatch(box::intersects);
+    private boolean intersects(AABB box, VoxelShape shape) {
+        return shape.toAabbs().stream().anyMatch(box::intersects);
     }
 
     @Override
@@ -532,9 +540,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public void setCFG() {
     }
 
-    @ModifyReturnValue(method = "getCameraPosVec", at = @At("RETURN"))
-    private Vec3d transformViaPortal(Vec3d original, float tickDelta) {
-        final Vec3d newPos = PortalDirectionUtils.simpleTransformPassingVector((Entity)(Object)this, getLerpedPos(tickDelta), original);
-        return newPos != null ? newPos : original;
-    }
+//    @ModifyReturnValue(method = "getEyePosition", at = @At("RETURN"))
+//    private Vec3 transformViaPortal(Vec3 original, float tickDelta) {
+//        final Vec3 newPos = PortalDirectionUtils.simpleTransformPassingVector((Entity)(Object)this, getPosition(tickDelta), original);
+//        return newPos != null ? newPos : original;
+//    }
 }

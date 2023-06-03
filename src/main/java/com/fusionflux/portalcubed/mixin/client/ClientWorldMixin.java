@@ -4,15 +4,15 @@ import com.fusionflux.portalcubed.blocks.SpecialHiddenBlock;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.Set;
 
-@Mixin(ClientWorld.class)
+@Mixin(ClientLevel.class)
 public class ClientWorldMixin {
     @WrapOperation(
         method = "getMarkerParticleTarget",

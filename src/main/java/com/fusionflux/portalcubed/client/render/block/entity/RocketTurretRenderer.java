@@ -1,62 +1,62 @@
 package com.fusionflux.portalcubed.client.render.block.entity;
 
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.phys.Vec3;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class RocketTurretRenderer extends EntityLikeBlockEntityRenderer<RocketTurretBlockEntity, RocketTurretModel> {
-    public static final EntityModelLayer ROCKET_TURRET_LAYER = new EntityModelLayer(id("rocket_turret"), "main");
+    public static final ModelLayerLocation ROCKET_TURRET_LAYER = new ModelLayerLocation(id("rocket_turret"), "main");
 
-    public RocketTurretRenderer(BlockEntityRendererFactory.Context ctx) {
+    public RocketTurretRenderer(BlockEntityRendererProvider.Context ctx) {
         super(ctx, RocketTurretModel::new);
     }
 
     @Override
-    public boolean rendersOutsideBoundingBox(RocketTurretBlockEntity blockEntity) {
+    public boolean shouldRenderOffScreen(RocketTurretBlockEntity blockEntity) {
         return blockEntity.aimDests != null;
     }
 
     @Override
-    public int getRenderDistance() {
+    public int getViewDistance() {
         return 128; // So that the whole laser can be seen. See the raycast in RocketTurretBlockEntity.java.
     }
 
     @Override
-    public void render(RocketTurretBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(RocketTurretBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay);
         if (entity.aimDests == null) return;
 
-        final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getLines());
-        final MatrixStack.Entry matrix = matrices.peek();
+        final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.lines());
+        final PoseStack.Pose matrix = matrices.last();
         for (final var aimDestInfo : entity.aimDests) {
-            final Vec3f origin = new Vec3f(aimDestInfo.getLeft().subtract(Vec3d.of(entity.getPos())));
-            final Vec3f offset = new Vec3f(aimDestInfo.getRight().subtract(Vec3d.of(entity.getPos())));
-            final Vec3f normal = offset.copy();
-            normal.subtract(origin);
+            final Vector3f origin = new Vector3f(aimDestInfo.getA().subtract(Vec3.atLowerCornerOf(entity.getBlockPos())));
+            final Vector3f offset = new Vector3f(aimDestInfo.getB().subtract(Vec3.atLowerCornerOf(entity.getBlockPos())));
+            final Vector3f normal = offset.copy();
+            normal.sub(origin);
             normal.normalize();
             vertexConsumer
-                .vertex(matrix.getModel(), origin.getX(), origin.getY(), origin.getZ())
+                .vertex(matrix.pose(), origin.x(), origin.y(), origin.z())
                 .color(130 / 255f, 200 / 255f, 230 / 255f, 0.25f)
-                .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
-                .next();
+                .normal(matrix.normal(), normal.x(), normal.y(), normal.z())
+                .endVertex();
             vertexConsumer
-                .vertex(matrix.getModel(), offset.getX(), offset.getY(), offset.getZ())
+                .vertex(matrix.pose(), offset.x(), offset.y(), offset.z())
                 .color(130 / 255f, 200 / 255f, 230 / 255f, 0.25f)
-                .normal(matrix.getNormal(), normal.getX(), normal.getY(), normal.getZ())
-                .next();
+                .normal(matrix.normal(), normal.x(), normal.y(), normal.z())
+                .endVertex();
         }
     }
 
     @Override
-    protected EntityModelLayer getModelLayer() {
+    protected ModelLayerLocation getModelLayer() {
         return ROCKET_TURRET_LAYER;
     }
 }

@@ -3,20 +3,24 @@ package com.fusionflux.portalcubed.blocks;
 import com.fusionflux.portalcubed.blocks.blockentities.HardLightBridgeBlockEntity;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -27,7 +31,7 @@ import java.util.stream.Collectors;
 
 // TODO replace with your own reference as appropriate
 
-public class HardLightBridgeBlock extends BlockWithEntity {
+public class HardLightBridgeBlock extends BaseEntityBlock {
 
 
 
@@ -42,43 +46,43 @@ public class HardLightBridgeBlock extends BlockWithEntity {
 
     public static final Map<Direction, BooleanProperty> PROPERTY_MAP;
 
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(2.0D, 1.0D, 0.0D, 14.0D, 2.0D, 16.0D);
-    protected static final VoxelShape SHAPE_ROTATED = Block.createCuboidShape(0.0D, 1.0D, 2.0D, 16.0D, 2.0D, 14.0D);
+    protected static final VoxelShape SHAPE = Block.box(2.0D, 1.0D, 0.0D, 14.0D, 2.0D, 16.0D);
+    protected static final VoxelShape SHAPE_ROTATED = Block.box(0.0D, 1.0D, 2.0D, 16.0D, 2.0D, 14.0D);
 
-    protected static final VoxelShape VERT_NORTH = Block.createCuboidShape(2.0D, 0.0D, 1.0D, 14.0D, 16.0D, 2.0D);
-    protected static final VoxelShape VERT_SOUTH = Block.createCuboidShape(2.0D, 0.0D, 14.0D, 14.0D, 16.0D, 15.0D);
-    protected static final VoxelShape VERT_EAST = Block.createCuboidShape(14.0D, 0.0D, 2.0D, 15.0D, 16.0D, 14.0D);
-    protected static final VoxelShape VERT_WEST = Block.createCuboidShape(1.0D, 0.0D, 2.0D, 2.0D, 16.0D, 14.0D);
+    protected static final VoxelShape VERT_NORTH = Block.box(2.0D, 0.0D, 1.0D, 14.0D, 16.0D, 2.0D);
+    protected static final VoxelShape VERT_SOUTH = Block.box(2.0D, 0.0D, 14.0D, 14.0D, 16.0D, 15.0D);
+    protected static final VoxelShape VERT_EAST = Block.box(14.0D, 0.0D, 2.0D, 15.0D, 16.0D, 14.0D);
+    protected static final VoxelShape VERT_WEST = Block.box(1.0D, 0.0D, 2.0D, 2.0D, 16.0D, 14.0D);
     private final Map<BlockState, VoxelShape> stateToShape;
 
 
 
-    public HardLightBridgeBlock(Settings settings) {
+    public HardLightBridgeBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(VERT_FACING_UP, Direction.NORTH).with(VERT_FACING_DOWN, Direction.NORTH));
-        this.stateToShape = ImmutableMap.copyOf(this.stateManager.getStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeBlock::getShapeForState)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(NORTH, false).setValue(EAST, false).setValue(SOUTH, false).setValue(WEST, false).setValue(UP, false).setValue(DOWN, false).setValue(VERT_FACING_UP, Direction.NORTH).setValue(VERT_FACING_DOWN, Direction.NORTH));
+        this.stateToShape = ImmutableMap.copyOf(this.stateDefinition.getPossibleStates().stream().collect(Collectors.toMap(Function.identity(), HardLightBridgeBlock::getShapeForState)));
     }
 
     static {
-        NORTH = Properties.NORTH;
-        EAST = Properties.EAST;
-        SOUTH = Properties.SOUTH;
-        WEST = Properties.WEST;
-        UP = Properties.UP;
-        DOWN = Properties.DOWN;
+        NORTH = BlockStateProperties.NORTH;
+        EAST = BlockStateProperties.EAST;
+        SOUTH = BlockStateProperties.SOUTH;
+        WEST = BlockStateProperties.WEST;
+        UP = BlockStateProperties.UP;
+        DOWN = BlockStateProperties.DOWN;
         VERT_FACING_UP = CustomProperties.HFACINGUP;
         VERT_FACING_DOWN = CustomProperties.HFACINGDOWN;
         PROPERTY_MAP = new HashMap<>();
-        PROPERTY_MAP.put(Direction.NORTH, Properties.NORTH);
-        PROPERTY_MAP.put(Direction.SOUTH, Properties.SOUTH);
-        PROPERTY_MAP.put(Direction.EAST, Properties.EAST);
-        PROPERTY_MAP.put(Direction.WEST, Properties.WEST);
-        PROPERTY_MAP.put(Direction.UP, Properties.UP);
-        PROPERTY_MAP.put(Direction.DOWN, Properties.DOWN);
+        PROPERTY_MAP.put(Direction.NORTH, BlockStateProperties.NORTH);
+        PROPERTY_MAP.put(Direction.SOUTH, BlockStateProperties.SOUTH);
+        PROPERTY_MAP.put(Direction.EAST, BlockStateProperties.EAST);
+        PROPERTY_MAP.put(Direction.WEST, BlockStateProperties.WEST);
+        PROPERTY_MAP.put(Direction.UP, BlockStateProperties.UP);
+        PROPERTY_MAP.put(Direction.DOWN, BlockStateProperties.DOWN);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN, VERT_FACING_UP, VERT_FACING_DOWN);
     }
 
@@ -86,44 +90,44 @@ public class HardLightBridgeBlock extends BlockWithEntity {
 
 
     private static VoxelShape getShapeForState(BlockState blockState) {
-        VoxelShape voxelShape = VoxelShapes.empty();
+        VoxelShape voxelShape = Shapes.empty();
 
 
-        if (blockState.get(WEST) || blockState.get(EAST)) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE_ROTATED);
+        if (blockState.getValue(WEST) || blockState.getValue(EAST)) {
+            voxelShape = Shapes.or(voxelShape, SHAPE_ROTATED);
         }
 
-        if (blockState.get(NORTH) || blockState.get(SOUTH)) {
-            voxelShape = VoxelShapes.union(voxelShape, SHAPE);
+        if (blockState.getValue(NORTH) || blockState.getValue(SOUTH)) {
+            voxelShape = Shapes.or(voxelShape, SHAPE);
         }
 
-        if (blockState.get(UP)) {
-            if (blockState.get(VERT_FACING_UP).equals(Direction.NORTH)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_NORTH);
+        if (blockState.getValue(UP)) {
+            if (blockState.getValue(VERT_FACING_UP).equals(Direction.NORTH)) {
+                voxelShape = Shapes.or(voxelShape, VERT_NORTH);
             }
-            if (blockState.get(VERT_FACING_UP).equals(Direction.SOUTH)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_SOUTH);
+            if (blockState.getValue(VERT_FACING_UP).equals(Direction.SOUTH)) {
+                voxelShape = Shapes.or(voxelShape, VERT_SOUTH);
             }
-            if (blockState.get(VERT_FACING_UP).equals(Direction.EAST)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_EAST);
+            if (blockState.getValue(VERT_FACING_UP).equals(Direction.EAST)) {
+                voxelShape = Shapes.or(voxelShape, VERT_EAST);
             }
-            if (blockState.get(VERT_FACING_UP).equals(Direction.WEST)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_WEST);
+            if (blockState.getValue(VERT_FACING_UP).equals(Direction.WEST)) {
+                voxelShape = Shapes.or(voxelShape, VERT_WEST);
             }
         }
 
-        if (blockState.get(DOWN)) {
-            if (blockState.get(VERT_FACING_DOWN).equals(Direction.NORTH)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_NORTH);
+        if (blockState.getValue(DOWN)) {
+            if (blockState.getValue(VERT_FACING_DOWN).equals(Direction.NORTH)) {
+                voxelShape = Shapes.or(voxelShape, VERT_NORTH);
             }
-            if (blockState.get(VERT_FACING_DOWN).equals(Direction.SOUTH)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_SOUTH);
+            if (blockState.getValue(VERT_FACING_DOWN).equals(Direction.SOUTH)) {
+                voxelShape = Shapes.or(voxelShape, VERT_SOUTH);
             }
-            if (blockState.get(VERT_FACING_DOWN).equals(Direction.EAST)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_EAST);
+            if (blockState.getValue(VERT_FACING_DOWN).equals(Direction.EAST)) {
+                voxelShape = Shapes.or(voxelShape, VERT_EAST);
             }
-            if (blockState.get(VERT_FACING_DOWN).equals(Direction.WEST)) {
-                voxelShape = VoxelShapes.union(voxelShape, VERT_WEST);
+            if (blockState.getValue(VERT_FACING_DOWN).equals(Direction.WEST)) {
+                voxelShape = Shapes.or(voxelShape, VERT_WEST);
             }
         }
 
@@ -135,50 +139,50 @@ public class HardLightBridgeBlock extends BlockWithEntity {
     @Override
     @ClientOnly
     @SuppressWarnings("deprecation")
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return true;
     }
 
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return this.stateToShape.get(state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return this.stateToShape.get(state);
     }
 
     @Override
     @ClientOnly
     @SuppressWarnings("deprecation")
-    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-        if (stateFrom.isOf(PortalCubedBlocks.HLB_EMITTER_BLOCK)) {
-            return stateFrom.get(Properties.POWERED);
-        } else return stateFrom.isOf(PortalCubedBlocks.HLB_BLOCK);
+    public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
+        if (stateFrom.is(PortalCubedBlocks.HLB_EMITTER_BLOCK)) {
+            return stateFrom.getValue(BlockStateProperties.POWERED);
+        } else return stateFrom.is(PortalCubedBlocks.HLB_BLOCK);
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new HardLightBridgeBlockEntity(pos, state);
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.HLB_BLOCK_ENTITY, HardLightBridgeBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, PortalCubedBlocks.HLB_BLOCK_ENTITY, HardLightBridgeBlockEntity::tick);
     }
 
 

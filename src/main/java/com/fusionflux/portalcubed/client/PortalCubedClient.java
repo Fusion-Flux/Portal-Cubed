@@ -33,37 +33,37 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix4f;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.DeathScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.item.UnclampedModelPredicateProvider;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.client.texture.TextureManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.DeathScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
@@ -101,7 +101,7 @@ public class PortalCubedClient implements ClientModInitializer {
     public static final int ZOOM_TIME = 2;
 
     private static final File GLOBAL_ADVANCEMENTS_FILE = QuiltLoader.getGameDir().resolve("portal_cubed_global_advancements.dat").toFile();
-    private static final Set<Identifier> GLOBAL_ADVANCEMENTS = new HashSet<>();
+    private static final Set<ResourceLocation> GLOBAL_ADVANCEMENTS = new HashSet<>();
 
     public static long shakeStart;
     @Nullable public static BlockPos velocityHelperDragStart;
@@ -115,14 +115,14 @@ public class PortalCubedClient implements ClientModInitializer {
     public static int zoomDir;
 
     public static int gelOverlayTimer = -1;
-    public static Identifier gelOverlayTexture = TextureManager.MISSING_IDENTIFIER;
+    public static ResourceLocation gelOverlayTexture = TextureManager.INTENTIONAL_MISSING_TEXTURE;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
 
-        HandledScreens.register(PortalCubed.FAITH_PLATE_SCREEN_HANDLER, FaithPlateScreen::new);
-        HandledScreens.register(PortalCubed.VELOCITY_HELPER_SCREEN_HANDLER, VelocityHelperScreen::new);
-        HandledScreens.register(PortalCubed.OPTIONS_LIST_SCREEN_HANDLER, OptionsListScreen::new);
+        MenuScreens.register(PortalCubed.FAITH_PLATE_SCREEN_HANDLER, FaithPlateScreen::new);
+        MenuScreens.register(PortalCubed.VELOCITY_HELPER_SCREEN_HANDLER, VelocityHelperScreen::new);
+        MenuScreens.register(PortalCubed.OPTIONS_LIST_SCREEN_HANDLER, OptionsListScreen::new);
 
         registerEntityRenderers();
         registerColorProviders();
@@ -181,11 +181,11 @@ public class PortalCubedClient implements ClientModInitializer {
             }
             if (isPortalHudMode()) {
                 assert client.player != null;
-                while (client.options.inventoryKey.wasPressed()) {
+                while (client.options.keyInventory.consumeClick()) {
                     PortalCubedComponents.HOLDER_COMPONENT.get(client.player).stopHolding();
                     ClientPlayNetworking.send(PortalCubedServerPackets.GRAB_KEY_PRESSED, PacketByteBufs.create());
                 }
-                while (client.options.pickItemKey.wasPressed()) {
+                while (client.options.keyPickItem.consumeClick()) {
                     if (zoomDir == 0) {
                         zoomDir = 1;
                         zoomTimer = 0;
@@ -198,7 +198,7 @@ public class PortalCubedClient implements ClientModInitializer {
                 zoomDir = -1;
                 zoomTimer = Math.max(ZOOM_TIME - zoomTimer, 0);
             }
-            if (zoomDir > 0 && zoomTimer > 100 && client.player.input.getMovementInput().lengthSquared() > 0.1) {
+            if (zoomDir > 0 && zoomTimer > 100 && client.player.input.getMoveVector().lengthSquared() > 0.1) {
                 zoomDir = -1;
                 zoomTimer = 0;
             }
@@ -211,78 +211,78 @@ public class PortalCubedClient implements ClientModInitializer {
             if (client.player == null) return;
             if (((EntityAttachments)client.player).isInFunnel()) {
                 if (excursionFunnelMusic == null) {
-                    excursionFunnelMusic = new PositionedSoundInstance(
-                        PortalCubedSounds.TBEAM_TRAVEL, SoundCategory.BLOCKS,
-                        0.1f, 1f, SoundInstance.m_mglvabhn(),
-                        true, 0, SoundInstance.AttenuationType.NONE,
+                    excursionFunnelMusic = new SimpleSoundInstance(
+                        PortalCubedSounds.TBEAM_TRAVEL, SoundSource.BLOCKS,
+                        0.1f, 1f, SoundInstance.createUnseededRandom(),
+                        true, 0, SoundInstance.Attenuation.NONE,
                         0.0, 0.0, 0.0, true
                     );
                     client.getSoundManager().play(excursionFunnelMusic);
                 } else if (excursionFunnelMusic.getVolume() < 1f && excursionFunnelMusic instanceof AbstractSoundInstanceAccessor access) {
                     access.setVolume(excursionFunnelMusic.getVolume() + 0.05f);
-                    if (((MusicTrackerAccessor)client.getMusicTracker()).getCurrent() instanceof AbstractSoundInstanceAccessor cAccess) {
+                    if (((MusicTrackerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor cAccess) {
                         cAccess.setVolume(1f - excursionFunnelMusic.getVolume() / 2);
                     }
-                    client.getSoundManager().updateSoundVolume(null, 0); // If first argument is null, all it does is refresh SoundInstance volumes
+                    client.getSoundManager().updateSourceVolume(null, 0); // If first argument is null, all it does is refresh SoundInstance volumes
                 }
             } else if (excursionFunnelMusic != null) {
                 if (excursionFunnelMusic.getVolume() <= 0f) {
                     client.getSoundManager().stop(excursionFunnelMusic);
                     excursionFunnelMusic = null;
-                    if (((MusicTrackerAccessor)client.getMusicTracker()).getCurrent() instanceof AbstractSoundInstanceAccessor access) {
+                    if (((MusicTrackerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor access) {
                         access.setVolume(1f);
-                        client.getSoundManager().updateSoundVolume(null, 0); // See above
+                        client.getSoundManager().updateSourceVolume(null, 0); // See above
                     }
                 } else if (excursionFunnelMusic instanceof AbstractSoundInstanceAccessor access) {
                     access.setVolume(excursionFunnelMusic.getVolume() - 0.05f);
-                    if (((MusicTrackerAccessor)client.getMusicTracker()).getCurrent() instanceof AbstractSoundInstanceAccessor cAccess) {
+                    if (((MusicTrackerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor cAccess) {
                         cAccess.setVolume(1f - excursionFunnelMusic.getVolume() / 2);
                     }
-                    client.getSoundManager().updateSoundVolume(null, 0); // See above
+                    client.getSoundManager().updateSourceVolume(null, 0); // See above
                 }
             }
-            if (isPortalHudMode() && !client.player.showsDeathScreen() && client.currentScreen instanceof DeathScreenAccessor deathScreen && deathScreen.getTicksSinceDeath() >= 50) {
-                client.player.requestRespawn();
+            if (isPortalHudMode() && !client.player.shouldShowDeathScreen() && client.screen instanceof DeathScreenAccessor deathScreen && deathScreen.getDelayTicker() >= 50) {
+                client.player.respawn();
             }
         });
 
-        final Identifier toxicGooStillSpriteId = id("block/toxic_goo_still");
-        final Identifier toxicGooFlowSpriteId = id("block/toxic_goo_flow");
+        final ResourceLocation toxicGooStillSpriteId = id("block/toxic_goo_still");
+        final ResourceLocation toxicGooFlowSpriteId = id("block/toxic_goo_flow");
         FluidRenderHandlerRegistry.INSTANCE.register(PortalCubedFluids.TOXIC_GOO.still, PortalCubedFluids.TOXIC_GOO.flowing, new SimpleFluidRenderHandler(toxicGooStillSpriteId, toxicGooFlowSpriteId));
 
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) -> {
+        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((atlasTexture, registry) -> {
             registry.register(toxicGooStillSpriteId);
             registry.register(toxicGooFlowSpriteId);
         });
 
-        ModelPredicateProviderRegistry.register(
+        ItemProperties.register(
             PortalCubedBlocks.POWER_BLOCK.asItem(),
-            new Identifier("level"),
-            (UnclampedModelPredicateProvider)ModelPredicateProviderRegistry.get(
-                Items.LIGHT, new Identifier("level")
+            new ResourceLocation("level"),
+            (ClampedItemPropertyFunction)ItemProperties.getProperty(
+                Items.LIGHT, new ResourceLocation("level")
             )
         );
 
         WorldRenderEvents.END.register(ctx -> {
-            final var player = MinecraftClient.getInstance().player;
+            final var player = Minecraft.getInstance().player;
             if (player != null) {
-                if (!(ctx.consumers() instanceof final VertexConsumerProvider.Immediate consumers)) return;
-                final var cameraPos = ctx.camera().getPos();
-                ctx.matrixStack().push();
+                if (!(ctx.consumers() instanceof final MultiBufferSource.BufferSource consumers)) return;
+                final var cameraPos = ctx.camera().getPosition();
+                ctx.matrixStack().pushPose();
                 ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
                 ExperimentalPortalRenderer.renderingTracers = true;
                 for (UUID portalUuid : CalledValues.getPortals(player)) {
                     if (
                         !(((Accessors) ctx.world()).getEntity(portalUuid) instanceof ExperimentalPortal portal) ||
-                            !player.getUuid().equals(portal.getOwnerUUID().orElse(null))
+                            !player.getUUID().equals(portal.getOwnerUUID().orElse(null))
                     ) continue;
-                    MinecraftClient.getInstance().getEntityRenderDispatcher().render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYaw(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+                    Minecraft.getInstance().getEntityRenderDispatcher().render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYRot(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightTexture.FULL_BRIGHT);
                 }
-                ctx.matrixStack().pop();
+                ctx.matrixStack().popPose();
 
                 RenderSystem.disableCull();
                 // depth func change handled in RenderSystemMixin
-                consumers.drawCurrentLayer();
+                consumers.endLastBatch();
                 ExperimentalPortalRenderer.renderingTracers = false;
                 RenderSystem.depthFunc(GL11.GL_LEQUAL);
                 RenderSystem.enableCull();
@@ -301,17 +301,17 @@ public class PortalCubedClient implements ClientModInitializer {
 
         ClientTickEvents.START.register(client -> {
             if (client.player == null || !isPortalHudMode()) return;
-            assert client.interactionManager != null;
-            final PlayerInventory inventory = client.player.getInventory();
-            inventory.selectedSlot = 0;
+            assert client.gameMode != null;
+            final Inventory inventory = client.player.getInventory();
+            inventory.selected = 0;
             outer:
             for (final Item desirable : PORTAL_HUD_DESIRABLES) {
-                for (int i = 0, l = inventory.size(); i < l; i++) {
-                    if (inventory.getStack(i).isOf(desirable)) {
+                for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
+                    if (inventory.getItem(i).is(desirable)) {
                         if (i != 0) {
-                            for (final Slot slot : client.player.playerScreenHandler.slots) {
-                                if (slot.getIndex() == i) {
-                                    client.interactionManager.clickSlot(0, slot.id, 0, SlotActionType.SWAP, client.player);
+                            for (final Slot slot : client.player.inventoryMenu.slots) {
+                                if (slot.getContainerSlot() == i) {
+                                    client.gameMode.handleInventoryMouseClick(0, slot.index, 0, ClickType.SWAP, client.player);
                                     break;
                                 }
                             }
@@ -320,46 +320,46 @@ public class PortalCubedClient implements ClientModInitializer {
                     }
                 }
             }
-            if (!inventory.offHand.get(0).isEmpty()) {
+            if (!inventory.offhand.get(0).isEmpty()) {
                 boolean found = false;
-                for (int i = 1; i < inventory.main.size(); ++i) {
-                    if (inventory.main.get(i).isEmpty()) {
+                for (int i = 1; i < inventory.items.size(); ++i) {
+                    if (inventory.items.get(i).isEmpty()) {
                         found = true;
-                        client.interactionManager.clickSlot(0, 45, i, SlotActionType.SWAP, client.player);
+                        client.gameMode.handleInventoryMouseClick(0, 45, i, ClickType.SWAP, client.player);
                         break;
                     }
                 }
                 if (!found) {
-                    client.interactionManager.clickSlot(0, 45, 1, SlotActionType.THROW, client.player);
+                    client.gameMode.handleInventoryMouseClick(0, 45, 1, ClickType.THROW, client.player);
                 }
             }
         });
 
         HudRenderCallback.EVENT.register((matrixStack, tickDelta) -> {
             if (!isPortalHudMode()) return;
-            final MinecraftClient client = MinecraftClient.getInstance();
+            final Minecraft client = Minecraft.getInstance();
             assert client.player != null;
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             RenderSystem.enableBlend();
-            final boolean fadeOut = !client.player.showsDeathScreen() && client.currentScreen instanceof DeathScreenAccessor;
+            final boolean fadeOut = !client.player.shouldShowDeathScreen() && client.screen instanceof DeathScreenAccessor;
             if (!fadeOut && client.player.getAbilities().invulnerable) return;
             final float red = fadeOut ? 0f : 1f;
             final float alpha = fadeOut
-                ? Math.min(((DeathScreenAccessor)client.currentScreen).getTicksSinceDeath() / 40f, 1f)
-                : client.player.isDead()
-                    ? 0.5f : 1f - MathHelper.clamp(MathHelper.lerp(
+                ? Math.min(((DeathScreenAccessor)client.screen).getDelayTicker() / 40f, 1f)
+                : client.player.isDeadOrDying()
+                    ? 0.5f : 1f - Mth.clamp(Mth.lerp(
                         client.player.getHealth() / client.player.getMaxHealth(), 0.65f, 1f
                     ), 0f, 1f);
-            BufferBuilder bufferBuilder = Tessellator.getInstance().getBufferBuilder();
-            final Matrix4f matrix = matrixStack.peek().getModel();
-            final float w = client.getWindow().getScaledWidth();
-            final float h = client.getWindow().getScaledHeight();
-            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-            bufferBuilder.vertex(matrix, 0, h, 0).color(red, 0f, 0f, alpha).next();
-            bufferBuilder.vertex(matrix, w, h, 0).color(red, 0f, 0f, alpha).next();
-            bufferBuilder.vertex(matrix, w, 0, 0).color(red, 0f, 0f, alpha).next();
-            bufferBuilder.vertex(matrix, 0, 0, 0).color(red, 0f, 0f, alpha).next();
-            BufferRenderer.drawWithShader(bufferBuilder.end());
+            BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+            final Matrix4f matrix = matrixStack.last().pose();
+            final float w = client.getWindow().getGuiScaledWidth();
+            final float h = client.getWindow().getGuiScaledHeight();
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            bufferBuilder.vertex(matrix, 0, h, 0).color(red, 0f, 0f, alpha).endVertex();
+            bufferBuilder.vertex(matrix, w, h, 0).color(red, 0f, 0f, alpha).endVertex();
+            bufferBuilder.vertex(matrix, w, 0, 0).color(red, 0f, 0f, alpha).endVertex();
+            bufferBuilder.vertex(matrix, 0, 0, 0).color(red, 0f, 0f, alpha).endVertex();
+            BufferUploader.drawWithShader(bufferBuilder.end());
         });
 
         HudRenderCallback.EVENT.register((matrixStack, tickDelta) -> {
@@ -377,38 +377,38 @@ public class PortalCubedClient implements ClientModInitializer {
             alpha *= PortalCubedConfig.gelOverlayOpacity / 100f;
             if (alpha <= 0) return;
 
-            final MinecraftClient client = MinecraftClient.getInstance();
+            final Minecraft client = Minecraft.getInstance();
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.enableBlend();
             RenderSystem.setShaderTexture(0, gelOverlayTexture);
-            BufferBuilder bufferBuilder = Tessellator.getInstance().getBufferBuilder();
-            final Matrix4f matrix = matrixStack.peek().getModel();
-            final float w = client.getWindow().getScaledWidth();
-            final float h = client.getWindow().getScaledHeight();
-            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-            bufferBuilder.vertex(matrix, 0, h, 0).uv(0f, 0f).color(1f, 1f, 1f, alpha).next();
-            bufferBuilder.vertex(matrix, w, h, 0).uv(1f, 0f).color(1f, 1f, 1f, alpha).next();
-            bufferBuilder.vertex(matrix, w, 0, 0).uv(1f, 1f).color(1f, 1f, 1f, alpha).next();
-            bufferBuilder.vertex(matrix, 0, 0, 0).uv(0f, 1f).color(1f, 1f, 1f, alpha).next();
-            BufferRenderer.drawWithShader(bufferBuilder.end());
+            BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+            final Matrix4f matrix = matrixStack.last().pose();
+            final float w = client.getWindow().getGuiScaledWidth();
+            final float h = client.getWindow().getGuiScaledHeight();
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            bufferBuilder.vertex(matrix, 0, h, 0).uv(0f, 0f).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix, w, h, 0).uv(1f, 0f).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix, w, 0, 0).uv(1f, 1f).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix, 0, 0, 0).uv(0f, 1f).color(1f, 1f, 1f, alpha).endVertex();
+            BufferUploader.drawWithShader(bufferBuilder.end());
         });
 
         RecoilEvents.UPDATE_FOV.register((value, tickDelta) -> {
             if (zoomDir == 0) return;
             if (zoomDir > 0) {
                 if (zoomTimer < ZOOM_TIME) {
-                    value.set(MathHelper.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get(), value.get() / 2));
+                    value.set(Mth.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get(), value.get() / 2));
                 } else {
                     value.scale(0.5f);
                 }
             } else {
-                value.set(MathHelper.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get() / 2, value.get()));
+                value.set(Mth.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get() / 2, value.get()));
             }
         });
 
         RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
-            final MinecraftClient client = MinecraftClient.getInstance();
-            if (PortalCubedClient.isPortalHudMode() && client.currentScreen instanceof DeathScreen) {
+            final Minecraft client = Minecraft.getInstance();
+            if (PortalCubedClient.isPortalHudMode() && client.screen instanceof DeathScreen) {
                 ctrl.setPos(ctrl.getPos().add(0, -1, 0));
             }
         });
@@ -423,20 +423,20 @@ public class PortalCubedClient implements ClientModInitializer {
 //        });
 
         try {
-            final NbtCompound compound = NbtIo.readCompressed(GLOBAL_ADVANCEMENTS_FILE);
-            for (final NbtElement element : compound.getList("Advancements", NbtElement.STRING_TYPE)) {
-                GLOBAL_ADVANCEMENTS.add(new Identifier(element.asString()));
+            final CompoundTag compound = NbtIo.readCompressed(GLOBAL_ADVANCEMENTS_FILE);
+            for (final Tag element : compound.getList("Advancements", Tag.TAG_STRING)) {
+                GLOBAL_ADVANCEMENTS.add(new ResourceLocation(element.getAsString()));
             }
         } catch (Exception e) {
             LOGGER.warn("Failed to load global advancements", e);
         }
 
-        ResourceLoader.get(ResourceType.CLIENT_RESOURCES).registerReloader(AdvancementTitles.createResourceReloader());
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(AdvancementTitles.createResourceReloader());
     }
 
     private void registerEmissiveModels(ModContainer mod) {
         try (Reader reader = Files.newBufferedReader(mod.getPath("emissives.json"), StandardCharsets.UTF_8)) {
-            for (final var entry : JsonHelper.deserialize(reader).entrySet()) {
+            for (final var entry : GsonHelper.parse(reader).entrySet()) {
                 if (entry.getValue().isJsonArray()) {
                     for (final var value : entry.getValue().getAsJsonArray()) {
                         EmissiveSpriteRegistry.register(id(entry.getKey()), id(value.getAsString()));
@@ -531,23 +531,23 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityRendererRegistry.register(PortalCubedEntities.CONVERSION_GEL_BLOB, GelBlobRenderer::new);
         EntityRendererRegistry.register(PortalCubedEntities.REFLECTION_GEL_BLOB, GelBlobRenderer::new);
 
-        BlockEntityRendererFactories.register(PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY, VelocityHelperRenderer::new);
+        BlockEntityRenderers.register(PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY, VelocityHelperRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(RocketTurretRenderer.ROCKET_TURRET_LAYER, RocketTurretModel::getTexturedModelData);
-        BlockEntityRendererFactories.register(PortalCubedBlocks.ROCKET_TURRET_BLOCK_ENTITY, RocketTurretRenderer::new);
+        BlockEntityRenderers.register(PortalCubedBlocks.ROCKET_TURRET_BLOCK_ENTITY, RocketTurretRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(RocketRenderer.ROCKET_LAYER, RocketModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.ROCKET, RocketRenderer::new);
 
         EntityRendererRegistry.register(PortalCubedEntities.ENERGY_PELLET, EnergyPelletRenderer::new);
 
-        BlockEntityRendererFactories.register(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, LaserEmitterRenderer::new);
+        BlockEntityRenderers.register(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, LaserEmitterRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(FaithPlateRenderer.FAITH_PLATE_LAYER, FaithPlateModel::getTexturedModelData);
-        BlockEntityRendererFactories.register(PortalCubedBlocks.FAITH_PLATE_BLOCK_ENTITY, FaithPlateRenderer::new);
+        BlockEntityRenderers.register(PortalCubedBlocks.FAITH_PLATE_BLOCK_ENTITY, FaithPlateRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(BetaFaithPlateRenderer.BETA_FAITH_PLATE_LAYER, BetaFaithPlateModel::getTexturedModelData);
-        BlockEntityRendererFactories.register(PortalCubedBlocks.BETA_FAITH_PLATE_BLOCK_ENTITY, BetaFaithPlateRenderer::new);
+        BlockEntityRenderers.register(PortalCubedBlocks.BETA_FAITH_PLATE_BLOCK_ENTITY, BetaFaithPlateRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(TurretRenderer.TURRET_LAYER, TurretModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.TURRET, TurretRenderer::new);
@@ -579,17 +579,17 @@ public class PortalCubedClient implements ClientModInitializer {
         PortalCubedClient.portalHudMode = portalHudMode;
     }
 
-    public static boolean hasGlobalAdvancement(Identifier advancement) {
+    public static boolean hasGlobalAdvancement(ResourceLocation advancement) {
         return GLOBAL_ADVANCEMENTS.contains(advancement);
     }
 
-    public static void addGlobalAdvancement(Identifier advancement) {
+    public static void addGlobalAdvancement(ResourceLocation advancement) {
         if (GLOBAL_ADVANCEMENTS.add(advancement)) {
             try {
-                final NbtCompound compound = new NbtCompound();
-                final NbtList list = new NbtList();
-                for (final Identifier id : GLOBAL_ADVANCEMENTS) {
-                    list.add(NbtString.of(id.toString()));
+                final CompoundTag compound = new CompoundTag();
+                final ListTag list = new ListTag();
+                for (final ResourceLocation id : GLOBAL_ADVANCEMENTS) {
+                    list.add(StringTag.valueOf(id.toString()));
                 }
                 compound.put("Advancements", list);
                 NbtIo.writeCompressed(compound, GLOBAL_ADVANCEMENTS_FILE);

@@ -2,36 +2,36 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 
 public class CompanionCubeEntity extends StorageCubeEntity {
 
-    public CompanionCubeEntity(EntityType<? extends PathAwareEntity> type, World world) {
+    public CompanionCubeEntity(EntityType<? extends PathfinderMob> type, Level world) {
         super(type, world);
     }
 
     private int t = 1500;
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (!this.world.isClient && !this.isRemoved()) {
-            boolean bl = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().creativeMode;
-            if (source.getAttacker() instanceof PlayerEntity || source == DamageSource.OUT_OF_WORLD) {
-                if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity) source.getAttacker()).getAbilities().allowModifyWorld) {
-                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.COMPANION_CUBE);
+    public boolean hurt(DamageSource source, float amount) {
+        if (!this.level.isClientSide && !this.isRemoved()) {
+            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
+            if (source.getEntity() instanceof Player || source == DamageSource.OUT_OF_WORLD) {
+                if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(PortalCubedItems.COMPANION_CUBE);
                     }
                     this.discard();
                 }
-                if (!(source.getAttacker() instanceof PlayerEntity)) {
-                    if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS) && !bl) {
-                        this.dropItem(PortalCubedItems.COMPANION_CUBE);
+                if (!(source.getEntity() instanceof Player)) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(PortalCubedItems.COMPANION_CUBE);
                     }
                     this.discard();
                 }
@@ -44,9 +44,9 @@ public class CompanionCubeEntity extends StorageCubeEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!this.world.isClient) {
+        if (!this.level.isClientSide) {
             if (t == 1500) {
-                world.playSoundFromEntity(null, this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundCategory(), 1f, 1f);
+                level.playSound(null, this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundSource(), 1f, 1f);
             }
             t--;
             if (t == 0) {
@@ -57,9 +57,9 @@ public class CompanionCubeEntity extends StorageCubeEntity {
     }
 
     @Override
-    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
         t = 40;
-        super.onSpawnPacket(packet);
+        super.recreateFromPacket(packet);
     }
 
 }

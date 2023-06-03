@@ -8,71 +8,78 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.DyeableItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.*;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
-public class AutoPortalBlock extends BlockWithEntity {
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
-    public static final BooleanProperty POWERED = Properties.POWERED;
-    public static final EnumProperty<PortalType> TYPE = EnumProperty.of("type", PortalType.class);
+public class AutoPortalBlock extends BaseEntityBlock {
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final EnumProperty<PortalType> TYPE = EnumProperty.create("type", PortalType.class);
 
-    private static final VoxelShape PILLAR_SHAPE_NS = createCuboidShape(-2, 0, 0, 1, 16, 2);
-    private static final VoxelShape PILLAR_SHAPE_EW = createCuboidShape(0, 0, -2, 2, 16, 1);
-    public static final VoxelShape SOUTH_SHAPE = VoxelShapes.union(PILLAR_SHAPE_NS, PILLAR_SHAPE_NS.offset(17 / 16.0, 0, 0));
-    public static final VoxelShape NORTH_SHAPE = SOUTH_SHAPE.offset(0, 0, 14 / 16.0);
-    public static final VoxelShape EAST_SHAPE = VoxelShapes.union(PILLAR_SHAPE_EW, PILLAR_SHAPE_EW.offset(0, 0, 17 / 16.0));
-    public static final VoxelShape WEST_SHAPE = EAST_SHAPE.offset(14 / 16.0, 0, 0);
+    private static final VoxelShape PILLAR_SHAPE_NS = box(-2, 0, 0, 1, 16, 2);
+    private static final VoxelShape PILLAR_SHAPE_EW = box(0, 0, -2, 2, 16, 1);
+    public static final VoxelShape SOUTH_SHAPE = Shapes.or(PILLAR_SHAPE_NS, PILLAR_SHAPE_NS.move(17 / 16.0, 0, 0));
+    public static final VoxelShape NORTH_SHAPE = SOUTH_SHAPE.move(0, 0, 14 / 16.0);
+    public static final VoxelShape EAST_SHAPE = Shapes.or(PILLAR_SHAPE_EW, PILLAR_SHAPE_EW.move(0, 0, 17 / 16.0));
+    public static final VoxelShape WEST_SHAPE = EAST_SHAPE.move(14 / 16.0, 0, 0);
 
-    public AutoPortalBlock(Settings settings) {
+    public AutoPortalBlock(Properties settings) {
         super(settings);
-        setDefaultState(
-            getStateManager().getDefaultState()
-                .with(FACING, Direction.NORTH)
-                .with(HALF, DoubleBlockHalf.LOWER)
-                .with(POWERED, false)
+        registerDefaultState(
+            getStateDefinition().any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(HALF, DoubleBlockHalf.LOWER)
+                .setValue(POWERED, false)
         );
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AutoPortalBlockEntity(pos, state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return switch (state.get(FACING)) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(FACING)) {
             case NORTH -> NORTH_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
@@ -83,129 +90,129 @@ public class AutoPortalBlock extends BlockWithEntity {
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        final DoubleBlockHalf half = state.get(HALF);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        final DoubleBlockHalf half = state.getValue(HALF);
         if (direction.getAxis() != Direction.Axis.Y || half == DoubleBlockHalf.LOWER != (direction == Direction.UP)) {
-            return half == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos)
-                ? Blocks.AIR.getDefaultState()
-                : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+            return half == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canSurvive(world, pos)
+                ? Blocks.AIR.defaultBlockState()
+                : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
         }
-        return neighborState.isOf(this) && neighborState.get(HALF) != half
-            ? state.with(FACING, neighborState.get(FACING))
-                .with(POWERED, neighborState.get(POWERED))
-            : Blocks.AIR.getDefaultState();
+        return neighborState.is(this) && neighborState.getValue(HALF) != half
+            ? state.setValue(FACING, neighborState.getValue(FACING))
+                .setValue(POWERED, neighborState.getValue(POWERED))
+            : Blocks.AIR.defaultBlockState();
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient && player.isCreative()) {
+    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        if (!world.isClientSide && player.isCreative()) {
             SlidingDoorBlock.onBreakInCreative(world, pos, state, player);
         }
 
-        super.onBreak(world, pos, state, player);
+        super.playerWillDestroy(world, pos, state, player);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType type) {
         return true;
     }
 
     @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        final BlockPos pos = ctx.getBlockPos();
-        final World world = ctx.getWorld();
-        if (pos.getY() >= world.getTopY() - 1 || !world.getBlockState(pos.up()).canReplace(ctx)) {
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        final BlockPos pos = ctx.getClickedPos();
+        final Level world = ctx.getLevel();
+        if (pos.getY() >= world.getMaxBuildHeight() - 1 || !world.getBlockState(pos.above()).canBeReplaced(ctx)) {
             return null;
         }
-        final boolean powered = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.up());
-        return getDefaultState()
-            .with(FACING, ctx.getPlayerFacing().getOpposite())
-            .with(HALF, DoubleBlockHalf.LOWER)
-            .with(POWERED, powered);
+        final boolean powered = world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.above());
+        return defaultBlockState()
+            .setValue(FACING, ctx.getHorizontalDirection().getOpposite())
+            .setValue(HALF, DoubleBlockHalf.LOWER)
+            .setValue(POWERED, powered);
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), Block.NOTIFY_ALL);
-        openOrClosePortal(world, pos, state.get(FACING), true);
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        world.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER), Block.UPDATE_ALL);
+        openOrClosePortal(world, pos, state.getValue(FACING), true);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        final boolean poweredNow = world.isReceivingRedstonePower(pos) ||
-            world.isReceivingRedstonePower(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
-        if (!getDefaultState().isOf(block) && poweredNow != state.get(POWERED)) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        final boolean poweredNow = world.hasNeighborSignal(pos) ||
+            world.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
+        if (!defaultBlockState().is(block) && poweredNow != state.getValue(POWERED)) {
             if (poweredNow) {
-                openOrClosePortal(world, state.get(HALF) == DoubleBlockHalf.LOWER ? pos : pos.down(), state.get(FACING), false);
+                openOrClosePortal(world, state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos : pos.below(), state.getValue(FACING), false);
             }
-            world.setBlockState(pos, state.with(POWERED, poweredNow));
+            world.setBlockAndUpdate(pos, state.setValue(POWERED, poweredNow));
         }
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        final Direction facing = state.get(FACING);
-        final BlockPos onPos = pos.offset(facing.getOpposite());
-        if (!world.getBlockState(onPos).isSideSolidFullSquare(world, onPos, facing)) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        final Direction facing = state.getValue(FACING);
+        final BlockPos onPos = pos.relative(facing.getOpposite());
+        if (!world.getBlockState(onPos).isFaceSturdy(world, onPos, facing)) {
             return false;
         }
-        final BlockPos otherPos = state.get(HALF) == DoubleBlockHalf.UPPER ? pos.down() : pos.up();
-        final BlockPos otherOnPos = otherPos.offset(facing.getOpposite());
-        if (!world.getBlockState(otherOnPos).isSideSolidFullSquare(world, otherOnPos, facing)) {
+        final BlockPos otherPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos.above();
+        final BlockPos otherOnPos = otherPos.relative(facing.getOpposite());
+        if (!world.getBlockState(otherOnPos).isFaceSturdy(world, otherOnPos, facing)) {
             return false;
         }
-        return state.get(HALF) == DoubleBlockHalf.LOWER || world.getBlockState(otherPos).isOf(this);
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER || world.getBlockState(otherPos).is(this);
     }
 
-    private static void openOrClosePortal(World world, BlockPos lower, Direction facing, boolean forceClose) {
-        if (world.isClient) return;
+    private static void openOrClosePortal(Level world, BlockPos lower, Direction facing, boolean forceClose) {
+        if (world.isClientSide) return;
         openOrClosePortal(world, lower, facing, forceClose, true, true);
     }
 
     public static ExperimentalPortal openOrClosePortal(
-        World world, BlockPos lower, Direction facing, boolean forceClose, boolean playCloseSound, boolean spawnEntity
+        Level world, BlockPos lower, Direction facing, boolean forceClose, boolean playCloseSound, boolean spawnEntity
     ) {
         final int color = getColor(world, lower);
-        final BlockPos upper = lower.up();
-        final List<ExperimentalPortal> portals = world.getEntitiesByType(
+        final BlockPos upper = lower.above();
+        final List<ExperimentalPortal> portals = world.getEntities(
             PortalCubedEntities.EXPERIMENTAL_PORTAL,
-            Box.from(BlockBox.create(lower, upper)),
+            AABB.of(BoundingBox.fromCorners(lower, upper)),
             p -> p.getColor() == color
         );
         if (!portals.isEmpty()) {
             portals.forEach(ExperimentalPortal::kill);
             if (playCloseSound) {
-                world.playSound(null, lower.getX(), lower.getY(), lower.getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundCategory.NEUTRAL, .1F, 1F);
+                world.playSound(null, lower.getX(), lower.getY(), lower.getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
             }
             return null;
         }
         if (forceClose) return null;
         final Direction facingOpposite = facing.getOpposite();
-        final BlockPos placeOn = upper.offset(facingOpposite);
+        final BlockPos placeOn = upper.relative(facingOpposite);
         final ExperimentalPortal portal = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
         assert portal != null;
-        final Vec3d portalPos = new Vec3d(
-            placeOn.getX() + 0.5 - 0.510 * facingOpposite.getOffsetX(),
+        final Vec3 portalPos = new Vec3(
+            placeOn.getX() + 0.5 - 0.510 * facingOpposite.getStepX(),
             placeOn.getY(),
-            placeOn.getZ() + 0.5 - 0.510 * facingOpposite.getOffsetZ()
+            placeOn.getZ() + 0.5 - 0.510 * facingOpposite.getStepZ()
         );
         portal.setOriginPos(portalPos);
         portal.setDestination(Optional.of(portalPos));
-        final Vec3i right = new Vec3i(0, 1, 0).crossProduct(facingOpposite.getVector());
-        final Pair<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(
-            PortalGun.getPortalOrientationQuaternion(Vec3d.of(right), new Vec3d(0, 1, 0))
+        final Vec3i right = new Vec3i(0, 1, 0).cross(facingOpposite.getNormal());
+        final Tuple<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(
+            PortalGun.getPortalOrientationQuaternion(Vec3.atLowerCornerOf(right), new Vec3(0, 1, 0))
         );
-        portal.setYaw(rotAngles.getLeft().floatValue());
-        portal.setPitch(rotAngles.getRight().floatValue());
+        portal.setYRot(rotAngles.getA().floatValue());
+        portal.setXRot(rotAngles.getB().floatValue());
         portal.setColor(color);
-        portal.setOrientation(Vec3d.of(right), new Vec3d(0, -1, 0));
+        portal.setOrientation(Vec3.atLowerCornerOf(right), new Vec3(0, -1, 0));
         portal.setLinkedPortalUUID(Optional.empty());
         if (spawnEntity) {
-            world.spawnEntity(portal);
+            world.addFreshEntity(portal);
             PortalGun.getPotentialOpposite(world, portalPos, portal, color, true)
                 .ifPresent(other -> PortalGun.linkPortals(portal, other, 0.9f));
         }
@@ -214,64 +221,64 @@ public class AutoPortalBlock extends BlockWithEntity {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        final boolean upper = state.get(HALF) == DoubleBlockHalf.UPPER;
-        final BlockPos otherPos = upper ? pos.down() : pos.up();
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        final boolean upper = state.getValue(HALF) == DoubleBlockHalf.UPPER;
+        final BlockPos otherPos = upper ? pos.below() : pos.above();
         final BlockPos lowerPos = upper ? otherPos : pos;
         final BlockState otherState = world.getBlockState(otherPos);
-        final ItemStack stack = player.getStackInHand(hand);
-        if (stack.isOf(PortalCubedItems.HAMMER)) {
-            openOrClosePortal(world, lowerPos, state.get(FACING), true);
-            if (player.isSneaking()) {
+        final ItemStack stack = player.getItemInHand(hand);
+        if (stack.is(PortalCubedItems.HAMMER)) {
+            openOrClosePortal(world, lowerPos, state.getValue(FACING), true);
+            if (player.isShiftKeyDown()) {
                 for (BlockPos usePos = pos; usePos != null; usePos = usePos == pos ? otherPos : null) {
                     world.getBlockEntity(usePos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
                         .ifPresent(entity -> entity.setColor(0x1d86db));
                 }
-                player.sendMessage(
-                    Text.translatable("portalcubed.auto_portal.set_portal_color.default")
-                        .styled(s -> s.withColor(getColor(world, pos))),
+                player.displayClientMessage(
+                    Component.translatable("portalcubed.auto_portal.set_portal_color.default")
+                        .withStyle(s -> s.withColor(getColor(world, pos))),
                     true
                 );
-                return ActionResult.success(world.isClient);
+                return InteractionResult.sidedSuccess(world.isClientSide);
             }
             final BlockState newState = state.cycle(TYPE);
-            world.setBlockState(pos, newState);
-            world.setBlockState(otherPos, otherState.cycle(TYPE));
-            player.sendMessage(
-                Text.translatable(
+            world.setBlockAndUpdate(pos, newState);
+            world.setBlockAndUpdate(otherPos, otherState.cycle(TYPE));
+            player.displayClientMessage(
+                Component.translatable(
                     "portalcubed.auto_portal.set_portal_type",
-                    Text.translatable("portalcubed.portal_type." + newState.get(TYPE).asString())
-                ).styled(s -> s.withColor(getColor(world, pos))),
+                    Component.translatable("portalcubed.portal_type." + newState.getValue(TYPE).getSerializedName())
+                ).withStyle(s -> s.withColor(getColor(world, pos))),
                 true
             );
-            return ActionResult.success(world.isClient);
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
         if (stack.getItem() instanceof DyeItem dye) {
-            openOrClosePortal(world, lowerPos, state.get(FACING), true);
-            final int dyeColor = PortalCubedItems.PORTAL_GUN.getColor(DyeableItem.blendAndSetColor(
+            openOrClosePortal(world, lowerPos, state.getValue(FACING), true);
+            final int dyeColor = PortalCubedItems.PORTAL_GUN.getColor(DyeableLeatherItem.dyeArmor(
                 new ItemStack(PortalCubedItems.PORTAL_GUN), List.of(dye)
             ));
             for (BlockPos usePos = pos; usePos != null; usePos = usePos == pos ? otherPos : null) {
                 world.getBlockEntity(usePos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
                     .ifPresent(entity -> entity.setColor(dyeColor));
             }
-            player.sendMessage(
-                Text.translatable(
+            player.displayClientMessage(
+                Component.translatable(
                     "portalcubed.auto_portal.set_portal_color",
-                    Text.translatable("color.minecraft." + dye.getColor().getName())
-                ).styled(s -> s.withColor(getColor(world, pos))),
+                    Component.translatable("color.minecraft." + dye.getDyeColor().getName())
+                ).withStyle(s -> s.withColor(getColor(world, pos))),
                 true
             );
-            if (!player.getAbilities().creativeMode) {
-                stack.decrement(1);
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
             }
-            return ActionResult.success(world.isClient);
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
-    public static int getColor(World world, BlockPos pos) {
-        return world.getBlockState(pos).get(TYPE).colorTransformer.applyAsInt(
+    public static int getColor(Level world, BlockPos pos) {
+        return world.getBlockState(pos).getValue(TYPE).colorTransformer.applyAsInt(
             world.getBlockEntity(pos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
                 .map(AutoPortalBlockEntity::getColor)
                 .orElse(0x1d86db)
@@ -280,38 +287,38 @@ public class AutoPortalBlock extends BlockWithEntity {
 
     @Override
     @SuppressWarnings("deprecation")
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.DESTROY;
+    public PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return mirror == BlockMirror.NONE ? state : state.rotate(mirror.getRotation(state.get(FACING)));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return mirror == Mirror.NONE ? state : state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, HALF, POWERED, TYPE);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-        tooltip.add(Text.translatable("portalcubed.auto_portal.tooltip").formatted(Formatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options) {
+        tooltip.add(Component.translatable("portalcubed.auto_portal.tooltip").withStyle(ChatFormatting.GRAY));
     }
 
-    public enum PortalType implements StringIdentifiable {
+    public enum PortalType implements StringRepresentable {
         PRIMARY("primary", Int2IntFunction.identity()),
         SECONDARY("secondary", c -> 0xffffff - c + 1);
 
@@ -324,7 +331,7 @@ public class AutoPortalBlock extends BlockWithEntity {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return id;
         }
     }

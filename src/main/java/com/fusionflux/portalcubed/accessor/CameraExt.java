@@ -1,11 +1,11 @@
 package com.fusionflux.portalcubed.accessor;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.material.FluidState;
 
 public interface CameraExt {
     FluidState portalcubed$getSubmergedFluidState();
 
-    void updateSimple(BlockView area, Entity focusedEntity);
+    void updateSimple(BlockGetter area, Entity focusedEntity);
 }

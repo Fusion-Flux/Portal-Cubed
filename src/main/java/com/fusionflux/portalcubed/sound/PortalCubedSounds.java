@@ -1,87 +1,87 @@
 package com.fusionflux.portalcubed.sound;
 
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.TagKey;
 import org.quiltmc.qsl.tag.api.QuiltTagKey;
 import org.quiltmc.qsl.tag.api.TagType;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedSounds {
-    public static final Identifier ERROR = id("error");
+    public static final ResourceLocation ERROR = id("error");
 
-    public static final Identifier GEL_BOUNCE = id("gel_bounce");
-    public static final Identifier GEL_RUN = id("gel_run");
-    public static final Identifier GEL_SPLAT = id("gel_splat");
-    public static final Identifier PORTAL_GUN_PRIMARY = id("portal_gun_primary");
-    public static final Identifier PORTAL_GUN_SECONDARY = id("portal_gun_secondary");
-    public static final Identifier PORTAL_INVALID_SURFACE = id("portal_invalid_surface");
-    public static final Identifier NOTHING_TO_GRAB = id("nothing_to_grab");
-    public static final Identifier PORTAL_AMBIANCE = id("portal_ambience");
-    public static final Identifier PORTAL_ENTER = id("portal_enter");
-    public static final Identifier PORTAL_EXIT = id("portal_exit");
-    public static final Identifier PORTAL_OPEN = id("portal_open");
-    public static final Identifier PORTAL_CLOSE = id("portal_close");
-    public static final Identifier PORTAL_FIZZLE = id("portal_fizzle");
-    public static final Identifier CUBE_HIT_HIGH = id("cube_hit_high");
-    public static final Identifier CUBE_HIT_LOW = id("cube_hit_low");
-    public static final Identifier CUBE_SCRAPE = id("cube_scrape");
-    public static final Identifier COMPANION_CUBE_AMBIANCE = id("companion_cube_ambiance");
-    public static final Identifier MATERIAL_EMANCIPATION = id("material_emancipation");
-    public static final Identifier CATAPULT_LAUNCH = id("catapult_launch");
+    public static final ResourceLocation GEL_BOUNCE = id("gel_bounce");
+    public static final ResourceLocation GEL_RUN = id("gel_run");
+    public static final ResourceLocation GEL_SPLAT = id("gel_splat");
+    public static final ResourceLocation PORTAL_GUN_PRIMARY = id("portal_gun_primary");
+    public static final ResourceLocation PORTAL_GUN_SECONDARY = id("portal_gun_secondary");
+    public static final ResourceLocation PORTAL_INVALID_SURFACE = id("portal_invalid_surface");
+    public static final ResourceLocation NOTHING_TO_GRAB = id("nothing_to_grab");
+    public static final ResourceLocation PORTAL_AMBIANCE = id("portal_ambience");
+    public static final ResourceLocation PORTAL_ENTER = id("portal_enter");
+    public static final ResourceLocation PORTAL_EXIT = id("portal_exit");
+    public static final ResourceLocation PORTAL_OPEN = id("portal_open");
+    public static final ResourceLocation PORTAL_CLOSE = id("portal_close");
+    public static final ResourceLocation PORTAL_FIZZLE = id("portal_fizzle");
+    public static final ResourceLocation CUBE_HIT_HIGH = id("cube_hit_high");
+    public static final ResourceLocation CUBE_HIT_LOW = id("cube_hit_low");
+    public static final ResourceLocation CUBE_SCRAPE = id("cube_scrape");
+    public static final ResourceLocation COMPANION_CUBE_AMBIANCE = id("companion_cube_ambiance");
+    public static final ResourceLocation MATERIAL_EMANCIPATION = id("material_emancipation");
+    public static final ResourceLocation CATAPULT_LAUNCH = id("catapult_launch");
 
-    public static final Identifier PEDESTAL_BUTTON_PRESS = id("pedestal_button_press");
-    public static final Identifier PEDESTAL_BUTTON_RELEASE = id("pedestal_button_release");
-    public static final Identifier OLD_AP_PEDESTAL_BUTTON_PRESS = id("old_ap_pedestal_button_press");
-    public static final Identifier OLD_AP_PEDESTAL_BUTTON_RELEASE = id("old_ap_pedestal_button_release");
-    public static final Identifier FLOOR_BUTTON_PRESS = id("floor_button_press");
-    public static final Identifier FLOOR_BUTTON_RELEASE = id("floor_button_release");
-    public static final Identifier OLD_AP_FLOOR_BUTTON_PRESS = id("old_ap_floor_button_press");
-    public static final Identifier OLD_AP_FLOOR_BUTTON_RELEASE = id("old_ap_floor_button_release");
+    public static final ResourceLocation PEDESTAL_BUTTON_PRESS = id("pedestal_button_press");
+    public static final ResourceLocation PEDESTAL_BUTTON_RELEASE = id("pedestal_button_release");
+    public static final ResourceLocation OLD_AP_PEDESTAL_BUTTON_PRESS = id("old_ap_pedestal_button_press");
+    public static final ResourceLocation OLD_AP_PEDESTAL_BUTTON_RELEASE = id("old_ap_pedestal_button_release");
+    public static final ResourceLocation FLOOR_BUTTON_PRESS = id("floor_button_press");
+    public static final ResourceLocation FLOOR_BUTTON_RELEASE = id("floor_button_release");
+    public static final ResourceLocation OLD_AP_FLOOR_BUTTON_PRESS = id("old_ap_floor_button_press");
+    public static final ResourceLocation OLD_AP_FLOOR_BUTTON_RELEASE = id("old_ap_floor_button_release");
 
-    public static final Identifier ROCKET_FIRE = id("rocket/fire");
-    public static final Identifier ROCKET_FLY = id("rocket/fly");
-    public static final Identifier ROCKET_LOCKED = id("rocket/locked");
-    public static final Identifier ROCKET_LOCKING = id("rocket/locking");
-    public static final Identifier ROCKET_EXPLODE = id("rocket/explode");
-    public static final Identifier ROCKET_GOO = id("rocket/goo");
+    public static final ResourceLocation ROCKET_FIRE = id("rocket/fire");
+    public static final ResourceLocation ROCKET_FLY = id("rocket/fly");
+    public static final ResourceLocation ROCKET_LOCKED = id("rocket/locked");
+    public static final ResourceLocation ROCKET_LOCKING = id("rocket/locking");
+    public static final ResourceLocation ROCKET_EXPLODE = id("rocket/explode");
+    public static final ResourceLocation ROCKET_GOO = id("rocket/goo");
 
-    public static final Identifier LASER_EMITTER_ACTIVATE = id("laser/emitter_activate");
-    public static final Identifier LASER_BEAM_MUSIC = id("laser/beam_music");
-    public static final Identifier LASER_NODE_MUSIC = id("laser/node_music");
-    public static final Identifier LASER_NODE_ACTIVATE = id("laser/node_activate");
-    public static final Identifier LASER_NODE_DEACTIVATE = id("laser/node_deactivate");
-    public static final Identifier LASER_TRIPLE_LASER_SOUND_DEMO_1 = id("laser/triple_laser_sound_demo_1");
-    public static final Identifier LASER_TRIPLE_LASER_SOUND_DEMO_2 = id("laser/triple_laser_sound_demo_2");
-    public static final Identifier LASER_TRIPLE_LASER_SOUND_DEMO_3 = id("laser/triple_laser_sound_demo_3");
+    public static final ResourceLocation LASER_EMITTER_ACTIVATE = id("laser/emitter_activate");
+    public static final ResourceLocation LASER_BEAM_MUSIC = id("laser/beam_music");
+    public static final ResourceLocation LASER_NODE_MUSIC = id("laser/node_music");
+    public static final ResourceLocation LASER_NODE_ACTIVATE = id("laser/node_activate");
+    public static final ResourceLocation LASER_NODE_DEACTIVATE = id("laser/node_deactivate");
+    public static final ResourceLocation LASER_TRIPLE_LASER_SOUND_DEMO_1 = id("laser/triple_laser_sound_demo_1");
+    public static final ResourceLocation LASER_TRIPLE_LASER_SOUND_DEMO_2 = id("laser/triple_laser_sound_demo_2");
+    public static final ResourceLocation LASER_TRIPLE_LASER_SOUND_DEMO_3 = id("laser/triple_laser_sound_demo_3");
 
-    public static final Identifier PELLET_BOUNCE = id("pellet/bounce");
-    public static final Identifier PELLET_EXPLODE = id("pellet/explode");
-    public static final Identifier PELLET_SPAWN = id("pellet/spawn");
-    public static final Identifier PELLET_TRAVEL = id("pellet/travel");
+    public static final ResourceLocation PELLET_BOUNCE = id("pellet/bounce");
+    public static final ResourceLocation PELLET_EXPLODE = id("pellet/explode");
+    public static final ResourceLocation PELLET_SPAWN = id("pellet/spawn");
+    public static final ResourceLocation PELLET_TRAVEL = id("pellet/travel");
 
-    public static final Identifier TBEAM_ENTER = id("tbeam/enter");
-    public static final Identifier TBEAM_TRAVEL = id("tbeam/travel");
+    public static final ResourceLocation TBEAM_ENTER = id("tbeam/enter");
+    public static final ResourceLocation TBEAM_TRAVEL = id("tbeam/travel");
 
-    public static final Identifier BULLET_CONCRETE = id("bullet/concrete");
-    public static final Identifier BULLET_GLASS = id("bullet/glass");
-    public static final Identifier BULLET_METAL = id("bullet/metal");
+    public static final ResourceLocation BULLET_CONCRETE = id("bullet/concrete");
+    public static final ResourceLocation BULLET_GLASS = id("bullet/glass");
+    public static final ResourceLocation BULLET_METAL = id("bullet/metal");
 
-    public static final Identifier RADIO_MUSIC = id("radio");
-    public static final Identifier EXILE_SONG = id("exile_vilify");
-    public static final Identifier CURIOSITY_CORE_SOUND = id("curiosity_core");
-    public static final Identifier ANGER_CORE_SOUND = id("anger_core");
-    public static final Identifier CAKE_CORE_SOUND = id("cake_core");
+    public static final ResourceLocation RADIO_MUSIC = id("radio");
+    public static final ResourceLocation EXILE_SONG = id("exile_vilify");
+    public static final ResourceLocation CURIOSITY_CORE_SOUND = id("curiosity_core");
+    public static final ResourceLocation ANGER_CORE_SOUND = id("anger_core");
+    public static final ResourceLocation CAKE_CORE_SOUND = id("cake_core");
 
-    public static final Identifier SPACE_CORE_SOUND = id("space_core");
-    public static final Identifier FACT_CORE_SOUND = id("fact_core");
-    public static final Identifier ADVENTURE_CORE_SOUND = id("adventure_core");
+    public static final ResourceLocation SPACE_CORE_SOUND = id("space_core");
+    public static final ResourceLocation FACT_CORE_SOUND = id("fact_core");
+    public static final ResourceLocation ADVENTURE_CORE_SOUND = id("adventure_core");
 
-    public static final Identifier SEWAGE_STEP = id("sewage_step");
+    public static final ResourceLocation SEWAGE_STEP = id("sewage_step");
 
-    public static final Identifier CROWBAR_SWOOSH = id("crowbar_swoosh");
+    public static final ResourceLocation CROWBAR_SWOOSH = id("crowbar_swoosh");
 
     public static final SoundEvent ERROR_EVENT = new SoundEvent(ERROR);
 
@@ -155,7 +155,7 @@ public class PortalCubedSounds {
 
     public static final SoundEvent CROWBAR_SWOOSH_EVENT = new SoundEvent(CROWBAR_SWOOSH);
 
-    public static final TagKey<SoundEvent> NO_ERROR_SOUND = QuiltTagKey.of(Registry.SOUND_EVENT_KEY, id("no_error_sound"), TagType.CLIENT_ONLY);
+    public static final TagKey<SoundEvent> NO_ERROR_SOUND = QuiltTagKey.of(Registry.SOUND_EVENT_REGISTRY, id("no_error_sound"), TagType.CLIENT_ONLY);
 
     public static void registerSounds() {
         Registry.register(Registry.SOUND_EVENT, ERROR, ERROR_EVENT);

@@ -3,13 +3,13 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,13 +29,13 @@ public class ReversedExcursionFunnelEmitterBlockEntity extends AbstractExcursion
         super(PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY, pos, state);
     }
 
-    public static void tick3(World world, BlockPos pos, @SuppressWarnings("unused") BlockState state, ReversedExcursionFunnelEmitterBlockEntity blockEntity) {
-        if (!world.isClient) {
-            boolean redstonePowered = world.isReceivingRedstonePower(blockEntity.getPos());
+    public static void tick3(Level world, BlockPos pos, @SuppressWarnings("unused") BlockState state, ReversedExcursionFunnelEmitterBlockEntity blockEntity) {
+        if (!world.isClientSide) {
+            boolean redstonePowered = world.hasNeighborSignal(blockEntity.getBlockPos());
 
             if (redstonePowered) {
 
-                if (!world.getBlockState(pos).get(Properties.POWERED)) {
+                if (!world.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
                     blockEntity.togglePowered(world.getBlockState(pos));
                 }
 
@@ -45,24 +45,24 @@ public class ReversedExcursionFunnelEmitterBlockEntity extends AbstractExcursion
                     Set<BlockPos> modFunnels = new HashSet<>();
                     Set<BlockPos> portalFunnels = new HashSet<>();
                     boolean teleported = false;
-                    Direction storedDirection = blockEntity.getCachedState().get(Properties.FACING);
+                    Direction storedDirection = blockEntity.getBlockState().getValue(BlockStateProperties.FACING);
                     for (int i = 0; i <= blockEntity.maxRange; i++) {
                         if (!teleported) {
-                            translatedPos = translatedPos.offset(storedDirection);
+                            translatedPos = translatedPos.relative(storedDirection);
                         } else {
                             teleported = false;
                         }
-                        if (translatedPos.getY() < world.getTopY() && translatedPos.getY() > world.getBottomY() && (world.isAir(translatedPos) || (world.getBlockState(translatedPos).getHardness(world, translatedPos) <= 0.1F && world.getBlockState(translatedPos).getHardness(world, translatedPos) != -1F) || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) && !world.getBlockState(translatedPos).getBlock().equals(Blocks.BARRIER)) {
+                        if (translatedPos.getY() < world.getMaxBuildHeight() && translatedPos.getY() > world.getMinBuildHeight() && (world.isEmptyBlock(translatedPos) || (world.getBlockState(translatedPos).getDestroySpeed(world, translatedPos) <= 0.1F && world.getBlockState(translatedPos).getDestroySpeed(world, translatedPos) != -1F) || world.getBlockState(translatedPos).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) && !world.getBlockState(translatedPos).getBlock().equals(Blocks.BARRIER)) {
 
-                            world.setBlockState(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.getDefaultState());
+                            world.setBlockAndUpdate(translatedPos, PortalCubedBlocks.EXCURSION_FUNNEL.defaultBlockState());
 
                             ExcursionFunnelMainBlockEntity funnel = ((ExcursionFunnelMainBlockEntity) Objects.requireNonNull(world.getBlockEntity(translatedPos)));
 
-                            modFunnels.add(funnel.getPos());
-                            blockEntity.funnels.add(funnel.getPos());
+                            modFunnels.add(funnel.getBlockPos());
+                            blockEntity.funnels.add(funnel.getBlockPos());
                             if (!savedPos.equals(pos)) {
-                                portalFunnels.add(funnel.getPos());
-                                blockEntity.portalFunnels.add(funnel.getPos());
+                                portalFunnels.add(funnel.getBlockPos());
+                                blockEntity.portalFunnels.add(funnel.getBlockPos());
                             }
                             if (!funnel.facing.contains(storedDirection)) {
                                 funnel.facing.add(storedDirection);
@@ -72,17 +72,17 @@ public class ReversedExcursionFunnelEmitterBlockEntity extends AbstractExcursion
 
                             funnel.updateState(world.getBlockState(translatedPos), world, translatedPos, funnel);
 
-                            Box portalCheckBox = new Box(translatedPos);
+                            AABB portalCheckBox = new AABB(translatedPos);
 
-                            List<ExperimentalPortal> list = world.getNonSpectatingEntities(ExperimentalPortal.class, portalCheckBox);
+                            List<ExperimentalPortal> list = world.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
 
 
                             for (ExperimentalPortal portal : list) {
                                 if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
                                     if (portal.getActive()) {
-                                        Direction otherPortalVertFacing = Direction.fromVector(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
-                                        int offset = (int)(((portal.getBlockPos().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.getBlockPos().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.getBlockPos().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
-                                        Direction mainPortalVertFacing = Direction.fromVector(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
+                                        Direction otherPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
+                                        int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
+                                        Direction mainPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
                                         assert mainPortalVertFacing != null;
                                         if (mainPortalVertFacing.equals(Direction.SOUTH)) {
                                             offset = (Math.abs(offset) - 1) * -1;
@@ -91,17 +91,17 @@ public class ReversedExcursionFunnelEmitterBlockEntity extends AbstractExcursion
                                             offset = (Math.abs(offset) - 1) * -1;
                                         }
 
-                                        translatedPos = new BlockPos(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).offset(otherPortalVertFacing, offset);
+                                        translatedPos = new BlockPos(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
                                         savedPos = translatedPos;
                                         assert otherPortalVertFacing != null;
                                         if (otherPortalVertFacing.equals(Direction.SOUTH)) {
-                                            translatedPos = translatedPos.offset(Direction.NORTH, 1);
+                                            translatedPos = translatedPos.relative(Direction.NORTH, 1);
                                         }
                                         if (otherPortalVertFacing.equals(Direction.EAST)) {
-                                            translatedPos = translatedPos.offset(Direction.WEST, 1);
+                                            translatedPos = translatedPos.relative(Direction.WEST, 1);
                                         }
 
-                                        storedDirection = Direction.fromVector((int)portal.getOtherFacing().x, (int)portal.getOtherFacing().y, (int)portal.getOtherFacing().z);
+                                        storedDirection = Direction.fromNormal((int)portal.getOtherFacing().x, (int)portal.getOtherFacing().y, (int)portal.getOtherFacing().z);
                                         teleported = true;
                                         blockEntity.funnels = modFunnels;
                                         blockEntity.portalFunnels = portalFunnels;
@@ -119,7 +119,7 @@ public class ReversedExcursionFunnelEmitterBlockEntity extends AbstractExcursion
             }
 
             if (!redstonePowered) {
-                if (world.getBlockState(pos).get(Properties.POWERED)) {
+                if (world.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
                     blockEntity.togglePowered(world.getBlockState(pos));
                 }
             }

@@ -2,33 +2,33 @@ package com.fusionflux.portalcubed.commands;
 
 import com.fusionflux.portalcubed.entity.Fizzleable;
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
 
 import java.util.Collection;
 import java.util.List;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class FizzleCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("fizzle")
-            .requires(s -> s.hasPermissionLevel(2))
-            .then(argument("entity", EntityArgumentType.entities())
+            .requires(s -> s.hasPermission(2))
+            .then(argument("entity", EntityArgument.entities())
                 .executes(ctx -> {
-                    final List<Fizzleable> entities = EntityArgumentType.getOptionalEntities(ctx, "entity")
+                    final List<Fizzleable> entities = EntityArgument.getOptionalEntities(ctx, "entity")
                         .stream()
                         .filter(e -> e instanceof Fizzleable)
                         .map(e -> (Fizzleable)e)
                         .toList();
                     if (entities.isEmpty()) {
-                        throw EntityArgumentType.ENTITY_NOT_FOUND_EXCEPTION.create();
+                        throw EntityArgument.NO_ENTITIES_FOUND.create();
                     }
                     fizzle(entities);
-                    ctx.getSource().sendFeedback(
-                        Text.translatable("portalcubed.command.fizzle.success", entities.size()),
+                    ctx.getSource().sendSuccess(
+                        Component.translatable("portalcubed.command.fizzle.success", entities.size()),
                         true
                     );
                     return entities.size();

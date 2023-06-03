@@ -13,26 +13,26 @@ import com.fusionflux.portalcubed.util.GeneralUtil;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.MovingSoundInstance;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -57,10 +57,10 @@ public class LaserEmitterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        final NbtList list = new NbtList();
+    public void saveAdditional(CompoundTag tag) {
+        final ListTag list = new ListTag();
         for (final Target target : targets) {
-            final NbtCompound targetNbt = new NbtCompound();
+            final CompoundTag targetNbt = new CompoundTag();
             targetNbt.putIntArray("Target", new int[] {target.pos.getX(), target.pos.getY(), target.pos.getZ()});
             if (target.side != null) {
                 targetNbt.putString("TargetSide", target.side.getName());
@@ -71,10 +71,10 @@ public class LaserEmitterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
+    public void load(CompoundTag tag) {
         targets.clear();
-        for (final NbtElement elem : tag.getList("Targets", NbtElement.COMPOUND_TYPE)) {
-            final NbtCompound targetNbt = (NbtCompound)elem;
+        for (final Tag elem : tag.getList("Targets", Tag.TAG_COMPOUND)) {
+            final CompoundTag targetNbt = (CompoundTag)elem;
             final int[] targetA = targetNbt.getIntArray("Target");
             if (targetA.length >= 3) {
                 targets.add(new Target(
@@ -85,10 +85,10 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         }
     }
 
-    public void tick(World world, BlockPos pos, BlockState state) {
+    public void tick(Level world, BlockPos pos, BlockState state) {
         multiSegments.clear();
-        if (!state.get(LaserEmitterBlock.POWERED)) {
-            if (!world.isClient) {
+        if (!state.getValue(LaserEmitterBlock.POWERED)) {
+            if (!world.isClientSide) {
                 for (final Target target : targets) {
                     world.getBlockEntity(target.pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
                 }
@@ -96,8 +96,8 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             }
             return;
         }
-        Vec3d direction = Vec3d.of(state.get(LaserEmitterBlock.FACING).getVector());
-        Vec3d start = Vec3d.ofCenter(pos).add(direction.multiply(0.5));
+        Vec3 direction = Vec3.atLowerCornerOf(state.getValue(LaserEmitterBlock.FACING).getNormal());
+        Vec3 start = Vec3.atCenterOf(pos).add(direction.scale(0.5));
         double lengthRemaining = PortalCubedConfig.maxBridgeLength;
         final Set<Entity> alreadyHit = new HashSet<>();
         BlockState hitState;
@@ -105,9 +105,9 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             //noinspection DataFlowIssue
             final AdvancedEntityRaycast.Result segments = AdvancedEntityRaycast.raycast(
                 world,
-                new RaycastContext(
-                    start, start.add(direction.multiply(lengthRemaining)),
-                    RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, null
+                new ClipContext(
+                    start, start.add(direction.scale(lengthRemaining)),
+                    ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, null
                 ),
                 PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
                 new AdvancedEntityRaycast.TransformInfo(
@@ -115,13 +115,13 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                     (context, blockHit, entityHit) -> {
                         final var entity = (RedirectionCubeEntity)entityHit.getEntity();
                         alreadyHit.add(entity);
-                        final double distance = context.getStart().distanceTo(context.getEnd());
-                        final Vec3d offset = entityHit.getPos().subtract(context.getStart());
-                        final Vec3d newOffset = Vec3d.fromPolar(entity.getPitch(), entity.getYaw())
-                            .multiply(distance - offset.length());
-                        final Vec3d origin = entity.getPos().add(new Vec3d(0, entity.getHeight() / 2, 0));
+                        final double distance = context.getFrom().distanceTo(context.getTo());
+                        final Vec3 offset = entityHit.getLocation().subtract(context.getFrom());
+                        final Vec3 newOffset = Vec3.directionFromRotation(entity.getXRot(), entity.getYRot())
+                            .scale(distance - offset.length());
+                        final Vec3 origin = entity.position().add(new Vec3(0, entity.getBbHeight() / 2, 0));
                         return new AdvancedEntityRaycast.TransformResult(
-                            entityHit.getPos().add(offset.multiply(0.25 / offset.length())),
+                            entityHit.getLocation().add(offset.scale(0.25 / offset.length())),
                             AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
                         );
                     }
@@ -133,16 +133,16 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             multiSegments.add(segments);
             if (segments.finalHit().getType() == HitResult.Type.BLOCK) {
                 hitState = world.getBlockState(segments.finalHit().getBlockPos());
-                if (hitState.isOf(PortalCubedBlocks.REFLECTION_GEL)) {
-                    final Direction.Axis axis = segments.finalHit().getSide().getAxis();
-                    direction = direction.withAxis(axis, -direction.getComponentAlongAxis(axis));
+                if (hitState.is(PortalCubedBlocks.REFLECTION_GEL)) {
+                    final Direction.Axis axis = segments.finalHit().getDirection().getAxis();
+                    direction = direction.with(axis, -direction.get(axis));
                 }
             } else {
                 hitState = null;
             }
-        } while (hitState != null && (hitState.isOf(PortalCubedBlocks.LASER_RELAY) || hitState.isOf(PortalCubedBlocks.REFLECTION_GEL)));
+        } while (hitState != null && (hitState.is(PortalCubedBlocks.LASER_RELAY) || hitState.is(PortalCubedBlocks.REFLECTION_GEL)));
 
-        if (world.isClient) {
+        if (world.isClientSide) {
             clientTick();
             return;
         }
@@ -152,12 +152,12 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         alreadyHit.clear();
         for (final AdvancedEntityRaycast.Result result : multiSegments) {
             for (final AdvancedEntityRaycast.Result.Ray ray : result.rays()) {
-                Vec3d rayStart = ray.start();
+                Vec3 rayStart = ray.start();
                 EntityHitResult hit;
                 do {
                     hit = new AdvancedEntityRaycast.Result.Ray(rayStart, ray.end(), null).entityRaycast(owner, e -> e instanceof LivingEntity && !alreadyHit.contains(e));
                     if (hit != null) {
-                        rayStart = hit.getPos();
+                        rayStart = hit.getLocation();
                         final Entity hitEntity = hit.getEntity();
                         alreadyHit.add(hitEntity);
                         owner = hitEntity;
@@ -165,11 +165,11 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                             continue; // TODO: Turrets and chairs burn
                         }
                         if (!hitEntity.isOnGround()) continue;
-                        hitEntity.damage(PortalCubedDamageSources.LASER, PortalCubedConfig.laserDamage);
-                        final Vec3d velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.getPos())
+                        hitEntity.hurt(PortalCubedDamageSources.LASER, PortalCubedConfig.laserDamage);
+                        final Vec3 velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.position())
                             .normalize()
-                            .multiply(1.25);
-                        hitEntity.addVelocity(velocity.x, velocity.y, velocity.z);
+                            .scale(1.25);
+                        hitEntity.push(velocity.x, velocity.y, velocity.z);
                     }
                 } while (hit != null && !GeneralUtil.targetsEqual(hit, ray.hit()));
                 if (ray.hit() instanceof EntityHitResult entityHitResult) {
@@ -184,10 +184,10 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             final BlockHitResult finalHit = result.finalHit();
             if (finalHit.getType() == HitResult.Type.MISS) continue;
             final BlockState hitState1 = world.getBlockState(finalHit.getBlockPos());
-            if (hitState1.isOf(PortalCubedBlocks.LASER_CATCHER) && finalHit.getSide() != hitState1.get(LaserCatcherBlock.FACING)) continue;
+            if (hitState1.is(PortalCubedBlocks.LASER_CATCHER) && finalHit.getDirection() != hitState1.getValue(LaserCatcherBlock.FACING)) continue;
             final Target target = new Target(
                 finalHit.getBlockPos(),
-                hitState1.isOf(PortalCubedBlocks.LASER_RELAY) ? null : finalHit.getSide()
+                hitState1.is(PortalCubedBlocks.LASER_RELAY) ? null : finalHit.getDirection()
             );
             newTargets.add(target);
             if (targets.add(target)) {
@@ -217,7 +217,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             }
         }
         if (!changes.isEmpty()) {
-            markDirty();
+            setChanged();
         }
     }
 
@@ -227,35 +227,35 @@ public class LaserEmitterBlockEntity extends BlockEntity {
 
     @ClientOnly
     protected void clientTick() {
-        if (musicInstance == null && world != null && world.getBlockState(pos).get(LaserEmitterBlock.POWERED)) {
-            musicInstance = new MovingSoundInstance(PortalCubedSounds.LASER_BEAM_MUSIC_EVENT, SoundCategory.BLOCKS, SoundInstance.m_mglvabhn()) {
+        if (musicInstance == null && level != null && level.getBlockState(worldPosition).getValue(LaserEmitterBlock.POWERED)) {
+            musicInstance = new AbstractTickableSoundInstance(PortalCubedSounds.LASER_BEAM_MUSIC_EVENT, SoundSource.BLOCKS, SoundInstance.createUnseededRandom()) {
                 {
                     volume = 0.1875f;
-                    repeat = true;
+                    looping = true;
                 }
 
                 @Override
                 public void tick() {
-                    if (isRemoved() || world == null || !world.getBlockState(pos).get(LaserEmitterBlock.POWERED)) {
+                    if (isRemoved() || level == null || !level.getBlockState(worldPosition).getValue(LaserEmitterBlock.POWERED)) {
                         musicInstance = null;
-                        setDone();
+                        stop();
                         return;
                     }
-                    final Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-                    Vec3d usePos = null;
+                    final Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+                    Vec3 usePos = null;
                     double distanceSq = Double.POSITIVE_INFINITY;
                     for (final AdvancedEntityRaycast.Result segments : multiSegments) {
                         for (final AdvancedEntityRaycast.Result.Ray ray : segments.rays()) {
-                            Vec3d tryPos = GeneralUtil.nearestPointOnLine(
+                            Vec3 tryPos = GeneralUtil.nearestPointOnLine(
                                 ray.start(), ray.end().subtract(ray.start()), cameraPos
                             );
-                            double tryDistance = tryPos.squaredDistanceTo(cameraPos);
-                            if (tryPos.squaredDistanceTo(ray.start()) > ray.end().squaredDistanceTo(ray.start())) {
+                            double tryDistance = tryPos.distanceToSqr(cameraPos);
+                            if (tryPos.distanceToSqr(ray.start()) > ray.end().distanceToSqr(ray.start())) {
                                 tryPos = ray.end();
-                                tryDistance = tryPos.squaredDistanceTo(cameraPos);
-                            } else if (tryPos.squaredDistanceTo(ray.end()) > ray.end().squaredDistanceTo(ray.start())) {
+                                tryDistance = tryPos.distanceToSqr(cameraPos);
+                            } else if (tryPos.distanceToSqr(ray.end()) > ray.end().distanceToSqr(ray.start())) {
                                 tryPos = ray.start();
-                                tryDistance = tryPos.squaredDistanceTo(cameraPos);
+                                tryDistance = tryPos.distanceToSqr(cameraPos);
                             }
                             if (tryDistance < distanceSq) {
                                 usePos = tryPos;
@@ -265,7 +265,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                     }
                     if (usePos == null) {
                         musicInstance = null;
-                        setDone();
+                        stop();
                         return;
                     }
                     x = usePos.x;
@@ -273,7 +273,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                     z = usePos.z;
                 }
             };
-            MinecraftClient.getInstance().getSoundManager().play(musicInstance);
+            Minecraft.getInstance().getSoundManager().play(musicInstance);
         }
     }
 }

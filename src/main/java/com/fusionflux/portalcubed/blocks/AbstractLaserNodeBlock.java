@@ -3,41 +3,41 @@ package com.fusionflux.portalcubed.blocks;
 import com.fusionflux.portalcubed.blocks.blockentities.LaserNodeBlockEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-public abstract class AbstractLaserNodeBlock extends BlockWithEntity {
-    public static final BooleanProperty ENABLED = Properties.ENABLED;
+public abstract class AbstractLaserNodeBlock extends BaseEntityBlock {
+    public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
 
-    protected AbstractLaserNodeBlock(Settings settings) {
+    protected AbstractLaserNodeBlock(Properties settings) {
         super(settings);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean emitsRedstonePower(BlockState state) {
-        return state.get(Properties.ENABLED);
+    public boolean isSignalSource(BlockState state) {
+        return state.getValue(BlockStateProperties.ENABLED);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        if (state.get(Properties.ENABLED)) {
+    public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
+        if (state.getValue(BlockStateProperties.ENABLED)) {
             return 15;
         }
         return 0;
@@ -46,38 +46,38 @@ public abstract class AbstractLaserNodeBlock extends BlockWithEntity {
     @Override
     @ClientOnly
     @SuppressWarnings("deprecation")
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new LaserNodeBlockEntity(pos, state);
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY, LaserNodeBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY, LaserNodeBlockEntity::tick);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!player.getStackInHand(hand).isOf(PortalCubedItems.HAMMER)) {
-            return ActionResult.PASS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!player.getItemInHand(hand).is(PortalCubedItems.HAMMER)) {
+            return InteractionResult.PASS;
         }
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+        if (world.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
         world.getBlockEntity(pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(entity -> entity.setSound(
             switch (entity.getSound().toString()) {
@@ -87,6 +87,6 @@ public abstract class AbstractLaserNodeBlock extends BlockWithEntity {
                 default -> PortalCubedSounds.LASER_NODE_MUSIC;
             }
         ));
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
 }

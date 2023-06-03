@@ -1,9 +1,11 @@
 package com.fusionflux.portalcubed.client.render.entity.model;
 
 import com.fusionflux.portalcubed.entity.RocketEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.*;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 
 public class RocketModel extends FizzleableModel<RocketEntity> {
     private final ModelPart bone;
@@ -12,25 +14,25 @@ public class RocketModel extends FizzleableModel<RocketEntity> {
         this.bone = root.getChild("bone");
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData bone = modelPartData.addChild("bone", ModelPartBuilder.create(), ModelTransform.of(0.0F, 23.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        PartDefinition bone = modelPartData.addOrReplaceChild("bone", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 23.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
-        bone.addChild(
-            "cube_r1", ModelPartBuilder.create().uv(44, 51).cuboid(0.0F, -1.5F, -5.0F, 0.0F, 3.0F, 10.0F,
-                                                                   new Dilation(0.0F)
-            ), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.7854F));
+        bone.addOrReplaceChild(
+            "cube_r1", CubeListBuilder.create().texOffs(44, 51).addBox(0.0F, -1.5F, -5.0F, 0.0F, 3.0F, 10.0F,
+                                                                   new CubeDeformation(0.0F)
+            ), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.7854F));
 
-        bone.addChild(
-            "cube_r2", ModelPartBuilder.create().uv(44, 51).mirrored().cuboid(0.0F, -1.5F, -5.0F, 0.0F, 3.0F, 10.0F,
-                                                                              new Dilation(0.0F)
-            ).mirrored(false), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.7854F));
-        return TexturedModelData.of(modelData, 64, 64);
+        bone.addOrReplaceChild(
+            "cube_r2", CubeListBuilder.create().texOffs(44, 51).mirror().addBox(0.0F, -1.5F, -5.0F, 0.0F, 3.0F, 10.0F,
+                                                                              new CubeDeformation(0.0F)
+            ).mirror(false), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.7854F));
+        return LayerDefinition.create(modelData, 64, 64);
     }
 
     @Override
-    public void renderFizzled(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public void renderFizzled(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         bone.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 }

@@ -5,56 +5,56 @@ import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.particle.DecalParticleEffect;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.GeneralUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class TurretEntity extends CorePhysicsEntity {
-    private static final TrackedData<Float> PITCH_SPEED = DataTracker.registerData(TurretEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final EntityDataAccessor<Float> PITCH_SPEED = SynchedEntityData.defineId(TurretEntity.class, EntityDataSerializers.FLOAT);
 
-    public static final float MODEL_SCALE = MathHelper.lerp(0.875f, 1 / 1.62f, 1f);
-    private static final Box BASE_BOX = createFootBox(0.5f * MODEL_SCALE, 1.5f * MODEL_SCALE, MODEL_SCALE);
+    public static final float MODEL_SCALE = Mth.lerp(0.875f, 1 / 1.62f, 1f);
+    private static final AABB BASE_BOX = createFootBox(0.5f * MODEL_SCALE, 1.5f * MODEL_SCALE, MODEL_SCALE);
     private static final float FALL_SPEED = 0.3f;
 
-    public TurretEntity(EntityType<? extends PathAwareEntity> type, World world) {
+    public TurretEntity(EntityType<? extends PathfinderMob> type, Level world) {
         super(type, world);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        getDataTracker().startTracking(PITCH_SPEED, 0f);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(PITCH_SPEED, 0f);
     }
 
     @Override
-    protected Box calculateBoundingBox() {
-        final Box fallenBox = GeneralUtil.rotate(BASE_BOX, getPitch(), Direction.Axis.X);
-        final float yaw = MathHelper.wrapDegrees(headYaw);
-        Box result = GeneralUtil.rotate(fallenBox, yaw, Direction.Axis.Y);
+    protected AABB makeBoundingBox() {
+        final AABB fallenBox = GeneralUtil.rotate(BASE_BOX, getXRot(), Direction.Axis.X);
+        final float yaw = Mth.wrapDegrees(yHeadRot);
+        AABB result = GeneralUtil.rotate(fallenBox, yaw, Direction.Axis.Y);
         if (yaw >= 45 || yaw < -135) {
-            result = new Box(-result.minX, result.minY, -result.minZ, -result.maxX, result.maxY, -result.maxZ);
+            result = new AABB(-result.minX, result.minY, -result.minZ, -result.maxX, result.maxY, -result.maxZ);
         }
-        return result.offset(getPos());
+        return result.move(position());
     }
 
     @Override
     public void tick() {
         float pitchSpeed = getPitchSpeed();
-        float pitch = getPitch();
+        float pitch = getXRot();
         if (!RayonIntegration.INSTANCE.isPresent()) {
             if (pitchSpeed > 90) {
                 pitchSpeed = 90;
@@ -64,65 +64,65 @@ public class TurretEntity extends CorePhysicsEntity {
         }
         super.tick();
         if (!RayonIntegration.INSTANCE.isPresent()) {
-            setPitch(MathHelper.wrapDegrees(pitch + pitchSpeed));
-            if (getPitch() > 90) {
-                setPitch(90);
+            setXRot(Mth.wrapDegrees(pitch + pitchSpeed));
+            if (getXRot() > 90) {
+                setXRot(90);
                 pitchSpeed = 0;
-            } else if (getPitch() < -90) {
-                setPitch(-90);
+            } else if (getXRot() < -90) {
+                setXRot(-90);
                 pitchSpeed = 0;
             }
-            pitchSpeed += FALL_SPEED * MathHelper.sign(pitchSpeed) * Math.sqrt(Math.abs(pitch));
+            pitchSpeed += FALL_SPEED * Mth.sign(pitchSpeed) * Math.sqrt(Math.abs(pitch));
             setPitchSpeed(pitchSpeed);
         }
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putFloat("PitchSpeed", getPitchSpeed());
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         setPitchSpeed(nbt.getFloat("PitchSpeed"));
     }
 
     public float getPitchSpeed() {
-        return getDataTracker().get(PITCH_SPEED);
+        return getEntityData().get(PITCH_SPEED);
     }
 
     public void setPitchSpeed(float pitchSpeed) {
-        getDataTracker().set(PITCH_SPEED, pitchSpeed);
+        getEntityData().set(PITCH_SPEED, pitchSpeed);
     }
 
-    public static void makeBulletHole(ServerWorld world, BlockHitResult hit, SoundCategory soundCategory) {
+    public static void makeBulletHole(ServerLevel world, BlockHitResult hit, SoundSource soundCategory) {
         final BlockState block = world.getBlockState(hit.getBlockPos());
         final SoundEvent soundEffect;
-        final Identifier particleTexture;
+        final ResourceLocation particleTexture;
         boolean multiplyTexture = true;
-        if (block.isIn(PortalCubedBlocks.BULLET_HOLE_CONCRETE)) {
+        if (block.is(PortalCubedBlocks.BULLET_HOLE_CONCRETE)) {
             soundEffect = PortalCubedSounds.BULLET_CONCRETE_EVENT;
             particleTexture = DecalParticleEffect.BULLET_HOLE_CONCRETE;
-        } else if (block.isIn(PortalCubedBlocks.BULLET_HOLE_GLASS)) {
+        } else if (block.is(PortalCubedBlocks.BULLET_HOLE_GLASS)) {
             soundEffect = PortalCubedSounds.BULLET_GLASS_EVENT;
             particleTexture = DecalParticleEffect.BULLET_HOLE_GLASS;
             multiplyTexture = false;
-        } else if (block.isIn(PortalCubedBlocks.BULLET_HOLE_METAL)) {
+        } else if (block.is(PortalCubedBlocks.BULLET_HOLE_METAL)) {
             soundEffect = PortalCubedSounds.BULLET_METAL_EVENT;
             particleTexture = DecalParticleEffect.BULLET_HOLE_METAL;
         } else {
             soundEffect = null;
             particleTexture = null;
         }
-        final Vec3d pos = hit.getPos().add(Vec3d.of(hit.getSide().getVector()).multiply(0.01));
+        final Vec3 pos = hit.getLocation().add(Vec3.atLowerCornerOf(hit.getDirection().getNormal()).scale(0.01));
         if (soundEffect != null) {
             world.playSound(null, pos.x, pos.y, pos.z, soundEffect, soundCategory, 0.3f, 1f);
         }
         if (particleTexture != null) {
-            world.spawnParticles(
-                new DecalParticleEffect(particleTexture, hit.getSide(), multiplyTexture),
+            world.sendParticles(
+                new DecalParticleEffect(particleTexture, hit.getDirection(), multiplyTexture),
                 pos.x, pos.y, pos.z, 0, 0, 0, 0, 0
             );
         }
