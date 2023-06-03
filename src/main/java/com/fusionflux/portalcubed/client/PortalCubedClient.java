@@ -31,7 +31,6 @@ import com.fusionflux.portalcubed.optionslist.OptionsListScreen;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
-import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
@@ -65,7 +64,6 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
@@ -415,14 +413,14 @@ public class PortalCubedClient implements ClientModInitializer {
             }
         });
 
-        RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
-            final Vec3d startPos = cameraEntity.getLerpedPos(tickDelta);
-            final Vec3d endPos = ctrl.getPos();
-            final Vec3d transformed = PortalDirectionUtils.simpleTransformPassingVector(cameraEntity, startPos, endPos);
-            if (transformed != null) {
-                ctrl.setPos(transformed);
-            }
-        });
+//        RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
+//            final Vec3d startPos = cameraEntity.getLerpedPos(tickDelta);
+//            final Vec3d endPos = ctrl.getPos();
+//            final Vec3d transformed = PortalDirectionUtils.simpleTransformPassingVector(cameraEntity, startPos, endPos);
+//            if (transformed != null) {
+//                ctrl.setPos(transformed);
+//            }
+//        });
 
         try {
             final NbtCompound compound = NbtIo.readCompressed(GLOBAL_ADVANCEMENTS_FILE);

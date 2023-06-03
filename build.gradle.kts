@@ -98,9 +98,9 @@ dependencies {
 
 	modCompileOnly("dev.lambdaurora:lambdynamiclights:2.2.0+1.19.2")
 
-	modCompileOnly("com.github.Virtuoel:Pehkui:3.6.3", {
+	modCompileOnly("com.github.Virtuoel:Pehkui:3.6.3") {
 		exclude(group = "net.fabricmc.fabric-api")
-	})
+	}
 
 	modCompileOnly("dev.lazurite:rayon-fabric:1.6.1")
 
