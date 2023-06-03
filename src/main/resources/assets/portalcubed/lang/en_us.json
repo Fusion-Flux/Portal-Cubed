@@ -327,10 +327,10 @@
   "portalcubed.midnightconfig.enum.TitleScreenMode.P1": "Portal 1",
   "portalcubed.midnightconfig.enum.TitleScreenMode.P2": "Portal 2",
   "portalcubed.midnightconfig.staticPortalItemDrops": "Static Portal Item Drops",
-  "portalcubed.midnightconfig.renderer": "Portal Renderer",
+  "portalcubed.midnightconfig.renderer": "Portal Renderer (in development)",
   "portalcubed.midnightconfig.enum.PortalRenderers.DISABLED": "Disabled",
-  "portalcubed.midnightconfig.enum.PortalRenderers.STENCIL": "Stencil \u00a7c(BROKEN)\u00a7r",
-  "portalcubed.midnightconfig.enum.PortalRenderers.FRAMEBUFFER": "Framebuffer \u00a7c(NOT IMPLEMENTED)\u00a7r",
+  "portalcubed.midnightconfig.enum.PortalRenderers.STENCIL": "Stencil",
+  "portalcubed.midnightconfig.enum.PortalRenderers.FRAMEBUFFER": "Framebuffer",
 
   "death.attack.portalcubed.acid": "%s was dissolved in toxic goo",
   "death.attack.portalcubed.fizzle": "%s got fizzled",
