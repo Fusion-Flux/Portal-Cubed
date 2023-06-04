@@ -45,7 +45,7 @@ jobs:
       uses: realRobotix/action-discord-notifier@release-master
       with:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        message-title: Building mod from branch ${{ steps.get_branch.outputs.branch }}
+        message-title: Built mod from branch ${{ steps.get_branch.outputs.branch }}
 
     - name: Send built file to discord
       if: github.event_name == 'push' && github.repository_id == '344617531'

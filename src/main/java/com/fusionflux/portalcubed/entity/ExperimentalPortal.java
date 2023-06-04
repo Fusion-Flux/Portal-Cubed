@@ -361,7 +361,6 @@ public class  ExperimentalPortal extends Entity {
         this.setCutoutBoundingBox(NULL_BOX);
         this.makeBoundingBox();
         this.calculateCuttoutBox();
-        this.calculateBoundsCheckBox();
     }
 
     @NotNull
