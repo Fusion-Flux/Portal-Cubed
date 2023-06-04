@@ -46,7 +46,6 @@
     "client.RenderTargetMixin",
     "client.ScreenEffectRendererMixin",
     "client.SoundEngineMixin",
-    "client.TitleScreenMixin",
     "client.VertexConsumerMixin"
   ],
   "injectors": {

@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.client;
 
 import amymialee.visiblebarriers.VisibleBarriers;
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
@@ -16,7 +17,6 @@ import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.block.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
-import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderer;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
@@ -56,7 +56,6 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
@@ -77,7 +76,6 @@ import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientLoginConnectionEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
-import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -436,8 +434,6 @@ public class PortalCubedClient implements ClientModInitializer {
         } catch (Exception e) {
             LOGGER.warn("Failed to load global advancements", e);
         }
-
-        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(AdvancementTitles.createResourceReloader());
     }
 
     private void registerEmissiveModels(ModContainer mod) {

@@ -15,11 +15,6 @@ public class PortalCubedConfig extends MidnightConfig {
     @Entry public static float laserDamage = 3;
     @Entry @Client public static boolean portalHudMode = false;
     @Entry(min = 0, max = 100, isSlider = true) @Client public static int gelOverlayOpacity = 100;
-    @Entry @Client public static TitleScreenMode titleScreenMode = TitleScreenMode.DEFAULT;
     @Entry @Client public static boolean staticPortalItemDrops = true;
     @Entry @Client public static PortalRenderers renderer = PortalRenderers.DISABLED;
-
-    public enum TitleScreenMode {
-        DEFAULT, P1, P2
-    }
 }
