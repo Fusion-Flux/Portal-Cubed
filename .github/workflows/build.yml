@@ -36,6 +36,10 @@ jobs:
         path: build/libs/
 
     # The following is based off of https://github.com/Cannoneers-of-Create/CreateBigCannons/blob/1.18.2/dev/.github/workflows/gradle.yml
+    - name: Get branch name
+      id: get_branch
+      run: echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+
     - name: Send building message to discord
       if: github.event_name == 'push' && github.repository_id == '344617531'
       uses: realRobotix/action-discord-notifier@release-master
@@ -49,4 +53,4 @@ jobs:
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        args: build/libs/
+        args: build/libs/*
