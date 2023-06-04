@@ -238,7 +238,7 @@ public class  ExperimentalPortal extends Entity {
             return;
         }
         this.makeBoundingBox();
-        this.calculateCuttoutBox();
+        this.calculateCutoutBox();
         if (!this.level.isClientSide)
             ((ServerLevel)(this.level)).setChunkForced(chunkPosition().x, chunkPosition().z, true);
 
@@ -360,7 +360,7 @@ public class  ExperimentalPortal extends Entity {
         this.setBoundingBox(NULL_BOX);
         this.setCutoutBoundingBox(NULL_BOX);
         this.makeBoundingBox();
-        this.calculateCuttoutBox();
+        this.calculateCutoutBox();
     }
 
     @NotNull
@@ -387,8 +387,7 @@ public class  ExperimentalPortal extends Entity {
         return portalBox;
     }
 
-
-    public AABB calculateCuttoutBox() {
+    public AABB calculateCutoutBox() {
         if (getAxisW().isEmpty()) {
             setCutoutBoundingBox(NULL_BOX);
             return NULL_BOX;

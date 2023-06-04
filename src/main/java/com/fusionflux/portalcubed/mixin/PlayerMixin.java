@@ -1,11 +1,11 @@
 package com.fusionflux.portalcubed.mixin;
 
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.PortalCubedGameRules;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.MixinPCClientAccessor;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
-import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -133,7 +133,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
         VoxelShape omittedDirections = Shapes.empty();
 
         for (ExperimentalPortal portal : list) {
-            if (portal.calculateCuttoutBox() != NULL_BOX) {
+            if (portal.calculateCutoutBox() != NULL_BOX) {
                 if (portal.getActive())
                     omittedDirections = Shapes.or(omittedDirections, Shapes.create(portal.getCutoutBoundingBox()));
             }
