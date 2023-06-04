@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -11,19 +10,14 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.ProfilePublicKey;
 import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin extends AbstractClientPlayer implements HasMovementInputAccessor {
@@ -36,14 +30,6 @@ public class LocalPlayerMixin extends AbstractClientPlayer implements HasMovemen
         super(clientWorld, gameProfile, playerPublicKey);
     }
 
-
-    @Inject(method = "suffocatesAt", at = @At("HEAD"), cancellable = true)
-    public void portalCubed$changeCollision(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(((LocalPlayer)(Object)this));
-        if (portalBox != Shapes.empty()) {
-            cir.setReturnValue(false);
-        }
-    }
 
     @Override
     public boolean hasMovementInputPublic() {

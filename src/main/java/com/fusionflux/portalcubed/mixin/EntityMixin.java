@@ -2,10 +2,7 @@ package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
-import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
-import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.accessor.ClientTeleportCheck;
-import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
+import com.fusionflux.portalcubed.accessor.*;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
@@ -13,10 +10,11 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
-import com.fusionflux.portalcubed.listeners.CustomCollisionView;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -26,7 +24,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -35,10 +32,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,11 +43,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.HashMap;
 import java.util.List;
@@ -433,47 +428,39 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         return this.gelTransferTimer;
     }
 
-
-    @ModifyArgs(
-            method = "collideBoundingBox",
-            at = @At(
-                target = "Lcom/google/common/collect/ImmutableList$Builder;addAll(Ljava/lang/Iterable;)Lcom/google/common/collect/ImmutableList$Builder;",
-                value = "INVOKE",
-                ordinal = 1,
-                remap = false
-            )
+    @WrapOperation(
+        method = "collideBoundingBox",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/Level;getBlockCollisions(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/lang/Iterable;"
+        )
     )
-    private static void addAllModifyArg(Args args, @Nullable Entity entity, Vec3 movement, AABB entityBoundingBox, Level world, List<VoxelShape> collisions) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(entity);
-        if (portalBox != Shapes.empty())
-            args.set(0, ((CustomCollisionView) world).getPortalBlockCollisions(entity, entityBoundingBox.expandTowards(movement), portalBox));
+    private static Iterable<VoxelShape> supportCutout(Level instance, Entity entity, AABB collisionBox, Operation<Iterable<VoxelShape>> original) {
+        return BlockCollisionsExt.wrapBlockCollisions(original.call(instance, entity, collisionBox), entity);
     }
 
-    @Inject(method = "isFree(Lnet/minecraft/world/phys/AABB;)Z", at = @At("RETURN"), cancellable = true)
-    private void doesNotCollide(AABB box, CallbackInfoReturnable<Boolean> cir) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
-        if (portalBox != Shapes.empty())
-            cir.setReturnValue(true);
+    @ModifyArg(
+        method = "method_30022",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/phys/shapes/Shapes;joinIsNotEmpty(Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/world/phys/shapes/BooleanOp;)Z"
+        ),
+        index = 0
+    )
+    private VoxelShape cutoutForIsInWall(VoxelShape shape) {
+        return Shapes.joinUnoptimized(shape, CalledValues.getPortalCutout(((Entity)(Object)this)), BooleanOp.ONLY_FIRST);
     }
 
-    @Inject(method = "canEnterPose", at = @At("RETURN"), cancellable = true)
-    public void wouldPoseNotCollide(Pose pose, CallbackInfoReturnable<Boolean> cir) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
-        if (portalBox != Shapes.empty())
-            cir.setReturnValue(true);
-    }
-
-    @Inject(method = "isInWall", at = @At("HEAD"), cancellable = true)
-    public void isInsideWall(CallbackInfoReturnable<Boolean> cir) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
-        if (portalBox != Shapes.empty()) cir.setReturnValue(false);
-    }
-
-    @Inject(method = "isColliding", at = @At("HEAD"), cancellable = true)
-    public void collidesWithStateAtPos(BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(((Entity) (Object) this));
-        if (portalBox != Shapes.empty())
-            cir.setReturnValue(false);
+    @ModifyArg(
+        method = "isColliding",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/phys/shapes/Shapes;joinIsNotEmpty(Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/world/phys/shapes/BooleanOp;)Z"
+        ),
+        index = 0
+    )
+    private VoxelShape cutoutForIsColliding(VoxelShape shape) {
+        return Shapes.joinUnoptimized(shape, CalledValues.getPortalCutout(((Entity)(Object)this)), BooleanOp.ONLY_FIRST);
     }
 
     @Inject(method = "checkInsideBlocks", at = @At("HEAD"))
