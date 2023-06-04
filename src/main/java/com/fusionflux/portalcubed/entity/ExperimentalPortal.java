@@ -30,6 +30,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -140,6 +141,7 @@ public class  ExperimentalPortal extends Entity {
         this.getEntityData().set(COLOR, color);
     }
 
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this);
@@ -237,7 +239,6 @@ public class  ExperimentalPortal extends Entity {
         }
         this.makeBoundingBox();
         this.calculateCuttoutBox();
-        this.calculateBoundsCheckBox();
         if (!this.level.isClientSide)
             ((ServerLevel)(this.level)).setChunkForced(chunkPosition().x, chunkPosition().z, true);
 
@@ -363,6 +364,7 @@ public class  ExperimentalPortal extends Entity {
         this.calculateBoundsCheckBox();
     }
 
+    @NotNull
     @Override
     protected AABB makeBoundingBox() {
         if (getAxisW().isEmpty()) {
@@ -373,12 +375,12 @@ public class  ExperimentalPortal extends Entity {
 
         AABB portalBox = new AABB(
                 getPointInPlane(width() / 2, height() / 2)
-                        .add(getNormal().scale(.2)),
+                        .add(getNormal().scale(.05)),
                 getPointInPlane(-width() / 2, -height() / 2)
                         .add(getNormal().scale(-.2))
         ).minmax(new AABB(
                 getPointInPlane(-width() / 2, height() / 2)
-                        .add(getNormal().scale(.2)),
+                        .add(getNormal().scale(.05)),
                 getPointInPlane(width() / 2, -height() / 2)
                         .add(getNormal().scale(-.2))
         ));

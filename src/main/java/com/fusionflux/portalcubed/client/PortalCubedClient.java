@@ -418,9 +418,11 @@ public class PortalCubedClient implements ClientModInitializer {
         });
 
 //        RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
-//            final Vec3d startPos = cameraEntity.getLerpedPos(tickDelta);
-//            final Vec3d endPos = ctrl.getPos();
-//            final Vec3d transformed = PortalDirectionUtils.simpleTransformPassingVector(cameraEntity, startPos, endPos);
+//            final Vec3 entityPos = cameraEntity.getPosition(tickDelta);
+//            final Vec3 eyePos = cameraEntity.getEyePosition(tickDelta);
+//            final Vec3 startPos = entityPos.add(eyePos.subtract(entityPos).normalize().scale(0.1));
+//            final Vec3 endPos = ctrl.getPos();
+//            final Vec3 transformed = PortalDirectionUtils.simpleTransformPassingVector(cameraEntity, startPos, endPos);
 //            if (transformed != null) {
 //                ctrl.setPos(transformed);
 //            }
