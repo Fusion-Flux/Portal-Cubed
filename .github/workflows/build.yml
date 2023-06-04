@@ -53,4 +53,4 @@ jobs:
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        args: build/libs/*
+        args: build/libs/portal_cubed-*-rev.???????.jar
