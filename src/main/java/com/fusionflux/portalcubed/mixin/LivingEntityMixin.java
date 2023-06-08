@@ -132,7 +132,10 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         final double angle = block.getAngle();
         final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08 * PehkuiApi.INSTANCE.getFallingScale(this));
         if (!Double.isFinite(speed)) return;
-        setDiscardFriction(getItemBySlot(EquipmentSlot.FEET).is(PortalCubedItems.LONG_FALL_BOOTS));
+        //noinspection ConstantValue
+        if ((Object)this instanceof Player) {
+            setDiscardFriction(getItemBySlot(EquipmentSlot.FEET).is(PortalCubedItems.LONG_FALL_BOOTS));
+        }
         RayonIntegration.INSTANCE.setVelocity(this, block.getLaunchDir(position().x, position().z).scale(Math.min(speed, 10)));
         hasImpulse = true;
     }
