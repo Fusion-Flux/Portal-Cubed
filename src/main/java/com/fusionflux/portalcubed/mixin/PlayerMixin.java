@@ -17,7 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -77,13 +76,6 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
     @Override
     @Shadow public abstract float getSpeed();
 
-    @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
-    public void portalCubed$letYouFallLonger(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        ItemStack itemStack5 = this.getItemBySlot(EquipmentSlot.FEET);
-        if (damageSource == DamageSource.FALL && (itemStack5.is(PortalCubedItems.LONG_FALL_BOOTS))) {
-            cir.setReturnValue(true);
-        }
-    }
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 portalCubed$what(Vec3 travelVectorOriginal) {
         if (!this.isNoGravity()) {
