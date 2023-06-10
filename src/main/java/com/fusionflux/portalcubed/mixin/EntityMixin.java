@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.*;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
@@ -355,6 +356,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         );
         final Vec3 destPos = portal.getDestination().orElseThrow(ExperimentalPortal.NOT_INIT).add(rotatedOffsets);
         thisEntity.moveTo(destPos.x, destPos.y, destPos.z, lookAngleYaw.y - 90, lookAnglePitch.x);
+        if (rotatedVel.lengthSqr() > PortalCubed.MAX_SPEED_SQR) {
+            rotatedVel = rotatedVel.scale(PortalCubed.MAX_SPEED / rotatedVel.length());
+        }
         thisEntity.setDeltaMovement(rotatedVel);
         GravityChangerAPI.clearGravity(thisEntity);
         if (level instanceof ServerLevel serverWorld) {

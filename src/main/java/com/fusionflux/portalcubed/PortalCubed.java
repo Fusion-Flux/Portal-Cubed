@@ -93,6 +93,8 @@ public class PortalCubed implements ModInitializer {
         new ExtendedScreenHandlerType<>(OptionsListScreenHandler::new)
     );
 
+    public static final double MAX_SPEED = 2225 / 64.0 / 20.0, MAX_SPEED_SQR = MAX_SPEED * MAX_SPEED;
+
     @Override
     public void onInitialize(ModContainer mod) {
         ServerPlayNetworking.registerGlobalReceiver(id("use_portal"), (server, player, handler, buf, responseSender) -> {
@@ -178,6 +180,9 @@ public class PortalCubed implements ModInitializer {
                         (float)Math.toDegrees(-Mth.atan2(rotatedYaw.y, Math.sqrt(rotatedYaw.x * rotatedYaw.x + rotatedYaw.z * rotatedYaw.z))),
                         (float)Math.toDegrees(Mth.atan2(rotatedYaw.z, rotatedYaw.x))
                 );
+                if (rotatedVel.lengthSqr() > PortalCubed.MAX_SPEED_SQR) {
+                    rotatedVel = rotatedVel.scale(PortalCubed.MAX_SPEED / rotatedVel.length());
+                }
                 CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
                 player.setYRot(lookAngleYaw.y - 90);
                 player.setXRot(lookAnglePitch.x);
