@@ -58,7 +58,7 @@ public class ItemEntityRendererMixin {
         @Share("laysOnFloor") LocalBooleanRef laysOnFloor,
         @Local(ordinal = 2) float yOffset
     ) {
-        original.call(instance, x, laysOnFloor.get() ? 0.25 * yOffset : y, z);
+        original.call(instance, x, laysOnFloor.get() ? 0.25f * yOffset : y, z);
     }
 
     @WrapOperation(
