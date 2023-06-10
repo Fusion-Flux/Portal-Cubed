@@ -1,5 +1,6 @@
 {
-  "itemGroup.portalcubed.testing_elements": "Testing Elements",
+  "itemGroup.portalcubed.main_testing_elements": "Main Testing Elements",
+  "itemGroup.portalcubed.other_testing_elements": "Other Testing Elements",
   "itemGroup.portalcubed.portal_blocks": "Portal Blocks",
 
   "subtitles.portalcubed.gel_bounce": "Repulsion Gel Bounce",

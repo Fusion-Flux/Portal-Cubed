@@ -2,7 +2,7 @@
   "credit": "Made with Blockbench by Cart3r.  ",
   "texture_size": [64, 64],
   "textures": {
-    "2": "portalcubed:block/redirection_cube"
+    "2": "portalcubed:item/redirection_cube"
   },
   "elements": [
     {
