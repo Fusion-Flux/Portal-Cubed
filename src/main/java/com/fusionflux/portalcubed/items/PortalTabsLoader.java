@@ -17,6 +17,7 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -126,13 +127,11 @@ public class PortalTabsLoader {
 
     private static Supplier<ItemStack> parseItemStack(JsonElement element, String memberName) {
         if (element.isJsonPrimitive()) {
-            final Item item = BuiltInRegistries.ITEM.get(
-                new ResourceLocation(GsonHelper.convertToString(element, memberName))
-            );
+            final Item item = getItem(GsonHelper.convertToString(element, memberName));
             return () -> new ItemStack(item);
         }
         final JsonObject object = GsonHelper.convertToJsonObject(element, memberName);
-        final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(GsonHelper.getAsString(object, "id")));
+        final Item item = getItem(GsonHelper.getAsString(object, "id"));
         final int count = object.has("count") ? GsonHelper.getAsInt(object, "count") : 1;
         final CompoundTag tag;
         try {
@@ -154,5 +153,14 @@ public class PortalTabsLoader {
     private static Predicate<CreativeModeTab.ItemDisplayParameters> parseCondition(JsonElement element) {
         final JsonObject object = GsonHelper.convertToJsonObject(element, "condition");
         return CONDITION_TYPES.get(GsonHelper.getAsString(object, "condition")).apply(object);
+    }
+
+    private static Item getItem(String id) {
+        final ResourceLocation path = new ResourceLocation(id);
+        final Item item = BuiltInRegistries.ITEM.get(path);
+        if (item == Items.AIR) {
+            throw new IllegalArgumentException("Unknown item " + id);
+        }
+        return item;
     }
 }
