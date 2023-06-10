@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 public abstract class GameRendererMixin {
     @Shadow
     @Final
-    private Minecraft minecraft;
+    Minecraft minecraft;
 
     @WrapOperation(
         method = "pick",

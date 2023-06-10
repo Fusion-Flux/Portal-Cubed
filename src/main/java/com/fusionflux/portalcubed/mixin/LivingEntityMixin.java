@@ -37,9 +37,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LivingEntityMixin extends Entity implements LivingEntityAccessor {
     @Shadow protected boolean jumping;
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    @Shadow public abstract boolean isEffectiveAi();
-
     @Shadow protected abstract float getFrictionInfluencedSpeed(float slipperiness);
 
     @Shadow protected abstract Vec3 handleOnClimbable(Vec3 motion);

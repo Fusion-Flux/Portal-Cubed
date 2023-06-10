@@ -1,6 +1,8 @@
 package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -9,14 +11,13 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = ServerPlayerGameMode.class, priority = 1001)
 public abstract class ServerPlayerGameModeMixin {
 
     @Shadow @Final protected ServerPlayer player;
 
-    @Redirect(
+    @WrapOperation(
         method = "handleBlockBreakAction",
         at = @At(
             value = "INVOKE",
@@ -24,7 +25,8 @@ public abstract class ServerPlayerGameModeMixin {
             ordinal = 0
         )
     )
-    private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck4(Vec3 from, Vec3 to) {
-        return CrossPortalInteraction.interactionDistance(player, ServerGamePacketListenerImpl.MAX_INTERACTION_DISTANCE, to);
+    private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck4(Vec3 instance, Vec3 to, Operation<Double> original) {
+        final double distance = CrossPortalInteraction.interactionDistance(player, ServerGamePacketListenerImpl.MAX_INTERACTION_DISTANCE, to);
+        return distance == Double.NEGATIVE_INFINITY ? original.call(instance, to) : distance;
     }
 }

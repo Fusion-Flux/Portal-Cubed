@@ -38,6 +38,7 @@
     "client.MinecraftAccessor",
     "client.MinecraftMixin",
     "client.ModelBakeryMixin",
+    "client.ModelBakeryMixin$ModelBakerImplMixin",
     "client.MouseHandlerMixin",
     "client.MultiPlayerGameModeMixin",
     "client.MusicManagerAccessor",

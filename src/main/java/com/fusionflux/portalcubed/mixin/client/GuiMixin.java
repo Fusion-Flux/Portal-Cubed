@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.mixin.client;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.world.entity.PlayerRideableJumping;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,7 +33,7 @@ public class GuiMixin {
     }
 
     @Inject(method = "renderJumpMeter", at = @At("HEAD"), cancellable = true)
-    private void notWithPortalHudRMJB(PoseStack matrices, int x, CallbackInfo ci) {
+    private void notWithPortalHudRMJB(PlayerRideableJumping rideable, PoseStack poseStack, int x, CallbackInfo ci) {
         if (PortalCubedClient.isPortalHudMode()) {
             ci.cancel();
         }

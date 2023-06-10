@@ -45,16 +45,16 @@ public class ItemEntityRendererMixin {
         method = "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
         at = @At(
             value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(DDD)V",
+            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
             ordinal = 0
         )
     )
     private void dontTranslate(
         PoseStack instance,
-        double x,
-        double y,
-        double z,
-        Operation<Float> original,
+        float x,
+        float y,
+        float z,
+        Operation<Void> original,
         @Share("laysOnFloor") LocalBooleanRef laysOnFloor,
         @Local(ordinal = 2) float yOffset
     ) {

@@ -14,7 +14,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerImplMixin {
@@ -34,7 +33,7 @@ public abstract class ServerGamePacketListenerImplMixin {
         return BlockCollisionsExt.wrapBlockCollisions(original.call(instance, entity, collisionBox), entity);
     }
 
-    @Redirect(
+    @WrapOperation(
         method = "handleUseItemOn",
         at = @At(
             value = "INVOKE",
@@ -42,11 +41,12 @@ public abstract class ServerGamePacketListenerImplMixin {
             ordinal = 0
         )
     )
-    private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck1(Vec3 from, Vec3 to) {
-        return CrossPortalInteraction.interactionDistance(player, ServerGamePacketListenerImpl.MAX_INTERACTION_DISTANCE, to);
+    private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck1(Vec3 instance, Vec3 to, Operation<Double> original) {
+        final double distance = CrossPortalInteraction.interactionDistance(player, ServerGamePacketListenerImpl.MAX_INTERACTION_DISTANCE, to);
+        return distance == Double.NEGATIVE_INFINITY ? original.call(instance, to) : distance;
     }
 
-    @Redirect(
+    @WrapOperation(
         method = "handleUseItemOn",
         at = @At(
             value = "INVOKE",
@@ -54,20 +54,22 @@ public abstract class ServerGamePacketListenerImplMixin {
             ordinal = 0
         )
     )
-    private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck2(ServerPlayer self, double x, double y, double z) {
-        return CrossPortalInteraction.interactionDistance(player, 64, new Vec3(x, y, z));
+    private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck2(ServerPlayer instance, double x, double y, double z, Operation<Double> original) {
+        final double distance = CrossPortalInteraction.interactionDistance(player, 64, new Vec3(x, y, z));
+        return distance == Double.NEGATIVE_INFINITY ? original.call(instance, x, y, z) : distance;
     }
 
-    @Redirect(
+    @WrapOperation(
         method = "handleInteract",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;distanceToSqr(Lnet/minecraft/world/phys/Vec3;)D",
+            target = "Lnet/minecraft/world/phys/AABB;distanceToSqr(Lnet/minecraft/world/phys/Vec3;)D",
             ordinal = 0
         )
     )
-    private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck3(Entity self, Vec3 to) {
-        return CrossPortalInteraction.interactionDistance(player, ServerGamePacketListenerImpl.MAX_INTERACTION_DISTANCE, to);
+    private double portalCubed$replaceWithCrossPortalInteractionDistanceCheck3(AABB instance, Vec3 eyePos, Operation<Double> original) {
+        final double distance = CrossPortalInteraction.interactionDistance(player, ServerGamePacketListenerImpl.MAX_INTERACTION_DISTANCE, instance.getCenter());
+        return distance == Double.NEGATIVE_INFINITY ? original.call(instance, eyePos) : distance;
     }
 
 }

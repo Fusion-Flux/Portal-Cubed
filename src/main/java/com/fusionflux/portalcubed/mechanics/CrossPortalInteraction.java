@@ -34,7 +34,7 @@ public final class CrossPortalInteraction {
             distance *= distance;
             return distance;
         }
-        return originPos.distanceToSqr(regularInteractionPos);
+        return Double.NEGATIVE_INFINITY;
     }
 
     public static double interactionDistance(@NotNull Player player, double maxDistance, @NotNull Vec3 regularInteractionPos) {
