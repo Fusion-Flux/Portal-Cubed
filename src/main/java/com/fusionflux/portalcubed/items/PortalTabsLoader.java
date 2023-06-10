@@ -35,7 +35,6 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 @ClientOnly
 public class PortalTabsLoader {
     private static final Map<String, Function<JsonObject, Predicate<CreativeModeTab.ItemDisplayParameters>>> CONDITION_TYPES = Map.of(
-        "always", o -> p -> true,
         "and", o -> GsonHelper.getAsJsonArray(o, "conditions")
             .asList()
             .stream()
@@ -96,7 +95,7 @@ public class PortalTabsLoader {
                     .asList()
                     .stream()
                     .map(e -> {
-                        if (e.isJsonPrimitive() || (e.isJsonObject() && !e.getAsJsonObject().has("type"))) {
+                        if (e.isJsonPrimitive() || (e.isJsonObject() && !e.getAsJsonObject().has("condition"))) {
                             return Pair.of(
                                 (Predicate<CreativeModeTab.ItemDisplayParameters>)p -> true,
                                 List.of(parseItemStack(e, "item").get())
@@ -154,6 +153,6 @@ public class PortalTabsLoader {
 
     private static Predicate<CreativeModeTab.ItemDisplayParameters> parseCondition(JsonElement element) {
         final JsonObject object = GsonHelper.convertToJsonObject(element, "condition");
-        return CONDITION_TYPES.get(GsonHelper.getAsString(object, "type")).apply(object);
+        return CONDITION_TYPES.get(GsonHelper.getAsString(object, "condition")).apply(object);
     }
 }

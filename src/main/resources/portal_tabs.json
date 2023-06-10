@@ -1,0 +1,19 @@
+{
+  "testing_elements": {
+    "icon": "portalcubed:portal_gun",
+    "items": [
+      "portalcubed:portal_gun",
+      { // Example of a condition
+        "condition": "hasPermissions",
+        "items": [
+          "portalcubed:power_block"
+        ]
+      }
+    ]
+  },
+  "portal_blocks": {
+    "icon": "portalcubed:block_item_icon",
+    "items": [
+    ]
+  }
+}
