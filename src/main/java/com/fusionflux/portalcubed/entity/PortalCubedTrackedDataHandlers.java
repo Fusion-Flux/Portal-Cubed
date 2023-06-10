@@ -1,10 +1,10 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.mojang.math.Quaternion;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
 
 import java.util.Optional;
@@ -13,14 +13,14 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedTrackedDataHandlers {
 
-    public static final EntityDataSerializer<Quaternion> QUATERNION = EntityDataSerializer.simple(
+    public static final EntityDataSerializer<Quaternionf> QUATERNION = EntityDataSerializer.simple(
         (buf, value) -> {
-            buf.writeFloat(value.i());
-            buf.writeFloat(value.j());
-            buf.writeFloat(value.k());
-            buf.writeFloat(value.r());
+            buf.writeFloat(value.x());
+            buf.writeFloat(value.y());
+            buf.writeFloat(value.z());
+            buf.writeFloat(value.w());
         },
-        buf -> new Quaternion(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat())
+        buf -> new Quaternionf(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat())
     );
 
     public static final EntityDataSerializer<Vec3> VEC3D = EntityDataSerializer.simple(

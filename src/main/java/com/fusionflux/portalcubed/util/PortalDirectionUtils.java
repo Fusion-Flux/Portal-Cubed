@@ -20,7 +20,7 @@ public class PortalDirectionUtils {
     public static Vec3 rotateVector(ExperimentalPortal portal, Vec3 vector) {
         Direction portalFacing = portal.getFacingDirection();
         Direction otherDirec = Direction.fromNormal((int) portal.getOtherFacing().x(), (int) portal.getOtherFacing().y(), (int) portal.getOtherFacing().z());
-        Direction portalVertFacing = Direction.fromNormal(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
+        Direction portalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
 
         IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().scale(-1), portal.getOtherAxisW(), (portal.getAxisH().orElseThrow()));
         IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow().scale(-1));

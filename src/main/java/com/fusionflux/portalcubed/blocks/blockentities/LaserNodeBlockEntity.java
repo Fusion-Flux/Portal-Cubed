@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -83,6 +84,7 @@ public class LaserNodeBlockEntity extends BlockEntity {
         }
     }
 
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
@@ -104,7 +106,7 @@ public class LaserNodeBlockEntity extends BlockEntity {
     protected void clientTick(BlockState state) {
         if (musicInstance == null && level != null && state.getValue(BlockStateProperties.ENABLED)) {
             // The sounds played here may actually be stereo, so we may need to handle our own fadeout
-            musicInstance = new AbstractTickableSoundInstance(new SoundEvent(sound), SoundSource.BLOCKS, SoundInstance.createUnseededRandom()) {
+            musicInstance = new AbstractTickableSoundInstance(SoundEvent.createVariableRangeEvent(sound), SoundSource.BLOCKS, SoundInstance.createUnseededRandom()) {
                 final ResourceLocation soundId = LaserNodeBlockEntity.this.sound;
                 final boolean isCustomSound = !soundId.equals(PortalCubedSounds.LASER_NODE_MUSIC);
 

@@ -3,13 +3,10 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
-import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.particle.DecalParticleEffect;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -31,6 +28,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSources;
 
 public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThroughPortalListener {
     private static final EntityDataAccessor<Integer> STARTING_LIFE = SynchedEntityData.defineId(EnergyPelletEntity.class, EntityDataSerializers.INT);
@@ -54,12 +53,6 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
     @Override
     protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putInt("Life", getLife());
-    }
-
-    @NotNull
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
     }
 
     public int getStartingLife() {
@@ -185,7 +178,7 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
     private void kill(@Nullable LivingEntity entity) {
         level.playSound(null, position().x, position().y, position().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundSource.HOSTILE, 0.8f, 1f);
         if (entity != null) {
-            entity.hurt(PortalCubedDamageSources.VAPORIZATION, PortalCubedConfig.pelletDamage);
+            entity.hurt(pcSources(level).vaporization(), PortalCubedConfig.pelletDamage);
         }
         kill();
     }

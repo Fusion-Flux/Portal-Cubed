@@ -77,9 +77,9 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
                             for (ExperimentalPortal portal : list) {
                                 if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
                                     if (portal.getActive()) {
-                                        Direction otherPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
+                                        Direction otherPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
                                         int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
-                                        Direction mainPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
+                                        Direction mainPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
                                         assert mainPortalVertFacing != null;
                                         if (mainPortalVertFacing.equals(Direction.SOUTH)) {
                                             offset = (Math.abs(offset) - 1) * -1;
@@ -88,7 +88,7 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
                                             offset = (Math.abs(offset) - 1) * -1;
                                         }
 
-                                        translatedPos = new BlockPos(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
+                                        translatedPos = BlockPos.containing(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
                                         savedPos = translatedPos;
                                         assert otherPortalVertFacing != null;
                                         if (otherPortalVertFacing.equals(Direction.SOUTH)) {
@@ -164,9 +164,9 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
                             for (ExperimentalPortal portal : list) {
                                 if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
                                     if (portal.getActive()) {
-                                        Direction otherPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
+                                        Direction otherPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
                                         int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
-                                        Direction mainPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
+                                        Direction mainPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
                                         assert mainPortalVertFacing != null;
                                         if (mainPortalVertFacing.equals(Direction.SOUTH)) {
                                             offset = (Math.abs(offset) - 1) * -1;
@@ -175,7 +175,7 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
                                             offset = (Math.abs(offset) - 1) * -1;
                                         }
 
-                                        translatedPos = new BlockPos(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
+                                        translatedPos = BlockPos.containing(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
                                         savedPos = translatedPos;
                                         assert otherPortalVertFacing != null;
                                         if (otherPortalVertFacing.equals(Direction.SOUTH)) {

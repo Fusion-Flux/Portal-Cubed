@@ -6,8 +6,6 @@ import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity
 import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
@@ -20,6 +18,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.objecthunter.exp4j.Expression;
+import org.joml.Math;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 import java.util.function.Consumer;
 
@@ -123,21 +124,24 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
             w.setParser(s -> VelocityHelperBlockEntity.parseExpression(s, "x"));
             w.setExpression(entity.getInterpolationCurveString());
         });
-        addRenderableWidget(new Button(
-            width / 2 - 90, this.topPos + imageHeight + 5, 75, 20, CommonComponents.GUI_CANCEL,
-            w -> onClose()
-        ));
-        addRenderableWidget(doneButton = new Button(
-            width / 2 + 15, this.topPos + imageHeight + 5, 75, 20, CommonComponents.GUI_DONE,
-            w -> {
+        addRenderableWidget(
+            Button.builder(CommonComponents.GUI_CANCEL, w -> onClose())
+                .width(width / 2 - 90)
+                .pos(this.topPos + imageHeight + 5, 75)
+                .build()
+        );
+        doneButton = addRenderableWidget(
+            Button.builder(CommonComponents.GUI_DONE, w -> {
                 VelocityHelperBlock.sendConfigurePacket(menu.getAt(), VelocityHelperBlock.CONFIG_OTHER, buf -> {
                     buf.writeVarInt(Integer.parseInt(flightDurationWidget.getValue()));
                     buf.writeUtf(conditionWidget.getValue());
                     buf.writeUtf(icWidget.getValue());
                 });
                 onClose();
-            }
-        ));
+            }).width(width / 2 + 15)
+                .pos(this.topPos + imageHeight + 5, 75)
+                .build()
+        );
     }
 
     private EditBox createTextField(int x, int y, int width, Consumer<EditBox> consumer) {
@@ -168,7 +172,7 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
     public static void drawLine(PoseStack matrices, float x0, float y0, float x1, float y1, int color) {
         final Matrix4f model = matrices.last().pose();
         final Matrix3f normal = matrices.last().normal();
-        final float mag = Mth.fastInvSqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
+        final float mag = Math.invsqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
         final float normalX = Math.abs(x1 - x0) * mag;
         final float normalY = Math.abs(y1 - y0) * mag;
 

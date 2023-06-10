@@ -2,10 +2,11 @@ package com.fusionflux.portalcubed.compat.rayon.absent;
 
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public enum RayonIntegrationAbsent implements RayonIntegration {
@@ -52,8 +53,8 @@ public enum RayonIntegrationAbsent implements RayonIntegration {
     @Override
     @ClientOnly
     public void multiplyMatrices(PoseStack matrices, Entity entity, float tickDelta) {
-        matrices.mulPose(Vector3f.YP.rotationDegrees(180f - entity.getViewYRot(tickDelta)));
-        matrices.mulPose(Vector3f.XP.rotationDegrees(entity.getViewXRot(tickDelta)));
+        matrices.mulPose(Axis.YP.rotationDegrees(180f - entity.getViewYRot(tickDelta)));
+        matrices.mulPose(Axis.XP.rotationDegrees(entity.getViewXRot(tickDelta)));
     }
 
 }

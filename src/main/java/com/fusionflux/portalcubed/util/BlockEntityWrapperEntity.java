@@ -2,9 +2,11 @@ package com.fusionflux.portalcubed.util;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 
 public final class BlockEntityWrapperEntity<E extends BlockEntity> extends Entity {
     private final E blockEntity;
@@ -26,9 +28,10 @@ public final class BlockEntityWrapperEntity<E extends BlockEntity> extends Entit
     protected void addAdditionalSaveData(CompoundTag nbt) {
     }
 
+    @NotNull
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return null;
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        throw new UnsupportedOperationException("Shouldn't call getAddEntityPacket() on BlockEntityWrapperEntity.");
     }
 
     public E getBlockEntity() {

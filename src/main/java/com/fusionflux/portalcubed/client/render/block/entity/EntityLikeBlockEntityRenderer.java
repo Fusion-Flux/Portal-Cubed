@@ -5,7 +5,7 @@ import com.fusionflux.portalcubed.client.render.EntityEmissiveRendering;
 import com.fusionflux.portalcubed.util.BlockEntityWrapperEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -39,7 +39,7 @@ public abstract class EntityLikeBlockEntityRenderer<T extends EntityLikeBlockEnt
     public void render(T entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         matrices.pushPose();
 
-        matrices.mulPose(Vector3f.YP.rotationDegrees(180));
+        matrices.mulPose(Axis.YP.rotationDegrees(180));
         matrices.scale(-1, -1, 1);
         matrices.translate(0.5, -1.501, -0.5);
 

@@ -57,7 +57,7 @@ public class RayonIntegrationPresent implements RayonIntegration {
     public float getYaw(Entity entity) {
         if (entity instanceof EntityPhysicsElement physicsElement) {
             final com.jme3.math.Quaternion q = physicsElement.getRigidBody().getPhysicsRotation(null);
-            https://stackoverflow.com/a/5783030/8840278
+            // https://stackoverflow.com/a/5783030/8840278
             return (float)Math.toDegrees(2 * Math.acos(q.getW()));
         }
         return entity.getYRot();
@@ -77,7 +77,7 @@ public class RayonIntegrationPresent implements RayonIntegration {
     }
 
     @Override
-    public void setAngularVelocityYaw(Entity entity, com.mojang.math.Vector3f angle) {
+    public void setAngularVelocityYaw(Entity entity, org.joml.Vector3f angle) {
         if (entity instanceof EntityPhysicsElement physicsElement) {
             physicsElement.getRigidBody().setAngularVelocity(Convert.toBullet(angle));
         }

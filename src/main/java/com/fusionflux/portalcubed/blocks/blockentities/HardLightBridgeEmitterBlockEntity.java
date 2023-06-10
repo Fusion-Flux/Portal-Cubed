@@ -6,8 +6,6 @@ import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -93,10 +91,10 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
                             for (ExperimentalPortal portal : list) {
                                 if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
                                     if (portal.getActive()) {
-                                        Direction otherPortalFacing = Direction.fromNormal(new BlockPos(portal.getOtherFacing().x, portal.getOtherFacing().y, portal.getOtherFacing().z));
-                                        Direction otherPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
+                                        Direction otherPortalFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherFacing().x, portal.getOtherFacing().y, portal.getOtherFacing().z));
+                                        Direction otherPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
                                         int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
-                                        Direction mainPortalVertFacing = Direction.fromNormal(new BlockPos(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
+                                        Direction mainPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
                                         assert mainPortalVertFacing != null;
                                         if (mainPortalVertFacing.equals(Direction.SOUTH)) {
                                             offset = (Math.abs(offset) - 1) * -1;
@@ -105,7 +103,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
                                             offset = (Math.abs(offset) - 1) * -1;
                                         }
 
-                                        translatedPos = new BlockPos(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
+                                        translatedPos = BlockPos.containing(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
                                         savedPos = translatedPos;
                                         assert otherPortalVertFacing != null;
                                         if (otherPortalVertFacing.equals(Direction.SOUTH)) {
@@ -146,12 +144,6 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
         }
 
 
-    }
-
-    @Override
-    public void playSound(SoundEvent soundEvent) {
-        assert this.level != null;
-        this.level.playSound(null, this.worldPosition, soundEvent, SoundSource.BLOCKS, 0.1F, 3.0F);
     }
 
     @Override

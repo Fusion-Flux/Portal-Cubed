@@ -5,7 +5,7 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,7 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -162,7 +161,7 @@ public abstract class GelBlobEntity extends Projectile {
         if (!level.isClientSide) {
             if (hitResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof ServerPlayer serverPlayer) {
                 final FriendlyByteBuf buf = PacketByteBufs.create();
-                buf.writeResourceLocation(Registry.BLOCK.getKey(getGel()));
+                buf.writeResourceLocation(BuiltInRegistries.BLOCK.getKey(getGel()));
                 ServerPlayNetworking.send(
                     serverPlayer,
                     PortalCubedClientPackets.GEL_OVERLAY_PACKET,
@@ -185,7 +184,7 @@ public abstract class GelBlobEntity extends Projectile {
     public void explode() {
         level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.GEL_SPLAT_EVENT, SoundSource.NEUTRAL, 0.5f, 1f);
         final FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeResourceLocation(Registry.BLOCK.getKey(getGel()));
+        buf.writeResourceLocation(BuiltInRegistries.BLOCK.getKey(getGel()));
         final int overlayDiameter = getSize() + 1;
         level.getEntities(
             EntityType.PLAYER,
@@ -199,7 +198,7 @@ public abstract class GelBlobEntity extends Projectile {
         final int radius = getExplosionRadius();
         final Vec3 origin = getBoundingBox().getCenter();
         if (radius == 0) {
-            final BlockPos originPos = new BlockPos(origin);
+            final BlockPos originPos = BlockPos.containing(origin);
             for (final Direction dir : Direction.values()) {
                 maybeExplodeAt(new BlockHitResult(
                     origin.add(Vec3.atLowerCornerOf(dir.getNormal())),
@@ -237,10 +236,16 @@ public abstract class GelBlobEntity extends Projectile {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (amount != 0 &&
-            (!(source instanceof EntityDamageSource eds) ||
-                (eds.getEntity() instanceof Player player &&
-                    player.isCreative()))
+//        if (amount != 0 &&
+//            (!(source instanceof EntityDamageSource eds) ||
+//                (eds.getEntity() instanceof Player player &&
+//                    player.isCreative()))
+//        ) {
+        if (
+            amount != 0 &&
+                (source.getDirectEntity() == null ||
+                    (source.getDirectEntity() instanceof Player player &&
+                        player.isCreative()))
         ) {
             remove(RemovalReason.KILLED);
         }

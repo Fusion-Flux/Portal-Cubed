@@ -1,6 +1,8 @@
 package com.fusionflux.portalcubed.sound;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
@@ -83,153 +85,153 @@ public class PortalCubedSounds {
 
     public static final ResourceLocation CROWBAR_SWOOSH = id("crowbar_swoosh");
 
-    public static final SoundEvent ERROR_EVENT = new SoundEvent(ERROR);
+    public static final SoundEvent ERROR_EVENT = SoundEvent.createVariableRangeEvent(ERROR);
 
-    public static final SoundEvent GEL_BOUNCE_EVENT = new SoundEvent(GEL_BOUNCE);
-    public static final SoundEvent GEL_RUN_EVENT = new SoundEvent(GEL_RUN);
-    public static final SoundEvent GEL_SPLAT_EVENT = new SoundEvent(GEL_SPLAT);
-    public static final SoundEvent PORTAL_AMBIENT_EVENT = new SoundEvent(PORTAL_AMBIANCE);
-    public static final SoundEvent FIRE_EVENT_PRIMARY = new SoundEvent(PORTAL_GUN_PRIMARY);
-    public static final SoundEvent FIRE_EVENT_SECONDARY = new SoundEvent(PORTAL_GUN_SECONDARY);
-    public static final SoundEvent INVALID_PORTAL_EVENT = new SoundEvent(PORTAL_INVALID_SURFACE);
-    public static final SoundEvent NOTHING_TO_GRAB_EVENT = new SoundEvent(NOTHING_TO_GRAB);
-    public static final SoundEvent ENTITY_ENTER_PORTAL = new SoundEvent(PORTAL_ENTER);
-    public static final SoundEvent ENTITY_EXIT_PORTAL = new SoundEvent(PORTAL_EXIT);
-    public static final SoundEvent ENTITY_PORTAL_OPEN = new SoundEvent(PORTAL_OPEN);
-    public static final SoundEvent ENTITY_PORTAL_CLOSE = new SoundEvent(PORTAL_CLOSE);
-    public static final SoundEvent ENTITY_PORTAL_FIZZLE = new SoundEvent(PORTAL_FIZZLE);
-    public static final SoundEvent CUBE_HIGH_HIT_EVENT = new SoundEvent(CUBE_HIT_HIGH);
-    public static final SoundEvent CUBE_LOW_HIT_EVENT = new SoundEvent(CUBE_HIT_LOW);
-    public static final SoundEvent CUBE_SCRAPE_EVENT = new SoundEvent(CUBE_SCRAPE);
-    public static final SoundEvent COMPANION_CUBE_AMBIANCE_EVENT = new SoundEvent(COMPANION_CUBE_AMBIANCE);
-    public static final SoundEvent MATERIAL_EMANCIPATION_EVENT = new SoundEvent(MATERIAL_EMANCIPATION);
-    public static final SoundEvent CATAPULT_LAUNCH_EVENT = new SoundEvent(CATAPULT_LAUNCH);
+    public static final SoundEvent GEL_BOUNCE_EVENT = SoundEvent.createVariableRangeEvent(GEL_BOUNCE);
+    public static final SoundEvent GEL_RUN_EVENT = SoundEvent.createVariableRangeEvent(GEL_RUN);
+    public static final SoundEvent GEL_SPLAT_EVENT = SoundEvent.createVariableRangeEvent(GEL_SPLAT);
+    public static final SoundEvent PORTAL_AMBIENT_EVENT = SoundEvent.createVariableRangeEvent(PORTAL_AMBIANCE);
+    public static final SoundEvent FIRE_EVENT_PRIMARY = SoundEvent.createVariableRangeEvent(PORTAL_GUN_PRIMARY);
+    public static final SoundEvent FIRE_EVENT_SECONDARY = SoundEvent.createVariableRangeEvent(PORTAL_GUN_SECONDARY);
+    public static final SoundEvent INVALID_PORTAL_EVENT = SoundEvent.createVariableRangeEvent(PORTAL_INVALID_SURFACE);
+    public static final SoundEvent NOTHING_TO_GRAB_EVENT = SoundEvent.createVariableRangeEvent(NOTHING_TO_GRAB);
+    public static final SoundEvent ENTITY_ENTER_PORTAL = SoundEvent.createVariableRangeEvent(PORTAL_ENTER);
+    public static final SoundEvent ENTITY_EXIT_PORTAL = SoundEvent.createVariableRangeEvent(PORTAL_EXIT);
+    public static final SoundEvent ENTITY_PORTAL_OPEN = SoundEvent.createVariableRangeEvent(PORTAL_OPEN);
+    public static final SoundEvent ENTITY_PORTAL_CLOSE = SoundEvent.createVariableRangeEvent(PORTAL_CLOSE);
+    public static final SoundEvent ENTITY_PORTAL_FIZZLE = SoundEvent.createVariableRangeEvent(PORTAL_FIZZLE);
+    public static final SoundEvent CUBE_HIGH_HIT_EVENT = SoundEvent.createVariableRangeEvent(CUBE_HIT_HIGH);
+    public static final SoundEvent CUBE_LOW_HIT_EVENT = SoundEvent.createVariableRangeEvent(CUBE_HIT_LOW);
+    public static final SoundEvent CUBE_SCRAPE_EVENT = SoundEvent.createVariableRangeEvent(CUBE_SCRAPE);
+    public static final SoundEvent COMPANION_CUBE_AMBIANCE_EVENT = SoundEvent.createVariableRangeEvent(COMPANION_CUBE_AMBIANCE);
+    public static final SoundEvent MATERIAL_EMANCIPATION_EVENT = SoundEvent.createVariableRangeEvent(MATERIAL_EMANCIPATION);
+    public static final SoundEvent CATAPULT_LAUNCH_EVENT = SoundEvent.createVariableRangeEvent(CATAPULT_LAUNCH);
 
-    public static final SoundEvent PEDESTAL_BUTTON_PRESS_EVENT = new SoundEvent(PEDESTAL_BUTTON_PRESS);
-    public static final SoundEvent PEDESTAL_BUTTON_RELEASE_EVENT = new SoundEvent(PEDESTAL_BUTTON_RELEASE);
-    public static final SoundEvent OLD_AP_PEDESTAL_BUTTON_PRESS_EVENT = new SoundEvent(OLD_AP_PEDESTAL_BUTTON_PRESS);
-    public static final SoundEvent OLD_AP_PEDESTAL_BUTTON_RELEASE_EVENT = new SoundEvent(OLD_AP_PEDESTAL_BUTTON_RELEASE);
-    public static final SoundEvent FLOOR_BUTTON_PRESS_EVENT = new SoundEvent(FLOOR_BUTTON_PRESS);
-    public static final SoundEvent FLOOR_BUTTON_RELEASE_EVENT = new SoundEvent(FLOOR_BUTTON_RELEASE);
-    public static final SoundEvent OLD_AP_FLOOR_BUTTON_PRESS_EVENT = new SoundEvent(OLD_AP_FLOOR_BUTTON_PRESS);
-    public static final SoundEvent OLD_AP_FLOOR_BUTTON_RELEASE_EVENT = new SoundEvent(OLD_AP_FLOOR_BUTTON_RELEASE);
+    public static final SoundEvent PEDESTAL_BUTTON_PRESS_EVENT = SoundEvent.createVariableRangeEvent(PEDESTAL_BUTTON_PRESS);
+    public static final SoundEvent PEDESTAL_BUTTON_RELEASE_EVENT = SoundEvent.createVariableRangeEvent(PEDESTAL_BUTTON_RELEASE);
+    public static final SoundEvent OLD_AP_PEDESTAL_BUTTON_PRESS_EVENT = SoundEvent.createVariableRangeEvent(OLD_AP_PEDESTAL_BUTTON_PRESS);
+    public static final SoundEvent OLD_AP_PEDESTAL_BUTTON_RELEASE_EVENT = SoundEvent.createVariableRangeEvent(OLD_AP_PEDESTAL_BUTTON_RELEASE);
+    public static final SoundEvent FLOOR_BUTTON_PRESS_EVENT = SoundEvent.createVariableRangeEvent(FLOOR_BUTTON_PRESS);
+    public static final SoundEvent FLOOR_BUTTON_RELEASE_EVENT = SoundEvent.createVariableRangeEvent(FLOOR_BUTTON_RELEASE);
+    public static final SoundEvent OLD_AP_FLOOR_BUTTON_PRESS_EVENT = SoundEvent.createVariableRangeEvent(OLD_AP_FLOOR_BUTTON_PRESS);
+    public static final SoundEvent OLD_AP_FLOOR_BUTTON_RELEASE_EVENT = SoundEvent.createVariableRangeEvent(OLD_AP_FLOOR_BUTTON_RELEASE);
 
-    public static final SoundEvent ROCKET_FIRE_EVENT = new SoundEvent(ROCKET_FIRE);
-    public static final SoundEvent ROCKET_FLY_EVENT = new SoundEvent(ROCKET_FLY);
-    public static final SoundEvent ROCKET_LOCKED_EVENT = new SoundEvent(ROCKET_LOCKED);
-    public static final SoundEvent ROCKET_LOCKING_EVENT = new SoundEvent(ROCKET_LOCKING);
-    public static final SoundEvent ROCKET_EXPLODE_EVENT = new SoundEvent(ROCKET_EXPLODE);
-    public static final SoundEvent ROCKET_GOO_EVENT = new SoundEvent(ROCKET_GOO);
+    public static final SoundEvent ROCKET_FIRE_EVENT = SoundEvent.createVariableRangeEvent(ROCKET_FIRE);
+    public static final SoundEvent ROCKET_FLY_EVENT = SoundEvent.createVariableRangeEvent(ROCKET_FLY);
+    public static final SoundEvent ROCKET_LOCKED_EVENT = SoundEvent.createVariableRangeEvent(ROCKET_LOCKED);
+    public static final SoundEvent ROCKET_LOCKING_EVENT = SoundEvent.createVariableRangeEvent(ROCKET_LOCKING);
+    public static final SoundEvent ROCKET_EXPLODE_EVENT = SoundEvent.createVariableRangeEvent(ROCKET_EXPLODE);
+    public static final SoundEvent ROCKET_GOO_EVENT = SoundEvent.createVariableRangeEvent(ROCKET_GOO);
 
-    public static final SoundEvent LASER_EMITTER_ACTIVATE_EVENT = new SoundEvent(LASER_EMITTER_ACTIVATE);
-    public static final SoundEvent LASER_BEAM_MUSIC_EVENT = new SoundEvent(LASER_BEAM_MUSIC);
-    public static final SoundEvent LASER_NODE_MUSIC_EVENT = new SoundEvent(LASER_NODE_MUSIC);
-    public static final SoundEvent LASER_NODE_ACTIVATE_EVENT = new SoundEvent(LASER_NODE_ACTIVATE);
-    public static final SoundEvent LASER_NODE_DEACTIVATE_EVENT = new SoundEvent(LASER_NODE_DEACTIVATE);
-    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_1_EVENT = new SoundEvent(LASER_TRIPLE_LASER_SOUND_DEMO_1);
-    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_2_EVENT = new SoundEvent(LASER_TRIPLE_LASER_SOUND_DEMO_2);
-    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_3_EVENT = new SoundEvent(LASER_TRIPLE_LASER_SOUND_DEMO_3);
+    public static final SoundEvent LASER_EMITTER_ACTIVATE_EVENT = SoundEvent.createVariableRangeEvent(LASER_EMITTER_ACTIVATE);
+    public static final SoundEvent LASER_BEAM_MUSIC_EVENT = SoundEvent.createVariableRangeEvent(LASER_BEAM_MUSIC);
+    public static final SoundEvent LASER_NODE_MUSIC_EVENT = SoundEvent.createVariableRangeEvent(LASER_NODE_MUSIC);
+    public static final SoundEvent LASER_NODE_ACTIVATE_EVENT = SoundEvent.createVariableRangeEvent(LASER_NODE_ACTIVATE);
+    public static final SoundEvent LASER_NODE_DEACTIVATE_EVENT = SoundEvent.createVariableRangeEvent(LASER_NODE_DEACTIVATE);
+    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_1_EVENT = SoundEvent.createVariableRangeEvent(LASER_TRIPLE_LASER_SOUND_DEMO_1);
+    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_2_EVENT = SoundEvent.createVariableRangeEvent(LASER_TRIPLE_LASER_SOUND_DEMO_2);
+    public static final SoundEvent LASER_TRIPLE_LASER_SOUND_DEMO_3_EVENT = SoundEvent.createVariableRangeEvent(LASER_TRIPLE_LASER_SOUND_DEMO_3);
 
-    public static final SoundEvent PELLET_BOUNCE_EVENT = new SoundEvent(PELLET_BOUNCE);
-    public static final SoundEvent PELLET_EXPLODE_EVENT = new SoundEvent(PELLET_EXPLODE);
-    public static final SoundEvent PELLET_SPAWN_EVENT = new SoundEvent(PELLET_SPAWN);
-    public static final SoundEvent PELLET_TRAVEL_EVENT = new SoundEvent(PELLET_TRAVEL);
+    public static final SoundEvent PELLET_BOUNCE_EVENT = SoundEvent.createVariableRangeEvent(PELLET_BOUNCE);
+    public static final SoundEvent PELLET_EXPLODE_EVENT = SoundEvent.createVariableRangeEvent(PELLET_EXPLODE);
+    public static final SoundEvent PELLET_SPAWN_EVENT = SoundEvent.createVariableRangeEvent(PELLET_SPAWN);
+    public static final SoundEvent PELLET_TRAVEL_EVENT = SoundEvent.createVariableRangeEvent(PELLET_TRAVEL);
 
-    public static final SoundEvent TBEAM_ENTER_EVENT = new SoundEvent(TBEAM_ENTER);
-    public static final SoundEvent TBEAM_TRAVEL_EVENT = new SoundEvent(TBEAM_TRAVEL);
+    public static final SoundEvent TBEAM_ENTER_EVENT = SoundEvent.createVariableRangeEvent(TBEAM_ENTER);
+    public static final SoundEvent TBEAM_TRAVEL_EVENT = SoundEvent.createVariableRangeEvent(TBEAM_TRAVEL);
 
-    public static final SoundEvent BULLET_CONCRETE_EVENT = new SoundEvent(BULLET_CONCRETE);
-    public static final SoundEvent BULLET_GLASS_EVENT = new SoundEvent(BULLET_GLASS);
-    public static final SoundEvent BULLET_METAL_EVENT = new SoundEvent(BULLET_METAL);
+    public static final SoundEvent BULLET_CONCRETE_EVENT = SoundEvent.createVariableRangeEvent(BULLET_CONCRETE);
+    public static final SoundEvent BULLET_GLASS_EVENT = SoundEvent.createVariableRangeEvent(BULLET_GLASS);
+    public static final SoundEvent BULLET_METAL_EVENT = SoundEvent.createVariableRangeEvent(BULLET_METAL);
 
-    public static final SoundEvent RADIO_MUSIC_EVENT = new SoundEvent(RADIO_MUSIC);
-    public static final SoundEvent EXILE_MUSIC_EVENT = new SoundEvent(EXILE_SONG);
-    public static final SoundEvent CURIOSITY_CORE_EVENT = new SoundEvent(CURIOSITY_CORE_SOUND);
-    public static final SoundEvent ANGER_CORE_EVENT = new SoundEvent(ANGER_CORE_SOUND);
-    public static final SoundEvent CAKE_CORE_EVENT = new SoundEvent(CAKE_CORE_SOUND);
-    public static final SoundEvent SPACE_CORE_EVENT = new SoundEvent(SPACE_CORE_SOUND);
-    public static final SoundEvent FACT_CORE_EVENT = new SoundEvent(FACT_CORE_SOUND);
-    public static final SoundEvent ADVENTURE_CORE_EVENT = new SoundEvent(ADVENTURE_CORE_SOUND);
+    public static final SoundEvent RADIO_MUSIC_EVENT = SoundEvent.createVariableRangeEvent(RADIO_MUSIC);
+    public static final SoundEvent EXILE_MUSIC_EVENT = SoundEvent.createVariableRangeEvent(EXILE_SONG);
+    public static final SoundEvent CURIOSITY_CORE_EVENT = SoundEvent.createVariableRangeEvent(CURIOSITY_CORE_SOUND);
+    public static final SoundEvent ANGER_CORE_EVENT = SoundEvent.createVariableRangeEvent(ANGER_CORE_SOUND);
+    public static final SoundEvent CAKE_CORE_EVENT = SoundEvent.createVariableRangeEvent(CAKE_CORE_SOUND);
+    public static final SoundEvent SPACE_CORE_EVENT = SoundEvent.createVariableRangeEvent(SPACE_CORE_SOUND);
+    public static final SoundEvent FACT_CORE_EVENT = SoundEvent.createVariableRangeEvent(FACT_CORE_SOUND);
+    public static final SoundEvent ADVENTURE_CORE_EVENT = SoundEvent.createVariableRangeEvent(ADVENTURE_CORE_SOUND);
 
-    public static final SoundEvent SEWAGE_STEP_EVENT = new SoundEvent(SEWAGE_STEP);
+    public static final SoundEvent SEWAGE_STEP_EVENT = SoundEvent.createVariableRangeEvent(SEWAGE_STEP);
 
-    public static final SoundEvent CROWBAR_SWOOSH_EVENT = new SoundEvent(CROWBAR_SWOOSH);
+    public static final SoundEvent CROWBAR_SWOOSH_EVENT = SoundEvent.createVariableRangeEvent(CROWBAR_SWOOSH);
 
-    public static final TagKey<SoundEvent> NO_ERROR_SOUND = QuiltTagKey.of(Registry.SOUND_EVENT_REGISTRY, id("no_error_sound"), TagType.CLIENT_ONLY);
+    public static final TagKey<SoundEvent> NO_ERROR_SOUND = QuiltTagKey.of(Registries.SOUND_EVENT, id("no_error_sound"), TagType.CLIENT_ONLY);
 
     public static void registerSounds() {
-        Registry.register(Registry.SOUND_EVENT, ERROR, ERROR_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ERROR, ERROR_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, GEL_BOUNCE, GEL_BOUNCE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, GEL_RUN, GEL_RUN_EVENT);
-        Registry.register(Registry.SOUND_EVENT, GEL_SPLAT, GEL_SPLAT_EVENT);
-        Registry.register(Registry.SOUND_EVENT, PORTAL_AMBIANCE, PORTAL_AMBIENT_EVENT);
-        Registry.register(Registry.SOUND_EVENT, PORTAL_GUN_PRIMARY, FIRE_EVENT_PRIMARY);
-        Registry.register(Registry.SOUND_EVENT, PORTAL_GUN_SECONDARY, FIRE_EVENT_SECONDARY);
-        Registry.register(Registry.SOUND_EVENT, PORTAL_INVALID_SURFACE, INVALID_PORTAL_EVENT);
-        Registry.register(Registry.SOUND_EVENT, NOTHING_TO_GRAB, NOTHING_TO_GRAB_EVENT);
-        Registry.register(Registry.SOUND_EVENT, PORTAL_ENTER, ENTITY_ENTER_PORTAL);
-        Registry.register(Registry.SOUND_EVENT, PORTAL_EXIT, ENTITY_EXIT_PORTAL);
-        Registry.register(Registry.SOUND_EVENT, PORTAL_OPEN, ENTITY_PORTAL_OPEN);
-        Registry.register(Registry.SOUND_EVENT, PORTAL_CLOSE, ENTITY_PORTAL_CLOSE);
-        Registry.register(Registry.SOUND_EVENT, PORTAL_FIZZLE, ENTITY_PORTAL_FIZZLE);
-        Registry.register(Registry.SOUND_EVENT, CUBE_HIT_HIGH, CUBE_HIGH_HIT_EVENT);
-        Registry.register(Registry.SOUND_EVENT, CUBE_HIT_LOW, CUBE_LOW_HIT_EVENT);
-        Registry.register(Registry.SOUND_EVENT, CUBE_SCRAPE, CUBE_SCRAPE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, GEL_BOUNCE, GEL_BOUNCE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, GEL_RUN, GEL_RUN_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, GEL_SPLAT, GEL_SPLAT_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_AMBIANCE, PORTAL_AMBIENT_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_GUN_PRIMARY, FIRE_EVENT_PRIMARY);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_GUN_SECONDARY, FIRE_EVENT_SECONDARY);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_INVALID_SURFACE, INVALID_PORTAL_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, NOTHING_TO_GRAB, NOTHING_TO_GRAB_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_ENTER, ENTITY_ENTER_PORTAL);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_EXIT, ENTITY_EXIT_PORTAL);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_OPEN, ENTITY_PORTAL_OPEN);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_CLOSE, ENTITY_PORTAL_CLOSE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_FIZZLE, ENTITY_PORTAL_FIZZLE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CUBE_HIT_HIGH, CUBE_HIGH_HIT_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CUBE_HIT_LOW, CUBE_LOW_HIT_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CUBE_SCRAPE, CUBE_SCRAPE_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, COMPANION_CUBE_AMBIANCE, COMPANION_CUBE_AMBIANCE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, MATERIAL_EMANCIPATION, MATERIAL_EMANCIPATION_EVENT);
-        Registry.register(Registry.SOUND_EVENT, CATAPULT_LAUNCH, CATAPULT_LAUNCH_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, COMPANION_CUBE_AMBIANCE, COMPANION_CUBE_AMBIANCE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MATERIAL_EMANCIPATION, MATERIAL_EMANCIPATION_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CATAPULT_LAUNCH, CATAPULT_LAUNCH_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, PEDESTAL_BUTTON_PRESS, PEDESTAL_BUTTON_PRESS_EVENT);
-        Registry.register(Registry.SOUND_EVENT, PEDESTAL_BUTTON_RELEASE, PEDESTAL_BUTTON_RELEASE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, OLD_AP_PEDESTAL_BUTTON_PRESS, OLD_AP_PEDESTAL_BUTTON_PRESS_EVENT);
-        Registry.register(Registry.SOUND_EVENT, OLD_AP_PEDESTAL_BUTTON_RELEASE, OLD_AP_PEDESTAL_BUTTON_RELEASE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, FLOOR_BUTTON_PRESS, FLOOR_BUTTON_PRESS_EVENT);
-        Registry.register(Registry.SOUND_EVENT, FLOOR_BUTTON_RELEASE, FLOOR_BUTTON_RELEASE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, OLD_AP_FLOOR_BUTTON_PRESS, OLD_AP_FLOOR_BUTTON_PRESS_EVENT);
-        Registry.register(Registry.SOUND_EVENT, OLD_AP_FLOOR_BUTTON_RELEASE, OLD_AP_FLOOR_BUTTON_RELEASE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PEDESTAL_BUTTON_PRESS, PEDESTAL_BUTTON_PRESS_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PEDESTAL_BUTTON_RELEASE, PEDESTAL_BUTTON_RELEASE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, OLD_AP_PEDESTAL_BUTTON_PRESS, OLD_AP_PEDESTAL_BUTTON_PRESS_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, OLD_AP_PEDESTAL_BUTTON_RELEASE, OLD_AP_PEDESTAL_BUTTON_RELEASE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, FLOOR_BUTTON_PRESS, FLOOR_BUTTON_PRESS_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, FLOOR_BUTTON_RELEASE, FLOOR_BUTTON_RELEASE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, OLD_AP_FLOOR_BUTTON_PRESS, OLD_AP_FLOOR_BUTTON_PRESS_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, OLD_AP_FLOOR_BUTTON_RELEASE, OLD_AP_FLOOR_BUTTON_RELEASE_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, ROCKET_FIRE, ROCKET_FIRE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, ROCKET_FLY, ROCKET_FLY_EVENT);
-        Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKED, ROCKET_LOCKED_EVENT);
-        Registry.register(Registry.SOUND_EVENT, ROCKET_LOCKING, ROCKET_LOCKING_EVENT);
-        Registry.register(Registry.SOUND_EVENT, ROCKET_EXPLODE, ROCKET_EXPLODE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, ROCKET_GOO, ROCKET_GOO_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_FIRE, ROCKET_FIRE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_FLY, ROCKET_FLY_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_LOCKED, ROCKET_LOCKED_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_LOCKING, ROCKET_LOCKING_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_EXPLODE, ROCKET_EXPLODE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_GOO, ROCKET_GOO_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, LASER_EMITTER_ACTIVATE, LASER_EMITTER_ACTIVATE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, LASER_BEAM_MUSIC, LASER_BEAM_MUSIC_EVENT);
-        Registry.register(Registry.SOUND_EVENT, LASER_NODE_MUSIC, LASER_NODE_MUSIC_EVENT);
-        Registry.register(Registry.SOUND_EVENT, LASER_NODE_ACTIVATE, LASER_NODE_ACTIVATE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, LASER_NODE_DEACTIVATE, LASER_NODE_DEACTIVATE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_1, LASER_TRIPLE_LASER_SOUND_DEMO_1_EVENT);
-        Registry.register(Registry.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_2, LASER_TRIPLE_LASER_SOUND_DEMO_2_EVENT);
-        Registry.register(Registry.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_3, LASER_TRIPLE_LASER_SOUND_DEMO_3_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, LASER_EMITTER_ACTIVATE, LASER_EMITTER_ACTIVATE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, LASER_BEAM_MUSIC, LASER_BEAM_MUSIC_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, LASER_NODE_MUSIC, LASER_NODE_MUSIC_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, LASER_NODE_ACTIVATE, LASER_NODE_ACTIVATE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, LASER_NODE_DEACTIVATE, LASER_NODE_DEACTIVATE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_1, LASER_TRIPLE_LASER_SOUND_DEMO_1_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_2, LASER_TRIPLE_LASER_SOUND_DEMO_2_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, LASER_TRIPLE_LASER_SOUND_DEMO_3, LASER_TRIPLE_LASER_SOUND_DEMO_3_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, PELLET_BOUNCE, PELLET_BOUNCE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, PELLET_EXPLODE, PELLET_EXPLODE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, PELLET_SPAWN, PELLET_SPAWN_EVENT);
-        Registry.register(Registry.SOUND_EVENT, PELLET_TRAVEL, PELLET_TRAVEL_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PELLET_BOUNCE, PELLET_BOUNCE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PELLET_EXPLODE, PELLET_EXPLODE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PELLET_SPAWN, PELLET_SPAWN_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PELLET_TRAVEL, PELLET_TRAVEL_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, TBEAM_ENTER, TBEAM_ENTER_EVENT);
-        Registry.register(Registry.SOUND_EVENT, TBEAM_TRAVEL, TBEAM_TRAVEL_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, TBEAM_ENTER, TBEAM_ENTER_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, TBEAM_TRAVEL, TBEAM_TRAVEL_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, BULLET_CONCRETE, BULLET_CONCRETE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, BULLET_GLASS, BULLET_GLASS_EVENT);
-        Registry.register(Registry.SOUND_EVENT, BULLET_METAL, BULLET_METAL_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BULLET_CONCRETE, BULLET_CONCRETE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BULLET_GLASS, BULLET_GLASS_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BULLET_METAL, BULLET_METAL_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, RADIO_MUSIC, RADIO_MUSIC_EVENT);
-        Registry.register(Registry.SOUND_EVENT, EXILE_SONG, EXILE_MUSIC_EVENT);
-        Registry.register(Registry.SOUND_EVENT, CURIOSITY_CORE_SOUND, CURIOSITY_CORE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, ANGER_CORE_SOUND, ANGER_CORE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, CAKE_CORE_SOUND, CAKE_CORE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, RADIO_MUSIC, RADIO_MUSIC_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, EXILE_SONG, EXILE_MUSIC_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CURIOSITY_CORE_SOUND, CURIOSITY_CORE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ANGER_CORE_SOUND, ANGER_CORE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CAKE_CORE_SOUND, CAKE_CORE_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, SPACE_CORE_SOUND, SPACE_CORE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, FACT_CORE_SOUND, FACT_CORE_EVENT);
-        Registry.register(Registry.SOUND_EVENT, ADVENTURE_CORE_SOUND, ADVENTURE_CORE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SPACE_CORE_SOUND, SPACE_CORE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, FACT_CORE_SOUND, FACT_CORE_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ADVENTURE_CORE_SOUND, ADVENTURE_CORE_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, SEWAGE_STEP, SEWAGE_STEP_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SEWAGE_STEP, SEWAGE_STEP_EVENT);
 
-        Registry.register(Registry.SOUND_EVENT, CROWBAR_SWOOSH, CROWBAR_SWOOSH_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CROWBAR_SWOOSH, CROWBAR_SWOOSH_EVENT);
     }
 }

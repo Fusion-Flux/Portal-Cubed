@@ -1,11 +1,10 @@
 package com.fusionflux.portalcubed.blocks.fizzler;
 
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
-import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.Fizzleable;
-import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,6 +30,8 @@ import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSources;
 
 public abstract class AbstractFizzlerBlock extends Block implements BlockCollisionTrigger {
     public static final BooleanProperty NS = BooleanProperty.create("ns");
@@ -129,7 +130,7 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
         if (entity.level.isClientSide) return;
         // TODO: Fizzle players visually?
         if (entity instanceof LivingEntity || (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() == Fizzleable.FizzleType.LIVING)) {
-            entity.hurt(PortalCubedDamageSources.FIZZLE, PortalCubedConfig.fizzlerDamage);
+            entity.hurt(pcSources(entity.level).fizzle(), PortalCubedConfig.fizzlerDamage);
             if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() != Fizzleable.FizzleType.NOT) {
                 fizzleable.fizzle();
             }

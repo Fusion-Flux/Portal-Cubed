@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.PortalCubedConfig;
+import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.Minecraft;
@@ -9,10 +9,9 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,12 +49,6 @@ public class RocketEntity extends Entity implements Fizzleable {
 
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-    }
-
-    @NotNull
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
     }
 
     @Override
@@ -134,7 +127,7 @@ public class RocketEntity extends Entity implements Fizzleable {
     public void explode(@Nullable LivingEntity entity) {
         if (entity != null) {
             entity.hurt(
-                new IndirectEntityDamageSource("fireworks", this, null).setExplosion(),
+                damageSources().source(DamageTypes.FIREWORKS, this),
                 PortalCubedConfig.rocketDamage
             );
         }

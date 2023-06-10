@@ -5,7 +5,7 @@ import com.fusionflux.portalcubed.client.render.entity.model.RocketModel;
 import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -36,8 +37,8 @@ public class RocketRenderer extends EntityRenderer<RocketEntity> {
         final float yaw = Mth.rotLerp(tickDelta, entity.yRotO, entity.getYRot());
         final float pitch = Mth.rotLerp(tickDelta, entity.xRotO, entity.getXRot());
 
-        matrices.mulPose(Vector3f.XP.rotationDegrees(-pitch));
-        matrices.mulPose(Vector3f.YP.rotationDegrees(180 - yaw));
+        matrices.mulPose(Axis.XP.rotationDegrees(-pitch));
+        matrices.mulPose(Axis.YP.rotationDegrees(180 - yaw));
         matrices.scale(-1, -1, 1);
         matrices.translate(0.0, -1.501, 0.0);
 
@@ -54,6 +55,7 @@ public class RocketRenderer extends EntityRenderer<RocketEntity> {
         matrices.popPose();
     }
 
+    @NotNull
     @Override
     public ResourceLocation getTextureLocation(RocketEntity entity) {
         return RocketTurretModel.TEXTURE_ACTIVE;

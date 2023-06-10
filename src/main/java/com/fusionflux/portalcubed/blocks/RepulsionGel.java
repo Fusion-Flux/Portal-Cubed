@@ -6,7 +6,6 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -199,11 +198,11 @@ public class RepulsionGel extends BaseGel {
     }
 
     @Override
-    public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         if (entity.isSuppressingBounce()) {
-            super.fallOn(world, state, pos, entity, fallDistance);
+            super.fallOn(level, state, pos, entity, fallDistance);
         } else {
-            entity.causeFallDamage(fallDistance, 0.0F, DamageSource.FALL);
+            entity.causeFallDamage(fallDistance, 0.0F, level.damageSources().fall());
         }
     }
 }

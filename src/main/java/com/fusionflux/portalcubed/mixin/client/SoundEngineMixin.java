@@ -5,7 +5,8 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,8 +29,10 @@ public abstract class SoundEngineMixin {
     private void ohFiddlesticks(SoundInstance sound, CallbackInfo ci) {
         if (
             !sound.getLocation().getNamespace().equals(PortalCubed.MOD_ID) ||
-                Registry.SOUND_EVENT.getOrCreateTag(PortalCubedSounds.NO_ERROR_SOUND)
-                    .contains(Registry.SOUND_EVENT.getHolderOrThrow(ResourceKey.create(Registry.SOUND_EVENT_REGISTRY, sound.getLocation())))
+                BuiltInRegistries.SOUND_EVENT.getOrCreateTag(PortalCubedSounds.NO_ERROR_SOUND)
+                    .contains(BuiltInRegistries.SOUND_EVENT.getHolderOrThrow(
+                        ResourceKey.create(Registries.SOUND_EVENT, sound.getLocation())
+                    ))
         ) return;
         play(SimpleSoundInstance.forUI(PortalCubedSounds.ERROR_EVENT, 1f));
     }

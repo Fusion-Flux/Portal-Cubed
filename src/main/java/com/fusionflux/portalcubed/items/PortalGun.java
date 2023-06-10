@@ -38,6 +38,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -129,6 +130,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
         return InteractionResult.CONSUME;
     }
 
+    @NotNull
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.NONE;
@@ -382,7 +384,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
             },
             context -> {
                 final Vec3 offset = start.subtract(end);
-                return BlockHitResult.miss(end, Direction.getNearest(offset.x, offset.y, offset.z), new BlockPos(end));
+                return BlockHitResult.miss(end, Direction.getNearest(offset.x, offset.y, offset.z), BlockPos.containing(end));
             }
         );
     }

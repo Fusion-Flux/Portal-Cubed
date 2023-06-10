@@ -12,7 +12,6 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -35,6 +34,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -81,14 +82,14 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
-        return  damageSource != DamageSource.OUT_OF_WORLD && !damageSource.isCreativePlayer();
+        return damageSource != damageSources().outOfWorld() && !damageSource.isCreativePlayer();
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (!this.level.isClientSide && !this.isRemoved()) {
             boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
-            if (source.getEntity() instanceof Player || source == DamageSource.OUT_OF_WORLD) {
+            if (source.getEntity() instanceof Player || source == damageSources().outOfWorld()) {
                 if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
                     if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
                         this.spawnAtLocation(PortalCubedItems.STORAGE_CUBE);
@@ -256,11 +257,13 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
         return !level.isClientSide || getHolderUUID().isPresent();
     }
 
+    @NotNull
     @Override
     public Iterable<ItemStack> getArmorSlots() {
         return Collections.emptyList();
     }
 
+    @NotNull
     @Override
     public ItemStack getItemBySlot(EquipmentSlot slot) {
         return ItemStack.EMPTY;
@@ -270,6 +273,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
     }
 
+    @NotNull
     @Override
     public HumanoidArm getMainArm() {
         return HumanoidArm.RIGHT;

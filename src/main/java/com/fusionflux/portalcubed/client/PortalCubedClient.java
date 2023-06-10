@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.client;
 
-import amymialee.visiblebarriers.VisibleBarriers;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.Accessors;
@@ -36,12 +35,11 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -62,12 +60,11 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
@@ -77,6 +74,7 @@ import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientLoginConnectionEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
+import xyz.amymialee.visiblebarriers.VisibleBarriers;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,6 +82,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -255,10 +254,11 @@ public class PortalCubedClient implements ClientModInitializer {
         final ResourceLocation toxicGooFlowSpriteId = id("block/toxic_goo_flow");
         FluidRenderHandlerRegistry.INSTANCE.register(PortalCubedFluids.TOXIC_GOO.still, PortalCubedFluids.TOXIC_GOO.flowing, new SimpleFluidRenderHandler(toxicGooStillSpriteId, toxicGooFlowSpriteId));
 
-        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((atlasTexture, registry) -> {
-            registry.register(toxicGooStillSpriteId);
-            registry.register(toxicGooFlowSpriteId);
-        });
+        // TODO: Remove this code if it's truly unnecessary
+//        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((atlasTexture, registry) -> {
+//            registry.register(toxicGooStillSpriteId);
+//            registry.register(toxicGooFlowSpriteId);
+//        });
 
         ItemProperties.register(
             PortalCubedBlocks.POWER_BLOCK.asItem(),
@@ -431,6 +431,18 @@ public class PortalCubedClient implements ClientModInitializer {
 
         PortalTabsLoader.load(mod);
 
+        //noinspection UnstableApiUsage
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(e -> e.addAfter(
+            i -> i.getItem() instanceof RecordItem,
+            List.of(
+                new ItemStack(PortalCubedItems.STILL_ALIVE),
+                new ItemStack(PortalCubedItems.CARA_MIA_ADDIO),
+                new ItemStack(PortalCubedItems.WANT_YOU_GONE),
+                new ItemStack(PortalCubedItems.RECONSTRUCTING_MORE_SCIENCE)
+            ),
+            CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+        ));
+
         try {
             final CompoundTag compound = NbtIo.readCompressed(GLOBAL_ADVANCEMENTS_FILE);
             for (final Tag element : compound.getList("Advancements", Tag.TAG_STRING)) {
@@ -562,7 +574,7 @@ public class PortalCubedClient implements ClientModInitializer {
 
     private static final class VisibleBarriersCompat {
         static boolean isVisible() {
-            return VisibleBarriers.isVisible();
+            return VisibleBarriers.isVisibilityEnabled();
         }
     }
 

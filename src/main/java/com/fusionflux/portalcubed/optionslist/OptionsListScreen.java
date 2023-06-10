@@ -10,7 +10,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -48,7 +48,7 @@ public class OptionsListScreen extends AbstractContainerScreen<OptionsListScreen
         }
         target = ola;
         //noinspection DataFlowIssue
-        this.translationPrefix = "optionslist." + Registry.BLOCK_ENTITY_TYPE.getKey(ola.getType()).toString().replace(':', '.') + ".";
+        this.translationPrefix = "optionslist." + BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(ola.getType()).toString().replace(':', '.') + ".";
         for (final EntryInfo entry : OptionsListData.getEntries(target)) {
             try {
                 entry.value = entry.field.get(target);
@@ -65,7 +65,7 @@ public class OptionsListScreen extends AbstractContainerScreen<OptionsListScreen
         imageHeight = height;
         super.init();
 
-        Button done = this.addRenderableWidget(new Button(this.width / 2 - 75, this.height - 28, 150, 20, CommonComponents.GUI_DONE, (button) -> {
+        Button done = this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> {
             for (EntryInfo info : OptionsListData.getEntries(target)) {
                 try {
                     info.field.set(target, info.value);
@@ -73,7 +73,7 @@ public class OptionsListScreen extends AbstractContainerScreen<OptionsListScreen
                 }
             }
             onClose();
-        }));
+        }).width(150).pos(this.width / 2 - 75, this.height - 28).build());
 
         this.list = new OptionsListListWidget(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
         if (this.minecraft != null && this.minecraft.level != null) this.list.setRenderBackground(false);
@@ -85,7 +85,7 @@ public class OptionsListScreen extends AbstractContainerScreen<OptionsListScreen
                 Map.Entry<Button.OnPress, Function<Object, Component>> widget = (Map.Entry<Button.OnPress, Function<Object, Component>>)info.widget;
                 if (info.field.getType().isEnum())
                     widget.setValue(value -> Component.translatable(translationPrefix + "enum." + info.field.getType().getSimpleName() + "." + info.value.toString()));
-                this.list.addButton(List.of(new Button(width - 160, 0, 150, 20, widget.getValue().apply(info.value), widget.getKey())), name, info);
+                this.list.addButton(List.of(Button.builder(widget.getValue().apply(info.value), widget.getKey()).width(150).pos(width - 160, 0).build()), name, info);
             } else if (info.field.getType() == List.class) {
                 if (!reload) info.index = 0;
                 EditBox widget = new EditBox(font, width - 160, 0, 150, 20, Component.empty());
@@ -94,7 +94,7 @@ public class OptionsListScreen extends AbstractContainerScreen<OptionsListScreen
                     widget.setValue((String.valueOf(((List<String>)info.value).get(info.index))));
                 Predicate<String> processor = ((BiFunction<EditBox, Button, Predicate<String>>)info.widget).apply(widget, done);
                 widget.setFilter(processor);
-                Button cycleButton = new Button(width - 185, 0, 20, 20, Component.literal(String.valueOf(info.index)).withStyle(ChatFormatting.GOLD), (button -> {
+                Button cycleButton = Button.builder(Component.literal(String.valueOf(info.index)).withStyle(ChatFormatting.GOLD), (button -> {
                     ((List<String>)info.value).remove("");
                     double scrollAmount = list.getScrollAmount();
                     this.reload = true;
@@ -102,7 +102,7 @@ public class OptionsListScreen extends AbstractContainerScreen<OptionsListScreen
                     if (info.index > ((List<String>)info.value).size()) info.index = 0;
                     Objects.requireNonNull(minecraft).setScreen(this);
                     list.setScrollAmount(scrollAmount);
-                }));
+                })).width(20).size(width - 185, 0).build();
                 this.list.addButton(List.of(widget, cycleButton), name, info);
             } else if (info.widget != null) {
                 AbstractWidget widget;
@@ -117,8 +117,8 @@ public class OptionsListScreen extends AbstractContainerScreen<OptionsListScreen
                     textField.setFilter(processor);
                 }
                 if (e.isColor()) {
-                    Button colorButton = new Button(width - 185, 0, 20, 20, Component.literal("⬛"), (button -> {
-                    }));
+                    Button colorButton = Button.builder(Component.literal("⬛"), (button -> {
+                    })).width(20).pos(width - 185, 0).build();
                     try {
                         colorButton.setMessage(Component.literal("⬛").setStyle(Style.EMPTY.withColor(Color.decode(info.tempValue).getRGB())));
                     } catch (Exception ignored) {

@@ -78,23 +78,26 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 portalCubed$what(Vec3 travelVectorOriginal) {
-        if (!this.isNoGravity()) {
-            ItemStack itemFeet = this.getItemBySlot(EquipmentSlot.FEET);
-            if (!this.isOnGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.level.getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.level.getBlockState(new BlockPos(this.blockPosition().getX(), this.blockPosition().getY() + 1, this.blockPosition().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
-                double mathVal = 1;
-                double horizontalVelocity = Math.abs(this.getDeltaMovement().x) + Math.abs(this.getDeltaMovement().z);
-                if (horizontalVelocity / 0.01783440120041885 > 1) {
-                    mathVal = horizontalVelocity / 0.01783440120041885;
-                }
-                travelVectorOriginal = new Vec3(travelVectorOriginal.x / mathVal, travelVectorOriginal.y, travelVectorOriginal.z / mathVal);
-                this.flyingSpeed = .04f;
+        if (!this.isNoGravity() && !this.isOnGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.level.getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.level.getBlockState(new BlockPos(this.blockPosition().getX(), this.blockPosition().getY() + 1, this.blockPosition().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
+            double mathVal = 1;
+            double horizontalVelocity = Math.abs(this.getDeltaMovement().x) + Math.abs(this.getDeltaMovement().z);
+            if (horizontalVelocity / 0.01783440120041885 > 1) {
+                mathVal = horizontalVelocity / 0.01783440120041885;
             }
+            travelVectorOriginal = new Vec3(travelVectorOriginal.x / mathVal, travelVectorOriginal.y, travelVectorOriginal.z / mathVal);
         }
         if (CalledValues.getIsTeleporting(this)) {
             travelVectorOriginal = Vec3.ZERO;
         }
 
         return travelVectorOriginal;
+    }
+
+    @Inject(method = "getFlyingSpeed", at = @At("HEAD"), cancellable = true)
+    private void replaceFlyingSpeed(CallbackInfoReturnable<Float> cir) {
+        if (!this.isNoGravity() && !this.isOnGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.level.getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.level.getBlockState(new BlockPos(this.blockPosition().getX(), this.blockPosition().getY() + 1, this.blockPosition().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
+            cir.setReturnValue(0.04f);
+        }
     }
 
     private boolean enableNoDrag2;

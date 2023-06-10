@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -43,6 +44,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
         return Optional.empty();
     }
 
+    @SuppressWarnings("DataFlowIssue")
     private static final RenderMaterial DEFAULT_MATERIAL = RendererAccess.INSTANCE.getRenderer().materialById(RenderMaterial.MATERIAL_STANDARD);
     private static final RenderMaterial[] EMISSIVE_MATERIALS;
     static {
@@ -51,10 +53,10 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
         final var materialFinder = RendererAccess.INSTANCE.getRenderer().materialFinder();
         for (BlendMode blendMode : blendModes) {
             EMISSIVE_MATERIALS[blendMode.ordinal()] = materialFinder
-                .emissive(0, true)
-                .disableDiffuse(0, true)
-                .disableAo(0, true)
-                .blendMode(0, blendMode)
+                .emissive(true)
+                .disableDiffuse(true)
+                .ambientOcclusion(TriState.FALSE)
+                .blendMode(blendMode)
                 .find();
         }
     }
@@ -100,7 +102,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
             final List<BakedQuad> quads = wrapped.getQuads(state, cullFace, randomSupplier.get());
 
             for (BakedQuad quad : quads) {
-                boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().getName());
+                boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().atlasLocation());
 
                 BlendMode blendMode = BlendMode.DEFAULT;
                 if (state != null) {

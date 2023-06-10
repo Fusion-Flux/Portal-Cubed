@@ -3,12 +3,12 @@ package com.fusionflux.portalcubed.client.render.block.entity;
 import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -37,11 +37,9 @@ public class RocketTurretRenderer extends EntityLikeBlockEntityRenderer<RocketTu
         final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.lines());
         final PoseStack.Pose matrix = matrices.last();
         for (final var aimDestInfo : entity.aimDests) {
-            final Vector3f origin = new Vector3f(aimDestInfo.getA().subtract(Vec3.atLowerCornerOf(entity.getBlockPos())));
-            final Vector3f offset = new Vector3f(aimDestInfo.getB().subtract(Vec3.atLowerCornerOf(entity.getBlockPos())));
-            final Vector3f normal = offset.copy();
-            normal.sub(origin);
-            normal.normalize();
+            final Vector3f origin = aimDestInfo.getA().subtract(Vec3.atLowerCornerOf(entity.getBlockPos())).toVector3f();
+            final Vector3f offset = aimDestInfo.getB().subtract(Vec3.atLowerCornerOf(entity.getBlockPos())).toVector3f();
+            final Vector3f normal = new Vector3f(offset).sub(origin).normalize();
             vertexConsumer
                 .vertex(matrix.pose(), origin.x(), origin.y(), origin.z())
                 .color(130 / 255f, 200 / 255f, 230 / 255f, 0.25f)

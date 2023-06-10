@@ -7,11 +7,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -23,6 +24,7 @@ public class DecalParticleEffect implements ParticleOptions {
 
     @SuppressWarnings("deprecation")
     public static final ParticleOptions.Deserializer<DecalParticleEffect> PARAMETERS_FACTORY = new Deserializer<>() {
+        @NotNull
         @Override
         public DecalParticleEffect fromCommand(ParticleType<DecalParticleEffect> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
@@ -39,6 +41,7 @@ public class DecalParticleEffect implements ParticleOptions {
             return new DecalParticleEffect(type, texture, direction, multiply);
         }
 
+        @NotNull
         @Override
         public DecalParticleEffect fromNetwork(ParticleType<DecalParticleEffect> type, FriendlyByteBuf buf) {
             return new DecalParticleEffect(
@@ -70,6 +73,7 @@ public class DecalParticleEffect implements ParticleOptions {
         this(texture, direction, false);
     }
 
+    @NotNull
     @Override
     public ParticleType<?> getType() {
         return particleType;
@@ -80,9 +84,10 @@ public class DecalParticleEffect implements ParticleOptions {
         buf.writeResourceLocation(texture);
     }
 
+    @NotNull
     @Override
     public String writeToString() {
-        return Registry.PARTICLE_TYPE.getKey(particleType) + " " + texture;
+        return BuiltInRegistries.PARTICLE_TYPE.getKey(particleType) + " " + texture;
     }
 
     public ResourceLocation getTexture() {

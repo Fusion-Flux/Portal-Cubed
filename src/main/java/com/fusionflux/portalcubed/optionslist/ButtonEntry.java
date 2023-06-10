@@ -9,6 +9,7 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ButtonEntry extends ContainerObjectSelectionList.Entry<ButtonEntry>
     @Override
     public void render(PoseStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
         buttons.forEach(b -> {
-            b.y = y;
+            b.setY(y);
             b.render(matrices, mouseX, mouseY, tickDelta);
         });
         if (text != null && (!text.getString().contains("spacer") || !buttons.isEmpty())) {
@@ -46,11 +47,13 @@ public class ButtonEntry extends ContainerObjectSelectionList.Entry<ButtonEntry>
         }
     }
 
+    @NotNull
     @Override
     public List<? extends GuiEventListener> children() {
         return children;
     }
 
+    @NotNull
     @Override
     public List<? extends NarratableEntry> narratables() {
         return children;

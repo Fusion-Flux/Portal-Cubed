@@ -18,7 +18,7 @@ public class BeansEntity extends CorePhysicsEntity  {
     public boolean hurt(DamageSource source, float amount) {
         if (!this.level.isClientSide && !this.isRemoved()) {
             boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
-            if (source.getEntity() instanceof Player || source == DamageSource.OUT_OF_WORLD) {
+            if (source.getEntity() instanceof Player || source == damageSources().outOfWorld()) {
                 if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
                     if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
                         this.spawnAtLocation(PortalCubedItems.BEANS);

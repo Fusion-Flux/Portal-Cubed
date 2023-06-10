@@ -5,7 +5,6 @@ import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -24,20 +23,20 @@ public class PropulsionGel extends BaseGel {
         this.addCollisionEffects(world, entity);
     }
 
-    private void addCollisionEffects(Level world, Entity entity) {
+    private void addCollisionEffects(Level level, Entity entity) {
         if (entity.getType().equals(EntityType.BOAT)) {
-            entity.hurt(DamageSource.MAGIC, 200);
+            entity.hurt(level.damageSources().magic(), 200);
         } else {
             if (entity.isOnGround()) {
                 if (!entity.isShiftKeyDown()) {
-                    if (limiter.check(world, entity)) {
+                    if (limiter.check(level, entity)) {
                         if (Math.abs(entity.getDeltaMovement().x) < 2 && Math.abs(entity.getDeltaMovement().z) < 2) {
                             entity.setDeltaMovement(entity.getDeltaMovement().multiply(1.7, 1.0D, 1.7));
                         } else if (Math.abs(entity.getDeltaMovement().x) > 2 && Math.abs(entity.getDeltaMovement().z) > 2) {
                             entity.setDeltaMovement(entity.getDeltaMovement().multiply(1.01, 1.0D, 1.01));
                         }
                         if (((EntityAttachments) entity).getMaxFallSpeed() == 0) {
-                            world.playSound(null, entity.position().x(), entity.position().y(), entity.position().z(), PortalCubedSounds.GEL_RUN_EVENT, SoundSource.NEUTRAL, .3F, 1F);
+                            level.playSound(null, entity.position().x(), entity.position().y(), entity.position().z(), PortalCubedSounds.GEL_RUN_EVENT, SoundSource.NEUTRAL, .3F, 1F);
                         }
                         ((EntityAttachments) entity).setMaxFallSpeed(10);
                     }

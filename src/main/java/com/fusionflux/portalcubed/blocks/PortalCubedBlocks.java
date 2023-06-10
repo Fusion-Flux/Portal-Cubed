@@ -1,11 +1,12 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.blockentities.*;
 import com.fusionflux.portalcubed.blocks.fizzler.*;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.GelBlobItem;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
@@ -22,7 +23,7 @@ import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedBlocks {
-    public static final Item BASE_GEL = new Item(new QuiltItemSettings().tab(PortalCubed.TESTING_ELEMENTS_GROUP).fireResistant());
+    public static final Item BASE_GEL = new Item(new QuiltItemSettings().fireResistant());
     public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(QuiltBlockSettings.of(Material.PLANT).randomTicks().destroyTime(0f).noOcclusion().noCollission().sound(new SoundType(1, -1, SoundEvents.HONEY_BLOCK_BREAK, SoundEvents.HONEY_BLOCK_STEP, SoundEvents.HONEY_BLOCK_PLACE, SoundEvents.HONEY_BLOCK_HIT, SoundEvents.HONEY_BLOCK_FALL)));
     public static final RepulsionGel REPULSION_GEL = new RepulsionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
     public static final AdhesionGel ADHESION_GEL = new AdhesionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
@@ -112,157 +113,157 @@ public class PortalCubedBlocks {
     public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
     public static final BlockEntityType<RocketTurretBlockEntity> ROCKET_TURRET_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build();
 
-    public static final TagKey<Block> BULLET_HOLE_CONCRETE = TagKey.create(Registry.BLOCK_REGISTRY, id("bullet_hole_concrete"));
-    public static final TagKey<Block> BULLET_HOLE_GLASS = TagKey.create(Registry.BLOCK_REGISTRY, id("bullet_hole_glass"));
-    public static final TagKey<Block> BULLET_HOLE_METAL = TagKey.create(Registry.BLOCK_REGISTRY, id("bullet_hole_metal"));
-    public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.create(Registry.BLOCK_REGISTRY, id("cant_place_portal_on"));
-    public static final TagKey<Block> PORTAL_NONSOLID = TagKey.create(Registry.BLOCK_REGISTRY, id("portal_nonsolid"));
-    public static final TagKey<Block> PORTAL_SOLID = TagKey.create(Registry.BLOCK_REGISTRY, id("portal_solid"));
-    public static final TagKey<Block> PORTALABLE_GELS = TagKey.create(Registry.BLOCK_REGISTRY, id("portalable_gels"));
+    public static final TagKey<Block> BULLET_HOLE_CONCRETE = TagKey.create(Registries.BLOCK, id("bullet_hole_concrete"));
+    public static final TagKey<Block> BULLET_HOLE_GLASS = TagKey.create(Registries.BLOCK, id("bullet_hole_glass"));
+    public static final TagKey<Block> BULLET_HOLE_METAL = TagKey.create(Registries.BLOCK, id("bullet_hole_metal"));
+    public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.create(Registries.BLOCK, id("cant_place_portal_on"));
+    public static final TagKey<Block> PORTAL_NONSOLID = TagKey.create(Registries.BLOCK, id("portal_nonsolid"));
+    public static final TagKey<Block> PORTAL_SOLID = TagKey.create(Registries.BLOCK, id("portal_solid"));
+    public static final TagKey<Block> PORTALABLE_GELS = TagKey.create(Registries.BLOCK, id("portalable_gels"));
 
     public static void registerBlocks() {
-        Registry.register(Registry.ITEM, id("base_gel"), BASE_GEL);
+        Registry.register(BuiltInRegistries.ITEM, id("base_gel"), BASE_GEL);
 
-        Registry.register(Registry.BLOCK, id("propulsion_gel"), PROPULSION_GEL);
-        Registry.register(Registry.ITEM, id("propulsion_gel"), new GelBlobItem(PROPULSION_GEL, PortalCubedEntities.PROPULSION_GEL_BLOB, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("propulsion_gel"), PROPULSION_GEL);
+        Registry.register(BuiltInRegistries.ITEM, id("propulsion_gel"), new GelBlobItem(PROPULSION_GEL, PortalCubedEntities.PROPULSION_GEL_BLOB, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("repulsion_gel"), REPULSION_GEL);
-        Registry.register(Registry.ITEM, id("repulsion_gel"), new GelBlobItem(REPULSION_GEL, PortalCubedEntities.REPULSION_GEL_BLOB, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("repulsion_gel"), REPULSION_GEL);
+        Registry.register(BuiltInRegistries.ITEM, id("repulsion_gel"), new GelBlobItem(REPULSION_GEL, PortalCubedEntities.REPULSION_GEL_BLOB, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("adhesion_gel"), ADHESION_GEL);
-        Registry.register(Registry.ITEM, id("adhesion_gel"), new GelBlobItem(ADHESION_GEL, PortalCubedEntities.ADHESION_GEL_BLOB, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("adhesion_gel"), ADHESION_GEL);
+        Registry.register(BuiltInRegistries.ITEM, id("adhesion_gel"), new GelBlobItem(ADHESION_GEL, PortalCubedEntities.ADHESION_GEL_BLOB, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("conversion_gel"), CONVERSION_GEL);
-        Registry.register(Registry.ITEM, id("conversion_gel"), new GelBlobItem(CONVERSION_GEL, PortalCubedEntities.CONVERSION_GEL_BLOB, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("conversion_gel"), CONVERSION_GEL);
+        Registry.register(BuiltInRegistries.ITEM, id("conversion_gel"), new GelBlobItem(CONVERSION_GEL, PortalCubedEntities.CONVERSION_GEL_BLOB, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("reflection_gel"), REFLECTION_GEL);
-        Registry.register(Registry.ITEM, id("reflection_gel"), new GelBlobItem(REFLECTION_GEL, PortalCubedEntities.REFLECTION_GEL_BLOB, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("reflection_gel"), REFLECTION_GEL);
+        Registry.register(BuiltInRegistries.ITEM, id("reflection_gel"), new GelBlobItem(REFLECTION_GEL, PortalCubedEntities.REFLECTION_GEL_BLOB, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("portal_2_door"), PORTAL2DOOR);
-        Registry.register(Registry.ITEM, id("portal_2_door"), new BlockItem(PORTAL2DOOR, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("portal_2_door"), PORTAL2DOOR);
+        Registry.register(BuiltInRegistries.ITEM, id("portal_2_door"), new BlockItem(PORTAL2DOOR, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("octopus_door"), OCTOPUS_DOOR);
-        Registry.register(Registry.ITEM, id("octopus_door"), new BlockItem(OCTOPUS_DOOR, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("octopus_door"), OCTOPUS_DOOR);
+        Registry.register(BuiltInRegistries.ITEM, id("octopus_door"), new BlockItem(OCTOPUS_DOOR, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("old_ap_door"), OLD_AP_DOOR);
-        Registry.register(Registry.ITEM, id("old_ap_door"), new BlockItem(OLD_AP_DOOR, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("old_ap_door"), OLD_AP_DOOR);
+        Registry.register(BuiltInRegistries.ITEM, id("old_ap_door"), new BlockItem(OLD_AP_DOOR, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("portal_1_door"), PORTAL1DOOR);
-        Registry.register(Registry.ITEM, id("portal_1_door"), new BlockItem(PORTAL1DOOR, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("portal_1_door"), PORTAL1DOOR);
+        Registry.register(BuiltInRegistries.ITEM, id("portal_1_door"), new BlockItem(PORTAL1DOOR, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_emitter_entity"), HLB_EMITTER_ENTITY);
-        Registry.register(Registry.BLOCK, id("light_bridge_emitter"), HLB_EMITTER_BLOCK);
-        Registry.register(Registry.ITEM, id("light_bridge_emitter"), new BlockItem(HLB_EMITTER_BLOCK, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("light_bridge_entity"), HLB_BLOCK_ENTITY);
-        Registry.register(Registry.BLOCK, id("light_bridge"), HLB_BLOCK);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("neurotoxin_entity"), NEUROTOXIN_BLOCK_ENTITY);
-        Registry.register(Registry.BLOCK, id("neurotoxin"), NEUROTOXIN_BLOCK);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("neurotoxin_emitter_entity"), NEUROTOXIN_EMITTER_ENTITY);
-        Registry.register(Registry.BLOCK, id("neurotoxin_emitter"), NEUROTOXIN_EMITTER);
-        Registry.register(Registry.ITEM, id("neurotoxin_emitter"), new BlockItem(NEUROTOXIN_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("light_bridge_emitter_entity"), HLB_EMITTER_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("light_bridge_emitter"), HLB_EMITTER_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, id("light_bridge_emitter"), new BlockItem(HLB_EMITTER_BLOCK, new Item.Properties()));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("light_bridge_entity"), HLB_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("light_bridge"), HLB_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("neurotoxin_entity"), NEUROTOXIN_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("neurotoxin"), NEUROTOXIN_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("neurotoxin_emitter_entity"), NEUROTOXIN_EMITTER_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("neurotoxin_emitter"), NEUROTOXIN_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("neurotoxin_emitter"), new BlockItem(NEUROTOXIN_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("auto_portal_entity"), AUTO_PORTAL_BLOCK_ENTITY);
-        Registry.register(Registry.BLOCK, id("auto_portal"), AUTO_PORTAL_BLOCK);
-        Registry.register(Registry.ITEM, id("auto_portal"), new BlockItem(AUTO_PORTAL_BLOCK, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("auto_portal_entity"), AUTO_PORTAL_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("auto_portal"), AUTO_PORTAL_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, id("auto_portal"), new BlockItem(AUTO_PORTAL_BLOCK, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_emitter_entity"), EXCURSION_FUNNEL_EMITTER_ENTITY);
-        Registry.register(Registry.BLOCK, id("excursion_funnel_emitter"), EXCURSION_FUNNEL_EMITTER);
-        Registry.register(Registry.ITEM, id("excursion_funnel_emitter"), new BlockItem(EXCURSION_FUNNEL_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("excursion_funnel_entity"), EXCURSION_FUNNEL_ENTITY);
-        Registry.register(Registry.BLOCK, id("excursion_funnel"), EXCURSION_FUNNEL);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("excursion_funnel_emitter_entity"), EXCURSION_FUNNEL_EMITTER_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("excursion_funnel_emitter"), EXCURSION_FUNNEL_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("excursion_funnel_emitter"), new BlockItem(EXCURSION_FUNNEL_EMITTER, new Item.Properties()));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("excursion_funnel_entity"), EXCURSION_FUNNEL_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("excursion_funnel"), EXCURSION_FUNNEL);
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("reversed_excursion_funnel_emitter_entity"), REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY);
-        Registry.register(Registry.BLOCK, id("reversed_excursion_funnel_emitter"), REVERSED_EXCURSION_FUNNEL_EMITTER);
-        Registry.register(Registry.ITEM, id("reversed_excursion_funnel_emitter"), new BlockItem(REVERSED_EXCURSION_FUNNEL_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("reversed_excursion_funnel_emitter_entity"), REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("reversed_excursion_funnel_emitter"), REVERSED_EXCURSION_FUNNEL_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("reversed_excursion_funnel_emitter"), new BlockItem(REVERSED_EXCURSION_FUNNEL_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("duel_excursion_funnel_emitter_entity"), DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY);
-        Registry.register(Registry.BLOCK, id("duel_excursion_funnel_emitter"), DUEL_EXCURSION_FUNNEL_EMITTER);
-        Registry.register(Registry.ITEM, id("duel_excursion_funnel_emitter"), new BlockItem(DUEL_EXCURSION_FUNNEL_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("duel_excursion_funnel_emitter_entity"), DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("duel_excursion_funnel_emitter"), DUEL_EXCURSION_FUNNEL_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("duel_excursion_funnel_emitter"), new BlockItem(DUEL_EXCURSION_FUNNEL_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("faith_plate"), FAITH_PLATE_BLOCK_ENTITY);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("beta_faith_plate"), BETA_FAITH_PLATE_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("faith_plate"), FAITH_PLATE_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("beta_faith_plate"), BETA_FAITH_PLATE_BLOCK_ENTITY);
 
-        Registry.register(Registry.BLOCK, id("faith_plate"), FAITH_PLATE);
-        Registry.register(Registry.ITEM, id("faith_plate"), new BlockItem(FAITH_PLATE, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("faith_plate"), FAITH_PLATE);
+        Registry.register(BuiltInRegistries.ITEM, id("faith_plate"), new BlockItem(FAITH_PLATE, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("beta_faith_plate"), BETA_FAITH_PLATE);
-        Registry.register(Registry.ITEM, id("beta_faith_plate"), new BlockItem(BETA_FAITH_PLATE, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("beta_faith_plate"), BETA_FAITH_PLATE);
+        Registry.register(BuiltInRegistries.ITEM, id("beta_faith_plate"), new BlockItem(BETA_FAITH_PLATE, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("faith_plate_target"), FAITH_PLATE_TARGET);
-        Registry.register(Registry.ITEM, id("faith_plate_target"), new BlockItem(FAITH_PLATE_TARGET, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("faith_plate_target"), FAITH_PLATE_TARGET);
+        Registry.register(BuiltInRegistries.ITEM, id("faith_plate_target"), new BlockItem(FAITH_PLATE_TARGET, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), LASER_EMITTER_BLOCK_ENTITY);
-        Registry.register(Registry.BLOCK, id("laser_emitter"), LASER_EMITTER);
-        Registry.register(Registry.ITEM, id("laser_emitter"), new BlockItem(LASER_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("laser_emitter_entity"), LASER_EMITTER_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("laser_emitter"), LASER_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("laser_emitter"), new BlockItem(LASER_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("laser_catcher"), LASER_CATCHER);
-        Registry.register(Registry.ITEM, id("laser_catcher"), new BlockItem(LASER_CATCHER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("laser_catcher"), LASER_CATCHER);
+        Registry.register(BuiltInRegistries.ITEM, id("laser_catcher"), new BlockItem(LASER_CATCHER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("laser_relay"), LASER_RELAY);
-        Registry.register(Registry.ITEM, id("laser_relay"), new BlockItem(LASER_RELAY, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("laser_relay"), LASER_RELAY);
+        Registry.register(BuiltInRegistries.ITEM, id("laser_relay"), new BlockItem(LASER_RELAY, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("laser_node"), LASER_NODE_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("laser_node"), LASER_NODE_BLOCK_ENTITY);
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("floor_button_block_entity"), FLOOR_BUTTON_BLOCK_ENTITY);
-        Registry.register(Registry.BLOCK, id("floor_button"), FLOOR_BUTTON);
-        Registry.register(Registry.ITEM, id("floor_button"), new BlockItem(FLOOR_BUTTON, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("floor_button_block_entity"), FLOOR_BUTTON_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("floor_button"), FLOOR_BUTTON);
+        Registry.register(BuiltInRegistries.ITEM, id("floor_button"), new BlockItem(FLOOR_BUTTON, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("old_ap_floor_button_block_entity"), OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY);
-        Registry.register(Registry.BLOCK, id("old_ap_floor_button"), OLD_AP_FLOOR_BUTTON);
-        Registry.register(Registry.ITEM, id("old_ap_floor_button"), new BlockItem(OLD_AP_FLOOR_BUTTON, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("old_ap_floor_button_block_entity"), OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("old_ap_floor_button"), OLD_AP_FLOOR_BUTTON);
+        Registry.register(BuiltInRegistries.ITEM, id("old_ap_floor_button"), new BlockItem(OLD_AP_FLOOR_BUTTON, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("rocket_turret"), ROCKET_TURRET_BLOCK_ENTITY);
-        Registry.register(Registry.BLOCK, id("rocket_turret"), ROCKET_TURRET);
-        Registry.register(Registry.ITEM, id("rocket_turret"), new BlockItem(ROCKET_TURRET, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("rocket_turret"), ROCKET_TURRET_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("rocket_turret"), ROCKET_TURRET);
+        Registry.register(BuiltInRegistries.ITEM, id("rocket_turret"), new BlockItem(ROCKET_TURRET, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("power_block"), POWER_BLOCK);
-        Registry.register(Registry.ITEM, id("power_block"), new BlockItem(POWER_BLOCK, new Item.Properties().rarity(Rarity.EPIC).tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("power_block"), POWER_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, id("power_block"), new BlockItem(POWER_BLOCK, new Item.Properties().rarity(Rarity.EPIC)));
 
-        Registry.register(Registry.BLOCK, id("velocity_helper"), VELOCITY_HELPER);
-        Registry.register(Registry.ITEM, id("velocity_helper"), new BlockItem(VELOCITY_HELPER, new Item.Properties().rarity(Rarity.EPIC).tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("velocity_helper"), VELOCITY_HELPER_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("velocity_helper"), VELOCITY_HELPER);
+        Registry.register(BuiltInRegistries.ITEM, id("velocity_helper"), new BlockItem(VELOCITY_HELPER, new Item.Properties().rarity(Rarity.EPIC)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("velocity_helper"), VELOCITY_HELPER_BLOCK_ENTITY);
 
-        Registry.register(Registry.BLOCK, id("catapult"), CATAPULT);
-        Registry.register(Registry.ITEM, id("catapult"), new BlockItem(CATAPULT, new Item.Properties().rarity(Rarity.EPIC).tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, id("catapult"), CATAPULT_BLOCK_ENTITY);
+        Registry.register(BuiltInRegistries.BLOCK, id("catapult"), CATAPULT);
+        Registry.register(BuiltInRegistries.ITEM, id("catapult"), new BlockItem(CATAPULT, new Item.Properties().rarity(Rarity.EPIC)));
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("catapult"), CATAPULT_BLOCK_ENTITY);
 
-        Registry.register(Registry.BLOCK, id("fizzler"), FIZZLER);
-        Registry.register(Registry.BLOCK, id("fizzler_emitter"), FIZZLER_EMITTER);
-        Registry.register(Registry.ITEM, id("fizzler_emitter"), new BlockItem(FIZZLER_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("fizzler"), FIZZLER);
+        Registry.register(BuiltInRegistries.BLOCK, id("fizzler_emitter"), FIZZLER_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("fizzler_emitter"), new BlockItem(FIZZLER_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("portal_1_fizzler"), PORTAL_1_FIZZLER);
-        Registry.register(Registry.BLOCK, id("portal_1_fizzler_emitter"), PORTAL_1_FIZZLER_EMITTER);
-        Registry.register(Registry.ITEM, id("portal_1_fizzler_emitter"), new BlockItem(PORTAL_1_FIZZLER_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("portal_1_fizzler"), PORTAL_1_FIZZLER);
+        Registry.register(BuiltInRegistries.BLOCK, id("portal_1_fizzler_emitter"), PORTAL_1_FIZZLER_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("portal_1_fizzler_emitter"), new BlockItem(PORTAL_1_FIZZLER_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("old_aperture_fizzler"), OLD_APERTURE_FIZZLER);
-        Registry.register(Registry.BLOCK, id("old_aperture_fizzler_emitter"), OLD_APERTURE_FIZZLER_EMITTER);
-        Registry.register(Registry.ITEM, id("old_aperture_fizzler_emitter"), new BlockItem(OLD_APERTURE_FIZZLER_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("old_aperture_fizzler"), OLD_APERTURE_FIZZLER);
+        Registry.register(BuiltInRegistries.BLOCK, id("old_aperture_fizzler_emitter"), OLD_APERTURE_FIZZLER_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("old_aperture_fizzler_emitter"), new BlockItem(OLD_APERTURE_FIZZLER_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("laser_fizzler"), LASER_FIZZLER);
-        Registry.register(Registry.BLOCK, id("laser_fizzler_emitter"), LASER_FIZZLER_EMITTER);
-        Registry.register(Registry.ITEM, id("laser_fizzler_emitter"), new BlockItem(LASER_FIZZLER_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("laser_fizzler"), LASER_FIZZLER);
+        Registry.register(BuiltInRegistries.BLOCK, id("laser_fizzler_emitter"), LASER_FIZZLER_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("laser_fizzler_emitter"), new BlockItem(LASER_FIZZLER_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("death_fizzler"), DEATH_FIZZLER);
-        Registry.register(Registry.BLOCK, id("death_fizzler_emitter"), DEATH_FIZZLER_EMITTER);
-        Registry.register(Registry.ITEM, id("death_fizzler_emitter"), new BlockItem(DEATH_FIZZLER_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("death_fizzler"), DEATH_FIZZLER);
+        Registry.register(BuiltInRegistries.BLOCK, id("death_fizzler_emitter"), DEATH_FIZZLER_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("death_fizzler_emitter"), new BlockItem(DEATH_FIZZLER_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("old_aperture_death_fizzler"), OLD_APERTURE_DEATH_FIZZLER);
-        Registry.register(Registry.BLOCK, id("old_aperture_death_fizzler_emitter"), OLD_APERTURE_DEATH_FIZZLER_EMITTER);
-        Registry.register(Registry.ITEM, id("old_aperture_death_fizzler_emitter"), new BlockItem(OLD_APERTURE_DEATH_FIZZLER_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("old_aperture_death_fizzler"), OLD_APERTURE_DEATH_FIZZLER);
+        Registry.register(BuiltInRegistries.BLOCK, id("old_aperture_death_fizzler_emitter"), OLD_APERTURE_DEATH_FIZZLER_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("old_aperture_death_fizzler_emitter"), new BlockItem(OLD_APERTURE_DEATH_FIZZLER_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("matter_inquisition_field"), MATTER_INQUISITION_FIELD);
-        Registry.register(Registry.BLOCK, id("matter_inquisition_field_emitter"), MATTER_INQUISITION_FIELD_EMITTER);
-        Registry.register(Registry.ITEM, id("matter_inquisition_field_emitter"), new BlockItem(MATTER_INQUISITION_FIELD_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("matter_inquisition_field"), MATTER_INQUISITION_FIELD);
+        Registry.register(BuiltInRegistries.BLOCK, id("matter_inquisition_field_emitter"), MATTER_INQUISITION_FIELD_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("matter_inquisition_field_emitter"), new BlockItem(MATTER_INQUISITION_FIELD_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("physics_repulsion_field"), PHYSICS_REPULSION_FIELD);
-        Registry.register(Registry.BLOCK, id("physics_repulsion_field_emitter"), PHYSICS_REPULSION_FIELD_EMITTER);
-        Registry.register(Registry.ITEM, id("physics_repulsion_field_emitter"), new BlockItem(PHYSICS_REPULSION_FIELD_EMITTER, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("physics_repulsion_field"), PHYSICS_REPULSION_FIELD);
+        Registry.register(BuiltInRegistries.BLOCK, id("physics_repulsion_field_emitter"), PHYSICS_REPULSION_FIELD_EMITTER);
+        Registry.register(BuiltInRegistries.ITEM, id("physics_repulsion_field_emitter"), new BlockItem(PHYSICS_REPULSION_FIELD_EMITTER, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("pedestal_button"), TALL_BUTTON);
-        Registry.register(Registry.ITEM, id("pedestal_button"), new BlockItem(TALL_BUTTON, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("pedestal_button"), TALL_BUTTON);
+        Registry.register(BuiltInRegistries.ITEM, id("pedestal_button"), new BlockItem(TALL_BUTTON, new Item.Properties()));
 
-        Registry.register(Registry.BLOCK, id("old_ap_pedestal_button"), OLD_AP_PEDESTAL_BUTTON);
-        Registry.register(Registry.ITEM, id("old_ap_pedestal_button"), new BlockItem(OLD_AP_PEDESTAL_BUTTON, new Item.Properties().tab(PortalCubed.TESTING_ELEMENTS_GROUP)));
+        Registry.register(BuiltInRegistries.BLOCK, id("old_ap_pedestal_button"), OLD_AP_PEDESTAL_BUTTON);
+        Registry.register(BuiltInRegistries.ITEM, id("old_ap_pedestal_button"), new BlockItem(OLD_AP_PEDESTAL_BUTTON, new Item.Properties()));
 
         PortalBlocksLoader.initCommon();
     }

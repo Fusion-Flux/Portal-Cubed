@@ -1,12 +1,11 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.blocks.LaserCatcherBlock;
 import com.fusionflux.portalcubed.blocks.LaserEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
-import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.GeneralUtil;
@@ -41,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSources;
 
 public class LaserEmitterBlockEntity extends BlockEntity {
     private record Target(@NotNull BlockPos pos, @Nullable Direction side) {
@@ -85,12 +86,12 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         }
     }
 
-    public void tick(Level world, BlockPos pos, BlockState state) {
+    public void tick(Level level, BlockPos pos, BlockState state) {
         multiSegments.clear();
         if (!state.getValue(LaserEmitterBlock.POWERED)) {
-            if (!world.isClientSide) {
+            if (!level.isClientSide) {
                 for (final Target target : targets) {
-                    world.getBlockEntity(target.pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
+                    level.getBlockEntity(target.pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
                 }
                 targets.clear();
             }
@@ -104,7 +105,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         do {
             //noinspection DataFlowIssue
             final AdvancedEntityRaycast.Result segments = AdvancedEntityRaycast.raycast(
-                world,
+                level,
                 new ClipContext(
                     start, start.add(direction.scale(lengthRemaining)),
                     ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, null
@@ -132,7 +133,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             lengthRemaining -= segments.length();
             multiSegments.add(segments);
             if (segments.finalHit().getType() == HitResult.Type.BLOCK) {
-                hitState = world.getBlockState(segments.finalHit().getBlockPos());
+                hitState = level.getBlockState(segments.finalHit().getBlockPos());
                 if (hitState.is(PortalCubedBlocks.REFLECTION_GEL)) {
                     final Direction.Axis axis = segments.finalHit().getDirection().getAxis();
                     direction = direction.with(axis, -direction.get(axis));
@@ -142,12 +143,12 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             }
         } while (hitState != null && (hitState.is(PortalCubedBlocks.LASER_RELAY) || hitState.is(PortalCubedBlocks.REFLECTION_GEL)));
 
-        if (world.isClientSide) {
+        if (level.isClientSide) {
             clientTick();
             return;
         }
 
-        Entity owner = EntityType.MARKER.create(world);
+        Entity owner = EntityType.MARKER.create(level);
         assert owner != null;
         alreadyHit.clear();
         for (final AdvancedEntityRaycast.Result result : multiSegments) {
@@ -165,7 +166,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                             continue; // TODO: Turrets and chairs burn
                         }
                         if (!hitEntity.isOnGround()) continue;
-                        hitEntity.hurt(PortalCubedDamageSources.LASER, PortalCubedConfig.laserDamage);
+                        hitEntity.hurt(pcSources(level).laser(), PortalCubedConfig.laserDamage);
                         final Vec3 velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.position())
                             .normalize()
                             .scale(1.25);
@@ -183,7 +184,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         for (final AdvancedEntityRaycast.Result result : multiSegments) {
             final BlockHitResult finalHit = result.finalHit();
             if (finalHit.getType() == HitResult.Type.MISS) continue;
-            final BlockState hitState1 = world.getBlockState(finalHit.getBlockPos());
+            final BlockState hitState1 = level.getBlockState(finalHit.getBlockPos());
             if (hitState1.is(PortalCubedBlocks.LASER_CATCHER) && finalHit.getDirection() != hitState1.getValue(LaserCatcherBlock.FACING)) continue;
             final Target target = new Target(
                 finalHit.getBlockPos(),
@@ -204,7 +205,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
 
         for (final var entry : changes.object2IntEntrySet()) {
             if (entry.getIntValue() == 0) continue;
-            final LaserNodeBlockEntity entity = world.getBlockEntity(entry.getKey(), PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).orElse(null);
+            final LaserNodeBlockEntity entity = level.getBlockEntity(entry.getKey(), PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).orElse(null);
             if (entity == null) continue;
             if (entry.getIntValue() > 0) {
                 for (int i = 0; i < entry.getIntValue(); i++) {

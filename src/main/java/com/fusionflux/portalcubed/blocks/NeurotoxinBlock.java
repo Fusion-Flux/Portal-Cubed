@@ -4,7 +4,6 @@ import com.fusionflux.portalcubed.blocks.blockentities.NeurotoxinBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -18,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class NeurotoxinBlock extends BaseEntityBlock {
@@ -26,6 +26,7 @@ public class NeurotoxinBlock extends BaseEntityBlock {
         super(settings);
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -47,6 +48,7 @@ public class NeurotoxinBlock extends BaseEntityBlock {
         return true;
     }
 
+    @NotNull
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
@@ -54,9 +56,9 @@ public class NeurotoxinBlock extends BaseEntityBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
-        if (!world.isClientSide) {
-            entity.hurt(DamageSource.DROWN, 1);
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if (!level.isClientSide) {
+            entity.hurt(level.damageSources().drown(), 1);
         }
     }
 

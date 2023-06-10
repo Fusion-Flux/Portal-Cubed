@@ -25,6 +25,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -137,6 +138,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Shadow public abstract double getZ();
 
     @Shadow public abstract float getXRot();
+
+    @Shadow public abstract DamageSources damageSources();
 
     private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
 
@@ -547,7 +550,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         //noinspection ConstantValue
         if (!((Object)this instanceof LivingEntity living)) return;
         ItemStack stack = living.getItemBySlot(EquipmentSlot.FEET);
-        if (damageSource == DamageSource.FALL && (stack.is(PortalCubedItems.LONG_FALL_BOOTS))) {
+        if (damageSource == damageSources().fall() && (stack.is(PortalCubedItems.LONG_FALL_BOOTS))) {
             cir.setReturnValue(true);
         }
     }

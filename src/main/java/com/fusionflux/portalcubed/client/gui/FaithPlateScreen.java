@@ -110,7 +110,7 @@ public class FaithPlateScreen extends AbstractContainerScreen<AbstractContainerM
 
         int x = this.width / 2;
         int y = this.height / 2;
-        addRenderableWidget(new Button(x - 50, y, 100, 20, Component.nullToEmpty("Done"), (button) -> {
+        addRenderableWidget(Button.builder(Component.nullToEmpty("Done"), (button) -> {
 
             FriendlyByteBuf buf = PacketByteBufs.create();
 
@@ -150,7 +150,7 @@ public class FaithPlateScreen extends AbstractContainerScreen<AbstractContainerM
             NetworkingSafetyWrapper.sendFromClient("configure_faith_plate", buf);
             this.onClose();
            // ClientPlayNetworking.send("a", buf);
-        }));
+        }).width(100).pos(x - 50, y).build());
         // Center the title
         titleLabelX = (imageWidth - font.width(title)) / 2;
     }

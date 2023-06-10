@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.fluids;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.google.common.base.Suppliers;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -25,7 +25,7 @@ public class PortalCubedFluids {
     );
 
     private static FluidRegistryContainer createFluid(String name, FlowingFluid flowing, FlowingFluid still, Function<FlowingFluid, LiquidBlock> blockSupplier) {
-        return new FluidRegistryContainer(name, flowing, still, blockSupplier, new BucketItem(still, new QuiltItemSettings().tab(PortalCubed.TESTING_ELEMENTS_GROUP).craftRemainder(Items.BUCKET).stacksTo(1)));
+        return new FluidRegistryContainer(name, flowing, still, blockSupplier, new BucketItem(still, new QuiltItemSettings().craftRemainder(Items.BUCKET).stacksTo(1)));
     }
 
     public static void registerFluids() {
@@ -49,10 +49,10 @@ public class PortalCubedFluids {
         }
 
         private void register() {
-            Registry.register(Registry.FLUID, id("flowing_" + name), flowing);
-            Registry.register(Registry.FLUID, id(name), still);
-            Registry.register(Registry.BLOCK, id(name), block.get());
-            if (bucket != null) Registry.register(Registry.ITEM, id(name + "_bucket"), bucket);
+            Registry.register(BuiltInRegistries.FLUID, id("flowing_" + name), flowing);
+            Registry.register(BuiltInRegistries.FLUID, id(name), still);
+            Registry.register(BuiltInRegistries.BLOCK, id(name), block.get());
+            if (bucket != null) Registry.register(BuiltInRegistries.ITEM, id(name + "_bucket"), bucket);
         }
 
         public LiquidBlock getBlock() {

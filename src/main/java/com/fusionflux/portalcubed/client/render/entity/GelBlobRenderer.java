@@ -3,16 +3,20 @@ package com.fusionflux.portalcubed.client.render.entity;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
+import java.util.EnumSet;
 
 public class GelBlobRenderer extends EntityRenderer<GelBlobEntity> {
     private final ModelPart.Cube cube;
@@ -25,7 +29,8 @@ public class GelBlobRenderer extends EntityRenderer<GelBlobEntity> {
             16, 16, 16, // XS, YS, ZS
             0, 0, 0, // Extra XS, Extra YS, Extra ZS
             false, // Mirror
-            1, 1 // U width, V height
+            1, 1, // U width, V height
+            EnumSet.allOf(Direction.class)
         );
     }
 
@@ -35,14 +40,14 @@ public class GelBlobRenderer extends EntityRenderer<GelBlobEntity> {
         final VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entitySolid(getTextureLocation(entity)));
         matrices.pushPose();
 
-        final Vector3f vel = new Vector3f(entity.getDeltaMovement());
+        final Vector3f vel = entity.getDeltaMovement().toVector3f();
         final float y = (vel.y() - 0.04f * tickDelta) * 0.98f;
         float speed = (float)Math.sqrt(vel.x() * vel.x() + y * y + vel.z() * vel.z());
         vel.normalize();
         final float angle = (float)Math.acos(Mth.clamp(y, -1, 1));
         vel.set(-1 * vel.z(), 0, vel.x());
         vel.normalize();
-        final Quaternion rot = new Quaternion(vel, -angle, false);
+        final Quaternionf rot = new Quaternionf().setAngleAxis(-angle, vel.x, vel.y, vel.z);
         matrices.translate(0, 0.5, 0);
         matrices.mulPose(rot);
         speed += 0.75f;
@@ -60,6 +65,7 @@ public class GelBlobRenderer extends EntityRenderer<GelBlobEntity> {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
+    @NotNull
     @Override
     public ResourceLocation getTextureLocation(GelBlobEntity entity) {
         return entity.getTexture();

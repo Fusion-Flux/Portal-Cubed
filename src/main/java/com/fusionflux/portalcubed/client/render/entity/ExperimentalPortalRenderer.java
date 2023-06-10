@@ -7,7 +7,7 @@ import com.fusionflux.portalcubed.client.render.portal.PortalRenderer;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -37,9 +37,9 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
     public void render(@NotNull ExperimentalPortal entity, float yaw, float tickDelta, @NotNull PoseStack matrices, @NotNull MultiBufferSource vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.pushPose();
-        matrices.mulPose(Vector3f.XP.rotationDegrees(entity.getYRot()));
-        matrices.mulPose(Vector3f.YP.rotationDegrees(entity.getXRot()));
-        matrices.mulPose(Vector3f.ZN.rotationDegrees(entity.getRoll()));
+        matrices.mulPose(Axis.XP.rotationDegrees(entity.getYRot()));
+        matrices.mulPose(Axis.YP.rotationDegrees(entity.getXRot()));
+        matrices.mulPose(Axis.ZN.rotationDegrees(entity.getRoll()));
 
         int color = entity.getColor() * -1;
         if (color == -16383998) {

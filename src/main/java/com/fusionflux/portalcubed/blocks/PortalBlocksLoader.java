@@ -1,21 +1,18 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -52,11 +49,6 @@ public final class PortalBlocksLoader {
     @ClientOnly
     private static Map<String, RenderType> renderLayers;
     private static final Map<String, BlockData> BLOCK_DATA = new LinkedHashMap<>();
-    ItemGroupEvents
-    private static final CreativeModeTab ITEM_GROUP = QuiltItemGroup.createWithIcon(
-        id("portal_blocks"),
-        () -> new ItemStack(PortalCubedItems.BLOCK_ITEM_ICON)
-    );
 
     static {
         if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT) {
@@ -87,8 +79,8 @@ public final class PortalBlocksLoader {
         BLOCK_DATA.forEach((key, value) -> {
             if (value.block == null) return;
             final ResourceLocation id = id(key);
-            Registry.register(Registry.BLOCK, id, value.block);
-            Registry.register(Registry.ITEM, id, new BlockItem(value.block, new Item.Properties().tab(ITEM_GROUP)));
+            Registry.register(BuiltInRegistries.BLOCK, id, value.block);
+            Registry.register(BuiltInRegistries.ITEM, id, new BlockItem(value.block, new Item.Properties()));
         });
     }
 
@@ -103,7 +95,7 @@ public final class PortalBlocksLoader {
                 }
                 BlockRenderLayerMap.put(
                     renderLayer,
-                    Registry.BLOCK.getOptional(id)
+                    BuiltInRegistries.BLOCK.getOptional(id)
                         .orElseThrow(() -> new IllegalArgumentException("Unknown block in portal_blocks.json " + id))
                 );
             }
@@ -123,7 +115,7 @@ public final class PortalBlocksLoader {
         }
         json.remove("type");
         final QuiltBlockSettings settings = json.has("inherit")
-            ? Registry.BLOCK.getOptional(new ResourceLocation(GsonHelper.getAsString(json, "inherit")))
+            ? BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(GsonHelper.getAsString(json, "inherit")))
                 .map(QuiltBlockSettings::copyOf)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown block " + json.get("inherit")))
             : QuiltBlockSettings.of(Material.STONE)
@@ -149,7 +141,7 @@ public final class PortalBlocksLoader {
 
     private static SoundType parseBlockSounds(JsonElement sounds) {
         if (sounds.isJsonPrimitive()) {
-            return Registry.BLOCK.getOptional(new ResourceLocation(GsonHelper.convertToString(sounds, "sounds")))
+            return BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(GsonHelper.convertToString(sounds, "sounds")))
                 .map(b -> b.getSoundType(b.defaultBlockState()))
                 .orElseThrow(() -> new IllegalArgumentException("Unknown block " + sounds));
         }
@@ -157,11 +149,11 @@ public final class PortalBlocksLoader {
         return new SoundType(
             GsonHelper.getAsFloat(object, "volume", 1f),
             GsonHelper.getAsFloat(object, "pitch", 1f),
-            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "break"))),
-            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "step"))),
-            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "place"))),
-            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "hit"))),
-            new SoundEvent(new ResourceLocation(GsonHelper.getAsString(object, "fall")))
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(GsonHelper.getAsString(object, "break"))),
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(GsonHelper.getAsString(object, "step"))),
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(GsonHelper.getAsString(object, "place"))),
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(GsonHelper.getAsString(object, "hit"))),
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(GsonHelper.getAsString(object, "fall")))
         );
     }
 

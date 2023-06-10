@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.fluids;
 
 import com.fusionflux.portalcubed.entity.Fizzleable;
-import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -17,23 +16,30 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import org.jetbrains.annotations.NotNull;
+
+import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSources;
 
 public abstract class ToxicGooFluid extends FlowingFluid {
+    @NotNull
     @Override
     public Fluid getSource() {
         return PortalCubedFluids.TOXIC_GOO.still;
     }
 
+    @NotNull
     @Override
     public Fluid getFlowing() {
         return PortalCubedFluids.TOXIC_GOO.flowing;
     }
 
+    @NotNull
     @Override
     public Item getBucket() {
         return PortalCubedFluids.TOXIC_GOO.bucket;
     }
 
+    @NotNull
     @Override
     protected BlockState createLegacyBlock(FluidState state) {
         return PortalCubedFluids.TOXIC_GOO.getBlock().defaultBlockState().setValue(BlockStateProperties.LEVEL, getLegacyLevel(state));
@@ -45,7 +51,7 @@ public abstract class ToxicGooFluid extends FlowingFluid {
     }
 
     @Override
-    protected boolean canConvertToSource() {
+    protected boolean canConvertToSource(Level level) {
         return true;
     }
 
@@ -116,14 +122,14 @@ public abstract class ToxicGooFluid extends FlowingFluid {
 
         @Override
         @SuppressWarnings("deprecation")
-        public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+        public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
             if (!entity.isAlive()) return;
             if (entity instanceof Fizzleable fizzleable) {
-                if (!world.isClientSide && fizzleable.fizzlesInGoo()) {
+                if (!level.isClientSide && fizzleable.fizzlesInGoo()) {
                     fizzleable.fizzle();
                 }
             } else {
-                entity.hurt(PortalCubedDamageSources.ACID, world.getRandom().nextIntBetweenInclusive(7, 10));
+                entity.hurt(pcSources(level).acid(), level.getRandom().nextIntBetweenInclusive(7, 10));
             }
         }
     }

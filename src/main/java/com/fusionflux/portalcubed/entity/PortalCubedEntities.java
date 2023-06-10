@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.blocks.BaseGel;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -128,41 +129,41 @@ public class PortalCubedEntities {
         .build();
 
     public static void registerEntities() {
-        Registry.register(Registry.ENTITY_TYPE, id("experimental_portal"), EXPERIMENTAL_PORTAL);
-        Registry.register(Registry.ENTITY_TYPE, id("storage_cube"), STORAGE_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, id("companion_cube"), COMPANION_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, id("radio"), RADIO);
-        Registry.register(Registry.ENTITY_TYPE, id("redirection_cube"), REDIRECTION_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, id("old_ap_cube"), OLD_AP_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, id("portal_1_companion_cube"), PORTAL_1_COMPANION_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, id("portal_1_storage_cube"), PORTAL_1_STORAGE_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, id("beans"), BEANS);
-        Registry.register(Registry.ENTITY_TYPE, id("mug"), MUG);
-        Registry.register(Registry.ENTITY_TYPE, id("jug"), JUG);
-        Registry.register(Registry.ENTITY_TYPE, id("computer"), COMPUTER);
-        Registry.register(Registry.ENTITY_TYPE, id("chair"), CHAIR);
-        Registry.register(Registry.ENTITY_TYPE, id("lil_pineapple"), LIL_PINEAPPLE);
-        Registry.register(Registry.ENTITY_TYPE, id("hoopy"), HOOPY);
-        Registry.register(Registry.ENTITY_TYPE, id("core_frame"), CORE_FRAME);
-        Registry.register(Registry.ENTITY_TYPE, id("anger_core"), ANGER_CORE);
-        Registry.register(Registry.ENTITY_TYPE, id("intelligence_core"), CAKE_CORE);
-        Registry.register(Registry.ENTITY_TYPE, id("curiosity_core"), CURIOSITY_CORE);
-        Registry.register(Registry.ENTITY_TYPE, id("morality_core"), MORALITY_CORE);
-        Registry.register(Registry.ENTITY_TYPE, id("space_core"), SPACE_CORE);
-        Registry.register(Registry.ENTITY_TYPE, id("adventure_core"), ADVENTURE_CORE);
-        Registry.register(Registry.ENTITY_TYPE, id("fact_core"), FACT_CORE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("experimental_portal"), EXPERIMENTAL_PORTAL);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("storage_cube"), STORAGE_CUBE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("companion_cube"), COMPANION_CUBE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("radio"), RADIO);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("redirection_cube"), REDIRECTION_CUBE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("old_ap_cube"), OLD_AP_CUBE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("portal_1_companion_cube"), PORTAL_1_COMPANION_CUBE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("portal_1_storage_cube"), PORTAL_1_STORAGE_CUBE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("beans"), BEANS);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("mug"), MUG);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("jug"), JUG);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("computer"), COMPUTER);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("chair"), CHAIR);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("lil_pineapple"), LIL_PINEAPPLE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("hoopy"), HOOPY);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("core_frame"), CORE_FRAME);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("anger_core"), ANGER_CORE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("intelligence_core"), CAKE_CORE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("curiosity_core"), CURIOSITY_CORE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("morality_core"), MORALITY_CORE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("space_core"), SPACE_CORE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("adventure_core"), ADVENTURE_CORE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("fact_core"), FACT_CORE);
 
-        Registry.register(Registry.ENTITY_TYPE, id("propulsion_gel_blob"), PROPULSION_GEL_BLOB);
-        Registry.register(Registry.ENTITY_TYPE, id("repulsion_gel_blob"), REPULSION_GEL_BLOB);
-        Registry.register(Registry.ENTITY_TYPE, id("adhesion_gel_blob"), ADHESION_GEL_BLOB);
-        Registry.register(Registry.ENTITY_TYPE, id("conversion_gel_blob"), CONVERSION_GEL_BLOB);
-        Registry.register(Registry.ENTITY_TYPE, id("reflection_gel_blob"), REFLECTION_GEL_BLOB);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("propulsion_gel_blob"), PROPULSION_GEL_BLOB);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("repulsion_gel_blob"), REPULSION_GEL_BLOB);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("adhesion_gel_blob"), ADHESION_GEL_BLOB);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("conversion_gel_blob"), CONVERSION_GEL_BLOB);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("reflection_gel_blob"), REFLECTION_GEL_BLOB);
 
-        Registry.register(Registry.ENTITY_TYPE, id("rocket"), ROCKET);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("rocket"), ROCKET);
 
-        Registry.register(Registry.ENTITY_TYPE, id("energy_pellet"), ENERGY_PELLET);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("energy_pellet"), ENERGY_PELLET);
 
-        Registry.register(Registry.ENTITY_TYPE, id("turret"), TURRET);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("turret"), TURRET);
 
         DefaultAttributes.SUPPLIERS.put(STORAGE_CUBE, StorageCubeEntity.createMobAttributes().build());
         DefaultAttributes.SUPPLIERS.put(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes().build());

@@ -2,22 +2,19 @@ package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.player.ProfilePublicKey;
 import net.minecraft.world.phys.Vec2;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin extends AbstractClientPlayer implements HasMovementInputAccessor {
@@ -26,8 +23,8 @@ public class LocalPlayerMixin extends AbstractClientPlayer implements HasMovemen
 
     @Shadow public Input input;
 
-    public LocalPlayerMixin(ClientLevel clientWorld, GameProfile gameProfile, @Nullable ProfilePublicKey playerPublicKey) {
-        super(clientWorld, gameProfile, playerPublicKey);
+    public LocalPlayerMixin(ClientLevel clientLevel, GameProfile gameProfile) {
+        super(clientLevel, gameProfile);
     }
 
 
@@ -37,18 +34,15 @@ public class LocalPlayerMixin extends AbstractClientPlayer implements HasMovemen
         return vec2f.x != 0.0F || vec2f.y != 0.0F;
     }
 
-    @WrapOperation(
-        method = "aiStep",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/player/LocalPlayer;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z"
-        )
+    @Inject(
+        method = "canStartSprinting",
+        at = @At("HEAD"),
+        cancellable = true
     )
-    private boolean noSprinting(LocalPlayer instance, MobEffect effect, Operation<Boolean> original) {
+    private void noSprintingInPortalHud(CallbackInfoReturnable<Boolean> cir) {
         if (PortalCubedClient.isPortalHudMode()) {
-            return true;
+            cir.setReturnValue(false);
         }
-        return original.call(instance, effect);
     }
 
 }

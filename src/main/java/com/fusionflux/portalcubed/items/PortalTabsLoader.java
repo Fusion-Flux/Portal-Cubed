@@ -35,6 +35,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 @ClientOnly
 public class PortalTabsLoader {
     private static final Map<String, Function<JsonObject, Predicate<CreativeModeTab.ItemDisplayParameters>>> CONDITION_TYPES = Map.of(
+        "always", o -> p -> true,
         "and", o -> GsonHelper.getAsJsonArray(o, "conditions")
             .asList()
             .stream()
@@ -90,16 +91,22 @@ public class PortalTabsLoader {
             if (entryData.has("backgroundImage")) {
                 builder.backgroundSuffix(GsonHelper.getAsString(entryData, "backgroundImage"));
             }
-            if (entryData.has("items") || entryData.has("itemConditions")) {
-                final List<ItemStack> items = parseItemArray(entryData);
-                final var itemConditions = GsonHelper.getAsJsonArray(entryData, "itemConditions", new JsonArray())
+            if (entryData.has("items")) {
+                final var items = GsonHelper.getAsJsonArray(entryData, "items")
                     .asList()
                     .stream()
-                    .map(e -> Pair.of(parseCondition(e), parseItemArray((JsonObject)e)))
+                    .map(e -> {
+                        if (e.isJsonPrimitive() || (e.isJsonObject() && !e.getAsJsonObject().has("type"))) {
+                            return Pair.of(
+                                (Predicate<CreativeModeTab.ItemDisplayParameters>)p -> true,
+                                List.of(parseItemStack(e, "item").get())
+                            );
+                        }
+                        return Pair.of(parseCondition(e), parseItemArray((JsonObject)e));
+                    })
                     .toList();
                 builder.displayItems((itemDisplayParameters, output) -> {
-                    output.acceptAll(items);
-                    for (final var condition : itemConditions) {
+                    for (final var condition : items) {
                         if (condition.key().test(itemDisplayParameters)) {
                             output.acceptAll(condition.value());
                         }

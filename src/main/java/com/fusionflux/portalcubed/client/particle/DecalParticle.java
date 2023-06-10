@@ -5,8 +5,6 @@ import com.fusionflux.portalcubed.particle.DecalParticleEffect;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import net.fabricmc.fabric.api.client.particle.v1.FabricSpriteProvider;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -20,6 +18,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.HashMap;
@@ -72,7 +73,7 @@ public class DecalParticle extends Particle {
         final float x = (float)(Mth.lerp(tickDelta, xo, this.x) - cameraPos.x());
         final float y = (float)(Mth.lerp(tickDelta, yo, this.y) - cameraPos.y());
         final float z = (float)(Mth.lerp(tickDelta, zo, this.z) - cameraPos.z());
-        final Quaternion rotation = direction.getRotation();
+        final Quaternionf rotation = direction.getRotation();
 
         final Vector3f[] vertices = {
             new Vector3f(-0.5f, 0f, -0.5f),
@@ -82,7 +83,7 @@ public class DecalParticle extends Particle {
         };
 
         for (final Vector3f vertex : vertices) {
-            vertex.transform(rotation);
+            vertex.rotate(rotation);
             vertex.add(x, y, z);
         }
 
@@ -119,6 +120,7 @@ public class DecalParticle extends Particle {
             .endVertex();
     }
 
+    @NotNull
     @Override
     public ParticleRenderType getRenderType() {
         return multiply ? PARTICLE_SHEET_MULTIPLY : ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
@@ -151,7 +153,7 @@ public class DecalParticle extends Particle {
                 cacheKey = sprites;
                 spriteCache.clear();
                 for (final TextureAtlasSprite sprite : sprites) {
-                    spriteCache.put(sprite.getName(), sprite);
+                    spriteCache.put(sprite.atlasLocation(), sprite);
                 }
             }
             return spriteCache;

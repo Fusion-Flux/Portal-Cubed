@@ -4,13 +4,13 @@ import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 public class VelocityHelperRenderer implements BlockEntityRenderer<VelocityHelperBlockEntity> {
     public VelocityHelperRenderer(BlockEntityRendererProvider.Context ctx) {
@@ -28,7 +28,7 @@ public class VelocityHelperRenderer implements BlockEntityRenderer<VelocityHelpe
             final BlockPos offset = entity.getDestination().subtract(entity.getBlockPos());
             final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.lines());
             final PoseStack.Pose matrix = matrices.last();
-            final Vector3f normal = new Vector3f(Vec3.atLowerCornerOf(offset).normalize());
+            final Vector3f normal = Vec3.atLowerCornerOf(offset).normalize().toVector3f();
             vertexConsumer
                 .vertex(matrix.pose(), 0.5f, 0.5f, 0.5f)
                 .color(0.0f, 0.5f, 1.0f, 1.0f)

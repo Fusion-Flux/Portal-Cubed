@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -18,7 +20,8 @@ public class PortalCubedParticleTypes {
     private static <T extends ParticleOptions> ParticleType<T> register(
         String name, boolean alwaysShow, ParticleOptions.Deserializer<T> parameterFactory, Function<ParticleType<T>, Codec<T>> codecProvider
     ) {
-        return Registry.register(Registry.PARTICLE_TYPE, id(name), new ParticleType<T>(alwaysShow, parameterFactory) {
+        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, id(name), new ParticleType<T>(alwaysShow, parameterFactory) {
+            @NotNull
             @Override
             public Codec<T> codec() {
                 return codecProvider.apply(this);

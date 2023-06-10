@@ -12,7 +12,6 @@ import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.commands.PortalCubedCommands;
-import com.fusionflux.portalcubed.compat.create.CreateIntegration;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
@@ -36,6 +35,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -47,8 +47,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -59,9 +57,8 @@ import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
-import org.quiltmc.qsl.entity_events.api.EntityWorldChangeEvents;
-import org.quiltmc.qsl.entity_events.api.ServerPlayerEntityCopyCallback;
-import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
+import org.quiltmc.qsl.entity.event.api.EntityWorldChangeEvents;
+import org.quiltmc.qsl.entity.event.api.ServerPlayerEntityCopyCallback;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -76,20 +73,16 @@ public class PortalCubed implements ModInitializer {
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final CreativeModeTab TESTING_ELEMENTS_GROUP = QuiltItemGroup.createWithIcon(
-            id("testing_elements"),
-            () -> new ItemStack(PortalCubedItems.PORTAL_GUN));
-
     public static final MenuType<FaithPlateScreenHandler> FAITH_PLATE_SCREEN_HANDLER = Registry.register(
-        Registry.MENU, id("faith_plate_screen"),
+        BuiltInRegistries.MENU, id("faith_plate_screen"),
         new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new)
     );
     public static final MenuType<VelocityHelperScreenHandler> VELOCITY_HELPER_SCREEN_HANDLER = Registry.register(
-        Registry.MENU, id("velocity_helper"),
+        BuiltInRegistries.MENU, id("velocity_helper"),
         new ExtendedScreenHandlerType<>(VelocityHelperScreenHandler::new)
     );
     public static final MenuType<OptionsListScreenHandler> OPTIONS_LIST_SCREEN_HANDLER = Registry.register(
-        Registry.MENU, id("options_list"),
+        BuiltInRegistries.MENU, id("options_list"),
         new ExtendedScreenHandlerType<>(OptionsListScreenHandler::new)
     );
 
@@ -134,7 +127,9 @@ public class PortalCubed implements ModInitializer {
                 }
                 Direction portalFacing = portal.getFacingDirection();
                 Direction otherDirec = Direction.fromNormal((int) portal.getOtherFacing().x(), (int) portal.getOtherFacing().y(), (int) portal.getOtherFacing().z());
-                Direction portalVertFacing = Direction.fromNormal(new BlockPos(portal.getAxisH().orElseThrow().x, portal.getAxisH().orElseThrow().y, portal.getAxisH().orElseThrow().z));
+                Direction portalVertFacing = Direction.fromNormal(BlockPos.containing(
+                    portal.getAxisH().orElseThrow().x, portal.getAxisH().orElseThrow().y, portal.getAxisH().orElseThrow().z
+                ));
 
                 IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().scale(-1), portal.getOtherAxisW(), (portal.getAxisH().orElseThrow()));
                 IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow().scale(-1));
@@ -297,13 +292,14 @@ public class PortalCubed implements ModInitializer {
         PortalCubedSounds.registerSounds();
         PortalCubedGameRules.register();
         PortalCubedParticleTypes.register();
-        BlockContentRegistries.FLAMMABLE_BLOCK.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
+        BlockContentRegistries.FLAMMABLE.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
         GravityChannel.UPDATE_GRAVITY.getVerifierRegistry().register(AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, AdhesionGravityVerifier::check);
 
         CommandRegistrationCallback.EVENT.register(new PortalCubedCommands());
 
         if (QuiltLoader.isModLoaded("create")) {
-            CreateIntegration.init();
+            LOGGER.warn("Create is out for this game version! Go poke the Portal Cubed developers on Discord to re-enable this integration.");
+//            CreateIntegration.init();
         }
 
         RayonIntegration.INSTANCE.init();

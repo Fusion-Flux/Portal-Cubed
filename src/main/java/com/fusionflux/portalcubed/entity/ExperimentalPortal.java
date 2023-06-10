@@ -11,8 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -139,12 +137,6 @@ public class  ExperimentalPortal extends Entity {
 
     public void setColor(int color) {
         this.getEntityData().set(COLOR, color);
-    }
-
-    @NotNull
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
     }
 
     public Optional<UUID> getLinkedPortalUUID() {
@@ -295,7 +287,7 @@ public class  ExperimentalPortal extends Entity {
             Mth.floor(portalBox.maxY + EPSILON) + 1,
             Mth.floor(portalBox.maxZ + EPSILON) + 1
         );
-        final Direction forward = Direction.fromNormal(new BlockPos(getNormal()));
+        final Direction forward = Direction.fromNormal(BlockPos.containing(getNormal()));
         assert forward != null;
         while (iter.advance()) {
             final BlockPos pos = new BlockPos(iter.nextX(), iter.nextY(), iter.nextZ());

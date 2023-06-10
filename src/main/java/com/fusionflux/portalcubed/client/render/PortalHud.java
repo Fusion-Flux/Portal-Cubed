@@ -99,7 +99,8 @@ public class PortalHud {
     public static void texture(int x, int y, int z, int width, int height, float u, float v, float uw, float vh, float r, float g, float b, float a) {
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuilder();
-        RenderSystem.enableTexture();
+        // TODO: Investigate if this is needed anymore
+//        RenderSystem.enableTexture();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         bufferBuilder.vertex(x, y + height, z).uv(u, v + vh).color(r, g, b, a).endVertex();
         bufferBuilder.vertex(x + width, y + height, z).uv(u + uw, v + vh).color(r, g, b, a).endVertex();
