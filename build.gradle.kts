@@ -23,7 +23,6 @@ repositories {
 	maven("https://api.modrinth.com/maven")
 	maven("https://maven.tterrag.com/")
 	maven("https://mvn.devos.one/snapshots/")
-	maven("https://maven.willbl.dev/releases/")
 	maven("https://lazurite.dev/maven")
 
 	maven {
@@ -59,6 +58,7 @@ repositories {
 		name = "ParchmentMC"
 		url = uri("https://maven.parchmentmc.org")
 	}
+
 	maven("https://jitpack.io/")
 }
 
@@ -79,43 +79,44 @@ dependencies {
 		exclude(group = "net.fabricmc")
 	}
 
-	include(modApi("maven.modrinth:stonecutter_recipe_tags:4.2.1-fabric")!!)
+	include(modApi("maven.modrinth:stonecutter_recipe_tags:5.1.1-fabric")!!)
 
-	include(modApi("com.unascribed:lib39-core:1.4.2")!!)
-	include(modApi("com.unascribed:lib39-recoil:1.4.2")!!)
+	include(modApi("com.unascribed:lib39-core:1.5.0-pre3+1.19.3")!!)
+	include(modApi("com.unascribed:lib39-recoil:1.5.0-pre3+1.19.3")!!)
 
-	include(modImplementation("maven.modrinth:gravity-api:${prop("gravity_api_version")}") {
+	include(modImplementation("com.github.qouteall:Gravity-Api:${prop("gravity_api_version")}") {
 		exclude(group = "net.fabricmc.fabric-api")
 		exclude(group = "net.fabricmc")
 		exclude(group = "dev.onyxstudios.cardinal-components-api")
 	})
 
-	include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.0.2") {
+	include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.1.0") {
 		exclude(group = "net.fabricmc.fabric-api")
 		exclude(group = "net.fabricmc")
 	})
 
-	include(modImplementation("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:0.2.0-beta.5")!!)
-	annotationProcessor("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:0.2.0-beta.5")
+	include(modImplementation("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:0.2.0-beta.8")!!)
+	annotationProcessor("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:0.2.0-beta.8")
 
-	include(modImplementation("maven.modrinth:midnightlib:1.0.0-quilt")!!)
+	include(modImplementation("maven.modrinth:midnightlib:1.3.0-quilt")!!)
 
-	modCompileOnly("com.simibubi.create:create-fabric-1.19.2:0.5.0.i-930+1.19.2")
-	modCompileOnly("amymialee:visible-barriers:1.5.3+1.19.x")
+//	modCompileOnly("com.simibubi.create:create-fabric-1.19.2:0.5.0.i-930+1.19.2")
+
+	modCompileOnly("maven.modrinth:visible-barriers:2.0.1")
 
 	include(implementation("net.objecthunter:exp4j:0.4.8")!!)
 
-	modCompileOnly(("alexiil.mc.lib:libmultipart-all:0.8.0"))
+//	modCompileOnly("alexiil.mc.lib:libmultipart-all:0.8.0")
 
-	modCompileOnly("dev.lambdaurora:lambdynamiclights:2.2.0+1.19.2")
+	modCompileOnly("dev.lambdaurora:lambdynamiclights:2.3.0+1.19.4")
 
 	modCompileOnly("com.github.Virtuoel:Pehkui:3.6.3") {
 		exclude(group = "net.fabricmc.fabric-api")
 	}
 
-	modCompileOnly("dev.lazurite:rayon-fabric:1.6.1")
+	modCompileOnly("dev.lazurite:rayon-fabric:1.7.1+1.19.4")
 
-	include(modImplementation("maven.modrinth:json-entity-animation:0.2+1.19.2")!!)
+	include(modImplementation("maven.modrinth:json-entity-animation:0.2.1+1.19.4")!!)
 }
 
 checkstyle {
