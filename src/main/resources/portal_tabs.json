@@ -3,7 +3,7 @@
     "icon": "portalcubed:portal_gun",
     "items": [
       "portalcubed:portal_gun",
-      { // Example of a condition
+      {
         "condition": "hasPermissions",
         "items": [
           "portalcubed:power_block"
