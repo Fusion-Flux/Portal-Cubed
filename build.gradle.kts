@@ -1,5 +1,5 @@
 plugins {
-	id("org.quiltmc.loom") version "1.0.+"
+	id("org.quiltmc.loom") version "1.1.+"
 	id("org.ajoberstar.grgit") version "4.1.0"
 	checkstyle
 }
