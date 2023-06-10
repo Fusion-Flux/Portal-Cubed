@@ -85,9 +85,7 @@ dependencies {
 	include(modApi("com.unascribed:lib39-recoil:1.5.0-pre3+1.19.3")!!)
 
 	include(modImplementation("com.github.qouteall:Gravity-Api:${prop("gravity_api_version")}") {
-		exclude(group = "net.fabricmc.fabric-api")
-		exclude(group = "net.fabricmc")
-		exclude(group = "dev.onyxstudios.cardinal-components-api")
+		isTransitive = false
 	})
 
 	include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.1.0") {
