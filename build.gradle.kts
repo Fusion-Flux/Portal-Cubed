@@ -117,6 +117,8 @@ dependencies {
 	modCompileOnly("dev.lazurite:rayon-fabric:1.7.1+1.19.4")
 
 	include(modImplementation("maven.modrinth:json-entity-animation:0.2.1+1.19.4")!!)
+
+	include(modImplementation("maven.modrinth:no-indium:1.1.0+1.19.4")!!)
 }
 
 checkstyle {
