@@ -26,6 +26,7 @@ import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.fog.FogSettings;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
+import com.fusionflux.portalcubed.items.PortalTabsLoader;
 import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
 import com.fusionflux.portalcubed.mixin.client.DeathScreenAccessor;
 import com.fusionflux.portalcubed.mixin.client.MusicManagerAccessor;
@@ -427,6 +428,8 @@ public class PortalCubedClient implements ClientModInitializer {
 //                ctrl.setPos(transformed);
 //            }
 //        });
+
+        PortalTabsLoader.load(mod);
 
         try {
             final CompoundTag compound = NbtIo.readCompressed(GLOBAL_ADVANCEMENTS_FILE);

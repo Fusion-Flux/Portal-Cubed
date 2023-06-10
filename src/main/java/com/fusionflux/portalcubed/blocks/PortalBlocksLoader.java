@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +26,6 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
-import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -52,6 +52,7 @@ public final class PortalBlocksLoader {
     @ClientOnly
     private static Map<String, RenderType> renderLayers;
     private static final Map<String, BlockData> BLOCK_DATA = new LinkedHashMap<>();
+    ItemGroupEvents
     private static final CreativeModeTab ITEM_GROUP = QuiltItemGroup.createWithIcon(
         id("portal_blocks"),
         () -> new ItemStack(PortalCubedItems.BLOCK_ITEM_ICON)
