@@ -17,10 +17,10 @@ import org.jetbrains.annotations.NotNull;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class DecalParticleEffect implements ParticleOptions {
-    public static final ResourceLocation BULLET_HOLE_CONCRETE = id("particle/bullet_hole_concrete");
-    public static final ResourceLocation BULLET_HOLE_GLASS = id("particle/bullet_hole_glass");
-    public static final ResourceLocation BULLET_HOLE_METAL = id("particle/bullet_hole_metal");
-    public static final ResourceLocation SCORCH = id("particle/scorch");
+    public static final ResourceLocation BULLET_HOLE_CONCRETE = id("bullet_hole_concrete");
+    public static final ResourceLocation BULLET_HOLE_GLASS = id("bullet_hole_glass");
+    public static final ResourceLocation BULLET_HOLE_METAL = id("bullet_hole_metal");
+    public static final ResourceLocation SCORCH = id("scorch");
 
     @SuppressWarnings("deprecation")
     public static final ParticleOptions.Deserializer<DecalParticleEffect> PARAMETERS_FACTORY = new Deserializer<>() {

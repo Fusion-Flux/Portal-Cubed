@@ -102,7 +102,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
             final List<BakedQuad> quads = wrapped.getQuads(state, cullFace, randomSupplier.get());
 
             for (BakedQuad quad : quads) {
-                boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().atlasLocation());
+                boolean isQuadEmissive = EmissiveSpriteRegistry.isEmissive(quad.getSprite().contents().name());
 
                 BlendMode blendMode = BlendMode.DEFAULT;
                 if (state != null) {

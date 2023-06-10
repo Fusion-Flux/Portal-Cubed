@@ -153,7 +153,7 @@ public class DecalParticle extends Particle {
                 cacheKey = sprites;
                 spriteCache.clear();
                 for (final TextureAtlasSprite sprite : sprites) {
-                    spriteCache.put(sprite.atlasLocation(), sprite);
+                    spriteCache.put(sprite.contents().name(), sprite);
                 }
             }
             return spriteCache;
