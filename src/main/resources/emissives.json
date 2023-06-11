@@ -7,9 +7,7 @@
   "block/reversed_excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",
 
 
-
   "block/faith_plate_target": "block/faith_plate_target",
-
 
 
   "block/laser": "block/laser_beam",
@@ -28,7 +26,6 @@
   "block/laser_catcher": "block/laser_emitter_e",
   "block/laser_catcher_downward": "block/laser_emitter_e",
   "block/laser_catcher_upward": "block/laser_emitter_e",
-
 
 
   "block/portal_2_fizzler_top": "block/portal_2_fizzler_top",
@@ -79,15 +76,12 @@
   "block/portal_2_physics_repulsion_field_emitter_bottom": "block/modded_grill_emitters_e",
 
 
-
   "block/light_bridge_emitter_active": "block/light_bridge_emitter_e",
   "block/light_bridge": "block/light_bridge",
 
 
-
   "block/auto_portal_lower": "block/auto_portal_e",
   "block/auto_portal_upper": "block/auto_portal_e",
-
 
 
   "block/portal_1_door_bottom_left": "block/portal_1_door_e",
@@ -108,7 +102,6 @@
   "block/octopus_door_top_right_open": "block/octopus_door_e",
 
 
-
   "block/floor_button": "block/floor_button_e",
   "block/floor_button_active": "block/floor_button_e",
 
@@ -120,7 +113,6 @@
 
   "block/offset_pedestal_button": "block/pedestal_button_e",
   "block/offset_pedestal_button_active": "block/pedestal_button_e",
-
 
 
   "block/rocket_turret_active": "block/rocket_turret_active_e",

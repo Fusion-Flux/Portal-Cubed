@@ -51,12 +51,12 @@
   "portal_1_rusted_tread_plating": {},
   "portal_1_metal_grating": {
     "type": "old_ap",
-    "render_layer": "translucent",
+    "render_layer": "cutout",
     "opaque": false
   },
   "portal_1_mesh_grating": {
     "type": "old_ap",
-    "render_layer": "translucent",
+    "render_layer": "cutout",
     "opaque": false
   },
   "portal_1_2x2_exposed_panel_bottom_left": {
@@ -218,7 +218,7 @@
   "portal_2_partially_exposed_panel": {},
   "portal_2_metal_grating": {
     "type": "old_ap",
-    "render_layer": "translucent",
+    "render_layer": "cutout",
     "opaque": false
   },
   "old_ap_white_checkered_panel": {},
@@ -278,38 +278,38 @@
   "striped_office_concrete": {},
   "old_ap_metal_grating": {
     "type": "old_ap",
-    "render_layer": "translucent",
+    "render_layer": "cutout",
     "opaque": false
   },
   "1x1_single_crossbar": {
     "type": "old_ap",
     "opaque": false,
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "1x1_double_crossbar": {
     "type": "old_ap",
     "opaque": false,
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "2x2_double_crossbar_bottom_left": {
     "type": "old_ap_directional",
     "opaque": false,
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "2x2_double_crossbar_bottom_right": {
     "type": "old_ap_directional",
     "opaque": false,
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "2x2_double_crossbar_top_left": {
     "type": "old_ap_directional",
     "opaque": false,
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "2x2_double_crossbar_top_right": {
     "type": "old_ap_directional",
     "opaque": false,
-    "render_layer": "translucent"
+    "render_layer": "cutout"
 
   },
   "portal_1_white_half_panel_facade": {
