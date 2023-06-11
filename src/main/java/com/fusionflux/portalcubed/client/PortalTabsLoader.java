@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.items;
+package com.fusionflux.portalcubed.client;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
