@@ -88,5 +88,6 @@
   "lithium:options": {
     "mixin.entity.collisions": false,
     "mixin.entity.fast_suffocation_check": false
-  }
+  },
+  "access_widener": "portalcubed.accesswidener"
 }

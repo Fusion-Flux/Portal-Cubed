@@ -119,6 +119,10 @@ dependencies {
 	include(modImplementation("maven.modrinth:no-indium:1.1.0+1.19.4")!!)
 }
 
+loom {
+	accessWidenerPath.set(file("src/main/resources/portalcubed.accesswidener"))
+}
+
 checkstyle {
 	toolVersion = "10.7.0"
 	isIgnoreFailures = false
