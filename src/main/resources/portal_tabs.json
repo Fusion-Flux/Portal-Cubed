@@ -1,19 +1,97 @@
 {
-  "testing_elements": {
+  "main_testing_elements": {
     "icon": "portalcubed:portal_gun",
     "items": [
+      "portalcubed:hammer",
+      "portalcubed:portal_gun_frame",
+      "portalcubed:portal_gun_casing",
+      "portalcubed:mini_blackhole",
       "portalcubed:portal_gun",
-      {
-        "condition": "hasPermissions",
-        "items": [
-          "portalcubed:power_block"
-        ]
-      }
+      "portalcubed:portal_gun_primary",
+      "portalcubed:portal_gun_secondary",
+      "portalcubed:long_fall_boots",
+      "portalcubed:power_block",
+      "portalcubed:velocity_helper",
+      "portalcubed:catapult",
+      "portalcubed:radio",
+      "portalcubed:portal_1_fizzler_emitter",
+      "portalcubed:fizzler_emitter",
+      "portalcubed:old_aperture_fizzler_emitter",
+      "portalcubed:laser_fizzler_emitter",
+      "portalcubed:auto_portal",
+      "portalcubed:floor_button",
+      "portalcubed:pedestal_button",
+      "portalcubed:old_ap_floor_button",
+      "portalcubed:old_ap_pedestal_button",
+      "portalcubed:portal_1_storage_cube",
+      "portalcubed:storage_cube",
+      "portalcubed:portal_1_companion_cube",
+      "portalcubed:companion_cube",
+      "portalcubed:redirection_cube",
+      "portalcubed:old_ap_cube",
+      "portalcubed:portal_1_door",
+      "portalcubed:portal_2_door",
+      "portalcubed:old_ap_door",
+      "portalcubed:energy_pellet",
+      "portalcubed:super_pellet",
+
+
+      "portalcubed:toxic_goo_bucket",
+      "portalcubed:turret",
+      "portalcubed:laser_emitter",
+      "portalcubed:laser_catcher",
+      "portalcubed:laser_relay",
+      "portalcubed:faith_plate",
+      "portalcubed:faith_plate_target",
+      "portalcubed:light_bridge_emitter",
+      "portalcubed:base_gel",
+      "portalcubed:repulsion_gel",
+      "portalcubed:propulsion_gel",
+      "portalcubed:conversion_gel",
+      "portalcubed:excursion_funnel_emitter",
+      "portalcubed:reversed_excursion_funnel_emitter",
+      "portalcubed:duel_excursion_funnel_emitter"
+
     ]
   },
+  "other_testing_elements": {
+    "icon": "portalcubed:paint_gun",
+    "items": [
+      "portalcubed:paint_gun",
+      "portalcubed:crowbar",
+      "portalcubed:reflection_gel",
+      "portalcubed:adhesion_gel",
+      "portalcubed:neurotoxin_emitter",
+      "portalcubed:beta_faith_plate",
+      "portalcubed:old_aperture_death_fizzler_emitter",
+      "portalcubed:death_fizzler_emitter",
+      "portalcubed:physics_repulsion_field_emitter",
+      "portalcubed:matter_inquisition_field_emitter",
+      "portalcubed:octopus_door",
+      "portalcubed:mug",
+      "portalcubed:chair",
+      "portalcubed:beans",
+      "portalcubed:jug",
+      "portalcubed:computer",
+      "portalcubed:hoopy",
+      "portalcubed:lil_pineapple",
+      "portalcubed:core_frame",
+      "portalcubed:rocket_turret",
+      "portalcubed:morality_core",
+      "portalcubed:curiosity_core",
+      "portalcubed:intelligence_core",
+      "portalcubed:anger_core",
+      "portalcubed:space_core",
+      "portalcubed:adventure_core",
+      "portalcubed:fact_core"
+    ]
+  },
+
   "portal_blocks": {
     "icon": "portalcubed:block_item_icon",
     "items": [
+
+
     ]
   }
 }

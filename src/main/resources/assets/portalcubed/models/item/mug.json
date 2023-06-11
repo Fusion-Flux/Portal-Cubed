@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench by Cart3r.  ",
 	"textures": {
-		"0": "portalcubed:entity/mug_white"
+		"0": "portalcubed:item/mug_white"
 	},
 	"elements": [
 		{
