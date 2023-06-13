@@ -24,7 +24,7 @@ public class SchrodingerCubeEntity extends RedirectionCubeEntity {
                 .ignoreInvisibilityTesting(),
             this,
             getX(), getY(), getZ(),
-            AABB.ofSize(position(), 50, 50, 50)
+            AABB.ofSize(position(), 256, 256, 256)
         ), this);
     }
 
