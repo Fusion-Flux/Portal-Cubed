@@ -3,7 +3,10 @@ package com.fusionflux.portalcubed.mixin;
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.accessor.*;
+import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
+import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.accessor.ClientTeleportCheck;
+import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
@@ -15,8 +18,6 @@ import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.fusionflux.portalcubed.util.IPQuaternion;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -438,17 +439,6 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Override
     public int getGelTimer() {
         return this.gelTransferTimer;
-    }
-
-    @WrapOperation(
-        method = "collideBoundingBox",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/level/Level;getBlockCollisions(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/lang/Iterable;"
-        )
-    )
-    private static Iterable<VoxelShape> supportCutout(Level instance, Entity entity, AABB collisionBox, Operation<Iterable<VoxelShape>> original) {
-        return BlockCollisionsExt.wrapBlockCollisions(original.call(instance, entity, collisionBox), entity);
     }
 
     @ModifyArg(

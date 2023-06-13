@@ -1,16 +1,12 @@
 package com.fusionflux.portalcubed.mixin;
 
-import com.fusionflux.portalcubed.accessor.BlockCollisionsExt;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,17 +17,6 @@ public abstract class ServerGamePacketListenerImplMixin {
     @Shadow public ServerPlayer player;
 
     @Shadow public abstract ServerPlayer getPlayer();
-
-    @WrapOperation(
-        method = "isPlayerCollidingWithAnythingNew",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/level/LevelReader;getCollisions(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/lang/Iterable;"
-        )
-    )
-    private Iterable<VoxelShape> supportCutout(LevelReader instance, Entity entity, AABB collisionBox, Operation<Iterable<VoxelShape>> original) {
-        return BlockCollisionsExt.wrapBlockCollisions(original.call(instance, entity, collisionBox), entity);
-    }
 
     @WrapOperation(
         method = "handleUseItemOn",
