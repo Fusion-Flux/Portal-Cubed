@@ -63,7 +63,7 @@ public class PortalCubedItems {
     public static final EnergyPelletItem ENERGY_PELLET = new EnergyPelletItem(new QuiltItemSettings(), false);
     public static final EnergyPelletItem SUPER_PELLET = new EnergyPelletItem(new QuiltItemSettings(), true);
 
-    public static final CrowbarItem CROWBAR = new CrowbarItem(new QuiltItemSettings());
+    public static final CrowbarItem CROWBAR = new CrowbarItem(new QuiltItemSettings().maxCount(1));
 
     public static final Item STILL_ALIVE = new RecordItem(15, SoundEvent.createVariableRangeEvent(id("disc/still_alive")), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 177);
     public static final Item CARA_MIA_ADDIO = new RecordItem(15, SoundEvent.createVariableRangeEvent(id("disc/cara_mia_addio")), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 154);
