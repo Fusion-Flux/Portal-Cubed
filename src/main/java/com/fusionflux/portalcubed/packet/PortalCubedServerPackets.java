@@ -71,8 +71,8 @@ public class PortalCubedServerPackets {
                     PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding();
                 }
             } else if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding()) {
-                final BlockHitResult hit = advancedCast.finalHit();
-                if (hit.getType() != HitResult.Type.MISS) {
+                if (advancedCast.finalHit().getType() == HitResult.Type.BLOCK) {
+                    final BlockHitResult hit = (BlockHitResult)advancedCast.finalHit();
                     final BlockState state = player.level.getBlockState(hit.getBlockPos());
                     if (
                         state.getBlock() instanceof TallButtonVariant button &&

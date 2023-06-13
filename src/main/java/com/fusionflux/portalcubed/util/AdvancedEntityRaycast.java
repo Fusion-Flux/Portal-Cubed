@@ -38,10 +38,10 @@ public class AdvancedEntityRaycast {
 
     public record TransformResult(
         Vec3 prevHitPos,
-        ClipContext newContext,
+        @Nullable ClipContext newContext,
         Set<Entity> ignoredEntities
     ) {
-        public TransformResult(Vec3 prevHitPos, ClipContext newContext) {
+        public TransformResult(Vec3 prevHitPos, @Nullable ClipContext newContext) {
             this(prevHitPos, newContext, Set.of());
         }
     }
@@ -68,15 +68,14 @@ public class AdvancedEntityRaycast {
 
         public Result {
             Validate.isTrue(!rays.isEmpty(), "AdvancedEntityRaycast.Result must have at least one ray.");
-            Validate.isTrue(rays.get(rays.size() - 1).hit instanceof BlockHitResult, "AdvancedEntityRaycast.Result.finalHit must be a BlockHitResult.");
         }
 
         public Ray finalRay() {
             return rays.get(rays.size() - 1);
         }
 
-        public BlockHitResult finalHit() {
-            return (BlockHitResult)finalRay().hit;
+        public HitResult finalHit() {
+            return finalRay().hit;
         }
 
         @Nullable
@@ -124,6 +123,9 @@ public class AdvancedEntityRaycast {
                         ignoredEntities[0] = newContext.ignoredEntities;
                         hits.add(new Result.Ray(context.getFrom(), newContext.prevHitPos, hit));
                         context = newContext.newContext;
+                        if (context == null) {
+                            return new Result(hits);
+                        }
                         continue mainLoop;
                     }
                 }

@@ -126,6 +126,10 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                             AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
                         );
                     }
+                ),
+                new AdvancedEntityRaycast.TransformInfo(
+                    e -> e instanceof CorePhysicsEntity,
+                    (context, blockHit, entityHit) -> new AdvancedEntityRaycast.TransformResult(entityHit.getLocation(), null)
                 )
             );
             direction = segments.finalRay().relative().normalize();
@@ -133,9 +137,10 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             lengthRemaining -= segments.length();
             multiSegments.add(segments);
             if (segments.finalHit().getType() == HitResult.Type.BLOCK) {
-                hitState = level.getBlockState(segments.finalHit().getBlockPos());
+                final BlockHitResult finalHit = (BlockHitResult)segments.finalHit();
+                hitState = level.getBlockState(finalHit.getBlockPos());
                 if (hitState.is(PortalCubedBlocks.REFLECTION_GEL)) {
-                    final Direction.Axis axis = segments.finalHit().getDirection().getAxis();
+                    final Direction.Axis axis = finalHit.getDirection().getAxis();
                     direction = direction.with(axis, -direction.get(axis));
                 }
             } else {
@@ -182,8 +187,8 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         final Set<Target> newTargets = new HashSet<>();
         final Object2IntMap<BlockPos> changes = new Object2IntOpenHashMap<>(targets.size() + multiSegments.size());
         for (final AdvancedEntityRaycast.Result result : multiSegments) {
-            final BlockHitResult finalHit = result.finalHit();
-            if (finalHit.getType() == HitResult.Type.MISS) continue;
+            if (result.finalHit().getType() != HitResult.Type.BLOCK) continue;
+            final BlockHitResult finalHit = (BlockHitResult)result.finalHit();
             final BlockState hitState1 = level.getBlockState(finalHit.getBlockPos());
             if (hitState1.is(PortalCubedBlocks.LASER_CATCHER) && finalHit.getDirection() != hitState1.getValue(LaserCatcherBlock.FACING)) continue;
             final Target target = new Target(

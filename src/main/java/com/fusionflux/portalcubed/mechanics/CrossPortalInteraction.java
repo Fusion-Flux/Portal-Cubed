@@ -19,7 +19,7 @@ public final class CrossPortalInteraction {
 
     public static BlockHitResult blockInteractionRaycast(@NotNull Level world, @NotNull ClipContext context) {
         final var result = PortalDirectionUtils.raycast(world, context);
-        final var finalHit = result.finalHit();
+        final var finalHit = (BlockHitResult)result.finalHit();
         ((AdvancedRaycastResultHolder) finalHit).setResult(Optional.of(result));
         return finalHit;
     }
