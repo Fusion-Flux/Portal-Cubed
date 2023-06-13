@@ -1,5 +1,6 @@
 {
     "type": "minecraft:crafting_shapeless",
+    "category": "redstone",
     "ingredients": [
         {
             "item": "portalcubed:reversed_excursion_funnel_emitter"
