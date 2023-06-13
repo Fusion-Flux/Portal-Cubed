@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "ingredients": [
+  "category": "redstone",
+    "ingredients": [
     {
       "item": "portalcubed:portal_2_door"
     },
@@ -11,5 +12,6 @@
   "result": {
     "item": "portalcubed:octopus_door",
     "count": 1
-  }
+  },
+  "group": "doors"
 }

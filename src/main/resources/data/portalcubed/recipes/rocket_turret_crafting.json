@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "ingredients": [
+  "category": "redstone",
+    "ingredients": [
     {
       "item": "portalcubed:core_frame"
     },

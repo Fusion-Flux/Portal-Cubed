@@ -11,15 +11,16 @@
       "item": "minecraft:red_stained_glass_pane"
     },
     "E": {
-      "tag": "portalcubed:portal_2_clean_gray_panels"
+      "tag": "portalcubed:old_aperture_green_metal_panels"
     },
 
     "R": {
-      "item": "minecraft:redstone"
+      "item": "minecraft:redstone_block"
     }
   },
   "result": {
-    "item": "portalcubed:laser_fizzler_emitter",
+    "item": "portalcubed:old_aperture_death_fizzler_emitter",
     "count": 2
-  }
+  },
+  "group": "death_fizzlers"
 }

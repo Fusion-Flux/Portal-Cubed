@@ -1,5 +1,6 @@
 {
     "type": "minecraft:crafting_shapeless",
+    "category": "building",
     "ingredients": [
         {
             "item": "portalcubed:white_2x2_panel_top_left"
@@ -11,5 +12,6 @@
     "result": {
         "item": "portalcubed:aged_white_2x2_panel_top_left",
         "count": 1
-    }
+    },
+  "group": "aged_white_2x2_panel_top_left"
 }

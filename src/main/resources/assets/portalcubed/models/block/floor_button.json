@@ -14,11 +14,11 @@
 			"to": [16, 16, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 13.2875, 8]},
 			"faces": {
-				"north": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0"},
-				"east": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0"},
-				"south": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0"},
-				"west": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0"},
-				"down": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0"}
+				"north": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0", "cullface": "north"},
+				"east": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0", "cullface": "east"},
+				"south": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0", "cullface": "south"},
+				"west": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0", "cullface": "west"},
+				"down": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0", "cullface": "down"}
 			}
 		},
 		{
@@ -207,7 +207,6 @@
 			"origin": [8, 8, 8],
 			"color": 0,
 			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 		}
 	]

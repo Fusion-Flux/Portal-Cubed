@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "ingredients": [
+  "category": "building",
+    "ingredients": [
     {
       "item": "portalcubed:portal_2_panel_frame"
     },

@@ -1,5 +1,6 @@
 {
     "type": "minecraft:crafting_shaped",
+    "category": "building",
     "pattern": [
         "XXX",
         "X X"
@@ -12,5 +13,6 @@
     "result": {
         "item": "portalcubed:aged_padded_gray_2x1_panel_top",
         "count": 5
-    }
+    },
+  "group": "aged_padded_gray_2x1_panel_top"
 }

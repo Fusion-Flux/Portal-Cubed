@@ -10,7 +10,7 @@
             "item": "minecraft:iron_nugget"
         },
         "X": {
-            "tag": "minecraft:glass"
+            "tag": "c:glass_blocks"
         }
     },
     "result": {

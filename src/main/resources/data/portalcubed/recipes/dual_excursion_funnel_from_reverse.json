@@ -1,5 +1,6 @@
 {
     "type": "minecraft:crafting_shapeless",
+    "category": "redstone",
     "ingredients": [
         {
             "item": "portalcubed:reversed_excursion_funnel_emitter"
@@ -11,5 +12,6 @@
     "result": {
         "item": "portalcubed:duel_excursion_funnel_emitter",
         "count": 1
-    }
+    },
+  "group": "dual_excursion_funnel_emitter"
 }

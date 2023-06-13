@@ -1,5 +1,6 @@
 {
     "type": "minecraft:crafting_shaped",
+    "category": "redstone",
     "pattern": [
         "XX",
         "XY",
@@ -19,5 +20,6 @@
     "result": {
         "item": "portalcubed:old_ap_door",
         "count": 4
-    }
+    },
+  "group": "doors"
 }

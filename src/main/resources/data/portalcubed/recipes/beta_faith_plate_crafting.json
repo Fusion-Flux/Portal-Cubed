@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
+  "category": "redstone",
+    "pattern": [
     "E#E",
     "ENE",
     "ERE"
@@ -22,5 +23,6 @@
   "result": {
     "item": "portalcubed:beta_faith_plate",
     "count": 1
-  }
+  },
+  "group": "faith_plates"
 }
