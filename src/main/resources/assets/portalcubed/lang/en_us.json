@@ -329,6 +329,7 @@
   "portalcubed.midnightconfig.enum.PortalRenderers.DISABLED": "Disabled",
   "portalcubed.midnightconfig.enum.PortalRenderers.STENCIL": "Stencil",
   "portalcubed.midnightconfig.enum.PortalRenderers.FRAMEBUFFER": "Framebuffer",
+  "portalcubed.midnightconfig.crossPortalEntityRendering": "Enable Cross-Portal Entity Rendering",
 
   "death.attack.acid": "%s was dissolved in toxic goo",
   "death.attack.acid.player": "%1$s couldn't get 6 extra seconds of cooperation from %2$s",

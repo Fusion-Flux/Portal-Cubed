@@ -7,6 +7,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPHelperDuplicate;
+import com.fusionflux.portalcubed.util.IPQuaternion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
 import net.minecraft.core.Direction;
@@ -457,6 +458,24 @@ public class  ExperimentalPortal extends Entity {
 
     private double height() {
         return HEIGHT * PehkuiScaleTypes.HITBOX_HEIGHT.getScaleData(this).getScale();
+    }
+
+    public IPQuaternion getRotationQuat() {
+        Direction portalFacing = getFacingDirection();
+        Direction otherDirec = Direction.fromNormal((int) getOtherFacing().x(), (int) getOtherFacing().y(), (int) getOtherFacing().z());
+        Direction portalVertFacing = Direction.fromNormal(BlockPos.containing(getAxisH().get().x, getAxisH().get().y, getAxisH().get().z));
+
+        IPQuaternion rotationW = IPQuaternion.getRotationBetween(getAxisW().orElseThrow().scale(-1), getOtherAxisW(), (getAxisH().orElseThrow()));
+        IPQuaternion rotationH = IPQuaternion.getRotationBetween((getAxisH().orElseThrow()), (getOtherAxisH()), getAxisW().orElseThrow().scale(-1));
+
+        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
+            if (otherDirec.equals(portalFacing) || (portalVertFacing != otherDirec && portalVertFacing != otherDirec.getOpposite())) {
+                rotationW = IPQuaternion.getRotationBetween(getNormal().scale(-1), getOtherNormal(), (getAxisH().orElseThrow()));
+                rotationH = IPQuaternion.getRotationBetween((getAxisH().orElseThrow()), (getOtherAxisH()), getNormal().scale(-1));
+            }
+        }
+
+        return rotationH.hamiltonProduct(rotationW);
     }
 
 }

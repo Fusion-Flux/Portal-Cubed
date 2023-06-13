@@ -46,6 +46,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -275,13 +276,17 @@ public class PortalCubedClient implements ClientModInitializer {
                 ctx.matrixStack().pushPose();
                 ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
                 ExperimentalPortalRenderer.renderingTracers = true;
+                final EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+                final boolean renderHitboxes = dispatcher.shouldRenderHitBoxes();
+                dispatcher.setRenderHitBoxes(false);
                 for (UUID portalUuid : CalledValues.getPortals(player)) {
                     if (
                         !(((Accessors) ctx.world()).getEntity(portalUuid) instanceof ExperimentalPortal portal) ||
                             !player.getUUID().equals(portal.getOwnerUUID().orElse(null))
                     ) continue;
-                    Minecraft.getInstance().getEntityRenderDispatcher().render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYRot(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightTexture.FULL_BRIGHT);
+                    dispatcher.render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYRot(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightTexture.FULL_BRIGHT);
                 }
+                dispatcher.setRenderHitBoxes(renderHitboxes);
                 ctx.matrixStack().popPose();
 
                 RenderSystem.disableCull();

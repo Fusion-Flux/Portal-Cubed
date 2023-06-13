@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
 import com.fusionflux.portalcubed.PortalCubedConfig;
+import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalModel;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderer;
@@ -11,12 +12,18 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.UUID;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -61,6 +68,10 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
 
         matrices.popPose();
 
+        if (PortalCubedConfig.crossPortalEntityRendering) {
+            renderOtherEntities(entity, matrices, tickDelta, vertexConsumers, light);
+        }
+
         if (Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes() && !entity.isInvisible() && !Minecraft.getInstance().showOnlyReducedInfo()) {
             renderAxes(entity, matrices, vertexConsumers.getBuffer(RenderType.lines()));
         }
@@ -77,7 +88,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         float tickDelta
     ) {
         final PortalRenderer renderer = PortalCubedClient.getRenderer();
-        final boolean renderPortal = renderer.enabled(entity);
+        final boolean renderPortal = !renderingTracers && renderer.enabled(entity);
         if (renderPortal) {
             renderer.preRender(entity, tickDelta, poseStack);
         }
@@ -85,6 +96,33 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         if (renderPortal) {
             renderer.postRender(entity, tickDelta, poseStack);
         }
+    }
+
+    private void renderOtherEntities(ExperimentalPortal entity, PoseStack poseStack, float tickDelta, MultiBufferSource buffer, int packedLight) {
+        if (renderingTracers || !entity.getActive()) return;
+        final UUID otherUuid = entity.getLinkedPortalUUID().orElse(null);
+        if (otherUuid == null || !(((Accessors)entity.level).getEntity(otherUuid) instanceof ExperimentalPortal otherPortal)) return;
+        final double oplx = Mth.lerp(tickDelta, otherPortal.xOld, otherPortal.getX());
+        final double oply = Mth.lerp(tickDelta, otherPortal.yOld, otherPortal.getY());
+        final double oplz = Mth.lerp(tickDelta, otherPortal.zOld, otherPortal.getZ());
+        final List<Entity> otherEntities = otherPortal.level.getEntities(otherPortal, otherPortal.getBoundingBox(), e -> !e.isInvisible());
+        final EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        final boolean renderHitboxes = dispatcher.shouldRenderHitBoxes();
+        dispatcher.setRenderHitBoxes(false);
+        for (final Entity otherEntity : otherEntities) {
+            poseStack.pushPose();
+            poseStack.mulPose(otherPortal.getRotationQuat().toQuaternionf());
+            dispatcher.render(
+                otherEntity,
+                Mth.lerp(tickDelta, otherEntity.xOld, otherEntity.getX()) - oplx,
+                Mth.lerp(tickDelta, otherEntity.yOld, otherEntity.getY()) - oply,
+                Mth.lerp(tickDelta, otherEntity.zOld, otherEntity.getZ()) - oplz,
+                Mth.lerp(tickDelta, otherEntity.yRotO, otherEntity.getYRot()),
+                tickDelta, poseStack, buffer, packedLight
+            );
+            poseStack.popPose();
+        }
+        dispatcher.setRenderHitBoxes(renderHitboxes);
     }
 
     private void renderAxes(ExperimentalPortal entity, PoseStack matrices, VertexConsumer vertices) {

@@ -17,4 +17,5 @@ public class PortalCubedConfig extends MidnightConfig {
     @Entry(min = 0, max = 100, isSlider = true) @Client public static int gelOverlayOpacity = 100;
     @Entry @Client public static boolean staticPortalItemDrops = true;
     @Entry @Client public static PortalRenderers renderer = PortalRenderers.DISABLED;
+    @Entry @Client public static boolean crossPortalEntityRendering = true;
 }

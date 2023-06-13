@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.util;
 
 import net.minecraft.util.Tuple;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 
 //This is from https://github.com/qouteall/ImmersivePortalsMod/blob/1.18/q_misc_util/src/main/java/qouteall/q_misc_util/my_util/DQuaternion.java,
 public class IPQuaternion {
@@ -211,4 +212,7 @@ public class IPQuaternion {
         return IPQuaternion.rotationByRadians(axis, angle);
     }
 
+    public Quaternionf toQuaternionf() {
+        return new Quaternionf(x, y, z, w);
+    }
 }
