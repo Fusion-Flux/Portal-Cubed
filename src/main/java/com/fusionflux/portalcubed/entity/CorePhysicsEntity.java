@@ -28,6 +28,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -81,6 +82,29 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
         return damageSource != damageSources().outOfWorld() && !damageSource.isCreativePlayer();
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (!this.level.isClientSide && !this.isRemoved()) {
+            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
+            if (source.getEntity() instanceof Player || source == damageSources().outOfWorld()) {
+                if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(getPickResult());
+                    }
+                    this.discard();
+                }
+                if (!(source.getEntity() instanceof Player)) {
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
+                        this.spawnAtLocation(getPickResult());
+                    }
+                    this.discard();
+                }
+            }
+
+        }
+        return false;
     }
 
     @Override
