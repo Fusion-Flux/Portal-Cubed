@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YAY",
+        "XZA",
+        "YAY"
+    ],
+    "key": {
+        "Y": {
+            "item": "minecraft:iron_nugget"
+        },
+        "X": {
+            "item": "minecraft:ender_pearl"
+        },
+        "Z": {
+            "item": "portalcubed:mini_blackhole"
+        },
+        "A": {
+            "tag": "c:glass_blocks"
+        }
+    },
+    "result": {
+        "item": "portalcubed:schrodinger_cube",
+        "count": 2
+    }
+}

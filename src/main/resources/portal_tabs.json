@@ -28,7 +28,6 @@
       "portalcubed:portal_1_companion_cube",
       "portalcubed:companion_cube",
       "portalcubed:redirection_cube",
-      "portalcubed:schrodinger_cube",
       "portalcubed:old_ap_cube",
       "portalcubed:portal_1_door",
       "portalcubed:portal_2_door",
@@ -59,6 +58,7 @@
     "items": [
       "portalcubed:paint_gun",
       "portalcubed:crowbar",
+      "portalcubed:schrodinger_cube",
       "portalcubed:reflection_gel",
       "portalcubed:adhesion_gel",
       "portalcubed:neurotoxin_emitter",
