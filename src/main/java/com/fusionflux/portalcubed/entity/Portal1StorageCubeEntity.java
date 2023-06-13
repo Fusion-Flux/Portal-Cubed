@@ -20,30 +20,6 @@ public class Portal1StorageCubeEntity extends CorePhysicsEntity  {
         super(type, world);
     }
 
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (!this.level.isClientSide && !this.isRemoved()) {
-            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
-            if (source.getEntity() instanceof Player || source == damageSources().outOfWorld()) {
-                if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
-                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
-                        this.spawnAtLocation(PortalCubedItems.PORTAL_1_STORAGE_CUBE);
-                    }
-                    this.discard();
-                }
-                if (!(source.getEntity() instanceof Player)) {
-                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
-                        this.spawnAtLocation(PortalCubedItems.PORTAL_1_STORAGE_CUBE);
-                    }
-                    this.discard();
-                }
-            }
-
-        }
-        return false;
-    }
-
     @Override
     protected void checkFallDamage(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition) {
         if (onGround && landedState.isAir()) {

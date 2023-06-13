@@ -13,29 +13,4 @@ public class BeansEntity extends CorePhysicsEntity  {
         super(type, world);
     }
 
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (!this.level.isClientSide && !this.isRemoved()) {
-            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
-            if (source.getEntity() instanceof Player || source == damageSources().outOfWorld()) {
-                if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
-                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
-                        this.spawnAtLocation(PortalCubedItems.BEANS);
-                    }
-                    this.discard();
-                }
-                if (!(source.getEntity() instanceof Player)) {
-                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
-                        this.spawnAtLocation(PortalCubedItems.BEANS);
-                    }
-                    this.discard();
-                }
-            }
-
-        }
-        return false;
-    }
-
-
 }

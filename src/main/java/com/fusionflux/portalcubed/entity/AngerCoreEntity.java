@@ -18,29 +18,6 @@ public class AngerCoreEntity extends CorePhysicsEntity  {
     private int t = 0;
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (!this.level.isClientSide && !this.isRemoved()) {
-            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
-            if (source.getEntity() instanceof Player || source == damageSources().outOfWorld()) {
-                if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
-                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
-                        this.spawnAtLocation(PortalCubedItems.ANGER_CORE);
-                    }
-                    this.discard();
-                }
-                if (!(source.getEntity() instanceof Player)) {
-                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
-                        this.spawnAtLocation(PortalCubedItems.ANGER_CORE);
-                    }
-                    this.discard();
-                }
-            }
-
-        }
-        return false;
-    }
-
-    @Override
     public void tick() {
         if (!this.level.isClientSide) {
             if (t == 0) {
