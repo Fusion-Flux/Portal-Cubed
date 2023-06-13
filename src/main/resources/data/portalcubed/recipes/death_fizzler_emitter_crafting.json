@@ -7,19 +7,19 @@
   ],
   "key": {
     "#": {
-      "item": "minecraft:light_blue_stained_glass_pane"
+      "item": "minecraft:red_stained_glass_pane"
     },
     "E": {
       "tag": "portalcubed:portal_2_clean_gray_panels"
     },
 
     "R": {
-      "item": "minecraft:redstone"
+      "item": "minecraft:redstone_block"
     }
   },
   "result": {
-    "item": "portalcubed:fizzler_emitter",
+    "item": "portalcubed:death_fizzler_emitter",
     "count": 2
   },
-  "group": "fizzlers"
+  "group": "death_fizzlers"
 }

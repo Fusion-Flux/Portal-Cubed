@@ -19,5 +19,6 @@
     "result": {
         "item": "portalcubed:companion_cube",
         "count": 1
-    }
+    },
+  "group": "companion_cubes"
 }

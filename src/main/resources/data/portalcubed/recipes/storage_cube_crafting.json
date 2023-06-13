@@ -19,5 +19,6 @@
     "result": {
         "item": "portalcubed:storage_cube",
         "count": 1
-    }
+    },
+  "group": "storage_cubes"
 }

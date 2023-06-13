@@ -14,5 +14,6 @@
   "result": {
     "item": "portalcubed:intelligence_core",
     "count": 1
-  }
+  },
+  "group": "cores"
 }

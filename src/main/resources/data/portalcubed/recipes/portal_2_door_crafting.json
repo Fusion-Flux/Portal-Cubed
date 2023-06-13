@@ -19,5 +19,6 @@
     "result": {
         "item": "portalcubed:portal_2_door",
         "count": 4
-    }
+    },
+  "group": "doors"
 }

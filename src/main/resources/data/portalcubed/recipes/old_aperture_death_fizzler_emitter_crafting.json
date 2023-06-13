@@ -14,11 +14,12 @@
     },
 
     "R": {
-      "item": "minecraft:redstone"
+      "item": "minecraft:redstone_block"
     }
   },
   "result": {
     "item": "portalcubed:old_aperture_death_fizzler_emitter",
     "count": 2
-  }
+  },
+  "group": "death_fizzlers"
 }
