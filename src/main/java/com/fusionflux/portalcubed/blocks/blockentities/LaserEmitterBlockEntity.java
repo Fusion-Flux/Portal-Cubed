@@ -239,7 +239,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         if (musicInstance == null && level != null && level.getBlockState(worldPosition).getValue(LaserEmitterBlock.POWERED)) {
             musicInstance = new AbstractTickableSoundInstance(PortalCubedSounds.LASER_BEAM_MUSIC_EVENT, SoundSource.BLOCKS, SoundInstance.createUnseededRandom()) {
                 {
-                    volume = 0.1875f;
+                    volume = 0.1f;
                     looping = true;
                 }
 
