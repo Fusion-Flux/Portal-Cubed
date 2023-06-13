@@ -491,6 +491,9 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(RedirectionCubeModel.REDIRECTION_CUBE_MAIN_LAYER, RedirectionCubeModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.REDIRECTION_CUBE, RedirectionCubeRenderer::new);
 
+        EntityModelLayerRegistry.registerModelLayer(SchrodingerCubeModel.SCHRODINGER_CUBE_MAIN_LAYER, SchrodingerCubeModel::getTexturedModelData);
+        EntityRendererRegistry.register(PortalCubedEntities.SCHRODINGER_CUBE, SchrodingerCubeRenderer::new);
+
         EntityModelLayerRegistry.registerModelLayer(OldApModel.OLD_AP_CUBE_MAIN_LAYER, OldApModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.OLD_AP_CUBE, OldApRenderer::new);
 

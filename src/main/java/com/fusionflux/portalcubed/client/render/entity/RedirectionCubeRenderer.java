@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
@@ -16,9 +17,10 @@ public class RedirectionCubeRenderer extends CorePhysicsRenderer<RedirectionCube
         super(context, new RedirectionCubeModel(Minecraft.getInstance().getEntityModels().bakeLayer(RedirectionCubeModel.REDIRECTION_CUBE_MAIN_LAYER)), 0.5f);
     }
 
+    @NotNull
     @Override
     public ResourceLocation getTextureLocation(RedirectionCubeEntity entity) {
-        if (entity.isOnButton()) {
+        if (entity.isActive()) {
             return ACTIVE_TEXTURE;
         }
         return BASE_TEXTURE;

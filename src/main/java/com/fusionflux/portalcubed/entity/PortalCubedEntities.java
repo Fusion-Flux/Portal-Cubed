@@ -29,6 +29,9 @@ public class PortalCubedEntities {
     public static final EntityType<RedirectionCubeEntity> REDIRECTION_CUBE = QuiltEntityTypeBuilder.create(MobCategory.CREATURE, RedirectionCubeEntity::new)
             .setDimensions(EntityDimensions.scalable(0.625F, 0.625F))
             .build();
+    public static final EntityType<SchrodingerCubeEntity> SCHRODINGER_CUBE = QuiltEntityTypeBuilder.create(MobCategory.CREATURE, SchrodingerCubeEntity::new)
+        .setDimensions(EntityDimensions.scalable(0.625F, 0.625F))
+        .build();
     public static final EntityType<RadioEntity> RADIO = QuiltEntityTypeBuilder.create(MobCategory.CREATURE, RadioEntity::new)
             .setDimensions(EntityDimensions.scalable(0.625F, 0.3125F))
             .build();
@@ -134,6 +137,7 @@ public class PortalCubedEntities {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("companion_cube"), COMPANION_CUBE);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("radio"), RADIO);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("redirection_cube"), REDIRECTION_CUBE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("schrodinger_cube"), SCHRODINGER_CUBE);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("old_ap_cube"), OLD_AP_CUBE);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("portal_1_companion_cube"), PORTAL_1_COMPANION_CUBE);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("portal_1_storage_cube"), PORTAL_1_STORAGE_CUBE);
@@ -169,6 +173,7 @@ public class PortalCubedEntities {
         DefaultAttributes.SUPPLIERS.put(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes().build());
         DefaultAttributes.SUPPLIERS.put(RADIO, RadioEntity.createMobAttributes().build());
         DefaultAttributes.SUPPLIERS.put(REDIRECTION_CUBE, RedirectionCubeEntity.createMobAttributes().build());
+        DefaultAttributes.SUPPLIERS.put(SCHRODINGER_CUBE, SchrodingerCubeEntity.createMobAttributes().build());
         DefaultAttributes.SUPPLIERS.put(OLD_AP_CUBE, OldApCubeEntity.createMobAttributes().build());
         DefaultAttributes.SUPPLIERS.put(PORTAL_1_COMPANION_CUBE, Portal1CompanionCubeEntity.createMobAttributes().build());
         DefaultAttributes.SUPPLIERS.put(PORTAL_1_STORAGE_CUBE, Portal1StorageCubeEntity.createMobAttributes().build());

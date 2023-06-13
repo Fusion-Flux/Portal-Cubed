@@ -114,13 +114,16 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                 new AdvancedEntityRaycast.TransformInfo(
                     e -> e instanceof RedirectionCubeEntity && !alreadyHit.contains(e),
                     (context, blockHit, entityHit) -> {
-                        final var entity = (RedirectionCubeEntity)entityHit.getEntity();
+                        final RedirectionCubeEntity entity = (RedirectionCubeEntity)entityHit.getEntity();
                         alreadyHit.add(entity);
                         final double distance = context.getFrom().distanceTo(context.getTo());
                         final Vec3 offset = entityHit.getLocation().subtract(context.getFrom());
-                        final Vec3 newOffset = Vec3.directionFromRotation(entity.getXRot(), entity.getYRot())
+                        final RedirectionCubeEntity destination = entity.getConnection();
+                        alreadyHit.add(destination);
+                        destination.markActive();
+                        final Vec3 newOffset = Vec3.directionFromRotation(destination.getXRot(), destination.getYRot())
                             .scale(distance - offset.length());
-                        final Vec3 origin = entity.position().add(new Vec3(0, entity.getBbHeight() / 2, 0));
+                        final Vec3 origin = destination.position().add(new Vec3(0, destination.getBbHeight() / 2, 0));
                         return new AdvancedEntityRaycast.TransformResult(
                             entityHit.getLocation().add(offset.scale(0.25 / offset.length())),
                             AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
@@ -128,7 +131,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                     }
                 ),
                 new AdvancedEntityRaycast.TransformInfo(
-                    e -> e instanceof CorePhysicsEntity,
+                    e -> e instanceof CorePhysicsEntity && !alreadyHit.contains(e),
                     (context, blockHit, entityHit) -> new AdvancedEntityRaycast.TransformResult(entityHit.getLocation(), null)
                 )
             );

@@ -40,6 +40,7 @@
   "item.portalcubed.companion_cube": "Weighted Companion Cube",
   "item.portalcubed.portal_1_companion_cube": "Portal 1 Weighted Companion Cube",
   "item.portalcubed.redirection_cube": "Discouragement Redirection Cube",
+  "item.portalcubed.schrodinger_cube": "Schrödinger Cube",
   "item.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
 
   "item.portalcubed.radio": "Radio",
@@ -49,7 +50,7 @@
   "item.portalcubed.chair": "Office Chair",
   "item.portalcubed.mug": "Mug",
   "item.portalcubed.hoopy": "Hoopy",
-  "item.portalcubed.lil_pineapple": "Lil\u0027 Pineapple",
+  "item.portalcubed.lil_pineapple": "Lil' Pineapple",
   "item.portalcubed.core_frame": "Core Frame",
   "item.portalcubed.anger_core": "Anger Core",
   "item.portalcubed.intelligence_core": "Intelligence Core",
@@ -382,7 +383,7 @@
   "entity.portalcubed.computer": "Computer",
   "entity.portalcubed.hoopy": "Hoopy",
   "entity.portalcubed.jug": "Water Jug",
-  "entity.portalcubed.lil_pineapple": "Lil\u0027 Pineapple",
+  "entity.portalcubed.lil_pineapple": "Lil' Pineapple",
   "entity.portalcubed.mug": "Mug",
   "entity.portalcubed.radio": "Radio",
 
@@ -391,6 +392,7 @@
   "entity.portalcubed.companion_cube": "Weighted Companion Cube",
   "entity.portalcubed.storage_cube": "Weighted Storage Cube",
   "entity.portalcubed.redirection_cube": "Discouragement Redirection Cube",
+  "entity.portalcubed.schrodinger_cube": "Schrödinger Cube",
   "entity.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
 
   "entity.portalcubed.decal": "Energy Pellet Scorch Mark",

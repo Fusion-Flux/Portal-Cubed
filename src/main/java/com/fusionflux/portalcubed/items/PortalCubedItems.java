@@ -33,6 +33,7 @@ public class PortalCubedItems {
     public static final SpawnEggItem COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.COMPANION_CUBE, 1, 1, new QuiltItemSettings());
     public static final SpawnEggItem RADIO = new SpawnEggItem(PortalCubedEntities.RADIO, 1, 1, new QuiltItemSettings());
     public static final SpawnEggItem REDIRECTION_CUBE = new SpawnEggItem(PortalCubedEntities.REDIRECTION_CUBE, 1, 1, new QuiltItemSettings());
+    public static final SpawnEggItem SCHRODINGER_CUBE = new SpawnEggItem(PortalCubedEntities.SCHRODINGER_CUBE, 1, 1, new QuiltItemSettings());
     public static final SpawnEggItem OLD_AP_CUBE = new SpawnEggItem(PortalCubedEntities.OLD_AP_CUBE, 1, 1, new QuiltItemSettings());
     public static final SpawnEggItem PORTAL_1_COMPANION_CUBE = new SpawnEggItem(PortalCubedEntities.PORTAL_1_COMPANION_CUBE, 1, 1, new QuiltItemSettings());
     public static final SpawnEggItem PORTAL_1_STORAGE_CUBE = new SpawnEggItem(PortalCubedEntities.PORTAL_1_STORAGE_CUBE, 1, 1, new QuiltItemSettings());
@@ -85,6 +86,7 @@ public class PortalCubedItems {
         Registry.register(BuiltInRegistries.ITEM, id("storage_cube"), STORAGE_CUBE);
         Registry.register(BuiltInRegistries.ITEM, id("companion_cube"), COMPANION_CUBE);
         Registry.register(BuiltInRegistries.ITEM, id("redirection_cube"), REDIRECTION_CUBE);
+        Registry.register(BuiltInRegistries.ITEM, id("schrodinger_cube"), SCHRODINGER_CUBE);
         Registry.register(BuiltInRegistries.ITEM, id("old_ap_cube"), OLD_AP_CUBE);
         Registry.register(BuiltInRegistries.ITEM, id("portal_1_companion_cube"), PORTAL_1_COMPANION_CUBE);
         Registry.register(BuiltInRegistries.ITEM, id("portal_1_storage_cube"), PORTAL_1_STORAGE_CUBE);
