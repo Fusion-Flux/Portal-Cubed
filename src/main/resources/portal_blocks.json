@@ -24,40 +24,133 @@
   "solid_office_concrete": {},
   "bordered_office_concrete": {},
   "portal_1_smooth_tiles": {},
-  "portal_1_smooth_gray_half_panel": {},
-  "portal_1_smooth_gray_panel": {},
+  "portal_1_smooth_gray_half_panel": {
+  "sounds": {
+    "break": "minecraft:block.copper.break",
+    "step": "minecraft:block.copper.step",
+    "place": "minecraft:block.copper.place",
+    "hit": "minecraft:block.copper.hit",
+    "fall": "minecraft:block.copper.fall"
+  }},
+  "portal_1_smooth_gray_panel": {
+  "sounds": {
+    "break": "minecraft:block.copper.break",
+    "step": "minecraft:block.copper.step",
+    "place": "minecraft:block.copper.place",
+    "hit": "minecraft:block.copper.hit",
+    "fall": "minecraft:block.copper.fall"
+  }},
   "portal_1_smooth_gray_2x1_panel_bottom": {
-  "type": "pillar"
+  "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_smooth_gray_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_smooth_gray_2x1_joiner": {
-    "type": "pillar"
+    "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_smooth_gray_2x2_panel_bottom_left": {
-  "type": "directional"
+  "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_smooth_gray_2x2_panel_bottom_right": {
-  "type": "directional"
+  "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_smooth_gray_2x2_panel_top_left": {
-  "type": "directional"
+  "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_smooth_gray_2x2_panel_top_right": {
-  "type": "directional"
+  "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
-  "portal_1_rusted_plating": {},
-  "portal_1_rusted_tread_plating": {},
+  "portal_1_rusted_plating": {
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+  "portal_1_rusted_tread_plating": {
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
   "portal_1_metal_grating": {
     "type": "old_ap",
     "render_layer": "cutout",
-    "opaque": false
+    "opaque": false,
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "portal_1_mesh_grating": {
     "type": "old_ap",
     "render_layer": "cutout",
-    "opaque": false
+    "opaque": false,
+    "sounds": {
+      "break": "minecraft:block.vine.break",
+      "step": "minecraft:block.vine.step",
+      "place": "minecraft:block.vine.place",
+      "hit": "minecraft:block.vine.hit",
+      "fall": "minecraft:block.vine.fall"
+    }
   },
   "portal_1_2x2_exposed_panel_bottom_left": {
   "type": "directional"
@@ -205,73 +298,243 @@
   "aged_smooth_gray_2x2_panel_top_right": {
     "type": "directional"
   },
-  "insulation": {},
+  "insulation": {
+  "sounds": {
+    "break": "minecraft:block.wool.break",
+    "step": "minecraft:block.wool.step",
+    "place": "minecraft:block.wool.place",
+    "hit": "minecraft:block.wool.hit",
+    "fall": "minecraft:block.wool.fall"
+  }},
   "portal_2_panel_frame": {
     "render_layer": "cutout",
-    "opaque": false
+    "opaque": false,
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "portal_2_panel_wireframe": {
     "opaque": false,
-    "render_layer": "translucent"
+    "render_layer": "translucent",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "portal_2_exposed_panel": {},
   "portal_2_partially_exposed_panel": {},
   "portal_2_metal_grating": {
     "type": "old_ap",
     "render_layer": "cutout",
-    "opaque": false
+    "opaque": false,
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
-  "old_ap_white_checkered_panel": {},
-  "old_ap_white_panel": {},
+  "old_ap_white_checkered_panel": {
+  "sounds": {
+    "break": "minecraft:block.wood.break",
+    "step": "minecraft:block.wood.step",
+    "place": "minecraft:block.wood.place",
+    "hit": "minecraft:block.wood.hit",
+    "fall": "minecraft:block.wood.fall"
+  }},
+  "old_ap_white_panel": {
+  "sounds": {
+    "break": "minecraft:block.wood.break",
+    "step": "minecraft:block.wood.step",
+    "place": "minecraft:block.wood.place",
+    "hit": "minecraft:block.wood.hit",
+    "fall": "minecraft:block.wood.fall"
+  }},
   "old_ap_white_2x2_panel_bottom_left": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.wood.break",
+      "step": "minecraft:block.wood.step",
+      "place": "minecraft:block.wood.place",
+      "hit": "minecraft:block.wood.hit",
+      "fall": "minecraft:block.wood.fall"
+    }
   },
   "old_ap_white_2x2_panel_bottom_right": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.wood.break",
+      "step": "minecraft:block.wood.step",
+      "place": "minecraft:block.wood.place",
+      "hit": "minecraft:block.wood.hit",
+      "fall": "minecraft:block.wood.fall"
+    }
   },
   "old_ap_white_2x2_panel_top_left": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.wood.break",
+      "step": "minecraft:block.wood.step",
+      "place": "minecraft:block.wood.place",
+      "hit": "minecraft:block.wood.hit",
+      "fall": "minecraft:block.wood.fall"
+    }
   },
   "old_ap_white_2x2_panel_top_right": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.wood.break",
+      "step": "minecraft:block.wood.step",
+      "place": "minecraft:block.wood.place",
+      "hit": "minecraft:block.wood.hit",
+      "fall": "minecraft:block.wood.fall"
+    }
   },
-  "old_ap_green_panel": {},
+  "old_ap_green_panel": {
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
+  },
   "old_ap_green_2x1_panel_bottom": {
-    "type": "pillar"
+    "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_green_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_green_2x2_panel_bottom_left": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_green_2x2_panel_bottom_right": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_green_2x2_panel_top_left": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_green_2x2_panel_top_right": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
-  "old_ap_blue_panel": {},
+  "old_ap_blue_panel": {
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
+  },
   "old_ap_blue_2x1_panel_bottom": {
-    "type": "pillar"
+    "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_blue_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_blue_2x2_panel_bottom_left": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_blue_2x2_panel_bottom_right": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_blue_2x2_panel_top_left": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_blue_2x2_panel_top_right": {
-    "type": "directional"
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "office_concrete": {},
   "blue_office_concrete": {},
@@ -279,37 +542,86 @@
   "old_ap_metal_grating": {
     "type": "old_ap",
     "render_layer": "cutout",
-    "opaque": false
+    "opaque": false,
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "1x1_single_crossbar": {
     "type": "old_ap",
     "opaque": false,
-    "render_layer": "cutout"
+    "render_layer": "cutout",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "1x1_double_crossbar": {
     "type": "old_ap",
     "opaque": false,
-    "render_layer": "cutout"
+    "render_layer": "cutout",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "2x2_double_crossbar_bottom_left": {
     "type": "old_ap_directional",
     "opaque": false,
-    "render_layer": "cutout"
+    "render_layer": "cutout",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "2x2_double_crossbar_bottom_right": {
     "type": "old_ap_directional",
     "opaque": false,
-    "render_layer": "cutout"
+    "render_layer": "cutout",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "2x2_double_crossbar_top_left": {
     "type": "old_ap_directional",
     "opaque": false,
-    "render_layer": "cutout"
+    "render_layer": "cutout",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "2x2_double_crossbar_top_right": {
     "type": "old_ap_directional",
     "opaque": false,
-    "render_layer": "cutout"
+    "render_layer": "cutout",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
 
   },
   "portal_1_white_half_panel_facade": {
@@ -328,10 +640,24 @@
     "type": "facade"
   },
   "portal_1_smooth_gray_half_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_smooth_gray_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_smooth_tile_facade": {
     "type": "facade"
@@ -373,45 +699,122 @@
     "type": "facade"
   },
   "old_ap_white_checkered_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.wood.break",
+      "step": "minecraft:block.wood.step",
+      "place": "minecraft:block.wood.place",
+      "hit": "minecraft:block.wood.hit",
+      "fall": "minecraft:block.wood.fall"
+    }
   },
   "old_ap_white_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.wood.break",
+      "step": "minecraft:block.wood.step",
+      "place": "minecraft:block.wood.place",
+      "hit": "minecraft:block.wood.hit",
+      "fall": "minecraft:block.wood.fall"
+    }
   },
   "old_ap_green_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "old_ap_blue_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.netherite_block.break",
+      "step": "minecraft:block.netherite_block.step",
+      "place": "minecraft:block.netherite_block.place",
+      "hit": "minecraft:block.netherite_block.hit",
+      "fall": "minecraft:block.netherite_block.fall"
+    }
   },
   "portal_1_rusted_plating_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_rusted_tread_plating_side_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_rusted_tread_plating_top_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
   },
   "portal_1_mesh_grating_facade": {
     "type": "multiface",
     "render_layer": "cutout",
-    "opaque": "false"
+    "opaque": "false",
+    "sounds": {
+      "break": "minecraft:block.vine.break",
+      "step": "minecraft:block.vine.step",
+      "place": "minecraft:block.vine.place",
+      "hit": "minecraft:block.vine.hit",
+      "fall": "minecraft:block.vine.fall"
+    }
   },
   "portal_1_metal_grating_facade": {
     "type": "multiface",
     "render_layer": "cutout",
-    "opaque": "false"
+    "opaque": "false",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "portal_2_metal_grating_facade": {
     "type": "multiface",
     "render_layer": "cutout",
-    "opaque": "false"
+    "opaque": "false",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
   "old_ap_metal_grating_facade": {
     "type": "multiface",
     "render_layer": "cutout",
-    "opaque": "false"
+    "opaque": "false",
+    "sounds": {
+      "break": "minecraft:block.lantern.break",
+      "step": "minecraft:block.lantern.step",
+      "place": "minecraft:block.lantern.place",
+      "hit": "minecraft:block.lantern.hit",
+      "fall": "minecraft:block.lantern.fall"
+    }
   },
 
   "exposed_panel_facade": {
@@ -421,7 +824,14 @@
     "type": "facade"
   },
   "insulation_facade": {
-    "type": "facade"
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.wool.break",
+      "step": "minecraft:block.wool.step",
+      "place": "minecraft:block.wool.place",
+      "hit": "minecraft:block.wool.hit",
+      "fall": "minecraft:block.wool.fall"
+    }
   },
 
 
@@ -560,7 +970,7 @@
   },
   "portal_1_fizzler_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "old_aperture_fizzler": {
     "type": "provided",

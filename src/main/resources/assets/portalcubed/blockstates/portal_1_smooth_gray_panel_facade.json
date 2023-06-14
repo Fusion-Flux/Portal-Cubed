@@ -10,40 +10,12 @@
     },
     {
       "apply": {
-        "model": "portalcubed:block/portal_1_smooth_gray_panel_facade"
-      },
-      "when": {
-        "down": "false",
-        "east": "false",
-        "north": "false",
-        "south": "false",
-        "up": "false",
-        "west": "false"
-      }
-    },
-    {
-      "apply": {
         "model": "portalcubed:block/portal_1_smooth_gray_panel_facade",
         "uvlock": true,
         "y": 90
       },
       "when": {
         "east": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "portalcubed:block/portal_1_smooth_gray_panel_facade",
-        "uvlock": true,
-        "y": 90
-      },
-      "when": {
-        "down": "false",
-        "east": "false",
-        "north": "false",
-        "south": "false",
-        "up": "false",
-        "west": "false"
       }
     },
     {
@@ -60,40 +32,10 @@
       "apply": {
         "model": "portalcubed:block/portal_1_smooth_gray_panel_facade",
         "uvlock": true,
-        "y": 180
-      },
-      "when": {
-        "down": "false",
-        "east": "false",
-        "north": "false",
-        "south": "false",
-        "up": "false",
-        "west": "false"
-      }
-    },
-    {
-      "apply": {
-        "model": "portalcubed:block/portal_1_smooth_gray_panel_facade",
-        "uvlock": true,
         "y": 270
       },
       "when": {
         "west": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "portalcubed:block/portal_1_smooth_gray_panel_facade",
-        "uvlock": true,
-        "y": 270
-      },
-      "when": {
-        "down": "false",
-        "east": "false",
-        "north": "false",
-        "south": "false",
-        "up": "false",
-        "west": "false"
       }
     },
     {
@@ -110,21 +52,6 @@
       "apply": {
         "model": "portalcubed:block/portal_1_smooth_gray_panel_facade",
         "uvlock": true,
-        "x": 270
-      },
-      "when": {
-        "down": "false",
-        "east": "false",
-        "north": "false",
-        "south": "false",
-        "up": "false",
-        "west": "false"
-      }
-    },
-    {
-      "apply": {
-        "model": "portalcubed:block/portal_1_smooth_gray_panel_facade",
-        "uvlock": true,
         "x": 90
       },
       "when": {
@@ -133,9 +60,8 @@
     },
     {
       "apply": {
-        "model": "portalcubed:block/portal_1_smooth_gray_panel_facade",
-        "uvlock": true,
-        "x": 90
+        "model": "portalcubed:block/error",
+        "uvlock": true
       },
       "when": {
         "down": "false",

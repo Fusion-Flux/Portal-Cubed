@@ -114,6 +114,7 @@
   "block/offset_pedestal_button": "block/pedestal_button_e",
   "block/offset_pedestal_button_active": "block/pedestal_button_e",
 
+  "block/error": "block/error",
 
   "block/rocket_turret_active": "block/rocket_turret_active_e",
   "block/rocket_turret_inactive": "block/rocket_turret_inactive_e",
