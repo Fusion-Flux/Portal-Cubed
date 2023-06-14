@@ -63,18 +63,17 @@
       "portalcubed:adhesion_gel",
       "portalcubed:neurotoxin_emitter",
       "portalcubed:beta_faith_plate",
-      "portalcubed:old_aperture_death_fizzler_emitter",
       "portalcubed:death_fizzler_emitter",
+      "portalcubed:old_aperture_death_fizzler_emitter",
       "portalcubed:physics_repulsion_field_emitter",
       "portalcubed:matter_inquisition_field_emitter",
       "portalcubed:octopus_door",
       "portalcubed:mug",
-      "portalcubed:chair",
       "portalcubed:beans",
       "portalcubed:jug",
+      "portalcubed:chair",
       "portalcubed:computer",
       "portalcubed:hoopy",
-      "portalcubed:lil_pineapple",
       "portalcubed:core_frame",
       "portalcubed:rocket_turret",
       "portalcubed:morality_core",
@@ -83,7 +82,8 @@
       "portalcubed:anger_core",
       "portalcubed:space_core",
       "portalcubed:adventure_core",
-      "portalcubed:fact_core"
+      "portalcubed:fact_core",
+      "portalcubed:lil_pineapple"
     ]
   },
 
