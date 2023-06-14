@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "category": "building",
+    "ingredients": [
+        {
+            "item": "portalcubed:portal_1_smooth_gray_2x2_panel_top_left"
+        },
+        {
+            "item": "portalcubed:sewage"
+        }
+    ],
+    "result": {
+        "item": "portalcubed:dirty_portal_1_smooth_gray_2x2_panel_top_left",
+        "count": 1
+    },
+  "group": "dirty_smooth_gray_2x2_panel_top_left"
+}

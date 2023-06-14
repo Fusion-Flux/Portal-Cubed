@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "portalcubed:block/dirty_portal_1_gray_half_panel",
+    "side": "portalcubed:block/dirty_portal_1_gray_2x1_panel_bottom"
+  }
+}

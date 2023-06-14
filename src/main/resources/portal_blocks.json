@@ -110,6 +110,94 @@
       "fall": "minecraft:block.copper.fall"
     }
   },
+
+  "dirty_portal_1_smooth_gray_half_panel": {
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }},
+  "dirty_portal_1_smooth_gray_panel": {
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }},
+  "dirty_portal_1_smooth_gray_2x1_panel_bottom": {
+    "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+  "dirty_portal_1_smooth_gray_2x1_panel_top": {
+    "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+  "dirty_portal_1_smooth_gray_2x1_joiner": {
+    "type": "pillar",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+  "dirty_portal_1_smooth_gray_2x2_panel_bottom_left": {
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+  "dirty_portal_1_smooth_gray_2x2_panel_bottom_right": {
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+  "dirty_portal_1_smooth_gray_2x2_panel_top_left": {
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+  "dirty_portal_1_smooth_gray_2x2_panel_top_right": {
+    "type": "directional",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+
   "portal_1_rusted_plating": {
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -650,6 +738,26 @@
     }
   },
   "portal_1_smooth_gray_panel_facade": {
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+  "dirty_portal_1_smooth_gray_half_panel_facade": {
+    "type": "facade",
+    "sounds": {
+      "break": "minecraft:block.copper.break",
+      "step": "minecraft:block.copper.step",
+      "place": "minecraft:block.copper.place",
+      "hit": "minecraft:block.copper.hit",
+      "fall": "minecraft:block.copper.fall"
+    }
+  },
+  "dirty_portal_1_smooth_gray_panel_facade": {
     "type": "facade",
     "sounds": {
       "break": "minecraft:block.copper.break",
