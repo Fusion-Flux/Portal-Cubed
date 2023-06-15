@@ -1,13 +1,12 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.IPHelperDuplicate;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.fusionflux.portalcubed.util.NbtHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
 import net.minecraft.core.Direction;
@@ -30,6 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -41,39 +41,32 @@ public class  ExperimentalPortal extends Entity {
     public static final Supplier<IllegalStateException> NOT_INIT =
         () -> new IllegalStateException("Portal data accessed before initialized");
 
+    private static final IPQuaternion FLIP_AXIS_W = IPQuaternion.rotationByDegrees(
+        new Vec3(0, 1, 0), 180
+    ).fixFloatingPointErrorAccumulation();
+
     private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
 
     private static final double WIDTH = 0.9, HEIGHT = 1.9;
     private static final double EPSILON = 1.0E-7;
 
+    private static final Vec3 AXIS_W = new Vec3(1, 0, 0);
+    private static final Vec3 AXIS_H = new Vec3(0, -1, 0);
+    private static final Vec3 NORMAL = new Vec3(0, 0, -1);
+
     private AABB cutoutBoundingBox = NULL_BOX;
 
+    private static final EntityDataAccessor<Quaternionf> ROTATION = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.QUATERNION);
+    private static final EntityDataAccessor<Optional<Quaternionf>> OTHER_ROTATION = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_QUAT);
     public static final EntityDataAccessor<Optional<UUID>> LINKED_PORTAL_UUID = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<Boolean> IS_ACTIVE = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<String> STORED_OUTLINE = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<Float> ROLL = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.INT);
-    /**
-     * getAxisW() and getAxisH() define the orientation of the portal
-     * They should be normalized and should be perpendicular to each other
-     */
-    public static final EntityDataAccessor<Optional<Vec3>> AXIS_W = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
-    public static final EntityDataAccessor<Optional<Vec3>> AXIS_H = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
-    public static final EntityDataAccessor<Vec3> AXIS_OH = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
-    public static final EntityDataAccessor<Vec3> AXIS_OW = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
     public static final EntityDataAccessor<Optional<Vec3>> DESTINATION = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
-    public static final EntityDataAccessor<Vec3> FACING = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.VEC3D);
     public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.OPTIONAL_UUID);
 
-    private boolean disableValidation;
-
-    public Vec3 getNormal() {
-        return (getAxisW().orElseThrow(NOT_INIT).cross(getAxisH().orElseThrow(NOT_INIT)));
-    }
-
-    public Vec3 getOtherNormal() {
-        return (getOtherAxisW().cross(getOtherAxisH()));
-    }
+    private boolean disableValidation = false;
+    private Vec3 axisW, axisH, normal;
+    private Optional<Vec3> otherAxisW = Optional.empty(), otherAxisH = Optional.empty(), otherNormal = Optional.empty();
 
     public ExperimentalPortal(EntityType<?> entityType, Level world) {
         super(entityType, world);
@@ -81,30 +74,26 @@ public class  ExperimentalPortal extends Entity {
 
     @Override
     protected void defineSynchedData() {
+        this.getEntityData().define(ROTATION, new Quaternionf());
+        this.getEntityData().define(OTHER_ROTATION, Optional.empty());
         this.getEntityData().define(LINKED_PORTAL_UUID, Optional.empty());
-        this.getEntityData().define(STORED_OUTLINE, "null");
         this.getEntityData().define(IS_ACTIVE, false);
-        this.getEntityData().define(ROLL, 0f);
         this.getEntityData().define(COLOR, 0);
-        this.getEntityData().define(AXIS_W, Optional.empty());
-        this.getEntityData().define(AXIS_H, Optional.empty());
-        this.getEntityData().define(AXIS_OH, Vec3.ZERO);
-        this.getEntityData().define(AXIS_OW, Vec3.ZERO);
         this.getEntityData().define(DESTINATION, Optional.empty());
-        this.getEntityData().define(FACING, Vec3.ZERO);
         this.getEntityData().define(OWNER_UUID, Optional.empty());
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag nbt) {
         this.setColor(nbt.getInt("color"));
-        this.setRoll(nbt.getFloat("roll"));
+        setRotation(NbtHelper.getQuaternion(nbt, "PortalRotation"));
+        if (nbt.contains("OtherRotation")) {
+            setOtherRotation(Optional.of(NbtHelper.getQuaternion(nbt, "OtherRotation")));
+        } else {
+            setOtherRotation(Optional.empty());
+        }
         if (nbt.hasUUID("linkedPortalUUID")) this.setLinkedPortalUUID(Optional.of(nbt.getUUID("linkedPortalUUID")));
-        if (nbt.contains("axisW")) this.setOrientation(IPHelperDuplicate.getVec3d(nbt, "axisW"), IPHelperDuplicate.getVec3d(nbt, "axisH"));
-        this.setOtherAxisH(IPHelperDuplicate.getVec3d(nbt, "axisOH"));
-        this.setOtherAxisW(IPHelperDuplicate.getVec3d(nbt, "axisOW"));
-        if (nbt.contains("destination")) this.setDestination(Optional.of(IPHelperDuplicate.getVec3d(nbt, "destination")));
-        this.setOtherFacing(IPHelperDuplicate.getVec3d(nbt, "facing"));
+        if (nbt.contains("destination")) this.setDestination(Optional.of(NbtHelper.getVec3d(nbt, "destination")));
         if (nbt.hasUUID("ownerUUID")) this.setOwnerUUID(Optional.of(nbt.getUUID("ownerUUID")));
         disableValidation = nbt.getBoolean("DisableValidation");
     }
@@ -112,24 +101,12 @@ public class  ExperimentalPortal extends Entity {
     @Override
     protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putFloat("color", this.getColor());
-        nbt.putFloat("roll", this.getRoll());
+        NbtHelper.putQuaternion(nbt, "PortalRotation", getRotation());
+        getOtherRotation().ifPresent(r -> NbtHelper.putQuaternion(nbt, "OtherRotation", r));
         this.getLinkedPortalUUID().ifPresent(uuid -> nbt.putUUID("linkedPortalUUID", uuid));
-        this.getAxisW().ifPresent(axisW -> IPHelperDuplicate.putVec3d(nbt, "axisW", axisW));
-        this.getAxisH().ifPresent(axisH -> IPHelperDuplicate.putVec3d(nbt, "axisH", axisH));
-        IPHelperDuplicate.putVec3d(nbt, "axisOH", this.getOtherAxisH());
-        IPHelperDuplicate.putVec3d(nbt, "axisOW", this.getOtherAxisW());
-        this.getDestination().ifPresent(destination -> IPHelperDuplicate.putVec3d(nbt, "destination", destination));
-        IPHelperDuplicate.putVec3d(nbt, "facing", this.getOtherFacing());
+        this.getDestination().ifPresent(destination -> NbtHelper.putVec3d(nbt, "destination", destination));
         this.getOwnerUUID().ifPresent(uuid -> nbt.putUUID("ownerUUID", uuid));
         nbt.putBoolean("DisableValidation", disableValidation);
-    }
-
-    public float getRoll() {
-        return getEntityData().get(ROLL);
-    }
-
-    public void setRoll(float roll) {
-        this.getEntityData().set(ROLL, roll);
     }
 
     public int getColor() {
@@ -168,28 +145,53 @@ public class  ExperimentalPortal extends Entity {
         return Direction.fromNormal((int) this.getNormal().x(), (int) this.getNormal().y(), (int) this.getNormal().z());
     }
 
-    public Optional<Vec3> getAxisW() {
-        return getEntityData().get(AXIS_W);
+    public Quaternionf getRotation() {
+        return getEntityData().get(ROTATION);
     }
 
-    public Optional<Vec3> getAxisH() {
-        return getEntityData().get(AXIS_H);
+    public void setRotation(Quaternionf rotation) {
+        getEntityData().set(ROTATION, rotation);
+        axisW = axisH = normal = null;
     }
 
-    public Vec3 getOtherAxisH() {
-        return getEntityData().get(AXIS_OH);
+    public Optional<Quaternionf> getOtherRotation() {
+        return getEntityData().get(OTHER_ROTATION);
     }
 
-    public Vec3 getOtherAxisW() {
-        return getEntityData().get(AXIS_OW);
+    public void setOtherRotation(Optional<Quaternionf> rotation) {
+        getEntityData().set(OTHER_ROTATION, rotation);
     }
 
-    public void setOtherAxisH(Vec3 h) {
-        this.getEntityData().set(AXIS_OH, h);
+    private Vec3 applyAxis(Vec3 axis) {
+        return IPQuaternion.fromQuaternionf(getRotation()).rotate(axis, true);
     }
 
-    public void setOtherAxisW(Vec3 w) {
-        this.getEntityData().set(AXIS_OW, w);
+    public Vec3 getAxisW() {
+        return axisW == null ? (axisW = applyAxis(AXIS_W)) : axisW;
+    }
+
+    public Vec3 getAxisH() {
+        return axisH == null ? (axisH = applyAxis(AXIS_H)) : axisH;
+    }
+
+    public Vec3 getNormal() {
+        return normal == null ? (normal = applyAxis(NORMAL)) : normal;
+    }
+
+    private Optional<Vec3> applyOtherAxis(Vec3 axis) {
+        return getOtherRotation().map(r -> IPQuaternion.fromQuaternionf(r).rotate(axis, true));
+    }
+
+    public Optional<Vec3> getOtherAxisW() {
+        return otherAxisW.isEmpty() ? (otherAxisW = applyOtherAxis(AXIS_W)) : otherAxisW;
+    }
+
+    public Optional<Vec3> getOtherAxisH() {
+        return otherAxisH.isEmpty() ? (otherAxisH = applyOtherAxis(AXIS_H)) : otherAxisH;
+    }
+
+    public Optional<Vec3> getOtherNormal() {
+        return otherNormal.isEmpty() ? (otherNormal = applyOtherAxis(NORMAL)) : otherNormal;
     }
 
     public Optional<Vec3> getDestination() {
@@ -198,20 +200,6 @@ public class  ExperimentalPortal extends Entity {
 
     public void setDestination(Optional<Vec3> destination) {
         this.getEntityData().set(DESTINATION, destination);
-    }
-
-    public Vec3 getOtherFacing() {
-        return getEntityData().get(FACING);
-    }
-
-    public void setOtherFacing(Vec3 facing) {
-        this.getEntityData().set(FACING, facing);
-    }
-
-    public void setOrientation(Vec3 axisW, Vec3 axisH) {
-        this.getEntityData().set(AXIS_W, Optional.of(axisW));
-        this.getEntityData().set(AXIS_H, Optional.of(axisH));
-        syncRotations();
     }
 
     @Override
@@ -225,11 +213,6 @@ public class  ExperimentalPortal extends Entity {
 
     @Override
     public void tick() {
-        if (getAxisH().isEmpty()) {
-            PortalCubed.LOGGER.warn("Invalid portal {} found: axisH is absent. Removing.", this);
-            discard();
-            return;
-        }
         this.makeBoundingBox();
         this.calculateCutoutBox();
         if (!this.level.isClientSide)
@@ -244,7 +227,7 @@ public class  ExperimentalPortal extends Entity {
             });
         }
 
-        if (!this.level.isClientSide && getAxisW().isPresent()) {
+        if (!this.level.isClientSide) {
             ExperimentalPortal otherPortal =
                 this.getLinkedPortalUUID().isPresent()
                     ? (ExperimentalPortal)((Accessors) level).getEntity(this.getLinkedPortalUUID().get())
@@ -259,6 +242,16 @@ public class  ExperimentalPortal extends Entity {
             }
         }
         super.tick();
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (ROTATION.equals(key)) {
+            axisW = axisH = normal = null;
+        } else if (OTHER_ROTATION.equals(key)) {
+            otherAxisW = otherAxisH = otherNormal = Optional.empty();
+        }
     }
 
     public boolean validate() {
@@ -349,22 +342,9 @@ public class  ExperimentalPortal extends Entity {
         return true;
     }
 
-    public void syncRotations() {
-        this.setBoundingBox(NULL_BOX);
-        this.setCutoutBoundingBox(NULL_BOX);
-        this.makeBoundingBox();
-        this.calculateCutoutBox();
-    }
-
     @NotNull
     @Override
     protected AABB makeBoundingBox() {
-        if (getAxisW().isEmpty()) {
-            // it may be called when the portal is not yet initialized
-            setBoundingBox(NULL_BOX);
-            return NULL_BOX;
-        }
-
         AABB portalBox = new AABB(
                 getPointInPlane(width() / 2, height() / 2)
                         .add(getNormal().scale(.05)),
@@ -381,11 +361,6 @@ public class  ExperimentalPortal extends Entity {
     }
 
     public AABB calculateCutoutBox() {
-        if (getAxisW().isEmpty()) {
-            setCutoutBoundingBox(NULL_BOX);
-            return NULL_BOX;
-        }
-
         AABB portalBox = new AABB(
                 getCutoutPointInPlane(width() / 2, height() / 2)
                         .add(getNormal().scale(5)),
@@ -403,10 +378,6 @@ public class  ExperimentalPortal extends Entity {
 
 
     public AABB calculateBoundsCheckBox() {
-        if (getAxisW().isEmpty()) {
-            return NULL_BOX;
-        }
-
         return new AABB(
                 getBoundsCheckPointInPlane(width() / 2, height() / 2)
                         .add(getNormal().scale(2.5)),
@@ -441,7 +412,7 @@ public class  ExperimentalPortal extends Entity {
     }
 
     public Vec3 getPointInPlaneLocal(double xInPlane, double yInPlane) {
-        return getAxisW().orElseThrow(NOT_INIT).scale(xInPlane).add(getAxisH().orElseThrow(NOT_INIT).scale(yInPlane));
+        return getAxisW().scale(xInPlane).add(getAxisH().scale(yInPlane));
     }
 
     public Vec3 getOriginPos() {
@@ -460,22 +431,12 @@ public class  ExperimentalPortal extends Entity {
         return HEIGHT * PehkuiScaleTypes.HITBOX_HEIGHT.getScaleData(this).getScale();
     }
 
-    public IPQuaternion getRotationQuat() {
-        Direction portalFacing = getFacingDirection();
-        Direction otherDirec = Direction.fromNormal((int) getOtherFacing().x(), (int) getOtherFacing().y(), (int) getOtherFacing().z());
-        Direction portalVertFacing = Direction.fromNormal(BlockPos.containing(getAxisH().get().x, getAxisH().get().y, getAxisH().get().z));
-
-        IPQuaternion rotationW = IPQuaternion.getRotationBetween(getAxisW().orElseThrow().scale(-1), getOtherAxisW(), (getAxisH().orElseThrow()));
-        IPQuaternion rotationH = IPQuaternion.getRotationBetween((getAxisH().orElseThrow()), (getOtherAxisH()), getAxisW().orElseThrow().scale(-1));
-
-        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-            if (otherDirec.equals(portalFacing) || (portalVertFacing != otherDirec && portalVertFacing != otherDirec.getOpposite())) {
-                rotationW = IPQuaternion.getRotationBetween(getNormal().scale(-1), getOtherNormal(), (getAxisH().orElseThrow()));
-                rotationH = IPQuaternion.getRotationBetween((getAxisH().orElseThrow()), (getOtherAxisH()), getNormal().scale(-1));
-            }
-        }
-
-        return rotationH.hamiltonProduct(rotationW);
+    public IPQuaternion getTransformQuat() {
+        final IPQuaternion myRotation = IPQuaternion.fromQuaternionf(getRotation());
+        final IPQuaternion otherRotation = IPQuaternion.fromQuaternionf(getOtherRotation().orElseThrow(NOT_INIT));
+        return otherRotation
+            .hamiltonProduct(FLIP_AXIS_W)
+            .hamiltonProduct(myRotation.getConjugated());
     }
 
 }

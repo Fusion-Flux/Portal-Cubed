@@ -44,12 +44,9 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 
 
 public class PortalGun extends Item implements DirectClickItem, DyeableLeatherItem {
-    private static final Supplier<IllegalStateException> NOT_INIT =
-            () -> new IllegalStateException("Portal data accessed before initialized");
     private static final Map<Pair<Vec3i, Vec3i>, List<List<Direction>>> FAIL_TRIES;
     private static final Map<Direction.AxisDirection, Double2DoubleFunction> FAIL_AXIS_DIRS = new EnumMap<>(Map.of(
         Direction.AxisDirection.NEGATIVE, Math::floor,
@@ -108,7 +105,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
     public boolean isSideActive(ClientLevel world, ItemStack stack, boolean rightSide) {
         final CompoundTag portalsTag = stack.getOrCreateTag().getCompound(world.dimension().toString());
         final String key = rightSide ? "RightPortal" : "LeftPortal";
-        if (portalsTag == null || !portalsTag.hasUUID(key)) return false;
+        if (!portalsTag.hasUUID(key)) return false;
         final UUID uuid = portalsTag.getUUID(key);
         for (final Entity globalPortal : world.entitiesForRendering()) {
             if (globalPortal.getUUID().equals(uuid)) {
@@ -159,7 +156,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
 
             ExperimentalPortal portalHolder;
             ExperimentalPortal originalPortal;
-            CompoundTag portalsTag = tag.getCompound(world.dimension().toString());
+            CompoundTag portalsTag = tag.getCompound(world.dimension().location().toString());
 
             if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
                 originalPortal = (ExperimentalPortal) ((ServerLevel) world).getEntity(portalsTag.getUUID((leftClick ? "Left" : "Right") + "Portal"));
@@ -209,12 +206,14 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
                 portalHolder.setOriginPos(portalPos1);
                 portalHolder.setDestination(Optional.of(portalPos1));
 
-                var rotAngles = IPQuaternion.getPitchYawFromRotation(getPortalOrientationQuaternion(Vec3.atLowerCornerOf(right), Vec3.atLowerCornerOf(up)));
-                portalHolder.setYRot(rotAngles.getA().floatValue() + (90 * up.getX()));
-                portalHolder.setXRot(rotAngles.getB().floatValue());
-                portalHolder.setRoll((rotAngles.getB().floatValue() + (90)) * up.getX());
+                portalHolder.setRotation(
+                    IPQuaternion.matrixToQuaternion(
+                        Vec3.atLowerCornerOf(right),
+                        Vec3.atLowerCornerOf(up),
+                        Vec3.atLowerCornerOf(normal)
+                    ).toQuaternionf()
+                );
                 portalHolder.setColor(this.getSidedColor(stack));
-                portalHolder.setOrientation(Vec3.atLowerCornerOf(right), Vec3.atLowerCornerOf(up).scale(-1));
 
                 //noinspection DataFlowIssue
                 final Direction.Axis hAxis = Direction.fromNormal(new BlockPos(right)).getAxis();
@@ -299,7 +298,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
 
             portalsTag.putUUID((leftClick ? "Left" : "Right") + "Portal", portalHolder.getUUID());
 
-            tag.put(world.dimension().toString(), portalsTag);
+            tag.put(world.dimension().location().toString(), portalsTag);
         } else {
             cancelClientMovement(user);
         }
@@ -336,14 +335,10 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
 
     public static void linkPortals(ExperimentalPortal portal1, ExperimentalPortal portal2, float volume) {
         portal1.setDestination(Optional.of(portal2.getOriginPos()));
-        portal1.setOtherFacing(new Vec3(portal2.getFacingDirection().step().x(), portal2.getFacingDirection().step().y(), portal2.getFacingDirection().step().z()));
-        portal1.setOtherAxisH(portal2.getAxisH().orElseThrow(NOT_INIT));
-        portal1.setOtherAxisW(portal2.getAxisW().orElseThrow(NOT_INIT));
-        portal2.setDestination(Optional.of(portal1.getOriginPos()));
-        portal2.setOtherFacing(new Vec3(portal1.getFacingDirection().step().x(), portal1.getFacingDirection().step().y(), portal1.getFacingDirection().step().z()));
-        portal2.setOtherAxisH(portal1.getAxisH().orElseThrow(NOT_INIT));
-        portal2.setOtherAxisW(portal1.getAxisW().orElseThrow(NOT_INIT));
+        portal1.setOtherRotation(Optional.of(portal2.getRotation()));
         portal1.setLinkedPortalUUID(Optional.of(portal2.getUUID()));
+        portal2.setDestination(Optional.of(portal1.getOriginPos()));
+        portal2.setOtherRotation(Optional.of(portal1.getRotation()));
         portal2.setLinkedPortalUUID(Optional.of(portal1.getUUID()));
 
         portal1.getLevel().playSound(null, portal1.position().x(), portal1.position().y(), portal1.position().z(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundSource.NEUTRAL, volume, 1F);
@@ -387,14 +382,6 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
                 return BlockHitResult.miss(end, Direction.getNearest(offset.x, offset.y, offset.z), BlockPos.containing(end));
             }
         );
-    }
-
-    public static IPQuaternion getPortalOrientationQuaternion(
-            Vec3 axisW, Vec3 axisH
-    ) {
-        Vec3 normal = axisW.cross(axisH);
-
-        return IPQuaternion.matrixToQuaternion(axisW, axisH, normal);
     }
 
 }

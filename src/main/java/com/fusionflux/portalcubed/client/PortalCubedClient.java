@@ -18,6 +18,7 @@ import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderer;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
+import com.fusionflux.portalcubed.commands.DirectionArgumentType;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
@@ -31,6 +32,7 @@ import com.fusionflux.portalcubed.mixin.client.MusicManagerAccessor;
 import com.fusionflux.portalcubed.optionslist.OptionsListScreen;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -53,11 +55,13 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -70,6 +74,7 @@ import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
+import org.quiltmc.qsl.command.api.client.ClientCommandRegistrationCallback;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientLoginConnectionEvents;
@@ -81,13 +86,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.fusionflux.portalcubed.PortalCubed.LOGGER;
 import static com.fusionflux.portalcubed.PortalCubed.id;
+import static org.quiltmc.qsl.command.api.client.ClientCommandManager.argument;
+import static org.quiltmc.qsl.command.api.client.ClientCommandManager.literal;
 
 @ClientOnly
 public class PortalCubedClient implements ClientModInitializer {
@@ -100,6 +104,7 @@ public class PortalCubedClient implements ClientModInitializer {
         Items.AIR
     };
     public static final int ZOOM_TIME = 2;
+    public static final long CAMERA_INTERP_TIME = 250;
 
     private static final File GLOBAL_ADVANCEMENTS_FILE = QuiltLoader.getGameDir().resolve("portal_cubed_global_advancements.dat").toFile();
     private static final Set<ResourceLocation> GLOBAL_ADVANCEMENTS = new HashSet<>();
@@ -120,6 +125,9 @@ public class PortalCubedClient implements ClientModInitializer {
 
     private static PortalRenderer renderer;
     private static PortalRenderers rendererType;
+
+    public static IPQuaternion cameraInterpStart;
+    public static long cameraInterpStartTime;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -455,6 +463,27 @@ public class PortalCubedClient implements ClientModInitializer {
         } catch (Exception e) {
             LOGGER.warn("Failed to load global advancements", e);
         }
+
+        if (QuiltLoader.isDevelopmentEnvironment()) {
+            ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> {
+                dispatcher.register(literal("face")
+                    .then(argument("direction", DirectionArgumentType.direction())
+                        .executes(ctx -> {
+                            final Direction direction = DirectionArgumentType.getDirection(ctx, "direction");
+                            final Entity entity = ctx.getSource().getEntity();
+                            if (direction.getAxis() == Direction.Axis.Y) {
+                                entity.setXRot(direction == Direction.UP ? -90f : 90f);
+                                entity.setYRot(0f);
+                            } else {
+                                entity.setXRot(0f);
+                                entity.setYRot(direction.toYRot());
+                            }
+                            return 1;
+                        })
+                    )
+                );
+            });
+        }
     }
 
     private void registerEmissiveModels(ModContainer mod) {
@@ -636,5 +665,18 @@ public class PortalCubedClient implements ClientModInitializer {
             renderer = rendererType.creator.get();
         }
         return renderer;
+    }
+
+    public static Optional<IPQuaternion> interpCamera() {
+        final long time = System.currentTimeMillis();
+        final long endTime = PortalCubedClient.cameraInterpStartTime + PortalCubedClient.CAMERA_INTERP_TIME;
+        if (time >= endTime) {
+            return Optional.empty();
+        }
+        return Optional.of(IPQuaternion.interpolate(
+            PortalCubedClient.cameraInterpStart,
+            IPQuaternion.IDENTITY,
+            (time - PortalCubedClient.cameraInterpStartTime) / (double)PortalCubedClient.CAMERA_INTERP_TIME
+        ));
     }
 }

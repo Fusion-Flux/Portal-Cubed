@@ -11,11 +11,9 @@ import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,6 +41,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -76,6 +75,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
         return new AutoPortalBlockEntity(pos, state);
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -88,6 +88,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
         };
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
@@ -202,14 +203,12 @@ public class AutoPortalBlock extends BaseEntityBlock {
         );
         portal.setOriginPos(portalPos);
         portal.setDestination(Optional.of(portalPos));
-        final Vec3i right = new Vec3i(0, 1, 0).cross(facingOpposite.getNormal());
-        final Tuple<Double, Double> rotAngles = IPQuaternion.getPitchYawFromRotation(
-            PortalGun.getPortalOrientationQuaternion(Vec3.atLowerCornerOf(right), new Vec3(0, 1, 0))
-        );
-        portal.setYRot(rotAngles.getA().floatValue());
-        portal.setXRot(rotAngles.getB().floatValue());
         portal.setColor(color);
-        portal.setOrientation(Vec3.atLowerCornerOf(right), new Vec3(0, -1, 0));
+        portal.setRotation(IPQuaternion.matrixToQuaternion(
+            Vec3.atLowerCornerOf(Direction.UP.getNormal().cross(facingOpposite.getNormal())),
+            Vec3.atLowerCornerOf(Direction.UP.getNormal()),
+            Vec3.atLowerCornerOf(facingOpposite.getNormal())
+        ).toQuaternionf());
         portal.setLinkedPortalUUID(Optional.empty());
         if (spawnEntity) {
             world.addFreshEntity(portal);
@@ -219,6 +218,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
         return portal;
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
@@ -285,18 +285,21 @@ public class AutoPortalBlock extends BaseEntityBlock {
         );
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public BlockState mirror(BlockState state, Mirror mirror) {
@@ -308,6 +311,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
         builder.add(FACING, HALF, POWERED, TYPE);
     }
 
+    @NotNull
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
@@ -330,6 +334,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
             this.colorTransformer = colorTransformer;
         }
 
+        @NotNull
         @Override
         public String getSerializedName() {
             return id;

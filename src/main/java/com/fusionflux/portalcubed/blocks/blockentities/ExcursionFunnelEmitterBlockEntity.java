@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.HashSet;
 import java.util.List;
@@ -79,9 +80,9 @@ public class ExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunnelEm
                             for (ExperimentalPortal portal : list) {
                                 if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
                                     if (portal.getActive()) {
-                                        Direction otherPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherAxisH().x, portal.getOtherAxisH().y, portal.getOtherAxisH().z));
-                                        int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().get().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().get().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().get().z)));
-                                        Direction mainPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().get().x, portal.getAxisH().get().y, portal.getAxisH().get().z));
+                                        Direction otherPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherAxisH().get().x, portal.getOtherAxisH().get().y, portal.getOtherAxisH().get().z));
+                                        int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().z)));
+                                        Direction mainPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().x, portal.getAxisH().y, portal.getAxisH().z));
                                         assert mainPortalVertFacing != null;
                                         if (mainPortalVertFacing.equals(Direction.SOUTH)) {
                                             offset = (Math.abs(offset) - 1) * -1;
@@ -100,7 +101,8 @@ public class ExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunnelEm
                                             translatedPos = translatedPos.relative(Direction.WEST, 1);
                                         }
 
-                                        storedDirection = Direction.fromNormal((int)portal.getOtherFacing().x, (int)portal.getOtherFacing().y, (int)portal.getOtherFacing().z);
+                                        final Vec3 otherNormal = portal.getOtherNormal().get();
+                                        storedDirection = Direction.fromNormal((int)otherNormal.x, (int)otherNormal.y, (int)otherNormal.z);
                                         teleported = true;
                                         blockEntity.funnels = modFunnels;
                                         blockEntity.portalFunnels = portalFunnels;

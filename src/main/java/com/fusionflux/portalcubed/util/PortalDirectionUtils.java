@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class PortalDirectionUtils {
     public static Vec3 rotateVector(ExperimentalPortal portal, Vec3 vector) {
-        return portal.getRotationQuat().rotate(vector);
+        return portal.getTransformQuat().rotate(vector, false);
     }
 
     public static final AdvancedEntityRaycast.TransformInfo PORTAL_RAYCAST_TRANSFORM = new AdvancedEntityRaycast.TransformInfo(

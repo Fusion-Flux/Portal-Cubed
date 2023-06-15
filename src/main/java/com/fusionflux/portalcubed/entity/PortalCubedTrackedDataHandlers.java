@@ -10,18 +10,9 @@ import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandle
 import java.util.Optional;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
+import static net.minecraft.network.syncher.EntityDataSerializers.QUATERNION;
 
 public class PortalCubedTrackedDataHandlers {
-
-    public static final EntityDataSerializer<Quaternionf> QUATERNION = EntityDataSerializer.simple(
-        (buf, value) -> {
-            buf.writeFloat(value.x());
-            buf.writeFloat(value.y());
-            buf.writeFloat(value.z());
-            buf.writeFloat(value.w());
-        },
-        buf -> new Quaternionf(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat())
-    );
 
     public static final EntityDataSerializer<Vec3> VEC3D = EntityDataSerializer.simple(
         (buf, value) -> {
@@ -33,11 +24,12 @@ public class PortalCubedTrackedDataHandlers {
     );
 
     public static final EntityDataSerializer<Optional<Vec3>> OPTIONAL_VEC3D = EntityDataSerializer.optional(VEC3D::write, VEC3D::read);
+    public static final EntityDataSerializer<Optional<Quaternionf>> OPTIONAL_QUAT = EntityDataSerializer.optional(QUATERNION::write, QUATERNION::read);
 
     public static final EntityDataSerializer<ResourceLocation> IDENTIFIER = EntityDataSerializer.simple(FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::readResourceLocation);
 
     public static void register() {
-        QuiltTrackedDataHandlerRegistry.register(id("quaternion"), QUATERNION);
+        QuiltTrackedDataHandlerRegistry.register(id("optional_quat"), OPTIONAL_QUAT);
         QuiltTrackedDataHandlerRegistry.register(id("vec3d"), VEC3D);
         QuiltTrackedDataHandlerRegistry.register(id("optional_vec3d"), OPTIONAL_VEC3D);
         QuiltTrackedDataHandlerRegistry.register(id("identifier"), IDENTIFIER);

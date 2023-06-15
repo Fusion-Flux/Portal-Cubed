@@ -1,18 +1,21 @@
 package com.fusionflux.portalcubed.util;
 
 
+import com.fusionflux.portalcubed.PortalCubed;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Math;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 //This is from https://github.com/qouteall/ImmersivePortalsMod/blob/1.18/q_misc_util/src/main/java/qouteall/q_misc_util/my_util/DQuaternion.java,
 public class IPQuaternion {
+    public static final IPQuaternion IDENTITY = new IPQuaternion(0, 0, 0, 1);
+
     public final double x;
     public final double y;
     public final double z;
     public final double w;
-
-
 
     public IPQuaternion(double x, double y, double z, double w) {
         this.x = x;
@@ -99,10 +102,55 @@ public class IPQuaternion {
         );
     }
 
-    public Vec3 rotate(Vec3 vec) {
-        IPQuaternion result = this.hamiltonProduct(new IPQuaternion(vec.x, vec.y, vec.z, 0)).hamiltonProduct(getConjugated());
+    public Vec3 rotate(Vec3 vec, boolean correct) {
+        IPQuaternion result = this.hamiltonProduct(new IPQuaternion(vec.x, vec.y, vec.z, 0))
+            .hamiltonProduct(getConjugated());
+
+        if (correct) {
+            result = result.fixFloatingPointErrorAccumulation();
+        }
 
         return new Vec3(result.x, result.y, result.z);
+    }
+
+    public IPQuaternion fixFloatingPointErrorAccumulation() {
+        IPQuaternion quaternion = new IPQuaternion(
+            fixCoordinateFloatingPointError(getX()),
+            fixCoordinateFloatingPointError(getY()),
+            fixCoordinateFloatingPointError(getZ()),
+            fixCoordinateFloatingPointError(getW())
+        );
+
+        return quaternion.getNormalized();
+    }
+
+    public IPQuaternion getNormalized() {
+        double lenSq = dotProduct(this);
+        if (lenSq != 0) {
+            // no fastInverseSqrt. precision is the most important
+            double len = Math.sqrt(lenSq);
+            return this.multiply(1.0 / len);
+        } else {
+            PortalCubed.LOGGER.error("Normalizing zero-length quaternion", new Throwable());
+            return IDENTITY;
+        }
+    }
+
+    private static double fixCoordinateFloatingPointError(double num) {
+        final double threshold = 0.0000001;
+        if (Math.abs(num) < threshold) {
+            return 0;
+        }
+
+        if (Math.abs(num - 1) < threshold) {
+            return 1;
+        }
+
+        if (Math.abs(num - (-1)) < threshold) {
+            return -1;
+        }
+
+        return num;
     }
 
     public IPQuaternion getConjugated() {
@@ -144,6 +192,14 @@ public class IPQuaternion {
             Math.toDegrees(Math.atan2(sinPitch, cosPitch)),
             Math.toDegrees(Math.atan2(sinYaw, cosYaw))
         );
+    }
+
+    public Vector3f getEulerAngles() {
+        final Vector3f eulerAngles = new Vector3f();
+        eulerAngles.x = (float)Math.toDegrees(Math.atan2(x * w - y * z, 0.5f - x * x - y * y));
+        eulerAngles.y = (float)Math.toDegrees(Math.safeAsin(2.0f * (x * z + y * w)));
+        eulerAngles.z = (float)Math.toDegrees(Math.atan2(z * w - x * y, 0.5f - y * y - z * z));
+        return eulerAngles;
     }
 
 
@@ -214,5 +270,85 @@ public class IPQuaternion {
 
     public Quaternionf toQuaternionf() {
         return new Quaternionf(x, y, z, w);
+    }
+
+    public static IPQuaternion fromEuler(float angleX, float angleY, float angleZ) {
+        angleX = Math.toRadians(angleX);
+        angleY = Math.toRadians(angleY);
+        angleZ = Math.toRadians(angleZ);
+        float sx = Math.sin(angleX * 0.5f);
+        float cx = Math.cosFromSin(sx, angleX * 0.5f);
+        float sy = Math.sin(angleY * 0.5f);
+        float cy = Math.cosFromSin(sy, angleY * 0.5f);
+        float sz = Math.sin(angleZ * 0.5f);
+        float cz = Math.cosFromSin(sz, angleZ * 0.5f);
+        float yx = cy * sx;
+        float yy = sy * cx;
+        float yz = sy * sx;
+        float yw = cy * cx;
+        return new IPQuaternion(
+            yx * cz + yy * sz,
+            yy * cz - yx * sz,
+            yw * sz - yz * cz,
+            yw * cz + yz * sz
+        );
+    }
+
+    public static IPQuaternion fromQuaternionf(Quaternionf joml) {
+        return new IPQuaternion(joml.x, joml.y, joml.z, joml.w);
+    }
+
+    public double dotProduct(IPQuaternion q) {
+        return getX() * q.getX() +
+            getY() * q.getY() +
+            getZ() * q.getZ() +
+            getW() * q.getW();
+    }
+
+    public static IPQuaternion getCameraRotation(double pitch, double yaw) {
+        IPQuaternion r1 = rotationByDegrees(new Vec3(1, 0, 0), pitch);
+        IPQuaternion r2 = rotationByDegrees(new Vec3(0, 1, 0), yaw + 180);
+        return r1.hamiltonProduct(r2);
+    }
+
+    public static IPQuaternion rotationByDegrees(
+        Vec3 rotatingAxis,
+        double degrees
+    ) {
+        return rotationByRadians(
+            rotatingAxis, Math.toRadians(degrees)
+        );
+    }
+
+    public static IPQuaternion interpolate(
+        IPQuaternion a,
+        IPQuaternion b,
+        double t
+    ) {
+
+        double dot = a.dotProduct(b);
+
+        if (dot < 0.0f) {
+            a = a.multiply(-1);
+            dot = -dot;
+        }
+
+        final double DOT_THRESHOLD = 0.9995;
+        if (dot > DOT_THRESHOLD) {
+            // If the inputs are too close for comfort, linearly interpolate
+            // and normalize the result.
+
+            return a.multiply(1 - t).add(b.multiply(t)).getNormalized();
+        }
+
+        double theta0 = Math.acos(dot);
+        double theta = theta0 * t;
+        double sinTheta = Math.sin(theta);
+        double sinTheta0 = Math.sin(theta0);
+
+        double s0 = Math.cos(theta) - dot * sinTheta / sinTheta0;
+        double s1 = sinTheta / sinTheta0;
+
+        return a.multiply(s0).add(b.multiply(s1));
     }
 }

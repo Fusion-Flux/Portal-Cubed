@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.commands;
 
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.StringRepresentableArgument;
 import net.minecraft.core.Direction;
 
@@ -14,7 +13,7 @@ public class DirectionArgumentType extends StringRepresentableArgument<Direction
         return new DirectionArgumentType();
     }
 
-    public static Direction getDirection(CommandContext<CommandSourceStack> context, String name) {
+    public static Direction getDirection(CommandContext<?> context, String name) {
         return context.getArgument(name, Direction.class);
     }
 }

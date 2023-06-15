@@ -177,8 +177,10 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
 
             for (ExperimentalPortal portalCheck : list) {
                 if (this.canChangeDimensions() && portalCheck.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
+                    assert portalCheck.getOtherNormal().isPresent();
                     Direction portalFacing = portalCheck.getFacingDirection();
-                    Direction otherDirec = Direction.fromNormal((int) portalCheck.getOtherFacing().x(), (int) portalCheck.getOtherFacing().y(), (int) portalCheck.getOtherFacing().z());
+                    final Vec3 otherNormal = portalCheck.getOtherNormal().get();
+                    Direction otherDirec = Direction.fromNormal((int) otherNormal.x(), (int) otherNormal.y(), (int) otherNormal.z());
                     if (otherDirec != null) {
                         entityVelocity = thisEntity.getDeltaMovement();
 
@@ -256,6 +258,12 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             byteBuf.writeVarInt(portal.getId());
             byteBuf.writeFloat(thisEntity.getYRot());
             byteBuf.writeFloat(thisEntity.getXRot());
+            byteBuf.writeOptional(PortalCubedClient.interpCamera(), (b, q) -> {
+                b.writeDouble(q.x);
+                b.writeDouble(q.y);
+                b.writeDouble(q.z);
+                b.writeDouble(q.w);
+            });
             byteBuf.writeDouble(entityVelocity.x);
             byteBuf.writeDouble(entityVelocity.y);
             byteBuf.writeDouble(entityVelocity.z);

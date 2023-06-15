@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.entity.Fizzleable;
 import com.fusionflux.portalcubed.fog.FogSettings;
 import com.fusionflux.portalcubed.listeners.ServerAnimatable;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
+import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -38,6 +39,7 @@ public class PortalCubedClientPackets {
     public static final ResourceLocation REFRESH_POS = id("refresh_pos");
     public static final ResourceLocation SERVER_ANIMATE = id("server_animate");
     public static final ResourceLocation SET_CUSTOM_FOG = id("set_custom_fog");
+    public static final ResourceLocation SET_CAMERA_INTERPOLATE = id("set_roll");
 
     @ClientOnly
     public static void registerPackets() {
@@ -50,6 +52,7 @@ public class PortalCubedClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(REFRESH_POS, PortalCubedClientPackets::onRefreshPos);
         ClientPlayNetworking.registerGlobalReceiver(SERVER_ANIMATE, PortalCubedClientPackets::onServerAnimate);
         ClientPlayNetworking.registerGlobalReceiver(SET_CUSTOM_FOG, PortalCubedClientPackets::onSetCustomFog);
+        ClientPlayNetworking.registerGlobalReceiver(SET_CAMERA_INTERPOLATE, PortalCubedClientPackets::onSetCameraInterpolate);
     }
 
     @ClientOnly
@@ -161,5 +164,11 @@ public class PortalCubedClientPackets {
     @ClientOnly
     public static void onSetCustomFog(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
         PortalCubedClient.customFog = FogSettings.decodeOptional(buf);
+    }
+
+    @ClientOnly
+    public static void onSetCameraInterpolate(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
+        PortalCubedClient.cameraInterpStart = new IPQuaternion(buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble());
+        PortalCubedClient.cameraInterpStartTime = System.currentTimeMillis();
     }
 }

@@ -127,11 +127,11 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
         hasTeleportationHappened = tag.getBoolean("hasTpHappened");
 
-        this.setVelocityUpdateAfterTeleport(IPHelperDuplicate.getVec3d(tag, "velocity"));
+        this.setVelocityUpdateAfterTeleport(NbtHelper.getVec3d(tag, "velocity"));
 
         setWasInfiniteFalling(tag.getBoolean("wasInfiniteFalling"));
 
-        this.setServerVelForGel(IPHelperDuplicate.getVec3d(tag, "gelVelocity"));
+        this.setServerVelForGel(NbtHelper.getVec3d(tag, "gelVelocity"));
 
         setCanFireGel(tag.getBoolean("canFireGel"));
     }
@@ -146,11 +146,11 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         tag.putInt("size", portals.size());
         tag.putBoolean("hasTpHappened", hasTeleportationHappened);
 
-        IPHelperDuplicate.putVec3d(tag, "velocity", this.getVelocityUpdateAfterTeleport());
+        NbtHelper.putVec3d(tag, "velocity", this.getVelocityUpdateAfterTeleport());
 
         tag.putBoolean("wasInfiniteFalling", wasInfiniteFalling);
 
-        IPHelperDuplicate.putVec3d(tag, "gelVelocity", this.getServerVelForGel());
+        NbtHelper.putVec3d(tag, "gelVelocity", this.getServerVelForGel());
 
         tag.putBoolean("canFireGel", canFireGel);
     }

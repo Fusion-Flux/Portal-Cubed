@@ -8,7 +8,6 @@ import com.fusionflux.portalcubed.client.render.portal.PortalRenderer;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -44,9 +43,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
     public void render(@NotNull ExperimentalPortal entity, float yaw, float tickDelta, @NotNull PoseStack matrices, @NotNull MultiBufferSource vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.pushPose();
-        matrices.mulPose(Axis.XP.rotationDegrees(entity.getYRot()));
-        matrices.mulPose(Axis.YP.rotationDegrees(entity.getXRot()));
-        matrices.mulPose(Axis.ZN.rotationDegrees(entity.getRoll()));
+        matrices.mulPose(entity.getRotation());
 
         int color = entity.getColor() * -1;
         if (color == -16383998) {
@@ -110,8 +107,9 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         final boolean renderHitboxes = dispatcher.shouldRenderHitBoxes();
         dispatcher.setRenderHitBoxes(false);
         for (final Entity otherEntity : otherEntities) {
+            if (otherEntity instanceof ExperimentalPortal) continue;
             poseStack.pushPose();
-            poseStack.mulPose(otherPortal.getRotationQuat().toQuaternionf());
+            poseStack.mulPose(otherPortal.getTransformQuat().toQuaternionf());
             dispatcher.render(
                 otherEntity,
                 Mth.lerp(tickDelta, otherEntity.xOld, otherEntity.getX()) - oplx,
@@ -127,20 +125,20 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
 
     private void renderAxes(ExperimentalPortal entity, PoseStack matrices, VertexConsumer vertices) {
         final PoseStack.Pose entry = matrices.last();
-        renderAxis(entry, vertices, entity.getNormal());
-        entity.getAxisW().ifPresent(axisW -> renderAxis(entry, vertices, axisW));
-        entity.getAxisH().ifPresent(axisH -> renderAxis(entry, vertices, axisH));
+        renderAxis(entry, vertices, entity.getAxisW(), 1f, 0f, 0f);
+        renderAxis(entry, vertices, entity.getAxisH(), 1f, 0f, 0f);
+        renderAxis(entry, vertices, entity.getNormal(), 0f, 1f, 0f);
     }
 
-    private void renderAxis(PoseStack.Pose entry, VertexConsumer vertices, Vec3 axis) {
+    private void renderAxis(PoseStack.Pose entry, VertexConsumer vertices, Vec3 axis, float red, float green, float blue) {
         vertices
             .vertex(entry.pose(), 0, 0, 0)
-            .color(1f, 0f, 0f, 1f)
+            .color(red, green, blue, 1f)
             .normal(entry.normal(), (float)axis.x, (float)axis.y, (float)axis.z)
             .endVertex();
         vertices
             .vertex(entry.pose(), (float)axis.x, (float)axis.y, (float)axis.z)
-            .color(1f, 0f, 0f, 1f)
+            .color(red, green, blue, 1f)
             .normal(entry.normal(), (float)axis.x, (float)axis.y, (float)axis.z)
             .endVertex();
     }
