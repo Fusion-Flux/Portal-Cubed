@@ -2,9 +2,6 @@
   "replace": true,
   "values": [
     "portalcubed:portal_1_rusted_plating",
-    "portalcubed:portal_1_rusted_plating_facade",
-    "portalcubed:portal_1_rusted_tread_plating",
-    "portalcubed:portal_1_rusted_tread_plating_side_facade",
-    "portalcubed:portal_1_rusted_tread_plating_top_facade"
+    "portalcubed:portal_1_rusted_tread_plating"
   ]
 }

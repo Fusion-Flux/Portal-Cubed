@@ -3,12 +3,9 @@
   "values": [
     "portalcubed:dirty_portal_1_white_panel",
     "portalcubed:dirty_portal_1_white_half_panel",
-    "portalcubed:dirty_portal_1_white_panel_facade",
-    "portalcubed:dirty_portal_1_white_half_panel_facade",
     "portalcubed:dirty_portal_1_white_2x1_panel_bottom",
     "portalcubed:dirty_portal_1_white_2x1_panel_top",
     "portalcubed:dirty_portal_1_white_checkered_panel",
-    "portalcubed:dirty_borderless_panel",
-    "portalcubed:dirty_borderless_panel_facade"
+    "portalcubed:dirty_borderless_panel"
   ]
 }
