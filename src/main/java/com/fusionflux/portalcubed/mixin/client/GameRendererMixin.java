@@ -1,9 +1,11 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
+import com.fusionflux.portalcubed.accessor.GameRendererExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.Entity;
@@ -12,16 +14,20 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.Predicate;
 
 @Mixin(GameRenderer.class)
-public abstract class GameRendererMixin {
+public abstract class GameRendererMixin implements GameRendererExt {
     @Shadow
     @Final
     Minecraft minecraft;
+
+    @Mutable
+    @Shadow @Final private Camera mainCamera;
 
     @WrapOperation(
         method = "pick",
@@ -50,5 +56,10 @@ public abstract class GameRendererMixin {
             return 0;
         }
         return original.call(a, b);
+    }
+
+    @Override
+    public void setMainCamera(Camera camera) {
+        mainCamera = camera;
     }
 }

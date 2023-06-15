@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.mixin.client;
 
+import com.fusionflux.portalcubed.accessor.MinecraftExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.items.PaintGun;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -12,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.Blocks;
@@ -23,6 +25,7 @@ import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public abstract class MinecraftMixin {
+public abstract class MinecraftMixin implements MinecraftExt {
 
     @Shadow @Final public Options options;
     @Shadow public LocalPlayer player;
@@ -40,6 +43,9 @@ public abstract class MinecraftMixin {
     protected abstract boolean startAttack();
 
     @Shadow @Nullable public HitResult hitResult;
+
+    @Mutable
+    @Shadow @Final private RenderBuffers renderBuffers;
 
     @Redirect(
         method = "handleKeybinds",
@@ -117,5 +123,10 @@ public abstract class MinecraftMixin {
             ClientPlayNetworking.send(PortalCubedServerPackets.CROWBAR_ATTACK, buf);
         }
         return original.call(instance, pos);
+    }
+
+    @Override
+    public void setRenderBuffers(RenderBuffers buffers) {
+        renderBuffers = buffers;
     }
 }
