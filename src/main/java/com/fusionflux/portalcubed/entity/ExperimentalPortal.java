@@ -151,7 +151,6 @@ public class  ExperimentalPortal extends Entity {
 
     public void setRotation(Quaternionf rotation) {
         getEntityData().set(ROTATION, rotation);
-        axisW = axisH = normal = null;
     }
 
     public Optional<Quaternionf> getOtherRotation() {

@@ -32,10 +32,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -52,6 +50,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final EnumProperty<PortalType> TYPE = EnumProperty.create("type", PortalType.class);
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
     private static final VoxelShape PILLAR_SHAPE_NS = box(-2, 0, 0, 1, 16, 2);
     private static final VoxelShape PILLAR_SHAPE_EW = box(0, 0, -2, 2, 16, 1);
@@ -67,6 +66,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
                 .setValue(FACING, Direction.NORTH)
                 .setValue(HALF, DoubleBlockHalf.LOWER)
                 .setValue(POWERED, false)
+                .setValue(OPEN, false)
         );
     }
 
@@ -137,19 +137,19 @@ public class AutoPortalBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         world.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER), Block.UPDATE_ALL);
-        openOrClosePortal(world, pos, state.getValue(FACING), true);
+        openOrClosePortal(world, pos, state, true);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        final boolean poweredNow = world.hasNeighborSignal(pos) ||
-            world.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        final boolean poweredNow = level.hasNeighborSignal(pos) ||
+            level.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
         if (!defaultBlockState().is(block) && poweredNow != state.getValue(POWERED)) {
             if (poweredNow) {
-                openOrClosePortal(world, state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos : pos.below(), state.getValue(FACING), false);
+                openOrClosePortal(level, state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos : pos.below(), state, false);
             }
-            world.setBlockAndUpdate(pos, state.setValue(POWERED, poweredNow));
+            level.setBlockAndUpdate(pos, level.getBlockState(pos).setValue(POWERED, poweredNow));
         }
     }
 
@@ -169,32 +169,30 @@ public class AutoPortalBlock extends BaseEntityBlock {
         return state.getValue(HALF) == DoubleBlockHalf.LOWER || world.getBlockState(otherPos).is(this);
     }
 
-    private static void openOrClosePortal(Level world, BlockPos lower, Direction facing, boolean forceClose) {
-        if (world.isClientSide) return;
-        openOrClosePortal(world, lower, facing, forceClose, true, true);
-    }
-
-    public static ExperimentalPortal openOrClosePortal(
-        Level world, BlockPos lower, Direction facing, boolean forceClose, boolean playCloseSound, boolean spawnEntity
-    ) {
-        final int color = getColor(world, lower);
+    public static void openOrClosePortal(Level level, BlockPos lower, BlockState state, boolean forceClose) {
+        if (level.isClientSide) return;
+        final boolean open = state.getValue(OPEN);
+        final int color = getColor(level, lower);
         final BlockPos upper = lower.above();
-        final List<ExperimentalPortal> portals = world.getEntities(
+        final List<ExperimentalPortal> portals = level.getEntities(
             PortalCubedEntities.EXPERIMENTAL_PORTAL,
-            AABB.of(BoundingBox.fromCorners(lower, upper)),
-            p -> p.getColor() == color
+            state.getCollisionShape(level, lower).bounds().move(lower).expandTowards(0, 1, 0),
+            p -> true
         );
         if (!portals.isEmpty()) {
             portals.forEach(ExperimentalPortal::kill);
-            if (playCloseSound) {
-                world.playSound(null, lower.getX(), lower.getY(), lower.getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
-            }
-            return null;
+            level.playSound(null, lower.getX(), lower.getY(), lower.getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
         }
-        if (forceClose) return null;
+        if (forceClose) return;
+        level.setBlockAndUpdate(lower, level.getBlockState(lower).setValue(OPEN, !open));
+        level.setBlockAndUpdate(upper, level.getBlockState(upper).setValue(OPEN, !open));
+        if (open) {
+            return;
+        }
+        final Direction facing = state.getValue(FACING);
         final Direction facingOpposite = facing.getOpposite();
         final BlockPos placeOn = upper.relative(facingOpposite);
-        final ExperimentalPortal portal = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
+        final ExperimentalPortal portal = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(level);
         assert portal != null;
         final Vec3 portalPos = new Vec3(
             placeOn.getX() + 0.5 - 0.510 * facingOpposite.getStepX(),
@@ -210,69 +208,65 @@ public class AutoPortalBlock extends BaseEntityBlock {
             Vec3.atLowerCornerOf(facingOpposite.getNormal())
         ).toQuaternionf());
         portal.setLinkedPortalUUID(Optional.empty());
-        if (spawnEntity) {
-            world.addFreshEntity(portal);
-            PortalGun.getPotentialOpposite(world, portalPos, portal, color, true)
-                .ifPresent(other -> PortalGun.linkPortals(portal, other, 0.9f));
-        }
-        return portal;
+        level.addFreshEntity(portal);
+        PortalGun.getPotentialOpposite(level, portalPos, portal, color, true)
+            .ifPresent(other -> PortalGun.linkPortals(portal, other, 0.9f));
     }
 
     @NotNull
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         final boolean upper = state.getValue(HALF) == DoubleBlockHalf.UPPER;
         final BlockPos otherPos = upper ? pos.below() : pos.above();
         final BlockPos lowerPos = upper ? otherPos : pos;
-        final BlockState otherState = world.getBlockState(otherPos);
         final ItemStack stack = player.getItemInHand(hand);
         if (stack.is(PortalCubedItems.HAMMER)) {
-            openOrClosePortal(world, lowerPos, state.getValue(FACING), true);
+            openOrClosePortal(level, lowerPos, state, true);
             if (player.isShiftKeyDown()) {
                 for (BlockPos usePos = pos; usePos != null; usePos = usePos == pos ? otherPos : null) {
-                    world.getBlockEntity(usePos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
+                    level.getBlockEntity(usePos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
                         .ifPresent(entity -> entity.setColor(0x1d86db));
                 }
                 player.displayClientMessage(
                     Component.translatable("portalcubed.auto_portal.set_portal_color.default")
-                        .withStyle(s -> s.withColor(getColor(world, pos))),
+                        .withStyle(s -> s.withColor(getColor(level, pos))),
                     true
                 );
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
-            final BlockState newState = state.cycle(TYPE);
-            world.setBlockAndUpdate(pos, newState);
-            world.setBlockAndUpdate(otherPos, otherState.cycle(TYPE));
+            final PortalType newType = state.cycle(TYPE).getValue(TYPE);
+            level.setBlockAndUpdate(pos, level.getBlockState(pos).cycle(TYPE));
+            level.setBlockAndUpdate(otherPos, level.getBlockState(otherPos).cycle(TYPE));
             player.displayClientMessage(
                 Component.translatable(
                     "portalcubed.auto_portal.set_portal_type",
-                    Component.translatable("portalcubed.portal_type." + newState.getValue(TYPE).getSerializedName())
-                ).withStyle(s -> s.withColor(getColor(world, pos))),
+                    Component.translatable("portalcubed.portal_type." + newType.getSerializedName())
+                ).withStyle(s -> s.withColor(getColor(level, pos))),
                 true
             );
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         if (stack.getItem() instanceof DyeItem dye) {
-            openOrClosePortal(world, lowerPos, state.getValue(FACING), true);
+            openOrClosePortal(level, lowerPos, state, true);
             final int dyeColor = PortalCubedItems.PORTAL_GUN.getColor(DyeableLeatherItem.dyeArmor(
                 new ItemStack(PortalCubedItems.PORTAL_GUN), List.of(dye)
             ));
             for (BlockPos usePos = pos; usePos != null; usePos = usePos == pos ? otherPos : null) {
-                world.getBlockEntity(usePos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
+                level.getBlockEntity(usePos, PortalCubedBlocks.AUTO_PORTAL_BLOCK_ENTITY)
                     .ifPresent(entity -> entity.setColor(dyeColor));
             }
             player.displayClientMessage(
                 Component.translatable(
                     "portalcubed.auto_portal.set_portal_color",
                     Component.translatable("color.minecraft." + dye.getDyeColor().getName())
-                ).withStyle(s -> s.withColor(getColor(world, pos))),
+                ).withStyle(s -> s.withColor(getColor(level, pos))),
                 true
             );
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
             }
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }
@@ -308,7 +302,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, HALF, POWERED, TYPE);
+        builder.add(FACING, HALF, POWERED, TYPE, OPEN);
     }
 
     @NotNull
