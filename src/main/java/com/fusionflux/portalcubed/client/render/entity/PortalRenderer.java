@@ -3,9 +3,9 @@ package com.fusionflux.portalcubed.client.render.entity;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
-import com.fusionflux.portalcubed.client.render.entity.model.ExperimentalPortalModel;
-import com.fusionflux.portalcubed.client.render.portal.PortalRenderer;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.client.render.entity.model.PortalModel;
+import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
+import com.fusionflux.portalcubed.entity.Portal;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -26,21 +26,21 @@ import java.util.UUID;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPortal> {
+public class PortalRenderer extends EntityRenderer<Portal> {
     private static final ResourceLocation SQUARE_TEXTURE = id("textures/entity/portal_square_outline_closed.png");
     private static final ResourceLocation ROUND_TEXTURE  = id("textures/entity/portal_oval_outline_closed.png");
     private static final ResourceLocation SQUARE_TEXTURE_TRACER = id("textures/entity/portal_tracer_square.png");
     private static final ResourceLocation ROUND_TEXTURE_TRACER = id("textures/entity/portal_tracer_oval.png");
-    protected final ExperimentalPortalModel model = new ExperimentalPortalModel(Minecraft.getInstance().getEntityModels().bakeLayer(ExperimentalPortalModel.MAIN_LAYER));
+    protected final PortalModel model = new PortalModel(Minecraft.getInstance().getEntityModels().bakeLayer(PortalModel.MAIN_LAYER));
 
     public static boolean renderingTracers = false;
 
-    public ExperimentalPortalRenderer(EntityRendererProvider.Context dispatcher) {
+    public PortalRenderer(EntityRendererProvider.Context dispatcher) {
         super(dispatcher);
     }
 
     @Override
-    public void render(@NotNull ExperimentalPortal entity, float yaw, float tickDelta, @NotNull PoseStack matrices, @NotNull MultiBufferSource vertexConsumers, int light) {
+    public void render(@NotNull Portal entity, float yaw, float tickDelta, @NotNull PoseStack matrices, @NotNull MultiBufferSource vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.pushPose();
         matrices.mulPose(entity.getRotation());
@@ -77,14 +77,14 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
     private void renderPortal(
         PoseStack poseStack,
         MultiBufferSource vertexConsumers,
-        ExperimentalPortal entity,
+        Portal entity,
         int light,
         int r,
         int g,
         int b,
         float tickDelta
     ) {
-        final PortalRenderer renderer = PortalCubedClient.getRenderer();
+        final PortalRendererImpl renderer = PortalCubedClient.getRenderer();
         final boolean renderPortal = !renderingTracers && renderer.enabled(entity);
         if (renderPortal) {
             renderer.preRender(entity, tickDelta, poseStack);
@@ -95,10 +95,10 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         }
     }
 
-    private void renderOtherEntities(ExperimentalPortal entity, PoseStack poseStack, float tickDelta, MultiBufferSource buffer, int packedLight) {
+    private void renderOtherEntities(Portal entity, PoseStack poseStack, float tickDelta, MultiBufferSource buffer, int packedLight) {
         if (renderingTracers || !entity.getActive()) return;
         final UUID otherUuid = entity.getLinkedPortalUUID().orElse(null);
-        if (otherUuid == null || !(((Accessors)entity.level).getEntity(otherUuid) instanceof ExperimentalPortal otherPortal)) return;
+        if (otherUuid == null || !(((Accessors)entity.level).getEntity(otherUuid) instanceof Portal otherPortal)) return;
         final double oplx = Mth.lerp(tickDelta, otherPortal.xOld, otherPortal.getX());
         final double oply = Mth.lerp(tickDelta, otherPortal.yOld, otherPortal.getY());
         final double oplz = Mth.lerp(tickDelta, otherPortal.zOld, otherPortal.getZ());
@@ -107,7 +107,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         final boolean renderHitboxes = dispatcher.shouldRenderHitBoxes();
         dispatcher.setRenderHitBoxes(false);
         for (final Entity otherEntity : otherEntities) {
-            if (otherEntity instanceof ExperimentalPortal) continue;
+            if (otherEntity instanceof Portal) continue;
             poseStack.pushPose();
             poseStack.mulPose(otherPortal.getTransformQuat().toQuaternionf());
             dispatcher.render(
@@ -123,7 +123,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
         dispatcher.setRenderHitBoxes(renderHitboxes);
     }
 
-    private void renderAxes(ExperimentalPortal entity, PoseStack matrices, VertexConsumer vertices) {
+    private void renderAxes(Portal entity, PoseStack matrices, VertexConsumer vertices) {
         final PoseStack.Pose entry = matrices.last();
         renderAxis(entry, vertices, entity.getAxisW(), 1f, 0f, 0f);
         renderAxis(entry, vertices, entity.getAxisH(), 1f, 0f, 0f);
@@ -145,7 +145,7 @@ public class ExperimentalPortalRenderer extends EntityRenderer<ExperimentalPorta
 
     @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@NotNull ExperimentalPortal entity) {
+    public ResourceLocation getTextureLocation(@NotNull Portal entity) {
         if (PortalCubedConfig.enableRoundPortals) {
             return !renderingTracers ? ROUND_TEXTURE : ROUND_TEXTURE_TRACER;
         } else {

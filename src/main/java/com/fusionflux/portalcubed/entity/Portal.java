@@ -36,7 +36,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class  ExperimentalPortal extends Entity {
+public class Portal extends Entity {
 
     public static final Supplier<IllegalStateException> NOT_INIT =
         () -> new IllegalStateException("Portal data accessed before initialized");
@@ -56,19 +56,19 @@ public class  ExperimentalPortal extends Entity {
 
     private AABB cutoutBoundingBox = NULL_BOX;
 
-    private static final EntityDataAccessor<Quaternionf> ROTATION = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.QUATERNION);
-    private static final EntityDataAccessor<Optional<Quaternionf>> OTHER_ROTATION = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_QUAT);
-    public static final EntityDataAccessor<Optional<UUID>> LINKED_PORTAL_UUID = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.OPTIONAL_UUID);
-    public static final EntityDataAccessor<Boolean> IS_ACTIVE = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Optional<Vec3>> DESTINATION = SynchedEntityData.defineId(ExperimentalPortal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
-    public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(ExperimentalPortal.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Quaternionf> ROTATION = SynchedEntityData.defineId(Portal.class, EntityDataSerializers.QUATERNION);
+    private static final EntityDataAccessor<Optional<Quaternionf>> OTHER_ROTATION = SynchedEntityData.defineId(Portal.class, PortalCubedTrackedDataHandlers.OPTIONAL_QUAT);
+    public static final EntityDataAccessor<Optional<UUID>> LINKED_PORTAL_UUID = SynchedEntityData.defineId(Portal.class, EntityDataSerializers.OPTIONAL_UUID);
+    public static final EntityDataAccessor<Boolean> IS_ACTIVE = SynchedEntityData.defineId(Portal.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(Portal.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Optional<Vec3>> DESTINATION = SynchedEntityData.defineId(Portal.class, PortalCubedTrackedDataHandlers.OPTIONAL_VEC3D);
+    public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(Portal.class, EntityDataSerializers.OPTIONAL_UUID);
 
     private boolean disableValidation = false;
     private Vec3 axisW, axisH, normal;
     private Optional<Vec3> otherAxisW = Optional.empty(), otherAxisH = Optional.empty(), otherNormal = Optional.empty();
 
-    public ExperimentalPortal(EntityType<?> entityType, Level world) {
+    public Portal(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }
 
@@ -227,9 +227,9 @@ public class  ExperimentalPortal extends Entity {
         }
 
         if (!this.level.isClientSide) {
-            ExperimentalPortal otherPortal =
+            Portal otherPortal =
                 this.getLinkedPortalUUID().isPresent()
-                    ? (ExperimentalPortal)((Accessors) level).getEntity(this.getLinkedPortalUUID().get())
+                    ? (Portal)((Accessors) level).getEntity(this.getLinkedPortalUUID().get())
                     : null;
 
             setActive(otherPortal != null);

@@ -14,7 +14,7 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.commands.PortalCubedCommands;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.PortalCubedTrackedDataHandlers;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
@@ -109,7 +109,7 @@ public class PortalCubed implements ModInitializer {
                 return;
             }
             server.execute(() -> {
-                if (!(player.level.getEntity(targetEntityId) instanceof ExperimentalPortal portal)) {
+                if (!(player.level.getEntity(targetEntityId) instanceof Portal portal)) {
                     LOGGER.warn("{} tried to teleport through nonexistent portal", player);
                     handler.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
                     CalledValues.setIsTeleporting(player, false);
@@ -307,7 +307,7 @@ public class PortalCubed implements ModInitializer {
     }
 
     public static TeleportResult commonTeleport(
-        ExperimentalPortal portal,
+        Portal portal,
         Vec3 entityVelocity,
         Vec3 teleportOffset,
         Entity entity,

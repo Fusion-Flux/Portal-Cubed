@@ -16,11 +16,11 @@ import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.block.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
-import com.fusionflux.portalcubed.client.render.portal.PortalRenderer;
+import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
 import com.fusionflux.portalcubed.commands.DirectionArgumentType;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.fog.FogSettings;
@@ -122,7 +122,7 @@ public class PortalCubedClient implements ClientModInitializer {
     public static int gelOverlayTimer = -1;
     public static ResourceLocation gelOverlayTexture = TextureManager.INTENTIONAL_MISSING_TEXTURE;
 
-    private static PortalRenderer renderer;
+    private static PortalRendererImpl renderer;
     private static PortalRenderers rendererType;
 
     public static IPQuaternion cameraInterpStart;
@@ -282,13 +282,13 @@ public class PortalCubedClient implements ClientModInitializer {
                 final var cameraPos = ctx.camera().getPosition();
                 ctx.matrixStack().pushPose();
                 ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-                ExperimentalPortalRenderer.renderingTracers = true;
+                PortalRenderer.renderingTracers = true;
                 final EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
                 final boolean renderHitboxes = dispatcher.shouldRenderHitBoxes();
                 dispatcher.setRenderHitBoxes(false);
                 for (UUID portalUuid : CalledValues.getPortals(player)) {
                     if (
-                        !(((Accessors) ctx.world()).getEntity(portalUuid) instanceof ExperimentalPortal portal) ||
+                        !(((Accessors) ctx.world()).getEntity(portalUuid) instanceof Portal portal) ||
                             !player.getUUID().equals(portal.getOwnerUUID().orElse(null))
                     ) continue;
                     dispatcher.render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYRot(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightTexture.FULL_BRIGHT);
@@ -299,7 +299,7 @@ public class PortalCubedClient implements ClientModInitializer {
                 RenderSystem.disableCull();
                 // depth func change handled in RenderSystemMixin
                 consumers.endLastBatch();
-                ExperimentalPortalRenderer.renderingTracers = false;
+                PortalRenderer.renderingTracers = false;
                 RenderSystem.depthFunc(GL11.GL_LEQUAL);
                 RenderSystem.enableCull();
             }
@@ -509,8 +509,8 @@ public class PortalCubedClient implements ClientModInitializer {
     }
 
     private void registerEntityRenderers() {
-        EntityModelLayerRegistry.registerModelLayer(ExperimentalPortalModel.MAIN_LAYER, ExperimentalPortalModel::getTexturedModelData);
-        EntityRendererRegistry.register(PortalCubedEntities.EXPERIMENTAL_PORTAL, ExperimentalPortalRenderer::new);
+        EntityModelLayerRegistry.registerModelLayer(PortalModel.MAIN_LAYER, PortalModel::getTexturedModelData);
+        EntityRendererRegistry.register(PortalCubedEntities.PORTAL, PortalRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER, StorageCubeModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.STORAGE_CUBE, StorageCubeRenderer::new);
@@ -658,7 +658,7 @@ public class PortalCubedClient implements ClientModInitializer {
     }
 
     @NotNull
-    public static PortalRenderer getRenderer() {
+    public static PortalRendererImpl getRenderer() {
         if (rendererType != PortalCubedConfig.renderer) {
             rendererType = PortalCubedConfig.renderer;
             renderer = rendererType.creator.get();

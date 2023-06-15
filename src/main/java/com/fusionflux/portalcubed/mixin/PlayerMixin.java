@@ -7,7 +7,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.MixinPCClientAccessor;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -124,10 +124,10 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
         } else {
             portalCheckBox = portalCheckBox.expandTowards(entityVelocity);
         }
-        List<ExperimentalPortal> list = level.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
+        List<Portal> list = level.getEntitiesOfClass(Portal.class, portalCheckBox);
         VoxelShape omittedDirections = Shapes.empty();
 
-        for (ExperimentalPortal portal : list) {
+        for (Portal portal : list) {
             if (portal.calculateCutoutBox() != NULL_BOX) {
                 if (portal.getActive())
                     omittedDirections = Shapes.or(omittedDirections, Shapes.create(portal.getCutoutBoundingBox()));
@@ -170,12 +170,12 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             portalCheckBox = portalCheckBox.expandTowards(entityVelocity).expandTowards(entityVelocity.scale(-1));
 
 
-            List<ExperimentalPortal> list = level.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
+            List<Portal> list = level.getEntitiesOfClass(Portal.class, portalCheckBox);
 
-            Set<ExperimentalPortal> possiblePortals = new HashSet<>();
+            Set<Portal> possiblePortals = new HashSet<>();
 
 
-            for (ExperimentalPortal portalCheck : list) {
+            for (Portal portalCheck : list) {
                 if (this.canChangeDimensions() && portalCheck.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
                     assert portalCheck.getOtherNormal().isPresent();
                     Direction portalFacing = portalCheck.getFacingDirection();
@@ -224,9 +224,9 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
                     }
                 }
             }
-            ExperimentalPortal portal = null;
+            Portal portal = null;
             double distance = 100;
-            for (ExperimentalPortal portals : possiblePortals) {
+            for (Portal portals : possiblePortals) {
                 double checkDistance = portals.position().distanceTo(thisEntity.getBoundingBox().getCenter());
                 if (checkDistance < distance) {
                     distance = checkDistance;
@@ -242,7 +242,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
 
     private void performTeleport(
             Player thisEntity,
-            ExperimentalPortal portal,
+            Portal portal,
             Vec3 entityVelocity
     ) {
         if (this.level.isClientSide && thisEntity.isLocalPlayer()) {
@@ -288,15 +288,15 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
         if (!this.level.isClientSide && stack.getItem().equals(PortalCubedItems.PORTAL_GUN)) {
             CompoundTag tag = stack.getOrCreateTag();
             CompoundTag portalsTag = tag.getCompound(level.dimension().toString());
-            ExperimentalPortal portalHolder;
+            Portal portalHolder;
             if (portalsTag.contains(("Left") + "Portal")) {
-                portalHolder = (ExperimentalPortal) ((ServerLevel) level).getEntity(portalsTag.getUUID(("Left") + "Portal"));
+                portalHolder = (Portal) ((ServerLevel) level).getEntity(portalsTag.getUUID(("Left") + "Portal"));
                 if (portalHolder != null) {
                     portalHolder.kill();
                 }
             }
             if (portalsTag.contains(("Right") + "Portal")) {
-                portalHolder = (ExperimentalPortal) ((ServerLevel) level).getEntity(portalsTag.getUUID(("Right") + "Portal"));
+                portalHolder = (Portal) ((ServerLevel) level).getEntity(portalsTag.getUUID(("Right") + "Portal"));
                 if (portalHolder != null) {
                     portalHolder.kill();
                 }

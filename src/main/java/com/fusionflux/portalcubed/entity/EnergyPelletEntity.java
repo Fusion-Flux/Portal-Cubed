@@ -195,7 +195,7 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
     }
 
     @Override
-    public void wentThroughPortal(ExperimentalPortal portal) {
+    public void wentThroughPortal(Portal portal) {
         setLife(getStartingLife());
     }
 }

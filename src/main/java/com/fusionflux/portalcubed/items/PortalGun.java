@@ -4,7 +4,7 @@ package com.fusionflux.portalcubed.items;
 import com.fusionflux.portalcubed.PortalCubedGameRules;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
@@ -154,20 +154,20 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
         if (!world.isClientSide) {
             CompoundTag tag = stack.getOrCreateTag();
 
-            ExperimentalPortal portalHolder;
-            ExperimentalPortal originalPortal;
+            Portal portalHolder;
+            Portal originalPortal;
             CompoundTag portalsTag = tag.getCompound(world.dimension().location().toString());
 
             if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
-                originalPortal = (ExperimentalPortal) ((ServerLevel) world).getEntity(portalsTag.getUUID((leftClick ? "Left" : "Right") + "Portal"));
+                originalPortal = (Portal) ((ServerLevel) world).getEntity(portalsTag.getUUID((leftClick ? "Left" : "Right") + "Portal"));
             } else {
                 originalPortal = null;
             }
-            portalHolder = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(world);
+            portalHolder = PortalCubedEntities.PORTAL.create(world);
 
-            ExperimentalPortal otherPortal;
+            Portal otherPortal;
             if (portalsTag.contains((leftClick ? "Right" : "Left") + "Portal")) {
-                otherPortal = (ExperimentalPortal) ((ServerLevel) world).getEntity(portalsTag.getUUID((leftClick ? "Right" : "Left") + "Portal"));
+                otherPortal = (Portal) ((ServerLevel) world).getEntity(portalsTag.getUUID((leftClick ? "Right" : "Left") + "Portal"));
             } else {
                 otherPortal = null;
             }
@@ -237,8 +237,8 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
                     return;
                 }
 
-                final List<ExperimentalPortal> overlappingPortals = world.getEntities(
-                        PortalCubedEntities.EXPERIMENTAL_PORTAL,
+                final List<Portal> overlappingPortals = world.getEntities(
+                        PortalCubedEntities.PORTAL,
                         portalHolder.getBoundingBox(),
                         p -> p != originalPortal && vectorsEqual(p.getNormal(), portalHolder.getNormal())
                 );
@@ -246,7 +246,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
                 if (!overlappingPortals.isEmpty()) {
                     boolean bumpSuccess = false;
                     if (overlappingPortals.size() == 1) {
-                        final ExperimentalPortal overlappingPortal = overlappingPortals.get(0);
+                        final Portal overlappingPortal = overlappingPortals.get(0);
                         if (overlappingPortal.getAxisW().equals(portalHolder.getAxisW())) {
                             final Direction.Axis axis = Objects.requireNonNull(Direction.fromNormal(new BlockPos(right))).getAxis();
                             if (overlappingPortal.getOriginPos().get(axis) < portalHolder.getOriginPos().get(axis)) {
@@ -321,9 +321,9 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
         }
     }
 
-    public static Optional<ExperimentalPortal> getPotentialOpposite(Level world, Vec3 portalPos, @Nullable ExperimentalPortal ignore, int color, boolean includePlayerPortals) {
+    public static Optional<Portal> getPotentialOpposite(Level world, Vec3 portalPos, @Nullable Portal ignore, int color, boolean includePlayerPortals) {
         return world.getEntities(
-            PortalCubedEntities.EXPERIMENTAL_PORTAL,
+            PortalCubedEntities.PORTAL,
             AABB.ofSize(portalPos, 256, 256, 256),
             p ->
                 p != ignore &&
@@ -333,7 +333,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
         ).stream().min(Comparator.comparingDouble(p -> p.getOriginPos().distanceToSqr(portalPos)));
     }
 
-    public static void linkPortals(ExperimentalPortal portal1, ExperimentalPortal portal2, float volume) {
+    public static void linkPortals(Portal portal1, Portal portal2, float volume) {
         portal1.setDestination(Optional.of(portal2.getOriginPos()));
         portal1.setOtherRotation(Optional.of(portal2.getRotation()));
         portal1.setLinkedPortalUUID(Optional.of(portal2.getUUID()));

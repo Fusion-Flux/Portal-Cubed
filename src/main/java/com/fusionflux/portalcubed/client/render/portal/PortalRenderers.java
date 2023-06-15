@@ -7,9 +7,9 @@ public enum PortalRenderers {
     STENCIL(StencilRenderer::new),
     FRAMEBUFFER(FramebufferRenderer::new);
 
-    public final Supplier<? extends PortalRenderer> creator;
+    public final Supplier<? extends PortalRendererImpl> creator;
 
-    PortalRenderers(Supplier<? extends PortalRenderer> creator) {
+    PortalRenderers(Supplier<? extends PortalRendererImpl> creator) {
         this.creator = creator;
     }
 }

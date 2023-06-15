@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -56,10 +56,10 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
 
                 AABB portalCheckBox = new AABB(bridge.portalEmitters.get(bridge.facing.indexOf(facing)));
 
-                List<ExperimentalPortal> list = world.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
+                List<Portal> list = world.getEntitiesOfClass(Portal.class, portalCheckBox);
 
                 boolean portalPresent = false;
-                for (ExperimentalPortal portal : list) {
+                for (Portal portal : list) {
                     if (portal.getFacingDirection().equals(facing)) {
                         if (portal.getActive()) {
                             portalPresent = true;
@@ -230,10 +230,10 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
                 for (int i = blockEntity.emitters.size() - 1; i >= 0; i--) {
                     AABB portalCheckBox = new AABB(blockEntity.portalEmitters.get(i)).inflate(.1);
 
-                    List<ExperimentalPortal> list = world.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
+                    List<Portal> list = world.getEntitiesOfClass(Portal.class, portalCheckBox);
 
                     boolean portalPresent = false;
-                    for (ExperimentalPortal portal : list) {
+                    for (Portal portal : list) {
                         if (portal.getFacingDirection().equals(blockEntity.facing.get(i))) {
                             if (portal.getActive()) {
                                 portalPresent = true;

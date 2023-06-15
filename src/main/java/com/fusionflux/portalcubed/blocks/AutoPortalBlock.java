@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.AutoPortalBlockEntity;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
@@ -174,13 +174,13 @@ public class AutoPortalBlock extends BaseEntityBlock {
         final boolean open = state.getValue(OPEN);
         final int color = getColor(level, lower);
         final BlockPos upper = lower.above();
-        final List<ExperimentalPortal> portals = level.getEntities(
-            PortalCubedEntities.EXPERIMENTAL_PORTAL,
+        final List<Portal> portals = level.getEntities(
+            PortalCubedEntities.PORTAL,
             state.getCollisionShape(level, lower).bounds().move(lower).expandTowards(0, 1, 0),
             p -> true
         );
         if (!portals.isEmpty()) {
-            portals.forEach(ExperimentalPortal::kill);
+            portals.forEach(Portal::kill);
             level.playSound(null, lower.getX(), lower.getY(), lower.getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
         }
         if (forceClose) return;
@@ -192,7 +192,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
         final Direction facing = state.getValue(FACING);
         final Direction facingOpposite = facing.getOpposite();
         final BlockPos placeOn = upper.relative(facingOpposite);
-        final ExperimentalPortal portal = PortalCubedEntities.EXPERIMENTAL_PORTAL.create(level);
+        final Portal portal = PortalCubedEntities.PORTAL.create(level);
         assert portal != null;
         final Vec3 portalPos = new Vec3(
             placeOn.getX() + 0.5 - 0.510 * facingOpposite.getStepX(),

@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.accessor.Accessors;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.Portal;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -16,14 +16,14 @@ import java.util.Optional;
 import java.util.Set;
 
 public class PortalDirectionUtils {
-    public static Vec3 rotateVector(ExperimentalPortal portal, Vec3 vector) {
+    public static Vec3 rotateVector(Portal portal, Vec3 vector) {
         return portal.getTransformQuat().rotate(vector, false);
     }
 
     public static final AdvancedEntityRaycast.TransformInfo PORTAL_RAYCAST_TRANSFORM = new AdvancedEntityRaycast.TransformInfo(
-        e -> e instanceof ExperimentalPortal,
+        e -> e instanceof Portal,
         (context, blockHit, entityHit) -> {
-            final ExperimentalPortal portal = (ExperimentalPortal)entityHit.getEntity();
+            final Portal portal = (Portal)entityHit.getEntity();
             if (!portal.getActive()) return null;
             final double distance = context.getFrom().distanceTo(context.getTo());
             final Vec3 offset = blockHit.getLocation().subtract(context.getFrom());
@@ -61,11 +61,11 @@ public class PortalDirectionUtils {
         final EntityHitResult hit = ProjectileUtil.getEntityHitResult(
             originEntity, startPos, endPos,
             new AABB(startPos, endPos).inflate(1),
-            e -> e instanceof ExperimentalPortal,
+            e -> e instanceof Portal,
             startPos.distanceToSqr(endPos)
         );
         if (hit == null) return null;
-        final ExperimentalPortal portal = (ExperimentalPortal)hit.getEntity();
+        final Portal portal = (Portal)hit.getEntity();
         final Direction facing = portal.getFacingDirection();
         final double yOffset = endPos.distanceTo(startPos) - hit.getLocation().distanceTo(startPos);
         final Vec3 hitRelative = PortalDirectionUtils.rotateVector(

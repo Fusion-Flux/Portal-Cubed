@@ -15,7 +15,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedEntities {
 
-    public static final EntityType<ExperimentalPortal> EXPERIMENTAL_PORTAL = QuiltEntityTypeBuilder.create(MobCategory.MISC, ExperimentalPortal::new)
+    public static final EntityType<Portal> PORTAL = QuiltEntityTypeBuilder.create(MobCategory.MISC, Portal::new)
             .setDimensions(EntityDimensions.scalable(1F, 1F))
             .build();
 
@@ -132,7 +132,7 @@ public class PortalCubedEntities {
         .build();
 
     public static void registerEntities() {
-        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("experimental_portal"), EXPERIMENTAL_PORTAL);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("portal"), PORTAL);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("storage_cube"), STORAGE_CUBE);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("companion_cube"), COMPANION_CUBE);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("radio"), RADIO);

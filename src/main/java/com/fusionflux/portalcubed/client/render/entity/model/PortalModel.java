@@ -4,7 +4,7 @@
 
 package com.fusionflux.portalcubed.client.render.entity.model;
 
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.Portal;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
@@ -15,12 +15,12 @@ import net.minecraft.client.model.geom.builders.*;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class ExperimentalPortalModel extends EntityModel<ExperimentalPortal> {
-    public static final ModelLayerLocation MAIN_LAYER = new ModelLayerLocation(id("experimental_placeholder"), "main");
+public class PortalModel extends EntityModel<Portal> {
+    public static final ModelLayerLocation MAIN_LAYER = new ModelLayerLocation(id("portal"), "main");
     @SuppressWarnings("checkstyle:MemberName")
     private final ModelPart bb_main;
 
-    public ExperimentalPortalModel(ModelPart root) {
+    public PortalModel(ModelPart root) {
         this.bb_main = root.getChild("bb_main");
     }
 
@@ -38,7 +38,7 @@ public class ExperimentalPortalModel extends EntityModel<ExperimentalPortal> {
     }
 
     @Override
-    public void setupAnim(ExperimentalPortal entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(Portal entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         //previously the render function, render code was moved to a method below
     }
 

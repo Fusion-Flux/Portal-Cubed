@@ -2,7 +2,7 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
+import com.fusionflux.portalcubed.entity.Portal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -86,10 +86,10 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
 
                             AABB portalCheckBox = new AABB(translatedPos);
 
-                            List<ExperimentalPortal> list = world.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
+                            List<Portal> list = world.getEntitiesOfClass(Portal.class, portalCheckBox);
 
 
-                            for (ExperimentalPortal portal : list) {
+                            for (Portal portal : list) {
                                 if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
                                     if (portal.getActive()) {
                                         final Vec3 otherNormal = portal.getOtherNormal().get();

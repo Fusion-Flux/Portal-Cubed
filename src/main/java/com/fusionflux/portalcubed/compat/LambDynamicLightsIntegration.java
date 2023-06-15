@@ -28,6 +28,6 @@ public class LambDynamicLightsIntegration implements DynamicLightsInitializer {
             Math.round((e.getStartingLife() > 0 ? Mth.clamp(Mth.lerp((float)e.getLife() / e.getStartingLife(), 0.25f, 1f), 0f, 1f) : 1f) * 15)
         );
 
-        DynamicLightHandlers.registerDynamicLightHandler(PortalCubedEntities.EXPERIMENTAL_PORTAL, e -> 2);
+        DynamicLightHandlers.registerDynamicLightHandler(PortalCubedEntities.PORTAL, e -> 2);
     }
 }

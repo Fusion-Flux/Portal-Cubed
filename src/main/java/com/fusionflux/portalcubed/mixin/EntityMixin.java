@@ -13,8 +13,8 @@ import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
-import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
+import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
@@ -162,10 +162,10 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
             portalCheckBox = portalCheckBox.expandTowards(entityVelocity.add(0, .08, 0));
 
-            List<ExperimentalPortal> list = ((Entity) (Object) this).level.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
+            List<Portal> list = ((Entity) (Object) this).level.getEntitiesOfClass(Portal.class, portalCheckBox);
             VoxelShape omittedDirections = Shapes.empty();
 
-            for (ExperimentalPortal portal : list) {
+            for (Portal portal : list) {
                 if (portal.calculateCutoutBox() != NULL_BOX && portal.calculateBoundsCheckBox() != NULL_BOX) {
                     if (portal.getActive())
                         omittedDirections = Shapes.or(omittedDirections, Shapes.create(portal.getCutoutBoundingBox()));
@@ -227,7 +227,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public void tickTail(CallbackInfo ci) {
         Entity thisEntity = ((Entity) (Object) this);
 
-        if (!thisEntity.level.isClientSide() && !(thisEntity instanceof Player) && !(thisEntity instanceof ExperimentalPortal)) {
+        if (!thisEntity.level.isClientSide() && !(thisEntity instanceof Player) && !(thisEntity instanceof Portal)) {
             Vec3 entityVelocity = this.getDeltaMovement();
 
 
@@ -236,9 +236,9 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             portalCheckBox = portalCheckBox.expandTowards(entityVelocity.add(0, .08, 0));
 
 
-            List<ExperimentalPortal> list = ((Entity) (Object) this).level.getEntitiesOfClass(ExperimentalPortal.class, portalCheckBox);
-            ExperimentalPortal portal;
-            for (ExperimentalPortal portalCheck : list) {
+            List<Portal> list = ((Entity) (Object) this).level.getEntitiesOfClass(Portal.class, portalCheckBox);
+            Portal portal;
+            for (Portal portalCheck : list) {
                 portal = portalCheck;
                 if (this.canChangeDimensions() && portal.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
                     assert portal.getOtherNormal().isPresent();
@@ -307,7 +307,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     private void performTeleport(
             Entity thisEntity,
-            ExperimentalPortal portal,
+            Portal portal,
             Vec3 entityVelocity
     ) {
         final TeleportResult result = PortalCubed.commonTeleport(
