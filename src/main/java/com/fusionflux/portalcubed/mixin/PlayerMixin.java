@@ -10,6 +10,7 @@ import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
+import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.BlockPos;
@@ -47,6 +48,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Mixin(Player.class)
@@ -258,7 +260,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             byteBuf.writeVarInt(portal.getId());
             byteBuf.writeFloat(thisEntity.getYRot());
             byteBuf.writeFloat(thisEntity.getXRot());
-            byteBuf.writeOptional(PortalCubedClient.interpCamera(), (b, q) -> {
+            byteBuf.writeOptional(interpCamera(), (b, q) -> {
                 b.writeDouble(q.x);
                 b.writeDouble(q.y);
                 b.writeDouble(q.z);
@@ -276,6 +278,10 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
         }
     }
 
+    @ClientOnly
+    private static Optional<IPQuaternion> interpCamera() {
+        return PortalCubedClient.interpCamera();
+    }
 
     @Inject(
         method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",

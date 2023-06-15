@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -58,12 +59,14 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(NORTH, false).setValue(EAST, false).setValue(SOUTH, false).setValue(WEST, false).setValue(UP, false).setValue(DOWN, false).setValue(R_NORTH, false).setValue(R_EAST, false).setValue(R_SOUTH, false).setValue(R_WEST, false).setValue(R_UP, false).setValue(R_DOWN, false));
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -106,6 +109,7 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
     }
 
 
+    @NotNull
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
@@ -222,26 +226,7 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
                 if (!((EntityAttachments) entity).isInFunnel()) {
                     ((EntityAttachments) entity).setInFunnel(true);
                     entity.setDeltaMovement(0, 0, 0);
-                    Minecraft.getInstance().getSoundManager().play(
-                            new AbstractTickableSoundInstance(PortalCubedSounds.TBEAM_ENTER_EVENT, SoundSource.BLOCKS, SoundInstance.createUnseededRandom()) {
-                                int ticks;
-
-                                {
-                                    attenuation = Attenuation.NONE;
-                                }
-
-                                @Override
-                                public void tick() {
-                                    ticks++;
-                                    if (ticks > 80) {
-                                        volume = 1f - 0.05f * (ticks - 80);
-                                        if (volume <= 0) {
-                                            stop();
-                                        }
-                                    }
-                                }
-                            }
-                    );
+                    playEnterSound();
                 }
                 double xOffset = (entityCenter.x() - pos.getX() - .5) + entity.getDeltaMovement().x;
                 double yOffset = (entityCenter.y() - pos.getY() - .5) + entity.getDeltaMovement().y;
@@ -349,6 +334,30 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
                     entity.setDeltaMovement(gotVelocity);
             }
         }
+    }
+
+    @ClientOnly
+    private static void playEnterSound() {
+        Minecraft.getInstance().getSoundManager().play(
+            new AbstractTickableSoundInstance(PortalCubedSounds.TBEAM_ENTER_EVENT, SoundSource.BLOCKS, SoundInstance.createUnseededRandom()) {
+                int ticks;
+
+                {
+                    attenuation = Attenuation.NONE;
+                }
+
+                @Override
+                public void tick() {
+                    ticks++;
+                    if (ticks > 80) {
+                        volume = 1f - 0.05f * (ticks - 80);
+                        if (volume <= 0) {
+                            stop();
+                        }
+                    }
+                }
+            }
+        );
     }
 
     @Override

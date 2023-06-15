@@ -62,8 +62,11 @@ public final class PortalBlocksLoader {
     @ClientOnly
     private static void clinitClient() {
         renderLayers = ImmutableMap.<String, RenderType>builder()
+            .put("solid", RenderType.solid())
+            .put("cutout_mipped", RenderType.cutoutMipped())
             .put("cutout", RenderType.cutout())
             .put("translucent", RenderType.translucent())
+            .put("tripwire", RenderType.tripwire())
             .build();
     }
 
