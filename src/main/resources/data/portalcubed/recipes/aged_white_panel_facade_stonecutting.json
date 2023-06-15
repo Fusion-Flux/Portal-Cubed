@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 6,
+  "ingredient": {
+    "item": "portalcubed:aged_white_panel"
+  },
+  "result": "portalcubed:aged_white_panel_facade"
+}

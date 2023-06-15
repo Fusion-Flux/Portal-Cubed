@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 6,
+  "ingredient": {
+    "item": "portalcubed:smooth_gray_panel"
+  },
+  "result": "portalcubed:smooth_gray_panel_facade"
+}

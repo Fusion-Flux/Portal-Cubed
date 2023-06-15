@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 6,
+  "ingredient": {
+    "item": "portalcubed:portal_2_exposed_panel"
+  },
+  "result": "portalcubed:exposed_panel_facade"
+}
