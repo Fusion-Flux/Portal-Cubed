@@ -1,7 +1,8 @@
 package com.fusionflux.portalcubed.mixin;
 
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
-import com.fusionflux.portalcubed.PortalCubedGameRules;
+import com.fusionflux.portalcubed.TeleportResult;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.MixinPCClientAccessor;
@@ -256,11 +257,12 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             } else if (invert.z != 0) {
                 invert = invert.add(1, 1, 0);
             }
+            final Optional<IPQuaternion> cameraInterp = interpCamera();
             var byteBuf = PacketByteBufs.create();
             byteBuf.writeVarInt(portal.getId());
             byteBuf.writeFloat(thisEntity.getYRot());
             byteBuf.writeFloat(thisEntity.getXRot());
-            byteBuf.writeOptional(interpCamera(), (b, q) -> {
+            byteBuf.writeOptional(cameraInterp, (b, q) -> {
                 b.writeDouble(q.x);
                 b.writeDouble(q.y);
                 b.writeDouble(q.z);
@@ -269,18 +271,46 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             byteBuf.writeDouble(entityVelocity.x);
             byteBuf.writeDouble(entityVelocity.y);
             byteBuf.writeDouble(entityVelocity.z);
-            byteBuf.writeDouble(((thisEntity.getEyePosition().x()) - portal.position().x()) * invert.x);
-            byteBuf.writeDouble(((thisEntity.getEyePosition().y()) - portal.position().y()) * invert.y);
-            byteBuf.writeDouble(((thisEntity.getEyePosition().z()) - portal.position().z()) * invert.z);
+            final Vec3 teleportOffset = new Vec3(
+                ((thisEntity.getEyePosition().x()) - portal.position().x()) * invert.x,
+                ((thisEntity.getEyePosition().y()) - portal.position().y()) * invert.y,
+                ((thisEntity.getEyePosition().z()) - portal.position().z()) * invert.z
+            );
+            byteBuf.writeDouble(teleportOffset.x);
+            byteBuf.writeDouble(teleportOffset.y);
+            byteBuf.writeDouble(teleportOffset.z);
             NetworkingSafetyWrapper.sendFromClient("use_portal", byteBuf);
-            CalledValues.setIsTeleporting(thisEntity, true);
-            thisEntity.setDeltaMovement(0, 0, 0);
+//            CalledValues.setIsTeleporting(thisEntity, true);
+
+            final TeleportResult result = PortalCubed.commonTeleport(
+                portal,
+                entityVelocity,
+                teleportOffset,
+                thisEntity,
+                cameraInterp,
+                thisEntity.getXRot(),
+                thisEntity.getYRot()
+            );
+            final Vec3 dest = result.dest();
+            moveTo(dest.x, dest.y, dest.z, result.yaw(), result.pitch());
+            setDeltaMovement(result.velocity());
+            interpCamera(
+                IPQuaternion.getCameraRotation(result.pitch(), result.yaw())
+                    .getConjugated()
+                    .hamiltonProduct(result.immediateFinalRot())
+            );
         }
     }
 
     @ClientOnly
     private static Optional<IPQuaternion> interpCamera() {
         return PortalCubedClient.interpCamera();
+    }
+
+    @ClientOnly
+    private static void interpCamera(IPQuaternion interp) {
+        PortalCubedClient.cameraInterpStart = interp;
+        PortalCubedClient.cameraInterpStartTime = System.currentTimeMillis();
     }
 
     @Inject(
@@ -329,14 +359,6 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
         )
     )
     private Pose playerCrouching(Operation<Pose> original) {
-        if (level.getGameRules().getRule(PortalCubedGameRules.USE_PORTAL_HUD).get() || (level.isClientSide && isPortalHudModeServerClient())) {
-            return Pose.SWIMMING;
-        }
-        return original.call();
-    }
-
-    @ClientOnly
-    private boolean isPortalHudModeServerClient() {
-        return PortalCubedClient.isPortalHudModeServer();
+        return PortalCubed.portalHudModeServerOrClient(level) ? Pose.SWIMMING : original.call();
     }
 }

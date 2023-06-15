@@ -46,6 +46,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.quiltmc.loader.api.ModContainer;
@@ -101,9 +102,7 @@ public class PortalCubed implements ModInitializer {
                 b.readDouble()
             ));
             final Vec3 entityVelocity = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-            double teleportXOffset = buf.readDouble();
-            double teleportYOffset = buf.readDouble();
-            double teleportZOffset = buf.readDouble();
+            final Vec3 teleportOffset = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
             if (!Float.isFinite(yawSet)) {
                 handler.disconnect(Component.translatable("multiplayer.disconnect.invalid_player_movement"));
                 return;
@@ -134,26 +133,29 @@ public class PortalCubed implements ModInitializer {
                 final TeleportResult result = commonTeleport(
                     portal,
                     entityVelocity,
-                    new Vec3(teleportXOffset, teleportYOffset, teleportZOffset),
+                    teleportOffset,
                     player,
                     currentAnimationDelta,
                     pitchSet, yawSet
                 );
-                CalledValues.setVelocityUpdateAfterTeleport(player, result.velocity());
+//                CalledValues.setVelocityUpdateAfterTeleport(player, result.velocity());
 
                 final Vec3 dest = result.dest();
-                final IPQuaternion cameraAnimation = IPQuaternion.getCameraRotation(result.pitch(), result.yaw())
-                    .getConjugated()
-                    .hamiltonProduct(result.immediateFinalRot());
-                player.connection.teleport(dest.x, dest.y, dest.z, result.yaw(), result.pitch());
-                final FriendlyByteBuf buf2 = PacketByteBufs.create();
-                buf2.writeDouble(cameraAnimation.x);
-                buf2.writeDouble(cameraAnimation.y);
-                buf2.writeDouble(cameraAnimation.z);
-                buf2.writeDouble(cameraAnimation.w);
-                ServerPlayNetworking.send(player, PortalCubedClientPackets.SET_CAMERA_INTERPOLATE, buf2);
+//                final IPQuaternion cameraAnimation = IPQuaternion.getCameraRotation(result.pitch(), result.yaw())
+//                    .getConjugated()
+//                    .hamiltonProduct(result.immediateFinalRot());
+//                player.connection.teleport(dest.x, dest.y, dest.z, result.yaw(), result.pitch());
+                player.moveTo(dest.x, dest.y, dest.z, result.yaw(), result.pitch());
+                player.setDeltaMovement(result.velocity());
+                player.connection.resetPosition();
+//                final FriendlyByteBuf buf2 = PacketByteBufs.create();
+//                buf2.writeDouble(cameraAnimation.x);
+//                buf2.writeDouble(cameraAnimation.y);
+//                buf2.writeDouble(cameraAnimation.z);
+//                buf2.writeDouble(cameraAnimation.w);
+//                ServerPlayNetworking.send(player, PortalCubedClientPackets.SET_CAMERA_INTERPOLATE, buf2);
 
-                CalledValues.setHasTeleportationHappened(player, true);
+//                CalledValues.setHasTeleportationHappened(player, true);
                 GravityChangerAPI.clearGravity(player);
 
             });
@@ -247,7 +249,7 @@ public class PortalCubed implements ModInitializer {
         ServerPlayerEntityCopyCallback.EVENT.register((copy, original, wasDeath) -> syncFog(copy));
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) ->
-            PortalCubedClient.isPortalHudMode() &&
+            portalHudModeServerOrClient(world) &&
                 (!(world.getBlockState(hitResult.getBlockPos()).getBlock() instanceof TallButtonVariant) ||
                     hand != InteractionHand.OFF_HAND)
                 ? InteractionResult.FAIL : InteractionResult.PASS
@@ -369,6 +371,10 @@ public class PortalCubed implements ModInitializer {
             rotatedVel,
             immediateFinalRot
         );
+    }
+
+    public static boolean portalHudModeServerOrClient(Level level) {
+        return level.getGameRules().getRule(PortalCubedGameRules.USE_PORTAL_HUD).get() || (level.isClientSide && PortalCubedClient.isPortalHudModeServer());
     }
 
     public static ResourceLocation id(String path) {
