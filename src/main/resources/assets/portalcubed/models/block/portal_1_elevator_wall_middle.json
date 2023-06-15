@@ -1,21 +1,21 @@
 {
 	"credit": "Made by Cart3r using Blockbench.",
 	"textures": {
+		"particle": "portalcubed:block/portal_1_elevator_wall_middle_top",
 		"end": "portalcubed:block/portal_1_elevator_wall_middle_top",
-		"side": "portalcubed:block/portal_1_elevator_wall_middle",
-		"particle": "portalcubed:block/portal_1_elevator_wall_middle_top"
+		"side": "portalcubed:block/portal_1_elevator_wall_middle"
 	},
 	"elements": [
 		{
 			"from": [0, 0, 0],
 			"to": [16, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#side"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#side"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#side"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#side"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#end"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#end"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#side", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#side", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#side", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#side", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#end", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#end", "cullface": "down"}
 			}
 		}
 	],

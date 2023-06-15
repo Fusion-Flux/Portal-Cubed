@@ -2,6 +2,7 @@
   "replace": true,
   "values": [
     "portalcubed:portal_1_smooth_tiles",
+    "portalcubed:portal_1_smooth_tile_facade",
     "portalcubed:portal_1_smooth_gray_panel",
     "portalcubed:portal_1_smooth_gray_half_panel",
     "portalcubed:portal_1_smooth_gray_panel_facade",
