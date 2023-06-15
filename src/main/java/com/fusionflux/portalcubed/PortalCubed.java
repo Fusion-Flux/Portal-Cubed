@@ -264,6 +264,7 @@ public class PortalCubed implements ModInitializer {
         PortalCubedSounds.registerSounds();
         PortalCubedGameRules.register();
         PortalCubedParticleTypes.register();
+        PortalTabsLoader.load(mod);
         BlockContentRegistries.FLAMMABLE.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
         GravityChannel.UPDATE_GRAVITY.getVerifierRegistry().register(AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, AdhesionGravityVerifier::check);
 

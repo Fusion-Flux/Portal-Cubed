@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.client;
+package com.fusionflux.portalcubed;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -33,7 +32,6 @@ import java.util.function.Supplier;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-@ClientOnly
 public class PortalTabsLoader {
     private static final Map<String, Function<JsonObject, Predicate<CreativeModeTab.ItemDisplayParameters>>> CONDITION_TYPES = Map.of(
         "and", o -> GsonHelper.getAsJsonArray(o, "conditions")

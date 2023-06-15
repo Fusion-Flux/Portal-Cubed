@@ -9,6 +9,7 @@
     "ClipContextAccessor",
     "CollisionContextMixin",
     "CollisionGetterMixin",
+    "CreativeModeTabsAccessor",
     "EntityMixin",
     "InventoryMixin",
     "LevelMixin",

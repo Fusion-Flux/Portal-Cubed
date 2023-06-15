@@ -440,8 +440,6 @@ public class PortalCubedClient implements ClientModInitializer {
 //            }
 //        });
 
-        PortalTabsLoader.load(mod);
-
         //noinspection UnstableApiUsage
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(e -> e.addAfter(
             i -> i.getItem() instanceof RecordItem,

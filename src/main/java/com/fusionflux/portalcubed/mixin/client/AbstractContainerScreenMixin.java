@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
+import com.fusionflux.portalcubed.mixin.CreativeModeTabsAccessor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +15,10 @@ public class AbstractContainerScreenMixin {
     private void floorButtonEasterEgg(CallbackInfo ci) {
         //noinspection ConstantValue
         if ((Object)this instanceof EffectRenderingInventoryScreen<?>) {
-            FloorButtonBlock.enableEasterEgg = false;
+            if (FloorButtonBlock.enableEasterEgg) {
+                FloorButtonBlock.enableEasterEgg = false;
+                CreativeModeTabsAccessor.setCACHED_PARAMETERS(null);
+            }
         }
     }
 }
