@@ -2,20 +2,28 @@ package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
+import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.TeleportResult;
 import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.ClientTeleportCheck;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.ExperimentalPortal;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
@@ -33,6 +41,8 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -46,6 +56,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAttachments, EntityPortalsAccess, ClientTeleportCheck {
@@ -299,79 +310,40 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             ExperimentalPortal portal,
             Vec3 entityVelocity
     ) {
-        // TODO: Reimplement
-//        double teleportXOffset = (thisEntity.getEyePosition().x()) - portal.position().x();
-//        double teleportYOffset = (thisEntity.getEyePosition().y()) - portal.position().y();
-//        double teleportZOffset = (thisEntity.getEyePosition().z()) - portal.position().z();
-//        Direction portalFacing = portal.getFacingDirection();
-//        Direction otherDirec = Direction.fromNormal((int) portal.getOtherFacing().x(), (int) portal.getOtherFacing().y(), (int) portal.getOtherFacing().z());
-//
-//        IPQuaternion rotationW = IPQuaternion.getRotationBetween(portal.getAxisW().orElseThrow().scale(-1), portal.getOtherAxisW(), portal.getAxisH().orElseThrow());
-//        IPQuaternion rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getAxisW().orElseThrow());
-//
-//        if (portalFacing == Direction.UP || portalFacing == Direction.DOWN) {
-//            if (otherDirec == portalFacing) {
-//                rotationW = IPQuaternion.getRotationBetween(portal.getNormal().scale(-1), portal.getOtherNormal(), (portal.getAxisH().orElseThrow()));
-//                rotationH = IPQuaternion.getRotationBetween((portal.getAxisH().orElseThrow()), (portal.getOtherAxisH()), portal.getNormal().scale(-1));
-//            }
-//        }
-//
-//        float modPitch = thisEntity.getXRot();
-//        if (modPitch == 90) {
-//            modPitch = 0;
-//        }
-//
-//        Vec3 rotatedYaw = Vec3.directionFromRotation(modPitch, thisEntity.getYRot());
-//        Vec3 rotatedPitch = Vec3.directionFromRotation(thisEntity.getXRot(), thisEntity.getYRot());
-//        Vec3 rotatedVel = entityVelocity;
-//        Vec3 rotatedOffsets = new Vec3(teleportXOffset, teleportYOffset, teleportZOffset);
-//
-//        rotatedYaw = (rotationH.rotate(rotationW.rotate(rotatedYaw)));
-//        rotatedPitch = (rotationH.rotate(rotationW.rotate(rotatedPitch)));
-//        rotatedVel = (rotationH.rotate(rotationW.rotate(rotatedVel)));
-//        rotatedOffsets = (rotationH.rotate(rotationW.rotate(rotatedOffsets)));
-//
-//        rotatedOffsets = rotatedOffsets.subtract(0, thisEntity.getEyeY() - thisEntity.getY(), 0);
-//        if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-//            if (rotatedOffsets.y < -0.95) {
-//                rotatedOffsets = new Vec3(rotatedOffsets.x, -0.95, rotatedOffsets.z);
-//            } else if (rotatedOffsets.y > (-0.95 + (1.9 - thisEntity.getBbHeight()))) {
-//                rotatedOffsets = new Vec3(rotatedOffsets.x, (-0.95 + (1.9 - thisEntity.getBbHeight())), rotatedOffsets.z);
-//            }
-//        }
-//
-//        Vec2 lookAnglePitch = new Vec2(
-//                (float)Math.toDegrees(-Mth.atan2(rotatedPitch.y, Math.sqrt(rotatedPitch.x * rotatedPitch.x + rotatedPitch.z * rotatedPitch.z))),
-//                (float)Math.toDegrees(Mth.atan2(rotatedPitch.z, rotatedPitch.x))
-//        );
-//
-//        Vec2 lookAngleYaw = new Vec2(
-//                (float)Math.toDegrees(-Mth.atan2(rotatedYaw.y, Math.sqrt(rotatedYaw.x * rotatedYaw.x + rotatedYaw.z * rotatedYaw.z))),
-//                (float)Math.toDegrees(Mth.atan2(rotatedYaw.z, rotatedYaw.x))
-//        );
-//        final Vec3 destPos = portal.getDestination().orElseThrow(ExperimentalPortal.NOT_INIT).add(rotatedOffsets);
-//        thisEntity.moveTo(destPos.x, destPos.y, destPos.z, lookAngleYaw.y - 90, lookAnglePitch.x);
-//        if (rotatedVel.lengthSqr() > PortalCubed.MAX_SPEED_SQR) {
-//            rotatedVel = rotatedVel.scale(PortalCubed.MAX_SPEED / rotatedVel.length());
-//        }
-//        thisEntity.setDeltaMovement(rotatedVel);
-//        GravityChangerAPI.clearGravity(thisEntity);
-//        if (level instanceof ServerLevel serverWorld) {
-//            final FriendlyByteBuf buf = PacketByteBufs.create();
-//            buf.writeVarInt(getId());
-//            buf.writeDouble(getX());
-//            buf.writeDouble(getY());
-//            buf.writeDouble(getZ());
-//            buf.writeFloat(getYRot());
-//            buf.writeFloat(getXRot());
-//            final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.REFRESH_POS, buf);
-//            for (final ServerPlayer player : serverWorld.players()) {
-//                serverWorld.sendParticles(player, true, destPos.x, destPos.y, destPos.z, packet);
-//            }
-//        }
-//        if (this instanceof WentThroughPortalListener listener) {
-//            listener.wentThroughPortal(portal);
-//        }
+        final TeleportResult result = PortalCubed.commonTeleport(
+            portal,
+            entityVelocity,
+            new Vec3(
+                (thisEntity.getEyePosition().x()) - portal.position().x(),
+                (thisEntity.getEyePosition().y()) - portal.position().y(),
+                (thisEntity.getEyePosition().z()) - portal.position().z()
+            ),
+            thisEntity,
+            Optional.empty(),
+            thisEntity.getXRot(),
+            thisEntity.getYRot()
+        );
+
+        final Vec3 dest = result.dest();
+        thisEntity.moveTo(dest.x, dest.y, dest.z, result.yaw(), result.pitch());
+        thisEntity.setDeltaMovement(result.velocity());
+        GravityChangerAPI.clearGravity(thisEntity);
+        if (level instanceof ServerLevel serverWorld) {
+            final FriendlyByteBuf buf = PacketByteBufs.create();
+            buf.writeVarInt(getId());
+            buf.writeDouble(getX());
+            buf.writeDouble(getY());
+            buf.writeDouble(getZ());
+            buf.writeFloat(getYRot());
+            buf.writeFloat(getXRot());
+            final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.REFRESH_POS, buf);
+            for (final ServerPlayer player : serverWorld.players()) {
+                serverWorld.sendParticles(player, true, dest.x, dest.y, dest.z, packet);
+            }
+        }
+        if (this instanceof WentThroughPortalListener listener) {
+            listener.wentThroughPortal(portal);
+        }
     }
 
     @Override

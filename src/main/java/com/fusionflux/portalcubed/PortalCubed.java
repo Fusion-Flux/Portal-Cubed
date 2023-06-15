@@ -131,54 +131,21 @@ public class PortalCubed implements ModInitializer {
                     return;
                 }
 
-                assert portal.getOtherNormal().isPresent();
+                final TeleportResult result = commonTeleport(
+                    portal,
+                    entityVelocity,
+                    new Vec3(teleportXOffset, teleportYOffset, teleportZOffset),
+                    player,
+                    currentAnimationDelta,
+                    pitchSet, yawSet
+                );
+                CalledValues.setVelocityUpdateAfterTeleport(player, result.velocity());
 
-                final Vec3 otherNormal = portal.getOtherNormal().get();
-                Direction otherDirec = Direction.fromNormal((int) otherNormal.x(), (int) otherNormal.y(), (int) otherNormal.z());
-                final IPQuaternion portalTransform = portal.getTransformQuat();
-
-                Vec3 rotatedVel = entityVelocity;
-                Vec3 rotatedOffsets = new Vec3(teleportXOffset, teleportYOffset, teleportZOffset);
-
-                rotatedVel = portalTransform.rotate(rotatedVel, false);
-                rotatedOffsets = portalTransform.rotate(rotatedOffsets, false);
-
-                if (otherDirec == Direction.UP && rotatedVel.y < 0.48) {
-                    rotatedVel = new Vec3(rotatedVel.x, 0.48, rotatedVel.z);
-                }
-
-                rotatedOffsets = rotatedOffsets.subtract(0, player.getEyeY() - player.getY(), 0);
-
-                if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
-                    if (rotatedOffsets.y < -0.95) {
-                        rotatedOffsets = new Vec3(rotatedOffsets.x, -0.95, rotatedOffsets.z);
-                    } else if (rotatedOffsets.y > -0.85) {
-                        rotatedOffsets = new Vec3(rotatedOffsets.x, -0.85, rotatedOffsets.z);
-                    }
-                }
-
-                if (rotatedVel.lengthSqr() > PortalCubed.MAX_SPEED_SQR) {
-                    rotatedVel = rotatedVel.scale(PortalCubed.MAX_SPEED / rotatedVel.length());
-                }
-                CalledValues.setVelocityUpdateAfterTeleport(player, rotatedVel);
-
-                IPQuaternion oldCameraRotation = IPQuaternion.getCameraRotation(pitchSet, yawSet);
-                if (currentAnimationDelta.isPresent()) {
-                    oldCameraRotation = oldCameraRotation.hamiltonProduct(currentAnimationDelta.get());
-                }
-                final IPQuaternion immediateFinalRot = oldCameraRotation.hamiltonProduct(portalTransform.getConjugated());
-                final var pitchYaw = IPQuaternion.getPitchYawFromRotation(immediateFinalRot);
-                float finalYaw = (float)(double)pitchYaw.getB();
-                float finalPitch = (float)(double)pitchYaw.getA();
-                if (finalPitch > 90) {
-                    finalPitch = 90 - (finalPitch - 90);
-                } else if (finalPitch < -90) {
-                    finalPitch = -90 + (-90 - finalPitch);
-                }
-
-                final Vec3 dest = portal.getDestination().get().add(rotatedOffsets);
-                player.connection.teleport(dest.x, dest.y, dest.z, finalYaw, finalPitch);
-                final IPQuaternion cameraAnimation = IPQuaternion.getCameraRotation(finalPitch, finalYaw).getConjugated().hamiltonProduct(immediateFinalRot);
+                final Vec3 dest = result.dest();
+                final IPQuaternion cameraAnimation = IPQuaternion.getCameraRotation(result.pitch(), result.yaw())
+                    .getConjugated()
+                    .hamiltonProduct(result.immediateFinalRot());
+                player.connection.teleport(dest.x, dest.y, dest.z, result.yaw(), result.pitch());
                 final FriendlyByteBuf buf2 = PacketByteBufs.create();
                 buf2.writeDouble(cameraAnimation.x);
                 buf2.writeDouble(cameraAnimation.y);
@@ -337,6 +304,70 @@ public class PortalCubed implements ModInitializer {
     @ClientOnly
     public static void playBounceSoundRemotely() {
         ClientPlayNetworking.send(PortalCubedServerPackets.PLAY_BOUNCE_SOUND, PacketByteBufs.empty());
+    }
+
+    public static TeleportResult commonTeleport(
+        ExperimentalPortal portal,
+        Vec3 entityVelocity,
+        Vec3 teleportOffset,
+        Entity entity,
+        Optional<IPQuaternion> currentAnimationDelta,
+        float pitchSet, float yawSet
+    ) {
+        assert portal.getDestination().isPresent();
+        assert portal.getOtherNormal().isPresent();
+
+        final Vec3 otherNormal = portal.getOtherNormal().get();
+        Direction otherDirec = Direction.fromNormal((int) otherNormal.x(), (int) otherNormal.y(), (int) otherNormal.z());
+        final IPQuaternion portalTransform = portal.getTransformQuat();
+
+        Vec3 rotatedVel = entityVelocity;
+        Vec3 rotatedOffsets = teleportOffset;
+
+        rotatedVel = portalTransform.rotate(rotatedVel, false);
+        rotatedOffsets = portalTransform.rotate(rotatedOffsets, false);
+
+        if (otherDirec == Direction.UP && rotatedVel.y < 0.48) {
+            rotatedVel = new Vec3(rotatedVel.x, 0.48, rotatedVel.z);
+        }
+
+        rotatedOffsets = rotatedOffsets.subtract(0, entity.getEyeY() - entity.getY(), 0);
+
+        if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+            if (rotatedOffsets.y < -0.95) {
+                rotatedOffsets = new Vec3(rotatedOffsets.x, -0.95, rotatedOffsets.z);
+            } else if (rotatedOffsets.y > -0.95 + (1.9 - entity.getBbHeight())) {
+                rotatedOffsets = new Vec3(rotatedOffsets.x, -0.95 + (1.9 - entity.getBbHeight()), rotatedOffsets.z);
+            }
+        }
+
+        if (rotatedVel.lengthSqr() > PortalCubed.MAX_SPEED_SQR) {
+            rotatedVel = rotatedVel.scale(PortalCubed.MAX_SPEED / rotatedVel.length());
+        }
+
+        IPQuaternion oldCameraRotation = IPQuaternion.getCameraRotation(pitchSet, yawSet);
+        if (currentAnimationDelta.isPresent()) {
+            oldCameraRotation = oldCameraRotation.hamiltonProduct(currentAnimationDelta.get());
+        }
+        final IPQuaternion immediateFinalRot = oldCameraRotation.hamiltonProduct(portalTransform.getConjugated());
+        final var pitchYaw = IPQuaternion.getPitchYawFromRotation(immediateFinalRot);
+        float finalYaw = (float)(double)pitchYaw.getB();
+        float finalPitch = (float)(double)pitchYaw.getA();
+        if (finalPitch > 90) {
+            finalPitch = 90 - (finalPitch - 90);
+        } else if (finalPitch < -90) {
+            finalPitch = -90 + (-90 - finalPitch);
+        }
+
+        final Vec3 dest = portal.getDestination().get().add(rotatedOffsets);
+
+        return new TeleportResult(
+            dest,
+            finalYaw,
+            finalPitch,
+            rotatedVel,
+            immediateFinalRot
+        );
     }
 
     public static ResourceLocation id(String path) {

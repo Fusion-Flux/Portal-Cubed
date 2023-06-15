@@ -249,6 +249,9 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
                 new ClientboundRotateHeadPacket(this, (byte)Mth.floor(getYHeadRot() * 256f / 360f))
             );
         }
+        if (!RayonIntegration.INSTANCE.isPresent()) {
+            setXRot(0f);
+        }
     }
 
     @Override
