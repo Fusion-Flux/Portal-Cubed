@@ -24,19 +24,19 @@
       },
       {
         "id": "minecraft",
-        "versions": ">=1.18.2"
+        "versions": ">=1.19.4"
       },
       {
         "id": "cardinal-components-entity",
-        "versions": ">=4.1.4"
+        "versions": "*"
       },
       {
         "id": "com.fusionflux:gravity_api",
-        "versions": ">=0.7.21"
+        "versions": "*"
       },
       {
         "id": "eu.midnightdust:midnightlib",
-        "versions": ">=1.0.0"
+        "versions": "*"
       }
     ],
 
