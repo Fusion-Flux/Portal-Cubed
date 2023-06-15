@@ -311,9 +311,9 @@
   "block.portalcubed.pedestal_button": "Pedestal Button",
   "block.portalcubed.old_ap_pedestal_button": "Old Aperture Pedestal Button",
 
-  "block.portalcubed.floor_button": "Surface Button",
+  "block.portalcubed.floor_button": "Weighted Button",
   "block.portalcubed.floor_button.easter_egg": "Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button",
-  "block.portalcubed.old_ap_floor_button": "Old Aperture Surface Button",
+  "block.portalcubed.old_ap_floor_button": "Old Aperture Weighted Button",
 
   "block.portalcubed.laser_relay": "Thermal Discouragement Beam Relay",
   "block.portalcubed.laser_emitter": "Thermal Discouragement Beam Emitter",

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "portalcubed:block/old_ap_white_panel"
+    "layer0": "portalcubed:block/old_aperture_white_panel_1"
   }
 }
