@@ -79,7 +79,7 @@ dependencies {
 		exclude(group = "net.fabricmc")
 	}
 
-	include(modApi("maven.modrinth:stonecutter_recipe_tags:5.1.1-fabric")!!)
+	include(modApi("io.github.tropheusj.stonecutter_recipe_tags:fabric:5.2.0+1.19.4.fabric")!!)
 
 	include(modApi("com.unascribed:lib39-core:1.5.0-pre3+1.19.3")!!)
 	include(modApi("com.unascribed:lib39-recoil:1.5.0-pre3+1.19.3")!!)
