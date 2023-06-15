@@ -8,6 +8,7 @@ import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -44,6 +45,7 @@ public class PortalRenderer extends EntityRenderer<Portal> {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.pushPose();
         matrices.mulPose(entity.getRotation());
+        matrices.mulPose(Axis.YP.rotationDegrees(180));
 
         int color = entity.getColor() * -1;
         if (color == -16383998) {
