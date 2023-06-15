@@ -104,7 +104,6 @@ public class PortalCubedClient implements ClientModInitializer {
         Items.AIR
     };
     public static final int ZOOM_TIME = 2;
-    public static final long CAMERA_INTERP_TIME = 250;
 
     private static final File GLOBAL_ADVANCEMENTS_FILE = QuiltLoader.getGameDir().resolve("portal_cubed_global_advancements.dat").toFile();
     private static final Set<ResourceLocation> GLOBAL_ADVANCEMENTS = new HashSet<>();
@@ -669,14 +668,14 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static Optional<IPQuaternion> interpCamera() {
         final long time = System.currentTimeMillis();
-        final long endTime = PortalCubedClient.cameraInterpStartTime + PortalCubedClient.CAMERA_INTERP_TIME;
+        final long endTime = PortalCubedClient.cameraInterpStartTime + PortalCubedConfig.portalSmoothTime;
         if (time >= endTime) {
             return Optional.empty();
         }
         return Optional.of(IPQuaternion.interpolate(
             PortalCubedClient.cameraInterpStart,
             IPQuaternion.IDENTITY,
-            (time - PortalCubedClient.cameraInterpStartTime) / (double)PortalCubedClient.CAMERA_INTERP_TIME
+            (time - PortalCubedClient.cameraInterpStartTime) / (double)PortalCubedConfig.portalSmoothTime
         ));
     }
 }

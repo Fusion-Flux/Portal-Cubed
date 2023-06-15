@@ -18,4 +18,5 @@ public class PortalCubedConfig extends MidnightConfig {
     @Entry @Client public static boolean staticPortalItemDrops = true;
     @Entry @Client public static PortalRenderers renderer = PortalRenderers.DISABLED;
     @Entry @Client public static boolean crossPortalEntityRendering = true;
+    @Entry(min = 0, max = 1000, isSlider = true) @Client public static int portalSmoothTime = 250;
 }
