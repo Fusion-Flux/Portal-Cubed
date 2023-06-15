@@ -248,6 +248,7 @@ public class Portal extends Entity {
         super.onSyncedDataUpdated(key);
         if (ROTATION.equals(key)) {
             axisW = axisH = normal = null;
+            makeBoundingBox();
         } else if (OTHER_ROTATION.equals(key)) {
             otherAxisW = otherAxisH = otherNormal = Optional.empty();
         }
