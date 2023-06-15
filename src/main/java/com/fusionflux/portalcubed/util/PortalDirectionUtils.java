@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.util;
 
-import com.fusionflux.portalcubed.accessor.Accessors;
+import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.entity.Portal;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -40,7 +40,7 @@ public class PortalDirectionUtils {
                 blockHit.getLocation(),
                 AdvancedEntityRaycast.withStartEnd(context, newStart, newStart.add(newOffset)),
                 portal.getLinkedPortalUUID()
-                    .flatMap(id -> Optional.ofNullable(((Accessors)portal.getLevel()).getEntity(id)))
+                    .flatMap(id -> Optional.ofNullable(((LevelExt)portal.getLevel()).getEntity(id)))
                     .map(Set::of)
                     .orElse(Set.of())
             );

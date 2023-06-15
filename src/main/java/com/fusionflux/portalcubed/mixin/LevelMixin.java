@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.mixin;
 
-import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import net.minecraft.core.Holder;
@@ -24,7 +23,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 @Mixin(Level.class)
-public abstract class LevelMixin implements Accessors, LevelExt {
+public abstract class LevelMixin implements LevelExt {
     @Unique
     PortalCubedDamageSources pc$damageSources;
 

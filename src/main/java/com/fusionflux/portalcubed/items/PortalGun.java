@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.items;
 
 import com.fusionflux.portalcubed.PortalCubedGameRules;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
@@ -102,17 +103,12 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
     }
 
     @ClientOnly
-    public boolean isSideActive(ClientLevel world, ItemStack stack, boolean rightSide) {
-        final CompoundTag portalsTag = stack.getOrCreateTag().getCompound(world.dimension().toString());
+    public boolean isSideActive(ClientLevel level, ItemStack stack, boolean rightSide) {
+        final CompoundTag portalsTag = stack.getOrCreateTag().getCompound(level.dimension().location().toString());
         final String key = rightSide ? "RightPortal" : "LeftPortal";
         if (!portalsTag.hasUUID(key)) return false;
         final UUID uuid = portalsTag.getUUID(key);
-        for (final Entity globalPortal : world.entitiesForRendering()) {
-            if (globalPortal.getUUID().equals(uuid)) {
-                return true;
-            }
-        }
-        return false;
+        return ((LevelExt)level).getEntity(uuid) != null;
     }
 
     @Override

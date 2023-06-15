@@ -323,7 +323,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
     public void portalCubed$dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<@Nullable ItemEntity> cir) {
         if (!this.level.isClientSide && stack.getItem().equals(PortalCubedItems.PORTAL_GUN)) {
             CompoundTag tag = stack.getOrCreateTag();
-            CompoundTag portalsTag = tag.getCompound(level.dimension().toString());
+            CompoundTag portalsTag = tag.getCompound(level.dimension().location().toString());
             Portal portalHolder;
             if (portalsTag.contains(("Left") + "Portal")) {
                 portalHolder = (Portal) ((ServerLevel) level).getEntity(portalsTag.getUUID(("Left") + "Portal"));

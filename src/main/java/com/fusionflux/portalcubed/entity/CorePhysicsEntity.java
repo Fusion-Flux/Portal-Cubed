@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.gravity_api.util.RotationUtil;
-import com.fusionflux.portalcubed.accessor.Accessors;
+import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
@@ -174,7 +174,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
         this.lastPos = this.position();
         this.setDiscardFriction(!this.isOnGround() && !this.level.getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
         if (isBeingHeld) {
-            Player player = (Player) ((Accessors) level).getEntity(getHolderUUID().get());
+            Player player = (Player) ((LevelExt) level).getEntity(getHolderUUID().get());
             if (player != null && player.isAlive()) {
                 Vec3 vec3d = player.getEyePosition(0);
                 double d = 1.5;

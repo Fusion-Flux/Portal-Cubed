@@ -2,8 +2,8 @@ package com.fusionflux.portalcubed.client;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
-import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
@@ -288,7 +288,7 @@ public class PortalCubedClient implements ClientModInitializer {
                 dispatcher.setRenderHitBoxes(false);
                 for (UUID portalUuid : CalledValues.getPortals(player)) {
                     if (
-                        !(((Accessors) ctx.world()).getEntity(portalUuid) instanceof Portal portal) ||
+                        !(((LevelExt) ctx.world()).getEntity(portalUuid) instanceof Portal portal) ||
                             !player.getUUID().equals(portal.getOwnerUUID().orElse(null))
                     ) continue;
                     dispatcher.render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYRot(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightTexture.FULL_BRIGHT);

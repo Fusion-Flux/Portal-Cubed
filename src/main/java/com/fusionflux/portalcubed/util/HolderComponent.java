@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.util;
 
-import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.ItemInHandRendererExt;
+import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -46,7 +46,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     }
 
     public @Nullable CorePhysicsEntity entityBeingHeld() {
-        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((Accessors) this.owner.level).getEntity(heldEntityUUID.get());
+        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((LevelExt) this.owner.level).getEntity(heldEntityUUID.get());
         return this.heldEntity;
     }
 
@@ -97,7 +97,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     public void applySyncPacket(FriendlyByteBuf buf) {
         final var syncedHeldEntityUUID = EntityDataSerializers.OPTIONAL_UUID.read(buf);
         if (heldEntity == null && syncedHeldEntityUUID.isPresent()) {
-            hold((CorePhysicsEntity) ((Accessors) this.owner.level).getEntity(syncedHeldEntityUUID.get()));
+            hold((CorePhysicsEntity) ((LevelExt) this.owner.level).getEntity(syncedHeldEntityUUID.get()));
         } else if (syncedHeldEntityUUID.isEmpty() && heldEntity != null) {
             stopHolding();
         }

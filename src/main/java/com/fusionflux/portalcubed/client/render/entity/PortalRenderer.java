@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
 import com.fusionflux.portalcubed.PortalCubedConfig;
-import com.fusionflux.portalcubed.accessor.Accessors;
+import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.client.render.entity.model.PortalModel;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
@@ -100,7 +100,7 @@ public class PortalRenderer extends EntityRenderer<Portal> {
     private void renderOtherEntities(Portal entity, PoseStack poseStack, float tickDelta, MultiBufferSource buffer, int packedLight) {
         if (renderingTracers || !entity.getActive()) return;
         final UUID otherUuid = entity.getLinkedPortalUUID().orElse(null);
-        if (otherUuid == null || !(((Accessors)entity.level).getEntity(otherUuid) instanceof Portal otherPortal)) return;
+        if (otherUuid == null || !(((LevelExt)entity.level).getEntity(otherUuid) instanceof Portal otherPortal)) return;
         final double oplx = Mth.lerp(tickDelta, otherPortal.xOld, otherPortal.getX());
         final double oply = Mth.lerp(tickDelta, otherPortal.yOld, otherPortal.getY());
         final double oplz = Mth.lerp(tickDelta, otherPortal.zOld, otherPortal.getZ());

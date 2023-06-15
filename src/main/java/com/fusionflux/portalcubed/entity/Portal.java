@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.entity;
 
-import com.fusionflux.portalcubed.accessor.Accessors;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -229,7 +229,7 @@ public class Portal extends Entity {
         if (!this.level.isClientSide) {
             Portal otherPortal =
                 this.getLinkedPortalUUID().isPresent()
-                    ? (Portal)((Accessors) level).getEntity(this.getLinkedPortalUUID().get())
+                    ? (Portal)((LevelExt) level).getEntity(this.getLinkedPortalUUID().get())
                     : null;
 
             setActive(otherPortal != null);
