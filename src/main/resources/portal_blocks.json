@@ -1,30 +1,61 @@
 {
-  "portal_1_white_checkered_panel": {},
-  "portal_1_white_half_panel": {},
-  "portal_1_white_panel": {},
+  "portal_1_white_checkered_panel": {
+    "map_color": 22
+  },
+  "portal_1_white_half_panel": {
+    "map_color": 22
+  },
+  "portal_1_white_panel": {
+    "map_color": 22
+  },
   "portal_1_white_2x1_panel_bottom": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 22
   },
   "portal_1_white_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 22
   },
-  "dirty_portal_1_white_checkered_panel": {},
-  "dirty_portal_1_white_half_panel": {},
-  "dirty_portal_1_white_panel": {},
+  "dirty_portal_1_white_checkered_panel": {
+  "map_color": 36
+  },
+  "dirty_portal_1_white_half_panel": {
+    "map_color": 36
+  },
+  "dirty_portal_1_white_panel": {
+    "map_color": 36
+  },
   "dirty_portal_1_white_2x1_panel_bottom": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 36
   },
   "dirty_portal_1_white_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 36
   },
-  "dirty_borderless_panel": {},
-  "portal_1_elevator_wall_bottom": {},
-  "portal_1_elevator_wall_middle": {},
-  "portal_1_elevator_wall_top": {},
-  "solid_office_concrete": {},
-  "bordered_office_concrete": {},
-  "portal_1_smooth_tiles": {},
+  "dirty_borderless_panel": {
+    "map_color": 36
+  },
+  "portal_1_elevator_wall_bottom": {
+    "map_color": 9
+  },
+  "portal_1_elevator_wall_middle": {
+    "map_color": 9
+  },
+  "portal_1_elevator_wall_top": {
+    "map_color": 9
+  },
+  "solid_office_concrete": {
+    "map_color": 45
+  },
+  "bordered_office_concrete": {
+    "map_color": 48
+  },
+  "portal_1_smooth_tiles": {
+    "map_color": 44
+  },
   "portal_1_smooth_gray_half_panel": {
+    "map_color": 48,
   "sounds": {
     "break": "minecraft:block.copper.break",
     "step": "minecraft:block.copper.step",
@@ -33,6 +64,7 @@
     "fall": "minecraft:block.copper.fall"
   }},
   "portal_1_smooth_gray_panel": {
+    "map_color": 48,
   "sounds": {
     "break": "minecraft:block.copper.break",
     "step": "minecraft:block.copper.step",
@@ -41,6 +73,7 @@
     "fall": "minecraft:block.copper.fall"
   }},
   "portal_1_smooth_gray_2x1_panel_bottom": {
+    "map_color": 48,
   "type": "pillar",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -51,6 +84,7 @@
     }
   },
   "portal_1_smooth_gray_2x1_panel_top": {
+    "map_color": 48,
     "type": "pillar",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -61,6 +95,7 @@
     }
   },
   "portal_1_smooth_gray_2x1_joiner": {
+    "map_color": 48,
     "type": "pillar",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -71,6 +106,7 @@
     }
   },
   "portal_1_smooth_gray_2x2_panel_bottom_left": {
+    "map_color": 48,
   "type": "directional",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -81,6 +117,7 @@
     }
   },
   "portal_1_smooth_gray_2x2_panel_bottom_right": {
+    "map_color": 48,
   "type": "directional",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -91,6 +128,7 @@
     }
   },
   "portal_1_smooth_gray_2x2_panel_top_left": {
+    "map_color": 48,
   "type": "directional",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -101,6 +139,7 @@
     }
   },
   "portal_1_smooth_gray_2x2_panel_top_right": {
+    "map_color": 48,
   "type": "directional",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -112,6 +151,7 @@
   },
 
   "dirty_portal_1_smooth_gray_half_panel": {
+    "map_color": 49,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -120,6 +160,7 @@
       "fall": "minecraft:block.copper.fall"
     }},
   "dirty_portal_1_smooth_gray_panel": {
+    "map_color": 49,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -128,6 +169,7 @@
       "fall": "minecraft:block.copper.fall"
     }},
   "dirty_portal_1_smooth_gray_2x1_panel_bottom": {
+    "map_color": 49,
     "type": "pillar",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -138,6 +180,7 @@
     }
   },
   "dirty_portal_1_smooth_gray_2x1_panel_top": {
+    "map_color": 49,
     "type": "pillar",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -148,6 +191,7 @@
     }
   },
   "dirty_portal_1_smooth_gray_2x1_joiner": {
+    "map_color": 49,
     "type": "pillar",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -158,6 +202,7 @@
     }
   },
   "dirty_portal_1_smooth_gray_2x2_panel_bottom_left": {
+    "map_color": 49,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -168,6 +213,7 @@
     }
   },
   "dirty_portal_1_smooth_gray_2x2_panel_bottom_right": {
+    "map_color": 49,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -178,6 +224,7 @@
     }
   },
   "dirty_portal_1_smooth_gray_2x2_panel_top_left": {
+    "map_color": 49,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -188,6 +235,7 @@
     }
   },
   "dirty_portal_1_smooth_gray_2x2_panel_top_right": {
+    "map_color": 49,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.copper.break",
@@ -199,6 +247,7 @@
   },
 
   "portal_1_rusted_plating": {
+    "map_color": 48,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -208,6 +257,7 @@
     }
   },
   "portal_1_rusted_tread_plating": {
+    "map_color": 48,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -217,6 +267,7 @@
     }
   },
   "portal_1_metal_grating": {
+    "map_color": 2,
     "type": "old_ap",
     "render_layer": "cutout",
     "opaque": false,
@@ -229,6 +280,7 @@
     }
   },
   "portal_1_mesh_grating": {
+    "map_color": 29,
     "type": "old_ap",
     "render_layer": "cutout",
     "opaque": false,
@@ -241,19 +293,24 @@
     }
   },
   "portal_1_2x2_exposed_panel_bottom_left": {
+    "map_color": 21,
   "type": "directional"
   },
   "portal_1_2x2_exposed_panel_bottom_right": {
+    "map_color": 21,
   "type": "directional"
   },
   "portal_1_2x2_exposed_panel_top_left": {
+    "map_color": 21,
   "type": "directional"
   },
   "portal_1_2x2_exposed_panel_top_right": {
+    "map_color": 21,
     "type": "directional"
   },
   "sewage": {
     "inherit": "minecraft:mud",
+    "map_color": 26,
     "jump_velocity_multiplier": 0.05,
     "slipperiness": 0.999,
     "sounds": {
@@ -264,138 +321,205 @@
       "fall": "minecraft:block.mud.fall"
     }
   },
-  "white_checkered_panel": {},
-  "white_half_panel": {},
-  "white_panel": {},
+  "white_checkered_panel": {
+    "map_color": 3
+  },
+  "white_half_panel": {
+    "map_color": 3
+  },
+  "white_panel": {
+    "map_color": 3
+  },
   "white_2x1_panel_bottom": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 3
   },
   "white_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 3
   },
   "white_2x2_panel_bottom_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 3
   },
   "white_2x2_panel_bottom_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 3
   },
   "white_2x2_panel_top_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 3
   },
   "white_2x2_panel_top_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 3
   },
-  "aged_white_checkered_panel": {},
-  "aged_white_half_panel": {},
-  "aged_white_panel": {},
+  "aged_white_checkered_panel": {
+    "map_color": 1
+  },
+  "aged_white_half_panel": {
+    "map_color": 1
+  },
+  "aged_white_panel": {
+    "map_color": 1
+  },
   "aged_white_2x1_panel_bottom": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 1
   },
   "aged_white_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 1
   },
   "aged_white_2x2_panel_bottom_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 1
   },
   "aged_white_2x2_panel_bottom_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 1
   },
   "aged_white_2x2_panel_top_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 1
   },
   "aged_white_2x2_panel_top_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 1
   },
-  "padded_gray_half_panel": {},
-  "padded_gray_panel": {},
+  "padded_gray_half_panel": {
+    "map_color": 59
+  },
+  "padded_gray_panel": {
+    "map_color": 59
+  },
   "padded_gray_2x1_panel_bottom": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 59
   },
   "padded_gray_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 59
   },
   "padded_gray_2x2_panel_bottom_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 59
   },
   "padded_gray_2x2_panel_bottom_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 59
   },
   "padded_gray_2x2_panel_top_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 59
   },
   "padded_gray_2x2_panel_top_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 59
   },
-  "aged_padded_gray_half_panel": {},
-  "aged_padded_gray_panel": {},
+  "aged_padded_gray_half_panel": {
+    "map_color": 59
+  },
+  "aged_padded_gray_panel": {
+    "map_color": 59
+  },
   "aged_padded_gray_2x1_panel_bottom": {
+    "map_color": 59,
     "type": "pillar"
   },
   "aged_padded_gray_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 59
   },
   "aged_padded_gray_2x2_panel_bottom_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 59
   },
   "aged_padded_gray_2x2_panel_bottom_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 59
   },
   "aged_padded_gray_2x2_panel_top_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 59
   },
   "aged_padded_gray_2x2_panel_top_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 59
   },
-  "smooth_gray_half_panel": {},
-  "smooth_gray_panel": {},
+  "smooth_gray_half_panel": {
+    "map_color": 45
+  },
+  "smooth_gray_panel": {
+    "map_color": 45
+  },
   "smooth_gray_2x1_panel_bottom": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 45
   },
   "smooth_gray_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 45
   },
   "smooth_gray_2x2_panel_bottom_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 45
   },
   "smooth_gray_2x2_panel_bottom_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 45
   },
   "smooth_gray_2x2_panel_top_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 45
   },
   "smooth_gray_2x2_panel_top_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 45
   },
-  "aged_smooth_gray_half_panel": {},
-  "aged_smooth_gray_panel": {},
+  "aged_smooth_gray_half_panel": {
+    "map_color": 45
+  },
+  "aged_smooth_gray_panel": {
+    "map_color": 45
+  },
   "aged_smooth_gray_2x1_panel_bottom": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 45
   },
   "aged_smooth_gray_2x1_panel_top": {
-    "type": "pillar"
+    "type": "pillar",
+    "map_color": 45
   },
   "aged_smooth_gray_2x2_panel_bottom_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 45
   },
   "aged_smooth_gray_2x2_panel_bottom_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 45
   },
   "aged_smooth_gray_2x2_panel_top_left": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 45
   },
   "aged_smooth_gray_2x2_panel_top_right": {
-    "type": "directional"
+    "type": "directional",
+    "map_color": 45
   },
   "insulation": {
-  "sounds": {
-    "break": "minecraft:block.wool.break",
-    "step": "minecraft:block.wool.step",
-    "place": "minecraft:block.wool.place",
-    "hit": "minecraft:block.wool.hit",
-    "fall": "minecraft:block.wool.fall"
-  }},
+    "map_color": 40,
+    "sounds": {
+     "break": "minecraft:block.wool.break",
+     "step": "minecraft:block.wool.step",
+     "place": "minecraft:block.wool.place",
+     "hit": "minecraft:block.wool.hit",
+     "fall": "minecraft:block.wool.fall"
+   }
+  },
   "portal_2_panel_frame": {
     "render_layer": "cutout",
+    "map_color": 0,
     "opaque": false,
     "sounds": {
       "break": "minecraft:block.lantern.break",
@@ -407,6 +531,7 @@
   },
   "portal_2_panel_wireframe": {
     "opaque": false,
+    "map_color": 0,
     "render_layer": "translucent",
     "sounds": {
       "break": "minecraft:block.lantern.break",
@@ -416,10 +541,15 @@
       "fall": "minecraft:block.lantern.fall"
     }
   },
-  "portal_2_exposed_panel": {},
-  "portal_2_partially_exposed_panel": {},
+  "portal_2_exposed_panel": {
+    "map_color": 48
+  },
+  "portal_2_partially_exposed_panel": {
+    "map_color": 40
+  },
   "portal_2_metal_grating": {
     "type": "old_ap",
+    "map_color": 22,
     "render_layer": "cutout",
     "opaque": false,
     "sounds": {
@@ -431,6 +561,7 @@
     }
   },
   "old_ap_white_checkered_panel": {
+    "map_color": 2,
   "sounds": {
     "break": "minecraft:block.wood.break",
     "step": "minecraft:block.wood.step",
@@ -439,6 +570,7 @@
     "fall": "minecraft:block.wood.fall"
   }},
   "old_ap_white_panel": {
+    "map_color": 2,
   "sounds": {
     "break": "minecraft:block.wood.break",
     "step": "minecraft:block.wood.step",
@@ -447,6 +579,7 @@
     "fall": "minecraft:block.wood.fall"
   }},
   "old_ap_white_2x2_panel_bottom_left": {
+    "map_color": 2,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.wood.break",
@@ -457,6 +590,7 @@
     }
   },
   "old_ap_white_2x2_panel_bottom_right": {
+    "map_color": 2,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.wood.break",
@@ -467,6 +601,7 @@
     }
   },
   "old_ap_white_2x2_panel_top_left": {
+    "map_color": 2,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.wood.break",
@@ -477,6 +612,7 @@
     }
   },
   "old_ap_white_2x2_panel_top_right": {
+    "map_color": 2,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.wood.break",
@@ -487,6 +623,7 @@
     }
   },
   "old_ap_green_panel": {
+    "map_color": 41,
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
       "step": "minecraft:block.netherite_block.step",
@@ -496,6 +633,7 @@
     }
   },
   "old_ap_green_2x1_panel_bottom": {
+    "map_color": 41,
     "type": "pillar",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -506,6 +644,7 @@
     }
   },
   "old_ap_green_2x1_panel_top": {
+    "map_color": 41,
     "type": "pillar",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -516,6 +655,7 @@
     }
   },
   "old_ap_green_2x2_panel_bottom_left": {
+    "map_color": 41,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -526,6 +666,7 @@
     }
   },
   "old_ap_green_2x2_panel_bottom_right": {
+    "map_color": 41,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -536,6 +677,7 @@
     }
   },
   "old_ap_green_2x2_panel_top_left": {
+    "map_color": 41,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -546,6 +688,7 @@
     }
   },
   "old_ap_green_2x2_panel_top_right": {
+    "map_color": 41,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -556,6 +699,7 @@
     }
   },
   "old_ap_blue_panel": {
+    "map_color": 23,
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
       "step": "minecraft:block.netherite_block.step",
@@ -565,6 +709,7 @@
     }
   },
   "old_ap_blue_2x1_panel_bottom": {
+    "map_color": 23,
     "type": "pillar",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -575,6 +720,7 @@
     }
   },
   "old_ap_blue_2x1_panel_top": {
+    "map_color": 23,
     "type": "pillar",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -585,6 +731,7 @@
     }
   },
   "old_ap_blue_2x2_panel_bottom_left": {
+    "map_color": 23,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -595,6 +742,7 @@
     }
   },
   "old_ap_blue_2x2_panel_bottom_right": {
+    "map_color": 23,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -605,6 +753,7 @@
     }
   },
   "old_ap_blue_2x2_panel_top_left": {
+    "map_color": 23,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -615,6 +764,7 @@
     }
   },
   "old_ap_blue_2x2_panel_top_right": {
+    "map_color": 23,
     "type": "directional",
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
@@ -624,10 +774,17 @@
       "fall": "minecraft:block.netherite_block.fall"
     }
   },
-  "office_concrete": {},
-  "blue_office_concrete": {},
-  "striped_office_concrete": {},
+  "office_concrete": {
+    "map_color": 40
+  },
+  "blue_office_concrete": {
+    "map_color": 45
+  },
+  "striped_office_concrete": {
+    "map_color": 6
+  },
   "old_ap_metal_grating": {
+    "map_color": 40,
     "type": "old_ap",
     "render_layer": "cutout",
     "opaque": false,
@@ -640,6 +797,7 @@
     }
   },
   "1x1_single_crossbar": {
+    "map_color": 0,
     "type": "old_ap",
     "opaque": false,
     "render_layer": "cutout",
@@ -652,6 +810,7 @@
     }
   },
   "1x1_double_crossbar": {
+    "map_color": 0,
     "type": "old_ap",
     "opaque": false,
     "render_layer": "cutout",
@@ -664,6 +823,7 @@
     }
   },
   "2x2_double_crossbar_bottom_left": {
+    "map_color": 0,
     "type": "old_ap_directional",
     "opaque": false,
     "render_layer": "cutout",
@@ -676,6 +836,7 @@
     }
   },
   "2x2_double_crossbar_bottom_right": {
+    "map_color": 0,
     "type": "old_ap_directional",
     "opaque": false,
     "render_layer": "cutout",
@@ -688,6 +849,7 @@
     }
   },
   "2x2_double_crossbar_top_left": {
+    "map_color": 0,
     "type": "old_ap_directional",
     "opaque": false,
     "render_layer": "cutout",
@@ -700,6 +862,7 @@
     }
   },
   "2x2_double_crossbar_top_right": {
+    "map_color": 0,
     "type": "old_ap_directional",
     "opaque": false,
     "render_layer": "cutout",
@@ -713,22 +876,28 @@
 
   },
   "portal_1_white_half_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 22
   },
   "portal_1_white_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 22
   },
   "dirty_portal_1_white_half_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 36
   },
   "dirty_portal_1_white_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 36
   },
   "dirty_borderless_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 36
   },
   "portal_1_smooth_gray_half_panel_facade": {
     "type": "facade",
+    "map_color": 48,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -739,6 +908,7 @@
   },
   "portal_1_smooth_gray_panel_facade": {
     "type": "facade",
+    "map_color": 48,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -749,6 +919,7 @@
   },
   "dirty_portal_1_smooth_gray_half_panel_facade": {
     "type": "facade",
+    "map_color": 49,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -759,6 +930,7 @@
   },
   "dirty_portal_1_smooth_gray_panel_facade": {
     "type": "facade",
+    "map_color": 49,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -768,46 +940,60 @@
     }
   },
   "portal_1_smooth_tile_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 44
   },
   "white_half_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 3
   },
   "white_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 3
   },
   "aged_white_half_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 1
   },
   "aged_white_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 1
   },
   "padded_gray_half_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 59
   },
   "padded_gray_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 59
   },
   "aged_padded_gray_half_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 59
   },
   "aged_padded_gray_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 59
   },
   "smooth_gray_half_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 45
   },
   "smooth_gray_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 45
   },
   "aged_smooth_gray_half_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 45
   },
   "aged_smooth_gray_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 45
   },
   "old_ap_white_checkered_panel_facade": {
     "type": "facade",
+    "map_color": 2,
     "sounds": {
       "break": "minecraft:block.wood.break",
       "step": "minecraft:block.wood.step",
@@ -818,6 +1004,7 @@
   },
   "old_ap_white_panel_facade": {
     "type": "facade",
+    "map_color": 2,
     "sounds": {
       "break": "minecraft:block.wood.break",
       "step": "minecraft:block.wood.step",
@@ -828,6 +1015,7 @@
   },
   "old_ap_green_panel_facade": {
     "type": "facade",
+    "map_color": 41,
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
       "step": "minecraft:block.netherite_block.step",
@@ -838,6 +1026,7 @@
   },
   "old_ap_blue_panel_facade": {
     "type": "facade",
+    "map_color": 23,
     "sounds": {
       "break": "minecraft:block.netherite_block.break",
       "step": "minecraft:block.netherite_block.step",
@@ -848,6 +1037,7 @@
   },
   "portal_1_rusted_plating_facade": {
     "type": "facade",
+    "map_color": 48,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -858,6 +1048,7 @@
   },
   "portal_1_rusted_tread_plating_side_facade": {
     "type": "facade",
+    "map_color": 48,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -868,6 +1059,7 @@
   },
   "portal_1_rusted_tread_plating_top_facade": {
     "type": "facade",
+    "map_color": 48,
     "sounds": {
       "break": "minecraft:block.copper.break",
       "step": "minecraft:block.copper.step",
@@ -878,6 +1070,7 @@
   },
   "portal_1_mesh_grating_facade": {
     "type": "multiface",
+    "map_color": 29,
     "render_layer": "cutout",
     "opaque": "false",
     "sounds": {
@@ -890,6 +1083,7 @@
   },
   "portal_1_metal_grating_facade": {
     "type": "multiface",
+    "map_color": 2,
     "render_layer": "cutout",
     "opaque": "false",
     "sounds": {
@@ -902,6 +1096,7 @@
   },
   "portal_2_metal_grating_facade": {
     "type": "multiface",
+    "map_color": 22,
     "render_layer": "cutout",
     "opaque": "false",
     "sounds": {
@@ -914,6 +1109,7 @@
   },
   "old_ap_metal_grating_facade": {
     "type": "multiface",
+    "map_color": 40,
     "render_layer": "cutout",
     "opaque": "false",
     "sounds": {
@@ -926,13 +1122,16 @@
   },
 
   "exposed_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 48
   },
   "partially_exposed_panel_facade": {
-    "type": "facade"
+    "type": "facade",
+    "map_color": 40
   },
   "insulation_facade": {
     "type": "facade",
+    "map_color": 40,
     "sounds": {
       "break": "minecraft:block.wool.break",
       "step": "minecraft:block.wool.step",
@@ -945,183 +1144,232 @@
 
 
   "light_bridge": {
+    "map_color": 31,
     "type": "provided",
     "render_layer": "translucent"
   },
   "light_bridge_emitter": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "cutout"
   },
   "neurotoxin": {
     "type": "provided",
+    "map_color": 0,
     "render_layer": "translucent"
   },
   "excursion_funnel": {
     "type": "provided",
+    "map_color": 0,
     "render_layer": "translucent"
   },
   "excursion_funnel_emitter": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "cutout"
   },
   "duel_excursion_funnel_emitter": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "cutout"
   },
   "reversed_excursion_funnel_emitter": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "cutout"
   },
   "neurotoxin_emitter": {
     "type": "provided",
+    "map_color": 6,
     "render_layer": "translucent"
   },
   "laser_emitter": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "translucent"
   },
   "laser_catcher": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "translucent"
   },
   "laser_relay": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "translucent"
   },
   "conversion_gel": {
+    "map_color": 6,
     "type": "provided",
     "render_layer": "translucent"
   },
   "reflection_gel": {
+    "map_color": 22,
     "type": "provided",
     "render_layer": "translucent"
   },
   "propulsion_gel": {
+    "map_color": 15,
     "type": "provided",
     "render_layer": "translucent"
   },
   "repulsion_gel": {
+    "map_color": 17,
     "type": "provided",
     "render_layer": "translucent"
   },
   "adhesion_gel": {
+    "map_color": 24,
     "type": "provided",
     "render_layer": "translucent"
   },
   "faith_plate": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "translucent"
   },
   "beta_faith_plate": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "translucent"
   },
   "faith_plate_target": {
+    "map_color": 23,
     "type": "provided",
     "render_layer": "cutout"
   },
   "portal_1_door": {
+    "map_color": 48,
     "type": "provided",
     "render_layer": "cutout"
   },
   "portal_2_door": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "cutout"
   },
   "octopus_door": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "cutout"
   },
   "old_ap_door": {
+    "map_color": 21,
     "type": "provided",
     "render_layer": "cutout"
   },
   "fizzler": {
+    "map_color": 31,
     "type": "provided",
     "render_layer": "translucent"
   },
   "pedestal_button": {
+    "map_color": 6,
     "type": "provided",
     "render_layer": "cutout"
   },
   "floor_button": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "cutout"
   },
   "old_ap_floor_button": {
+    "map_color": 59,
     "type": "provided",
     "render_layer": "translucent"
   },
   "matter_inquisition_field": {
+    "map_color": 18,
     "type": "provided",
     "render_layer": "translucent"
   },
   "physics_repulsion_field": {
+    "map_color": 19,
     "type": "provided",
     "render_layer": "translucent"
   },
   "matter_inquisition_field_emitter": {
     "type": "provided",
+    "map_color": 59,
     "render_layer": "translucent"
   },
   "physics_repulsion_field_emitter": {
     "type": "provided",
+    "map_color": 59,
     "render_layer": "translucent"
   },
   "fizzler_emitter": {
     "type": "provided",
+    "map_color": 59,
     "render_layer": "translucent"
   },
   "portal_1_fizzler": {
+    "map_color": 31,
     "type": "provided",
     "render_layer": "cutout"
   },
   "portal_1_fizzler_emitter": {
     "type": "provided",
+    "map_color": 48,
     "render_layer": "cutout"
   },
   "old_aperture_fizzler": {
+    "map_color": 31,
     "type": "provided",
     "render_layer": "translucent"
   },
   "old_aperture_fizzler_emitter": {
     "type": "provided",
+    "map_color": 41,
     "render_layer": "translucent"
   },
   "death_fizzler": {
+    "map_color": 4,
     "type": "provided",
     "render_layer": "translucent"
   },
   "death_fizzler_emitter": {
     "type": "provided",
+    "map_color": 59,
     "render_layer": "translucent"
   },
   "laser_fizzler": {
+    "map_color": 4,
     "type": "provided",
     "render_layer": "translucent"
   },
   "laser_fizzler_emitter": {
     "type": "provided",
+    "map_color": 59,
     "render_layer": "translucent"
   },
   "old_aperture_death_fizzler": {
+    "map_color": 4,
     "type": "provided",
     "render_layer": "translucent"
   },
   "old_aperture_death_fizzler_emitter": {
     "type": "provided",
+    "map_color": 41,
     "render_layer": "translucent"
   },
   "power_block": {
     "type": "provided",
+    "map_color": 4,
     "render_layer": "cutout"
   },
   "rocket_turret": {
     "type": "provided",
+    "map_color": 22,
     "render_layer": "cutout"
   },
   "catapult": {
     "type": "provided",
+    "map_color": 29,
     "render_layer": "translucent"
+  },
+  "velocity_helper": {
+    "type": "provided",
+    "map_color": 17
   }
 }
