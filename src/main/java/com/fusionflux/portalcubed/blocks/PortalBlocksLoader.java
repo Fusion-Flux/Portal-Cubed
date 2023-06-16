@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -31,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
@@ -136,7 +136,10 @@ public final class PortalBlocksLoader {
                 case "jump_velocity_multiplier" -> settings.jumpFactor(GsonHelper.convertToFloat(value, "jump_velocity_multiplier"));
                 case "slipperiness" -> settings.friction(GsonHelper.convertToFloat(value, "slipperiness"));
                 case "sounds" -> settings.sound(parseBlockSounds(value));
-                case "map_color" -> settings.mapColor(MaterialColor.byId(GsonHelper.convertToInt(value, "map_color")));
+                case "map_color" -> settings.mapColor(
+                    Optional.ofNullable(MaterialColorNames.COLORS.get(GsonHelper.convertToString(value, "map_color")))
+                        .orElseThrow(() -> new IllegalArgumentException("Unknown map_color " + value))
+                );
                 case "render_layer" -> renderLayer = GsonHelper.convertToString(value, "render_layer");
                 default -> throw new IllegalArgumentException("Unknown Portal Block field " + entry.getKey());
             }

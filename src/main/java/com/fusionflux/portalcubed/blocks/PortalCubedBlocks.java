@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
@@ -24,14 +25,14 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedBlocks {
     public static final Item BASE_GEL = new Item(new QuiltItemSettings().fireResistant());
-    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(QuiltBlockSettings.of(Material.PLANT).randomTicks().destroyTime(0f).noOcclusion().noCollission().sound(new SoundType(1, -1, SoundEvents.HONEY_BLOCK_BREAK, SoundEvents.HONEY_BLOCK_STEP, SoundEvents.HONEY_BLOCK_PLACE, SoundEvents.HONEY_BLOCK_HIT, SoundEvents.HONEY_BLOCK_FALL)));
-    public static final RepulsionGel REPULSION_GEL = new RepulsionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
-    public static final AdhesionGel ADHESION_GEL = new AdhesionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
-    public static final BaseGel CONVERSION_GEL = new BaseGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
-    public static final BaseGel REFLECTION_GEL = new ReflectionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL));
+    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(QuiltBlockSettings.of(Material.PLANT).randomTicks().destroyTime(0f).noOcclusion().noCollission().sound(new SoundType(1, -1, SoundEvents.HONEY_BLOCK_BREAK, SoundEvents.HONEY_BLOCK_STEP, SoundEvents.HONEY_BLOCK_PLACE, SoundEvents.HONEY_BLOCK_HIT, SoundEvents.HONEY_BLOCK_FALL)).color(MaterialColor.COLOR_ORANGE));
+    public static final RepulsionGel REPULSION_GEL = new RepulsionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MaterialColor.COLOR_LIGHT_BLUE));
+    public static final AdhesionGel ADHESION_GEL = new AdhesionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MaterialColor.COLOR_PURPLE));
+    public static final BaseGel CONVERSION_GEL = new BaseGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MaterialColor.METAL));
+    public static final BaseGel REFLECTION_GEL = new ReflectionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MaterialColor.COLOR_LIGHT_GRAY));
 
     public static final HardLightBridgeEmitterBlock HLB_EMITTER_BLOCK = new HardLightBridgeEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
-    public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(QuiltBlockSettings.of(Material.AIR).destroyTime(999999f).noOcclusion().explosionResistance(9999999999f).sound(new SoundType(1, 1, SoundEvents.STONE_BREAK, SoundEvents.STONE_STEP, SoundEvents.STONE_PLACE, SoundEvents.STONE_HIT, SoundEvents.STONE_FALL)));
+    public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(QuiltBlockSettings.of(Material.AIR).destroyTime(999999f).noOcclusion().explosionResistance(9999999999f).sound(new SoundType(1, 1, SoundEvents.STONE_BREAK, SoundEvents.STONE_STEP, SoundEvents.STONE_PLACE, SoundEvents.STONE_HIT, SoundEvents.STONE_FALL)).color(MaterialColor.DIAMOND));
 
     public static final AutoPortalBlock AUTO_PORTAL_BLOCK = new AutoPortalBlock(
         QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE)
@@ -63,7 +64,7 @@ public class PortalCubedBlocks {
     public static final BlockEntityType<FaithPlateBlockEntity> FAITH_PLATE_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(FaithPlateBlockEntity::new, FAITH_PLATE).build();
     public static final BlockEntityType<BetaFaithPlateBlockEntity> BETA_FAITH_PLATE_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(BetaFaithPlateBlockEntity::new, BETA_FAITH_PLATE).build();
 
-    public static final Block FAITH_PLATE_TARGET = new FaithPlateTargetBlock(QuiltBlockSettings.of(Material.PLANT).destroyTime(0).noOcclusion().noCollission());
+    public static final Block FAITH_PLATE_TARGET = new FaithPlateTargetBlock(QuiltBlockSettings.of(Material.PLANT).destroyTime(0).noOcclusion().noCollission().color(MaterialColor.COLOR_CYAN));
 
     public static final BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinBlockEntity::new, NEUROTOXIN_BLOCK).build();
     public static final BlockEntityType<NeurotoxinEmitterBlockEntity> NEUROTOXIN_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinEmitterBlockEntity::new, NEUROTOXIN_EMITTER).build();
