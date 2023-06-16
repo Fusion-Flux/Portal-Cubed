@@ -347,12 +347,12 @@ public class Portal extends Entity {
     protected AABB makeBoundingBox() {
         AABB portalBox = new AABB(
                 getPointInPlane(width() / 2, height() / 2)
-                        .add(getNormal().scale(.05)),
+                        .add(getNormal().scale(.0)),
                 getPointInPlane(-width() / 2, -height() / 2)
                         .add(getNormal().scale(-.2))
         ).minmax(new AABB(
                 getPointInPlane(-width() / 2, height() / 2)
-                        .add(getNormal().scale(.05)),
+                        .add(getNormal().scale(.0)),
                 getPointInPlane(width() / 2, -height() / 2)
                         .add(getNormal().scale(-.2))
         ));
