@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -135,6 +136,7 @@ public final class PortalBlocksLoader {
                 case "jump_velocity_multiplier" -> settings.jumpFactor(GsonHelper.convertToFloat(value, "jump_velocity_multiplier"));
                 case "slipperiness" -> settings.friction(GsonHelper.convertToFloat(value, "slipperiness"));
                 case "sounds" -> settings.sound(parseBlockSounds(value));
+                case "map_color" -> settings.mapColor(MaterialColor.byId(GsonHelper.convertToInt(value, "map_color")));
                 case "render_layer" -> renderLayer = GsonHelper.convertToString(value, "render_layer");
                 default -> throw new IllegalArgumentException("Unknown Portal Block field " + entry.getKey());
             }
