@@ -16,4 +16,9 @@ public class DisabledRenderer extends PortalRendererImpl {
     @Override
     public void postRender(Portal portal, float tickDelta, PoseStack poseStack) {
     }
+
+    @Override
+    public PortalRenderPhase targetPhase() {
+        return PortalRenderPhase.ENTITY;
+    }
 }

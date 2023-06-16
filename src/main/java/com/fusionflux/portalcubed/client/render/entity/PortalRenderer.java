@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.client.render.entity.model.PortalModel;
+import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,7 +35,7 @@ public class PortalRenderer extends EntityRenderer<Portal> {
     private static final ResourceLocation ROUND_TEXTURE_TRACER = id("textures/entity/portal_tracer_oval.png");
     protected final PortalModel model = new PortalModel(Minecraft.getInstance().getEntityModels().bakeLayer(PortalModel.MAIN_LAYER));
 
-    public static boolean renderingTracers = false;
+    public static PortalRenderPhase renderPhase = PortalRenderPhase.ENTITY;
 
     public PortalRenderer(EntityRendererProvider.Context dispatcher) {
         super(dispatcher);
@@ -76,7 +77,7 @@ public class PortalRenderer extends EntityRenderer<Portal> {
         }
     }
 
-    private void renderPortal(
+    public void renderPortal(
         PoseStack poseStack,
         MultiBufferSource vertexConsumers,
         Portal entity,
@@ -87,18 +88,18 @@ public class PortalRenderer extends EntityRenderer<Portal> {
         float tickDelta
     ) {
         final PortalRendererImpl renderer = PortalCubedClient.getRenderer();
-        final boolean renderPortal = !renderingTracers && renderer.enabled(entity);
-        if (renderPortal) {
+        final boolean renderContents = renderPhase == renderer.targetPhase() && renderer.enabled(entity);
+        if (renderContents) {
             renderer.preRender(entity, tickDelta, poseStack);
         }
         model.renderToBuffer(poseStack, vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity))), light, OverlayTexture.NO_OVERLAY, r, g, b, 1F);
-        if (renderPortal) {
+        if (renderContents) {
             renderer.postRender(entity, tickDelta, poseStack);
         }
     }
 
     private void renderOtherEntities(Portal entity, PoseStack poseStack, float tickDelta, MultiBufferSource buffer, int packedLight) {
-        if (renderingTracers || !entity.getActive()) return;
+        if (renderPhase != PortalRenderPhase.ENTITY || !entity.getActive()) return;
         final UUID otherUuid = entity.getLinkedPortalUUID().orElse(null);
         if (otherUuid == null || !(((LevelExt)entity.level).getEntity(otherUuid) instanceof Portal otherPortal)) return;
         final double oplx = Mth.lerp(tickDelta, otherPortal.xOld, otherPortal.getX());
@@ -149,9 +150,9 @@ public class PortalRenderer extends EntityRenderer<Portal> {
     @Override
     public ResourceLocation getTextureLocation(@NotNull Portal entity) {
         if (PortalCubedConfig.enableRoundPortals) {
-            return !renderingTracers ? ROUND_TEXTURE : ROUND_TEXTURE_TRACER;
+            return renderPhase == PortalRenderPhase.TRACER ? ROUND_TEXTURE_TRACER : ROUND_TEXTURE;
         } else {
-            return !renderingTracers ? SQUARE_TEXTURE : SQUARE_TEXTURE_TRACER;
+            return renderPhase == PortalRenderPhase.TRACER ? SQUARE_TEXTURE_TRACER : SQUARE_TEXTURE;
         }
     }
 }

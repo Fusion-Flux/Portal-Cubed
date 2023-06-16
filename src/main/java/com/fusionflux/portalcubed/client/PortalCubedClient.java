@@ -16,6 +16,7 @@ import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.block.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
+import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
 import com.fusionflux.portalcubed.commands.DirectionArgumentType;
@@ -36,6 +37,7 @@ import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Axis;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
@@ -276,33 +278,61 @@ public class PortalCubedClient implements ClientModInitializer {
         );
 
         WorldRenderEvents.END.register(ctx -> {
-            final var player = Minecraft.getInstance().player;
-            if (player != null) {
-                if (!(ctx.consumers() instanceof final MultiBufferSource.BufferSource consumers)) return;
-                final var cameraPos = ctx.camera().getPosition();
-                ctx.matrixStack().pushPose();
-                ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-                PortalRenderer.renderingTracers = true;
-                final EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-                final boolean renderHitboxes = dispatcher.shouldRenderHitBoxes();
-                dispatcher.setRenderHitBoxes(false);
-                for (UUID portalUuid : CalledValues.getPortals(player)) {
-                    if (
-                        !(((LevelExt) ctx.world()).getEntity(portalUuid) instanceof Portal portal) ||
-                            !player.getUUID().equals(portal.getOwnerUUID().orElse(null))
-                    ) continue;
-                    dispatcher.render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYRot(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightTexture.FULL_BRIGHT);
-                }
-                dispatcher.setRenderHitBoxes(renderHitboxes);
-                ctx.matrixStack().popPose();
-
-                RenderSystem.disableCull();
-                // depth func change handled in RenderSystemMixin
-                consumers.endLastBatch();
-                PortalRenderer.renderingTracers = false;
-                RenderSystem.depthFunc(GL11.GL_LEQUAL);
-                RenderSystem.enableCull();
+            final var cameraEntity = ctx.camera().getEntity();
+            if (!(ctx.consumers() instanceof final MultiBufferSource.BufferSource consumers)) return;
+            final var cameraPos = ctx.camera().getPosition();
+            ctx.matrixStack().pushPose();
+            ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+            PortalRenderer.renderPhase = PortalRenderPhase.TRACER;
+            final EntityRenderDispatcher dispatcher = ctx.gameRenderer().getMinecraft().getEntityRenderDispatcher();
+            final boolean renderHitboxes = dispatcher.shouldRenderHitBoxes();
+            dispatcher.setRenderHitBoxes(false);
+            for (UUID portalUuid : CalledValues.getPortals(cameraEntity)) {
+                if (
+                    !(((LevelExt) ctx.world()).getEntity(portalUuid) instanceof Portal portal) ||
+                        !cameraEntity.getUUID().equals(portal.getOwnerUUID().orElse(null))
+                ) continue;
+                dispatcher.render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYRot(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightTexture.FULL_BRIGHT);
             }
+            dispatcher.setRenderHitBoxes(renderHitboxes);
+            ctx.matrixStack().popPose();
+
+            RenderSystem.disableCull();
+            // depth func change handled in RenderSystemMixin
+            consumers.endLastBatch();
+            PortalRenderer.renderPhase = PortalRenderPhase.ENTITY;
+            RenderSystem.depthFunc(GL11.GL_LEQUAL);
+            RenderSystem.enableCull();
+        });
+
+        WorldRenderEvents.END.register(ctx -> {
+            if (getRenderer().targetPhase() != PortalRenderPhase.FINAL) return;
+            if (!(ctx.consumers() instanceof final MultiBufferSource.BufferSource consumers)) return;
+            final var cameraPos = ctx.camera().getPosition();
+            ctx.matrixStack().pushPose();
+            ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+            PortalRenderer.renderPhase = PortalRenderPhase.FINAL;
+
+            final EntityRenderDispatcher dispatcher = ctx.gameRenderer().getMinecraft().getEntityRenderDispatcher();
+            for (final Entity entity : ctx.world().entitiesForRendering()) {
+                if (!(entity instanceof Portal portal) || !portal.getActive()) continue;
+                ctx.matrixStack().pushPose();
+                ctx.matrixStack().translate(entity.getX(), entity.getY(), entity.getZ());
+                ctx.matrixStack().mulPose(portal.getRotation());
+                ctx.matrixStack().mulPose(Axis.YP.rotationDegrees(180f));
+                ((PortalRenderer)dispatcher.getRenderer(portal)).renderPortal(
+                    ctx.matrixStack(),
+                    consumers,
+                    portal,
+                    0, 1, 1, 1,
+                    ctx.tickDelta()
+                );
+                ctx.matrixStack().popPose();
+            }
+
+            ctx.matrixStack().popPose();
+            consumers.endLastBatch();
+            PortalRenderer.renderPhase = PortalRenderPhase.ENTITY;
         });
 
         PortalBlocksLoader.initClient();

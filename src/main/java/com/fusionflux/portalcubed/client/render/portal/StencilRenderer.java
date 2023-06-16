@@ -42,4 +42,9 @@ public class StencilRenderer extends PortalRendererImpl {
 
         glDisable(GL_STENCIL_TEST);
     }
+
+    @Override
+    public PortalRenderPhase targetPhase() {
+        return PortalRenderPhase.FINAL;
+    }
 }

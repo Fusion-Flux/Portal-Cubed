@@ -67,4 +67,9 @@ public class FramebufferRenderer extends PortalRendererImpl {
 
         freeRenderTarget(newTarget);
     }
+
+    @Override
+    public PortalRenderPhase targetPhase() {
+        return PortalRenderPhase.ENTITY;
+    }
 }
