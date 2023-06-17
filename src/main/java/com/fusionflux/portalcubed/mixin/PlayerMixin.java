@@ -14,6 +14,7 @@ import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -175,7 +176,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
 
             List<Portal> list = level.getEntitiesOfClass(Portal.class, portalCheckBox);
 
-            Set<Portal> possiblePortals = new HashSet<>();
+            Set<Pair<Portal, Vec3>> possiblePortals = new HashSet<>();
 
 
             for (Portal portalCheck : list) {
@@ -192,52 +193,53 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
                         } else {
                             entityVelocity = entityVelocity.add(0, .08 * .98, 0);
                         }
-                        Vec3 entityEyePos = thisEntity.getEyePosition();
+//                        Vec3 entityPos = portalCheck.getNormal().y > 0 ? thisEntity.position() : thisEntity.getEyePosition();
+                        Vec3 entityPos = thisEntity.position().add(0, portalCheck.getOtherNormal().get().y < 0 ? 0.02 - entityVelocity.y : thisEntity.getEyeHeight(), 0);
                         if (portalFacing.step().x() < 0) {
-                            if (entityEyePos.x() + entityVelocity.x >= portalCheck.position().x() && entityVelocity.x() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                possiblePortals.add(portalCheck);
+                            if (entityPos.x() + entityVelocity.x >= portalCheck.position().x() && entityVelocity.x() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().y() < 0) {
-                            if (entityEyePos.y() + entityVelocity.y >= portalCheck.position().y() && entityVelocity.y() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                possiblePortals.add(portalCheck);
+                            if (entityPos.y() + entityVelocity.y >= portalCheck.position().y() && entityVelocity.y() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().z() < 0) {
-                            if (entityEyePos.z() + entityVelocity.z >= portalCheck.position().z() && entityVelocity.z() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                possiblePortals.add(portalCheck);
+                            if (entityPos.z() + entityVelocity.z >= portalCheck.position().z() && entityVelocity.z() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().x() > 0) {
-                            if (entityEyePos.x() + entityVelocity.x <= portalCheck.position().x() && entityVelocity.x() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                possiblePortals.add(portalCheck);
+                            if (entityPos.x() + entityVelocity.x <= portalCheck.position().x() && entityVelocity.x() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().y() > 0) {
-                            if (entityEyePos.y() + entityVelocity.y <= portalCheck.position().y() && entityVelocity.y() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                possiblePortals.add(portalCheck);
+                            if (entityPos.y() + entityVelocity.y <= portalCheck.position().y() && entityVelocity.y() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().z() > 0) {
-                            if (entityEyePos.z() + entityVelocity.z <= portalCheck.position().z() && entityVelocity.z() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                possiblePortals.add(portalCheck);
+                            if (entityPos.z() + entityVelocity.z <= portalCheck.position().z() && entityVelocity.z() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                                possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
 
                     }
                 }
             }
-            Portal portal = null;
+            Pair<Portal, Vec3> portal = null;
             double distance = 100;
-            for (Portal portals : possiblePortals) {
-                double checkDistance = portals.position().distanceTo(thisEntity.getBoundingBox().getCenter());
+            for (var portalTry : possiblePortals) {
+                double checkDistance = portalTry.first().position().distanceTo(thisEntity.getBoundingBox().getCenter());
                 if (checkDistance < distance) {
                     distance = checkDistance;
-                    portal = portals;
+                    portal = portalTry;
                 }
             }
             if (portal != null) {
-                performTeleport(thisEntity, portal, entityVelocity);
+                performTeleport(thisEntity, portal.first(), entityVelocity, portal.second());
             }
 
         }
@@ -246,7 +248,8 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
     private void performTeleport(
             Player thisEntity,
             Portal portal,
-            Vec3 entityVelocity
+            Vec3 entityVelocity,
+            Vec3 basePosition
     ) {
         if (this.level.isClientSide && thisEntity.isLocalPlayer()) {
             Vec3 invert = (portal.getNormal().multiply(portal.getNormal())).scale(-1);
@@ -272,9 +275,9 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             byteBuf.writeDouble(entityVelocity.y);
             byteBuf.writeDouble(entityVelocity.z);
             final Vec3 teleportOffset = new Vec3(
-                ((thisEntity.getEyePosition().x()) - portal.position().x()) * invert.x,
-                ((thisEntity.getEyePosition().y()) - portal.position().y()) * invert.y,
-                ((thisEntity.getEyePosition().z()) - portal.position().z()) * invert.z
+                ((basePosition.x()) - portal.position().x()) * invert.x,
+                ((basePosition.y()) - portal.position().y()) * invert.y,
+                ((basePosition.z()) - portal.position().z()) * invert.z
             );
             byteBuf.writeDouble(teleportOffset.x);
             byteBuf.writeDouble(teleportOffset.y);

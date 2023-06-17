@@ -141,8 +141,18 @@ public class Portal extends Entity {
         this.getEntityData().set(IS_ACTIVE, active);
     }
 
+    /**
+     * Unless you <i>need</i> axis alignment, this method should be avoided, and methods based off of
+     * {@link #getRotation()} or {@link #getNormal()} should be used instead.
+     * @return The closest direction to the portal's rotation
+     * @see #getRotation()
+     * @see #getNormal()
+     */
     public Direction getFacingDirection() {
-        return Direction.fromNormal((int) this.getNormal().x(), (int) this.getNormal().y(), (int) this.getNormal().z());
+        final Vec3 normal = getNormal();
+        final double x = normal.x, y = normal.y, z = normal.z;
+        final Direction result = Direction.fromNormal((int)x, (int)y, (int)z);
+        return result != null ? result : Direction.getNearest((float)x, (float)y, (float)z);
     }
 
     public Quaternionf getRotation() {

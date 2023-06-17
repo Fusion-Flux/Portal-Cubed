@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.client;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.accessor.CameraExt;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
@@ -35,6 +36,7 @@ import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -68,9 +70,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
@@ -129,6 +133,8 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static IPQuaternion cameraInterpStart;
     public static long cameraInterpStartTime;
+
+    public static Portal cameraTransformedThroughPortal;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -459,16 +465,30 @@ public class PortalCubedClient implements ClientModInitializer {
             }
         });
 
-//        RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
-//            final Vec3 entityPos = cameraEntity.getPosition(tickDelta);
-//            final Vec3 eyePos = cameraEntity.getEyePosition(tickDelta);
-//            final Vec3 startPos = entityPos.add(eyePos.subtract(entityPos).normalize().scale(0.1));
-//            final Vec3 endPos = ctrl.getPos();
-//            final Vec3 transformed = PortalDirectionUtils.simpleTransformPassingVector(cameraEntity, startPos, endPos);
-//            if (transformed != null) {
-//                ctrl.setPos(transformed);
-//            }
-//        });
+        RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
+            final Vec3 entityPos = cameraEntity.getPosition(tickDelta);
+            final Vec3 startPos = entityPos.add(ctrl.getPos().subtract(entityPos).normalize().scale(0.1));
+            final Vec3 endPos = ctrl.getPos();
+            final var transformed = PortalDirectionUtils.simpleTransformPassingVector(
+                cameraEntity, startPos, endPos, p -> p.getNormal().y < 0
+            );
+            if (transformed != null) {
+                cameraTransformedThroughPortal = transformed.second();
+                ctrl.setPos(transformed.first());
+                final Quaternionf cameraRot = camera.rotation().mul(
+                    cameraTransformedThroughPortal.getTransformQuat().toQuaternionf()
+                );
+                camera.getLookVector().set(0.0F, 0.0F, 1.0F).rotate(cameraRot);
+                camera.getUpVector().set(0.0F, 1.0F, 0.0F).rotate(cameraRot);
+                camera.getLeftVector().set(1.0F, 0.0F, 0.0F).rotate(cameraRot);
+                if (camera.isDetached()) {
+                    ((CameraExt)camera).backCameraUp(transformed.first());
+                    ctrl.setPos(camera.getPosition());
+                }
+            } else {
+                cameraTransformedThroughPortal = null;
+            }
+        });
 
         //noinspection UnstableApiUsage
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(e -> e.addAfter(

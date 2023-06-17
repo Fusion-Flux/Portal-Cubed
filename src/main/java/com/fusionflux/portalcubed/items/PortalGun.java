@@ -181,7 +181,8 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
                 if (normal.getY() == 0) {
                     up = new Vec3i(0, 1, 0);
                 } else {
-                    up = user.getDirection().getNormal();
+                    final Vec3 lookAngle = user.getLookAngle();
+                    up = Direction.getNearest(lookAngle.x, 0, lookAngle.z).getNormal();
                 }
                 right = up.cross(normal);
 

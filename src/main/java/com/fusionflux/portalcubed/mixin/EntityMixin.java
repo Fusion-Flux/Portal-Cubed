@@ -18,6 +18,8 @@ import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -141,6 +143,12 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract DamageSources damageSources();
 
+    @Shadow public abstract Vec3 getPosition(float partialTicks);
+
+    @Shadow public abstract Vec3 position();
+
+    @Shadow public abstract Vec3 getEyePosition();
+
     private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
 
     @Unique
@@ -148,6 +156,8 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Unique
     private final Map<BlockState, BlockPos> leftBlocks = new HashMap<>();
 
+    @Unique
+    private Portal viewTranslatingPortal;
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
@@ -492,11 +502,36 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     public void setCFG() {
     }
 
-//    @ModifyReturnValue(method = "getEyePosition", at = @At("RETURN"))
-//    private Vec3 transformViaPortal(Vec3 original, float tickDelta) {
-//        final Vec3 newPos = PortalDirectionUtils.simpleTransformPassingVector((Entity)(Object)this, getPosition(tickDelta), original);
-//        return newPos != null ? newPos : original;
-//    }
+    @ModifyReturnValue(method = "getEyePosition()Lnet/minecraft/world/phys/Vec3;", at = @At("RETURN"))
+    private Vec3 transformViaPortalNoInterp(Vec3 original) {
+        final var newPos = PortalDirectionUtils.simpleTransformPassingVector(
+            (Entity)(Object)this,
+            position().add(0, 0.02, 0),
+            original, p -> p.getNormal().y < 0
+        );
+        viewTranslatingPortal = newPos != null ? newPos.second() : null;
+        return newPos != null ? newPos.first() : original;
+    }
+
+    @ModifyReturnValue(method = "getEyePosition(F)Lnet/minecraft/world/phys/Vec3;", at = @At("RETURN"))
+    private Vec3 transformViaPortalInterp(Vec3 original, float tickDelta) {
+        final var newPos = PortalDirectionUtils.simpleTransformPassingVector(
+            (Entity)(Object)this,
+            getPosition(tickDelta).add(0, 0.02, 0),
+            original, p -> p.getNormal().y < 0
+        );
+        viewTranslatingPortal = newPos != null ? newPos.second() : null;
+        return newPos != null ? newPos.first() : original;
+    }
+
+    @ModifyReturnValue(method = "calculateViewVector", at = @At("RETURN"))
+    private Vec3 transformViewVector(Vec3 original, float xRot, float yRot) {
+        getEyePosition(); // Force a recalculation of viewTranslatingPortal
+        if (viewTranslatingPortal == null) {
+            return original;
+        }
+        return viewTranslatingPortal.getTransformQuat().rotate(original, false);
+    }
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     public void portalCubed$letYouFallLonger(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {

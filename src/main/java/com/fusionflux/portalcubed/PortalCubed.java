@@ -320,8 +320,9 @@ public class PortalCubed implements ModInitializer {
         assert portal.getDestination().isPresent();
         assert portal.getOtherNormal().isPresent();
 
+        final Direction direction = portal.getFacingDirection();
         final Vec3 otherNormal = portal.getOtherNormal().get();
-        Direction otherDirec = Direction.fromNormal((int) otherNormal.x(), (int) otherNormal.y(), (int) otherNormal.z());
+        Direction otherDirec = Direction.getNearest(otherNormal.x(), otherNormal.y(), otherNormal.z());
         final IPQuaternion portalTransform = portal.getTransformQuat();
 
         Vec3 rotatedVel = entityVelocity;
@@ -334,9 +335,8 @@ public class PortalCubed implements ModInitializer {
             rotatedVel = new Vec3(rotatedVel.x, 0.48, rotatedVel.z);
         }
 
-        rotatedOffsets = rotatedOffsets.subtract(0, entity.getEyeY() - entity.getY(), 0);
-
-        if (otherDirec != Direction.UP && otherDirec != Direction.DOWN) {
+        if (direction.getAxis().isHorizontal() && otherDirec.getAxis().isHorizontal()) {
+            rotatedOffsets = rotatedOffsets.subtract(0, entity.getEyeY() - entity.getY(), 0);
             if (rotatedOffsets.y < -0.95) {
                 rotatedOffsets = new Vec3(rotatedOffsets.x, -0.95, rotatedOffsets.z);
             } else if (rotatedOffsets.y > -0.95 + (1.9 - entity.getBbHeight())) {

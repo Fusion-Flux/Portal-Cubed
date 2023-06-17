@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.util;
 
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.entity.Portal;
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class PortalDirectionUtils {
     public static Vec3 rotateVector(Portal portal, Vec3 vector) {
@@ -57,11 +59,11 @@ public class PortalDirectionUtils {
      *         Usually this is interpreted as a return value of {@code endPos}, but that's not a requirement.
      */
     @Nullable
-    public static Vec3 simpleTransformPassingVector(Entity originEntity, Vec3 startPos, Vec3 endPos) {
+    public static Pair<Vec3, Portal> simpleTransformPassingVector(Entity originEntity, Vec3 startPos, Vec3 endPos, Predicate<Portal> portalPredicate) {
         final EntityHitResult hit = ProjectileUtil.getEntityHitResult(
             originEntity, startPos, endPos,
             new AABB(startPos, endPos).inflate(1),
-            e -> e instanceof Portal,
+            e -> e instanceof Portal portal && portal.getActive() && portalPredicate.test(portal),
             startPos.distanceToSqr(endPos)
         );
         if (hit == null) return null;
@@ -74,7 +76,7 @@ public class PortalDirectionUtils {
                 .subtract(portal.getOriginPos())
                 .with(facing.getAxis(), facing.getAxisDirection().getStep() * -1 * yOffset)
         );
-        return portal.getDestination().orElseThrow().add(hitRelative);
+        return Pair.of(portal.getDestination().orElseThrow().add(hitRelative), portal);
     }
 
 }

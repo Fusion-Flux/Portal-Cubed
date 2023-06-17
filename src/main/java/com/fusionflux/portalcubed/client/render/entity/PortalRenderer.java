@@ -10,6 +10,7 @@ import com.fusionflux.portalcubed.entity.Portal;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -105,14 +106,19 @@ public class PortalRenderer extends EntityRenderer<Portal> {
         final double oplx = Mth.lerp(tickDelta, otherPortal.xOld, otherPortal.getX());
         final double oply = Mth.lerp(tickDelta, otherPortal.yOld, otherPortal.getY());
         final double oplz = Mth.lerp(tickDelta, otherPortal.zOld, otherPortal.getZ());
-        final List<Entity> otherEntities = otherPortal.level.getEntities(otherPortal, otherPortal.getBoundingBox(), e -> !e.isInvisible());
+        final List<Entity> otherEntities = otherPortal.level.getEntities(otherPortal, otherPortal.getBoundingBox().deflate(0.01), e -> !e.isInvisible());
         final EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         final boolean renderHitboxes = dispatcher.shouldRenderHitBoxes();
         dispatcher.setRenderHitBoxes(false);
         for (final Entity otherEntity : otherEntities) {
             if (otherEntity instanceof Portal) continue;
+            if (PortalCubedClient.cameraTransformedThroughPortal != null) {
+                final Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+                if (otherEntity == camera.getEntity() && !camera.isDetached()) return;
+            }
             poseStack.pushPose();
             poseStack.mulPose(otherPortal.getTransformQuat().toQuaternionf());
+            poseStack.translate(0, 0.01, 0);
             dispatcher.render(
                 otherEntity,
                 Mth.lerp(tickDelta, otherEntity.xOld, otherEntity.getX()) - oplx,

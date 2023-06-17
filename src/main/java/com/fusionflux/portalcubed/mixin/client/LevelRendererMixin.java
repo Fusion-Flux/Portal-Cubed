@@ -2,7 +2,11 @@ package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.accessor.LevelRendererExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -23,9 +27,14 @@ public class LevelRendererMixin implements LevelRendererExt {
     @Mutable
     @Shadow @Final private RenderBuffers renderBuffers;
 
+    @Shadow @Final private Minecraft minecraft;
+
     @Inject(method = "prepareCullFrustum", at = @At("HEAD"))
     private void modifyCameraRotation(PoseStack poseStack, Vec3 cameraPos, Matrix4f projectionMatrix, CallbackInfo ci) {
         PortalCubedClient.interpCamera().ifPresent(q -> poseStack.mulPose(q.toQuaternionf()));
+        if (PortalCubedClient.cameraTransformedThroughPortal != null && !minecraft.gameRenderer.getMainCamera().isDetached()) {
+            poseStack.mulPose(PortalCubedClient.cameraTransformedThroughPortal.getTransformQuat().toQuaternionf().conjugate());
+        }
     }
 
     @Override
@@ -46,5 +55,16 @@ public class LevelRendererMixin implements LevelRendererExt {
     @Override
     public void setRenderBuffers(RenderBuffers renderBuffers) {
         this.renderBuffers = renderBuffers;
+    }
+
+    @WrapOperation(
+        method = "renderLevel",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/Camera;isDetached()Z"
+        )
+    )
+    private boolean overrideDetached(Camera instance, Operation<Boolean> original) {
+        return PortalCubedClient.cameraTransformedThroughPortal != null || original.call(instance);
     }
 }
