@@ -177,6 +177,11 @@
     "minecraft:chorus_flower",
     "minecraft:pointed_dripstone",
     "minecraft:ladder",
+    "minecraft:slime_block",
+    "minecraft:spawner",
+    "minecraft:piston",
+    "minecraft:sticky_piston",
+    "minecraft:mangrove_roots",
     "minecraft:barrier",
     "minecraft:bedrock"
 
