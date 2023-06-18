@@ -49,6 +49,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3d;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -353,14 +354,9 @@ public class PortalCubed implements ModInitializer {
             oldCameraRotation = oldCameraRotation.hamiltonProduct(currentAnimationDelta.get());
         }
         final IPQuaternion immediateFinalRot = oldCameraRotation.hamiltonProduct(portalTransform.getConjugated());
-        final var pitchYaw = IPQuaternion.getPitchYawFromRotation(immediateFinalRot);
-        float finalYaw = (float)(double)pitchYaw.getB();
-        float finalPitch = (float)(double)pitchYaw.getA();
-        if (finalPitch > 90) {
-            finalPitch = 90 - (finalPitch - 90);
-        } else if (finalPitch < -90) {
-            finalPitch = -90 + (-90 - finalPitch);
-        }
+        final Vector3d euler = immediateFinalRot.toQuaterniond().getEulerAnglesZXY(new Vector3d());
+        final float finalYaw = (float)Math.toDegrees(euler.y) + 180;
+        final float finalPitch = (float)Math.toDegrees(euler.x);
 
         final Vec3 dest = portal.getDestination().get().add(rotatedOffsets);
 

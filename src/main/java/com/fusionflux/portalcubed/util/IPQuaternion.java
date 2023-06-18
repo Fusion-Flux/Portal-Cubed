@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.PortalCubed;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
+import org.joml.Quaterniond;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -270,6 +271,10 @@ public class IPQuaternion {
 
     public Quaternionf toQuaternionf() {
         return new Quaternionf(x, y, z, w);
+    }
+
+    public Quaterniond toQuaterniond() {
+        return new Quaterniond(x, y, z, w);
     }
 
     public static IPQuaternion fromEuler(float angleX, float angleY, float angleZ) {
