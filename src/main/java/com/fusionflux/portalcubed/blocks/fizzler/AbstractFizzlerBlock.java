@@ -129,7 +129,7 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
     protected final void fizzleLiving(Entity entity) {
         if (entity.level.isClientSide) return;
         // TODO: Fizzle players visually?
-        if (entity instanceof LivingEntity || (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() == Fizzleable.FizzleType.LIVING)) {
+        if (entity instanceof Fizzleable fizzleable ? fizzleable.getFizzleType() == Fizzleable.FizzleType.LIVING : entity instanceof LivingEntity) {
             entity.hurt(pcSources(entity.level).fizzle(), PortalCubedConfig.fizzlerDamage);
             if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() != Fizzleable.FizzleType.NOT) {
                 fizzleable.fizzle();
