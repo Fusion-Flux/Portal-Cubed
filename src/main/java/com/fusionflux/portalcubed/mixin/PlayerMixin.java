@@ -194,34 +194,35 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
                             entityVelocity = entityVelocity.add(0, .08 * .98, 0);
                         }
 //                        Vec3 entityPos = portalCheck.getNormal().y > 0 ? thisEntity.position() : thisEntity.getEyePosition();
-                        Vec3 entityPos = thisEntity.position().add(0, portalCheck.getOtherNormal().get().y < 0 && portalCheck.getNormal().y >= 0 ? 0.02 - entityVelocity.y : thisEntity.getEyeHeight(), 0);
+                        Vec3 entityPos = thisEntity.position().add(0, portalCheck.getOtherNormal().get().y < 0 || portalCheck.getNormal().y < 0 ? 0.02 - entityVelocity.y : thisEntity.getEyeHeight(), 0);
+                        final boolean isColliding = portalCheck.getBoundingBox().distanceToSqr(entityPos) <= entityVelocity.lengthSqr();
                         if (portalFacing.step().x() < 0) {
-                            if (entityPos.x() + entityVelocity.x >= portalCheck.position().x() && entityVelocity.x() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityPos.x() + entityVelocity.x >= portalCheck.position().x() && entityVelocity.x() > 0 && isColliding) {
                                 possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().y() < 0) {
-                            if (entityPos.y() + entityVelocity.y >= portalCheck.position().y() && entityVelocity.y() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityPos.y() + entityVelocity.y >= portalCheck.position().y() && entityVelocity.y() > 0 && isColliding) {
                                 possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().z() < 0) {
-                            if (entityPos.z() + entityVelocity.z >= portalCheck.position().z() && entityVelocity.z() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityPos.z() + entityVelocity.z >= portalCheck.position().z() && entityVelocity.z() > 0 && isColliding) {
                                 possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().x() > 0) {
-                            if (entityPos.x() + entityVelocity.x <= portalCheck.position().x() && entityVelocity.x() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityPos.x() + entityVelocity.x <= portalCheck.position().x() && entityVelocity.x() < 0 && isColliding) {
                                 possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().y() > 0) {
-                            if (entityPos.y() + entityVelocity.y <= portalCheck.position().y() && entityVelocity.y() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityPos.y() + entityVelocity.y <= portalCheck.position().y() && entityVelocity.y() < 0 && isColliding) {
                                 possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
                         if (portalFacing.step().z() > 0) {
-                            if (entityPos.z() + entityVelocity.z <= portalCheck.position().z() && entityVelocity.z() < 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            if (entityPos.z() + entityVelocity.z <= portalCheck.position().z() && entityVelocity.z() < 0 && isColliding) {
                                 possiblePortals.add(Pair.of(portalCheck, entityPos));
                             }
                         }
