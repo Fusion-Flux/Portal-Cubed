@@ -194,7 +194,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
                             entityVelocity = entityVelocity.add(0, .08 * .98, 0);
                         }
 //                        Vec3 entityPos = portalCheck.getNormal().y > 0 ? thisEntity.position() : thisEntity.getEyePosition();
-                        Vec3 entityPos = thisEntity.position().add(0, portalCheck.getOtherNormal().get().y < 0 ? 0.02 - entityVelocity.y : thisEntity.getEyeHeight(), 0);
+                        Vec3 entityPos = thisEntity.position().add(0, portalCheck.getOtherNormal().get().y < 0 && portalCheck.getNormal().y >= 0 ? 0.02 - entityVelocity.y : thisEntity.getEyeHeight(), 0);
                         if (portalFacing.step().x() < 0) {
                             if (entityPos.x() + entityVelocity.x >= portalCheck.position().x() && entityVelocity.x() > 0 && portalCheck.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
                                 possiblePortals.add(Pair.of(portalCheck, entityPos));
@@ -251,6 +251,9 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             Vec3 entityVelocity,
             Vec3 basePosition
     ) {
+        assert portal.getDestination().isPresent();
+        assert portal.getOtherNormal().isPresent();
+
         if (this.level.isClientSide && thisEntity.isLocalPlayer()) {
             Vec3 invert = (portal.getNormal().multiply(portal.getNormal())).scale(-1);
             if (invert.x != 0) {
@@ -274,11 +277,20 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             byteBuf.writeDouble(entityVelocity.x);
             byteBuf.writeDouble(entityVelocity.y);
             byteBuf.writeDouble(entityVelocity.z);
-            final Vec3 teleportOffset = new Vec3(
+            Vec3 teleportOffset = new Vec3(
                 ((basePosition.x()) - portal.position().x()) * invert.x,
                 ((basePosition.y()) - portal.position().y()) * invert.y,
                 ((basePosition.z()) - portal.position().z()) * invert.z
             );
+            if (portal.getNormal().y < 0 && portal.getOtherNormal().get().y <= 0) {
+                teleportOffset = teleportOffset.add(
+                    new Vec3(
+                        0, thisEntity.getEyeHeight() - Math.sqrt(
+                            portal.getBoundingBox().distanceToSqr(thisEntity.position())
+                        ), 0
+                    )
+                );
+            }
             byteBuf.writeDouble(teleportOffset.x);
             byteBuf.writeDouble(teleportOffset.y);
             byteBuf.writeDouble(teleportOffset.z);
