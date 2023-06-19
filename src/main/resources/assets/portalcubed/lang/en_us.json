@@ -329,7 +329,7 @@
   "portalcubed.midnightconfig.title": "Portal Cubed Config",
   "portalcubed.midnightconfig.maxBridgeLength": "Max Emitter Range",
   "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
-  "portalcubed.midnightconfig.enableAccurateMovement": "Enable Accurate Movement",
+  "portalcubed.midnightconfig.enableAccurateMovement": "Enable Source-Accurate Movement",
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
   "portalcubed.midnightconfig.pelletDamage": "Energy Pellet Damage",
@@ -439,8 +439,11 @@
 
   "gamerule.category.portalcubed": "Portal\u00b3",
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
-  "gamerule.portalAlignment": "Portal Alignment (1/xth of a block, 0 to disable)",
+  "gamerule.allowCrouchFlyGlitch.description": "Enables the Excursion Funnel Crouch Fly Glitch from Portal 2.",
+  "gamerule.portalAlignment": "Portal Alignment",
+  "gamerule.portalAlignment.description": "Changes portal placement snapping, with the value being fraction of a block snapped to. For example, 16 is every pixel, 1 is full blocks, and 0 is off.",
   "gamerule.usePortalHud": "Use Portal HUD",
+  "gamerule.usePortalHud.description": "Disables the hotbar, uses 'E' to grab objects, and disables fizzling portals using the keybind. Requires valid items to be in the first hotbar slot.",
   "gamerule.usePortalFog": "Use Portal Cinematic Fog",
 
   "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
