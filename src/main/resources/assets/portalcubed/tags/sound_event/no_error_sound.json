@@ -7,6 +7,7 @@
     "portalcubed:cake_core",
     "portalcubed:space_core",
     "portalcubed:adventure_core",
-    "portalcubed:fact_core"
+    "portalcubed:fact_core",
+    "portalcubed:generic_physics_fall"
   ]
 }

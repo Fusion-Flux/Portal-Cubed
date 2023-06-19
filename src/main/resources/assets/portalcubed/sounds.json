@@ -416,5 +416,10 @@
 			"portalcubed:iceaxe_swing1"
 		],
 		"subtitle": "subtitles.portalcubed.crowbar_swoosh"
+	},
+
+	"generic_physics_fall": {
+		"sounds": [
+		]
 	}
 }

@@ -12,6 +12,7 @@ import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -361,5 +363,15 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     protected static AABB createFootBox(double x, double y, double z) {
         return new AABB(-x / 2, 0, -z / 2, x / 2, y, z / 2);
+    }
+
+    @NotNull
+    @Override
+    public Fallsounds getFallSounds() {
+        return new Fallsounds(PortalCubedSounds.GENERIC_PHYSICS_FALL_EVENT, PortalCubedSounds.GENERIC_PHYSICS_FALL_EVENT);
+    }
+
+    @Override
+    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
     }
 }

@@ -85,6 +85,8 @@ public class PortalCubedSounds {
 
     public static final ResourceLocation CROWBAR_SWOOSH = id("crowbar_swoosh");
 
+    public static final ResourceLocation GENERIC_PHYSICS_FALL = id("generic_physics_fall");
+
     public static final SoundEvent ERROR_EVENT = SoundEvent.createVariableRangeEvent(ERROR);
 
     public static final SoundEvent GEL_BOUNCE_EVENT = SoundEvent.createVariableRangeEvent(GEL_BOUNCE);
@@ -156,6 +158,8 @@ public class PortalCubedSounds {
     public static final SoundEvent SEWAGE_STEP_EVENT = SoundEvent.createVariableRangeEvent(SEWAGE_STEP);
 
     public static final SoundEvent CROWBAR_SWOOSH_EVENT = SoundEvent.createVariableRangeEvent(CROWBAR_SWOOSH);
+
+    public static final SoundEvent GENERIC_PHYSICS_FALL_EVENT = SoundEvent.createVariableRangeEvent(GENERIC_PHYSICS_FALL);
 
     public static final TagKey<SoundEvent> NO_ERROR_SOUND = QuiltTagKey.of(Registries.SOUND_EVENT, id("no_error_sound"), TagType.CLIENT_ONLY);
 
@@ -233,5 +237,7 @@ public class PortalCubedSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, SEWAGE_STEP, SEWAGE_STEP_EVENT);
 
         Registry.register(BuiltInRegistries.SOUND_EVENT, CROWBAR_SWOOSH, CROWBAR_SWOOSH_EVENT);
+
+        Registry.register(BuiltInRegistries.SOUND_EVENT, GENERIC_PHYSICS_FALL, GENERIC_PHYSICS_FALL_EVENT);
     }
 }

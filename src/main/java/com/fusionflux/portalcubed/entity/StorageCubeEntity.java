@@ -5,6 +5,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class StorageCubeEntity extends CorePhysicsEntity  {
 
@@ -13,7 +14,7 @@ public class StorageCubeEntity extends CorePhysicsEntity  {
     }
 
     @Override
-    public LivingEntity.Fallsounds getFallSounds() {
+    public LivingEntity.@NotNull Fallsounds getFallSounds() {
         return new LivingEntity.Fallsounds(PortalCubedSounds.CUBE_LOW_HIT_EVENT, PortalCubedSounds.CUBE_HIGH_HIT_EVENT);
     }
 
