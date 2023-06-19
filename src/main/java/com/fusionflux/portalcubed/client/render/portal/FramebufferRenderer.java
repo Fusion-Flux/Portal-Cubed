@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -45,12 +46,13 @@ public class FramebufferRenderer extends PortalRendererImpl {
     }
 
     @Override
-    public void preRender(Portal portal, float tickDelta, PoseStack poseStack) {
-        stencilRenderer.preRender(portal, tickDelta, poseStack);
+    public void preRender(Portal portal, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
+        stencilRenderer.preRender(portal, tickDelta, poseStack, bufferSource);
     }
 
     @Override
-    public void postRender(Portal portal, float tickDelta, PoseStack poseStack) {
+    public void postRender(Portal portal, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
+        ((MultiBufferSource.BufferSource)bufferSource).endBatch();
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthMask(true);
         RenderSystem.stencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
@@ -69,14 +71,14 @@ public class FramebufferRenderer extends PortalRendererImpl {
         GlStateManager._clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
 
         portalLayer++;
-//        renderWorld(portal, tickDelta);
+        renderWorld(portal, tickDelta);
         portalLayer--;
 
         ((MinecraftAccessor)minecraft).setMainRenderTarget(oldTarget);
         oldTarget.bindWrite(true);
 
         glEnable(GL_STENCIL_TEST);
-        RenderSystem.stencilFunc(GL_LEQUAL, 1, 0xff);
+        RenderSystem.stencilFunc(GL_LEQUAL, portalLayer + 1, 0xff);
         newTarget.blitToScreen(oldTarget.width, oldTarget.height, false);
         glDisable(GL_STENCIL_TEST);
 

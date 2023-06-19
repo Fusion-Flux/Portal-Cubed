@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.client.render.portal;
 
-import com.fusionflux.portalcubed.accessor.CameraExt;
 import com.fusionflux.portalcubed.accessor.GameRendererExt;
 import com.fusionflux.portalcubed.accessor.LevelRendererExt;
 import com.fusionflux.portalcubed.accessor.MinecraftExt;
@@ -12,6 +11,7 @@ import net.fabricmc.fabric.impl.client.rendering.WorldRenderContextImpl;
 import net.minecraft.Util;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.culling.Frustum;
 
@@ -27,9 +27,9 @@ public abstract class PortalRendererImpl {
 
     public abstract boolean enabled(Portal portal);
 
-    public abstract void preRender(Portal portal, float tickDelta, PoseStack poseStack);
+    public abstract void preRender(Portal portal, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource);
 
-    public abstract void postRender(Portal portal, float tickDelta, PoseStack poseStack);
+    public abstract void postRender(Portal portal, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource);
 
     public abstract PortalRenderPhase targetPhase();
 
@@ -46,7 +46,6 @@ public abstract class PortalRendererImpl {
         final WorldRenderContextImpl oldRenderContext = copyWorldRenderContext(contextObj, new WorldRenderContextImpl());
 
         final Camera newCamera = new Camera();
-        ((CameraExt)newCamera).updateSimple(portal.level, portal);
 
         final RenderBuffers newRenderBuffers = newRenderBuffers();
         if (newRenderBuffers != null) {

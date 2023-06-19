@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.client.render.portal;
 
 import com.fusionflux.portalcubed.entity.Portal;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 public class DisabledRenderer extends PortalRendererImpl {
     @Override
@@ -10,11 +11,11 @@ public class DisabledRenderer extends PortalRendererImpl {
     }
 
     @Override
-    public void preRender(Portal portal, float tickDelta, PoseStack poseStack) {
+    public void preRender(Portal portal, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
     }
 
     @Override
-    public void postRender(Portal portal, float tickDelta, PoseStack poseStack) {
+    public void postRender(Portal portal, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
     }
 
     @Override

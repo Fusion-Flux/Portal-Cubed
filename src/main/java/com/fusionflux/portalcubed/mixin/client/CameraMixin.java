@@ -7,8 +7,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,14 +28,6 @@ public abstract class CameraMixin implements CameraExt {
     @Shadow protected abstract double getMaxZoom(double startingDistance);
 
     @Shadow protected abstract void setPosition(Vec3 pos);
-
-    @Shadow @Final private Vector3f forwards;
-
-    @Shadow @Final private Vector3f up;
-
-    @Shadow @Final private Vector3f left;
-
-    @Shadow @Final private Quaternionf rotation;
 
     @Override
     public FluidState portalcubed$getSubmergedFluidState() {

@@ -105,11 +105,13 @@ public class LevelRendererMixin implements LevelRendererExt {
         final EntityRenderDispatcher dispatcher = minecraft.getEntityRenderDispatcher();
         for (final Entity entity : level.entitiesForRendering()) {
             if (!(entity instanceof Portal portal) || !portal.getActive()) continue;
+            final PortalRenderer renderer = (PortalRenderer)dispatcher.getRenderer(portal);
+            renderer.shouldRender(portal, cullingFrustum, cameraPos.x, cameraPos.y, cameraPos.z);
             poseStack.pushPose();
             poseStack.translate(entity.getX(), entity.getY(), entity.getZ());
             poseStack.mulPose(portal.getRotation());
             poseStack.mulPose(Axis.YP.rotationDegrees(180f));
-            ((PortalRenderer)dispatcher.getRenderer(portal)).renderPortal(
+            renderer.renderPortal(
                 poseStack,
                 consumers,
                 portal,

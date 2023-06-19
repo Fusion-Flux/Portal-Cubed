@@ -91,11 +91,11 @@ public class PortalRenderer extends EntityRenderer<Portal> {
         final PortalRendererImpl renderer = PortalCubedClient.getRenderer();
         final boolean renderContents = renderPhase == renderer.targetPhase() && renderer.enabled(entity);
         if (renderContents) {
-            renderer.preRender(entity, tickDelta, poseStack);
+            renderer.preRender(entity, tickDelta, poseStack, vertexConsumers);
         }
         model.renderToBuffer(poseStack, vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity))), light, OverlayTexture.NO_OVERLAY, r, g, b, 1F);
         if (renderContents) {
-            renderer.postRender(entity, tickDelta, poseStack);
+            renderer.postRender(entity, tickDelta, poseStack, vertexConsumers);
         }
     }
 

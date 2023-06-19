@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.entity.Portal;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -17,7 +18,8 @@ public class StencilRenderer extends PortalRendererImpl {
     }
 
     @Override
-    public void preRender(Portal portal, float tickDelta, PoseStack poseStack) {
+    public void preRender(Portal portal, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
+        ((MultiBufferSource.BufferSource)bufferSource).endBatch();
         // TODO: PortingLib compat
         ((RenderTargetExt)Minecraft.getInstance().getMainRenderTarget()).setStencilBufferEnabled(true);
         glEnable(GL_STENCIL_TEST);
@@ -30,7 +32,8 @@ public class StencilRenderer extends PortalRendererImpl {
     }
 
     @Override
-    public void postRender(Portal portal, float tickDelta, PoseStack poseStack) {
+    public void postRender(Portal portal, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
+        ((MultiBufferSource.BufferSource)bufferSource).endBatch();
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthMask(true);
         RenderSystem.stencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
