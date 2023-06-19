@@ -21,12 +21,12 @@ public class StencilRenderer extends PortalRendererImpl {
         // TODO: PortingLib compat
         ((RenderTargetExt)Minecraft.getInstance().getMainRenderTarget()).setStencilBufferEnabled(true);
         glEnable(GL_STENCIL_TEST);
+        RenderSystem.clear(GL_STENCIL_BUFFER_BIT, Minecraft.ON_OSX);
         RenderSystem.colorMask(false, false, false, false);
         RenderSystem.depthMask(false);
         RenderSystem.stencilMask(0xff);
-        RenderSystem.stencilFunc(GL_GREATER, 0, 0xff);
+        RenderSystem.stencilFunc(GL_NEVER, 0, 0xff);
         RenderSystem.stencilOp(GL_INCR, GL_KEEP, GL_KEEP);
-        RenderSystem.clear(GL_STENCIL_BUFFER_BIT, Minecraft.ON_OSX);
     }
 
     @Override

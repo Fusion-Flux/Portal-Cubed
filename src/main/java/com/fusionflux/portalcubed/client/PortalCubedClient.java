@@ -39,7 +39,6 @@ import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Axis;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
@@ -135,6 +134,8 @@ public class PortalCubedClient implements ClientModInitializer {
     public static long cameraInterpStartTime;
 
     public static Portal cameraTransformedThroughPortal;
+
+    public static WorldRenderContext worldRenderContext; // QFAPI impl detail: this is a mutable singleton
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -311,36 +312,6 @@ public class PortalCubedClient implements ClientModInitializer {
             RenderSystem.enableCull();
         });
 
-        WorldRenderEvents.END.register(ctx -> {
-            if (getRenderer().targetPhase() != PortalRenderPhase.FINAL) return;
-            if (!(ctx.consumers() instanceof final MultiBufferSource.BufferSource consumers)) return;
-            final var cameraPos = ctx.camera().getPosition();
-            ctx.matrixStack().pushPose();
-            ctx.matrixStack().translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-            PortalRenderer.renderPhase = PortalRenderPhase.FINAL;
-
-            final EntityRenderDispatcher dispatcher = ctx.gameRenderer().getMinecraft().getEntityRenderDispatcher();
-            for (final Entity entity : ctx.world().entitiesForRendering()) {
-                if (!(entity instanceof Portal portal) || !portal.getActive()) continue;
-                ctx.matrixStack().pushPose();
-                ctx.matrixStack().translate(entity.getX(), entity.getY(), entity.getZ());
-                ctx.matrixStack().mulPose(portal.getRotation());
-                ctx.matrixStack().mulPose(Axis.YP.rotationDegrees(180f));
-                ((PortalRenderer)dispatcher.getRenderer(portal)).renderPortal(
-                    ctx.matrixStack(),
-                    consumers,
-                    portal,
-                    0, 1, 1, 1,
-                    ctx.tickDelta()
-                );
-                ctx.matrixStack().popPose();
-            }
-
-            ctx.matrixStack().popPose();
-            consumers.endLastBatch();
-            PortalRenderer.renderPhase = PortalRenderPhase.ENTITY;
-        });
-
         PortalBlocksLoader.initClient();
 
         FloorButtonBlock.enableEasterEgg = true;
@@ -501,6 +472,8 @@ public class PortalCubedClient implements ClientModInitializer {
             ),
             CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
         ));
+
+        WorldRenderEvents.START.register(context -> worldRenderContext = context);
 
         try {
             final CompoundTag compound = NbtIo.readCompressed(GLOBAL_ADVANCEMENTS_FILE);

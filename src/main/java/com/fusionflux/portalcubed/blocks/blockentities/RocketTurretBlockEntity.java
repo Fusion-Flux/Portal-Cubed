@@ -7,6 +7,7 @@ import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.RocketEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.GeneralUtil;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -260,10 +261,8 @@ public class RocketTurretBlockEntity extends EntityLikeBlockEntity {
                     Vec3.atLowerCornerOf(pos)
                         .add(getGunOffset(0))
                 );
-            destAngle = new Vec2(
-                (float)Math.toDegrees(-Mth.atan2(offset.y, Math.sqrt(offset.x * offset.x + offset.z * offset.z))),
-                (float)Math.toDegrees(Mth.atan2(offset.z, offset.x))
-            );
+            destAngle = GeneralUtil.normalToRotation(offset);
+            destAngle = new Vec2(destAngle.x, destAngle.y + 90);
         } else if (destAngle != null) {
             destAngle = new Vec2(0, destAngle.y);
         } else return;

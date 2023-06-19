@@ -64,7 +64,6 @@ public class GeneralUtil {
         return linePnt.add(lineDir.scale(d));
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
     public static AABB rotate(AABB box, float angle, Direction.Axis axis) {
         angle = Mth.wrapDegrees(angle);
         if ((angle > -45 && angle <= 45) || angle > 135 || angle <= -135) {
@@ -76,5 +75,12 @@ public class GeneralUtil {
                 case Z -> new AABB(box.minY, box.minX, box.minZ, box.maxY, box.maxX, box.maxZ);
             };
         }
+    }
+
+    public static Vec2 normalToRotation(Vec3 normal) {
+        return new Vec2(
+            (float)toDegrees(-Mth.atan2(normal.y, sqrt(normal.x * normal.x + normal.z * normal.z))),
+            (float)toDegrees(Mth.atan2(normal.z, normal.x)) - 90
+        );
     }
 }

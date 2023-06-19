@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.mixin.client.MinecraftAccessor;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 
@@ -13,10 +14,12 @@ import java.util.Queue;
 
 import static com.mojang.blaze3d.platform.GlConst.GL_COLOR_BUFFER_BIT;
 import static com.mojang.blaze3d.platform.GlConst.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.*;
 
 public class FramebufferRenderer extends PortalRendererImpl {
     private static final Queue<RenderTarget> FREE_TARGETS = new ArrayDeque<>();
 
+    private final PortalRendererImpl stencilRenderer = new StencilRenderer();
     private int portalLayer = 0;
 
     private static RenderTarget getRenderTarget(int width, int height) {
@@ -43,10 +46,17 @@ public class FramebufferRenderer extends PortalRendererImpl {
 
     @Override
     public void preRender(Portal portal, float tickDelta, PoseStack poseStack) {
+        stencilRenderer.preRender(portal, tickDelta, poseStack);
     }
 
     @Override
     public void postRender(Portal portal, float tickDelta, PoseStack poseStack) {
+        RenderSystem.colorMask(true, true, true, true);
+        RenderSystem.depthMask(true);
+        RenderSystem.stencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        RenderSystem.stencilFunc(GL_ALWAYS, 0, 0xff);
+        glDisable(GL_STENCIL_TEST);
+
         final Minecraft minecraft = Minecraft.getInstance();
         final RenderTarget oldTarget = minecraft.getMainRenderTarget();
         final RenderTarget newTarget = getRenderTarget(oldTarget.width, oldTarget.height);
@@ -59,17 +69,22 @@ public class FramebufferRenderer extends PortalRendererImpl {
         GlStateManager._clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
 
         portalLayer++;
-        renderWorld(portal, tickDelta);
+//        renderWorld(portal, tickDelta);
         portalLayer--;
 
         ((MinecraftAccessor)minecraft).setMainRenderTarget(oldTarget);
         oldTarget.bindWrite(true);
+
+        glEnable(GL_STENCIL_TEST);
+        RenderSystem.stencilFunc(GL_LEQUAL, 1, 0xff);
+        newTarget.blitToScreen(oldTarget.width, oldTarget.height, false);
+        glDisable(GL_STENCIL_TEST);
 
         freeRenderTarget(newTarget);
     }
 
     @Override
     public PortalRenderPhase targetPhase() {
-        return PortalRenderPhase.ENTITY;
+        return PortalRenderPhase.FINAL;
     }
 }
