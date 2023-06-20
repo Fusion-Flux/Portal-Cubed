@@ -50,7 +50,7 @@ public class FaithPlateBlock extends BaseEntityBlock {
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide && player.getItemInHand(hand).is(PortalCubedItems.HAMMER)) {
+        if (!world.isClientSide && canConfigure(player, hand)) {
             //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity cast to
             //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
             MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
@@ -61,6 +61,12 @@ public class FaithPlateBlock extends BaseEntityBlock {
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    public boolean canConfigure(Player player, InteractionHand hand) {
+        if (player.isCreative())
+            return true;
+        return player.getItemInHand(hand).is(PortalCubedItems.HAMMER);
     }
 
     @Override
