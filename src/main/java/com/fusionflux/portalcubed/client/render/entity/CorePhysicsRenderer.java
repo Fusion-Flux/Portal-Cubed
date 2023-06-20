@@ -13,6 +13,11 @@ public abstract class CorePhysicsRenderer<T extends CorePhysicsEntity, M extends
     }
 
     @Override
+    protected boolean shouldShowName(T entity) {
+        return entity.isCustomNameVisible() && super.shouldShowName(entity);
+    }
+
+    @Override
     protected void setupRotations(T entity, PoseStack matrices, float animationProgress, float bodyYaw, float tickDelta) {
         RayonIntegration.INSTANCE.multiplyMatrices(matrices, entity, tickDelta);
     }

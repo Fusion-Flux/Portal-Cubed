@@ -7,6 +7,7 @@ import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
@@ -14,6 +15,7 @@ import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
@@ -24,18 +26,19 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
@@ -82,29 +85,20 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource damageSource) {
-        return damageSource != damageSources().outOfWorld() && !damageSource.isCreativePlayer();
+    public boolean isInvulnerableTo(DamageSource source) {
+        if (source.isCreativePlayer() || source == damageSources().outOfWorld())
+            return false;
+        if (!(source.getEntity() instanceof Player player))
+            return true;
+        return !player.getItemInHand(InteractionHand.MAIN_HAND).is(PortalCubedItems.HAMMER);
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (!this.level.isClientSide && !this.isRemoved()) {
-            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
-            if (source.getEntity() instanceof Player || source == damageSources().outOfWorld()) {
-                if (source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().mayBuild) {
-                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
-                        this.spawnAtLocation(getPickResult());
-                    }
-                    this.discard();
-                }
-                if (!(source.getEntity() instanceof Player)) {
-                    if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && !bl) {
-                        this.spawnAtLocation(getPickResult());
-                    }
-                    this.discard();
-                }
-            }
-
+        if (!level.isClientSide && !isInvulnerableTo(source) && !isRemoved()) {
+            dropAllDeathLoot(source);
+            discard();
+            return true;
         }
         return false;
     }
@@ -113,15 +107,25 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     public boolean shouldShowName() {
         return false;
     }
+
     @Override
     public boolean isCustomNameVisible() {
         return false;
     }
 
-
     @Override
-    public boolean hasCustomName() {
-        return false;
+    @NotNull
+    public Component getDisplayName() {
+        return super.getDisplayName().plainCopy();
+    }
+
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        ItemStack stack = super.getPickResult();
+        if (stack != null)
+            stack.setHoverName(getDisplayName());
+        return stack;
     }
 
     @Override

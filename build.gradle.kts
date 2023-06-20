@@ -90,6 +90,8 @@ dependencies {
 		isTransitive = false
 	})
 
+	modLocalRuntime("maven.modrinth:cloth-config:10.0.96+fabric")
+
 	include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.1.0") {
 		exclude(group = "net.fabricmc.fabric-api")
 		exclude(group = "net.fabricmc")
@@ -102,7 +104,7 @@ dependencies {
 
 //	modCompileOnly("com.simibubi.create:create-fabric-1.19.2:0.5.0.i-930+1.19.2")
 
-	modCompileOnly("maven.modrinth:visible-barriers:2.0.1")
+	modCompileOnly("maven.modrinth:visiblebarriers:2.0.1")
 
 	include(implementation("net.objecthunter:exp4j:0.4.8")!!)
 
@@ -123,6 +125,24 @@ dependencies {
 
 loom {
 	accessWidenerPath.set(file("src/main/resources/portalcubed.accesswidener"))
+	runs {
+		create("datagen") {
+			client()
+			name("Data Generation")
+			vmArg("-Dfabric-api.datagen")
+			vmArg("-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}")
+			vmArg("-Dfabric-api.datagen.modid=portalcubed")
+		}
+	}
+}
+
+sourceSets {
+	main {
+		resources {
+			srcDir("src/generated/resources")
+			exclude("src/generated/resources/.cache")
+		}
+	}
 }
 
 checkstyle {
