@@ -2,6 +2,8 @@ package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
+import com.fusionflux.portalcubed.blocks.BaseGel;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import com.fusionflux.portalcubed.client.gui.ExpressionFieldWidget;
@@ -13,14 +15,18 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.GeneralUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.objecthunter.exp4j.Expression;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -201,6 +207,25 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                 PortalCubedSounds.CROWBAR_SWOOSH_EVENT, SoundSource.PLAYERS,
                 0.7f, 1f
             );
+        }
+    }
+
+    @Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
+    private void repulsionGelNoFallDamage(float fallDistance, float multiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        final AABB boundingBox = getBoundingBox();
+        for (BlockPos pos : BlockPos.betweenClosed(
+            (int)Math.floor(boundingBox.minX),
+            (int)Math.floor(boundingBox.minY),
+            (int)Math.floor(boundingBox.minZ),
+            (int)Math.ceil(boundingBox.maxX),
+            (int)Math.ceil(boundingBox.maxY),
+            (int)Math.ceil(boundingBox.maxZ)
+        )) {
+            final BlockState state = level.getBlockState(pos);
+            if (state.is(PortalCubedBlocks.REPULSION_GEL) && BaseGel.collides(this, pos, state)) {
+                cir.setReturnValue(false);
+                return;
+            }
         }
     }
 }
