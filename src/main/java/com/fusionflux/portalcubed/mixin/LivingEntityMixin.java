@@ -211,21 +211,26 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     }
 
     @Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
-    private void repulsionGelNoFallDamage(float fallDistance, float multiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
-        if (isSuppressingBounce()) return;
-        final AABB boundingBox = getBoundingBox();
-        for (BlockPos pos : BlockPos.betweenClosed(
-            (int)Math.floor(boundingBox.minX),
-            (int)Math.floor(boundingBox.minY),
-            (int)Math.floor(boundingBox.minZ),
-            (int)Math.ceil(boundingBox.maxX),
-            (int)Math.ceil(boundingBox.maxY),
-            (int)Math.ceil(boundingBox.maxZ)
-        )) {
-            final BlockState state = level.getBlockState(pos);
-            if (state.is(PortalCubedBlocks.REPULSION_GEL) && BaseGel.collides(this, pos, state)) {
-                cir.setReturnValue(false);
-                return;
+    private void noFallDamage(float fallDistance, float multiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        if (getItemBySlot(EquipmentSlot.FEET).is(PortalCubedItems.LONG_FALL_BOOTS)) {
+            cir.setReturnValue(true);
+            return;
+        }
+        if (!isSuppressingBounce()) {
+            final AABB boundingBox = getBoundingBox();
+            for (BlockPos pos : BlockPos.betweenClosed(
+                (int)Math.floor(boundingBox.minX),
+                (int)Math.floor(boundingBox.minY),
+                (int)Math.floor(boundingBox.minZ),
+                (int)Math.ceil(boundingBox.maxX),
+                (int)Math.ceil(boundingBox.maxY),
+                (int)Math.ceil(boundingBox.maxZ)
+            )) {
+                final BlockState state = level.getBlockState(pos);
+                if (state.is(PortalCubedBlocks.REPULSION_GEL) && BaseGel.collides(this, pos, state)) {
+                    cir.setReturnValue(false);
+                    return;
+                }
             }
         }
     }
