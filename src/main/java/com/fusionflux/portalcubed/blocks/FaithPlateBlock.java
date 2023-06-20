@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,7 +50,7 @@ public class FaithPlateBlock extends BaseEntityBlock {
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide && player.getItemInHand(hand).is(PortalCubedItems.HAMMER)) {
             //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity cast to
             //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
             MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
