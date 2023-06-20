@@ -1,29 +1,50 @@
 plugins {
 	id("org.quiltmc.loom") version "1.1.+"
 	id("org.ajoberstar.grgit") version "4.1.0"
-	checkstyle
+	id("checkstyle")
 }
-
-fun prop(key: String) = project.property(key) as String
 
 java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
 
-base.archivesName.set(prop("archives_base_name"))
-project.version = "${prop("mod_version")}-rev.${grgit.head().abbreviatedId}"
-project.group = prop("maven_group")
+base.archivesName.set(project["archives_base_name"] as String)
+project.version = "${project["mod_version"]}-rev.${grgit.head().abbreviatedId}"
+project.group = project["maven_group"]
 
-val minecraftVersion = prop("minecraft_version")
+def minecraftVersion = project["minecraft_version"]
 
 repositories {
-	maven("https://maven.shedaniel.me/")
-	maven("https://www.cursemaven.com")
-	maven("https://maven.terraformersmc.com/releases")
-	maven("https://hephaestus.dev/release")
-	maven("https://api.modrinth.com/maven")
-	maven("https://maven.tterrag.com/")
-	maven("https://mvn.devos.one/snapshots/")
-	maven("https://lazurite.dev/maven")
+	maven {
+		url = "https://maven.shedaniel.me/"
+	}
+
+	maven {
+		url = "https://www.cursemaven.com"
+	}
+
+	maven {
+		url = "https://maven.terraformersmc.com/releases"
+	}
+
+	maven {
+		url = "https://hephaestus.dev/release"
+	}
+
+	maven {
+		url = "https://api.modrinth.com/maven"
+	}
+
+	maven {
+		url = "https://maven.tterrag.com/"
+	}
+
+	maven {
+		url = "https://mvn.devos.one/snapshots/"
+	}
+
+	maven {
+		url = "https://lazurite.dev/maven"
+	}
 
 	maven {
 		name = "Ladysnake Mods"
@@ -59,68 +80,70 @@ repositories {
 		url = uri("https://maven.parchmentmc.org")
 	}
 
-	maven("https://jitpack.io/")
+	maven {
+		url = "https://jitpack.io/"
+	}
+
 }
 
 dependencies {
 	minecraft("com.mojang:minecraft:$minecraftVersion")
 
-	@Suppress("UnstableApiUsage")
 	mappings(loom.layered {
 		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-${prop("parchment_version")}@zip")
+		parchment("org.parchmentmc.data:parchment-${project["parchment_version"]}@zip")
 	})
 
-	modImplementation("org.quiltmc:quilt-loader:${prop("loader_version")}")
-	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${prop("quilted_version")}-$minecraftVersion")
+	modImplementation("org.quiltmc:quilt-loader:${project["loader_version"]}")
+	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${project["quilted_version"]}-$minecraftVersion")
 
-	modImplementation("com.terraformersmc:modmenu:${prop("mod_menu_version")}") {
-		exclude(group = "net.fabricmc.fabric-api")
-		exclude(group = "net.fabricmc")
+	modImplementation("com.terraformersmc:modmenu:${project["mod_menu_version"]}") {
+		exclude(group: "net.fabricmc.fabric-api")
+		exclude(group: "net.fabricmc")
 	}
 
 	include(modApi("io.github.tropheusj.stonecutter_recipe_tags:fabric:5.2.0+1.19.4.fabric") {
-		isTransitive = false
+		transitive = false
 	})
 
-	include(modApi("com.unascribed:lib39-core:1.5.0-pre3+1.19.3")!!)
-	include(modApi("com.unascribed:lib39-recoil:1.5.0-pre3+1.19.3")!!)
+	include(modApi("com.unascribed:lib39-core:1.5.0-pre3+1.19.3"))
+	include(modApi("com.unascribed:lib39-recoil:1.5.0-pre3+1.19.3"))
 
-	include(modImplementation("com.github.qouteall:Gravity-Api:${prop("gravity_api_version")}") {
-		isTransitive = false
+	include(modImplementation("com.github.qouteall:Gravity-Api:${project["gravity_api_version"]}") {
+		transitive = false
 	})
 
 	modLocalRuntime("maven.modrinth:cloth-config:10.0.96+fabric")
 
 	include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.1.0") {
-		exclude(group = "net.fabricmc.fabric-api")
-		exclude(group = "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+		exclude(group: "net.fabricmc")
 	})
 
-	include(modImplementation("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:0.2.0-beta.8")!!)
+	include(modImplementation("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:0.2.0-beta.8"))
 	annotationProcessor("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:0.2.0-beta.8")
 
-	include(modImplementation("maven.modrinth:midnightlib:1.3.0-quilt")!!)
+	include(modImplementation("maven.modrinth:midnightlib:1.3.0-quilt"))
 
 //	modCompileOnly("com.simibubi.create:create-fabric-1.19.2:0.5.0.i-930+1.19.2")
 
 	modCompileOnly("maven.modrinth:visiblebarriers:2.0.1")
 
-	include(implementation("net.objecthunter:exp4j:0.4.8")!!)
+	include(implementation("net.objecthunter:exp4j:0.4.8"))
 
 //	modCompileOnly("alexiil.mc.lib:libmultipart-all:0.8.0")
 
 	modCompileOnly("dev.lambdaurora:lambdynamiclights:2.3.0+1.19.4")
 
 	modCompileOnly("com.github.Virtuoel:Pehkui:3.6.3") {
-		exclude(group = "net.fabricmc.fabric-api")
+		exclude(group: "net.fabricmc.fabric-api")
 	}
 
 	modCompileOnly("dev.lazurite:rayon-fabric:1.7.1+1.19.4")
 
-	include(modImplementation("maven.modrinth:json-entity-animation:0.2.1+1.19.4")!!)
+	include(modImplementation("maven.modrinth:json-entity-animation:0.2.1+1.19.4"))
 
-	include(modImplementation("maven.modrinth:no-indium:1.1.0+1.19.4")!!)
+	include(modImplementation("maven.modrinth:no-indium:1.1.0+1.19.4"))
 }
 
 loom {
@@ -147,15 +170,15 @@ sourceSets {
 
 checkstyle {
 	toolVersion = "10.7.0"
-	isIgnoreFailures = false
-	maxWarnings = prop("checkstyle_max_warns").toInt()
+	ignoreFailures = false
+	maxWarnings = project["checkstyle_max_warns"] as int
 }
 
 tasks.processResources {
 	inputs.property("version", project.version)
 
 	filesMatching("quilt.mod.json") {
-		expand("version" to project.version)
+		expand("version": project.version)
 	}
 }
 
