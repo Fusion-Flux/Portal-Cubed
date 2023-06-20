@@ -5,6 +5,7 @@
 <module name="Checker">
     <property name="severity" value="warning"/>
     <property name="fileExtensions" value="java"/>
+    <property name="tabWidth" value="4"/>
 
     <module name="BeforeExecutionExclusionFileFilter">
         <property name="fileNamePattern" value=".*[\\/]src[\\/]main[\\/]java[\\/]com[\\/]fusionflux[\\/]portalcubed[\\/]client[\\/]render[\\/]model[\\/]entity[\\/].*$"/>
