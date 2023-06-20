@@ -39,14 +39,17 @@ import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -60,6 +63,7 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.GsonHelper;
@@ -74,6 +78,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.joml.Vector3d;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
@@ -91,6 +96,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import static com.fusionflux.portalcubed.PortalCubed.LOGGER;
@@ -109,6 +115,8 @@ public class PortalCubedClient implements ClientModInitializer {
         Items.AIR
     };
     public static final int ZOOM_TIME = 2;
+
+    private static final DecimalFormat CL_SHOWPOS_FORMAT = new DecimalFormat("0.00");
 
     private static final File GLOBAL_ADVANCEMENTS_FILE = QuiltLoader.getGameDir().resolve("portal_cubed_global_advancements.dat").toFile();
     private static final Set<ResourceLocation> GLOBAL_ADVANCEMENTS = new HashSet<>();
@@ -136,6 +144,9 @@ public class PortalCubedClient implements ClientModInitializer {
     public static Portal cameraTransformedThroughPortal;
 
     public static WorldRenderContext worldRenderContext; // QFAPI impl detail: this is a mutable singleton
+
+    private static String clShowPosValue = "0";
+    public static boolean clShowPos = false;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -475,6 +486,38 @@ public class PortalCubedClient implements ClientModInitializer {
 
         WorldRenderEvents.START.register(context -> worldRenderContext = context);
 
+        HudRenderCallback.EVENT.register((poseStack, tickDelta) -> {
+            if (!clShowPos) return;
+            final Minecraft minecraft = Minecraft.getInstance();
+            if (minecraft.options.renderDebug) return;
+            final LocalPlayer player = minecraft.player;
+            if (player == null) return;
+
+            minecraft.font.draw(poseStack, Component.literal("name: ").append(player.getName()), 2, 11, 0xffffffff);
+
+            minecraft.font.draw(
+                poseStack,
+                "pos:  " + CL_SHOWPOS_FORMAT.format(player.getX()) +
+                    ' ' + CL_SHOWPOS_FORMAT.format(player.getY()) +
+                    ' ' + CL_SHOWPOS_FORMAT.format(player.getZ()),
+                2, 20, 0xffffffff
+            );
+
+            IPQuaternion quat = IPQuaternion.getCameraRotation(player.getXRot(), player.getYRot());
+            final Optional<IPQuaternion> rotation = interpCamera();
+            if (rotation.isPresent()) {
+                quat = quat.hamiltonProduct(rotation.get());
+            }
+            final Vector3d angle = quat.toQuaterniond().getEulerAnglesZXY(new Vector3d());
+            minecraft.font.draw(
+                poseStack,
+                "ang:  " + CL_SHOWPOS_FORMAT.format(Math.toDegrees(angle.x)) +
+                    ' ' + CL_SHOWPOS_FORMAT.format(Mth.wrapDegrees(Math.toDegrees(angle.y) + 180)) +
+                    ' ' + CL_SHOWPOS_FORMAT.format(Math.toDegrees(angle.z)),
+                2, 29, 0xffffffff
+            );
+        });
+
         try {
             final CompoundTag compound = NbtIo.readCompressed(GLOBAL_ADVANCEMENTS_FILE);
             for (final Tag element : compound.getList("Advancements", Tag.TAG_STRING)) {
@@ -484,8 +527,8 @@ public class PortalCubedClient implements ClientModInitializer {
             LOGGER.warn("Failed to load global advancements", e);
         }
 
-        if (QuiltLoader.isDevelopmentEnvironment()) {
-            ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> {
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> {
+            if (QuiltLoader.isDevelopmentEnvironment()) {
                 dispatcher.register(literal("face")
                     .then(argument("direction", DirectionArgumentType.direction())
                         .executes(ctx -> {
@@ -502,8 +545,31 @@ public class PortalCubedClient implements ClientModInitializer {
                         })
                     )
                 );
-            });
-        }
+            }
+            dispatcher.register(literal("cl_showpos")
+                .then(argument("value", StringArgumentType.greedyString())
+                    .executes(ctx -> {
+                        clShowPosValue = StringArgumentType.getString(ctx, "value");
+                        try {
+                            clShowPos = Integer.parseInt(clShowPosValue) != 0;
+                        } catch (NumberFormatException e) {
+                            clShowPos = false;
+                        }
+                        return 1;
+                    })
+                )
+                .executes(ctx -> {
+                    ctx.getSource().sendFeedback(
+                        Component.empty()
+                            .append(Component.literal("\"cl_showpos\" = \"" + clShowPosValue + "\"").withStyle(ChatFormatting.RED))
+                            .append(" (def. \"0\" )")
+                    );
+                    ctx.getSource().sendFeedback(Component.literal(" client"));
+                    ctx.getSource().sendFeedback(Component.literal(" - Draw current position at top of screen"));
+                    return 1;
+                })
+            );
+        });
     }
 
     private void registerEmissiveModels(ModContainer mod) {
