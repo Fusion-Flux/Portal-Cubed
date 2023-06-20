@@ -212,6 +212,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
 
     @Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
     private void repulsionGelNoFallDamage(float fallDistance, float multiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        if (isSuppressingBounce()) return;
         final AABB boundingBox = getBoundingBox();
         for (BlockPos pos : BlockPos.betweenClosed(
             (int)Math.floor(boundingBox.minX),
