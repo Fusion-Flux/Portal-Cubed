@@ -70,7 +70,7 @@
   "item.portalcubed.mini_blackhole": "Miniature Black Hole",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
 
-  "item.portalcubed.base_gel": "Base Gel Blob",
+  "item.portalcubed.base_gel": "Gel Blob",
 
   "item.portalcubed.turret": "Sentry Turret",
 
@@ -355,7 +355,7 @@
   "death.attack.cube": "%s was hit on the head by a falling Weighted Cube",
   "death.attack.cube.player":  "%1$s was hit on the head by a falling Weighted Cube trying to escape %2$s",
 
-  "key.portalcubed.category" : "Portal\u00b3",
+  "key.portalcubed.category" : "Portal Cubed",
   "key.portalcubed.grab" : "Grab",
   "key.portalcubed.remove_portals" : "Remove Portals",
   "key.portalcubed.toggle_hidden_blocks" : "Toggle Hidden Blocks",
@@ -409,7 +409,7 @@
   "entity.portalcubed.schrodinger_cube": "Schrödinger Cube",
   "entity.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
 
-  "entity.portalcubed.decal": "Energy Pellet Scorch Mark",
+  "entity.portalcubed.decal": "Decal",
   "entity.portalcubed.energy_pellet": "High Energy Pellet",
 
   "entity.portalcubed.rocket": "Rocket",
@@ -437,7 +437,7 @@
   "portalcubed.command.fog.set.success": "Set fog in %s to %s.",
   "portalcubed.command.fog.preset.success": "Set fog in %s to %s.",
 
-  "gamerule.category.portalcubed": "Portal\u00b3",
+  "gamerule.category.portalcubed": "Portal Cubed",
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
   "gamerule.allowCrouchFlyGlitch.description": "Enables the Excursion Funnel Crouch Fly Glitch from Portal 2.",
   "gamerule.portalAlignment": "Portal Alignment",
