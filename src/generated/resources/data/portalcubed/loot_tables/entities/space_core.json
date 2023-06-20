@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "this"
+            }
+          ],
+          "name": "portalcubed:space_core"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

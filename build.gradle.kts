@@ -125,6 +125,24 @@ dependencies {
 
 loom {
 	accessWidenerPath.set(file("src/main/resources/portalcubed.accesswidener"))
+	runs {
+		create("datagen") {
+			client()
+			name("Data Generation")
+			vmArg("-Dfabric-api.datagen")
+			vmArg("-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}")
+			vmArg("-Dfabric-api.datagen.modid=portalcubed")
+		}
+	}
+}
+
+sourceSets {
+	main {
+		resources {
+			srcDir("src/generated/resources")
+			exclude("src/generated/resources/.cache")
+		}
+	}
 }
 
 checkstyle {
