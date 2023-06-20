@@ -283,10 +283,10 @@
   "block.portalcubed.smooth_gray_half_panel_facade": "Smooth Gray Half Panel Fa\u00E7ade",
   "block.portalcubed.aged_smooth_gray_panel_facade": "Aged Smooth Gray Panel Fa\u00E7ade",
   "block.portalcubed.aged_smooth_gray_half_panel_facade": "Aged Smooth Gray Half Panel Fa\u00E7ade",
-  "block.portalcubed.old_ap_white_panel_facade": "Old Ap White Panel Fa\u00E7ade",
-  "block.portalcubed.old_ap_white_checkered_panel_facade": "Old Ap White Checkered Panel Fa\u00E7ade",
-  "block.portalcubed.old_ap_green_panel_facade": "Old Ap Green Panel Fa\u00E7ade",
-  "block.portalcubed.old_ap_blue_panel_facade": "Old Ap Blue Panel Fa\u00E7ade",
+  "block.portalcubed.old_ap_white_panel_facade": "Old Aperture White Panel Fa\u00E7ade",
+  "block.portalcubed.old_ap_white_checkered_panel_facade": "Old Aperture White Checkered Panel Fa\u00E7ade",
+  "block.portalcubed.old_ap_green_panel_facade": "Old Aperture Green Panel Fa\u00E7ade",
+  "block.portalcubed.old_ap_blue_panel_facade": "Old Aperture Blue Panel Fa\u00E7ade",
   "block.portalcubed.insulation_facade": "Insulation Fa\u00E7ade",
   "block.portalcubed.exposed_panel_facade": "Exposed Panel Fa\u00E7ade",
   "block.portalcubed.partially_exposed_panel_facade": "Partially Exposed Panel Fa\u00E7ade",
@@ -374,8 +374,8 @@
   "portalcubed.velocity_helper.condition_expression": "condition",
   "portalcubed.velocity_helper.curve_expression": "interpolation curve",
 
-  "portalcubed.radio.allow_mute": "Muting Allowed",
-  "portalcubed.radio.disallow_mute": "Muting Disallowed",
+  "portalcubed.radio.allow_mute": "Grabbing Toggles Radio Music: Enabled",
+  "portalcubed.radio.disallow_mute": "Grabbing Toggles Radio Music: Disabled",
 
   "entity.portalcubed.adhesion_gel_blob": "Adhesion Gel Blob",
   "entity.portalcubed.conversion_gel_blob": "Conversion Gel Blob",
@@ -444,7 +444,6 @@
   "gamerule.portalAlignment.description": "Changes portal placement snapping, with the value being fraction of a block snapped to. For example, 16 is every pixel, 1 is full blocks, and 0 is off.",
   "gamerule.usePortalHud": "Use Portal HUD",
   "gamerule.usePortalHud.description": "Disables the hotbar, uses 'E' to grab objects, and disables fizzling portals using the keybind. Requires valid items to be in the first hotbar slot.",
-  "gamerule.usePortalFog": "Use Portal Cinematic Fog",
 
   "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
   "portalcubed.ponder.auto_portal.text_1": "Power an Auto Portal with redstone to open it.",
