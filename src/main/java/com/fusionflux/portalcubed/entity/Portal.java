@@ -292,25 +292,31 @@ public class Portal extends Entity {
             Mth.floor(portalBox.maxY + EPSILON) + 1,
             Mth.floor(portalBox.maxZ + EPSILON) + 1
         );
-        final Direction forward = Direction.fromNormal(BlockPos.containing(getNormal()));
+        Direction forward = Objects.requireNonNull(Direction.fromNormal(BlockPos.containing(getNormal())));
+        BooleanProperty coveringWall = MultifaceBlock.getFaceProperty(forward.getOpposite());
         Player owner = getOwnerUUID().map(level::getPlayerByUUID).orElse(null);
-        assert forward != null;
         while (iter.advance()) {
             final BlockPos pos = new BlockPos(iter.nextX(), iter.nextY(), iter.nextZ());
             if (!AABB.of(BoundingBox.fromCorners(pos, pos)).intersects(portalBox)) continue;
-            final BlockState state = level.getBlockState(pos);
-            if (owner != null && !owner.getAbilities().mayBuild && !owner.isSpectator()) { // adventure mode
-                if (!state.is(PortalCubedBlocks.PORTALABLE_IN_ADVENTURE))
+
+            BlockState wall = level.getBlockState(pos);
+            BlockState facade = level.getBlockState(pos.relative(forward));
+            BlockState portalSurface;
+            if (facade.getOptionalValue(coveringWall).orElse(Boolean.FALSE)) { // facade covers wall and determines ability to place a portal
+                if (!facade.is(PortalCubedBlocks.PORTALABLE_GELS))
+                    return false; // cannot support portals
+                portalSurface = facade;
+            } else { // no facade, check the wall directly
+                if (wall.is(PortalCubedBlocks.PORTAL_NONSOLID) || wall.is(PortalCubedBlocks.CANT_PLACE_PORTAL_ON))
+                    return false; // cannot support portals
+                portalSurface = wall;
+            }
+            if (owner != null && !owner.getAbilities().mayBuild && !owner.isSpectator()) { // finally, check if the surface is valid in adventure mode
+                if (!portalSurface.is(PortalCubedBlocks.PORTALABLE_IN_ADVENTURE))
                     return false;
             }
-            if (state.is(PortalCubedBlocks.PORTAL_NONSOLID) || state.is(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
-                final BlockState gelState = level.getBlockState(pos.relative(forward));
-                final BooleanProperty property = MultifaceBlock.getFaceProperty(forward.getOpposite());
-                if (!gelState.is(PortalCubedBlocks.PORTALABLE_GELS) || !gelState.getOptionalValue(property).orElse(false)) {
-                    return false;
-                }
-            }
-            final VoxelShape shape = state.getCollisionShape(level, pos, CollisionContext.of(this));
+
+            final VoxelShape shape = wall.getCollisionShape(level, pos, CollisionContext.of(this));
             if (
                 shape.move(pos.getX(), pos.getY(), pos.getZ())
                     .toAabbs()
