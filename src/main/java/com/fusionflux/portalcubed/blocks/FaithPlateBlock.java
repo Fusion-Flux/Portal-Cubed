@@ -66,7 +66,7 @@ public class FaithPlateBlock extends BaseEntityBlock {
     public boolean canConfigure(Player player, InteractionHand hand) {
         if (player.isCreative())
             return true;
-        return player.getItemInHand(hand).is(PortalCubedItems.HAMMER);
+        return player.getAbilities().mayBuild && player.getItemInHand(hand).is(PortalCubedItems.HAMMER);
     }
 
     @Override
