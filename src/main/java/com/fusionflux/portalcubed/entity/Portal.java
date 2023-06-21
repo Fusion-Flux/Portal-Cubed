@@ -302,7 +302,8 @@ public class Portal extends Entity {
             BlockState wall = level.getBlockState(pos);
             BlockState facade = level.getBlockState(pos.relative(forward));
             BlockState portalSurface;
-            if (facade.getOptionalValue(coveringWall).orElse(Boolean.FALSE)) { // facade covers wall and determines ability to place a portal
+            if (!facade.is(PortalCubedBlocks.PORTAL_NONSOLID) && // non-solids fallback to the wall
+                    facade.getOptionalValue(coveringWall).orElse(Boolean.FALSE)) { // if property is present and true, facade covers the wall
                 if (!facade.is(PortalCubedBlocks.PORTALABLE_GELS))
                     return false; // cannot support portals
                 portalSurface = facade;

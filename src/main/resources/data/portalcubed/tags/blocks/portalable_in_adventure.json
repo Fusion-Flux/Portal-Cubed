@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values" : [
+    "#portalcubed:portalable_gels",
     "portalcubed:portal_1_white_panel",
     "portalcubed:portal_1_white_half_panel",
     "portalcubed:portal_1_white_2x1_panel_bottom",
