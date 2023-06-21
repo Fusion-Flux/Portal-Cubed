@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -292,11 +293,16 @@ public class Portal extends Entity {
             Mth.floor(portalBox.maxZ + EPSILON) + 1
         );
         final Direction forward = Direction.fromNormal(BlockPos.containing(getNormal()));
+        Player owner = getOwnerUUID().map(level::getPlayerByUUID).orElse(null);
         assert forward != null;
         while (iter.advance()) {
             final BlockPos pos = new BlockPos(iter.nextX(), iter.nextY(), iter.nextZ());
             if (!AABB.of(BoundingBox.fromCorners(pos, pos)).intersects(portalBox)) continue;
             final BlockState state = level.getBlockState(pos);
+            if (owner != null && !owner.getAbilities().mayBuild && !owner.isSpectator()) { // adventure mode
+                if (!state.is(PortalCubedBlocks.PORTALABLE_IN_ADVENTURE))
+                    return false;
+            }
             if (state.is(PortalCubedBlocks.PORTAL_NONSOLID) || state.is(PortalCubedBlocks.CANT_PLACE_PORTAL_ON)) {
                 final BlockState gelState = level.getBlockState(pos.relative(forward));
                 final BooleanProperty property = MultifaceBlock.getFaceProperty(forward.getOpposite());

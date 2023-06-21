@@ -118,6 +118,7 @@ public class PortalCubedBlocks {
     public static final TagKey<Block> BULLET_HOLE_GLASS = TagKey.create(Registries.BLOCK, id("bullet_hole_glass"));
     public static final TagKey<Block> BULLET_HOLE_METAL = TagKey.create(Registries.BLOCK, id("bullet_hole_metal"));
     public static final TagKey<Block> CANT_PLACE_PORTAL_ON = TagKey.create(Registries.BLOCK, id("cant_place_portal_on"));
+    public static final TagKey<Block> PORTALABLE_IN_ADVENTURE = TagKey.create(Registries.BLOCK, id("portalable_in_adventure"));
     public static final TagKey<Block> PORTAL_NONSOLID = TagKey.create(Registries.BLOCK, id("portal_nonsolid"));
     public static final TagKey<Block> PORTAL_SOLID = TagKey.create(Registries.BLOCK, id("portal_solid"));
     public static final TagKey<Block> PORTALABLE_GELS = TagKey.create(Registries.BLOCK, id("portalable_gels"));

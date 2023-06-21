@@ -200,6 +200,7 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
                 Vec3 portalPos1 = calcPos(blockPos, normal);
 
                 assert portalHolder != null;
+                portalHolder.setOwnerUUID(Optional.of(user.getUUID()));
                 portalHolder.setOriginPos(portalPos1);
                 portalHolder.setDestination(Optional.of(portalPos1));
 
@@ -267,7 +268,6 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
                     originalPortal.kill();
                 }
                 world.addFreshEntity(portalHolder);
-                portalHolder.setOwnerUUID(Optional.of(user.getUUID()));
                 CalledValues.addPortals(user, portalHolder.getUUID());
                 final boolean isOtherAuto = otherPortal == null;
                 if (isOtherAuto) {
