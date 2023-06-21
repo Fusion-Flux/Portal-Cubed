@@ -127,13 +127,13 @@ public class DecalParticle extends Particle {
     }
 
     @ClientOnly
-    public static class Factory implements ParticleProvider<DecalParticleOption> {
+    public static class Provider implements ParticleProvider<DecalParticleOption> {
         private final FabricSpriteProvider spriteProvider;
 
         private List<TextureAtlasSprite> cacheKey;
         private final Map<ResourceLocation, TextureAtlasSprite> spriteCache = new HashMap<>();
 
-        public Factory(FabricSpriteProvider spriteProvider) {
+        public Provider(FabricSpriteProvider spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 

@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.particle.DecalParticleOption;
+import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -114,18 +115,22 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
         if (bouncedDir != null) {
             setDeltaMovement(vel);
             level.playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
-            if (level instanceof ServerLevel serverWorld) {
-                final Vec3 spawnPos = serverWorld.clip(new ClipContext(
+            if (level instanceof ServerLevel serverLevel) {
+                final Vec3 spawnPos = serverLevel.clip(new ClipContext(
                     position(),
                     position().add(vel.with(bouncedDir.getAxis(), -vel.get(bouncedDir.getAxis()))),
                     ClipContext.Block.COLLIDER,
                     ClipContext.Fluid.NONE,
                     this
                 )).getLocation().add(Vec3.atLowerCornerOf(bouncedDir.getNormal()).scale(0.01));
-                serverWorld.sendParticles(
+                serverLevel.sendParticles(
                     new DecalParticleOption(DecalParticleOption.SCORCH, bouncedDir),
                     spawnPos.x, spawnPos.y, spawnPos.z,
                     0, 0, 0, 0, 0
+                );
+                serverLevel.sendParticles(
+                    PortalCubedParticleTypes.ENERGY_SPARK,
+                    getX(), getY(), getZ(), 25, 0.1, 0.1, 0.1, 1
                 );
             }
         }
@@ -177,6 +182,12 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
 
     private void kill(@Nullable LivingEntity entity) {
         level.playSound(null, position().x, position().y, position().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundSource.HOSTILE, 0.8f, 1f);
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(
+                PortalCubedParticleTypes.ENERGY_SPARK,
+                getX(), getY(), getZ(), 100, 0.1, 0.1, 0.1, 3.5
+            );
+        }
         if (entity != null) {
             entity.hurt(pcSources(level).vaporization(), PortalCubedConfig.pelletDamage);
         }

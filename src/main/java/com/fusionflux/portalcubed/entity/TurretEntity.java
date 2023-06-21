@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.particle.DecalParticleOption;
+import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.GeneralUtil;
 import net.minecraft.core.Direction;
@@ -104,8 +105,8 @@ public class TurretEntity extends CorePhysicsEntity {
         getEntityData().set(PITCH_SPEED, pitchSpeed);
     }
 
-    public static void makeBulletHole(ServerLevel world, BlockHitResult hit, SoundSource soundCategory) {
-        final BlockState block = world.getBlockState(hit.getBlockPos());
+    public static void makeBulletHole(ServerLevel level, BlockHitResult hit, SoundSource soundCategory) {
+        final BlockState block = level.getBlockState(hit.getBlockPos());
         final Vec3 pos = hit.getLocation().add(Vec3.atLowerCornerOf(hit.getDirection().getNormal()).scale(0.01));
         final SoundEvent soundEffect;
         final ResourceLocation particleTexture;
@@ -113,7 +114,7 @@ public class TurretEntity extends CorePhysicsEntity {
         if (block.is(PortalCubedBlocks.BULLET_HOLE_CONCRETE)) {
             soundEffect = PortalCubedSounds.BULLET_CONCRETE_EVENT;
             particleTexture = DecalParticleOption.BULLET_HOLE_CONCRETE;
-            world.sendParticles(
+            level.sendParticles(
                 new BlockParticleOption(ParticleTypes.BLOCK, block),
                 pos.x, pos.y, pos.z, 3, 0.1, 0.1, 0.1, 1
             );
@@ -124,15 +125,19 @@ public class TurretEntity extends CorePhysicsEntity {
         } else if (block.is(PortalCubedBlocks.BULLET_HOLE_METAL)) {
             soundEffect = PortalCubedSounds.BULLET_METAL_EVENT;
             particleTexture = DecalParticleOption.BULLET_HOLE_METAL;
+            level.sendParticles(
+                PortalCubedParticleTypes.ENERGY_SPARK,
+                pos.x, pos.y, pos.z, 50, 0.1, 0.1, 0.1, 2
+            );
         } else {
             soundEffect = null;
             particleTexture = null;
         }
         if (soundEffect != null) {
-            world.playSound(null, pos.x, pos.y, pos.z, soundEffect, soundCategory, 0.3f, 1f);
+            level.playSound(null, pos.x, pos.y, pos.z, soundEffect, soundCategory, 0.3f, 1f);
         }
         if (particleTexture != null) {
-            world.sendParticles(
+            level.sendParticles(
                 new DecalParticleOption(particleTexture, hit.getDirection(), multiplyTexture),
                 pos.x, pos.y, pos.z, 0, 0, 0, 0, 0
             );
