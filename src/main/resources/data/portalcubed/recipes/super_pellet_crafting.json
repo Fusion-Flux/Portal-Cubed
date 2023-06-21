@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " X ",
+        "XYX",
+        " X "
+    ],
+    "key": {
+        "X": {
+            "item": "portalcubed:energy_pellet"
+        },
+        "Y": {
+            "item": "minecraft:lime_dye"
+        }
+    },
+    "result": {
+        "item": "portalcubed:super_pellet",
+        "count": 1
+    },
+  "group": "pellets"
+}

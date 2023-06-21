@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " X ",
+        "XYX",
+        " X "
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:glowstone_dust"
+        },
+        "Y": {
+            "item": "minecraft:nether_star"
+        }
+    },
+    "result": {
+        "item": "portalcubed:energy_pellet",
+        "count": 8
+    },
+  "group": "pellets"
+}

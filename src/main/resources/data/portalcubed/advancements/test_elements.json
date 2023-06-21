@@ -18,6 +18,8 @@
       "portalcubed:old_aperture_pedestal_button_crafting",
       "portalcubed:portal_1_door_crafting",
       "portalcubed:portal_2_door_crafting",
+      "portalcubed:energy_pellet_crafting",
+      "portalcubed:super_pellet_crafting",
       "portalcubed:old_aperture_door_crafting",
       "portalcubed:fizzler_emitter_crafting",
       "portalcubed:portal_1_fizzler_emitter_crafting",
@@ -40,7 +42,7 @@
         "items": [
           {
             "items": [
-"minecraft:end_rod",
+"minecraft:redstone",
 "portalcubed:smooth_gray_panel",
 "portalcubed:padded_gray_panel",
 "portalcubed:portal_1_smooth_gray_panel"

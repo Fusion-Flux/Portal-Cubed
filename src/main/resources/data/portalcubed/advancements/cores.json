@@ -4,6 +4,7 @@
     "recipes": [
 
       "portalcubed:rocket_turret_crafting",
+      "portalcubed:turret_crafting",
       "portalcubed:morality_core_crafting",
       "portalcubed:curiosity_core_crafting",
       "portalcubed:intelligence_core_crafting",
