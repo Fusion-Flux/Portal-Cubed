@@ -12,7 +12,6 @@ classes/
 # idea
 
 .idea/*
-!.idea/checkstyle-idea.xml
 *.iml
 *.ipr
 *.iws
