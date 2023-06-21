@@ -16,17 +16,17 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class DecalParticleEffect implements ParticleOptions {
+public class DecalParticleOption implements ParticleOptions {
     public static final ResourceLocation BULLET_HOLE_CONCRETE = id("bullet_hole_concrete");
     public static final ResourceLocation BULLET_HOLE_GLASS = id("bullet_hole_glass");
     public static final ResourceLocation BULLET_HOLE_METAL = id("bullet_hole_metal");
     public static final ResourceLocation SCORCH = id("scorch");
 
     @SuppressWarnings("deprecation")
-    public static final ParticleOptions.Deserializer<DecalParticleEffect> PARAMETERS_FACTORY = new Deserializer<>() {
+    public static final ParticleOptions.Deserializer<DecalParticleOption> PARAMETERS_FACTORY = new Deserializer<>() {
         @NotNull
         @Override
-        public DecalParticleEffect fromCommand(ParticleType<DecalParticleEffect> type, StringReader reader) throws CommandSyntaxException {
+        public DecalParticleOption fromCommand(ParticleType<DecalParticleOption> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
             final ResourceLocation texture = ResourceLocationArgument.id().parse(reader);
             reader.expect(' ');
@@ -38,13 +38,13 @@ public class DecalParticleEffect implements ParticleOptions {
             } else {
                 multiply = false;
             }
-            return new DecalParticleEffect(type, texture, direction, multiply);
+            return new DecalParticleOption(type, texture, direction, multiply);
         }
 
         @NotNull
         @Override
-        public DecalParticleEffect fromNetwork(ParticleType<DecalParticleEffect> type, FriendlyByteBuf buf) {
-            return new DecalParticleEffect(
+        public DecalParticleOption fromNetwork(ParticleType<DecalParticleOption> type, FriendlyByteBuf buf) {
+            return new DecalParticleOption(
                 type,
                 buf.readResourceLocation(),
                 buf.readEnum(Direction.class),
@@ -53,23 +53,23 @@ public class DecalParticleEffect implements ParticleOptions {
         }
     };
 
-    private final ParticleType<DecalParticleEffect> particleType;
+    private final ParticleType<DecalParticleOption> particleType;
     private final ResourceLocation texture;
     private final Direction direction;
     private final boolean multiply;
 
-    public DecalParticleEffect(ParticleType<DecalParticleEffect> particleType, ResourceLocation texture, Direction direction, boolean multiply) {
+    public DecalParticleOption(ParticleType<DecalParticleOption> particleType, ResourceLocation texture, Direction direction, boolean multiply) {
         this.particleType = particleType;
         this.texture = texture;
         this.direction = direction;
         this.multiply = multiply;
     }
 
-    public DecalParticleEffect(ResourceLocation texture, Direction direction, boolean multiply) {
+    public DecalParticleOption(ResourceLocation texture, Direction direction, boolean multiply) {
         this(PortalCubedParticleTypes.DECAL, texture, direction, multiply);
     }
 
-    public DecalParticleEffect(ResourceLocation texture, Direction direction) {
+    public DecalParticleOption(ResourceLocation texture, Direction direction) {
         this(texture, direction, false);
     }
 
@@ -102,14 +102,14 @@ public class DecalParticleEffect implements ParticleOptions {
         return multiply;
     }
 
-    public static Codec<DecalParticleEffect> codec(ParticleType<DecalParticleEffect> particleType) {
+    public static Codec<DecalParticleOption> codec(ParticleType<DecalParticleOption> particleType) {
         return RecordCodecBuilder.create(
             instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("texture").forGetter(DecalParticleEffect::getTexture),
-                Direction.CODEC.fieldOf("direction").forGetter(DecalParticleEffect::getDirection),
-                Codec.BOOL.fieldOf("multiply").forGetter(DecalParticleEffect::isMultiply)
+                ResourceLocation.CODEC.fieldOf("texture").forGetter(DecalParticleOption::getTexture),
+                Direction.CODEC.fieldOf("direction").forGetter(DecalParticleOption::getDirection),
+                Codec.BOOL.fieldOf("multiply").forGetter(DecalParticleOption::isMultiply)
             ).apply(instance, (texture, direction, multiply) ->
-                new DecalParticleEffect(particleType, texture, direction, multiply)
+                new DecalParticleOption(particleType, texture, direction, multiply)
             )
         );
     }

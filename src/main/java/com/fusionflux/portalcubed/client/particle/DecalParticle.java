@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.client.particle;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.particle.DecalParticleEffect;
+import com.fusionflux.portalcubed.particle.DecalParticleOption;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -127,7 +127,7 @@ public class DecalParticle extends Particle {
     }
 
     @ClientOnly
-    public static class Factory implements ParticleProvider<DecalParticleEffect> {
+    public static class Factory implements ParticleProvider<DecalParticleOption> {
         private final FabricSpriteProvider spriteProvider;
 
         private List<TextureAtlasSprite> cacheKey;
@@ -138,7 +138,7 @@ public class DecalParticle extends Particle {
         }
 
         @Override
-        public Particle createParticle(DecalParticleEffect parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(DecalParticleOption parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             final TextureAtlasSprite sprite = getSpriteCache().get(parameters.getTexture());
             if (sprite == null) {
                 PortalCubed.LOGGER.warn("Unknown decal particle texture {}", parameters.getTexture());

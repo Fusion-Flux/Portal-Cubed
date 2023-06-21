@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
-import com.fusionflux.portalcubed.particle.DecalParticleEffect;
+import com.fusionflux.portalcubed.particle.DecalParticleOption;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -123,7 +123,7 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
                     this
                 )).getLocation().add(Vec3.atLowerCornerOf(bouncedDir.getNormal()).scale(0.01));
                 serverWorld.sendParticles(
-                    new DecalParticleEffect(DecalParticleEffect.SCORCH, bouncedDir),
+                    new DecalParticleOption(DecalParticleOption.SCORCH, bouncedDir),
                     spawnPos.x, spawnPos.y, spawnPos.z,
                     0, 0, 0, 0, 0
                 );

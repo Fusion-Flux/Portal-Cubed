@@ -12,8 +12,8 @@ import java.util.function.Function;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedParticleTypes {
-    public static final ParticleType<DecalParticleEffect> DECAL = register(
-        "decal", false, DecalParticleEffect.PARAMETERS_FACTORY, DecalParticleEffect::codec
+    public static final ParticleType<DecalParticleOption> DECAL = register(
+        "decal", false, DecalParticleOption.PARAMETERS_FACTORY, DecalParticleOption::codec
     );
 
     @SuppressWarnings("deprecation")
