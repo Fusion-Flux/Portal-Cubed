@@ -361,10 +361,10 @@ public class PortalCubed implements ModInitializer {
 
         if (entity instanceof Player) {
             boolean tweak = false;
-            if (finalPitch <= -50) {
+            if (finalPitch <= -50 && pitchSet >= 50) {
                 finalPitch = -90;
                 tweak = true;
-            } else if (finalPitch >= 50) {
+            } else if (finalPitch >= 50 && pitchSet <= -50) {
                 finalPitch = 90;
                 tweak = true;
             }
