@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.ClientTeleportCheck;
 import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.fizzler.AbstractFizzlerBlock;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
@@ -29,10 +30,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -40,6 +44,9 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -523,5 +530,21 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             return original;
         }
         return viewTranslatingPortal.getTransformQuat().rotate(original, false);
+    }
+
+    @WrapOperation(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setPos(DDD)V"))
+    private void collideWithFizzlersOnMove(Entity self, double x, double y, double z, Operation<Void> original) {
+        // this is done so collision works even when moving very fast.
+        Vec3 pos = position();
+        original.call(self, x, y, z);
+        Vec3 newPos = position();
+        // based on ProjectileUtil
+        ClipContext ctx = new ClipContext(pos, newPos, Block.OUTLINE, Fluid.NONE, (Entity) (Object) this);
+        BlockHitResult hit = level.clip(ctx);
+        if (hit.getType() == Type.BLOCK) {
+            BlockState state = level.getBlockState(hit.getBlockPos());
+            if (state.getBlock() instanceof AbstractFizzlerBlock fizzler)
+                fizzler.applyEffectsTo((Entity) (Object) this);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.blocks.fizzler;
 
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -14,10 +15,13 @@ public class PhysicsRepulsionField extends AbstractFizzlerBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return context instanceof EntityCollisionContext entityCtx && entityCtx.getEntity() instanceof CorePhysicsEntity
             ? getShape(state, world, pos, context)
             : super.getCollisionShape(state, world, pos, context);
+    }
+
+    @Override
+    public void applyEffectsTo(Entity entity) {
     }
 }

@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.blocks.fizzler;
 
 import com.fusionflux.portalcubed.PortalCubedConfig;
-import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.entity.Fizzleable;
@@ -33,7 +32,7 @@ import java.util.UUID;
 
 import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSources;
 
-public abstract class AbstractFizzlerBlock extends Block implements BlockCollisionTrigger {
+public abstract class AbstractFizzlerBlock extends Block {
     public static final BooleanProperty NS = BooleanProperty.create("ns");
     public static final BooleanProperty EW = BooleanProperty.create("ew");
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
@@ -77,11 +76,6 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
     }
 
     @Override
-    public VoxelShape getTriggerShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return getShape(state, world, pos, context);
-    }
-
-    @Override
     @SuppressWarnings("deprecation")
     public float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos) {
         return 1;
@@ -102,6 +96,8 @@ public abstract class AbstractFizzlerBlock extends Block implements BlockCollisi
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NS, EW, HALF);
     }
+
+    public abstract void applyEffectsTo(Entity entity);
 
     protected final void fizzlePortals(Entity entity) {
         if (entity.level.isClientSide) return;
