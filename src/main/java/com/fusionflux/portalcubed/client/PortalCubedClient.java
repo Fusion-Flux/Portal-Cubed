@@ -493,9 +493,6 @@ public class PortalCubedClient implements ClientModInitializer {
             final LocalPlayer player = minecraft.player;
             if (player == null) return;
 
-            poseStack.pushPose();
-            poseStack.scale(1f, 1f, 1f);
-
             minecraft.font.draw(poseStack, Component.literal("name: ").append(player.getName()), 2, 11, 0xffffffff);
 
             minecraft.font.draw(
@@ -525,8 +522,6 @@ public class PortalCubedClient implements ClientModInitializer {
                 "vel:  " + CL_SHOWPOS_FORMAT.format(player.getDeltaMovement().length()),
                 2, 38, 0xffffffff
             );
-
-            poseStack.popPose();
         });
 
         try {
