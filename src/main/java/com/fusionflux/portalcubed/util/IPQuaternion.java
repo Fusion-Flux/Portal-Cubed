@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.util;
 
 
 import com.fusionflux.portalcubed.PortalCubed;
+import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
@@ -311,7 +312,7 @@ public class IPQuaternion {
     }
 
     public static IPQuaternion getCameraRotation(double pitch, double yaw) {
-        IPQuaternion r1 = rotationByDegrees(new Vec3(1, 0, 0), pitch);
+        IPQuaternion r1 = rotationByDegrees(new Vec3(1, 0, 0), Mth.clamp(pitch, -89.9999, 89.9999));
         IPQuaternion r2 = rotationByDegrees(new Vec3(0, 1, 0), yaw + 180);
         return r1.hamiltonProduct(r2);
     }

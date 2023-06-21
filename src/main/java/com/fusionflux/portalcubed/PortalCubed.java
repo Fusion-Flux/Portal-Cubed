@@ -45,6 +45,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -353,10 +354,24 @@ public class PortalCubed implements ModInitializer {
         if (currentAnimationDelta.isPresent()) {
             oldCameraRotation = oldCameraRotation.hamiltonProduct(currentAnimationDelta.get());
         }
-        final IPQuaternion immediateFinalRot = oldCameraRotation.hamiltonProduct(portalTransform.getConjugated());
+        IPQuaternion immediateFinalRot = oldCameraRotation.hamiltonProduct(portalTransform.getConjugated());
         final Vector3d euler = immediateFinalRot.toQuaterniond().getEulerAnglesZXY(new Vector3d());
         final float finalYaw = (float)Math.toDegrees(euler.y) + 180;
-        final float finalPitch = (float)Math.toDegrees(euler.x);
+        float finalPitch = (float)Math.toDegrees(euler.x);
+
+        if (entity instanceof Player) {
+            boolean tweak = false;
+            if (finalPitch <= -50) {
+                finalPitch = -90;
+                tweak = true;
+            } else if (finalPitch >= 50) {
+                finalPitch = 90;
+                tweak = true;
+            }
+            if (tweak) {
+                immediateFinalRot = immediateFinalRot.hamiltonProduct(IPQuaternion.rotationByDegrees(new Vec3(0, 1, 0), 180));
+            }
+        }
 
         final Vec3 dest = portal.getDestination().get().add(rotatedOffsets);
 
