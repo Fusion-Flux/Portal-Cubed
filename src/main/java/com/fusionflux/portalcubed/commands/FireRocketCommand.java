@@ -18,6 +18,7 @@ import static net.minecraft.commands.Commands.literal;
 public class FireRocketCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("firerocket")
+            .requires(s -> s.hasPermission(2))
             .executes(ctx -> fireRocket(ctx.getSource(), null))
             .then(argument("rotation", RotationArgument.rotation())
                 .executes(ctx -> fireRocket(ctx.getSource(), RotationArgument.getRotation(ctx, "rotation")))

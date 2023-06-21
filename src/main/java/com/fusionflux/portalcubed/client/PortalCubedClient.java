@@ -39,13 +39,12 @@ import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -145,8 +144,7 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static WorldRenderContext worldRenderContext; // QFAPI impl detail: this is a mutable singleton
 
-    private static String clShowPosValue = "0";
-    public static boolean clShowPos = false;
+    public static boolean showPos = false;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -487,7 +485,7 @@ public class PortalCubedClient implements ClientModInitializer {
         WorldRenderEvents.START.register(context -> worldRenderContext = context);
 
         HudRenderCallback.EVENT.register((poseStack, tickDelta) -> {
-            if (!clShowPos) return;
+            if (!showPos) return;
             final Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.options.renderDebug) return;
             final LocalPlayer player = minecraft.player;
@@ -552,27 +550,17 @@ public class PortalCubedClient implements ClientModInitializer {
                     )
                 );
             }
-            dispatcher.register(literal("cl_showpos")
-                .then(argument("value", StringArgumentType.greedyString())
+            dispatcher.register(literal("showpos")
+                .then(argument("enabled", BoolArgumentType.bool())
                     .executes(ctx -> {
-                        clShowPosValue = StringArgumentType.getString(ctx, "value");
-                        try {
-                            clShowPos = Integer.parseInt(clShowPosValue) != 0;
-                        } catch (NumberFormatException e) {
-                            clShowPos = false;
-                        }
-                        return 1;
+                        showPos = BoolArgumentType.getBool(ctx, "enabled");
+                        ctx.getSource().sendFeedback(Component.literal("showpos = " + showPos));
+                        return showPos ? 1 : 0;
                     })
                 )
                 .executes(ctx -> {
-                    ctx.getSource().sendFeedback(
-                        Component.empty()
-                            .append(Component.literal("\"cl_showpos\" = \"" + clShowPosValue + "\"").withStyle(ChatFormatting.RED))
-                            .append(" (def. \"0\" )")
-                    );
-                    ctx.getSource().sendFeedback(Component.literal(" client"));
-                    ctx.getSource().sendFeedback(Component.literal(" - Draw current position at top of screen"));
-                    return 1;
+                    ctx.getSource().sendFeedback(Component.literal("showpos = " + showPos));
+                    return showPos ? 1 : 0;
                 })
             );
         });

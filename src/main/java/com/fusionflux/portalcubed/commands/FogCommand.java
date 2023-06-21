@@ -28,6 +28,7 @@ public class FogCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(buildDefaultDimension(literal("fog"), FogCommand::getFog)
+            .requires(s -> s.hasPermission(2))
             .then(buildDefaultDimension(literal("reset"), FogCommand::resetFog))
             .then(buildSet(literal("set"), true)
                 .then(buildSet(argument("dimension", DimensionArgument.dimension()), false))
