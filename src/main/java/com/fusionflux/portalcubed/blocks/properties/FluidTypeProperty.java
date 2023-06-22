@@ -17,6 +17,7 @@ public class FluidTypeProperty extends Property<ResourceLocation> {
     public static final ResourceLocation EMPTY = new ResourceLocation("empty");
 
     private final BiMap<ResourceLocation, String> values = BuiltInRegistries.FLUID.keySet().stream()
+        .sorted()
         .collect(ImmutableBiMap.toImmutableBiMap(Function.identity(), this::getName));
 
     private FluidTypeProperty(String name) {
