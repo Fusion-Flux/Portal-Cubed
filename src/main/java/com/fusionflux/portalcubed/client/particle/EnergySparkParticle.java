@@ -39,7 +39,7 @@ public class EnergySparkParticle extends Particle {
         poseStack.translate(-position.x, -position.y, -position.z);
         final MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         final VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.lines());
-        render0(poseStack, vertexConsumer, partialTicks);
+//        render0(poseStack, vertexConsumer, partialTicks);
         bufferSource.endBatch();
     }
 
