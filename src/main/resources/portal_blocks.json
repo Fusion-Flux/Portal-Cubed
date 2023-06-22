@@ -1163,7 +1163,7 @@
     "type": "provided",
     "render_layer": "cutout"
   },
-  "duel_excursion_funnel_emitter": {
+  "dual_excursion_funnel_emitter": {
     "type": "provided",
     "render_layer": "cutout"
   },

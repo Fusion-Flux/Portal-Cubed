@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.HardLightBridgeBlockEntity;
-import com.fusionflux.portalcubed.util.CustomProperties;
+import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -70,8 +71,8 @@ public class HardLightBridgeBlock extends BaseEntityBlock {
         WEST = BlockStateProperties.WEST;
         UP = BlockStateProperties.UP;
         DOWN = BlockStateProperties.DOWN;
-        VERT_FACING_UP = CustomProperties.HFACINGUP;
-        VERT_FACING_DOWN = CustomProperties.HFACINGDOWN;
+        VERT_FACING_UP = PortalCubedProperties.HFACINGUP;
+        VERT_FACING_DOWN = PortalCubedProperties.HFACINGDOWN;
         PROPERTY_MAP = new HashMap<>();
         PROPERTY_MAP.put(Direction.NORTH, BlockStateProperties.NORTH);
         PROPERTY_MAP.put(Direction.SOUTH, BlockStateProperties.SOUTH);
@@ -148,18 +149,20 @@ public class HardLightBridgeBlock extends BaseEntityBlock {
         return true;
     }
 
-
+    @NotNull
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return this.stateToShape.get(state);
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {

@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.entity.Portal;
-import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -66,9 +66,9 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
                         }
                     }
                 }
-                if (emitter.getBlock() == PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER || emitter.getBlock() == PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMITTER || emitter.getBlock() == PortalCubedBlocks.DUEL_EXCURSION_FUNNEL_EMITTER || portalPresent) {
+                if (emitter.getBlock() == PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER || emitter.getBlock() == PortalCubedBlocks.REVERSED_EXCURSION_FUNNEL_EMITTER || emitter.getBlock() == PortalCubedBlocks.DUAL_EXCURSION_FUNNEL_EMITTER || portalPresent) {
 
-                    if (!emitter.getValue(CustomProperties.REVERSED)) {
+                    if (!emitter.getValue(PortalCubedProperties.REVERSED)) {
                         if (facing.equals(Direction.NORTH)) {
                             mNorth = true;
                         }
@@ -88,7 +88,7 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
                             mDown = true;
                         }
                     }
-                    if (emitter.getValue(CustomProperties.REVERSED)) {
+                    if (emitter.getValue(PortalCubedProperties.REVERSED)) {
                         if (facing.equals(Direction.NORTH)) {
                             mRNorth = true;
                         }
@@ -114,7 +114,7 @@ public class ExcursionFunnelMainBlockEntity extends BlockEntity {
             }
 
             state = state.setValue(BlockStateProperties.NORTH, mNorth).setValue(BlockStateProperties.EAST, mEast).setValue(BlockStateProperties.SOUTH, mSouth).setValue(BlockStateProperties.WEST, mWest).setValue(BlockStateProperties.UP, mUp).setValue(BlockStateProperties.DOWN, mDown)
-                    .setValue(CustomProperties.RNORTH, mRNorth).setValue(CustomProperties.REAST, mREast).setValue(CustomProperties.RSOUTH, mRSouth).setValue(CustomProperties.RWEST, mRWest).setValue(CustomProperties.RUP, mRUp).setValue(CustomProperties.RDOWN, mRDown);
+                    .setValue(PortalCubedProperties.RNORTH, mRNorth).setValue(PortalCubedProperties.REAST, mREast).setValue(PortalCubedProperties.RSOUTH, mRSouth).setValue(PortalCubedProperties.RWEST, mRWest).setValue(PortalCubedProperties.RUP, mRUp).setValue(PortalCubedProperties.RDOWN, mRDown);
         }
 
         world.setBlock(pos, state, 3);

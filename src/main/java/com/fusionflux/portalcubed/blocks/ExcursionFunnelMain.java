@@ -4,10 +4,10 @@ import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelMainBlockEntity;
+import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -81,12 +81,12 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
         WEST = BlockStateProperties.WEST;
         UP = BlockStateProperties.UP;
         DOWN = BlockStateProperties.DOWN;
-        R_NORTH = CustomProperties.RNORTH;
-        R_EAST = CustomProperties.REAST;
-        R_SOUTH = CustomProperties.RSOUTH;
-        R_WEST = CustomProperties.RWEST;
-        R_UP = CustomProperties.RUP;
-        R_DOWN = CustomProperties.RDOWN;
+        R_NORTH = PortalCubedProperties.RNORTH;
+        R_EAST = PortalCubedProperties.REAST;
+        R_SOUTH = PortalCubedProperties.RSOUTH;
+        R_WEST = PortalCubedProperties.RWEST;
+        R_UP = PortalCubedProperties.RUP;
+        R_DOWN = PortalCubedProperties.RDOWN;
     }
 
 
@@ -165,32 +165,32 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
             modifyY = true;
         }
 
-        if (state.getValue(CustomProperties.RSOUTH)) {
+        if (state.getValue(PortalCubedProperties.RSOUTH)) {
             result = result.subtract(0, 0, 1);
         }
-        if (state.getValue(CustomProperties.RNORTH)) {
+        if (state.getValue(PortalCubedProperties.RNORTH)) {
             result = result.add(0, 0, 1);
         }
-        if (state.getValue(CustomProperties.RWEST)) {
+        if (state.getValue(PortalCubedProperties.RWEST)) {
             result = result.add(1, 0, 0);
         }
-        if (state.getValue(CustomProperties.REAST)) {
+        if (state.getValue(PortalCubedProperties.REAST)) {
             result = result.subtract(1, 0, 0);
         }
-        if (state.getValue(CustomProperties.RUP)) {
+        if (state.getValue(PortalCubedProperties.RUP)) {
             result = result.subtract(0, 1, 0);
         }
-        if (state.getValue(CustomProperties.RDOWN)) {
+        if (state.getValue(PortalCubedProperties.RDOWN)) {
             result = result.add(0, 1, 0);
         }
 
-        if (state.getValue(CustomProperties.RNORTH) && state.getValue(CustomProperties.RSOUTH)) {
+        if (state.getValue(PortalCubedProperties.RNORTH) && state.getValue(PortalCubedProperties.RSOUTH)) {
             modifyZ = true;
         }
-        if (state.getValue(CustomProperties.REAST) && state.getValue(CustomProperties.RWEST)) {
+        if (state.getValue(PortalCubedProperties.REAST) && state.getValue(PortalCubedProperties.RWEST)) {
             modifyX = true;
         }
-        if (state.getValue(CustomProperties.RUP) && state.getValue(CustomProperties.RDOWN)) {
+        if (state.getValue(PortalCubedProperties.RUP) && state.getValue(PortalCubedProperties.RDOWN)) {
             modifyY = true;
         }
 

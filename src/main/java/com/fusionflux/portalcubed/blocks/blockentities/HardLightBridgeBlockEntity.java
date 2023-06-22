@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.entity.Portal;
-import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -143,7 +143,7 @@ public class HardLightBridgeBlockEntity extends BlockEntity {
             }
 
             state = state.setValue(BlockStateProperties.NORTH, mNorth).setValue(BlockStateProperties.EAST, mEast).setValue(BlockStateProperties.SOUTH, mSouth).setValue(BlockStateProperties.WEST, mWest).setValue(BlockStateProperties.UP, mUp).setValue(BlockStateProperties.DOWN, mDown)
-                    .setValue(CustomProperties.HFACINGUP, resultUp).setValue(CustomProperties.HFACINGDOWN, resultDown);
+                    .setValue(PortalCubedProperties.HFACINGUP, resultUp).setValue(PortalCubedProperties.HFACINGDOWN, resultDown);
         }
         world.setBlock(pos, state, 3);
     }

@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.entity.Portal;
-import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -32,7 +32,7 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
 
                 if (world.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
                     blockEntity.togglePowered(world.getBlockState(pos));
-                    blockEntity.duelTogglePowered(world.getBlockState(pos));
+                    blockEntity.dualTogglePowered(world.getBlockState(pos));
                 }
 
                 BlockPos translatedPos = pos;
@@ -76,35 +76,37 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
 
 
                             for (Portal portal : list) {
-                                if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
-                                    if (portal.getActive()) {
-                                        Direction otherPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherAxisH().get().x, portal.getOtherAxisH().get().y, portal.getOtherAxisH().get().z));
-                                        int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().z)));
-                                        Direction mainPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().x, portal.getAxisH().y, portal.getAxisH().z));
-                                        assert mainPortalVertFacing != null;
-                                        if (mainPortalVertFacing.equals(Direction.SOUTH)) {
-                                            offset = (Math.abs(offset) - 1) * -1;
-                                        }
-                                        if (mainPortalVertFacing.equals(Direction.EAST)) {
-                                            offset = (Math.abs(offset) - 1) * -1;
-                                        }
+                                if (portal.getFacingDirection().getOpposite().equals(storedDirection) && portal.getActive()) {
+                                    assert portal.getOtherAxisH().isPresent();
+                                    assert portal.getOtherNormal().isPresent();
+                                    assert portal.getDestination().isPresent();
 
-                                        translatedPos = BlockPos.containing(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
-                                        savedPos = translatedPos;
-                                        assert otherPortalVertFacing != null;
-                                        if (otherPortalVertFacing.equals(Direction.SOUTH)) {
-                                            translatedPos = translatedPos.relative(Direction.NORTH, 1);
-                                        }
-                                        if (otherPortalVertFacing.equals(Direction.EAST)) {
-                                            translatedPos = translatedPos.relative(Direction.WEST, 1);
-                                        }
-
-                                        final Vec3 otherNormal = portal.getOtherNormal().get();
-                                        storedDirection = Direction.fromNormal((int)otherNormal.x, (int)otherNormal.y, (int)otherNormal.z);
-                                        teleported = true;
-                                        blockEntity.funnels = modFunnels;
-                                        blockEntity.portalFunnels = portalFunnels;
+                                    Direction otherPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherAxisH().get().x, portal.getOtherAxisH().get().y, portal.getOtherAxisH().get().z));
+                                    int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().z)));
+                                    Direction mainPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().x, portal.getAxisH().y, portal.getAxisH().z));
+                                    assert mainPortalVertFacing != null;
+                                    if (mainPortalVertFacing.equals(Direction.SOUTH)) {
+                                        offset = (Math.abs(offset) - 1) * -1;
                                     }
+                                    if (mainPortalVertFacing.equals(Direction.EAST)) {
+                                        offset = (Math.abs(offset) - 1) * -1;
+                                    }
+
+                                    translatedPos = BlockPos.containing(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
+                                    savedPos = translatedPos;
+                                    assert otherPortalVertFacing != null;
+                                    if (otherPortalVertFacing.equals(Direction.SOUTH)) {
+                                        translatedPos = translatedPos.relative(Direction.NORTH, 1);
+                                    }
+                                    if (otherPortalVertFacing.equals(Direction.EAST)) {
+                                        translatedPos = translatedPos.relative(Direction.WEST, 1);
+                                    }
+
+                                    final Vec3 otherNormal = portal.getOtherNormal().get();
+                                    storedDirection = Direction.fromNormal((int)otherNormal.x, (int)otherNormal.y, (int)otherNormal.z);
+                                    teleported = true;
+                                    blockEntity.funnels = modFunnels;
+                                    blockEntity.portalFunnels = portalFunnels;
                                 }
                             }
                         } else {
@@ -120,7 +122,7 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
             if (redstonePowered) {
                 if (!world.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
                     blockEntity.togglePowered(world.getBlockState(pos));
-                    blockEntity.duelTogglePowered(world.getBlockState(pos));
+                    blockEntity.dualTogglePowered(world.getBlockState(pos));
                 }
 
 
@@ -164,35 +166,37 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
 
 
                             for (Portal portal : list) {
-                                if (portal.getFacingDirection().getOpposite().equals(storedDirection)) {
-                                    if (portal.getActive()) {
-                                        Direction otherPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherAxisH().get().x, portal.getOtherAxisH().get().y, portal.getOtherAxisH().get().z));
-                                        int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().z)));
-                                        Direction mainPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().x, portal.getAxisH().y, portal.getAxisH().z));
-                                        assert mainPortalVertFacing != null;
-                                        if (mainPortalVertFacing.equals(Direction.SOUTH)) {
-                                            offset = (Math.abs(offset) - 1) * -1;
-                                        }
-                                        if (mainPortalVertFacing.equals(Direction.EAST)) {
-                                            offset = (Math.abs(offset) - 1) * -1;
-                                        }
+                                if (portal.getFacingDirection().getOpposite().equals(storedDirection) && portal.getActive()) {
+                                    assert portal.getOtherAxisH().isPresent();
+                                    assert portal.getOtherNormal().isPresent();
+                                    assert portal.getDestination().isPresent();
 
-                                        translatedPos = BlockPos.containing(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
-                                        savedPos = translatedPos;
-                                        assert otherPortalVertFacing != null;
-                                        if (otherPortalVertFacing.equals(Direction.SOUTH)) {
-                                            translatedPos = translatedPos.relative(Direction.NORTH, 1);
-                                        }
-                                        if (otherPortalVertFacing.equals(Direction.EAST)) {
-                                            translatedPos = translatedPos.relative(Direction.WEST, 1);
-                                        }
-
-                                        final Vec3 otherNormal = portal.getOtherNormal().get();
-                                        storedDirection = Direction.fromNormal((int)otherNormal.x, (int)otherNormal.y, (int)otherNormal.z);
-                                        teleported = true;
-                                        blockEntity.funnels = modFunnels;
-                                        blockEntity.portalFunnels = portalFunnels;
+                                    Direction otherPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getOtherAxisH().get().x, portal.getOtherAxisH().get().y, portal.getOtherAxisH().get().z));
+                                    int offset = (int)(((portal.blockPosition().getX() - translatedPos.getX()) * Math.abs(portal.getAxisH().x)) + ((portal.blockPosition().getY() - translatedPos.getY()) * Math.abs(portal.getAxisH().y)) + ((portal.blockPosition().getZ() - translatedPos.getZ()) * Math.abs(portal.getAxisH().z)));
+                                    Direction mainPortalVertFacing = Direction.fromNormal(BlockPos.containing(portal.getAxisH().x, portal.getAxisH().y, portal.getAxisH().z));
+                                    assert mainPortalVertFacing != null;
+                                    if (mainPortalVertFacing.equals(Direction.SOUTH)) {
+                                        offset = (Math.abs(offset) - 1) * -1;
                                     }
+                                    if (mainPortalVertFacing.equals(Direction.EAST)) {
+                                        offset = (Math.abs(offset) - 1) * -1;
+                                    }
+
+                                    translatedPos = BlockPos.containing(portal.getDestination().get().x, portal.getDestination().get().y, portal.getDestination().get().z).relative(otherPortalVertFacing, offset);
+                                    savedPos = translatedPos;
+                                    assert otherPortalVertFacing != null;
+                                    if (otherPortalVertFacing.equals(Direction.SOUTH)) {
+                                        translatedPos = translatedPos.relative(Direction.NORTH, 1);
+                                    }
+                                    if (otherPortalVertFacing.equals(Direction.EAST)) {
+                                        translatedPos = translatedPos.relative(Direction.WEST, 1);
+                                    }
+
+                                    final Vec3 otherNormal = portal.getOtherNormal().get();
+                                    storedDirection = Direction.fromNormal((int)otherNormal.x, (int)otherNormal.y, (int)otherNormal.z);
+                                    teleported = true;
+                                    blockEntity.funnels = modFunnels;
+                                    blockEntity.portalFunnels = portalFunnels;
                                 }
                             }
                         } else {
@@ -210,8 +214,8 @@ public class DualExcursionFunnelEmitterBlockEntity extends AbstractExcursionFunn
 
     }
 
-    public void duelTogglePowered(BlockState state) {
+    public void dualTogglePowered(BlockState state) {
         assert level != null;
-        level.setBlockAndUpdate(worldPosition, state.cycle(CustomProperties.REVERSED));
+        level.setBlockAndUpdate(worldPosition, state.cycle(PortalCubedProperties.REVERSED));
     }
 }

@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.ReversedExcursionFunnelEmitterBlockEntity;
-import com.fusionflux.portalcubed.util.CustomProperties;
+import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -30,15 +31,17 @@ public class ReversedExcursionFunnelEmitter extends BaseEntityBlock {
 
     public ReversedExcursionFunnelEmitter(Properties settings) {
         super(settings);
-        this.registerDefaultState(this.stateDefinition.any().setValue(CustomProperties.REVERSED, true));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PortalCubedProperties.REVERSED, true));
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -57,6 +60,7 @@ public class ReversedExcursionFunnelEmitter extends BaseEntityBlock {
         return true;
     }
 
+    @NotNull
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
@@ -66,7 +70,7 @@ public class ReversedExcursionFunnelEmitter extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED, CustomProperties.REVERSED);
+        builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED, PortalCubedProperties.REVERSED);
     }
 
     @Override
@@ -76,7 +80,7 @@ public class ReversedExcursionFunnelEmitter extends BaseEntityBlock {
 
 
 
-
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public BlockState rotate(BlockState state, Rotation rotation) {

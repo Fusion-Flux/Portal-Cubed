@@ -259,8 +259,8 @@ public class PortalCubed implements ModInitializer {
 
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
         PortalBlocksLoader.init(mod);
-        PortalCubedBlocks.registerBlocks();
         PortalCubedFluids.registerFluids();
+        PortalCubedBlocks.registerBlocks();
         PortalCubedItems.registerItems();
         PortalCubedEntities.registerEntities();
         PortalCubedTrackedDataHandlers.register();
