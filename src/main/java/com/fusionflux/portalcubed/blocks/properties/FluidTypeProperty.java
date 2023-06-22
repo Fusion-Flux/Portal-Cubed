@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -14,8 +15,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class FluidTypeProperty extends Property<ResourceLocation> {
-    public static final ResourceLocation EMPTY = new ResourceLocation("empty");
-
     private final BiMap<ResourceLocation, String> values = BuiltInRegistries.FLUID.keySet().stream()
         .sorted()
         .collect(ImmutableBiMap.toImmutableBiMap(Function.identity(), this::getName));
@@ -54,5 +53,20 @@ public class FluidTypeProperty extends Property<ResourceLocation> {
     @NotNull
     public Fluid getFluid(BlockState state) {
         return getFluid(state.getValue(this));
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        return super.equals(object) && values.equals(((FluidTypeProperty)object).values);
+    }
+
+    @Override
+    public int generateHashCode() {
+        return 31 * super.generateHashCode() + values.hashCode();
+    }
+
+    @NotNull
+    public static ResourceLocation getEmpty() {
+        return BuiltInRegistries.FLUID.getKey(Fluids.EMPTY);
     }
 }

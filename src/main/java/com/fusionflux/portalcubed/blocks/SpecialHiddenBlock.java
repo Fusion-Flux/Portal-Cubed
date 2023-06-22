@@ -34,7 +34,7 @@ public abstract class SpecialHiddenBlock extends Block implements SimpleLoggedBl
         super(settings);
         registerDefaultState(
             getStateDefinition().any()
-                .setValue(LOGGING, FluidTypeProperty.EMPTY)
+                .setValue(LOGGING, FluidTypeProperty.getEmpty())
         );
     }
 

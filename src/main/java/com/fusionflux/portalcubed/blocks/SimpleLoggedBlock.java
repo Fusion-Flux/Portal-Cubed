@@ -44,7 +44,7 @@ public interface SimpleLoggedBlock extends BucketPickupEx, LiquidBlockContainer 
         if (fluid == Fluids.EMPTY) {
             return ItemStack.EMPTY;
         }
-        level.setBlock(pos, state.setValue(PortalCubedProperties.LOGGING, FluidTypeProperty.EMPTY), Block.UPDATE_ALL);
+        level.setBlock(pos, state.setValue(PortalCubedProperties.LOGGING, FluidTypeProperty.getEmpty()), Block.UPDATE_ALL);
         if (!state.canSurvive(level, pos)) {
             level.destroyBlock(pos, true);
         }
