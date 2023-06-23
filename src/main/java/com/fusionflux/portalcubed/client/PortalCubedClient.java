@@ -20,7 +20,6 @@ import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
-import com.fusionflux.portalcubed.commands.DirectionArgumentType;
 import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
@@ -534,20 +533,13 @@ public class PortalCubedClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> {
             if (QuiltLoader.isDevelopmentEnvironment()) {
                 dispatcher.register(literal("face")
-                    .then(argument("direction", DirectionArgumentType.direction())
-                        .executes(ctx -> {
-                            final Direction direction = DirectionArgumentType.getDirection(ctx, "direction");
-                            final Entity entity = ctx.getSource().getEntity();
-                            if (direction.getAxis() == Direction.Axis.Y) {
-                                entity.setXRot(direction == Direction.UP ? -90f : 90f);
-                                entity.setYRot(0f);
-                            } else {
-                                entity.setXRot(0f);
-                                entity.setYRot(direction.toYRot());
-                            }
-                            return 1;
-                        })
-                    )
+                    .executes(ctx -> {
+                        final Entity entity = ctx.getSource().getEntity();
+                        final Direction direction = entity.getDirection();
+                        entity.setXRot(entity.getXRot() < -45 ? -90 : entity.getXRot() > 45 ? 90 : 0);
+                        entity.setYRot(direction.toYRot());
+                        return 1;
+                    })
                 );
             }
             dispatcher.register(literal("showpos")
