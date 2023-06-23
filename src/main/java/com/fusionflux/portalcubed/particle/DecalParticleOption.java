@@ -82,6 +82,8 @@ public class DecalParticleOption implements ParticleOptions {
     @Override
     public void writeToNetwork(FriendlyByteBuf buf) {
         buf.writeResourceLocation(texture);
+        buf.writeEnum(direction);
+        buf.writeBoolean(multiply);
     }
 
     @NotNull
