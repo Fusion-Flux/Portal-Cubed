@@ -51,7 +51,8 @@ public class DecalParticle extends Particle {
     };
 
     private final TextureAtlasSprite sprite;
-    private final Direction direction;
+    private final Quaternionf rotation;
+    private final Vector3f pixelOffset;
     private final boolean multiply;
 
     public DecalParticle(
@@ -62,7 +63,8 @@ public class DecalParticle extends Particle {
     ) {
         super(world, x, y, z);
         this.sprite = sprite;
-        this.direction = direction;
+        rotation = direction.getRotation();
+        pixelOffset = getPixelOffset(direction);
         this.multiply = multiply;
         lifetime = 1400;
     }
@@ -73,7 +75,6 @@ public class DecalParticle extends Particle {
         final float x = (float)(Mth.lerp(tickDelta, xo, this.x) - cameraPos.x());
         final float y = (float)(Mth.lerp(tickDelta, yo, this.y) - cameraPos.y());
         final float z = (float)(Mth.lerp(tickDelta, zo, this.z) - cameraPos.z());
-        final Quaternionf rotation = direction.getRotation();
 
         final Vector3f[] vertices = {
             new Vector3f(-0.5f, 0f, -0.5f),
@@ -83,8 +84,7 @@ public class DecalParticle extends Particle {
         };
 
         for (final Vector3f vertex : vertices) {
-            vertex.rotate(rotation);
-            vertex.add(x, y, z);
+            vertex.rotate(rotation).add(x, y, z).add(pixelOffset);
         }
 
         alpha = 1f;
@@ -124,6 +124,14 @@ public class DecalParticle extends Particle {
     @Override
     public ParticleRenderType getRenderType() {
         return multiply ? PARTICLE_SHEET_MULTIPLY : ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    }
+
+    private static Vector3f getPixelOffset(Direction direction) {
+        final float HALF_PIXEL = 0.5f / 16;
+        if (direction == Direction.UP || direction == Direction.DOWN) {
+            return new Vector3f(-HALF_PIXEL, 0, -HALF_PIXEL);
+        }
+        return direction.getClockWise().step().mul(HALF_PIXEL).add(0, HALF_PIXEL, 0);
     }
 
     @ClientOnly
