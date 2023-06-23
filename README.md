@@ -22,12 +22,21 @@ Portal Cubed is a Minecraft mod for Quilt that adds mechanics from Valve's Porta
 
 ## Implemented Features
 
-- All panels from Portal 1, Portal 2 [Old Aperture and New Aperture]
-- Physics props like cubes, the radio, a can of beans, chairs, and more!
-- Floor buttons and pedestal buttons
-- Gels from Portal 2 including the cut Adhesion Gel
-- Hard Light Bridges, Lasers, Excursion Funnels
-- Portal Gun
+- Various building blocks from areas across the series.  Build chambers themed around Portal 1, Portal 2, Old Aperture, and more!
+- Physics props, including cubes, personality cores, radios, and other junk found around Aperture Science.
+- The Aperture Science Handheld Portal Device, for all your spacetime traversal needs.
+- Everyone's favorite foot-based suit of armor, the Long Fall Boots.
+- Many of Aperture's most well known testing elements, including but not limited to:
+  - Thermal Discouragement Beams
+  - Hard Light Bridges
+  - Material Emancipation Grids
+  - Excursion Funnels
+  - Gels
+  - Aerial Faith Plates
+  - High Energy Pellets
+- The revival of some scrapped content, such as the cut Adhesion and Reflection gels.
+- A handful of testing elements from Community-Made maps and mods, such as the Paint Gun.
+
 
 ## License
 This project is licensed under the [MIT License](LICENSE)
