@@ -15,6 +15,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -225,8 +226,10 @@ public class Portal extends Entity {
     public void tick() {
         this.makeBoundingBox();
         this.calculateCutoutBox();
-        if (!this.level.isClientSide)
-            ((ServerLevel)(this.level)).setChunkForced(chunkPosition().x, chunkPosition().z, true);
+        if (!this.level.isClientSide) {
+            final ServerLevel serverLevel = (ServerLevel)level;
+            serverLevel.getChunkSource().addRegionTicket(TicketType.PORTAL, chunkPosition(), 2, blockPosition());
+        }
 
         if (!level.isClientSide) {
             getOwnerUUID().ifPresent(uuid -> {
