@@ -180,7 +180,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
         this.lastPos = this.position();
         this.setDiscardFriction(!this.isOnGround() && !this.level.getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
         if (isBeingHeld) {
-            Player player = (Player) ((LevelExt) level).getEntity(getHolderUUID().get());
+            Player player = (Player) ((LevelExt) level).getEntityByUuid(getHolderUUID().get());
             if (player != null && player.isAlive()) {
                 Vec3 vec3d = player.getEyePosition(0);
                 double d = 1.5;

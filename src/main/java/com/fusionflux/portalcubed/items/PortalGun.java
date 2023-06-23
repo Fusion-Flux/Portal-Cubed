@@ -108,13 +108,13 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
         final String key = rightSide ? "RightPortal" : "LeftPortal";
         if (!portalsTag.hasUUID(key)) return false;
         final UUID uuid = portalsTag.getUUID(key);
-        if (((LevelExt)level).getEntity(uuid) != null) {
+        if (((LevelExt)level).getEntityByUuid(uuid) != null) {
             return true;
         }
         final String otherKey = rightSide ? "LeftPortal" : "RightPortal";
         if (!portalsTag.hasUUID(otherKey)) return false;
         final UUID otherUuid = portalsTag.getUUID(otherKey);
-        return ((LevelExt)level).getEntity(otherUuid) instanceof Portal portal && portal.getActive();
+        return ((LevelExt)level).getEntityByUuid(otherUuid) instanceof Portal portal && portal.getActive();
     }
 
     @Override

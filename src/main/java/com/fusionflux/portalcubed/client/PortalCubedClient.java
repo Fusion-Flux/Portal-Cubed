@@ -304,7 +304,7 @@ public class PortalCubedClient implements ClientModInitializer {
             dispatcher.setRenderHitBoxes(false);
             for (UUID portalUuid : CalledValues.getPortals(cameraEntity)) {
                 if (
-                    !(((LevelExt) ctx.world()).getEntity(portalUuid) instanceof Portal portal) ||
+                    !(((LevelExt) ctx.world()).getEntityByUuid(portalUuid) instanceof Portal portal) ||
                         !cameraEntity.getUUID().equals(portal.getOwnerUUID().orElse(null))
                 ) continue;
                 dispatcher.render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYRot(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightTexture.FULL_BRIGHT);

@@ -42,7 +42,7 @@ public class PortalDirectionUtils {
                 blockHit.getLocation(),
                 AdvancedEntityRaycast.withStartEnd(context, newStart, newStart.add(newOffset)),
                 portal.getLinkedPortalUUID()
-                    .flatMap(id -> Optional.ofNullable(((LevelExt)portal.getLevel()).getEntity(id)))
+                    .flatMap(id -> Optional.ofNullable(((LevelExt)portal.getLevel()).getEntityByUuid(id)))
                     .map(Set::of)
                     .orElse(Set.of())
             );

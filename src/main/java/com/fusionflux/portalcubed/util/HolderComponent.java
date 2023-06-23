@@ -46,7 +46,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     }
 
     public @Nullable CorePhysicsEntity entityBeingHeld() {
-        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((LevelExt) this.owner.level).getEntity(heldEntityUUID.get());
+        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((LevelExt) this.owner.level).getEntityByUuid(heldEntityUUID.get());
         return this.heldEntity;
     }
 
@@ -97,7 +97,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     public void applySyncPacket(FriendlyByteBuf buf) {
         final var syncedHeldEntityUUID = EntityDataSerializers.OPTIONAL_UUID.read(buf);
         if (heldEntity == null && syncedHeldEntityUUID.isPresent()) {
-            hold((CorePhysicsEntity) ((LevelExt) this.owner.level).getEntity(syncedHeldEntityUUID.get()));
+            hold((CorePhysicsEntity) ((LevelExt) this.owner.level).getEntityByUuid(syncedHeldEntityUUID.get()));
         } else if (syncedHeldEntityUUID.isEmpty() && heldEntity != null) {
             stopHolding();
         }
