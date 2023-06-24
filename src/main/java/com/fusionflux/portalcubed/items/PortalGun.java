@@ -9,6 +9,7 @@ import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.unascribed.lib39.recoil.api.DirectClickItem;
@@ -150,8 +151,8 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
     }
 
     protected void shoot(Level world, Player user, InteractionHand hand, boolean leftClick) {
+        if (user.isSpectator() || PortalCubedComponents.HOLDER_COMPONENT.get(user).entityBeingHeld() != null) return;
         ItemStack stack = user.getItemInHand(hand);
-        if (user.isSpectator()) return;
         stack.getOrCreateTag().putBoolean("complementary", !leftClick);
         if (!world.isClientSide) {
             CompoundTag tag = stack.getOrCreateTag();
