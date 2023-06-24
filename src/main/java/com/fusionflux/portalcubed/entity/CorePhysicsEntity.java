@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSources;
+
 // TODO: Extend LivingEntity
 public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
@@ -76,7 +78,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     public boolean canCollideWith(Entity other) {
-        return canBeCollidedWith() && other instanceof LivingEntity && other.isAlive();
+        return other != this && canBeCollidedWith() && other instanceof LivingEntity && other.isAlive();
     }
 
     @Override
@@ -377,5 +379,16 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+        if (onGround) {
+            if (state.isAir() && fallDistance > 0 && getType().is(PortalCubedEntities.P1_ENTITY)) {
+                final List<Entity> collisions = level.getEntitiesOfClass(Entity.class, getBoundingBox().expandTowards(0, -0.1, 0), this::canCollideWith);
+                for (final Entity collision : collisions) {
+                    collision.hurt(pcSources(level).cube(), fallDistance * 1.5f);
+                }
+            }
+            fallDistance = 0;
+        } else {
+            fallDistance -= y;
+        }
     }
 }

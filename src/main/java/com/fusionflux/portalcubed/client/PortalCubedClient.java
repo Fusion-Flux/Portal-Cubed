@@ -159,8 +159,7 @@ public class PortalCubedClient implements ClientModInitializer {
         PortalCubedKeyBindings.register();
         PortalCubedParticleProviders.register();
 
-        HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
-        HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
+        HudRenderCallback.EVENT.register(PortalHud::renderPortals);
 
         // Thanks to https://github.com/JulianWww/Amazia-fabric/blob/main/src/main/java/net/denanu/amazia/GUI/debug/VillagePathingOverlay.java for some code
 //        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {

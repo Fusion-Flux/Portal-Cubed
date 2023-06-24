@@ -213,7 +213,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
     private void noFallDamage(float fallDistance, float multiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
         if (getItemBySlot(EquipmentSlot.FEET).is(PortalCubedItems.LONG_FALL_BOOTS)) {
-            cir.setReturnValue(true);
+            cir.setReturnValue(false);
             return;
         }
         if (!isSuppressingBounce()) {
