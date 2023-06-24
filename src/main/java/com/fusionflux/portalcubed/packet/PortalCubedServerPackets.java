@@ -82,7 +82,7 @@ public class PortalCubedServerPackets {
                         return;
                     }
                 }
-                player.playNotifySound(PortalCubedSounds.NOTHING_TO_GRAB_EVENT, SoundSource.NEUTRAL, 0.3f, 1f);
+                player.playNotifySound(PortalCubedSounds.HOLD_FAIL_EVENT, SoundSource.NEUTRAL, 0.3f, 1f);
                 ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
             }
         });

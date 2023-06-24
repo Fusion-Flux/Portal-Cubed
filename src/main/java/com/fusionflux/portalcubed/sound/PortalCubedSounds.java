@@ -20,7 +20,6 @@ public class PortalCubedSounds {
     public static final ResourceLocation PORTAL_GUN_PRIMARY = id("portal_gun_primary");
     public static final ResourceLocation PORTAL_GUN_SECONDARY = id("portal_gun_secondary");
     public static final ResourceLocation PORTAL_INVALID_SURFACE = id("portal_invalid_surface");
-    public static final ResourceLocation NOTHING_TO_GRAB = id("nothing_to_grab");
     public static final ResourceLocation PORTAL_AMBIANCE = id("portal_ambience");
     public static final ResourceLocation PORTAL_ENTER = id("portal_enter");
     public static final ResourceLocation PORTAL_EXIT = id("portal_exit");
@@ -87,6 +86,11 @@ public class PortalCubedSounds {
 
     public static final ResourceLocation GENERIC_PHYSICS_FALL = id("generic_physics_fall");
 
+    public static final ResourceLocation HOLD_FAIL = id("hold/fail");
+    public static final ResourceLocation HOLD_START = id("hold/start");
+    public static final ResourceLocation HOLD_LOOP = id("hold/loop");
+    public static final ResourceLocation HOLD_STOP = id("hold/stop");
+
     public static final SoundEvent ERROR_EVENT = SoundEvent.createVariableRangeEvent(ERROR);
 
     public static final SoundEvent GEL_BOUNCE_EVENT = SoundEvent.createVariableRangeEvent(GEL_BOUNCE);
@@ -96,7 +100,6 @@ public class PortalCubedSounds {
     public static final SoundEvent FIRE_EVENT_PRIMARY = SoundEvent.createVariableRangeEvent(PORTAL_GUN_PRIMARY);
     public static final SoundEvent FIRE_EVENT_SECONDARY = SoundEvent.createVariableRangeEvent(PORTAL_GUN_SECONDARY);
     public static final SoundEvent INVALID_PORTAL_EVENT = SoundEvent.createVariableRangeEvent(PORTAL_INVALID_SURFACE);
-    public static final SoundEvent NOTHING_TO_GRAB_EVENT = SoundEvent.createVariableRangeEvent(NOTHING_TO_GRAB);
     public static final SoundEvent ENTITY_ENTER_PORTAL = SoundEvent.createVariableRangeEvent(PORTAL_ENTER);
     public static final SoundEvent ENTITY_EXIT_PORTAL = SoundEvent.createVariableRangeEvent(PORTAL_EXIT);
     public static final SoundEvent ENTITY_PORTAL_OPEN = SoundEvent.createVariableRangeEvent(PORTAL_OPEN);
@@ -161,6 +164,11 @@ public class PortalCubedSounds {
 
     public static final SoundEvent GENERIC_PHYSICS_FALL_EVENT = SoundEvent.createVariableRangeEvent(GENERIC_PHYSICS_FALL);
 
+    public static final SoundEvent HOLD_FAIL_EVENT = SoundEvent.createVariableRangeEvent(HOLD_FAIL);
+    public static final SoundEvent HOLD_START_EVENT = SoundEvent.createVariableRangeEvent(HOLD_START);
+    public static final SoundEvent HOLD_LOOP_EVENT = SoundEvent.createVariableRangeEvent(HOLD_LOOP);
+    public static final SoundEvent HOLD_STOP_EVENT = SoundEvent.createVariableRangeEvent(HOLD_STOP);
+
     public static final TagKey<SoundEvent> NO_ERROR_SOUND = QuiltTagKey.of(Registries.SOUND_EVENT, id("no_error_sound"), TagType.CLIENT_ONLY);
 
     public static void registerSounds() {
@@ -173,7 +181,6 @@ public class PortalCubedSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_GUN_PRIMARY, FIRE_EVENT_PRIMARY);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_GUN_SECONDARY, FIRE_EVENT_SECONDARY);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_INVALID_SURFACE, INVALID_PORTAL_EVENT);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, NOTHING_TO_GRAB, NOTHING_TO_GRAB_EVENT);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_ENTER, ENTITY_ENTER_PORTAL);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_EXIT, ENTITY_EXIT_PORTAL);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PORTAL_OPEN, ENTITY_PORTAL_OPEN);
@@ -239,5 +246,10 @@ public class PortalCubedSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, CROWBAR_SWOOSH, CROWBAR_SWOOSH_EVENT);
 
         Registry.register(BuiltInRegistries.SOUND_EVENT, GENERIC_PHYSICS_FALL, GENERIC_PHYSICS_FALL_EVENT);
+
+        Registry.register(BuiltInRegistries.SOUND_EVENT, HOLD_FAIL, HOLD_FAIL_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, HOLD_START, HOLD_START_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, HOLD_LOOP, HOLD_LOOP_EVENT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, HOLD_STOP, HOLD_STOP_EVENT);
     }
 }

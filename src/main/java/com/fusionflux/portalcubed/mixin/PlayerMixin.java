@@ -12,6 +12,7 @@ import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import it.unimi.dsi.fastutil.Pair;
@@ -242,6 +243,8 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             if (portal != null) {
                 performTeleport(thisEntity, portal.first(), entityVelocity, portal.second());
             }
+
+            PortalCubedComponents.HOLDER_COMPONENT.get(this).tick();
 
         }
     }

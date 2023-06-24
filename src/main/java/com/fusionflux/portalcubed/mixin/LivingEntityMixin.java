@@ -107,11 +107,10 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         }
     }
 
-
     @Override
     public void collidedWithVelocityHelper(VelocityHelperBlockEntity block) {
         if (!isEffectiveAi() || block.getDestination() == null) return;
-        if (velocityHelper != null && block.getBlockPos() != null && block.getBlockPos().equals(velocityHelper.getBlockPos())) return;
+        if (velocityHelper != null && block.getBlockPos().equals(velocityHelper.getBlockPos())) return;
         final Expression condition = block.getCondition();
         condition.setVariable("x", getDeltaMovement().x);
         condition.setVariable("y", getDeltaMovement().y);
