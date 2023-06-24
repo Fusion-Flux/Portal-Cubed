@@ -20,5 +20,6 @@
     "result": {
         "item": "portalcubed:portal_1_elevator_wall_bottom",
         "count": 4
-    }
+    },
+  "group": "elevator_walls"
 }

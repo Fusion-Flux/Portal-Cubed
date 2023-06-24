@@ -7,10 +7,10 @@
         "YXY"
     ],
     "key": {
-        "X": {
+        "Y": {
             "item": "minecraft:iron_nugget"
         },
-        "Y": {
+        "X": {
             "item": "minecraft:copper_ingot"
         }
     },
