@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "portalcubed:block/acid"
+      "model": "portalcubed:block/toxic_goo"
     }
   }
 }
