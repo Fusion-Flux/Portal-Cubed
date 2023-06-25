@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.mixin.client;
 import com.fusionflux.portalcubed.accessor.AdvancedRaycastResultHolder;
 import com.fusionflux.portalcubed.accessor.GameRendererExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Camera;
@@ -12,6 +13,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import org.apache.commons.lang3.mutable.MutableDouble;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -28,6 +31,13 @@ public abstract class GameRendererMixin implements GameRendererExt {
 
     @Mutable
     @Shadow @Final private Camera mainCamera;
+
+    @ModifyReturnValue(method = "getFov", at = @At("RETURN"))
+    private double portalCubed$modifyFov(double org) {
+        var fov = new MutableDouble(org);
+        PortalCubedClient.modifyFov(fov);
+        return fov.getValue();
+    }
 
     @WrapOperation(
         method = "pick",

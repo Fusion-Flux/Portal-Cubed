@@ -33,17 +33,18 @@ import com.fusionflux.portalcubed.mixin.client.MusicManagerAccessor;
 import com.fusionflux.portalcubed.optionslist.OptionsListScreen;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.CameraControl;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -71,7 +72,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.phys.Vec3;
+
+import org.apache.commons.lang3.mutable.MutableDouble;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -422,51 +426,32 @@ public class PortalCubedClient implements ClientModInitializer {
             bufferBuilder.vertex(matrix, 0, 0, 0).uv(0f, 1f).color(1f, 1f, 1f, alpha).endVertex();
             BufferUploader.drawWithShader(bufferBuilder.end());
         });
-
-        RecoilEvents.UPDATE_FOV.register((value, tickDelta) -> {
-            if (zoomDir == 0) return;
-            if (zoomDir > 0) {
-                if (zoomTimer < ZOOM_TIME) {
-                    value.set(Mth.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get(), value.get() / 2));
-                } else {
-                    value.scale(0.5f);
-                }
-            } else {
-                value.set(Mth.lerp((zoomTimer + tickDelta) / ZOOM_TIME, value.get() / 2, value.get()));
-            }
-        });
-
-        RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
-            final Minecraft client = Minecraft.getInstance();
-            if (PortalCubedClient.isPortalHudMode() && client.screen instanceof DeathScreen) {
-                ctrl.setPos(ctrl.getPos().add(0, -1, 0));
-            }
-        });
-
-        RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
-            final Vec3 entityPos = cameraEntity.getPosition(tickDelta);
-            final Vec3 startPos = entityPos.add(ctrl.getPos().subtract(entityPos).normalize().scale(0.1));
-            final Vec3 endPos = ctrl.getPos();
-            final var transformed = PortalDirectionUtils.simpleTransformPassingVector(
-                cameraEntity, startPos, endPos, p -> p.getNormal().y < 0
-            );
-            if (transformed != null) {
-                cameraTransformedThroughPortal = transformed.second();
-                ctrl.setPos(transformed.first());
-                final Quaternionf cameraRot = camera.rotation().mul(
-                    cameraTransformedThroughPortal.getTransformQuat().toQuaternionf()
-                );
-                camera.getLookVector().set(0.0F, 0.0F, 1.0F).rotate(cameraRot);
-                camera.getUpVector().set(0.0F, 1.0F, 0.0F).rotate(cameraRot);
-                camera.getLeftVector().set(1.0F, 0.0F, 0.0F).rotate(cameraRot);
-                if (camera.isDetached()) {
-                    ((CameraExt)camera).backCameraUp(transformed.first());
-                    ctrl.setPos(camera.getPosition());
-                }
-            } else {
-                cameraTransformedThroughPortal = null;
-            }
-        });
+        
+        // TODO: Note for gaming don't use camera setup for portal rendering
+        // RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
+        //     final Vec3 entityPos = cameraEntity.getPosition(tickDelta);
+        //     final Vec3 startPos = entityPos.add(ctrl.getPos().subtract(entityPos).normalize().scale(0.1));
+        //     final Vec3 endPos = ctrl.getPos();
+        //     final var transformed = PortalDirectionUtils.simpleTransformPassingVector(
+        //         cameraEntity, startPos, endPos, p -> p.getNormal().y < 0
+        //     );
+        //     if (transformed != null) {
+        //         cameraTransformedThroughPortal = transformed.second();
+        //         ctrl.setPos(transformed.first());
+        //         final Quaternionf cameraRot = camera.rotation().mul(
+        //             cameraTransformedThroughPortal.getTransformQuat().toQuaternionf()
+        //         );
+        //         camera.getLookVector().set(0.0F, 0.0F, 1.0F).rotate(cameraRot);
+        //         camera.getUpVector().set(0.0F, 1.0F, 0.0F).rotate(cameraRot);
+        //         camera.getLeftVector().set(1.0F, 0.0F, 0.0F).rotate(cameraRot);
+        //         if (camera.isDetached()) {
+        //             ((CameraExt)camera).backCameraUp(transformed.first());
+        //             ctrl.setPos(camera.getPosition());
+        //         }
+        //     } else {
+        //         cameraTransformedThroughPortal = null;
+        //     }
+        // });
 
         //noinspection UnstableApiUsage
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(e -> e.addAfter(
@@ -555,6 +540,31 @@ public class PortalCubedClient implements ClientModInitializer {
                 })
             );
         });
+    }
+
+    public static void modifyFov(MutableDouble fov) {
+        var tickDelta = Minecraft.getInstance().getFrameTime();
+        if (zoomDir == 0) return;
+        if (zoomDir > 0) {
+            if (zoomTimer < ZOOM_TIME) {
+                fov.setValue(Mth.lerp((zoomTimer + tickDelta) / ZOOM_TIME, fov.getValue(), fov.getValue() / 2));
+            } else {
+                fov.setValue(fov.getValue() * .5);
+            }
+        } else {
+            fov.setValue(Mth.lerp((zoomTimer + tickDelta) / ZOOM_TIME, fov.getValue() / 2, fov.getValue()));
+        }
+    }
+
+    public static CameraControl modifyCamera(CameraControl ctrl, BlockGetter level, Entity entity, CameraType cameraType, float tickDelta) {
+        var pos = ctrl.pos();
+
+        final var minecraft = Minecraft.getInstance();
+        if (PortalCubedClient.isPortalHudMode() && minecraft.screen instanceof DeathScreen) {
+            pos = pos.add(0, -1, 0);
+        }
+        ctrl.update(pos, ctrl.yaw(), ctrl.pitch());
+        return ctrl;
     }
 
     private void registerEmissiveModels(ModContainer mod) {

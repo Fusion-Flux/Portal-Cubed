@@ -14,6 +14,7 @@ import com.fusionflux.portalcubed.optionslist.OptionsListBlockEntity;
 import com.fusionflux.portalcubed.optionslist.OptionsListData;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
+import com.fusionflux.portalcubed.util.ClickHandlingItem;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.core.BlockPos;
@@ -52,6 +53,8 @@ public class PortalCubedServerPackets {
     public static final ResourceLocation OPTIONS_LIST_CONFIGURE = id("options_list_configure");
     public static final ResourceLocation PLAY_BOUNCE_SOUND = id("play_bounce_sound");
     public static final ResourceLocation CROWBAR_ATTACK = id("crowbar_attack");
+    public static final ResourceLocation LEFT_CLICK = id("left_click");
+    public static final ResourceLocation RIGHT_CLICK = id("right_click");
 
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayer player, @SuppressWarnings("unused") ServerGamePacketListenerImpl handler, @SuppressWarnings("unused") FriendlyByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
@@ -178,6 +181,20 @@ public class PortalCubedServerPackets {
                     1f, 1f
                 );
                 TurretEntity.makeBulletHole((ServerLevel)player.level, hit, SoundSource.PLAYERS);
+            });
+        });
+        ServerPlayNetworking.registerGlobalReceiver(LEFT_CLICK, (server, player, handler, buf, responseSender) -> {
+            server.execute(() -> {
+                if (player.getMainHandItem().getItem() instanceof ClickHandlingItem chi) {
+                    if (chi.onLeftClick(player, InteractionHand.MAIN_HAND).shouldSwing()) player.swing(InteractionHand.MAIN_HAND, true);
+                }
+            });
+        });
+        ServerPlayNetworking.registerGlobalReceiver(RIGHT_CLICK, (server, player, handler, buf, responseSender) -> {
+            server.execute(() -> {
+                if (player.getMainHandItem().getItem() instanceof ClickHandlingItem chi) {
+                    if (chi.onRightClick(player, InteractionHand.MAIN_HAND).shouldSwing()) player.swing(InteractionHand.MAIN_HAND, true);
+                }
             });
         });
     }

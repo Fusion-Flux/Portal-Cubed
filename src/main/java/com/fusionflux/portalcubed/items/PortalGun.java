@@ -8,11 +8,12 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import com.fusionflux.portalcubed.util.ClickHandlingItem;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.unascribed.lib39.recoil.api.DirectClickItem;
+
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -48,7 +49,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 
 
-public class PortalGun extends Item implements DirectClickItem, DyeableLeatherItem {
+public class PortalGun extends Item implements ClickHandlingItem, DyeableLeatherItem {
     private static final Map<Pair<Vec3i, Vec3i>, List<List<Direction>>> FAIL_TRIES;
     private static final Map<Direction.AxisDirection, Double2DoubleFunction> FAIL_AXIS_DIRS = new EnumMap<>(Map.of(
         Direction.AxisDirection.NEGATIVE, Math::floor,
@@ -119,13 +120,13 @@ public class PortalGun extends Item implements DirectClickItem, DyeableLeatherIt
     }
 
     @Override
-    public InteractionResult onDirectAttack(Player user, InteractionHand hand) {
+    public InteractionResult onLeftClick(Player user, InteractionHand hand) {
         shoot(user.level, user, hand, true);
         return InteractionResult.CONSUME;
     }
 
     @Override
-    public InteractionResult onDirectUse(Player user, InteractionHand hand) {
+    public InteractionResult onRightClick(Player user, InteractionHand hand) {
         shoot(user.level, user, hand, false);
         return InteractionResult.CONSUME;
     }
