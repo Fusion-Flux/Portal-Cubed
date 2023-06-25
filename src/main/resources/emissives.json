@@ -10,22 +10,9 @@
   "block/faith_plate_target": "block/faith_plate_target",
 
 
-  "block/laser": "block/laser_beam",
-  "block/laser_ref_main": "block/laser_beam",
-  "block/laser_ref_prev": "block/laser_beam",
-
   "block/laser_emitter_active": "block/laser_emitter_e",
-  "block/laser_emitter_active_downward": "block/laser_emitter_e",
-  "block/laser_emitter_active_upward": "block/laser_emitter_e",
-
-  "block/laser_relay_active": "block/laser_emitter_e",
-
   "block/laser_catcher_active": "block/laser_emitter_e",
-  "block/laser_catcher_active_downward": "block/laser_emitter_e",
-  "block/laser_catcher_active_upward": "block/laser_emitter_e",
   "block/laser_catcher": "block/laser_emitter_e",
-  "block/laser_catcher_downward": "block/laser_emitter_e",
-  "block/laser_catcher_upward": "block/laser_emitter_e",
 
 
   "block/portal_2_fizzler_top": "block/portal_2_fizzler_top",
@@ -110,7 +97,6 @@
 
   "block/pedestal_button": "block/pedestal_button_e",
   "block/pedestal_button_active": "block/pedestal_button_e",
-
   "block/offset_pedestal_button": "block/pedestal_button_e",
   "block/offset_pedestal_button_active": "block/pedestal_button_e",
 
