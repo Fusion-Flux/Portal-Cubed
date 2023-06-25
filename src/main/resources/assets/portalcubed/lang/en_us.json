@@ -441,7 +441,7 @@
   "gamerule.portalAlignment": "Portal Alignment",
   "gamerule.portalAlignment.description": "Changes portal placement snapping, with the value being fraction of a block snapped to. For example, 16 is every pixel, 1 is full blocks, and 0 is off.",
   "gamerule.usePortalHud": "Use Portal HUD",
-  "gamerule.usePortalHud.description": "Disables the hotbar, uses 'E' to grab objects, and disables fizzling portals using the keybind. Requires valid items to be in the first hotbar slot.",
+  "gamerule.usePortalHud.description": "Disables the hotbar and inventory, uses 'E' to grab objects, and disables clearing your portals with the keybind. Requires valid items to be in the first hotbar slot.",
 
   "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
   "portalcubed.ponder.auto_portal.text_1": "Power an Auto Portal with redstone to open it.",
