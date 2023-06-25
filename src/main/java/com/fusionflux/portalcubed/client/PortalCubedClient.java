@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.CameraExt;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
@@ -20,7 +21,6 @@ import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
@@ -236,7 +236,7 @@ public class PortalCubedClient implements ClientModInitializer {
 
         ClientTickEvents.END.register(client -> {
             if (client.player == null) return;
-            if (((EntityAttachments)client.player).isInFunnel()) {
+            if (((EntityExt)client.player).isInFunnel()) {
                 if (excursionFunnelMusic == null) {
                     excursionFunnelMusic = new SimpleSoundInstance(
                         PortalCubedSounds.TBEAM_TRAVEL, SoundSource.BLOCKS,

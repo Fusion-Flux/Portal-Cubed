@@ -1,6 +1,8 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.PortalCubedConfig;
+import com.fusionflux.portalcubed.accessor.EntityExt;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.particle.DecalParticleOption;
@@ -86,6 +88,13 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
         super.tick();
         if (level.isClientSide) return;
         Vec3 vel = getDeltaMovement();
+        {
+            final var catapult = level.getBlockEntity(blockPosition(), PortalCubedBlocks.CATAPULT_BLOCK_ENTITY);
+            if (catapult.isPresent()) {
+                ((EntityExt)this).collidedWithCatapult(catapult.get());
+                vel = getDeltaMovement();
+            }
+        }
         move(MoverType.SELF, vel);
         hasImpulse = true;
         int life = getLife();

@@ -1,8 +1,10 @@
-package com.fusionflux.portalcubed.entity;
+package com.fusionflux.portalcubed.accessor;
 
+import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-public interface EntityAttachments {
+public interface EntityExt {
 
     boolean isBounced();
 
@@ -34,4 +36,7 @@ public interface EntityAttachments {
 
     void setCFG();
 
+    void collidedWithVelocityHelper(VelocityHelperBlockEntity block);
+
+    void collidedWithCatapult(CatapultBlockEntity block);
 }

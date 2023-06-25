@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.blocks;
 
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.entity.BlockCollisionLimiter;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
@@ -35,10 +35,10 @@ public class PropulsionGel extends BaseGel {
                         } else if (Math.abs(entity.getDeltaMovement().x) > 2 && Math.abs(entity.getDeltaMovement().z) > 2) {
                             entity.setDeltaMovement(entity.getDeltaMovement().multiply(1.01, 1.0D, 1.01));
                         }
-                        if (((EntityAttachments) entity).getMaxFallSpeed() == 0) {
+                        if (((EntityExt) entity).getMaxFallSpeed() == 0) {
                             level.playSound(null, entity.position().x(), entity.position().y(), entity.position().z(), PortalCubedSounds.GEL_RUN_EVENT, SoundSource.NEUTRAL, .3F, 1F);
                         }
-                        ((EntityAttachments) entity).setMaxFallSpeed(10);
+                        ((EntityExt) entity).setMaxFallSpeed(10);
                     }
                 }
             }

@@ -2,11 +2,11 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelMainBlockEntity;
 import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -223,8 +223,8 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
 
                 RayonIntegration.INSTANCE.setNoGravity(entity, true);
 
-                if (!((EntityAttachments) entity).isInFunnel()) {
-                    ((EntityAttachments) entity).setInFunnel(true);
+                if (!((EntityExt) entity).isInFunnel()) {
+                    ((EntityExt) entity).setInFunnel(true);
                     entity.setDeltaMovement(0, 0, 0);
                     playEnterSound();
                 }
@@ -240,7 +240,7 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
                 if (zOffset == 0) {
                     zOffset = .0001;
                 }
-                ((EntityAttachments) entity).setFunnelTimer(2);
+                ((EntityExt) entity).setFunnelTimer(2);
 
                 Vec3 gotVelocity = Vec3.ZERO;
 
@@ -277,7 +277,7 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
                     entity.setDeltaMovement(gotVelocity);
 
                     if (entity.isShiftKeyDown() && gotVelocity.lengthSqr() < 0.15 * 0.15 && !entity.isFree(gotVelocity.x, gotVelocity.y, gotVelocity.z)) {
-                        ((EntityAttachments) entity).setCFG();
+                        ((EntityExt) entity).setCFG();
                     }
 
                 }
@@ -291,8 +291,8 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
 
                 RayonIntegration.INSTANCE.setNoGravity(entity, true);
 
-                if (!((EntityAttachments) entity).isInFunnel()) {
-                    ((EntityAttachments) entity).setInFunnel(true);
+                if (!((EntityExt) entity).isInFunnel()) {
+                    ((EntityExt) entity).setInFunnel(true);
                     entity.setDeltaMovement(0, 0, 0); //not this code
                 }
 
@@ -311,7 +311,7 @@ public class ExcursionFunnelMain extends BaseEntityBlock {
                 }
                 entity.fallDistance = 0;
 
-                ((EntityAttachments) entity).setFunnelTimer(2);
+                ((EntityExt) entity).setFunnelTimer(2);
 
                 Vec3 gotVelocity = Vec3.ZERO;
 

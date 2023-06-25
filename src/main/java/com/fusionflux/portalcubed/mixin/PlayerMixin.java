@@ -4,10 +4,10 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.TeleportResult;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.MixinPCClientAccessor;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
@@ -55,7 +55,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity implements EntityAttachments {
+public abstract class PlayerMixin extends LivingEntity implements EntityExt {
     @Unique
     private boolean cfg;
 
@@ -116,7 +116,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityAttachme
             var byteBuf = PacketByteBufs.create();
             NetworkingSafetyWrapper.sendFromClient("client_teleport_update", byteBuf);
             CalledValues.setHasTeleportationHappened(thisEntity, false);
-            ((EntityAttachments) thisEntity).setMaxFallHeight(-99999999);
+            ((EntityExt) thisEntity).setMaxFallHeight(-99999999);
             CalledValues.setIsTeleporting(thisEntity, false);
             this.setDeltaMovement(CalledValues.getVelocityUpdateAfterTeleport(thisEntity));
         }
