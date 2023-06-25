@@ -3,7 +3,6 @@ package com.fusionflux.portalcubed.client;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.accessor.CameraExt;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
@@ -36,7 +35,6 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.CameraControl;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
-import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -73,13 +71,10 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.phys.Vec3;
-
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
@@ -426,7 +421,7 @@ public class PortalCubedClient implements ClientModInitializer {
             bufferBuilder.vertex(matrix, 0, 0, 0).uv(0f, 1f).color(1f, 1f, 1f, alpha).endVertex();
             BufferUploader.drawWithShader(bufferBuilder.end());
         });
-        
+
         // TODO: Note for gaming don't use camera setup for portal rendering
         // RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
         //     final Vec3 entityPos = cameraEntity.getPosition(tickDelta);
