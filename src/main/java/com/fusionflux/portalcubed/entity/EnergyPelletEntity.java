@@ -112,8 +112,8 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
                 bouncedDir = vel.z < 0 ? Direction.NORTH : Direction.SOUTH;
             }
         }
+        setDeltaMovement(vel);
         if (bouncedDir != null) {
-            setDeltaMovement(vel);
             level.playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
             if (level instanceof ServerLevel serverLevel) {
                 final Vec3 spawnPos = serverLevel.clip(new ClipContext(
