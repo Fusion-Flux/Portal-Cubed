@@ -226,10 +226,6 @@ public class PortalCubed implements ModInitializer {
                     return;
                 }
 
-                if (cubePos.distanceToSqr(player.position()) > 10 * 10) {
-                    LOGGER.warn("{} tried to drop physics object far away ({})", player, cubePos.distanceTo(player.position()));
-                    return;
-                }
                 cube.setPos(cubePos);
                 cube.setDeltaMovement(RotationUtil.vecWorldToPlayer(cubePos.subtract(lastCubePos), GravityChangerAPI.getGravityDirection(cube)).scale(.5));
             });
