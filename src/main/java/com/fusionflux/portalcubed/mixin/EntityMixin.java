@@ -4,29 +4,38 @@ import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.TeleportResult;
-import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
-import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.accessor.ClientTeleportCheck;
-import com.fusionflux.portalcubed.accessor.EntityPortalsAccess;
+import com.fusionflux.portalcubed.accessor.*;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import com.fusionflux.portalcubed.blocks.fizzler.AbstractFizzlerBlock;
+import com.fusionflux.portalcubed.client.gui.ExpressionFieldWidget;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
+import com.fusionflux.portalcubed.compat.pehkui.PehkuiApi;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.entity.Portal;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
+import com.fusionflux.portalcubed.util.GeneralUtil;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -42,11 +51,10 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.objecthunter.exp4j.Expression;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
-
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -62,7 +70,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAttachments, EntityPortalsAccess, ClientTeleportCheck {
+public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, ClientTeleportCheck {
     @Shadow
     public Level level;
 
@@ -75,6 +83,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
     @Unique
     private double maxFallHeight = -99999999;
 
+    @Unique
     private Direction prevGravDirec = Direction.DOWN;
 
     @Unique
@@ -148,6 +157,11 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Shadow public abstract Vec3 getEyePosition();
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    @Shadow public abstract boolean isEffectiveAi();
+
+    @Shadow public boolean hasImpulse;
+    @Unique
     private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
 
     @Unique
@@ -157,6 +171,13 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
 
     @Unique
     private Portal viewTranslatingPortal;
+
+    @Unique
+    private VelocityHelperBlockEntity velocityHelper;
+    @Unique
+    private long velocityHelperStartTime;
+    @Unique
+    private Vec3 velocityHelperOffset;
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
@@ -314,6 +335,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         }
     }
 
+    @Unique
     private void performTeleport(
             Entity thisEntity,
             Portal portal,
@@ -488,6 +510,7 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
         return CrossPortalInteraction.blockInteractionRaycast(world, context);
     }
 
+    @Unique
     private boolean intersects(AABB box, VoxelShape shape) {
         return shape.toAabbs().stream().anyMatch(box::intersects);
     }
@@ -546,5 +569,97 @@ public abstract class EntityMixin implements EntityAttachments, EntityPortalsAcc
             if (state.getBlock() instanceof AbstractFizzlerBlock fizzler)
                 fizzler.applyEffectsTo((Entity) (Object) this);
         }
+    }
+
+    @Override
+    public void collidedWithVelocityHelper(VelocityHelperBlockEntity block) {
+        if (!isEffectiveAi() || block.getDestination() == null) return;
+        if (velocityHelper != null && block.getBlockPos().equals(velocityHelper.getBlockPos())) return;
+        final Expression condition = block.getCondition();
+        condition.setVariable("x", getDeltaMovement().x);
+        condition.setVariable("y", getDeltaMovement().y);
+        condition.setVariable("z", getDeltaMovement().z);
+        try {
+            if (condition.evaluate() == 0) return;
+        } catch (RuntimeException e) {
+            logVHWarning("condition", e);
+            return;
+        }
+        velocityHelper = block;
+        velocityHelperStartTime = level.getGameTime();
+        velocityHelperOffset = Vec3.atCenterOf(block.getBlockPos()).subtract(position());
+    }
+
+    @Override
+    public void collidedWithCatapult(CatapultBlockEntity block) {
+        if (!isEffectiveAi()) return;
+        final double relH = block.getRelH(position().x, position().z);
+        final double relY = block.getRelY(position().y);
+        final double angle = block.getAngle();
+        final double speed = GeneralUtil.calculateVelocity(relH, relY, angle, -0.08 * PehkuiApi.INSTANCE.getFallingScale((Entity)(Object)this));
+        if (!Double.isFinite(speed)) return;
+        //noinspection ConstantValue
+        if ((Object)this instanceof Player player) {
+            player.setDiscardFriction(player.getItemBySlot(EquipmentSlot.FEET).is(PortalCubedItems.LONG_FALL_BOOTS));
+        }
+        RayonIntegration.INSTANCE.setVelocity((Entity)(Object)this, block.getLaunchDir(position().x, position().z).scale(Math.min(speed, 10)));
+        hasImpulse = true;
+    }
+
+    @Unique
+    private void logVHWarning(String type, RuntimeException e) {
+        //noinspection ConstantValue
+        if ((Object)this instanceof Player && level.isClientSide) {
+            logVHWarningToChat(type, e);
+        }
+        PortalCubed.LOGGER.info("{} at {}", getVHWarning(type).getString(), velocityHelper.getBlockPos(), e);
+    }
+
+    @Unique
+    @ClientOnly
+    private void logVHWarningToChat(String type, RuntimeException e) {
+        Minecraft.getInstance().gui.getChat().addMessage(getVHWarning(type));
+        Minecraft.getInstance().gui.getChat().addMessage(
+            Component.literal(ExpressionFieldWidget.cleanError(e)).withStyle(ChatFormatting.RED)
+        );
+    }
+
+    @Unique
+    private Component getVHWarning(String type) {
+        return Component.translatable(
+            "portalcubed.velocity_helper.failed_expression",
+            Component.translatable("portalcubed.velocity_helper." + type + "_expression")
+        ).withStyle(ChatFormatting.RED);
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void tickVelocityHelper(CallbackInfo ci) {
+        if (velocityHelper == null || velocityHelper.getDestination() == null) {
+            velocityHelper = null;
+            return;
+        }
+        double progress = (level.getGameTime() - velocityHelperStartTime) / (double)velocityHelper.getFlightDuration();
+        if (progress >= 1.0) {
+            velocityHelper = null;
+            return;
+        }
+        if (progress < 0) {
+            progress = 0;
+        }
+        final Expression curve = velocityHelper.getInterpolationCurve();
+        curve.setVariable("x", progress);
+        final double useProgress;
+        try {
+            useProgress = Mth.clamp(curve.evaluate(), 0, 1);
+        } catch (RuntimeException e) {
+            logVHWarning("curve", e);
+            return;
+        }
+        assert velocityHelper.getDestination() != null;
+        setDeltaMovement(new Vec3(
+            Mth.lerp(useProgress, velocityHelper.getBlockPos().getX() + 0.5, velocityHelper.getDestination().getX() + 0.5),
+            Mth.lerp(useProgress, velocityHelper.getBlockPos().getY() + 0.5, velocityHelper.getDestination().getY() + 0.5),
+            Mth.lerp(useProgress, velocityHelper.getBlockPos().getZ() + 0.5, velocityHelper.getDestination().getZ() + 0.5)
+        ).subtract(position()).subtract(velocityHelperOffset));
     }
 }

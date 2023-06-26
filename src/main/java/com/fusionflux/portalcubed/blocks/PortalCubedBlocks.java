@@ -2,7 +2,10 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.*;
 import com.fusionflux.portalcubed.blocks.fizzler.*;
+import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock;
+import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelTubeBlock;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.items.ExcursionFunnelEmitterBlockItem;
 import com.fusionflux.portalcubed.items.GelBlobItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -41,10 +44,8 @@ public class PortalCubedBlocks {
     // TODO: Due to remapping weirdness, QuiltMaterialBuilder couldn't be used properly here. However, the whole material system is redone in 1.20, and neurotoxin is broken anyway, so this is just a temporary patch.
     public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(QuiltBlockSettings.of(Material.AIR).noOcclusion().noCollission());
     public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().noCollission().sound(SoundType.STONE));
-    public static final ExcursionFunnelEmitter EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
-    public static final DualExcursionFunnelEmitter DUAL_EXCURSION_FUNNEL_EMITTER = new DualExcursionFunnelEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
-    public static final ReversedExcursionFunnelEmitter REVERSED_EXCURSION_FUNNEL_EMITTER = new ReversedExcursionFunnelEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
-    public static final ExcursionFunnelMain EXCURSION_FUNNEL = new ExcursionFunnelMain(QuiltBlockSettings.of(Material.AIR).noOcclusion().noCollission());
+    public static final ExcursionFunnelEmitterBlock EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
+    public static final ExcursionFunnelTubeBlock EXCURSION_FUNNEL = new ExcursionFunnelTubeBlock(QuiltBlockSettings.of(Material.AIR).noOcclusion().noCollission().randomTicks());
 
     public static final TallButton TALL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
     public static final OldApTallButton OLD_AP_PEDESTAL_BUTTON = new OldApTallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
@@ -69,9 +70,6 @@ public class PortalCubedBlocks {
     public static final BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinBlockEntity::new, NEUROTOXIN_BLOCK).build();
     public static final BlockEntityType<NeurotoxinEmitterBlockEntity> NEUROTOXIN_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinEmitterBlockEntity::new, NEUROTOXIN_EMITTER).build();
     public static final BlockEntityType<ExcursionFunnelEmitterBlockEntity> EXCURSION_FUNNEL_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(ExcursionFunnelEmitterBlockEntity::new, EXCURSION_FUNNEL_EMITTER).build();
-    public static final BlockEntityType<ReversedExcursionFunnelEmitterBlockEntity> REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(ReversedExcursionFunnelEmitterBlockEntity::new, REVERSED_EXCURSION_FUNNEL_EMITTER).build();
-    public static final BlockEntityType<DualExcursionFunnelEmitterBlockEntity> DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(DualExcursionFunnelEmitterBlockEntity::new, DUAL_EXCURSION_FUNNEL_EMITTER).build();
-    public static final BlockEntityType<ExcursionFunnelMainBlockEntity> EXCURSION_FUNNEL_ENTITY = QuiltBlockEntityTypeBuilder.create(ExcursionFunnelMainBlockEntity::new, EXCURSION_FUNNEL).build();
 
     public static final PowerBlock POWER_BLOCK = new PowerBlock(QuiltBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
 
@@ -170,17 +168,8 @@ public class PortalCubedBlocks {
 
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("excursion_funnel_emitter_entity"), EXCURSION_FUNNEL_EMITTER_ENTITY);
         Registry.register(BuiltInRegistries.BLOCK, id("excursion_funnel_emitter"), EXCURSION_FUNNEL_EMITTER);
-        Registry.register(BuiltInRegistries.ITEM, id("excursion_funnel_emitter"), new BlockItem(EXCURSION_FUNNEL_EMITTER, new Item.Properties()));
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("excursion_funnel_entity"), EXCURSION_FUNNEL_ENTITY);
+        Registry.register(BuiltInRegistries.ITEM, id("excursion_funnel_emitter"), new ExcursionFunnelEmitterBlockItem(EXCURSION_FUNNEL_EMITTER, new Item.Properties()));
         Registry.register(BuiltInRegistries.BLOCK, id("excursion_funnel"), EXCURSION_FUNNEL);
-
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("reversed_excursion_funnel_emitter_entity"), REVERSED_EXCURSION_FUNNEL_EMITTER_ENTITY);
-        Registry.register(BuiltInRegistries.BLOCK, id("reversed_excursion_funnel_emitter"), REVERSED_EXCURSION_FUNNEL_EMITTER);
-        Registry.register(BuiltInRegistries.ITEM, id("reversed_excursion_funnel_emitter"), new BlockItem(REVERSED_EXCURSION_FUNNEL_EMITTER, new Item.Properties()));
-
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("dual_excursion_funnel_emitter_entity"), DUAL_EXCURSION_FUNNEL_EMITTER_ENTITY);
-        Registry.register(BuiltInRegistries.BLOCK, id("dual_excursion_funnel_emitter"), DUAL_EXCURSION_FUNNEL_EMITTER);
-        Registry.register(BuiltInRegistries.ITEM, id("dual_excursion_funnel_emitter"), new BlockItem(DUAL_EXCURSION_FUNNEL_EMITTER, new Item.Properties()));
 
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("faith_plate"), FAITH_PLATE_BLOCK_ENTITY);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("beta_faith_plate"), BETA_FAITH_PLATE_BLOCK_ENTITY);

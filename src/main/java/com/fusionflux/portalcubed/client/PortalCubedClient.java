@@ -3,6 +3,8 @@ package com.fusionflux.portalcubed.client;
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.accessor.CameraExt;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
@@ -19,7 +21,6 @@ import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
@@ -38,6 +39,7 @@ import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
@@ -50,11 +52,13 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
@@ -235,7 +239,7 @@ public class PortalCubedClient implements ClientModInitializer {
 
         ClientTickEvents.END.register(client -> {
             if (client.player == null) return;
-            if (((EntityAttachments)client.player).isInFunnel()) {
+            if (((EntityExt)client.player).isInFunnel()) {
                 if (excursionFunnelMusic == null) {
                     excursionFunnelMusic = new SimpleSoundInstance(
                         PortalCubedSounds.TBEAM_TRAVEL, SoundSource.BLOCKS,
@@ -682,6 +686,10 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(TurretRenderer.TURRET_LAYER, TurretModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.TURRET, TurretRenderer::new);
+
+        BlockEntityRenderers.register(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER_ENTITY, ExcursionFunnelEmitterBlockEntityRenderer::new);
+        EntityModelLayerRegistry.registerModelLayer(ExcursionFunnelEmitterCenterModel.LAYER, ExcursionFunnelEmitterCenterModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(ExcursionFunnelEmitterCenterModel.LAYER_REVERSED, ExcursionFunnelEmitterCenterModel::createBodyLayer);
     }
 
     private static final class VisibleBarriersCompat {

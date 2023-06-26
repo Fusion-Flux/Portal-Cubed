@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
-import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -22,6 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -58,12 +59,13 @@ public class VelocityHelperBlock extends SpecialHiddenBlockWithEntity implements
 
     @Override
     public void onEntityEnter(BlockState state, Level world, BlockPos pos, Entity entity) {
-        if (entity instanceof LivingEntityAccessor livingEntity) {
+        if (entity instanceof EntityExt ext) {
             world.getBlockEntity(pos, PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY)
-                .ifPresent(livingEntity::collidedWithVelocityHelper);
+                .ifPresent(ext::collidedWithVelocityHelper);
         }
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {

@@ -26,13 +26,13 @@ import java.util.Objects;
  * <p>
  * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
  */
-public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEmitterBlockEntity {
+public class HardLightBridgeEmitterBlockEntity extends ExcursionFunnelEmitterBlockEntity {
 
     public List<BlockPos> bridges;
     public List<BlockPos> portalBridges;
 
     public HardLightBridgeEmitterBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.HLB_EMITTER_ENTITY, pos, state);
+        super(pos, state);
         this.bridges = new ArrayList<>();
         this.portalBridges = new ArrayList<>();
     }
@@ -43,7 +43,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
             if (redstonePowered) {
 
                 if (!world.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
-                    blockEntity.togglePowered(world.getBlockState(pos));
+//                    blockEntity.togglePowered(world.getBlockState(pos));
                 }
 
                 BlockPos translatedPos = pos;
@@ -54,7 +54,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
                     boolean teleported = false;
                     Direction storedDirection = blockEntity.getBlockState().getValue(BlockStateProperties.FACING);
                     Direction vertDirection = Direction.NORTH;
-                    for (int i = 0; i <= blockEntity.maxRange; i++) {
+                    for (int i = 0; i <= 127; i++) {
                         if (!teleported) {
                             translatedPos = translatedPos.relative(storedDirection);
                         } else {
@@ -139,7 +139,7 @@ public class HardLightBridgeEmitterBlockEntity extends AbstractExcursionFunnelEm
 
             if (!redstonePowered) {
                 if (world.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
-                    blockEntity.togglePowered(world.getBlockState(pos));
+//                    blockEntity.togglePowered(world.getBlockState(pos));
                 }
             }
 

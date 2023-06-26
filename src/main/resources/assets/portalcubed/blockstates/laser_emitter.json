@@ -2,47 +2,55 @@
   "variants": {
     "facing=east,powered=true": {
       "model": "portalcubed:block/laser_emitter_active",
-      "y": 180
+      "y": -90,
+      "x": -90
     },
     "facing=north,powered=true": {
       "model": "portalcubed:block/laser_emitter_active",
-      "y": 90
+      "y": -180,
+      "x": -90
     },
     "facing=south,powered=true": {
       "model": "portalcubed:block/laser_emitter_active",
-      "y": 270
+      "x": -90
     },
     "facing=west,powered=true": {
       "model": "portalcubed:block/laser_emitter_active",
-      "y": 0
+      "y": -270,
+      "x": -90
     },
     "facing=up,powered=true": {
-      "model": "portalcubed:block/laser_emitter_active_upward"
+      "model": "portalcubed:block/laser_emitter_active"
     },
     "facing=down,powered=true": {
-      "model": "portalcubed:block/laser_emitter_active_downward"
+      "model": "portalcubed:block/laser_emitter_active",
+      "x": 180
     },
     "facing=east,powered=false": {
       "model": "portalcubed:block/laser_emitter",
-      "y": 180
+      "y": -90,
+      "x": -90
     },
     "facing=north,powered=false": {
       "model": "portalcubed:block/laser_emitter",
-      "y": 90
+      "y": -180,
+      "x": -90
     },
     "facing=south,powered=false": {
       "model": "portalcubed:block/laser_emitter",
-      "y": 270
+      "x": -90
     },
     "facing=west,powered=false": {
       "model": "portalcubed:block/laser_emitter",
-      "y": 0
+      "y": -270,
+      "x": -90
     },
     "facing=up,powered=false": {
-      "model": "portalcubed:block/laser_emitter_upward"
+      "model": "portalcubed:block/laser_emitter"
     },
     "facing=down,powered=false": {
-      "model": "portalcubed:block/laser_emitter_downward"
+      "model": "portalcubed:block/laser_emitter",
+      "x": 180
     }
   }
 }

@@ -1,6 +1,8 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.PortalCubedConfig;
+import com.fusionflux.portalcubed.accessor.EntityExt;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.particle.DecalParticleOption;
@@ -86,6 +88,13 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
         super.tick();
         if (level.isClientSide) return;
         Vec3 vel = getDeltaMovement();
+        {
+            final var catapult = level.getBlockEntity(blockPosition(), PortalCubedBlocks.CATAPULT_BLOCK_ENTITY);
+            if (catapult.isPresent()) {
+                ((EntityExt)this).collidedWithCatapult(catapult.get());
+                vel = getDeltaMovement();
+            }
+        }
         move(MoverType.SELF, vel);
         hasImpulse = true;
         int life = getLife();
@@ -112,8 +121,8 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
                 bouncedDir = vel.z < 0 ? Direction.NORTH : Direction.SOUTH;
             }
         }
+        setDeltaMovement(vel);
         if (bouncedDir != null) {
-            setDeltaMovement(vel);
             level.playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
             if (level instanceof ServerLevel serverLevel) {
                 final Vec3 spawnPos = serverLevel.clip(new ClipContext(

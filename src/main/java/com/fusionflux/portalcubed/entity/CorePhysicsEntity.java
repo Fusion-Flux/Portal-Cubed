@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.gravity_api.util.RotationUtil;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
@@ -233,7 +234,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
                 canUsePortals = true;
             }
             RayonIntegration.INSTANCE.setNoGravity(this, true);
-        } else if (this.isNoGravity() && !fizzling && !((EntityAttachments)this).isInFunnel()) {
+        } else if (this.isNoGravity() && !fizzling && !((EntityExt)this).isInFunnel()) {
             RayonIntegration.INSTANCE.setNoGravity(this, false);
         }
         if (this.getDeltaMovement().y < -3.92) {

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "portalcubed:excursion_funnel_emitter",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "quadrant": "1"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "portalcubed:excursion_funnel_emitter"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

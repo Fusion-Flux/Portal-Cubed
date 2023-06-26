@@ -22,6 +22,11 @@
   "client": [
     "client.AbstractContainerScreenMixin",
     "client.AbstractSoundInstanceAccessor",
+    "client.BakedQuadMixin",
+    "client.BlockElement_DeserializerMixin",
+    "client.BlockElementMixin",
+    "client.BlockModel_DeserializerMixin",
+    "client.BlockModelMixin",
     "client.CameraMixin",
     "client.ClientAdvancementMixin",
     "client.ClientLevelMixin",
@@ -41,6 +46,7 @@
     "client.MinecraftAccessor",
     "client.MinecraftMixin",
     "client.ModelBakery_ModelBakerImplMixin",
+    "client.ModelManagerAccessor",
     "client.MouseHandlerMixin",
     "client.MultiPlayerGameModeMixin",
     "client.MusicManagerAccessor",
@@ -49,6 +55,7 @@
     "client.RenderSystemMixin",
     "client.RenderTargetMixin",
     "client.ScreenEffectRendererMixin",
+    "client.SimpleBakedModelAccessor",
     "client.SoundEngineMixin",
     "client.VertexConsumerMixin"
   ],

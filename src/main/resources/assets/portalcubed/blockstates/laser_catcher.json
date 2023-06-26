@@ -2,47 +2,55 @@
   "variants": {
     "facing=east,enabled=true": {
       "model": "portalcubed:block/laser_catcher_active",
-      "y": 180
+      "y": -90,
+      "x": -90
     },
     "facing=north,enabled=true": {
       "model": "portalcubed:block/laser_catcher_active",
-      "y": 90
+      "y": -180,
+      "x": -90
     },
     "facing=south,enabled=true": {
       "model": "portalcubed:block/laser_catcher_active",
-      "y": 270
+      "x": -90
     },
     "facing=west,enabled=true": {
       "model": "portalcubed:block/laser_catcher_active",
-      "y": 0
+      "y": -270,
+      "x": -90
     },
     "facing=up,enabled=true": {
-      "model": "portalcubed:block/laser_catcher_active_upward"
+      "model": "portalcubed:block/laser_catcher_active"
     },
     "facing=down,enabled=true": {
-      "model": "portalcubed:block/laser_catcher_active_downward"
+      "model": "portalcubed:block/laser_catcher_active",
+      "x": 180
     },
     "facing=east,enabled=false": {
       "model": "portalcubed:block/laser_catcher",
-      "y": 180
+      "y": -90,
+      "x": -90
     },
     "facing=north,enabled=false": {
       "model": "portalcubed:block/laser_catcher",
-      "y": 90
+      "y": -180,
+      "x": -90
     },
     "facing=south,enabled=false": {
       "model": "portalcubed:block/laser_catcher",
-      "y": 270
+      "x": -90
     },
     "facing=west,enabled=false": {
       "model": "portalcubed:block/laser_catcher",
-      "y": 0
+      "y": -270,
+      "x": -90
     },
     "facing=up,enabled=false": {
-      "model": "portalcubed:block/laser_catcher_upward"
+      "model": "portalcubed:block/laser_catcher"
     },
     "facing=down,enabled=false": {
-      "model": "portalcubed:block/laser_catcher_downward"
+      "model": "portalcubed:block/laser_catcher",
+      "x": 180
     }
   }
 }

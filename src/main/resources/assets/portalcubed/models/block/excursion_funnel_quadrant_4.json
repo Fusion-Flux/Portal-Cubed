@@ -1,0 +1,38 @@
+{
+	"credit": "Made by Cart3r using Blockbench.",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "portalcubed:block/excursion_funnel_beam",
+		"1": "portalcubed:block/excursion_funnel_beam_end",
+		"particle": "portalcubed:block/excursion_funnel_beam"
+	},
+	"elements": [
+		{
+			"from": [0.99, 0.99, -0.01],
+			"to": [16.01, 16.01, 16.01],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 1, 0]},
+			"faces": {
+				"west": {"uv": [8, 8, 0, 0], "texture": "#0"},
+				"down": {"uv": [0, 8, 8, 16], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "cube inverted",
+			"from": [16, 16, 16],
+			"to": [1, 1, 0],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 1, 0]},
+			"faces": {
+				"east": {"uv": [8, 0, 0, 8], "texture": "#0"},
+				"up": {"uv": [0, 16, 8, 8], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 0],
+			"faces": {
+				"north": {"uv": [8, 8, 0, 16], "texture": "#1", "cullface": "north"},
+				"south": {"uv": [0, 8, 8, 16], "texture": "#1", "cullface": "north"}
+			}
+		}
+	]
+}

@@ -3,13 +3,13 @@
     "icon": "portalcubed:portal_gun",
     "items": [
       "portalcubed:hammer",
+      "portalcubed:long_fall_boots",
       "portalcubed:portal_gun_frame",
       "portalcubed:portal_gun_casing",
       "portalcubed:mini_blackhole",
       "portalcubed:portal_gun",
       "portalcubed:portal_gun_primary",
       "portalcubed:portal_gun_secondary",
-      "portalcubed:long_fall_boots",
       "portalcubed:power_block",
       "portalcubed:velocity_helper",
       "portalcubed:catapult",
@@ -48,9 +48,7 @@
       "portalcubed:repulsion_gel",
       "portalcubed:propulsion_gel",
       "portalcubed:conversion_gel",
-      "portalcubed:excursion_funnel_emitter",
-      "portalcubed:reversed_excursion_funnel_emitter",
-      "portalcubed:dual_excursion_funnel_emitter"
+      "portalcubed:excursion_funnel_emitter"
     ]
   },
   "other_testing_elements": {

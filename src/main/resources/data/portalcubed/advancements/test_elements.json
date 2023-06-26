@@ -2,15 +2,10 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-
-      "portalcubed:dual_excursion_funnel_crafting",
-      "portalcubed:dual_excursion_funnel_crafting_alternate",
-      "portalcubed:dual_excursion_funnel_from_normal",
-      "portalcubed:dual_excursion_funnel_from_reverse",
-      "portalcubed:reversed_excursion_funnel_crafting",
       "portalcubed:laser_emitter_crafting",
       "portalcubed:laser_catcher_crafting",
       "portalcubed:laser_relay_crafting",
+      "portalcubed:excursion_funnel_emitter_crafting",
       "portalcubed:light_bridge_emitter_crafting",
       "portalcubed:floor_button_crafting",
       "portalcubed:old_aperture_floor_button_crafting",
