@@ -1,11 +1,4 @@
 {
-  "block/excursion_funnel": "block/excursion_funnel_beam",
-  "block/excursion_funnel_reversed": "block/excursion_funnel_beam",
-  "block/excursion_funnel_emitter_deactivated": "block/excursion_funnel_emitter_e",
-  "block/excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",
-  "block/reversed_excursion_funnel_emitter_deactivated": "block/excursion_funnel_emitter_e",
-  "block/reversed_excursion_funnel_emitter_activated": "block/excursion_funnel_emitter_wings_active_e",
-
 
   "block/faith_plate_target": "block/faith_plate_target",
 
