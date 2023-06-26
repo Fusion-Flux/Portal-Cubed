@@ -51,7 +51,7 @@ public class ExcursionFunnelEmitterBlockEntityRenderer implements BlockEntityRen
         poseStack.translate(0.5, 0.5, 0.5);
         poseStack.mulPose(facing.getRotation());
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
-        poseStack.translate(-0.5, -1, -0.5);
+        poseStack.translate(-0.5, -1.03, -0.5);
         if (facing.getAxis().isVertical())
             poseStack.translate(1, 0, 1);
 
