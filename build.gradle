@@ -52,13 +52,6 @@ repositories {
 	}
 
 	maven {
-		url = uri("https://repo.sleeping.town")
-		content {
-			includeGroup("com.unascribed")
-		}
-	}
-
-	maven {
 		url = uri("https://maven.jamieswhiteshirt.com/libs-release")
 		content {
 			includeGroup("com.jamieswhiteshirt")
@@ -105,9 +98,6 @@ dependencies {
 	include(modApi("io.github.tropheusj.stonecutter_recipe_tags:fabric:5.2.0+1.19.4.fabric") {
 		transitive = false
 	})
-
-	include(modApi("com.unascribed:lib39-core:1.5.0-pre3+1.19.3"))
-	include(modApi("com.unascribed:lib39-recoil:1.5.0-pre3+1.19.3"))
 
 	include(modImplementation("com.github.qouteall:Gravity-Api:${project["gravity_api_version"]}") {
 		transitive = false

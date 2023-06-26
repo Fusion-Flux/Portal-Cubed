@@ -4,7 +4,8 @@ import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
-import com.unascribed.lib39.recoil.api.DirectClickItem;
+import com.fusionflux.portalcubed.util.ClickHandlingItem;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
-public class PaintGun extends Item implements DirectClickItem, DyeableLeatherItem {
+public class PaintGun extends Item implements ClickHandlingItem, DyeableLeatherItem {
 
     public PaintGun(Properties settings) {
         super(settings);
@@ -36,13 +37,13 @@ public class PaintGun extends Item implements DirectClickItem, DyeableLeatherIte
     private FireableGelType lastFiredGelType = null;
 
     @Override
-    public InteractionResult onDirectAttack(Player user, InteractionHand hand) {
+    public InteractionResult onLeftClick(Player user, InteractionHand hand) {
         fireGel(user.level, user, FireableGelType.REPULSION);
         return InteractionResult.CONSUME;
     }
 
     @Override
-    public InteractionResult onDirectUse(Player user, InteractionHand hand) {
+    public InteractionResult onRightClick(Player user, InteractionHand hand) {
         fireGel(user.level, user, FireableGelType.PROPULSION);
         return InteractionResult.CONSUME;
     }
