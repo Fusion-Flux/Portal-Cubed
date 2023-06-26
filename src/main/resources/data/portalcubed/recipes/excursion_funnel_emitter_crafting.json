@@ -3,7 +3,7 @@
     "category": "redstone",
     "pattern": [
         "XXX",
-        "YZZ",
+        "YZA",
         "XXX"
     ],
     "key": {
@@ -15,6 +15,9 @@
         },
         "Z": {
             "item": "minecraft:light_blue_dye"
+        },
+        "A": {
+            "item": "minecraft:orange_dye"
         }
     },
     "result": {
