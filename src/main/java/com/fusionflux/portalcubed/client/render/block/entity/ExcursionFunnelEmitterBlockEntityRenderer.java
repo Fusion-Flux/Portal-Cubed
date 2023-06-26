@@ -65,7 +65,8 @@ public class ExcursionFunnelEmitterBlockEntityRenderer implements BlockEntityRen
     protected float getTickTime(@Nullable Level level, float partialTicks, Mode mode) {
         if (level == null || !mode.isOn)
             return 0;
-        return level.getLevelData().getGameTime() + partialTicks;
+        long gameTime = level.getLevelData().getGameTime() % 10_000; // keep it small
+        return gameTime + partialTicks;
     }
 
     @Override

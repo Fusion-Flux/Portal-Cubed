@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -42,7 +43,6 @@ public class ExcursionFunnelTubeBlock extends Block implements TwoByTwoFacingMul
                         .setValue(FACING, Direction.NORTH)
                         .setValue(REVERSED, false)
         );
-        System.out.println("Tube states: " + this.stateDefinition.getPossibleStates().size());
     }
 
     @NotNull
@@ -68,6 +68,15 @@ public class ExcursionFunnelTubeBlock extends Block implements TwoByTwoFacingMul
             return false;
         Direction adjacentFacing = adjacentState.getValue(FACING);
         return adjacentFacing == facing;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        Direction back = state.getValue(FACING).getOpposite();
+        BlockState stateBehind = level.getBlockState(pos.relative(back));
+        if (!stateBehind.is(this) || !state.is(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER))
+            level.removeBlock(pos, false);
     }
 
     @SuppressWarnings("deprecation")

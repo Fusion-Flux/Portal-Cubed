@@ -67,7 +67,6 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
                 .setValue(MODE, Mode.FORWARD_OFF)
                 .setValue(QUADRANT, 1)
         );
-        System.out.println("Emitter states: " + this.stateDefinition.getPossibleStates().size());
     }
 
     @Override
@@ -261,7 +260,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
     }
 
     private static BlockState getTubeState(BlockState emitter, BlockState base) {
-        if (base.isAir())
+        if (base.isAir() || !emitter.hasProperty(QUADRANT))
             return base;
         Integer quadrant = emitter.getValue(QUADRANT);
         return base.setValue(QUADRANT, quadrant);
