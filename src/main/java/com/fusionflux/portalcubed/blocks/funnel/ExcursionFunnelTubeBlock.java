@@ -1,10 +1,11 @@
 package com.fusionflux.portalcubed.blocks.funnel;
 
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock.Mode;
+import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.sound.ExcursionFunnelEnterSoundInstance;
 
 import net.minecraft.client.Minecraft;
@@ -25,14 +26,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import com.fusionflux.portalcubed.util.CustomProperties;
 import com.fusionflux.portalcubed.util.TwoByTwo;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
 public class ExcursionFunnelTubeBlock extends Block implements TwoByTwoFacingMultiblockBlock {
-    public static final BooleanProperty REVERSED = CustomProperties.REVERSED;
+    public static final BooleanProperty REVERSED = PortalCubedProperties.REVERSED;
 
     public ExcursionFunnelTubeBlock(Properties settings) {
         super(settings);
@@ -132,7 +132,7 @@ public class ExcursionFunnelTubeBlock extends Block implements TwoByTwoFacingMul
         RayonIntegration.INSTANCE.setNoGravity(entity, true);
         entity.resetFallDistance();
 
-        EntityAttachments entityEx = (EntityAttachments) entity;
+        EntityExt entityEx = (EntityExt) entity;
         if (!entityEx.isInFunnel()) {
             entityEx.setInFunnel(true);
             entity.setDeltaMovement(0, 0, 0);
