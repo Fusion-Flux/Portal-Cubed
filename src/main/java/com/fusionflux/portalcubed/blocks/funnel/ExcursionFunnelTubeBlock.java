@@ -75,7 +75,7 @@ public class ExcursionFunnelTubeBlock extends Block implements TwoByTwoFacingMul
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         Direction back = state.getValue(FACING).getOpposite();
         BlockState stateBehind = level.getBlockState(pos.relative(back));
-        if (!stateBehind.is(this) && !state.is(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER))
+        if (!stateBehind.is(this) && !stateBehind.is(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER))
             level.removeBlock(pos, false);
     }
 
