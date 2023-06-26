@@ -1,0 +1,28 @@
+package com.fusionflux.portalcubed.mixin.client;
+
+import com.fusionflux.portalcubed.accessor.BlockElementExt;
+import com.fusionflux.portalcubed.client.render.block.MultiRenderTypeSimpleBakedModel;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+import net.minecraft.client.renderer.block.model.BlockElement;
+import net.minecraft.client.renderer.block.model.BlockModel;
+
+@Mixin(BlockModel.Deserializer.class)
+public class BlockModel_DeserializerMixin {
+    // failing in parsing is much better than in baking.
+    @ModifyReturnValue(method = "deserialize", at = @At("RETURN"))
+    private BlockModel portalcubed$validateMultiRenderTypeModel(BlockModel original) {
+        if (!MultiRenderTypeSimpleBakedModel.IS_SUPPORTED)
+            return original;
+
+        for (BlockElement element : original.getElements()) {
+            String renderType = ((BlockElementExt) element).portalcubed$getRenderType();
+            if (renderType != null) {
+                MultiRenderTypeSimpleBakedModel.parseType(renderType);
+            }
+        }
+        return original;
+    }
+}

@@ -1,0 +1,372 @@
+{
+  "variants": {
+    "facing=down,mode=forward_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_1",
+      "x": 90
+    },
+    "facing=down,mode=forward_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_2",
+      "x": 90
+    },
+    "facing=down,mode=forward_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_3",
+      "x": 90
+    },
+    "facing=down,mode=forward_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_4",
+      "x": 90
+    },
+    "facing=down,mode=forward_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_1",
+      "x": 90
+    },
+    "facing=down,mode=forward_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_2",
+      "x": 90
+    },
+    "facing=down,mode=forward_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_3",
+      "x": 90
+    },
+    "facing=down,mode=forward_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_4",
+      "x": 90
+    },
+    "facing=down,mode=reversed_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_1",
+      "x": 90
+    },
+    "facing=down,mode=reversed_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_2",
+      "x": 90
+    },
+    "facing=down,mode=reversed_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_3",
+      "x": 90
+    },
+    "facing=down,mode=reversed_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_4",
+      "x": 90
+    },
+    "facing=down,mode=reversed_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_1",
+      "x": 90
+    },
+    "facing=down,mode=reversed_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_2",
+      "x": 90
+    },
+    "facing=down,mode=reversed_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_3",
+      "x": 90
+    },
+    "facing=down,mode=reversed_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_4",
+      "x": 90
+    },
+    "facing=east,mode=forward_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_1",
+      "y": 90
+    },
+    "facing=east,mode=forward_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_2",
+      "y": 90
+    },
+    "facing=east,mode=forward_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_3",
+      "y": 90
+    },
+    "facing=east,mode=forward_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_4",
+      "y": 90
+    },
+    "facing=east,mode=forward_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_1",
+      "y": 90
+    },
+    "facing=east,mode=forward_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_2",
+      "y": 90
+    },
+    "facing=east,mode=forward_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_3",
+      "y": 90
+    },
+    "facing=east,mode=forward_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_4",
+      "y": 90
+    },
+    "facing=east,mode=reversed_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_1",
+      "y": 90
+    },
+    "facing=east,mode=reversed_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_2",
+      "y": 90
+    },
+    "facing=east,mode=reversed_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_3",
+      "y": 90
+    },
+    "facing=east,mode=reversed_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_4",
+      "y": 90
+    },
+    "facing=east,mode=reversed_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_1",
+      "y": 90
+    },
+    "facing=east,mode=reversed_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_2",
+      "y": 90
+    },
+    "facing=east,mode=reversed_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_3",
+      "y": 90
+    },
+    "facing=east,mode=reversed_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_4",
+      "y": 90
+    },
+    "facing=north,mode=forward_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_1"
+    },
+    "facing=north,mode=forward_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_2"
+    },
+    "facing=north,mode=forward_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_3"
+    },
+    "facing=north,mode=forward_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_4"
+    },
+    "facing=north,mode=forward_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_1"
+    },
+    "facing=north,mode=forward_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_2"
+    },
+    "facing=north,mode=forward_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_3"
+    },
+    "facing=north,mode=forward_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_4"
+    },
+    "facing=north,mode=reversed_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_1"
+    },
+    "facing=north,mode=reversed_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_2"
+    },
+    "facing=north,mode=reversed_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_3"
+    },
+    "facing=north,mode=reversed_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_4"
+    },
+    "facing=north,mode=reversed_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_1"
+    },
+    "facing=north,mode=reversed_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_2"
+    },
+    "facing=north,mode=reversed_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_3"
+    },
+    "facing=north,mode=reversed_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_4"
+    },
+    "facing=south,mode=forward_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_1",
+      "y": 180
+    },
+    "facing=south,mode=forward_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_2",
+      "y": 180
+    },
+    "facing=south,mode=forward_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_3",
+      "y": 180
+    },
+    "facing=south,mode=forward_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_4",
+      "y": 180
+    },
+    "facing=south,mode=forward_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_1",
+      "y": 180
+    },
+    "facing=south,mode=forward_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_2",
+      "y": 180
+    },
+    "facing=south,mode=forward_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_3",
+      "y": 180
+    },
+    "facing=south,mode=forward_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_4",
+      "y": 180
+    },
+    "facing=south,mode=reversed_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_1",
+      "y": 180
+    },
+    "facing=south,mode=reversed_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_2",
+      "y": 180
+    },
+    "facing=south,mode=reversed_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_3",
+      "y": 180
+    },
+    "facing=south,mode=reversed_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_4",
+      "y": 180
+    },
+    "facing=south,mode=reversed_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_1",
+      "y": 180
+    },
+    "facing=south,mode=reversed_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_2",
+      "y": 180
+    },
+    "facing=south,mode=reversed_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_3",
+      "y": 180
+    },
+    "facing=south,mode=reversed_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_4",
+      "y": 180
+    },
+    "facing=up,mode=forward_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_1",
+      "x": 270
+    },
+    "facing=up,mode=forward_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_2",
+      "x": 270
+    },
+    "facing=up,mode=forward_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_3",
+      "x": 270
+    },
+    "facing=up,mode=forward_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_4",
+      "x": 270
+    },
+    "facing=up,mode=forward_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_1",
+      "x": 270
+    },
+    "facing=up,mode=forward_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_2",
+      "x": 270
+    },
+    "facing=up,mode=forward_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_3",
+      "x": 270
+    },
+    "facing=up,mode=forward_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_4",
+      "x": 270
+    },
+    "facing=up,mode=reversed_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_1",
+      "x": 270
+    },
+    "facing=up,mode=reversed_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_2",
+      "x": 270
+    },
+    "facing=up,mode=reversed_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_3",
+      "x": 270
+    },
+    "facing=up,mode=reversed_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_4",
+      "x": 270
+    },
+    "facing=up,mode=reversed_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_1",
+      "x": 270
+    },
+    "facing=up,mode=reversed_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_2",
+      "x": 270
+    },
+    "facing=up,mode=reversed_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_3",
+      "x": 270
+    },
+    "facing=up,mode=reversed_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_4",
+      "x": 270
+    },
+    "facing=west,mode=forward_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_1",
+      "y": 270
+    },
+    "facing=west,mode=forward_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_2",
+      "y": 270
+    },
+    "facing=west,mode=forward_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_3",
+      "y": 270
+    },
+    "facing=west,mode=forward_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_off_quadrant_4",
+      "y": 270
+    },
+    "facing=west,mode=forward_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_1",
+      "y": 270
+    },
+    "facing=west,mode=forward_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_2",
+      "y": 270
+    },
+    "facing=west,mode=forward_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_3",
+      "y": 270
+    },
+    "facing=west,mode=forward_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_forward_on_quadrant_4",
+      "y": 270
+    },
+    "facing=west,mode=reversed_off,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_1",
+      "y": 270
+    },
+    "facing=west,mode=reversed_off,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_2",
+      "y": 270
+    },
+    "facing=west,mode=reversed_off,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_3",
+      "y": 270
+    },
+    "facing=west,mode=reversed_off,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_off_quadrant_4",
+      "y": 270
+    },
+    "facing=west,mode=reversed_on,quadrant=1": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_1",
+      "y": 270
+    },
+    "facing=west,mode=reversed_on,quadrant=2": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_2",
+      "y": 270
+    },
+    "facing=west,mode=reversed_on,quadrant=3": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_3",
+      "y": 270
+    },
+    "facing=west,mode=reversed_on,quadrant=4": {
+      "model": "portalcubed:block/excursion_funnel_emitter_reversed_on_quadrant_4",
+      "y": 270
+    }
+  }
+}

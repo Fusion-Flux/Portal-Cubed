@@ -41,6 +41,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
@@ -53,11 +54,13 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
@@ -698,6 +701,10 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(TurretRenderer.TURRET_LAYER, TurretModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.TURRET, TurretRenderer::new);
+
+        BlockEntityRenderers.register(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER_ENTITY, ExcursionFunnelEmitterBlockEntityRenderer::new);
+        EntityModelLayerRegistry.registerModelLayer(ExcursionFunnelEmitterCenterModel.LAYER, ExcursionFunnelEmitterCenterModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(ExcursionFunnelEmitterCenterModel.LAYER_REVERSED, ExcursionFunnelEmitterCenterModel::createBodyLayer);
     }
 
     private static final class VisibleBarriersCompat {

@@ -1,4 +1,4 @@
-// 1.19.4	2023-06-20T02:18:16.635105	Portal Cubed/minecraft:entity Loot Table
+// 1.19.4	2023-06-25T21:26:22.7078517	Portal Cubed/minecraft:entity Loot Table
 86318041d1ac315fabfc88090d936e86682580c3 data\portalcubed\loot_tables\entities\jug.json
 b6b91f589e96c00755552126be8649b5ba0f2aeb data\portalcubed\loot_tables\entities\space_core.json
 fd2fc0a38a7350cb98dd9a515cc4616df5f298c8 data\portalcubed\loot_tables\entities\beans.json
@@ -8,8 +8,8 @@ fb9d054a28d17044419f7497f273490cd284471b data\portalcubed\loot_tables\entities\m
 d973ae191dc2028412755414dfd96a6e0f8757a3 data\portalcubed\loot_tables\entities\portal_1_companion_cube.json
 dbe4700abb769c9c200dbfb1a78fec63430eaa79 data\portalcubed\loot_tables\entities\storage_cube.json
 b3f1f2fbb9c918c62d4e5f6930670c5920b2c690 data\portalcubed\loot_tables\entities\radio.json
-57a5e0bf2373e2548dab8077543b9e95e8dd2ad4 data\portalcubed\loot_tables\entities\intelligence_core.json
 19cd9ae3c2937208bfa9390163854ab38472f3ef data\portalcubed\loot_tables\entities\curiosity_core.json
+57a5e0bf2373e2548dab8077543b9e95e8dd2ad4 data\portalcubed\loot_tables\entities\intelligence_core.json
 df05785c45716c8c5e5ce5f3466f0cfabd94076c data\portalcubed\loot_tables\entities\core_frame.json
 d4762018abff4512768063591fcf4c671ed72911 data\portalcubed\loot_tables\entities\companion_cube.json
 05125e0bb26b7431648dd726813673f6aeb174ab data\portalcubed\loot_tables\entities\energy_pellet.json

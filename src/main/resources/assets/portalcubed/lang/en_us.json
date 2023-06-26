@@ -300,8 +300,6 @@
 
   "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",
   "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",
-  "block.portalcubed.reversed_excursion_funnel_emitter": "Reversed Excursion Funnel Emitter",
-  "block.portalcubed.duel_excursion_funnel_emitter": "Dual Excursion Funnel Emitter",
   "block.portalcubed.excursion_funnel": "Excursion Funnel",
   "block.portalcubed.portal_1_door": "Portal 1 Door",
   "block.portalcubed.portal_2_door": "Portal 2 Door",

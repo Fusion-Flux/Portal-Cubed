@@ -1163,14 +1163,6 @@
     "type": "provided",
     "render_layer": "cutout"
   },
-  "duel_excursion_funnel_emitter": {
-    "type": "provided",
-    "render_layer": "cutout"
-  },
-  "reversed_excursion_funnel_emitter": {
-    "type": "provided",
-    "render_layer": "cutout"
-  },
   "neurotoxin_emitter": {
     "type": "provided",
     "render_layer": "translucent"

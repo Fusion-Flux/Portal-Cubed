@@ -1,7 +1,10 @@
 package com.fusionflux.portalcubed.util;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
 import net.minecraft.world.phys.Vec3;
+
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 public class NbtHelper {
@@ -43,5 +46,28 @@ public class NbtHelper {
             result.identity(); // Just in case the quat ends up as (0, 0, 0, 0)
         }
         return result;
+    }
+
+    @Nullable
+    public static BlockPos readBlockPos(CompoundTag tag, String key) {
+        if (!tag.contains(key, Tag.TAG_COMPOUND))
+            return null;
+        CompoundTag pos = tag.getCompound(key);
+        if (pos.contains("X", Tag.TAG_INT) && pos.contains("Y", Tag.TAG_INT) && pos.contains("Z", Tag.TAG_INT))
+            return new BlockPos(pos.getInt("X"), pos.getInt("Y"), pos.getInt("Z"));
+        return null;
+    }
+
+    public static <T extends Enum<T>> T readEnum(CompoundTag tag, String key, T fallback) {
+        if (!tag.contains(key, Tag.TAG_STRING))
+            return fallback;
+        String name = tag.getString(key);
+        //noinspection unchecked
+        Class<T> clazz = (Class<T>) fallback.getClass();
+        for (T entry : clazz.getEnumConstants()) {
+            if (entry.name().equals(name))
+                return entry;
+        }
+        return fallback;
     }
 }

@@ -39,6 +39,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.SpawnArmorTrimsCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -280,6 +281,8 @@ public class PortalCubed implements ModInitializer {
         }
 
         RayonIntegration.INSTANCE.init();
+
+        CommandRegistrationCallback.EVENT.register(((dispatcher, buildContext, environment) -> SpawnArmorTrimsCommand.register(dispatcher)));
     }
 
     public static void syncFog(ServerPlayer player) {
