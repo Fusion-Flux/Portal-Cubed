@@ -1,8 +1,9 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
-import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
+import com.fusionflux.portalcubed.entity.EnergyPelletEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -17,6 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CatapultBlock extends SpecialHiddenBlockWithEntity implements BlockCollisionTrigger {
@@ -44,12 +46,12 @@ public class CatapultBlock extends SpecialHiddenBlockWithEntity implements Block
 
     @Override
     public void onEntityEnter(BlockState state, Level world, BlockPos pos, Entity entity) {
-        if (entity instanceof LivingEntityAccessor livingEntity) {
-            world.getBlockEntity(pos, PortalCubedBlocks.CATAPULT_BLOCK_ENTITY)
-                .ifPresent(livingEntity::collidedWithCatapult);
+        if (entity instanceof EntityExt ext && !(entity instanceof EnergyPelletEntity)) {
+            world.getBlockEntity(pos, PortalCubedBlocks.CATAPULT_BLOCK_ENTITY).ifPresent(ext::collidedWithCatapult);
         }
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {

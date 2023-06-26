@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.client.particle;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.particle.DecalParticleEffect;
+import com.fusionflux.portalcubed.particle.DecalParticleOption;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -51,7 +51,8 @@ public class DecalParticle extends Particle {
     };
 
     private final TextureAtlasSprite sprite;
-    private final Direction direction;
+    private final Quaternionf rotation;
+    private final Vector3f pixelOffset;
     private final boolean multiply;
 
     public DecalParticle(
@@ -62,7 +63,8 @@ public class DecalParticle extends Particle {
     ) {
         super(world, x, y, z);
         this.sprite = sprite;
-        this.direction = direction;
+        rotation = direction.getRotation();
+        pixelOffset = getPixelOffset(direction);
         this.multiply = multiply;
         lifetime = 1400;
     }
@@ -73,7 +75,6 @@ public class DecalParticle extends Particle {
         final float x = (float)(Mth.lerp(tickDelta, xo, this.x) - cameraPos.x());
         final float y = (float)(Mth.lerp(tickDelta, yo, this.y) - cameraPos.y());
         final float z = (float)(Mth.lerp(tickDelta, zo, this.z) - cameraPos.z());
-        final Quaternionf rotation = direction.getRotation();
 
         final Vector3f[] vertices = {
             new Vector3f(-0.5f, 0f, -0.5f),
@@ -83,8 +84,7 @@ public class DecalParticle extends Particle {
         };
 
         for (final Vector3f vertex : vertices) {
-            vertex.rotate(rotation);
-            vertex.add(x, y, z);
+            vertex.rotate(rotation).add(x, y, z).add(pixelOffset);
         }
 
         alpha = 1f;
@@ -126,19 +126,27 @@ public class DecalParticle extends Particle {
         return multiply ? PARTICLE_SHEET_MULTIPLY : ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
+    private static Vector3f getPixelOffset(Direction direction) {
+        final float HALF_PIXEL = 0.5f / 16;
+        if (direction == Direction.UP || direction == Direction.DOWN) {
+            return new Vector3f(-HALF_PIXEL, 0, -HALF_PIXEL);
+        }
+        return direction.getClockWise().step().mul(HALF_PIXEL).add(0, HALF_PIXEL, 0);
+    }
+
     @ClientOnly
-    public static class Factory implements ParticleProvider<DecalParticleEffect> {
+    public static class Provider implements ParticleProvider<DecalParticleOption> {
         private final FabricSpriteProvider spriteProvider;
 
         private List<TextureAtlasSprite> cacheKey;
         private final Map<ResourceLocation, TextureAtlasSprite> spriteCache = new HashMap<>();
 
-        public Factory(FabricSpriteProvider spriteProvider) {
+        public Provider(FabricSpriteProvider spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
         @Override
-        public Particle createParticle(DecalParticleEffect parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(DecalParticleOption parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             final TextureAtlasSprite sprite = getSpriteCache().get(parameters.getTexture());
             if (sprite == null) {
                 PortalCubed.LOGGER.warn("Unknown decal particle texture {}", parameters.getTexture());

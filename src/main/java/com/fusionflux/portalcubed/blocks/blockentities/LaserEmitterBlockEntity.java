@@ -3,9 +3,11 @@ package com.fusionflux.portalcubed.blocks.blockentities;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.blocks.LaserCatcherBlock;
 import com.fusionflux.portalcubed.blocks.LaserEmitterBlock;
+import com.fusionflux.portalcubed.blocks.LaserRelayBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
+import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.GeneralUtil;
@@ -20,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -154,6 +157,14 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         if (level.isClientSide) {
             clientTick();
             return;
+        }
+
+        if (hitState != null && !(hitState.getBlock() instanceof LaserRelayBlock)) {
+            final Vec3 finalPos = multiSegments.get(multiSegments.size() - 1).finalRay().end();
+            ((ServerLevel)level).sendParticles(
+                PortalCubedParticleTypes.ENERGY_SPARK,
+                finalPos.x, finalPos.y, finalPos.z, 5, 0, 0, 0, 0.01
+            );
         }
 
         Entity owner = EntityType.MARKER.create(level);

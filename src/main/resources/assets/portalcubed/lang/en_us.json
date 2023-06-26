@@ -64,18 +64,20 @@
   "item.portalcubed.portal_gun": "Portal Gun",
   "item.portalcubed.portal_gun_primary": "Primary Portal Gun",
   "item.portalcubed.portal_gun_secondary": "Secondary Portal Gun",
-  "item.portalcubed.portal_gun_frame": "Portal Gun Barrel",
+  "item.portalcubed.portal_gun_frame": "Portal Gun Frame",
   "item.portalcubed.portal_gun_casing": "Portal Gun Casing",
   "item.portalcubed.paint_gun": "Paint Gun",
   "item.portalcubed.mini_blackhole": "Miniature Black Hole",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
 
-  "item.portalcubed.base_gel": "Gel Blob",
-
   "item.portalcubed.turret": "Sentry Turret",
+  "block.portalcubed.rocket_turret": "Rocket Turret",
 
   "block.portalcubed.power_block": "Power Block",
+  "block.portalcubed.velocity_helper": "Velocity Helper",
+  "block.portalcubed.catapult": "Catapult",
 
+  "item.portalcubed.base_gel": "Gel Blob",
   "block.portalcubed.propulsion_gel": "Propulsion Gel Blob",
   "block.portalcubed.repulsion_gel": "Repulsion Gel Blob",
   "block.portalcubed.adhesion_gel": "Adhesion Gel Blob",
@@ -83,10 +85,6 @@
   "block.portalcubed.reflection_gel": "Reflection Gel Blob",
 
   "block.portalcubed.auto_portal": "Auto Portal",
-  "block.portalcubed.velocity_helper": "Velocity Helper",
-  "block.portalcubed.catapult": "Catapult",
-
-  "block.portalcubed.rocket_turret": "Rocket Turret",
 
   "block.portalcubed.sewage": "Sewage",
 
@@ -325,15 +323,15 @@
   "block.portalcubed.light_bridge": "Hard Light Bridge Emitter",
 
   "portalcubed.midnightconfig.title": "Portal Cubed Config",
-  "portalcubed.midnightconfig.maxBridgeLength": "Max Emitter Range",
+  "portalcubed.midnightconfig.maxBridgeLength": "Maximum Emitter Block Range",
   "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
-  "portalcubed.midnightconfig.enableAccurateMovement": "Enable Source-Accurate Movement",
+  "portalcubed.midnightconfig.enableAccurateMovement": "Long Fall Boots Enable Source-Accurate Movement",
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
   "portalcubed.midnightconfig.pelletDamage": "Energy Pellet Damage",
   "portalcubed.midnightconfig.laserDamage": "Thermal Discouragement Beam Damage",
   "portalcubed.midnightconfig.portalHudMode": "Use Portal HUD",
-  "portalcubed.midnightconfig.gelOverlayOpacity": "Gel Overlay Opacity",
+  "portalcubed.midnightconfig.gelOverlayOpacity": "Gel Screen Overlay Opacity",
   "portalcubed.midnightconfig.staticPortalItemDrops": "Static Portal Item Drops",
   "portalcubed.midnightconfig.renderer": "Portal Renderer (in development)",
   "portalcubed.midnightconfig.enum.PortalRenderers.DISABLED": "Disabled",
@@ -441,7 +439,7 @@
   "gamerule.portalAlignment": "Portal Alignment",
   "gamerule.portalAlignment.description": "Changes portal placement snapping, with the value being fraction of a block snapped to. For example, 16 is every pixel, 1 is full blocks, and 0 is off.",
   "gamerule.usePortalHud": "Use Portal HUD",
-  "gamerule.usePortalHud.description": "Disables the hotbar, uses 'E' to grab objects, and disables fizzling portals using the keybind. Requires valid items to be in the first hotbar slot.",
+  "gamerule.usePortalHud.description": "Disables the hotbar and inventory, uses 'E' to grab objects, and disables clearing your portals with the keybind. Requires valid items to be in the first hotbar slot.",
 
   "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
   "portalcubed.ponder.auto_portal.text_1": "Power an Auto Portal with redstone to open it.",

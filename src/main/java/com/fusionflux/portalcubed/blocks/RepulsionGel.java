@@ -3,8 +3,8 @@ package com.fusionflux.portalcubed.blocks;
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.LivingEntityAccessor;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -65,7 +65,7 @@ public class RepulsionGel extends BaseGel {
     }
 
     private void addCollisionEffects(Level world, Entity entity, BlockPos pos) {
-        Vec3 vec3dLast = ((EntityAttachments) entity).getLastVel();
+        Vec3 vec3dLast = ((EntityExt) entity).getLastVel();
         Vec3 vec3d = new Vec3(Math.max(entity.getDeltaMovement().x(), vec3dLast.x()), Math.max(entity.getDeltaMovement().y(), vec3dLast.y()), Math.max(entity.getDeltaMovement().z(), vec3dLast.z()));
         BlockState state = world.getBlockState(pos);
 
@@ -79,7 +79,7 @@ public class RepulsionGel extends BaseGel {
             if (entity.verticalCollision || jumping) {
                 final boolean speedGel = Math.abs(vec3d.x()) + Math.abs(vec3d.z()) > 0.6;
                 if ((direction.y == -1 || Math.abs(direction.y) == 2)  && (vec3dLast.y() < 0 || speedGel || jumping)) {
-                    double fall = ((EntityAttachments) entity).getMaxFallHeight();
+                    double fall = ((EntityExt) entity).getMaxFallHeight();
                     if (fall != rotatedPos.y || speedGel) {
 
                         fall = fall - rotatedPos.y;
@@ -89,7 +89,7 @@ public class RepulsionGel extends BaseGel {
                         double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
                         entity.setOnGround(false);
                         entity.setDeltaMovement(vec3d.x, velocity, vec3d.z);
-                        ((EntityAttachments) entity).setMaxFallHeight(rotatedPos.y);
+                        ((EntityExt) entity).setMaxFallHeight(rotatedPos.y);
                         PortalCubed.playBounceSound(entity);
                         if (entity instanceof Player && world.isClientSide && (jumping || speedGel)) {
                             PortalCubed.playBounceSoundRemotely();
@@ -112,7 +112,7 @@ public class RepulsionGel extends BaseGel {
                     }
                     if (Math.abs(vec3dLast.z) > .1) {
                         if (vec3dLast.y() != 0) {
-                            double fall = ((EntityAttachments)entity).getMaxFallHeight();
+                            double fall = ((EntityExt)entity).getMaxFallHeight();
                             if (fall != rotatedPos.y) {
 
                                 fall = fall - rotatedPos.y;
@@ -122,7 +122,7 @@ public class RepulsionGel extends BaseGel {
 
                                 double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
                                 entity.setDeltaMovement(vec3d.x, velocity, vec3d.z);
-                                ((EntityAttachments)entity).setMaxFallHeight(rotatedPos.y);
+                                ((EntityExt)entity).setMaxFallHeight(rotatedPos.y);
                             }
                         }
                     }
@@ -136,7 +136,7 @@ public class RepulsionGel extends BaseGel {
                         entity.setDeltaMovement(vec3d.x, vec3d.y, -vec3dLast.z);
                     }
                     if (Math.abs(vec3dLast.z) > .1 && vec3dLast.y() != 0) {
-                        double fall = ((EntityAttachments)entity).getMaxFallHeight();
+                        double fall = ((EntityExt)entity).getMaxFallHeight();
                         if (fall != rotatedPos.y) {
 
                             fall = fall - rotatedPos.y;
@@ -145,7 +145,7 @@ public class RepulsionGel extends BaseGel {
                             }
                             double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
                             entity.setDeltaMovement(vec3d.x, velocity, vec3d.z);
-                            ((EntityAttachments)entity).setMaxFallHeight(rotatedPos.y);
+                            ((EntityExt)entity).setMaxFallHeight(rotatedPos.y);
                         }
                     }
                     PortalCubed.playBounceSound(entity);
@@ -158,7 +158,7 @@ public class RepulsionGel extends BaseGel {
                         entity.setDeltaMovement(-vec3dLast.x, vec3d.y, vec3d.z);
                     }
                     if (Math.abs(vec3dLast.x) > .1 && vec3dLast.y() != 0) {
-                        double fall = ((EntityAttachments)entity).getMaxFallHeight();
+                        double fall = ((EntityExt)entity).getMaxFallHeight();
                         if (fall != rotatedPos.y) {
 
                             fall = fall - rotatedPos.y;
@@ -167,7 +167,7 @@ public class RepulsionGel extends BaseGel {
                             }
                             double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
                             entity.setDeltaMovement(vec3d.x, velocity, vec3d.z);
-                            ((EntityAttachments)entity).setMaxFallHeight(rotatedPos.y);
+                            ((EntityExt)entity).setMaxFallHeight(rotatedPos.y);
                         }
                     }
                     PortalCubed.playBounceSound(entity);
@@ -179,7 +179,7 @@ public class RepulsionGel extends BaseGel {
                         entity.setDeltaMovement(-vec3dLast.x, vec3d.y, vec3d.z);
                     }
                     if (Math.abs(vec3dLast.x) > .1 && vec3dLast.y() != 0) {
-                        double fall = ((EntityAttachments)entity).getMaxFallHeight();
+                        double fall = ((EntityExt)entity).getMaxFallHeight();
                         if (fall != rotatedPos.y) {
 
                             fall = fall - rotatedPos.y;
@@ -188,7 +188,7 @@ public class RepulsionGel extends BaseGel {
                             }
                             double velocity = Math.sqrt(2 * .08 * (fall)) + .0402;
                             entity.setDeltaMovement(vec3d.x, velocity, vec3d.z);
-                            ((EntityAttachments)entity).setMaxFallHeight(rotatedPos.y);
+                            ((EntityExt)entity).setMaxFallHeight(rotatedPos.y);
                         }
                     }
                     PortalCubed.playBounceSound(entity);

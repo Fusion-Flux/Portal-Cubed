@@ -6,6 +6,7 @@
   "mixins": [
     "BlockCollisionsMixin",
     "BlockHitResultMixin",
+    "BucketItemMixin",
     "ClipContextAccessor",
     "CollisionContextMixin",
     "CollisionGetterMixin",

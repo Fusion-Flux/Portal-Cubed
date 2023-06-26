@@ -17,6 +17,7 @@ public class ChellScaleCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("chellscale")
+            .requires(s -> s.hasPermission(2))
             .executes(ctx -> scale(Collections.singleton(ctx.getSource().getEntity())))
             .then(argument("targets", EntityArgument.entities())
                 .executes(ctx -> scale(EntityArgument.getEntities(ctx, "targets")))

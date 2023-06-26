@@ -48,7 +48,7 @@ public abstract class LevelMixin implements LevelExt {
 
     @Override
     @Nullable
-    public Entity getEntity(UUID uuid) {
+    public Entity getEntityByUuid(UUID uuid) {
         return this.getEntities().get(uuid);
     }
 

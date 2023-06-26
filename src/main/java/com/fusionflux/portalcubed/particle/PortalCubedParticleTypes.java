@@ -1,9 +1,11 @@
 package com.fusionflux.portalcubed.particle;
 
 import com.mojang.serialization.Codec;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,9 +14,14 @@ import java.util.function.Function;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedParticleTypes {
-    public static final ParticleType<DecalParticleEffect> DECAL = register(
-        "decal", false, DecalParticleEffect.PARAMETERS_FACTORY, DecalParticleEffect::codec
+    public static final ParticleType<DecalParticleOption> DECAL = register(
+        "decal", false, DecalParticleOption.PARAMETERS_FACTORY, DecalParticleOption::codec
     );
+    public static final SimpleParticleType ENERGY_SPARK = register("energy_spark", false);
+
+    private static SimpleParticleType register(String key, boolean overrideLimiter) {
+        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, id(key), FabricParticleTypes.simple(overrideLimiter));
+    }
 
     @SuppressWarnings("deprecation")
     private static <T extends ParticleOptions> ParticleType<T> register(

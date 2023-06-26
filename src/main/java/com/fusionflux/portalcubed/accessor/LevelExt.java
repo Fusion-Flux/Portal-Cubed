@@ -10,5 +10,5 @@ public interface LevelExt {
     PortalCubedDamageSources pcDamageSources();
 
     @Nullable
-    Entity getEntity(UUID uuid);
+    Entity getEntityByUuid(UUID uuid);
 }

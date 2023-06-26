@@ -2,8 +2,8 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.Gravity;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.client.AdhesionGravityVerifier;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +34,7 @@ public class AdhesionGel extends BaseGel {
     private void addCollisionEffects(Level world, Entity entity, BlockPos pos, BlockState state) {
         FriendlyByteBuf info = AdhesionGravityVerifier.packInfo(pos);
         if ((entity.isOnGround() && entity.horizontalCollision) || (!entity.isOnGround() && entity.horizontalCollision) || (!entity.isOnGround() && !entity.horizontalCollision)) {
-            if (((EntityAttachments) entity).getGelTimer() == 0) {
+            if (((EntityExt) entity).getGelTimer() == 0) {
                 Direction current = GravityChangerAPI.getGravityDirection(entity);
 
                 double delta = -.9;
@@ -51,12 +51,12 @@ public class AdhesionGel extends BaseGel {
                         if (gravbox.intersects(entity.getBoundingBox())) {
                             if (world.isClientSide && entity instanceof Player) {
                                 GravityChangerAPI.addGravityClient((LocalPlayer) entity, AdhesionGravityVerifier.newFieldGravity(direc), AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, info);
-                                ((EntityAttachments) entity).setGelTimer(10);
+                                ((EntityExt) entity).setGelTimer(10);
                                 break;
                             } else {
                                 if (!(entity instanceof Player) && !world.isClientSide) {
                                     GravityChangerAPI.addGravity(entity, new Gravity(direc, 10, 2, "adhesion_gel"));
-                                    ((EntityAttachments) entity).setGelTimer(10);
+                                    ((EntityExt) entity).setGelTimer(10);
                                     break;
                                 }
                             }

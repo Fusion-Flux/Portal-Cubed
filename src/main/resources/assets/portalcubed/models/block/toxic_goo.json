@@ -1,5 +1,6 @@
 {
-  "textures": {
-    "particle": "block/acid_still"
-  }
+    "textures": {
+        "particle": "portalcubed:block/toxic_goo_still"
+    }
 }
+

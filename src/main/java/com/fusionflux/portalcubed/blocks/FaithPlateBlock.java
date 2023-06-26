@@ -1,8 +1,8 @@
 package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
+import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.fusionflux.portalcubed.util.CustomProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -33,7 +34,7 @@ import java.util.function.Supplier;
 
 public class FaithPlateBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final DirectionProperty HORIFACING = CustomProperties.HORIFACING;
+    public static final DirectionProperty HORIFACING = PortalCubedProperties.HORIFACING;
 
     private final Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType;
 
@@ -47,6 +48,7 @@ public class FaithPlateBlock extends BaseEntityBlock {
         this.blockEntityType = blockEntityType;
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
@@ -81,6 +83,7 @@ public class FaithPlateBlock extends BaseEntityBlock {
         return true;
     }
 
+    @NotNull
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
@@ -103,6 +106,7 @@ public class FaithPlateBlock extends BaseEntityBlock {
             .setValue(FACING, look.getOpposite());
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public BlockState rotate(BlockState state, Rotation rotation) {

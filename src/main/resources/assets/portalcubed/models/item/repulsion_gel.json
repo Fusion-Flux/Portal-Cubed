@@ -1,4 +1,4 @@
 {
   "parent": "item/generated",
-  "textures": { "layer0": "portalcubed:item/repulsion_gel_glob" }
+  "textures": { "layer0": "portalcubed:item/repulsion_gel_blob" }
 }

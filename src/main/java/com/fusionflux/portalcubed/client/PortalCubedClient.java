@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.CameraExt;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.FloorButtonBlock;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
@@ -11,7 +12,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.gui.FaithPlateScreen;
 import com.fusionflux.portalcubed.client.gui.VelocityHelperScreen;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
-import com.fusionflux.portalcubed.client.particle.PortalCubedParticleFactories;
+import com.fusionflux.portalcubed.client.particle.PortalCubedParticleProviders;
 import com.fusionflux.portalcubed.client.render.PortalHud;
 import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.block.entity.*;
@@ -20,8 +21,6 @@ import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
-import com.fusionflux.portalcubed.commands.DirectionArgumentType;
-import com.fusionflux.portalcubed.entity.EntityAttachments;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
@@ -39,14 +38,13 @@ import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -148,8 +146,7 @@ public class PortalCubedClient implements ClientModInitializer {
 
     public static WorldRenderContext worldRenderContext; // QFAPI impl detail: this is a mutable singleton
 
-    private static String clShowPosValue = "0";
-    public static boolean clShowPos = false;
+    public static boolean showPos = false;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
@@ -163,10 +160,9 @@ public class PortalCubedClient implements ClientModInitializer {
         registerEmissiveModels(mod);
         PortalCubedClientPackets.registerPackets();
         PortalCubedKeyBindings.register();
-        PortalCubedParticleFactories.register();
+        PortalCubedParticleProviders.register();
 
-        HudRenderCallback.EVENT.register(PortalHud::renderPortalRight);
-        HudRenderCallback.EVENT.register(PortalHud::renderPortalLeft);
+        HudRenderCallback.EVENT.register(PortalHud::renderPortals);
 
         // Thanks to https://github.com/JulianWww/Amazia-fabric/blob/main/src/main/java/net/denanu/amazia/GUI/debug/VillagePathingOverlay.java for some code
 //        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
@@ -243,7 +239,7 @@ public class PortalCubedClient implements ClientModInitializer {
 
         ClientTickEvents.END.register(client -> {
             if (client.player == null) return;
-            if (((EntityAttachments)client.player).isInFunnel()) {
+            if (((EntityExt)client.player).isInFunnel()) {
                 if (excursionFunnelMusic == null) {
                     excursionFunnelMusic = new SimpleSoundInstance(
                         PortalCubedSounds.TBEAM_TRAVEL, SoundSource.BLOCKS,
@@ -310,7 +306,7 @@ public class PortalCubedClient implements ClientModInitializer {
             dispatcher.setRenderHitBoxes(false);
             for (UUID portalUuid : CalledValues.getPortals(cameraEntity)) {
                 if (
-                    !(((LevelExt) ctx.world()).getEntity(portalUuid) instanceof Portal portal) ||
+                    !(((LevelExt) ctx.world()).getEntityByUuid(portalUuid) instanceof Portal portal) ||
                         !cameraEntity.getUUID().equals(portal.getOwnerUUID().orElse(null))
                 ) continue;
                 dispatcher.render(portal, portal.getX(), portal.getY(), portal.getZ(), portal.getYRot(), ctx.tickDelta(), ctx.matrixStack(), consumers, LightTexture.FULL_BRIGHT);
@@ -490,7 +486,7 @@ public class PortalCubedClient implements ClientModInitializer {
         WorldRenderEvents.START.register(context -> worldRenderContext = context);
 
         HudRenderCallback.EVENT.register((poseStack, tickDelta) -> {
-            if (!clShowPos) return;
+            if (!showPos) return;
             final Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.options.renderDebug) return;
             final LocalPlayer player = minecraft.player;
@@ -539,43 +535,26 @@ public class PortalCubedClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> {
             if (QuiltLoader.isDevelopmentEnvironment()) {
                 dispatcher.register(literal("face")
-                    .then(argument("direction", DirectionArgumentType.direction())
-                        .executes(ctx -> {
-                            final Direction direction = DirectionArgumentType.getDirection(ctx, "direction");
-                            final Entity entity = ctx.getSource().getEntity();
-                            if (direction.getAxis() == Direction.Axis.Y) {
-                                entity.setXRot(direction == Direction.UP ? -90f : 90f);
-                                entity.setYRot(0f);
-                            } else {
-                                entity.setXRot(0f);
-                                entity.setYRot(direction.toYRot());
-                            }
-                            return 1;
-                        })
-                    )
+                    .executes(ctx -> {
+                        final Entity entity = ctx.getSource().getEntity();
+                        final Direction direction = entity.getDirection();
+                        entity.setXRot(entity.getXRot() < -45 ? -90 : entity.getXRot() > 45 ? 90 : 0);
+                        entity.setYRot(direction.toYRot());
+                        return 1;
+                    })
                 );
             }
-            dispatcher.register(literal("cl_showpos")
-                .then(argument("value", StringArgumentType.greedyString())
+            dispatcher.register(literal("showpos")
+                .then(argument("enabled", BoolArgumentType.bool())
                     .executes(ctx -> {
-                        clShowPosValue = StringArgumentType.getString(ctx, "value");
-                        try {
-                            clShowPos = Integer.parseInt(clShowPosValue) != 0;
-                        } catch (NumberFormatException e) {
-                            clShowPos = false;
-                        }
-                        return 1;
+                        showPos = BoolArgumentType.getBool(ctx, "enabled");
+                        ctx.getSource().sendFeedback(Component.literal("showpos = " + showPos));
+                        return showPos ? 1 : 0;
                     })
                 )
                 .executes(ctx -> {
-                    ctx.getSource().sendFeedback(
-                        Component.empty()
-                            .append(Component.literal("\"cl_showpos\" = \"" + clShowPosValue + "\"").withStyle(ChatFormatting.RED))
-                            .append(" (def. \"0\" )")
-                    );
-                    ctx.getSource().sendFeedback(Component.literal(" client"));
-                    ctx.getSource().sendFeedback(Component.literal(" - Draw current position at top of screen"));
-                    return 1;
+                    ctx.getSource().sendFeedback(Component.literal("showpos = " + showPos));
+                    return showPos ? 1 : 0;
                 })
             );
         });

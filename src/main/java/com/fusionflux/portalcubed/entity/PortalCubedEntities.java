@@ -4,7 +4,9 @@ import com.fusionflux.portalcubed.blocks.BaseGel;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -130,6 +132,8 @@ public class PortalCubedEntities {
     public static final EntityType<TurretEntity> TURRET = QuiltEntityTypeBuilder.create(MobCategory.MISC, TurretEntity::new)
         .setDimensions(EntityDimensions.scalable(0.75f * TurretEntity.MODEL_SCALE, 1.5f * TurretEntity.MODEL_SCALE))
         .build();
+
+    public static final TagKey<EntityType<?>> P1_ENTITY = TagKey.create(Registries.ENTITY_TYPE, id("p1_entity"));
 
     public static void registerEntities() {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("portal"), PORTAL);

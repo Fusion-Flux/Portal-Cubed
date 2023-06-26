@@ -1,5 +1,7 @@
 package com.fusionflux.portalcubed.blocks;
 
+import com.fusionflux.portalcubed.blocks.properties.FluidTypeProperty;
+import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import net.fabricmc.api.EnvType;
@@ -11,36 +13,37 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 
-public abstract class SpecialHiddenBlock extends Block implements SimpleWaterloggedBlock {
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+public abstract class SpecialHiddenBlock extends Block implements SimpleLoggedBlock {
+    public static final FluidTypeProperty LOGGING = PortalCubedProperties.LOGGING;
 
     public SpecialHiddenBlock(Properties settings) {
         super(settings);
         registerDefaultState(
             getStateDefinition().any()
-                .setValue(WATERLOGGED, false)
+                .setValue(LOGGING, FluidTypeProperty.getEmpty())
         );
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED);
+        builder.add(LOGGING);
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public final VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -65,6 +68,7 @@ public abstract class SpecialHiddenBlock extends Block implements SimpleWaterlog
         return true;
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public RenderShape getRenderShape(BlockState state) {
@@ -83,19 +87,23 @@ public abstract class SpecialHiddenBlock extends Block implements SimpleWaterlog
         return 1f;
     }
 
+    @NotNull
     @SuppressWarnings("deprecation")
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+        final Fluid fluid = LOGGING.getFluid(state);
+        if (fluid != Fluids.EMPTY) {
+            world.scheduleTick(pos, fluid, fluid.getTickDelay(world));
         }
 
         return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        final Fluid fluid = LOGGING.getFluid(state);
+        return fluid instanceof FlowingFluid flowing ? flowing.getSource(false) : fluid.defaultFluidState();
     }
 }

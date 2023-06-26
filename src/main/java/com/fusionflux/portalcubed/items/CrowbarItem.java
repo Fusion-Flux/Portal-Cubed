@@ -13,6 +13,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class CrowbarItem extends Item {
     private static final Multimap<Attribute, AttributeModifier> ATTRIBUTE_MODIFIERS =
@@ -47,6 +48,7 @@ public class CrowbarItem extends Item {
         return false;
     }
 
+    @NotNull
     @Override
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
         return slot == EquipmentSlot.MAINHAND ? ATTRIBUTE_MODIFIERS : super.getDefaultAttributeModifiers(slot);

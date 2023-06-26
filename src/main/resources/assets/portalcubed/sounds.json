@@ -91,11 +91,6 @@
 			"portalcubed:portal_invalid_surface3"
 		]
 	},
-	"nothing_to_grab": {
-		"sounds": [
-			"portalcubed:object_use_failure_01"
-		]
-	},
 	"portal_ambience": {
 		"sounds": [
 			"portalcubed:portal_ambient_loop"
@@ -420,6 +415,27 @@
 
 	"generic_physics_fall": {
 		"sounds": [
+		]
+	},
+
+	"hold/fail": {
+		"sounds": [
+			"portalcubed:object_use_failure_01"
+		]
+	},
+	"hold/start": {
+		"sounds": [
+			"portalcubed:object_use_lp_01_start"
+		]
+	},
+	"hold/loop": {
+		"sounds": [
+			"portalcubed:object_use_lp_01_loop"
+		]
+	},
+	"hold/stop": {
+		"sounds": [
+			"portalcubed:object_use_stop_01"
 		]
 	}
 }

@@ -3,7 +3,7 @@
     "category": "redstone",
     "pattern": [
         "XYX",
-        "ZAZ",
+        "CAC",
         "ZBZ"
     ],
     "key": {
@@ -21,6 +21,9 @@
         },
         "B": {
             "item": "minecraft:redstone"
+        },
+        "C": {
+            "item": "portalcubed:white_half_panel"
         }
     },
     "result": {

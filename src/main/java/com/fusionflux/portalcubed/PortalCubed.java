@@ -111,6 +111,7 @@ public class PortalCubed implements ModInitializer {
                 return;
             }
             server.execute(() -> {
+                boolean rubberband = false;
                 if (!(player.level.getEntity(targetEntityId) instanceof Portal portal)) {
                     LOGGER.warn("{} tried to teleport through nonexistent portal", player);
                     handler.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
@@ -120,13 +121,17 @@ public class PortalCubed implements ModInitializer {
                 }
                 if (portal.position().distanceToSqr(player.position()) > 10 * 10) {
                     LOGGER.warn("{} tried to teleport through distant portal ({})", player, portal.position().distanceTo(player.position()));
-                    handler.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
-                    CalledValues.setIsTeleporting(player, false);
-                    GravityChangerAPI.clearGravity(player);
-                    return;
+                    rubberband = true;
                 }
                 if (portal.getDestination().isEmpty()) {
                     LOGGER.warn("{} tried to teleport through an inactive portal ({}).", player, portal);
+                    rubberband = true;
+                }
+                if (teleportOffset.lengthSqr() > 10 * 10) {
+                    LOGGER.warn("{} tried to use a huge teleportOffset ({}).", player, teleportOffset.length());
+                    rubberband = true;
+                }
+                if (rubberband) {
                     handler.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
                     CalledValues.setIsTeleporting(player, false);
                     GravityChangerAPI.clearGravity(player);
@@ -222,10 +227,6 @@ public class PortalCubed implements ModInitializer {
                     return;
                 }
 
-                if (cubePos.distanceToSqr(player.position()) > 10 * 10) {
-                    LOGGER.warn("{} tried to drop physics object far away ({})", player, cubePos.distanceTo(player.position()));
-                    return;
-                }
                 cube.setPos(cubePos);
                 cube.setDeltaMovement(RotationUtil.vecWorldToPlayer(cubePos.subtract(lastCubePos), GravityChangerAPI.getGravityDirection(cube)).scale(.5));
             });
@@ -260,8 +261,8 @@ public class PortalCubed implements ModInitializer {
 
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
         PortalBlocksLoader.init(mod);
-        PortalCubedBlocks.registerBlocks();
         PortalCubedFluids.registerFluids();
+        PortalCubedBlocks.registerBlocks();
         PortalCubedItems.registerItems();
         PortalCubedEntities.registerEntities();
         PortalCubedTrackedDataHandlers.register();
@@ -364,10 +365,10 @@ public class PortalCubed implements ModInitializer {
 
         if (entity instanceof Player) {
             boolean tweak = false;
-            if (finalPitch <= -50) {
+            if (finalPitch <= -50 && pitchSet >= 50) {
                 finalPitch = -90;
                 tweak = true;
-            } else if (finalPitch >= 50) {
+            } else if (finalPitch >= 50 && pitchSet <= -50) {
                 finalPitch = 90;
                 tweak = true;
             }

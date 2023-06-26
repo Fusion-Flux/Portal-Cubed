@@ -5,16 +5,22 @@ import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
+import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
 import java.util.Objects;
@@ -28,6 +34,11 @@ public final class HolderComponent implements AutoSyncedComponent {
 
     private final Player owner;
 
+    @ClientOnly
+    private int heldTicks;
+    @ClientOnly
+    private boolean grabbedWithGun;
+
     HolderComponent(Player owner) {
         this.owner = owner;
     }
@@ -40,13 +51,27 @@ public final class HolderComponent implements AutoSyncedComponent {
             RayonIntegration.INSTANCE.setNoGravity(heldEntity, true);
             this.heldEntityUUID = Optional.of(entityToHold.getUUID());
             PortalCubedComponents.HOLDER_COMPONENT.sync(owner);
+            if (owner.level.isClientSide) {
+                grabbedWithGun = owner.isHolding(i -> i.getItem() instanceof PortalGun);
+                playClientSound(false);
+            }
             return true;
         }
         return false;
     }
 
+    @ClientOnly
+    private void playClientSound(boolean stop) {
+        heldTicks = 0;
+        if (!grabbedWithGun) return;
+        Minecraft.getInstance().getSoundManager().play(new HoldSoundInstance(
+            stop ? PortalCubedSounds.HOLD_STOP_EVENT : PortalCubedSounds.HOLD_START_EVENT,
+            false, !stop
+        ));
+    }
+
     public @Nullable CorePhysicsEntity entityBeingHeld() {
-        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((LevelExt) this.owner.level).getEntity(heldEntityUUID.get());
+        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((LevelExt) this.owner.level).getEntityByUuid(heldEntityUUID.get());
         return this.heldEntity;
     }
 
@@ -72,6 +97,9 @@ public final class HolderComponent implements AutoSyncedComponent {
             this.heldEntityUUID = Optional.empty();
             this.heldEntity = null;
             PortalCubedComponents.HOLDER_COMPONENT.sync(owner);
+            if (owner.level.isClientSide) {
+                playClientSound(true);
+            }
             return true;
         }
         return false;
@@ -97,7 +125,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     public void applySyncPacket(FriendlyByteBuf buf) {
         final var syncedHeldEntityUUID = EntityDataSerializers.OPTIONAL_UUID.read(buf);
         if (heldEntity == null && syncedHeldEntityUUID.isPresent()) {
-            hold((CorePhysicsEntity) ((LevelExt) this.owner.level).getEntity(syncedHeldEntityUUID.get()));
+            hold((CorePhysicsEntity) ((LevelExt) this.owner.level).getEntityByUuid(syncedHeldEntityUUID.get()));
         } else if (syncedHeldEntityUUID.isEmpty() && heldEntity != null) {
             stopHolding();
         }
@@ -113,6 +141,36 @@ public final class HolderComponent implements AutoSyncedComponent {
         if (owner.getMainHandItem().is(PortalCubedItems.HOLDS_OBJECT)) return;
         owner.resetAttackStrengthTicker();
         ((ItemInHandRendererExt)Minecraft.getInstance().gameRenderer.itemInHandRenderer).startHandFaker();
+    }
+
+    @ClientOnly
+    public void tick() {
+        if (entityBeingHeld() == null || !grabbedWithGun) return;
+        if (++heldTicks == 87) {
+            Minecraft.getInstance().getSoundManager().play(new HoldSoundInstance(PortalCubedSounds.HOLD_LOOP_EVENT, true, true));
+        }
+    }
+
+    private class HoldSoundInstance extends EntityBoundSoundInstance {
+        private final boolean fadeout;
+
+        HoldSoundInstance(SoundEvent event, boolean looping, boolean fadeout) {
+            super(event, SoundSource.PLAYERS, 0.8f, 1f, owner, owner.getRandom().nextLong());
+            this.looping = looping;
+            this.fadeout = fadeout;
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            if (fadeout && entityBeingHeld() == null) {
+                if (volume > 1 / 14f) {
+                    volume -= 1 / 14f;
+                } else {
+                    stop();
+                }
+            }
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
-import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -15,6 +14,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -225,22 +225,20 @@ public class Portal extends Entity {
     public void tick() {
         this.makeBoundingBox();
         this.calculateCutoutBox();
-        if (!this.level.isClientSide)
-            ((ServerLevel)(this.level)).setChunkForced(chunkPosition().x, chunkPosition().z, true);
+        if (!this.level.isClientSide) {
+            final ServerLevel serverLevel = (ServerLevel)level;
+            serverLevel.getChunkSource().addRegionTicket(TicketType.PORTAL, chunkPosition(), 2, blockPosition());
 
-        if (!level.isClientSide) {
             getOwnerUUID().ifPresent(uuid -> {
-                Entity player = ((ServerLevel) level).getEntity(uuid);
+                Entity player = serverLevel.getEntity(uuid);
                 if (player == null || !player.isAlive()) {
                     this.kill();
                 }
             });
-        }
 
-        if (!this.level.isClientSide) {
             Portal otherPortal =
                 this.getLinkedPortalUUID().isPresent()
-                    ? (Portal)((LevelExt) level).getEntity(this.getLinkedPortalUUID().get())
+                    ? (Portal)serverLevel.getEntity(this.getLinkedPortalUUID().get())
                     : null;
 
             setActive(otherPortal != null);
@@ -248,9 +246,10 @@ public class Portal extends Entity {
 
             if (!validate()) {
                 this.kill();
-                level.playSound(null, this.position().x(), this.position().y(), this.position().z(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
+                level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
             }
         }
+
         super.tick();
     }
 

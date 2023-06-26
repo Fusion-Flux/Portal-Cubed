@@ -102,7 +102,7 @@ public class PortalRenderer extends EntityRenderer<Portal> {
     private void renderOtherEntities(Portal entity, PoseStack poseStack, float tickDelta, MultiBufferSource buffer, int packedLight) {
         if (renderPhase != PortalRenderPhase.ENTITY || !entity.getActive()) return;
         final UUID otherUuid = entity.getLinkedPortalUUID().orElse(null);
-        if (otherUuid == null || !(((LevelExt)entity.level).getEntity(otherUuid) instanceof Portal otherPortal)) return;
+        if (otherUuid == null || !(((LevelExt)entity.level).getEntityByUuid(otherUuid) instanceof Portal otherPortal)) return;
         final double oplx = Mth.lerp(tickDelta, otherPortal.xOld, otherPortal.getX());
         final double oply = Mth.lerp(tickDelta, otherPortal.yOld, otherPortal.getY());
         final double oplz = Mth.lerp(tickDelta, otherPortal.zOld, otherPortal.getZ());

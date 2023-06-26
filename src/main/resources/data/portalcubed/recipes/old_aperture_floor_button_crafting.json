@@ -2,11 +2,14 @@
     "type": "minecraft:crafting_shaped",
     "category": "redstone",
     "pattern": [
-        " Y ",
+        "XYX",
         "ZZZ",
         "ZBZ"
     ],
     "key": {
+        "X": {
+            "item": "minecraft:iron_nugget"
+        },
         "Y": {
             "tag": "minecraft:wooden_pressure_plates"
         },

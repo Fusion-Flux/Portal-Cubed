@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.gravity_api.util.RotationUtil;
+import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
@@ -49,6 +50,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSources;
+
 // TODO: Extend LivingEntity
 public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
@@ -76,7 +79,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     public boolean canCollideWith(Entity other) {
-        return canBeCollidedWith() && other instanceof LivingEntity && other.isAlive();
+        return other != this && canBeCollidedWith() && other instanceof LivingEntity && other.isAlive();
     }
 
     @Override
@@ -180,7 +183,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
         this.lastPos = this.position();
         this.setDiscardFriction(!this.isOnGround() && !this.level.getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
         if (isBeingHeld) {
-            Player player = (Player) ((LevelExt) level).getEntity(getHolderUUID().get());
+            Player player = (Player) ((LevelExt) level).getEntityByUuid(getHolderUUID().get());
             if (player != null && player.isAlive()) {
                 Vec3 vec3d = player.getEyePosition(0);
                 double d = 1.5;
@@ -231,7 +234,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
                 canUsePortals = true;
             }
             RayonIntegration.INSTANCE.setNoGravity(this, true);
-        } else if (this.isNoGravity() && !fizzling && !((EntityAttachments)this).isInFunnel()) {
+        } else if (this.isNoGravity() && !fizzling && !((EntityExt)this).isInFunnel()) {
             RayonIntegration.INSTANCE.setNoGravity(this, false);
         }
         if (this.getDeltaMovement().y < -3.92) {
@@ -377,5 +380,16 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+        if (onGround) {
+            if (state.isAir() && fallDistance > 0 && getType().is(PortalCubedEntities.P1_ENTITY)) {
+                final List<Entity> collisions = level.getEntitiesOfClass(Entity.class, getBoundingBox().expandTowards(0, -0.1, 0), this::canCollideWith);
+                for (final Entity collision : collisions) {
+                    collision.hurt(pcSources(level).cube(), fallDistance * 1.5f);
+                }
+            }
+            fallDistance = 0;
+        } else {
+            fallDistance -= y;
+        }
     }
 }

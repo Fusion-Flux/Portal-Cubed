@@ -1,64 +1,149 @@
 {
   "multipart": [
     {
+      "apply": {
+        "model": "portalcubed:block/conversion_gel"
+      },
       "when": {
         "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "portalcubed:block/conversion_gel"
       },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "portalcubed:block/conversion_gel",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "portalcubed:block/conversion_gel",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "portalcubed:block/conversion_gel",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "portalcubed:block/conversion_gel",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "portalcubed:block/conversion_gel",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "portalcubed:block/conversion_gel",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
       "apply": {
         "model": "portalcubed:block/conversion_gel",
         "uvlock": true,
         "x": 270
+      },
+      "when": {
+        "up": "true"
       }
     },
     {
-      "when": {
-        "east": "true"
-      },
       "apply": {
         "model": "portalcubed:block/conversion_gel",
         "uvlock": true,
-        "x": 270,
-        "y": 90
+        "x": 270
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
       }
     },
     {
-      "when": {
-        "south": "true"
-      },
       "apply": {
         "model": "portalcubed:block/conversion_gel",
         "uvlock": true,
         "x": 90
-      }
-    },
-    {
-      "when": {
-        "west": "true"
       },
-      "apply": {
-        "model": "portalcubed:block/conversion_gel",
-        "uvlock": true,
-        "x": 90,
-        "y": 90
-      }
-    },
-    {
-      "when": {
-        "up": "true"
-      },
-      "apply": {
-        "model": "portalcubed:block/conversion_gel",
-        "uvlock": true,
-        "x": 180
-      }
-    },
-    {
       "when": {
         "down": "true"
-      },
+      }
+    },
+    {
       "apply": {
         "model": "portalcubed:block/conversion_gel",
-        "uvlock": true
+        "uvlock": true,
+        "x": 90
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
       }
     }
   ]
