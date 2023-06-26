@@ -297,11 +297,12 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
         if (!level.isLoaded(pos))
             return false;
         BlockState state = level.getBlockState(pos);
-        // prevent crossing funnels from fighting
-        if (state.is(PortalCubedBlocks.EXCURSION_FUNNEL)) {
-            return state.getValue(FACING) == facing;
-        }
-        return state.canBeReplaced();
+        if (state.isAir())
+            return true;
+        // allow replacing other funnels
+        if (state.is(PortalCubedBlocks.EXCURSION_FUNNEL))
+            return state.getValue(FACING) == facing; // prevent crossing ones from fighting
+        return false;
     }
 
     public static void withUpdatesSuppressed(Runnable runnable) {
