@@ -1,12 +1,34 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.blockentities.*;
-import com.fusionflux.portalcubed.blocks.fizzler.*;
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
+import com.fusionflux.portalcubed.blocks.blockentities.AutoPortalBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.FloorButtonBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.LaserEmitterBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.LaserNodeBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.NeurotoxinBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.NeurotoxinEmitterBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.OldApFloorButtonBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
+import com.fusionflux.portalcubed.blocks.bridge.HardLightBridgeBlock;
+import com.fusionflux.portalcubed.blocks.bridge.HardLightBridgeEmitterBlock;
+import com.fusionflux.portalcubed.blocks.fizzler.DeathFizzlerBlock;
+import com.fusionflux.portalcubed.blocks.fizzler.FizzlerBlock;
+import com.fusionflux.portalcubed.blocks.fizzler.FizzlerEmitter;
+import com.fusionflux.portalcubed.blocks.fizzler.LaserFizzlerBlock;
+import com.fusionflux.portalcubed.blocks.fizzler.MatterInquisitionField;
+import com.fusionflux.portalcubed.blocks.fizzler.PhysicsRepulsionField;
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock;
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelTubeBlock;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.ExcursionFunnelEmitterBlockItem;
 import com.fusionflux.portalcubed.items.GelBlobItem;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -20,11 +42,10 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
-
-import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedBlocks {
     public static final Item BASE_GEL = new Item(new QuiltItemSettings().fireResistant());
@@ -35,7 +56,7 @@ public class PortalCubedBlocks {
     public static final BaseGel REFLECTION_GEL = new ReflectionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MaterialColor.COLOR_LIGHT_GRAY));
 
     public static final HardLightBridgeEmitterBlock HLB_EMITTER_BLOCK = new HardLightBridgeEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
-    public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(QuiltBlockSettings.of(Material.AIR).destroyTime(999999f).noOcclusion().explosionResistance(9999999999f).sound(new SoundType(1, 1, SoundEvents.STONE_BREAK, SoundEvents.STONE_STEP, SoundEvents.STONE_PLACE, SoundEvents.STONE_HIT, SoundEvents.STONE_FALL)).color(MaterialColor.DIAMOND));
+    public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(QuiltBlockSettings.of(Material.STONE).destroyTime(999999f).noOcclusion().explosionResistance(9999999999f).color(MaterialColor.DIAMOND).randomTicks());
 
     public static final AutoPortalBlock AUTO_PORTAL_BLOCK = new AutoPortalBlock(
         QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE)
@@ -54,9 +75,6 @@ public class PortalCubedBlocks {
     public static final SlidingDoorBlock OCTOPUS_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
     public static final SlidingDoorBlock OLD_AP_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
     public static final SlidingDoorBlock PORTAL1DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
-
-    public static final BlockEntityType<HardLightBridgeEmitterBlockEntity> HLB_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(HardLightBridgeEmitterBlockEntity::new, HLB_EMITTER_BLOCK).build();
-    public static final BlockEntityType<HardLightBridgeBlockEntity> HLB_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(HardLightBridgeBlockEntity::new, HLB_BLOCK).build();
 
     public static final BlockEntityType<AutoPortalBlockEntity> AUTO_PORTAL_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(AutoPortalBlockEntity::new, AUTO_PORTAL_BLOCK).build();
 
@@ -151,10 +169,8 @@ public class PortalCubedBlocks {
         Registry.register(BuiltInRegistries.BLOCK, id("portal_1_door"), PORTAL1DOOR);
         Registry.register(BuiltInRegistries.ITEM, id("portal_1_door"), new BlockItem(PORTAL1DOOR, new Item.Properties()));
 
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("light_bridge_emitter_entity"), HLB_EMITTER_ENTITY);
         Registry.register(BuiltInRegistries.BLOCK, id("light_bridge_emitter"), HLB_EMITTER_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, id("light_bridge_emitter"), new BlockItem(HLB_EMITTER_BLOCK, new Item.Properties()));
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("light_bridge_entity"), HLB_BLOCK_ENTITY);
         Registry.register(BuiltInRegistries.BLOCK, id("light_bridge"), HLB_BLOCK);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("neurotoxin_entity"), NEUROTOXIN_BLOCK_ENTITY);
         Registry.register(BuiltInRegistries.BLOCK, id("neurotoxin"), NEUROTOXIN_BLOCK);

@@ -1,0 +1,96 @@
+{
+  "variants": {
+    "edge=down,facing=down": {
+      "model": "portalcubed:block/light_bridge_down",
+      "x": 90
+    },
+    "edge=down,facing=east": {
+      "model": "portalcubed:block/light_bridge_down",
+      "y": 90
+    },
+    "edge=down,facing=north": {
+      "model": "portalcubed:block/light_bridge_down"
+    },
+    "edge=down,facing=south": {
+      "model": "portalcubed:block/light_bridge_down",
+      "y": 180
+    },
+    "edge=down,facing=up": {
+      "model": "portalcubed:block/light_bridge_down",
+      "x": 270
+    },
+    "edge=down,facing=west": {
+      "model": "portalcubed:block/light_bridge_down",
+      "y": 270
+    },
+    "edge=left,facing=down": {
+      "model": "portalcubed:block/light_bridge_left",
+      "x": 90
+    },
+    "edge=left,facing=east": {
+      "model": "portalcubed:block/light_bridge_left",
+      "y": 90
+    },
+    "edge=left,facing=north": {
+      "model": "portalcubed:block/light_bridge_left"
+    },
+    "edge=left,facing=south": {
+      "model": "portalcubed:block/light_bridge_left",
+      "y": 180
+    },
+    "edge=left,facing=up": {
+      "model": "portalcubed:block/light_bridge_left",
+      "x": 270
+    },
+    "edge=left,facing=west": {
+      "model": "portalcubed:block/light_bridge_left",
+      "y": 270
+    },
+    "edge=right,facing=down": {
+      "model": "portalcubed:block/light_bridge_right",
+      "x": 90
+    },
+    "edge=right,facing=east": {
+      "model": "portalcubed:block/light_bridge_right",
+      "y": 90
+    },
+    "edge=right,facing=north": {
+      "model": "portalcubed:block/light_bridge_right"
+    },
+    "edge=right,facing=south": {
+      "model": "portalcubed:block/light_bridge_right",
+      "y": 180
+    },
+    "edge=right,facing=up": {
+      "model": "portalcubed:block/light_bridge_right",
+      "x": 270
+    },
+    "edge=right,facing=west": {
+      "model": "portalcubed:block/light_bridge_right",
+      "y": 270
+    },
+    "edge=up,facing=down": {
+      "model": "portalcubed:block/light_bridge_up",
+      "x": 90
+    },
+    "edge=up,facing=east": {
+      "model": "portalcubed:block/light_bridge_up",
+      "y": 90
+    },
+    "edge=up,facing=north": {
+      "model": "portalcubed:block/light_bridge_up"
+    },
+    "edge=up,facing=south": {
+      "model": "portalcubed:block/light_bridge_up",
+      "y": 180
+    },
+    "edge=up,facing=up": {
+      "model": "portalcubed:block/light_bridge_up",
+      "x": 270
+    },
+    "edge=up,facing=west": {
+      "model": "portalcubed:block/light_bridge_up",
+      "y": 270
+    }
+  }
+}

@@ -1,19 +1,13 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-/**
- * @author sailKite
- * @author FusionFlux
- * <p>
- * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
- */
 public class NeurotoxinEmitterBlockEntity extends BlockEntity {
 
     private final BlockPos.MutableBlockPos obstructorPos;

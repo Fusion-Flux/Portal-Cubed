@@ -1,9 +1,15 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
-import com.fusionflux.portalcubed.blocks.HardLightBridgeEmitterBlock;
+import java.util.List;
+
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.entity.*;
+import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
+import com.fusionflux.portalcubed.entity.OldApCubeEntity;
+import com.fusionflux.portalcubed.entity.Portal1CompanionCubeEntity;
+import com.fusionflux.portalcubed.entity.Portal1StorageCubeEntity;
+import com.fusionflux.portalcubed.entity.StorageCubeEntity;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,14 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 
-import java.util.List;
-
-/**
- * @author sailKite
- * @author FusionFlux
- * <p>
- * Handles the operating logic for the {@link HardLightBridgeEmitterBlock} and their associated bridges.
- */
 public class FloorButtonBlockEntity extends BlockEntity {
 
 
