@@ -356,7 +356,7 @@
   "key.portalcubed.remove_portals" : "Remove Portals",
   "key.portalcubed.toggle_hidden_blocks" : "Toggle Hidden Blocks",
 
-  "portalcubed.auto_portal.tooltip": "Right click with Hammer to change portal type.",
+  "portalcubed.auto_portal.tooltip": "Interact with a Hammer to change portal type.",
   "portalcubed.auto_portal.set_portal_type": "Set portal type to %s",
   "portalcubed.portal_type.primary": "Primary",
   "portalcubed.portal_type.secondary": "Secondary",
