@@ -13,7 +13,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +34,7 @@ public abstract class GameRendererMixin implements GameRendererExt {
     @ModifyReturnValue(method = "getFov", at = @At("RETURN"))
     private double portalCubed$modifyFov(double org) {
         var fov = new MutableDouble(org);
-        PortalCubedClient.modifyFov(fov);
+        PortalCubedClient.zoomGoBrrrr(fov);
         return fov.getValue();
     }
 

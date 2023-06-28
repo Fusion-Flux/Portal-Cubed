@@ -3,7 +3,6 @@ package com.fusionflux.portalcubed.mixin.client;
 import com.fusionflux.portalcubed.accessor.CameraExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.util.CameraControl;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.core.BlockPos;
@@ -40,14 +39,19 @@ public abstract class CameraMixin implements CameraExt {
     @Inject(method = "setup", at = @At("RETURN"))
     private void portalCubed$redirectSetup(BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
         var cameraType = CameraType.FIRST_PERSON;
-        if (detached) cameraType = thirdPersonReverse ? CameraType.THIRD_PERSON_FRONT : CameraType.THIRD_PERSON_BACK;
-        var ctrl = PortalCubedClient.modifyCamera(new CameraControl(
-            ((Camera) (Object) this).getPosition(),
-            ((Camera) (Object) this).getYRot(),
-            ((Camera) (Object) this).getXRot()
-        ), level, entity, cameraType, partialTick);
-        if (ctrl.pos() != ((Camera) (Object) this).getPosition()) setPosition(ctrl.pos());
-        if (ctrl.yaw() != ((Camera) (Object) this).getYRot() || ctrl.pitch() != ((Camera) (Object) this).getXRot()) setRotation(ctrl.yaw(), ctrl.pitch());
+        if (detached) {
+            cameraType = thirdPersonReverse ? CameraType.THIRD_PERSON_FRONT : CameraType.THIRD_PERSON_BACK;
+        }
+        final Camera camera = (Camera)(Object)this;
+        final CameraControl ctrl = new CameraControl(camera.getPosition(), camera.getYRot(), camera.getXRot());
+        PortalCubedClient.moveCameraIfDead(camera, entity, cameraType, partialTick, ctrl);
+        PortalCubedClient.transformCameraIntersectingPortal(camera, entity, cameraType, partialTick, ctrl);
+        if (ctrl.getPos() != camera.getPosition()) {
+            setPosition(ctrl.getPos());
+        }
+        if (ctrl.getYaw() != camera.getYRot() || ctrl.getPitch() != camera.getXRot()) {
+            setRotation(ctrl.getYaw(), ctrl.getPitch());
+        }
     }
 
     @Override

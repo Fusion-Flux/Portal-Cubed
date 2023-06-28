@@ -36,14 +36,15 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.CameraControl;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.BoolArgumentType;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
@@ -52,13 +53,11 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
@@ -74,11 +73,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.ModContainer;
@@ -541,7 +541,7 @@ public class PortalCubedClient implements ClientModInitializer {
         });
     }
 
-    public static void modifyFov(MutableDouble fov) {
+    public static void zoomGoBrrrr(MutableDouble fov) {
         var tickDelta = Minecraft.getInstance().getFrameTime();
         if (zoomDir == 0) return;
         if (zoomDir > 0) {
@@ -555,15 +555,38 @@ public class PortalCubedClient implements ClientModInitializer {
         }
     }
 
-    public static CameraControl modifyCamera(CameraControl ctrl, BlockGetter level, Entity entity, CameraType cameraType, float tickDelta) {
-        var pos = ctrl.pos();
+    public static void moveCameraIfDead(Camera camera, Entity cameraEntity, CameraType perspective, float tickDelta, CameraControl ctrl) {
+        var pos = ctrl.getPos();
 
         final var minecraft = Minecraft.getInstance();
         if (PortalCubedClient.isPortalHudMode() && minecraft.screen instanceof DeathScreen) {
-            pos = pos.add(0, -1, 0);
+            ctrl.setPos(pos.add(0, -1, 0));
         }
-        ctrl.update(pos, ctrl.yaw(), ctrl.pitch());
-        return ctrl;
+    }
+
+    public static void transformCameraIntersectingPortal(Camera camera, Entity cameraEntity, CameraType perspective, float tickDelta, CameraControl ctrl) {
+        final Vec3 entityPos = cameraEntity.getPosition(tickDelta);
+        final Vec3 startPos = entityPos.add(ctrl.getPos().subtract(entityPos).normalize().scale(0.1));
+        final Vec3 endPos = ctrl.getPos();
+        final var transformed = PortalDirectionUtils.simpleTransformPassingVector(
+            cameraEntity, startPos, endPos, p -> p.getNormal().y < 0
+        );
+        if (transformed != null) {
+            cameraTransformedThroughPortal = transformed.second();
+            ctrl.setPos(transformed.first());
+            final Quaternionf cameraRot = camera.rotation().mul(
+                cameraTransformedThroughPortal.getTransformQuat().toQuaternionf()
+            );
+            camera.getLookVector().set(0.0F, 0.0F, 1.0F).rotate(cameraRot);
+            camera.getUpVector().set(0.0F, 1.0F, 0.0F).rotate(cameraRot);
+            camera.getLeftVector().set(1.0F, 0.0F, 0.0F).rotate(cameraRot);
+            if (camera.isDetached()) {
+                ((CameraExt)camera).backCameraUp(transformed.first());
+                ctrl.setPos(camera.getPosition());
+            }
+        } else {
+            cameraTransformedThroughPortal = null;
+        }
     }
 
     private void registerEmissiveModels(ModContainer mod) {
