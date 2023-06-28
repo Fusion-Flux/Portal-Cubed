@@ -126,7 +126,7 @@ public class PortalCubedServerPackets {
             entity -> {
                 switch (mode) {
                     case VelocityHelperBlock.CONFIG_DEST -> {
-                        if (!player.isHolding(PortalCubedItems.HAMMER)) {
+                        if (!player.isHolding(s -> s.is(PortalCubedItems.WRENCHES))) {
                             PortalCubed.LOGGER.warn("Received velocity_helper_configure from {}, who's not holding a hammer.", player);
                             return;
                         }
@@ -183,19 +183,15 @@ public class PortalCubedServerPackets {
                 TurretEntity.makeBulletHole((ServerLevel)player.level, hit, SoundSource.PLAYERS);
             });
         });
-        ServerPlayNetworking.registerGlobalReceiver(LEFT_CLICK, (server, player, handler, buf, responseSender) -> {
-            server.execute(() -> {
-                if (player.getMainHandItem().getItem() instanceof ClickHandlingItem chi) {
-                    if (chi.onLeftClick(player, InteractionHand.MAIN_HAND).shouldSwing()) player.swing(InteractionHand.MAIN_HAND, true);
-                }
-            });
-        });
-        ServerPlayNetworking.registerGlobalReceiver(RIGHT_CLICK, (server, player, handler, buf, responseSender) -> {
-            server.execute(() -> {
-                if (player.getMainHandItem().getItem() instanceof ClickHandlingItem chi) {
-                    if (chi.onRightClick(player, InteractionHand.MAIN_HAND).shouldSwing()) player.swing(InteractionHand.MAIN_HAND, true);
-                }
-            });
-        });
+        ServerPlayNetworking.registerGlobalReceiver(LEFT_CLICK, (server, player, handler, buf, responseSender) -> server.execute(() -> {
+            if (player.getMainHandItem().getItem() instanceof ClickHandlingItem chi) {
+                if (chi.onLeftClick(player, InteractionHand.MAIN_HAND).shouldSwing()) player.swing(InteractionHand.MAIN_HAND, true);
+            }
+        }));
+        ServerPlayNetworking.registerGlobalReceiver(RIGHT_CLICK, (server, player, handler, buf, responseSender) -> server.execute(() -> {
+            if (player.getMainHandItem().getItem() instanceof ClickHandlingItem chi) {
+                if (chi.onRightClick(player, InteractionHand.MAIN_HAND).shouldSwing()) player.swing(InteractionHand.MAIN_HAND, true);
+            }
+        }));
     }
 }

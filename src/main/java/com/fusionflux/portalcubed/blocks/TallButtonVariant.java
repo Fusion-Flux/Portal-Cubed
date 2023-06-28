@@ -24,6 +24,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -73,6 +74,7 @@ public abstract class TallButtonVariant extends FaceAttachedHorizontalDirectiona
         return v == 20 ? 18 : v == -4 ? -2 : v;
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -105,10 +107,11 @@ public abstract class TallButtonVariant extends FaceAttachedHorizontalDirectiona
         };
     }
 
-    @SuppressWarnings("deprecation")
+    @NotNull
     @Override
+    @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (player.getItemInHand(hand).is(PortalCubedItems.HAMMER)) {
+        if (player.getItemInHand(hand).is(PortalCubedItems.WRENCHES)) {
             world.setBlockAndUpdate(pos, state.cycle(OFFSET));
             return InteractionResult.sidedSuccess(world.isClientSide);
         }

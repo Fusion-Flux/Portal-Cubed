@@ -221,7 +221,7 @@ public class AutoPortalBlock extends BaseEntityBlock {
         final BlockPos otherPos = upper ? pos.below() : pos.above();
         final BlockPos lowerPos = upper ? otherPos : pos;
         final ItemStack stack = player.getItemInHand(hand);
-        if (stack.is(PortalCubedItems.HAMMER)) {
+        if (stack.is(PortalCubedItems.WRENCHES)) {
             openOrClosePortal(level, lowerPos, state, true);
             if (player.isShiftKeyDown()) {
                 for (BlockPos usePos = pos; usePos != null; usePos = usePos == pos ? otherPos : null) {

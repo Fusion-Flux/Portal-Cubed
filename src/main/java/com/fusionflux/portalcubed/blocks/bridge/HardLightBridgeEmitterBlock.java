@@ -1,14 +1,9 @@
 package com.fusionflux.portalcubed.blocks.bridge;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.util.VoxelShaper;
-import org.jetbrains.annotations.NotNull;
-
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -32,6 +27,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HardLightBridgeEmitterBlock extends Block implements HardLightBridgePart {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -48,7 +47,7 @@ public class HardLightBridgeEmitterBlock extends Block implements HardLightBridg
         map.put(Edge.LEFT, VoxelShaper.forDirectional(BASE_SHAPE_LEFT, Direction.SOUTH));
     });
 
-    private static final Map<BlockState, VoxelShape> shapes = new HashMap<>();
+    private static final Map<BlockState, VoxelShape> SHAPES = new HashMap<>();
 
     static boolean suppressUpdates;
 
@@ -71,7 +70,7 @@ public class HardLightBridgeEmitterBlock extends Block implements HardLightBridg
     @Override
     @NotNull
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!player.getItemInHand(hand).is(PortalCubedItems.HAMMER))
+        if (!player.getItemInHand(hand).is(PortalCubedItems.WRENCHES))
             return InteractionResult.PASS;
         if (!(level instanceof ServerLevel serverLevel))
             return InteractionResult.SUCCESS;
@@ -131,7 +130,7 @@ public class HardLightBridgeEmitterBlock extends Block implements HardLightBridg
     @Override
     @NotNull
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return shapes.computeIfAbsent(state, HardLightBridgeEmitterBlock::makeShape);
+        return SHAPES.computeIfAbsent(state, HardLightBridgeEmitterBlock::makeShape);
     }
 
     @SuppressWarnings("deprecation")

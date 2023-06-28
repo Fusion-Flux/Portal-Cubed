@@ -4,6 +4,7 @@ import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
@@ -70,6 +71,7 @@ public class PortalCubedItems {
     public static final Item WANT_YOU_GONE = new RecordItem(15, SoundEvent.createVariableRangeEvent(id("disc/want_you_gone")), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 142);
     public static final Item RECONSTRUCTING_MORE_SCIENCE = new RecordItem(15, SoundEvent.createVariableRangeEvent(id("disc/reconstructing_more_science")), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 157);
 
+    public static final TagKey<Item> WRENCHES = TagKey.create(Registries.ITEM, new ResourceLocation("c:wrenches"));
     public static final TagKey<Item> HOLDS_OBJECT = QuiltTagKey.of(Registries.ITEM, id("holds_object"), TagType.CLIENT_ONLY);
     public static final TagKey<Item> LAYS_ON_FLOOR = QuiltTagKey.of(Registries.ITEM, id("lays_on_floor"), TagType.CLIENT_ONLY);
 

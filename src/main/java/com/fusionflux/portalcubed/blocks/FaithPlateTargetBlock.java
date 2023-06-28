@@ -16,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class FaithPlateTargetBlock extends SimpleMultiSidedBlock {
@@ -23,12 +24,13 @@ public class FaithPlateTargetBlock extends SimpleMultiSidedBlock {
         super(settings);
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!player.getAbilities().instabuild || !world.isClientSide) return InteractionResult.PASS;
         final ItemStack held = player.getItemInHand(hand);
-        if (!held.is(PortalCubedItems.HAMMER)) return InteractionResult.PASS;
+        if (!held.is(PortalCubedItems.WRENCHES)) return InteractionResult.PASS;
 
         final ItemStack result = new ItemStack(PortalCubedBlocks.CATAPULT.asItem());
 

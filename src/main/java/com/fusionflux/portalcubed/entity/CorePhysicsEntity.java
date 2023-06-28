@@ -93,7 +93,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
             return false;
         if (!(source.getEntity() instanceof Player player))
             return true;
-        return !player.getItemInHand(InteractionHand.MAIN_HAND).is(PortalCubedItems.HAMMER);
+        return !player.getItemInHand(InteractionHand.MAIN_HAND).is(PortalCubedItems.WRENCHES);
     }
 
     @Override

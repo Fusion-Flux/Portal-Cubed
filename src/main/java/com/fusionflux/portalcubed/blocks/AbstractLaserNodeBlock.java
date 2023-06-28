@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public abstract class AbstractLaserNodeBlock extends BaseEntityBlock {
@@ -55,6 +56,7 @@ public abstract class AbstractLaserNodeBlock extends BaseEntityBlock {
         return true;
     }
 
+    @NotNull
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
@@ -70,10 +72,11 @@ public abstract class AbstractLaserNodeBlock extends BaseEntityBlock {
         return createTickerHelper(type, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY, LaserNodeBlockEntity::tick);
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!player.getItemInHand(hand).is(PortalCubedItems.HAMMER)) {
+        if (!player.getItemInHand(hand).is(PortalCubedItems.WRENCHES)) {
             return InteractionResult.PASS;
         }
         if (world.isClientSide) {

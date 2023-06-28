@@ -1,19 +1,14 @@
 package com.fusionflux.portalcubed.blocks.funnel;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity;
-
+import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity.ToggleMode;
+import com.fusionflux.portalcubed.entity.Portal;
+import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.util.TwoByTwo;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
@@ -32,20 +27,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity.ToggleMode;
-import com.fusionflux.portalcubed.entity.Portal;
-import com.fusionflux.portalcubed.entity.PortalCubedEntities;
-import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.fusionflux.portalcubed.util.TwoByTwo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoByTwoFacingMultiblockBlock {
     public static final EnumProperty<Mode> MODE = EnumProperty.create("mode", Mode.class);
@@ -78,7 +70,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
     @Override
     @NotNull
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!player.getItemInHand(hand).is(PortalCubedItems.HAMMER))
+        if (!player.getItemInHand(hand).is(PortalCubedItems.WRENCHES))
             return InteractionResult.PASS;
         if (!(level instanceof ServerLevel serverLevel))
             return InteractionResult.SUCCESS;

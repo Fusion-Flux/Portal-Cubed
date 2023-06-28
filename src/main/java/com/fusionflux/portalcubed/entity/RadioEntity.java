@@ -22,6 +22,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -50,6 +51,7 @@ public class RadioEntity extends CorePhysicsEntity  {
         entityData.define(ALLOW_MUTE, true);
     }
 
+    @NotNull
     @Override
     protected AABB makeBoundingBox() {
         return GeneralUtil.rotate(BASE_BOX, yHeadRot, Direction.Axis.Y).move(position());
@@ -112,9 +114,10 @@ public class RadioEntity extends CorePhysicsEntity  {
         }
     }
 
+    @NotNull
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (!level.isClientSide && player.getItemInHand(hand).is(PortalCubedItems.HAMMER)) {
+        if (!level.isClientSide && player.getItemInHand(hand).is(PortalCubedItems.WRENCHES)) {
             setAllowMute(!isAllowMute());
             if (isAllowMute()) {
                 player.displayClientMessage(Component.translatable("portalcubed.radio.allow_mute"), true);

@@ -71,7 +71,7 @@ public class VelocityHelperBlock extends SpecialHiddenBlockWithEntity implements
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!player.isCreative()) return InteractionResult.PASS;
         final ItemStack stack = player.getItemInHand(hand);
-        if (stack.is(PortalCubedItems.HAMMER)) {
+        if (stack.is(PortalCubedItems.WRENCHES)) {
             final VelocityHelperBlockEntity entity = world.getBlockEntity(pos, PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY).orElse(null);
             if (entity != null) {
                 if (!world.isClientSide) {
