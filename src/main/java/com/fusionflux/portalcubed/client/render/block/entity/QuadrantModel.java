@@ -1,23 +1,22 @@
 package com.fusionflux.portalcubed.client.render.block.entity;
 
-import java.util.function.Supplier;
-
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.function.Supplier;
+
 public class QuadrantModel extends ForwardingBakedModel {
     public static final Bounds[] BOUNDS = {
-            new Bounds(0, 2, 0, 2),
-            new Bounds(-2, 0, 0, 2),
-            new Bounds(-2, 0, -2, 0),
-            new Bounds(0, 2, -2, 0)
+        new Bounds(0, 2, 0, 2),
+        new Bounds(-2, 0, 0, 2),
+        new Bounds(-2, 0, -2, 0),
+        new Bounds(0, 2, -2, 0)
     };
 
     public final int quadrant;

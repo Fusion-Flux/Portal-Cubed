@@ -1,19 +1,15 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import java.lang.reflect.Type;
-
 import com.fusionflux.portalcubed.accessor.BlockElementExt;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.minecraft.client.renderer.block.model.BlockElement;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import net.minecraft.client.renderer.block.model.BlockElement;
+import java.lang.reflect.Type;
 
+@SuppressWarnings("checkstyle:TypeName")
 @Mixin(targets = "net.minecraft.client.renderer.block.model.BlockElement$Deserializer")
 public class BlockElement_DeserializerMixin {
     @ModifyReturnValue(method = "deserialize", at = @At("RETURN"))

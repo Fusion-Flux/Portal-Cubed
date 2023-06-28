@@ -1,16 +1,9 @@
 package com.fusionflux.portalcubed.mixin.client;
 
-import java.util.List;
-
 import com.fusionflux.portalcubed.accessor.BakedQuadExt;
 import com.fusionflux.portalcubed.accessor.BlockElementExt;
 import com.fusionflux.portalcubed.client.render.block.MultiRenderTypeSimpleBakedModel;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
@@ -21,6 +14,11 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+
+import java.util.List;
 
 @Mixin(BlockModel.class)
 public abstract class BlockModelMixin {

@@ -1,12 +1,5 @@
 package com.fusionflux.portalcubed.client.render.block;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
@@ -14,7 +7,6 @@ import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext.QuadTransform;
 import net.fabricmc.fabric.api.util.TriState;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -28,6 +20,13 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public final class EmissiveBakedModel extends ForwardingBakedModel {
 
@@ -45,7 +44,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
         return Optional.empty();
     }
 
-    private static final Map<RenderMaterial, RenderMaterial> toEmissive = new ConcurrentHashMap<>();
+    private static final Map<RenderMaterial, RenderMaterial> TO_EMISSIVE = new ConcurrentHashMap<>();
 
     private final QuadTransform emissiveTransform;
 
@@ -86,7 +85,7 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
     }
 
     public static RenderMaterial getEmissiveMaterial(RenderMaterial base) {
-        return toEmissive.computeIfAbsent(base, EmissiveBakedModel::makeEmissiveMaterial);
+        return TO_EMISSIVE.computeIfAbsent(base, EmissiveBakedModel::makeEmissiveMaterial);
     }
 
     private static RenderMaterial makeEmissiveMaterial(RenderMaterial base) {

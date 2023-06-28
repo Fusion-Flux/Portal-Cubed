@@ -1,19 +1,17 @@
 package com.fusionflux.portalcubed.util;
 
-import java.util.Iterator;
-import java.util.List;
-
-import com.fusionflux.portalcubed.fluids.ToxicGooFluid.Block;
 import com.google.common.collect.Iterators;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Iterator;
+import java.util.List;
 
 public record TwoByTwo(BlockPos topRight, BlockPos topLeft, BlockPos bottomLeft, BlockPos bottomRight) implements Iterable<BlockPos> {
     public static TwoByTwo fromBottomRightCorner(BlockPos bottomRight, Direction left, Direction up) {

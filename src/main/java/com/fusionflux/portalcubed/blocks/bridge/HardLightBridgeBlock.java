@@ -1,12 +1,7 @@
 package com.fusionflux.portalcubed.blocks.bridge;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.util.VoxelShaper;
-import org.jetbrains.annotations.NotNull;
-
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,6 +15,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HardLightBridgeBlock extends Block implements HardLightBridgePart {
     public static final VoxelShape BASE_SHAPE_DOWN = Block.box(2, 1.5, 0, 14, 2.5, 16);
@@ -34,7 +33,7 @@ public class HardLightBridgeBlock extends Block implements HardLightBridgePart {
         map.put(Edge.LEFT, VoxelShaper.forDirectional(BASE_SHAPE_LEFT, Direction.SOUTH));
     });
 
-    private static final Map<BlockState, VoxelShape> shapes = new HashMap<>();
+    private static final Map<BlockState, VoxelShape> SHAPES = new HashMap<>();
 
     public HardLightBridgeBlock(Properties settings) {
         super(settings);
@@ -54,7 +53,7 @@ public class HardLightBridgeBlock extends Block implements HardLightBridgePart {
     @Override
     @NotNull
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return shapes.computeIfAbsent(state, HardLightBridgeBlock::makeShape);
+        return SHAPES.computeIfAbsent(state, HardLightBridgeBlock::makeShape);
     }
 
     @SuppressWarnings("deprecation")

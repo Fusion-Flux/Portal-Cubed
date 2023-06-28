@@ -1,14 +1,7 @@
 package com.fusionflux.portalcubed.items;
 
-import java.util.Collection;
-import java.util.List;
-
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity;
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock;
 import com.fusionflux.portalcubed.util.TwoByTwo;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
@@ -19,6 +12,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
 
 public class ExcursionFunnelEmitterBlockItem extends BlockItem {
     public static final Collection<Property<?>> REQUIRED_PROPERTIES = List.of(

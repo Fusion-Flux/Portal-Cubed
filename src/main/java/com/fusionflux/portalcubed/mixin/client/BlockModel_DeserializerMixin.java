@@ -4,12 +4,12 @@ import com.fusionflux.portalcubed.accessor.BlockElementExt;
 import com.fusionflux.portalcubed.client.render.block.MultiRenderTypeSimpleBakedModel;
 import com.fusionflux.portalcubed.client.render.block.RenderMaterials;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.minecraft.client.renderer.block.model.BlockElement;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import net.minecraft.client.renderer.block.model.BlockElement;
-import net.minecraft.client.renderer.block.model.BlockModel;
-
+@SuppressWarnings("checkstyle:TypeName")
 @Mixin(BlockModel.Deserializer.class)
 public class BlockModel_DeserializerMixin {
     // failing in parsing is much better than in baking.
