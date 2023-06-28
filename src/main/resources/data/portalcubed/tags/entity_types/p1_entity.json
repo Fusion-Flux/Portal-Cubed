@@ -1,6 +1,10 @@
 {
   "values": [
     "portalcubed:portal_1_storage_cube",
-    "portalcubed:portal_1_companion_cube"
+    "portalcubed:portal_1_companion_cube",
+    "portalcubed:curiosity_core",
+    "portalcubed:morality_core",
+    "portalcubed:intelligence_core",
+    "portalcubed:anger_core"
   ]
 }
