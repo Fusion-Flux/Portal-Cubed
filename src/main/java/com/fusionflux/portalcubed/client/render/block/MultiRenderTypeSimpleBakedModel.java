@@ -5,14 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.BakedQuadExt;
 import com.fusionflux.portalcubed.mixin.client.SimpleBakedModelAccessor;
 import com.google.gson.JsonParseException;
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
@@ -31,32 +26,11 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MultiRenderTypeSimpleBakedModel extends ForwardingBakedModel {
-    public static final boolean IS_SUPPORTED;
-    protected static final RenderMaterial DEFAULT_MATERIAL;
-    protected static final RenderMaterial SOLID_MATERIAL;
-    protected static final RenderMaterial CUTOUT_MATERIAL;
-    protected static final RenderMaterial TRANSLUCENT_MATERIAL;
-
-    static {
-        Renderer renderer = RendererAccess.INSTANCE.getRenderer();
-        IS_SUPPORTED = renderer != null;
-        if (IS_SUPPORTED) {
-            MaterialFinder finder = renderer.materialFinder();
-            DEFAULT_MATERIAL = finder.find();
-            SOLID_MATERIAL = finder.blendMode(BlendMode.SOLID).find();
-            CUTOUT_MATERIAL = finder.blendMode(BlendMode.CUTOUT).find();
-            TRANSLUCENT_MATERIAL = finder.blendMode(BlendMode.TRANSLUCENT).find();
-        } else {
-            PortalCubed.LOGGER.error("No renderer present, rendering will be wrong. If you have Sodium, install Indium!");
-            DEFAULT_MATERIAL = SOLID_MATERIAL = CUTOUT_MATERIAL = TRANSLUCENT_MATERIAL = null;
-        }
-    }
-
     public static final Map<String, Supplier<RenderMaterial>> SUPPORTED_TYPES = Map.of(
-            "default", () -> DEFAULT_MATERIAL,
-            "solid", () -> SOLID_MATERIAL,
-            "cutout", () -> CUTOUT_MATERIAL,
-            "translucent", () -> TRANSLUCENT_MATERIAL
+            "default", () -> RenderMaterials.DEFAULT_MATERIAL,
+            "solid", () -> RenderMaterials.SOLID_MATERIAL,
+            "cutout", () -> RenderMaterials.CUTOUT_MATERIAL,
+            "translucent", () -> RenderMaterials.TRANSLUCENT_MATERIAL
     );
     public static final String SUPPORTED_TYPE_LIST = String.join(", ", SUPPORTED_TYPES.keySet());
 

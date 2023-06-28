@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.accessor.BlockElementExt;
 import com.fusionflux.portalcubed.client.render.block.MultiRenderTypeSimpleBakedModel;
+import com.fusionflux.portalcubed.client.render.block.RenderMaterials;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +15,7 @@ public class BlockModel_DeserializerMixin {
     // failing in parsing is much better than in baking.
     @ModifyReturnValue(method = "deserialize", at = @At("RETURN"))
     private BlockModel portalcubed$validateMultiRenderTypeModel(BlockModel original) {
-        if (!MultiRenderTypeSimpleBakedModel.IS_SUPPORTED)
+        if (!RenderMaterials.ARE_SUPPORTED)
             return original;
 
         for (BlockElement element : original.getElements()) {
