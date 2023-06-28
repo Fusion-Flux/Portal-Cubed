@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"particle": "portalcubed:block/adhesion_gel",
 		"adhesion_gel": "portalcubed:block/adhesion_gel"

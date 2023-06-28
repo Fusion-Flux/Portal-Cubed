@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"particle": "portalcubed:block/reflection_gel",
 		"reflection_gel": "portalcubed:block/reflection_gel"

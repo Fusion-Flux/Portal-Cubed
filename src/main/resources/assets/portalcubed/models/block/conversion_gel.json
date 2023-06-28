@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"particle": "portalcubed:block/conversion_gel",
 		"conversion_gel": "portalcubed:block/conversion_gel"
