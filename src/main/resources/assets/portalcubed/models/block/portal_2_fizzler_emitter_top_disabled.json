@@ -17,7 +17,8 @@
 				"south": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0", "cullface": "south"},
 				"west": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#0", "cullface": "west"},
 				"up": {"uv": [0.016, 0.016, 15.984, 15.984], "texture": "#1", "cullface": "up"}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [5, 0, -1],
@@ -27,7 +28,8 @@
 				"east": {"uv": [7.016, 0.016, 7.484, 7.984], "texture": "#2"},
 				"west": {"uv": [7.516, 0.016, 7.984, 7.984], "texture": "#2"},
 				"up": {"uv": [2.968, 0.468, 0, 0], "texture": "#2"}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [7.75, 0, -1.05],
@@ -36,7 +38,8 @@
 			"faces": {
 				"north": {"uv": [3.016, 0.016, 3.984, 7.984], "texture": "#2"},
 				"south": {"uv": [3.016, 0.016, 3.984, 7.984], "texture": "#2"}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [6.25, 0, -1.025],
@@ -45,7 +48,8 @@
 			"faces": {
 				"north": {"uv": [3.984, 0.016, 3.016, 7.984], "texture": "#2"},
 				"south": {"uv": [3.016, 0.016, 3.984, 7.984], "texture": "#2"}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		}
 	],
 	"display": {
