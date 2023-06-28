@@ -85,7 +85,17 @@ public class HardLightBridgeEmitterBlock extends Block implements HardLightBridg
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         Direction facing = ctx.getNearestLookingDirection().getOpposite();
-        return defaultBlockState().setValue(FACING, facing);
+        Edge edge = Edge.DOWN;
+        if (facing.getAxis().isHorizontal()) {
+            if (ctx.getClickLocation().y - ctx.getClickedPos().getY() > 0.5)
+                edge = Edge.UP;
+        } else {
+            Direction edgeSide = ctx.getHorizontalDirection();
+            if (facing == Direction.UP)
+                edgeSide = edgeSide.getOpposite();
+            edge = Edge.fromFacingAndSide(facing, edgeSide);
+        }
+        return defaultBlockState().setValue(FACING, facing).setValue(EDGE, edge);
     }
 
     @SuppressWarnings("deprecation")
