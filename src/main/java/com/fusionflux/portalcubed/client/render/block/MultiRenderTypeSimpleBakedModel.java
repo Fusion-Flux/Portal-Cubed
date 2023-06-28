@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class MultiRenderTypeSimpleBakedModel extends ForwardingBakedModel {
     public static final boolean IS_SUPPORTED;
+    protected static final RenderMaterial DEFAULT_MATERIAL;
     protected static final RenderMaterial SOLID_MATERIAL;
     protected static final RenderMaterial CUTOUT_MATERIAL;
     protected static final RenderMaterial TRANSLUCENT_MATERIAL;
@@ -41,19 +42,21 @@ public class MultiRenderTypeSimpleBakedModel extends ForwardingBakedModel {
         IS_SUPPORTED = renderer != null;
         if (IS_SUPPORTED) {
             MaterialFinder finder = renderer.materialFinder();
+            DEFAULT_MATERIAL = finder.find();
             SOLID_MATERIAL = finder.blendMode(BlendMode.SOLID).find();
             CUTOUT_MATERIAL = finder.blendMode(BlendMode.CUTOUT).find();
             TRANSLUCENT_MATERIAL = finder.blendMode(BlendMode.TRANSLUCENT).find();
         } else {
             PortalCubed.LOGGER.error("No renderer present, rendering will be wrong. If you have Sodium, install Indium!");
-            SOLID_MATERIAL = CUTOUT_MATERIAL = TRANSLUCENT_MATERIAL = null;
+            DEFAULT_MATERIAL = SOLID_MATERIAL = CUTOUT_MATERIAL = TRANSLUCENT_MATERIAL = null;
         }
     }
 
-    public static final Map<String, RenderMaterial> SUPPORTED_TYPES = Map.of(
-            "solid", SOLID_MATERIAL,
-            "cutout", CUTOUT_MATERIAL,
-            "translucent", TRANSLUCENT_MATERIAL
+    public static final Map<String, Supplier<RenderMaterial>> SUPPORTED_TYPES = Map.of(
+            "default", () -> DEFAULT_MATERIAL,
+            "solid", () -> SOLID_MATERIAL,
+            "cutout", () -> CUTOUT_MATERIAL,
+            "translucent", () -> TRANSLUCENT_MATERIAL
     );
     public static final String SUPPORTED_TYPE_LIST = String.join(", ", SUPPORTED_TYPES.keySet());
 
@@ -73,7 +76,7 @@ public class MultiRenderTypeSimpleBakedModel extends ForwardingBakedModel {
     private void addQuad(BakedQuad quad, @Nullable Direction cullFace) {
         String renderType = ((BakedQuadExt) quad).portalcubed$getRenderType();
         if (renderType == null)
-            renderType = "solid";
+            renderType = "default";
         RenderMaterial material = parseType(renderType);
         this.quads.add(Triple.of(quad, material, cullFace));
     }
@@ -110,9 +113,9 @@ public class MultiRenderTypeSimpleBakedModel extends ForwardingBakedModel {
     }
 
     public static RenderMaterial parseType(String name) throws JsonParseException {
-        RenderMaterial type = SUPPORTED_TYPES.get(name);
+        Supplier<RenderMaterial> type = SUPPORTED_TYPES.get(name);
         if (type != null)
-            return type;
+            return type.get();
         throw new JsonParseException(name + " is not a supported RenderType. must be one of: " + SUPPORTED_TYPE_LIST);
     }
 }
