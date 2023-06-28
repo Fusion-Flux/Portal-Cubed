@@ -2,6 +2,92 @@
 
   "block/faith_plate_target": "block/faith_plate_target",
 
+  "block/excursion_funnel_emitter_forward_off_quadrant_1": "block/excursion_funnel_emitter_e",
+  "block/excursion_funnel_emitter_forward_off_quadrant_2": "block/excursion_funnel_emitter_e",
+  "block/excursion_funnel_emitter_forward_off_quadrant_3": "block/excursion_funnel_emitter_e",
+  "block/excursion_funnel_emitter_forward_off_quadrant_4": "block/excursion_funnel_emitter_e",
+
+  "block/excursion_funnel_emitter_reversed_off_quadrant_1": "block/excursion_funnel_emitter_e",
+  "block/excursion_funnel_emitter_reversed_off_quadrant_2": "block/excursion_funnel_emitter_e",
+  "block/excursion_funnel_emitter_reversed_off_quadrant_3": "block/excursion_funnel_emitter_e",
+  "block/excursion_funnel_emitter_reversed_off_quadrant_4": "block/excursion_funnel_emitter_e",
+
+  "block/excursion_funnel_emitter_forward_on_quadrant_1": [
+    "block/excursion_funnel_emitter_wings_active_e",
+    "block/excursion_funnel_beam",
+    "block/excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_emitter_forward_on_quadrant_2": [
+    "block/excursion_funnel_emitter_wings_active_e",
+    "block/excursion_funnel_beam",
+    "block/excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_emitter_forward_on_quadrant_3": [
+    "block/excursion_funnel_emitter_wings_active_e",
+    "block/excursion_funnel_beam",
+    "block/excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_emitter_forward_on_quadrant_4": [
+    "block/excursion_funnel_emitter_wings_active_e",
+    "block/excursion_funnel_beam",
+    "block/excursion_funnel_beam_end"
+  ],
+
+  "block/excursion_funnel_emitter_reversed_on_quadrant_1": [
+    "block/excursion_funnel_emitter_wings_active_e",
+    "block/excursion_funnel_beam",
+    "block/reversed_excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_emitter_reversed_on_quadrant_2": [
+    "block/excursion_funnel_emitter_wings_active_e",
+    "block/excursion_funnel_beam",
+    "block/reversed_excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_emitter_reversed_on_quadrant_3": [
+    "block/excursion_funnel_emitter_wings_active_e",
+    "block/excursion_funnel_beam",
+    "block/reversed_excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_emitter_reversed_on_quadrant_4": [
+    "block/excursion_funnel_emitter_wings_active_e",
+    "block/excursion_funnel_beam",
+    "block/reversed_excursion_funnel_beam_end"
+  ],
+
+  "block/excursion_funnel_quadrant_1": [
+    "block/excursion_funnel_beam",
+    "block/excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_quadrant_2": [
+    "block/excursion_funnel_beam",
+    "block/excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_quadrant_3": [
+    "block/excursion_funnel_beam",
+    "block/excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_quadrant_4": [
+    "block/excursion_funnel_beam",
+    "block/excursion_funnel_beam_end"
+  ],
+
+  "block/excursion_funnel_reversed_quadrant_1": [
+    "block/excursion_funnel_beam",
+    "block/reversed_excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_reversed_quadrant_2": [
+    "block/excursion_funnel_beam",
+    "block/reversed_excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_reversed_quadrant_3": [
+    "block/excursion_funnel_beam",
+    "block/reversed_excursion_funnel_beam_end"
+  ],
+  "block/excursion_funnel_reversed_quadrant_4": [
+    "block/excursion_funnel_beam",
+    "block/reversed_excursion_funnel_beam_end"
+  ],
+
 
   "block/laser_emitter_active": "block/laser_emitter_e",
   "block/laser_catcher_active": "block/laser_emitter_e",
@@ -56,8 +142,28 @@
   "block/portal_2_physics_repulsion_field_emitter_bottom": "block/modded_grill_emitters_e",
 
 
-  "block/light_bridge_emitter_active": "block/light_bridge_emitter_e",
-  "block/light_bridge": "block/light_bridge",
+  "block/light_bridge_emitter_up_edge_on": [
+    "block/light_bridge_emitter_e",
+    "block/light_bridge"
+  ],
+  "block/light_bridge_emitter_down_edge_on": [
+    "block/light_bridge_emitter_e",
+    "block/light_bridge"
+  ],
+  "block/light_bridge_emitter_left_edge_on": [
+    "block/light_bridge_emitter_e",
+    "block/light_bridge"
+  ],
+  "block/light_bridge_emitter_right_edge_on": [
+    "block/light_bridge_emitter_e",
+    "block/light_bridge"
+  ],
+
+
+  "block/light_bridge_up": "block/light_bridge",
+  "block/light_bridge_down": "block/light_bridge",
+  "block/light_bridge_left": "block/light_bridge",
+  "block/light_bridge_right": "block/light_bridge",
 
 
   "block/auto_portal_lower": "block/auto_portal_e",
