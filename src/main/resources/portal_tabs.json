@@ -1,5 +1,5 @@
-[
-  {
+{
+  "main_testing_elements": {
     "title": {
       "translate": "itemGroup.portalcubed.main_testing_elements"
     },
@@ -54,7 +54,7 @@
       "portalcubed:excursion_funnel_emitter"
     ]
   },
-  {
+  "other_testing_elements": {
     "title": {
       "translate": "itemGroup.portalcubed.other_testing_elements"
     },
@@ -90,8 +90,7 @@
       "portalcubed:lil_pineapple"
     ]
   },
-
-  {
+  "portal_blocks": {
     "title": {
       "translate": "itemGroup.portalcubed.portal_blocks"
     },
@@ -284,4 +283,4 @@
 
     ]
   }
-]
+}

@@ -7,6 +7,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -30,6 +31,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalTabsLoader {
     private static final Map<String, Function<JsonObject, Predicate<CreativeModeTab.ItemDisplayParameters>>> CONDITION_TYPES = Map.of(
@@ -60,19 +63,19 @@ public class PortalTabsLoader {
     );
 
     public static void load(ModContainer mod) {
-        final JsonArray jsonArray;
+        final JsonObject jsonObject;
         try (Reader reader = Files.newBufferedReader(mod.getPath("portal_tabs.json"))) {
-            jsonArray = GsonHelper.parseArray(reader);
+            jsonObject = GsonHelper.parse(reader);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        load(jsonArray);
+        load(jsonObject);
     }
 
-    private static void load(JsonArray jsonArray) {
-        for (final var entry : jsonArray) {
+    private static void load(JsonObject jsonObject) {
+        for (final var entry : jsonObject.entrySet()) {
             final CreativeModeTab.Builder builder = FabricItemGroup.builder();
-            final JsonObject entryData = GsonHelper.convertToJsonObject(entry, "tab");
+            final JsonObject entryData = GsonHelper.convertToJsonObject(entry.getValue(), "tab");
             if (entryData.has("title")) {
                 builder.title(Component.Serializer.fromJson(entryData.get("title")));
             }
@@ -113,7 +116,7 @@ public class PortalTabsLoader {
                     }
                 });
             }
-            builder.build();
+            Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, id(entry.getKey()), builder.build());
         }
     }
 
