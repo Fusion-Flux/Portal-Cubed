@@ -8,7 +8,6 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -21,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -309,11 +307,6 @@ public class AutoPortalBlock extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options) {
-        tooltip.add(Component.translatable("portalcubed.auto_portal.tooltip").withStyle(ChatFormatting.GRAY));
     }
 
     public enum PortalType implements StringRepresentable {
