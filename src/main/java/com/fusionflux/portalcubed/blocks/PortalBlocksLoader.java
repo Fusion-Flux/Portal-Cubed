@@ -16,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -122,7 +121,7 @@ public final class PortalBlocksLoader {
             ? BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(GsonHelper.getAsString(json, "inherit")))
                 .map(QuiltBlockSettings::copyOf)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown block " + json.get("inherit")))
-            : QuiltBlockSettings.of(Material.STONE)
+            : PortalCubedBlocks.settings()
                 .strength(3.5f, 3.5f)
                 .requiresTool();
         json.remove("inherit");
@@ -137,7 +136,7 @@ public final class PortalBlocksLoader {
                 case "slipperiness" -> settings.friction(GsonHelper.convertToFloat(value, "slipperiness"));
                 case "sounds" -> settings.sound(parseBlockSounds(value));
                 case "map_color" -> settings.mapColor(
-                    Optional.ofNullable(MaterialColorNames.COLORS.get(GsonHelper.convertToString(value, "map_color")))
+                    Optional.ofNullable(MapColorNames.COLORS.get(GsonHelper.convertToString(value, "map_color")))
                         .orElseThrow(() -> new IllegalArgumentException("Unknown map_color " + value))
                 );
                 case "render_layer" -> renderLayer = GsonHelper.convertToString(value, "render_layer");

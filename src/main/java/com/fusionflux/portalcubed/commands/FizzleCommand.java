@@ -28,7 +28,7 @@ public class FizzleCommand {
                     }
                     fizzle(entities);
                     ctx.getSource().sendSuccess(
-                        Component.translatable("portalcubed.command.fizzle.success", entities.size()),
+                        () -> Component.translatable("portalcubed.command.fizzle.success", entities.size()),
                         true
                     );
                     return entities.size();

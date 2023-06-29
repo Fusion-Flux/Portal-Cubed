@@ -1,5 +1,8 @@
-{
-  "main_testing_elements": {
+[
+  {
+    "title": {
+      "translate": "itemGroup.portalcubed.main_testing_elements"
+    },
     "icon": "portalcubed:portal_gun",
     "items": [
       "portalcubed:hammer",
@@ -51,7 +54,10 @@
       "portalcubed:excursion_funnel_emitter"
     ]
   },
-  "other_testing_elements": {
+  {
+    "title": {
+      "translate": "itemGroup.portalcubed.other_testing_elements"
+    },
     "icon": "portalcubed:paint_gun",
     "items": [
       "portalcubed:paint_gun",
@@ -85,7 +91,10 @@
     ]
   },
 
-  "portal_blocks": {
+  {
+    "title": {
+      "translate": "itemGroup.portalcubed.portal_blocks"
+    },
     "icon": "portalcubed:block_item_icon",
     "items": [
       "portalcubed:portal_1_white_checkered_panel",
@@ -275,4 +284,4 @@
 
     ]
   }
-}
+]

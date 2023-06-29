@@ -27,7 +27,7 @@ public class StorageCubeEntity extends CorePhysicsEntity  {
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             if (buttonTimer <= 0) {
                 setOnButton(false);
             } else {

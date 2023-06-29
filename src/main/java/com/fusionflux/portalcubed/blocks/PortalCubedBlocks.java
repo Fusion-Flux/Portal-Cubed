@@ -1,34 +1,14 @@
 package com.fusionflux.portalcubed.blocks;
 
-import static com.fusionflux.portalcubed.PortalCubed.id;
-
-import com.fusionflux.portalcubed.blocks.blockentities.AutoPortalBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.BetaFaithPlateBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.FaithPlateBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.FloorButtonBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.LaserEmitterBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.LaserNodeBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.NeurotoxinBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.NeurotoxinEmitterBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.OldApFloorButtonBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.RocketTurretBlockEntity;
-import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
+import com.fusionflux.portalcubed.blocks.blockentities.*;
 import com.fusionflux.portalcubed.blocks.bridge.HardLightBridgeBlock;
 import com.fusionflux.portalcubed.blocks.bridge.HardLightBridgeEmitterBlock;
-import com.fusionflux.portalcubed.blocks.fizzler.DeathFizzlerBlock;
-import com.fusionflux.portalcubed.blocks.fizzler.FizzlerBlock;
-import com.fusionflux.portalcubed.blocks.fizzler.FizzlerEmitter;
-import com.fusionflux.portalcubed.blocks.fizzler.LaserFizzlerBlock;
-import com.fusionflux.portalcubed.blocks.fizzler.MatterInquisitionField;
-import com.fusionflux.portalcubed.blocks.fizzler.PhysicsRepulsionField;
+import com.fusionflux.portalcubed.blocks.fizzler.*;
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock;
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelTubeBlock;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.ExcursionFunnelEmitterBlockItem;
 import com.fusionflux.portalcubed.items.GelBlobItem;
-
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -40,65 +20,67 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
-
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
+import static com.fusionflux.portalcubed.PortalCubed.id;
+
 public class PortalCubedBlocks {
     public static final Item BASE_GEL = new Item(new QuiltItemSettings().fireResistant());
-    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(QuiltBlockSettings.of(Material.PLANT).randomTicks().destroyTime(0f).noOcclusion().noCollission().sound(new SoundType(1, -1, SoundEvents.HONEY_BLOCK_BREAK, SoundEvents.HONEY_BLOCK_STEP, SoundEvents.HONEY_BLOCK_PLACE, SoundEvents.HONEY_BLOCK_HIT, SoundEvents.HONEY_BLOCK_FALL)).color(MaterialColor.COLOR_ORANGE));
-    public static final RepulsionGel REPULSION_GEL = new RepulsionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MaterialColor.COLOR_LIGHT_BLUE));
-    public static final AdhesionGel ADHESION_GEL = new AdhesionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MaterialColor.COLOR_PURPLE));
-    public static final BaseGel CONVERSION_GEL = new BaseGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MaterialColor.METAL));
-    public static final BaseGel REFLECTION_GEL = new ReflectionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MaterialColor.COLOR_LIGHT_GRAY));
+    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(settings().randomTicks().destroyTime(0f).noOcclusion().noCollission().sound(new SoundType(1, -1, SoundEvents.HONEY_BLOCK_BREAK, SoundEvents.HONEY_BLOCK_STEP, SoundEvents.HONEY_BLOCK_PLACE, SoundEvents.HONEY_BLOCK_HIT, SoundEvents.HONEY_BLOCK_FALL)).mapColor(MapColor.COLOR_ORANGE));
+    public static final RepulsionGel REPULSION_GEL = new RepulsionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.COLOR_LIGHT_BLUE));
+    public static final AdhesionGel ADHESION_GEL = new AdhesionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.COLOR_PURPLE));
+    public static final BaseGel CONVERSION_GEL = new BaseGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.METAL));
+    public static final BaseGel REFLECTION_GEL = new ReflectionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.COLOR_LIGHT_GRAY));
 
-    public static final HardLightBridgeEmitterBlock HLB_EMITTER_BLOCK = new HardLightBridgeEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
-    public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(QuiltBlockSettings.of(Material.STONE).destroyTime(999999f).noOcclusion().explosionResistance(9999999999f).color(MaterialColor.DIAMOND).randomTicks());
+    public static final HardLightBridgeEmitterBlock HLB_EMITTER_BLOCK = new HardLightBridgeEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
+    public static final HardLightBridgeBlock HLB_BLOCK = new HardLightBridgeBlock(settings().destroyTime(999999f).noOcclusion().explosionResistance(9999999999f).mapColor(MapColor.DIAMOND).randomTicks().pushReaction(PushReaction.DESTROY));
 
     public static final AutoPortalBlock AUTO_PORTAL_BLOCK = new AutoPortalBlock(
-        QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE)
+        settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE).pushReaction(PushReaction.DESTROY)
     );
 
     // TODO: Due to remapping weirdness, QuiltMaterialBuilder couldn't be used properly here. However, the whole material system is redone in 1.20, and neurotoxin is broken anyway, so this is just a temporary patch.
-    public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(QuiltBlockSettings.of(Material.AIR).noOcclusion().noCollission());
-    public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().noCollission().sound(SoundType.STONE));
-    public static final ExcursionFunnelEmitterBlock EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
-    public static final ExcursionFunnelTubeBlock EXCURSION_FUNNEL = new ExcursionFunnelTubeBlock(QuiltBlockSettings.of(Material.AIR).noOcclusion().noCollission().randomTicks());
+    public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(settings().noOcclusion().noCollission());
+    public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().noCollission().sound(SoundType.STONE));
+    public static final ExcursionFunnelEmitterBlock EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
+    public static final ExcursionFunnelTubeBlock EXCURSION_FUNNEL = new ExcursionFunnelTubeBlock(settings().noOcclusion().noCollission().randomTicks().pushReaction(PushReaction.DESTROY));
 
-    public static final TallButton TALL_BUTTON = new TallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
-    public static final OldApTallButton OLD_AP_PEDESTAL_BUTTON = new OldApTallButton(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
+    public static final TallButton TALL_BUTTON = new TallButton(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops());
+    public static final OldApTallButton OLD_AP_PEDESTAL_BUTTON = new OldApTallButton(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops());
 
-    public static final SlidingDoorBlock PORTAL2DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
-    public static final SlidingDoorBlock OCTOPUS_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
-    public static final SlidingDoorBlock OLD_AP_DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
-    public static final SlidingDoorBlock PORTAL1DOOR = new SlidingDoorBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops());
+    public static final SlidingDoorBlock PORTAL2DOOR = new SlidingDoorBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().pushReaction(PushReaction.DESTROY));
+    public static final SlidingDoorBlock OCTOPUS_DOOR = new SlidingDoorBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().pushReaction(PushReaction.DESTROY));
+    public static final SlidingDoorBlock OLD_AP_DOOR = new SlidingDoorBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().pushReaction(PushReaction.DESTROY));
+    public static final SlidingDoorBlock PORTAL1DOOR = new SlidingDoorBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().pushReaction(PushReaction.DESTROY));
 
     public static final BlockEntityType<AutoPortalBlockEntity> AUTO_PORTAL_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(AutoPortalBlockEntity::new, AUTO_PORTAL_BLOCK).build();
 
-    public static final Block FAITH_PLATE = new FaithPlateBlock(QuiltBlockSettings.of(Material.STONE).destroyTime(999999f).explosionResistance(9999999999f).sound(new SoundType(1, 1, SoundEvents.STONE_BREAK, SoundEvents.STONE_STEP, SoundEvents.STONE_PLACE, SoundEvents.STONE_HIT, SoundEvents.STONE_FALL)), PortalCubedBlocks::getFaithPlateBlockEntity);
+    public static final Block FAITH_PLATE = new FaithPlateBlock(settings().destroyTime(999999f).explosionResistance(9999999999f).sound(new SoundType(1, 1, SoundEvents.STONE_BREAK, SoundEvents.STONE_STEP, SoundEvents.STONE_PLACE, SoundEvents.STONE_HIT, SoundEvents.STONE_FALL)), PortalCubedBlocks::getFaithPlateBlockEntity);
     public static final Block BETA_FAITH_PLATE = new FaithPlateBlock(QuiltBlockSettings.copyOf(FAITH_PLATE), PortalCubedBlocks::getBetaFaithPlateBlockEntity);
     public static final BlockEntityType<FaithPlateBlockEntity> FAITH_PLATE_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(FaithPlateBlockEntity::new, FAITH_PLATE).build();
     public static final BlockEntityType<BetaFaithPlateBlockEntity> BETA_FAITH_PLATE_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(BetaFaithPlateBlockEntity::new, BETA_FAITH_PLATE).build();
 
-    public static final Block FAITH_PLATE_TARGET = new FaithPlateTargetBlock(QuiltBlockSettings.of(Material.PLANT).destroyTime(0).noOcclusion().noCollission().color(MaterialColor.COLOR_CYAN));
+    public static final Block FAITH_PLATE_TARGET = new FaithPlateTargetBlock(settings().destroyTime(0).noOcclusion().noCollission().mapColor(MapColor.COLOR_CYAN));
 
     public static final BlockEntityType<NeurotoxinBlockEntity> NEUROTOXIN_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinBlockEntity::new, NEUROTOXIN_BLOCK).build();
     public static final BlockEntityType<NeurotoxinEmitterBlockEntity> NEUROTOXIN_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinEmitterBlockEntity::new, NEUROTOXIN_EMITTER).build();
     public static final BlockEntityType<ExcursionFunnelEmitterBlockEntity> EXCURSION_FUNNEL_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(ExcursionFunnelEmitterBlockEntity::new, EXCURSION_FUNNEL_EMITTER).build();
 
-    public static final PowerBlock POWER_BLOCK = new PowerBlock(QuiltBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
+    public static final PowerBlock POWER_BLOCK = new PowerBlock(settings().strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
 
-    public static final Block VELOCITY_HELPER = new VelocityHelperBlock(QuiltBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
+    public static final Block VELOCITY_HELPER = new VelocityHelperBlock(settings().strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
     public static final BlockEntityType<VelocityHelperBlockEntity> VELOCITY_HELPER_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(VelocityHelperBlockEntity::new, VELOCITY_HELPER).build();
 
-    public static final Block CATAPULT = new CatapultBlock(QuiltBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
+    public static final Block CATAPULT = new CatapultBlock(settings().strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
     public static final BlockEntityType<CatapultBlockEntity> CATAPULT_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(CatapultBlockEntity::new, CATAPULT).build();
 
-    public static final FizzlerBlock FIZZLER = new FizzlerBlock(QuiltBlockSettings.of(Material.PORTAL).noCollission().strength(-1, 3600000));
-    public static final FizzlerEmitter FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.STONE), FIZZLER);
+    public static final FizzlerBlock FIZZLER = new FizzlerBlock(settings().noCollission().strength(-1, 3600000));
+    public static final FizzlerEmitter FIZZLER_EMITTER = new FizzlerEmitter(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.STONE), FIZZLER);
     public static final FizzlerBlock PORTAL_1_FIZZLER = new FizzlerBlock(QuiltBlockSettings.copyOf(FIZZLER));
     public static final FizzlerEmitter PORTAL_1_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(FIZZLER_EMITTER), PORTAL_1_FIZZLER);
     public static final FizzlerBlock OLD_APERTURE_FIZZLER = new FizzlerBlock(QuiltBlockSettings.copyOf(FIZZLER));
@@ -114,20 +96,20 @@ public class PortalCubedBlocks {
     public static final PhysicsRepulsionField PHYSICS_REPULSION_FIELD = new PhysicsRepulsionField(QuiltBlockSettings.copyOf(FIZZLER));
     public static final FizzlerEmitter PHYSICS_REPULSION_FIELD_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(FIZZLER_EMITTER), PHYSICS_REPULSION_FIELD);
 
-    public static final LaserEmitterBlock LASER_EMITTER = new LaserEmitterBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.STONE));
+    public static final LaserEmitterBlock LASER_EMITTER = new LaserEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.STONE));
     public static final BlockEntityType<LaserEmitterBlockEntity> LASER_EMITTER_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserEmitterBlockEntity::new, LASER_EMITTER).build();
 
-    public static final LaserCatcherBlock LASER_CATCHER = new LaserCatcherBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.STONE));
-    public static final LaserRelayBlock LASER_RELAY = new LaserRelayBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.STONE));
+    public static final LaserCatcherBlock LASER_CATCHER = new LaserCatcherBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.STONE));
+    public static final LaserRelayBlock LASER_RELAY = new LaserRelayBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.STONE));
     public static final BlockEntityType<LaserNodeBlockEntity> LASER_NODE_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(LaserNodeBlockEntity::new, LASER_CATCHER, LASER_RELAY).build();
 
-    public static final FloorButtonBlock FLOOR_BUTTON = new FloorButtonBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
+    public static final FloorButtonBlock FLOOR_BUTTON = new FloorButtonBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
     public static final BlockEntityType<FloorButtonBlockEntity> FLOOR_BUTTON_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(FloorButtonBlockEntity::new, FLOOR_BUTTON).build();
 
-    public static final OldApFloorButtonBlock OLD_AP_FLOOR_BUTTON = new OldApFloorButtonBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
+    public static final OldApFloorButtonBlock OLD_AP_FLOOR_BUTTON = new OldApFloorButtonBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
     public static final BlockEntityType<OldApFloorButtonBlockEntity> OLD_AP_FLOOR_BUTTON_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(OldApFloorButtonBlockEntity::new, OLD_AP_FLOOR_BUTTON).build();
 
-    public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(QuiltBlockSettings.of(Material.STONE).strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
+    public static final RocketTurretBlock ROCKET_TURRET = new RocketTurretBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE));
     public static final BlockEntityType<RocketTurretBlockEntity> ROCKET_TURRET_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(RocketTurretBlockEntity::new, ROCKET_TURRET).build();
 
     public static final TagKey<Block> BULLET_HOLE_CONCRETE = TagKey.create(Registries.BLOCK, id("bullet_hole_concrete"));
@@ -281,5 +263,9 @@ public class PortalCubedBlocks {
 
     private static BlockEntityType<BetaFaithPlateBlockEntity> getBetaFaithPlateBlockEntity() {
         return BETA_FAITH_PLATE_BLOCK_ENTITY;
+    }
+
+    public static QuiltBlockSettings settings() {
+        return QuiltBlockSettings.copyOf(BlockBehaviour.Properties.of());
     }
 }

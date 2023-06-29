@@ -33,7 +33,7 @@ public class AdhesionGel extends BaseGel {
 
     private void addCollisionEffects(Level world, Entity entity, BlockPos pos, BlockState state) {
         FriendlyByteBuf info = AdhesionGravityVerifier.packInfo(pos);
-        if ((entity.isOnGround() && entity.horizontalCollision) || (!entity.isOnGround() && entity.horizontalCollision) || (!entity.isOnGround() && !entity.horizontalCollision)) {
+        if ((entity.onGround() && entity.horizontalCollision) || (!entity.onGround() && entity.horizontalCollision) || (!entity.onGround() && !entity.horizontalCollision)) {
             if (((EntityExt) entity).getGelTimer() == 0) {
                 Direction current = GravityChangerAPI.getGravityDirection(entity);
 

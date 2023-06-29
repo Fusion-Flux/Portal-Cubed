@@ -25,7 +25,7 @@ public final class CrossPortalInteraction {
     }
 
     public static double interactionDistance(@NotNull Entity originEntity, @NotNull Vec3 originPos, @NotNull Vec3 endPos, @NotNull Vec3 regularInteractionPos) {
-        final var rays = PortalDirectionUtils.raycast(originEntity.level, new ClipContext(originPos, endPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, originEntity)).rays();
+        final var rays = PortalDirectionUtils.raycast(originEntity.level(), new ClipContext(originPos, endPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, originEntity)).rays();
         if (rays.size() > 1) {
             var distance = 0.0;
             for (AdvancedEntityRaycast.Result.Ray ray : rays) {

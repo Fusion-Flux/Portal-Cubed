@@ -117,7 +117,7 @@ public class RadioEntity extends CorePhysicsEntity  {
     @NotNull
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (!level.isClientSide && player.getItemInHand(hand).is(PortalCubedItems.WRENCHES)) {
+        if (!level().isClientSide && player.getItemInHand(hand).is(PortalCubedItems.WRENCHES)) {
             setAllowMute(!isAllowMute());
             if (isAllowMute()) {
                 player.displayClientMessage(Component.translatable("portalcubed.radio.allow_mute"), true);

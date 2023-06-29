@@ -100,10 +100,10 @@ public abstract class AbstractFizzlerBlock extends Block {
     public abstract void applyEffectsTo(Entity entity);
 
     protected final void fizzlePortals(Entity entity) {
-        if (entity.level.isClientSide) return;
+        if (entity.level().isClientSide) return;
         boolean foundPortal = false;
         for (final UUID portal : List.copyOf(CalledValues.getPortals(entity))) {
-            final Entity checkPortal = ((ServerLevel)entity.level).getEntity(portal);
+            final Entity checkPortal = ((ServerLevel)entity.level()).getEntity(portal);
             if (checkPortal != null) {
                 foundPortal = true;
                 checkPortal.kill();
@@ -116,17 +116,17 @@ public abstract class AbstractFizzlerBlock extends Block {
     }
 
     protected final void fizzlePhysicsEntity(Entity entity) {
-        if (entity.level.isClientSide) return;
+        if (entity.level().isClientSide) return;
         if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() == Fizzleable.FizzleType.OBJECT) {
             fizzleable.fizzle();
         }
     }
 
     protected final void fizzleLiving(Entity entity) {
-        if (entity.level.isClientSide) return;
+        if (entity.level().isClientSide) return;
         // TODO: Fizzle players visually?
         if (entity instanceof Fizzleable fizzleable ? fizzleable.getFizzleType() == Fizzleable.FizzleType.LIVING : entity instanceof LivingEntity) {
-            entity.hurt(pcSources(entity.level).fizzle(), PortalCubedConfig.fizzlerDamage);
+            entity.hurt(pcSources(entity.level()).fizzle(), PortalCubedConfig.fizzlerDamage);
             if (entity instanceof Fizzleable fizzleable && fizzleable.getFizzleType() != Fizzleable.FizzleType.NOT) {
                 fizzleable.fizzle();
             }

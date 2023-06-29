@@ -1,9 +1,7 @@
+// TODO: Reimplement GUI without optionslist
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.optionslist.OptionsListBlockEntity;
-import com.fusionflux.portalcubed.optionslist.OptionsListData;
-import com.fusionflux.portalcubed.optionslist.OptionsListScreenHandler;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
@@ -18,12 +16,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CatapultBlockEntity extends OptionsListBlockEntity implements ExtendedScreenHandlerFactory {
+public class CatapultBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
     @MidnightConfig.Entry(min = -30_000_000, max = 30_000_000)
     private double destX;
 
@@ -49,14 +49,15 @@ public class CatapultBlockEntity extends OptionsListBlockEntity implements Exten
 
     @Override
     public void load(CompoundTag nbt) {
-        OptionsListData.read(nbt, this);
+//        OptionsListData.read(nbt, this);
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt) {
-        OptionsListData.write(nbt, this);
+//        OptionsListData.write(nbt, this);
     }
 
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
@@ -68,6 +69,7 @@ public class CatapultBlockEntity extends OptionsListBlockEntity implements Exten
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    @NotNull
     @Override
     public Component getDisplayName() {
         return Component.translatable(getBlockState().getBlock().getDescriptionId());
@@ -76,7 +78,8 @@ public class CatapultBlockEntity extends OptionsListBlockEntity implements Exten
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new OptionsListScreenHandler(i, worldPosition);
+        return null;
+//        return new OptionsListScreenHandler(i, worldPosition);
     }
 
     @Override

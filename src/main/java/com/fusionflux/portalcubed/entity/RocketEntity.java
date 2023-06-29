@@ -55,7 +55,7 @@ public class RocketEntity extends Entity implements Fizzleable {
     public void tick() {
         super.tick();
         if (fizzling) {
-            if (level.isClientSide) {
+            if (level().isClientSide) {
                 fizzleProgress += Minecraft.getInstance().getFrameTime();
             } else {
                 fizzleProgress += 0.05f;
@@ -67,19 +67,19 @@ public class RocketEntity extends Entity implements Fizzleable {
             setDeltaMovement(Vec3.directionFromRotation(getXRot(), getYRot()).scale(SPEED));
         }
         move(MoverType.SELF, getDeltaMovement());
-        if (!level.isClientSide && tickCount > 0 && tickCount % 13 == 0) {
-            level.playSound(null, this, PortalCubedSounds.ROCKET_FLY_EVENT, SoundSource.HOSTILE, 1, 1);
+        if (!level().isClientSide && tickCount > 0 && tickCount % 13 == 0) {
+            level().playSound(null, this, PortalCubedSounds.ROCKET_FLY_EVENT, SoundSource.HOSTILE, 1, 1);
         }
         if (fizzling) return;
-        if (level.isClientSide) {
-            level.addParticle(
+        if (level().isClientSide) {
+            level().addParticle(
                 ParticleTypes.SMOKE,
                 getX() + random.nextGaussian() * 0.1,
                 getY() + random.nextGaussian() * 0.1,
                 getZ() + random.nextGaussian() * 0.1,
                 0, 0, 0
             );
-            level.addParticle(
+            level().addParticle(
                 ParticleTypes.SMALL_FLAME,
                 getX() + random.nextGaussian() * 0.1,
                 getY() + random.nextGaussian() * 0.1,
@@ -88,11 +88,11 @@ public class RocketEntity extends Entity implements Fizzleable {
             );
             return;
         }
-        final HitResult hit = ProjectileUtil.getHitResult(this, this::canHit);
+        final HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHit);
         if (hit.getType() == HitResult.Type.ENTITY) {
             explode((LivingEntity)((EntityHitResult)hit).getEntity());
         } else {
-            final LivingEntity hit2 = level.getNearestEntity(
+            final LivingEntity hit2 = level().getNearestEntity(
                 LivingEntity.class,
                 TargetingConditions.forNonCombat().selector(this::canHit),
                 null, getX(), getY(), getZ(),
@@ -115,7 +115,7 @@ public class RocketEntity extends Entity implements Fizzleable {
             state.getFluidState().is(PortalCubedFluids.TOXIC_GOO.still) ||
                 state.getFluidState().is(PortalCubedFluids.TOXIC_GOO.flowing)
         ) {
-            level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_GOO_EVENT, SoundSource.HOSTILE, 1, 1);
+            level().playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_GOO_EVENT, SoundSource.HOSTILE, 1, 1);
             kill();
         }
     }
@@ -131,9 +131,9 @@ public class RocketEntity extends Entity implements Fizzleable {
                 PortalCubedConfig.rocketDamage
             );
         }
-        level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_EXPLODE_EVENT, SoundSource.HOSTILE, 1, 1);
-        if (level instanceof ServerLevel serverWorld) {
-            serverWorld.sendParticles(
+        level().playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ROCKET_EXPLODE_EVENT, SoundSource.HOSTILE, 1, 1);
+        if (level() instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(
                 ParticleTypes.EXPLOSION,
                 getX(), getY(), getZ(),
                 8,

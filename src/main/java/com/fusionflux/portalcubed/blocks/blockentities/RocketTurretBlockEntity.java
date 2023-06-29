@@ -247,7 +247,7 @@ public class RocketTurretBlockEntity extends EntityLikeBlockEntity {
         //noinspection DataFlowIssue
         final LivingEntity player = world.getNearestEntity(
             LivingEntity.class,
-            TargetingConditions.forCombat().selector(e -> !(e instanceof CorePhysicsEntity) && e.level.clip(new ClipContext(
+            TargetingConditions.forCombat().selector(e -> !(e instanceof CorePhysicsEntity) && e.level().clip(new ClipContext(
                 eye, e.position().with(Direction.Axis.Y, e.getY(0.5)), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null
             )).getType() == HitResult.Type.MISS),
             null,

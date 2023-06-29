@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -147,13 +146,6 @@ public class HardLightBridgeEmitterBlock extends Block implements HardLightBridg
             return stateFrom.getValue(FACING) == state.getValue(FACING);
         }
         return false;
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    @NotNull
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.BLOCK;
     }
 
     public static void updateEmission(ServerLevel level, BlockState emitterState, BlockPos emitterPos, boolean powered) {

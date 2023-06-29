@@ -10,8 +10,6 @@ import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.TurretEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.fusionflux.portalcubed.optionslist.OptionsListBlockEntity;
-import com.fusionflux.portalcubed.optionslist.OptionsListData;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.ClickHandlingItem;
@@ -21,7 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundSource;
@@ -65,7 +62,7 @@ public class PortalCubedServerPackets {
         Vec3 vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
 
         server.execute(() -> {
-            final AdvancedEntityRaycast.Result advancedCast = PortalDirectionUtils.raycast(player.level, new ClipContext(
+            final AdvancedEntityRaycast.Result advancedCast = PortalDirectionUtils.raycast(player.level(), new ClipContext(
                 vec3d, vec3d3, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player
             ));
             EntityHitResult entityHitResult = advancedCast.entityRaycast(player, (entity) -> !entity.isSpectator() && entity.isPickable());
@@ -76,12 +73,12 @@ public class PortalCubedServerPackets {
             } else if (!PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding()) {
                 if (advancedCast.finalHit().getType() == HitResult.Type.BLOCK) {
                     final BlockHitResult hit = (BlockHitResult)advancedCast.finalHit();
-                    final BlockState state = player.level.getBlockState(hit.getBlockPos());
+                    final BlockState state = player.level().getBlockState(hit.getBlockPos());
                     if (
                         state.getBlock() instanceof TallButtonVariant button &&
-                            player.gameMode.useItemOn(player, player.level, ItemStack.EMPTY, InteractionHand.OFF_HAND, hit) != InteractionResult.PASS
+                            player.gameMode.useItemOn(player, player.level(), ItemStack.EMPTY, InteractionHand.OFF_HAND, hit) != InteractionResult.PASS
                     ) {
-                        player.level.playSound(null, hit.getBlockPos(), button.getClickSound(true), SoundSource.BLOCKS, 0.8f, 1f);
+                        player.level().playSound(null, hit.getBlockPos(), button.getClickSound(true), SoundSource.BLOCKS, 0.8f, 1f);
                         return;
                     }
                 }
@@ -95,7 +92,7 @@ public class PortalCubedServerPackets {
         server.execute(() -> {
             boolean foundPortal = false;
             for (final UUID portal : List.copyOf(CalledValues.getPortals(player))) {
-                final Entity checkPortal = ((ServerLevel)player.level).getEntity(portal);
+                final Entity checkPortal = player.serverLevel().getEntity(portal);
                 if (checkPortal != null) {
                     foundPortal = true;
                     checkPortal.kill();
@@ -122,7 +119,7 @@ public class PortalCubedServerPackets {
             }
         };
         if (arg == null) return;
-        server.execute(() -> player.getLevel().getBlockEntity(origin, PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY).ifPresentOrElse(
+        server.execute(() -> player.level().getBlockEntity(origin, PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY).ifPresentOrElse(
             entity -> {
                 switch (mode) {
                     case VelocityHelperBlock.CONFIG_DEST -> {
@@ -146,15 +143,15 @@ public class PortalCubedServerPackets {
     }
 
     public static void onOptionsListConfigure(MinecraftServer server, ServerPlayer player, @SuppressWarnings("unused") ServerGamePacketListenerImpl handler, @SuppressWarnings("unused") FriendlyByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
-        final BlockPos origin = buf.readBlockPos();
-        final String json = buf.readUtf();
-        server.execute(() -> {
-            if (!(player.getLevel().getBlockEntity(origin) instanceof OptionsListBlockEntity optionsListBlockEntity) || !player.isCreative()) {
-                return;
-            }
-            OptionsListData.read(json, optionsListBlockEntity);
-            optionsListBlockEntity.updateListeners();
-        });
+//        final BlockPos origin = buf.readBlockPos();
+//        final String json = buf.readUtf();
+//        server.execute(() -> {
+//            if (!(player.level().getBlockEntity(origin) instanceof OptionsListBlockEntity optionsListBlockEntity) || !player.isCreative()) {
+//                return;
+//            }
+//            OptionsListData.read(json, optionsListBlockEntity);
+//            optionsListBlockEntity.updateListeners();
+//        });
     }
 
     public static void registerPackets() {
@@ -174,13 +171,13 @@ public class PortalCubedServerPackets {
                 );
             }
             server.execute(() -> {
-                player.level.playSound(
+                player.level().playSound(
                     player,
                     player.getX(), player.getY(), player.getZ(),
                     PortalCubedSounds.CROWBAR_SWOOSH_EVENT, SoundSource.PLAYERS,
                     1f, 1f
                 );
-                TurretEntity.makeBulletHole((ServerLevel)player.level, hit, SoundSource.PLAYERS);
+                TurretEntity.makeBulletHole(player.serverLevel(), hit, SoundSource.PLAYERS);
             });
         });
         ServerPlayNetworking.registerGlobalReceiver(LEFT_CLICK, (server, player, handler, buf, responseSender) -> server.execute(() -> {

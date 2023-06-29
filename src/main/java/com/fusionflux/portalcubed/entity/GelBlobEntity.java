@@ -99,7 +99,7 @@ public abstract class GelBlobEntity extends Projectile {
 
         Vec3 vec3d3 = this.position();
         Vec3 vec3d2 = vec3d3.add(vec3d);
-        HitResult hitResult = this.level.clip(new ClipContext(vec3d3, vec3d2, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        HitResult hitResult = this.level().clip(new ClipContext(vec3d3, vec3d2, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
         if (hitResult.getType() != HitResult.Type.MISS) {
             vec3d2 = hitResult.getLocation();
         }
@@ -150,7 +150,7 @@ public abstract class GelBlobEntity extends Projectile {
     @Nullable
     protected EntityHitResult getEntityCollision(Vec3 currentPosition, Vec3 nextPosition) {
         return ProjectileUtil.getEntityHitResult(
-            this.level, this, currentPosition, nextPosition, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), this::canHitEntity
+            this.level(), this, currentPosition, nextPosition, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), this::canHitEntity
         );
     }
 
@@ -158,7 +158,7 @@ public abstract class GelBlobEntity extends Projectile {
     protected void onHit(HitResult hitResult) {
         if (hitResult.getType() == HitResult.Type.MISS) return;
         kill();
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             if (hitResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof ServerPlayer serverPlayer) {
                 final FriendlyByteBuf buf = PacketByteBufs.create();
                 buf.writeResourceLocation(BuiltInRegistries.BLOCK.getKey(getGel()));
@@ -176,17 +176,17 @@ public abstract class GelBlobEntity extends Projectile {
     protected void checkFallDamage(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition) {
         super.checkFallDamage(heightDifference, onGround, landedState, landedPosition);
         kill();
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             explode();
         }
     }
 
     public void explode() {
-        level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.GEL_SPLAT_EVENT, SoundSource.NEUTRAL, 0.5f, 1f);
+        level().playSound(null, getX(), getY(), getZ(), PortalCubedSounds.GEL_SPLAT_EVENT, SoundSource.NEUTRAL, 0.5f, 1f);
         final FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeResourceLocation(BuiltInRegistries.BLOCK.getKey(getGel()));
         final int overlayDiameter = getSize() + 1;
-        level.getEntities(
+        level().getEntities(
             EntityType.PLAYER,
             AABB.ofSize(position(), overlayDiameter, overlayDiameter, overlayDiameter),
             p -> p instanceof ServerPlayer
@@ -210,7 +210,7 @@ public abstract class GelBlobEntity extends Projectile {
             return;
         }
         for (final Vec3 angle : ANGLES) {
-            final BlockHitResult hit = level.clip(new ClipContext(
+            final BlockHitResult hit = level().clip(new ClipContext(
                 origin, origin.add(angle.scale(radius)),
                 ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.NONE,
@@ -222,15 +222,15 @@ public abstract class GelBlobEntity extends Projectile {
     }
 
     private void maybeExplodeAt(BlockHitResult hit) {
-        final BlockState hitState = level.getBlockState(hit.getBlockPos());
-        if (!hitState.isFaceSturdy(level, hit.getBlockPos(), hit.getDirection())) return;
+        final BlockState hitState = level().getBlockState(hit.getBlockPos());
+        if (!hitState.isFaceSturdy(level(), hit.getBlockPos(), hit.getDirection())) return;
         final BlockPos sidePos = hit.getBlockPos().relative(hit.getDirection());
-        final BlockState sideState = level.getBlockState(sidePos);
+        final BlockState sideState = level().getBlockState(sidePos);
         final BooleanProperty property = MultifaceBlock.getFaceProperty(hit.getDirection().getOpposite());
         if (sideState.is(getGel())) {
-            level.setBlockAndUpdate(sidePos, sideState.setValue(property, true));
-        } else if (sideState.getMaterial().isReplaceable() || sideState.getBlock() instanceof BaseGel) {
-            level.setBlockAndUpdate(sidePos, getGel().defaultBlockState().setValue(property, true));
+            level().setBlockAndUpdate(sidePos, sideState.setValue(property, true));
+        } else if (sideState.canBeReplaced() || sideState.getBlock() instanceof BaseGel) {
+            level().setBlockAndUpdate(sidePos, getGel().defaultBlockState().setValue(property, true));
         }
     }
 

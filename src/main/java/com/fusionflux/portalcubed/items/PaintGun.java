@@ -5,7 +5,6 @@ import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
 import com.fusionflux.portalcubed.util.ClickHandlingItem;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -18,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
 public class PaintGun extends Item implements ClickHandlingItem, DyeableLeatherItem {
@@ -38,16 +38,17 @@ public class PaintGun extends Item implements ClickHandlingItem, DyeableLeatherI
 
     @Override
     public InteractionResult onLeftClick(Player user, InteractionHand hand) {
-        fireGel(user.level, user, FireableGelType.REPULSION);
+        fireGel(user.level(), user, FireableGelType.REPULSION);
         return InteractionResult.CONSUME;
     }
 
     @Override
     public InteractionResult onRightClick(Player user, InteractionHand hand) {
-        fireGel(user.level, user, FireableGelType.PROPULSION);
+        fireGel(user.level(), user, FireableGelType.PROPULSION);
         return InteractionResult.CONSUME;
     }
 
+    @NotNull
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.NONE;

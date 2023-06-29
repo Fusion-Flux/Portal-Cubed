@@ -184,7 +184,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                         if (hitEntity instanceof CorePhysicsEntity) {
                             continue; // TODO: Turrets and chairs burn
                         }
-                        if (!hitEntity.isOnGround()) continue;
+                        if (!hitEntity.onGround()) continue;
                         hitEntity.hurt(pcSources(level).laser(), PortalCubedConfig.laserDamage);
                         hitEntity.setRemainingFireTicks(Math.max(10, hitEntity.getRemainingFireTicks()));
                         final Vec3 velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.position())

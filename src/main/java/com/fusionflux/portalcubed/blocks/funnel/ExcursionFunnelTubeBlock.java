@@ -7,7 +7,7 @@ import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock.Mode
 import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.sound.ExcursionFunnelEnterSoundInstance;
-
+import com.fusionflux.portalcubed.util.TwoByTwo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,13 +21,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import com.fusionflux.portalcubed.util.TwoByTwo;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -114,13 +111,6 @@ public class ExcursionFunnelTubeBlock extends Block implements TwoByTwoFacingMul
         TwoByTwo funnelTube = TwoByTwoFacingMultiblockBlock.makeMultiblockFromQuadrant(pos, quadrant, facing);
         Mode newMode = state.getValue(REVERSED) ? Mode.REVERSED_ON : Mode.FORWARD_ON;
         ExcursionFunnelEmitterBlock.updateEmissionSuppressed(serverLevel, funnelTube, facing, newMode);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    @NotNull
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
     }
 
     @Override

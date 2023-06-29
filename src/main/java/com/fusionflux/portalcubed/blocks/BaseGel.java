@@ -31,7 +31,7 @@ public class BaseGel extends SimpleMultiSidedBlock {
 
     public static boolean collides(Entity entity, BlockPos pos, BlockState state) {
         return Shapes.joinIsNotEmpty(
-            state.getShape(entity.level, pos, CollisionContext.of(entity)).move(pos.getX(), pos.getY(), pos.getZ()),
+            state.getShape(entity.level(), pos, CollisionContext.of(entity)).move(pos.getX(), pos.getY(), pos.getZ()),
             Shapes.create(entity.getBoundingBox()),
             BooleanOp.AND
         );

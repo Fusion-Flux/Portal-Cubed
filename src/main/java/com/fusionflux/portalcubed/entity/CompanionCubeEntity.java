@@ -17,9 +17,9 @@ public class CompanionCubeEntity extends StorageCubeEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (t == 1500) {
-                level.playSound(null, this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundSource(), 1f, 1f);
+                level().playSound(null, this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundSource(), 1f, 1f);
             }
             t--;
             if (t == 0) {

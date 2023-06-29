@@ -71,9 +71,6 @@ import java.util.Optional;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, ClientTeleportCheck {
-    @Shadow
-    public Level level;
-
     @Unique
     private double maxFallSpeed = 0;
 
@@ -127,7 +124,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     public abstract boolean isNoGravity();
 
     @Shadow
-    public abstract boolean isOnGround();
+    public abstract boolean onGround();
 
     @Shadow
     private Vec3 position;
@@ -161,6 +158,9 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     @Shadow public abstract boolean isEffectiveAi();
 
     @Shadow public boolean hasImpulse;
+
+    @Shadow public abstract Level level();
+
     @Unique
     private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
 
@@ -192,7 +192,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
 
             portalCheckBox = portalCheckBox.expandTowards(entityVelocity.add(0, .08, 0));
 
-            List<Portal> list = ((Entity) (Object) this).level.getEntitiesOfClass(Portal.class, portalCheckBox);
+            List<Portal> list = ((Entity) (Object) this).level().getEntitiesOfClass(Portal.class, portalCheckBox);
             VoxelShape omittedDirections = Shapes.empty();
 
             for (Portal portal : list) {
@@ -220,7 +220,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
             this.gelTransferChangeTimer -= 1;
         }
 
-        if (maxFallSpeed == 10 && level.getBlockState(this.blockPosition()).getBlock() == PortalCubedBlocks.PROPULSION_GEL) {
+        if (maxFallSpeed == 10 && level().getBlockState(this.blockPosition()).getBlock() == PortalCubedBlocks.PROPULSION_GEL) {
             maxFallSpeed = 10;
         } else {
             if (maxFallSpeed > 0) {
@@ -235,7 +235,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
             this.maxFallHeight = rotatedPos.y;
         }
 
-        if (!this.isOnGround()) {
+        if (!this.onGround()) {
             if (rotatedPos.y > this.maxFallHeight) {
                 this.maxFallHeight = rotatedPos.y;
             }
@@ -245,7 +245,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
 
         this.lastVel = this.getDeltaMovement();
 
-        if (level.getBlockState(this.blockPosition()).getBlock() != PortalCubedBlocks.REPULSION_GEL && this.isBounced()) {
+        if (level().getBlockState(this.blockPosition()).getBlock() != PortalCubedBlocks.REPULSION_GEL && this.isBounced()) {
             this.setBounced(false);
         }
 
@@ -257,7 +257,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     public void tickTail(CallbackInfo ci) {
         Entity thisEntity = ((Entity) (Object) this);
 
-        if (!thisEntity.level.isClientSide() && !(thisEntity instanceof Player) && !(thisEntity instanceof Portal)) {
+        if (!thisEntity.level().isClientSide() && !(thisEntity instanceof Player) && !(thisEntity instanceof Portal)) {
             Vec3 entityVelocity = this.getDeltaMovement();
 
 
@@ -266,63 +266,58 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
             portalCheckBox = portalCheckBox.expandTowards(entityVelocity.add(0, .08, 0));
 
 
-            List<Portal> list = ((Entity) (Object) this).level.getEntitiesOfClass(Portal.class, portalCheckBox);
+            List<Portal> list = ((Entity) (Object) this).level().getEntitiesOfClass(Portal.class, portalCheckBox);
             Portal portal;
             for (Portal portalCheck : list) {
                 portal = portalCheck;
                 if (this.canChangeDimensions() && portal.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
                     assert portal.getOtherNormal().isPresent();
                     Direction portalFacing = portal.getFacingDirection();
-                    final Vec3 otherNormal = portal.getOtherNormal().get();
-                    Direction otherDirec = Direction.fromNormal((int) otherNormal.x(), (int) otherNormal.y(), (int) otherNormal.z());
 
-                    if (otherDirec != null) {
-
-                        //noinspection ConstantValue
-                        if ((Object)this instanceof LivingEntity) {
-                            entityVelocity = entityVelocity.add(0, .08, 0);
-                        }
-
-                        Vec3 entityEyePos = thisEntity.getEyePosition();
-
-                        if (portalFacing.step().x() < 0) {
-                            if (entityEyePos.x() + entityVelocity.x >= portal.position().x() && entityVelocity.x() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
-                            }
-                        }
-                        if (portalFacing.step().y() < 0) {
-                            if (entityEyePos.y() + entityVelocity.y >= portal.position().y() && entityVelocity.y() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
-                            }
-                        }
-                        if (portalFacing.step().z() < 0) {
-                            if (entityEyePos.z() + entityVelocity.z >= portal.position().z() && entityVelocity.z() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
-                            }
-                        }
-                        if (portalFacing.step().x() > 0) {
-                            if (entityEyePos.x() + entityVelocity.x <= portal.position().x() && entityVelocity.x() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
-                            }
-                        }
-                        if (portalFacing.step().y() > 0) {
-                            if (entityEyePos.y() + entityVelocity.y <= portal.position().y() && entityVelocity.y() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
-                            }
-                        }
-                        if (portalFacing.step().z() > 0) {
-                            if (entityEyePos.z() + entityVelocity.z <= portal.position().z() && entityVelocity.z() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
-                                performTeleport(thisEntity, portal, entityVelocity);
-                                break;
-                            }
-                        }
-
+                    //noinspection ConstantValue
+                    if ((Object)this instanceof LivingEntity) {
+                        entityVelocity = entityVelocity.add(0, .08, 0);
                     }
+
+                    Vec3 entityEyePos = thisEntity.getEyePosition();
+
+                    if (portalFacing.step().x() < 0) {
+                        if (entityEyePos.x() + entityVelocity.x >= portal.position().x() && entityVelocity.x() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, entityVelocity);
+                            break;
+                        }
+                    }
+                    if (portalFacing.step().y() < 0) {
+                        if (entityEyePos.y() + entityVelocity.y >= portal.position().y() && entityVelocity.y() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, entityVelocity);
+                            break;
+                        }
+                    }
+                    if (portalFacing.step().z() < 0) {
+                        if (entityEyePos.z() + entityVelocity.z >= portal.position().z() && entityVelocity.z() > 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, entityVelocity);
+                            break;
+                        }
+                    }
+                    if (portalFacing.step().x() > 0) {
+                        if (entityEyePos.x() + entityVelocity.x <= portal.position().x() && entityVelocity.x() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, entityVelocity);
+                            break;
+                        }
+                    }
+                    if (portalFacing.step().y() > 0) {
+                        if (entityEyePos.y() + entityVelocity.y <= portal.position().y() && entityVelocity.y() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, entityVelocity);
+                            break;
+                        }
+                    }
+                    if (portalFacing.step().z() > 0) {
+                        if (entityEyePos.z() + entityVelocity.z <= portal.position().z() && entityVelocity.z() < 0 && portal.calculateBoundsCheckBox().intersects(thisEntity.getBoundingBox())) {
+                            performTeleport(thisEntity, portal, entityVelocity);
+                            break;
+                        }
+                    }
+
                 }
             }
         }
@@ -359,7 +354,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         thisEntity.moveTo(dest.x, dest.y, dest.z, result.yaw(), result.pitch());
         thisEntity.setDeltaMovement(result.velocity());
         GravityChangerAPI.clearGravity(thisEntity);
-        if (level instanceof ServerLevel serverWorld) {
+        if (level() instanceof ServerLevel serverWorld) {
             final FriendlyByteBuf buf = PacketByteBufs.create();
             buf.writeVarInt(getId());
             buf.writeDouble(getX());
@@ -492,7 +487,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     private void endBlockCheck(CallbackInfo ci) {
         for (final var entry : leftBlocks.entrySet()) {
             if (entry.getKey().getBlock() instanceof BlockCollisionTrigger trigger) {
-                trigger.onEntityLeave(entry.getKey(), level, entry.getValue(), (Entity) (Object) this);
+                trigger.onEntityLeave(entry.getKey(), level(), entry.getValue(), (Entity) (Object) this);
             }
             collidingBlocks.remove(entry.getKey());
         }
@@ -563,9 +558,9 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         Vec3 newPos = position();
         // based on ProjectileUtil
         ClipContext ctx = new ClipContext(pos, newPos, Block.OUTLINE, Fluid.NONE, (Entity) (Object) this);
-        BlockHitResult hit = level.clip(ctx);
+        BlockHitResult hit = level().clip(ctx);
         if (hit.getType() == Type.BLOCK) {
-            BlockState state = level.getBlockState(hit.getBlockPos());
+            BlockState state = level().getBlockState(hit.getBlockPos());
             if (state.getBlock() instanceof AbstractFizzlerBlock fizzler)
                 fizzler.applyEffectsTo((Entity) (Object) this);
         }
@@ -586,7 +581,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
             return;
         }
         velocityHelper = block;
-        velocityHelperStartTime = level.getGameTime();
+        velocityHelperStartTime = level().getGameTime();
         velocityHelperOffset = Vec3.atCenterOf(block.getBlockPos()).subtract(position());
     }
 
@@ -609,7 +604,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     @Unique
     private void logVHWarning(String type, RuntimeException e) {
         //noinspection ConstantValue
-        if ((Object)this instanceof Player && level.isClientSide) {
+        if ((Object)this instanceof Player && level().isClientSide) {
             logVHWarningToChat(type, e);
         }
         PortalCubed.LOGGER.info("{} at {}", getVHWarning(type).getString(), velocityHelper.getBlockPos(), e);
@@ -638,7 +633,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
             velocityHelper = null;
             return;
         }
-        double progress = (level.getGameTime() - velocityHelperStartTime) / (double)velocityHelper.getFlightDuration();
+        double progress = (level().getGameTime() - velocityHelperStartTime) / (double)velocityHelper.getFlightDuration();
         if (progress >= 1.0) {
             velocityHelper = null;
             return;

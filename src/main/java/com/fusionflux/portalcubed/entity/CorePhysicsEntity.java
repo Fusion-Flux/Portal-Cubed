@@ -89,7 +89,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        if (source.isCreativePlayer() || source == damageSources().outOfWorld())
+        if (source.isCreativePlayer() || source == damageSources().fellOutOfWorld())
             return false;
         if (!(source.getEntity() instanceof Player player))
             return true;
@@ -98,7 +98,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (!level.isClientSide && !isInvulnerableTo(source) && !isRemoved()) {
+        if (!level().isClientSide && !isInvulnerableTo(source) && !isRemoved()) {
             dropAllDeathLoot(source);
             discard();
             return true;
@@ -181,20 +181,20 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
         canUsePortals = getHolderUUID().isEmpty();
         Vec3 rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
         this.lastPos = this.position();
-        this.setDiscardFriction(!this.isOnGround() && !this.level.getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
+        this.setDiscardFriction(!this.onGround() && !this.level().getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL));
         if (isBeingHeld) {
-            Player player = (Player) ((LevelExt) level).getEntityByUuid(getHolderUUID().get());
+            Player player = (Player) ((LevelExt) level()).getEntityByUuid(getHolderUUID().get());
             if (player != null && player.isAlive()) {
                 Vec3 vec3d = player.getEyePosition(0);
                 double d = 1.5;
                 canUsePortals = false;
                 Vec3 vec3d2 = this.getPlayerRotationVector(player.getXRot(), player.getYRot());
                 Vec3 vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
-                final AdvancedEntityRaycast.Result raycastResult = PortalDirectionUtils.raycast(level, new ClipContext(
+                final AdvancedEntityRaycast.Result raycastResult = PortalDirectionUtils.raycast(level(), new ClipContext(
                     vec3d, vec3d3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this
                 ));
                 final Vec3 holdPos = raycastResult.finalHit().getLocation();
-                if (!level.isClientSide) {
+                if (!level().isClientSide) {
                     GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
                 }
                 this.fallDistance = 0;
@@ -241,7 +241,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
             this.setDeltaMovement(this.getDeltaMovement().add(0, .81d, 0));
         }
         if (fizzling) {
-            if (level.isClientSide) {
+            if (level().isClientSide) {
                 fizzleProgress += Minecraft.getInstance().getFrameTime();
             } else {
                 fizzleProgress += 0.05f;
@@ -250,11 +250,11 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
                 }
             }
         }
-        if (getHolderUUID().isEmpty() && !level.isClientSide) {
+        if (getHolderUUID().isEmpty() && !level().isClientSide) {
             //noinspection DataFlowIssue
-            level.getServer().getPlayerList().broadcast(
+            level().getServer().getPlayerList().broadcast(
                 null, getX(), getY(), getZ(), 64,
-                getLevel().dimension(),
+                level().dimension(),
                 new ClientboundRotateHeadPacket(this, (byte)Mth.floor(getYHeadRot() * 256f / 360f))
             );
         }
@@ -265,7 +265,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     public boolean isControlledByLocalInstance() {
-        return !level.isClientSide || getHolderUUID().isPresent();
+        return !level().isClientSide || getHolderUUID().isPresent();
     }
 
     @NotNull
@@ -299,7 +299,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     public void fizzle() {
         if (fizzling) return;
         fizzling = true;
-        level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundSource.NEUTRAL, 0.1f, 1f);
+        level().playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundSource.NEUTRAL, 0.1f, 1f);
         RayonIntegration.INSTANCE.setNoGravity(this, true);
         final FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(getId());
@@ -343,8 +343,8 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
         if (horizontalCollision) {
             if (!hasCollided) {
                 hasCollided = true;
-                if (!level.isClientSide && timeSinceLastSound >= 20) {
-                    level.playSound(null, this, getCollisionSound(), SoundSource.NEUTRAL, 1f, 1f);
+                if (!level().isClientSide && timeSinceLastSound >= 20) {
+                    level().playSound(null, this, getCollisionSound(), SoundSource.NEUTRAL, 1f, 1f);
                     timeSinceLastSound = 0;
                 }
             }
@@ -359,8 +359,8 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     public void remove(RemovalReason reason) {
-        if (!level.isClientSide) //noinspection DataFlowIssue
-            getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get(((ServerLevel) level).getEntity(value)).stopHolding());
+        if (!level().isClientSide) //noinspection DataFlowIssue
+            getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get(((ServerLevel) level()).getEntity(value)).stopHolding());
         super.remove(reason);
     }
 
@@ -382,9 +382,9 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
         if (onGround) {
             if (state.isAir() && fallDistance > 0 && getType().is(PortalCubedEntities.P1_ENTITY)) {
-                final List<Entity> collisions = level.getEntitiesOfClass(Entity.class, getBoundingBox().expandTowards(0, -0.1, 0), this::canCollideWith);
+                final List<Entity> collisions = level().getEntitiesOfClass(Entity.class, getBoundingBox().expandTowards(0, -0.1, 0), this::canCollideWith);
                 for (final Entity collision : collisions) {
-                    collision.hurt(pcSources(level).cube(), fallDistance * 1.5f);
+                    collision.hurt(pcSources(level()).cube(), fallDistance * 1.5f);
                 }
             }
             fallDistance = 0;

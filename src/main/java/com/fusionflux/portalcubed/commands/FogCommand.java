@@ -68,7 +68,7 @@ public class FogCommand {
 
     public static int getFog(CommandContext<CommandSourceStack> ctx, boolean defaultDimension) throws CommandSyntaxException {
         final ServerLevel dimension = getDimension(ctx, defaultDimension);
-        ctx.getSource().sendSuccess(Component.translatable(
+        ctx.getSource().sendSuccess(() -> Component.translatable(
             "portalcubed.command.fog.success",
             dimension.dimension().location(),
             FogPersistentState.getOrCreate(dimension).getSettings()
@@ -80,7 +80,7 @@ public class FogCommand {
         final ServerLevel dimension = getDimension(ctx, defaultDimension);
         FogPersistentState.getOrCreate(dimension).setSettings(null);
         PortalCubed.syncFog(dimension);
-        ctx.getSource().sendSuccess(Component.translatable(
+        ctx.getSource().sendSuccess(() -> Component.translatable(
             "portalcubed.command.fog.reset.success",
             dimension.dimension().location()
         ), true);
@@ -103,7 +103,7 @@ public class FogCommand {
         );
         FogPersistentState.getOrCreate(dimension).setSettings(settings);
         PortalCubed.syncFog(dimension);
-        ctx.getSource().sendSuccess(Component.translatable(
+        ctx.getSource().sendSuccess(() -> Component.translatable(
             "portalcubed.command.fog.set.success",
             dimension.dimension().location(),
             settings
@@ -116,7 +116,7 @@ public class FogCommand {
         final FogPreset preset = getEnumConstant(ctx, "preset", FogPreset.class);
         FogPersistentState.getOrCreate(dimension).setSettings(preset.getSettings());
         PortalCubed.syncFog(dimension);
-        ctx.getSource().sendSuccess(Component.translatable(
+        ctx.getSource().sendSuccess(() -> Component.translatable(
             "portalcubed.command.fog.preset.success",
             dimension.dimension().location(),
             preset

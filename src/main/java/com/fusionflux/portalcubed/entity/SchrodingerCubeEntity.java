@@ -16,7 +16,7 @@ public class SchrodingerCubeEntity extends RedirectionCubeEntity {
 
     @Override
     public SchrodingerCubeEntity getConnection() {
-        return Objects.requireNonNullElse(level.getNearestEntity(
+        return Objects.requireNonNullElse(level().getNearestEntity(
             SchrodingerCubeEntity.class,
             TargetingConditions.forNonCombat()
                 .selector(e -> Objects.equals(e.getCustomName(), getCustomName()))

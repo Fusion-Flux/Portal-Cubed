@@ -7,6 +7,7 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -17,11 +18,12 @@ public class InventoryMixin {
 
     @Inject(method = "swapPaint", at = @At("HEAD"), cancellable = true)
     private void zoomInPortalMode(double scrollAmount, CallbackInfo ci) {
-        if (player.level.isClientSide && performZoom((int)Math.signum(scrollAmount))) {
+        if (player.level().isClientSide && performZoom((int)Math.signum(scrollAmount))) {
             ci.cancel();
         }
     }
 
+    @Unique
     @ClientOnly
     private boolean performZoom(int delta) {
         if (!PortalCubedClient.isPortalHudMode()) {

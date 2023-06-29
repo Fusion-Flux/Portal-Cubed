@@ -5,9 +5,13 @@ import com.fusionflux.portalcubed.blocks.VelocityHelperBlock;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
 import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -47,38 +51,37 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
     }
 
     @Override
-    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(matrices, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    protected void renderLabels(PoseStack matrices, int mouseX, int mouseY) {
-        font.draw(matrices, title, (float)titleLabelX, (float)titleLabelY, 0x404040);
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawString(font, title, titleLabelX, titleLabelY, 0x404040);
         drawTextRightAligned(
-            matrices, font,
+            graphics, font,
             Component.translatable("portalcubed.velocity_helper.flight_duration"),
             139, 23, 0x404040
         );
         drawTextCentered(
-            matrices, font,
+            graphics, font,
             Component.translatable("portalcubed.velocity_helper.condition"),
             imageWidth / 2, 39, 0x404040
         );
         drawTextCentered(
-            matrices, font,
+            graphics, font,
             Component.translatable("portalcubed.velocity_helper.interpolation_curve"),
             imageWidth / 2, 71, 0x404040
         );
     }
 
     @Override
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, delta);
-        renderTooltip(matrices, mouseX, mouseY);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, delta);
+        renderTooltip(graphics, mouseX, mouseY);
 
         final Expression curve = icWidget.getExpression();
         if (curve != null) {
@@ -92,7 +95,7 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
                     for (int i = 1; i <= pointCount; i++, x += spacing) {
                         curve.setVariable("x", 1.0 / pointCount * i);
                         final float calculation = (float)Mth.clamp(curve.evaluate(), 0, 1) * 44;
-                        drawLine(matrices, x - spacing, this.topPos + 157 - last, x, this.topPos + 157 - calculation, 0xffffffff);
+                        drawLine(graphics, x - spacing, this.topPos + 157 - last, x, this.topPos + 157 - calculation, 0xffffffff);
                         last = calculation;
                     }
                 } catch (RuntimeException e) {
@@ -169,9 +172,9 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
                 !icWidget.getValue().isEmpty();
     }
 
-    public static void drawLine(PoseStack matrices, float x0, float y0, float x1, float y1, int color) {
-        final Matrix4f model = matrices.last().pose();
-        final Matrix3f normal = matrices.last().normal();
+    public static void drawLine(GuiGraphics graphics, float x0, float y0, float x1, float y1, int color) {
+        final Matrix4f model = graphics.pose().last().pose();
+        final Matrix3f normal = graphics.pose().last().normal();
         final float mag = Math.invsqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
         final float normalX = Math.abs(x1 - x0) * mag;
         final float normalY = Math.abs(y1 - y0) * mag;
@@ -186,11 +189,11 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
         Tesselator.getInstance().end();
     }
 
-    public static void drawTextRightAligned(PoseStack matrices, Font textRenderer, Component text, int x, int y, int color) {
-        textRenderer.draw(matrices, text, x - textRenderer.width(text), y, color);
+    public static void drawTextRightAligned(GuiGraphics graphics, Font font, Component text, int x, int y, int color) {
+        graphics.drawString(font, text, x - font.width(text), y, color);
     }
 
-    public static void drawTextCentered(PoseStack matrices, Font textRenderer, Component text, int x, int y, int color) {
-        textRenderer.draw(matrices, text, x - textRenderer.width(text) / 2f, y, color);
+    public static void drawTextCentered(GuiGraphics graphics, Font font, Component text, int x, int y, int color) {
+        graphics.drawString(font, text, x - font.width(text) / 2, y, color);
     }
 }

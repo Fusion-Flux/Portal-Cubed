@@ -15,9 +15,9 @@ public class SpaceCoreEntity extends CorePhysicsEntity {
 
     @Override
     public void tick() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (t == 0) {
-                level.playSound(null, this, PortalCubedSounds.SPACE_CORE_EVENT, this.getSoundSource(), 1f, 1f);
+                level().playSound(null, this, PortalCubedSounds.SPACE_CORE_EVENT, this.getSoundSource(), 1f, 1f);
                 t = 2765;
             }
             t--;

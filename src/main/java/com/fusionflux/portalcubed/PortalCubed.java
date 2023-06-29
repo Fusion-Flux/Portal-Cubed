@@ -23,7 +23,6 @@ import com.fusionflux.portalcubed.fog.FogSettings;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
-import com.fusionflux.portalcubed.optionslist.OptionsListScreenHandler;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
@@ -84,10 +83,10 @@ public class PortalCubed implements ModInitializer {
         BuiltInRegistries.MENU, id("velocity_helper"),
         new ExtendedScreenHandlerType<>(VelocityHelperScreenHandler::new)
     );
-    public static final MenuType<OptionsListScreenHandler> OPTIONS_LIST_SCREEN_HANDLER = Registry.register(
-        BuiltInRegistries.MENU, id("options_list"),
-        new ExtendedScreenHandlerType<>(OptionsListScreenHandler::new)
-    );
+//    public static final MenuType<OptionsListScreenHandler> OPTIONS_LIST_SCREEN_HANDLER = Registry.register(
+//        BuiltInRegistries.MENU, id("options_list"),
+//        new ExtendedScreenHandlerType<>(OptionsListScreenHandler::new)
+//    );
 
     public static final double MAX_SPEED = 2225 / 64.0 / 20.0, MAX_SPEED_SQR = MAX_SPEED * MAX_SPEED;
 
@@ -112,7 +111,7 @@ public class PortalCubed implements ModInitializer {
             }
             server.execute(() -> {
                 boolean rubberband = false;
-                if (!(player.level.getEntity(targetEntityId) instanceof Portal portal)) {
+                if (!(player.level().getEntity(targetEntityId) instanceof Portal portal)) {
                     LOGGER.warn("{} tried to teleport through nonexistent portal", player);
                     handler.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
                     CalledValues.setIsTeleporting(player, false);
@@ -176,7 +175,7 @@ public class PortalCubed implements ModInitializer {
             double y = buf.readDouble();
             double z = buf.readDouble();
             server.execute(() -> {
-                final BlockEntity entity = player.level.getBlockEntity(target);
+                final BlockEntity entity = player.level().getBlockEntity(target);
                 if (entity instanceof FaithPlateBlockEntity faithPlateBlockEntity) {
                     faithPlateBlockEntity.setVelX(x);
                     faithPlateBlockEntity.setVelY(y);
@@ -211,7 +210,7 @@ public class PortalCubed implements ModInitializer {
             float rotYaw = buf.readFloat();
             UUID cubeuuid =  buf.readUUID();
             server.execute(() -> {
-                if (!(player.getLevel().getEntity(cubeuuid) instanceof CorePhysicsEntity cube)) {
+                if (!(player.serverLevel().getEntity(cubeuuid) instanceof CorePhysicsEntity cube)) {
                     LOGGER.warn("{} tried to drop nonexistent physics object", player);
                     return;
                 }
@@ -233,13 +232,13 @@ public class PortalCubed implements ModInitializer {
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            if (!handler.player.level.getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH)) {
+            if (!handler.player.level().getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH)) {
                 // Default is true on the client, so we don't need to send in that case
                 final FriendlyByteBuf buf = PacketByteBufs.create();
                 buf.writeBoolean(false);
                 handler.send(ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.ENABLE_CFG, buf));
             }
-            if (handler.player.level.getGameRules().getBoolean(PortalCubedGameRules.USE_PORTAL_HUD)) {
+            if (handler.player.level().getGameRules().getBoolean(PortalCubedGameRules.USE_PORTAL_HUD)) {
                 // Same as above, but false
                 final FriendlyByteBuf buf = PacketByteBufs.create();
                 buf.writeBoolean(true);
@@ -288,7 +287,7 @@ public class PortalCubed implements ModInitializer {
 
     public static void syncFog(ServerPlayer player) {
         final FriendlyByteBuf buf = PacketByteBufs.create();
-        FogSettings.encodeOptional(FogPersistentState.getOrCreate((ServerLevel)player.level).getSettings(), buf);
+        FogSettings.encodeOptional(FogPersistentState.getOrCreate(player.serverLevel()).getSettings(), buf);
         ServerPlayNetworking.send(player, PortalCubedClientPackets.SET_CUSTOM_FOG, buf);
     }
 
@@ -302,11 +301,11 @@ public class PortalCubed implements ModInitializer {
     }
 
     public static void playBounceSound(Entity entity) {
-        entity.level.playSound(
+        entity.level().playSound(
             null,
             entity.position().x(), entity.position().y(), entity.position().z(),
             PortalCubedSounds.GEL_BOUNCE_EVENT, SoundSource.BLOCKS,
-            1f, 0.95f + entity.level.random.nextFloat() * 0.1f
+            1f, 0.95f + entity.level().random.nextFloat() * 0.1f
         );
     }
 

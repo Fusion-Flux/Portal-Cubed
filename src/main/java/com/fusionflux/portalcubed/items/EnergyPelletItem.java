@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class EnergyPelletItem extends Item {
     private final boolean isSuper;
@@ -24,6 +25,7 @@ public class EnergyPelletItem extends Item {
         this.isSuper = isSuper;
     }
 
+    @NotNull
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         final ItemStack item = user.getItemInHand(hand);
@@ -35,7 +37,7 @@ public class EnergyPelletItem extends Item {
         if (pellet == null) return InteractionResultHolder.pass(item);
         pellet.setPos(user.getEyePosition(0).add(user.getLookAngle()));
         Vec3 userVelocity = user.getDeltaMovement();
-        if (user.isOnGround()) {
+        if (user.onGround()) {
             userVelocity = userVelocity.with(Direction.Axis.Y, 0);
         }
         pellet.setDeltaMovement(userVelocity.add(user.getLookAngle().scale(0.25)));
@@ -48,6 +50,7 @@ public class EnergyPelletItem extends Item {
 
     public DispenseItemBehavior createDispenserBehavior() {
         return new DefaultDispenseItemBehavior() {
+            @NotNull
             @Override
             protected ItemStack execute(BlockSource pointer, ItemStack stack) {
                 final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(pointer.getLevel());

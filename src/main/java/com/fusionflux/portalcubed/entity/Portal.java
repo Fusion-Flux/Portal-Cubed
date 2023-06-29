@@ -152,7 +152,7 @@ public class Portal extends Entity {
     public Direction getFacingDirection() {
         final Vec3 normal = getNormal();
         final double x = normal.x, y = normal.y, z = normal.z;
-        final Direction result = Direction.fromNormal((int)x, (int)y, (int)z);
+        final Direction result = Direction.fromDelta((int)x, (int)y, (int)z);
         return result != null ? result : Direction.getNearest((float)x, (float)y, (float)z);
     }
 
@@ -215,7 +215,7 @@ public class Portal extends Entity {
     @Override
     public void kill() {
         getOwnerUUID().ifPresent(uuid -> {
-            Entity player = ((ServerLevel) level).getEntity(uuid);
+            Entity player = ((ServerLevel) level()).getEntity(uuid);
             CalledValues.removePortals(player, this.getUUID());
         });
         super.kill();
@@ -225,8 +225,8 @@ public class Portal extends Entity {
     public void tick() {
         this.makeBoundingBox();
         this.calculateCutoutBox();
-        if (!this.level.isClientSide) {
-            final ServerLevel serverLevel = (ServerLevel)level;
+        if (!this.level().isClientSide) {
+            final ServerLevel serverLevel = (ServerLevel)level();
             serverLevel.getChunkSource().addRegionTicket(TicketType.PORTAL, chunkPosition(), 2, blockPosition());
 
             getOwnerUUID().ifPresent(uuid -> {
@@ -246,7 +246,7 @@ public class Portal extends Entity {
 
             if (!validate()) {
                 this.kill();
-                level.playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
+                level().playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
             }
         }
 
@@ -291,15 +291,15 @@ public class Portal extends Entity {
             Mth.floor(portalBox.maxY + EPSILON) + 1,
             Mth.floor(portalBox.maxZ + EPSILON) + 1
         );
-        Direction forward = Objects.requireNonNull(Direction.fromNormal(BlockPos.containing(getNormal())));
+        Direction forward = getFacingDirection();
         BooleanProperty coveringWall = MultifaceBlock.getFaceProperty(forward.getOpposite());
-        Player owner = getOwnerUUID().map(level::getPlayerByUUID).orElse(null);
+        Player owner = getOwnerUUID().map(level()::getPlayerByUUID).orElse(null);
         while (iter.advance()) {
             final BlockPos pos = new BlockPos(iter.nextX(), iter.nextY(), iter.nextZ());
             if (!AABB.of(BoundingBox.fromCorners(pos, pos)).intersects(portalBox)) continue;
 
-            BlockState wall = level.getBlockState(pos);
-            BlockState facade = level.getBlockState(pos.relative(forward));
+            BlockState wall = level().getBlockState(pos);
+            BlockState facade = level().getBlockState(pos.relative(forward));
             BlockState portalSurface;
             if (!facade.is(PortalCubedBlocks.PORTAL_NONSOLID) && // non-solids fallback to the wall
                     facade.getOptionalValue(coveringWall).orElse(Boolean.FALSE)) { // if property is present and true, facade covers the wall
@@ -316,7 +316,7 @@ public class Portal extends Entity {
                     return false;
             }
 
-            final VoxelShape shape = wall.getCollisionShape(level, pos, CollisionContext.of(this));
+            final VoxelShape shape = wall.getCollisionShape(level(), pos, CollisionContext.of(this));
             if (
                 shape.move(pos.getX(), pos.getY(), pos.getZ())
                     .toAabbs()
@@ -348,12 +348,12 @@ public class Portal extends Entity {
         while (iter.advance()) {
             final BlockPos pos = new BlockPos(iter.nextX(), iter.nextY(), iter.nextZ());
             if (!AABB.of(BoundingBox.fromCorners(pos, pos)).intersects(portalBox)) continue;
-            final BlockState state = level.getBlockState(pos);
+            final BlockState state = level().getBlockState(pos);
             if (state.is(PortalCubedBlocks.PORTAL_NONSOLID)) continue;
             if (state.is(PortalCubedBlocks.PORTAL_SOLID)) {
                 return false;
             }
-            final VoxelShape shape = state.getCollisionShape(level, pos, CollisionContext.of(this));
+            final VoxelShape shape = state.getCollisionShape(level(), pos, CollisionContext.of(this));
             if (
                 shape.move(pos.getX(), pos.getY(), pos.getZ())
                     .toAabbs()

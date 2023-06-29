@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -29,8 +30,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalTabsLoader {
     private static final Map<String, Function<JsonObject, Predicate<CreativeModeTab.ItemDisplayParameters>>> CONDITION_TYPES = Map.of(
@@ -61,19 +60,22 @@ public class PortalTabsLoader {
     );
 
     public static void load(ModContainer mod) {
-        final JsonObject jsonObject;
+        final JsonArray jsonArray;
         try (Reader reader = Files.newBufferedReader(mod.getPath("portal_tabs.json"))) {
-            jsonObject = GsonHelper.parse(reader);
+            jsonArray = GsonHelper.parseArray(reader);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        load(jsonObject);
+        load(jsonArray);
     }
 
-    private static void load(JsonObject jsonObject) {
-        for (final var entry : jsonObject.entrySet()) {
-            final CreativeModeTab.Builder builder = FabricItemGroup.builder(id(entry.getKey()));
-            final JsonObject entryData = GsonHelper.convertToJsonObject(entry.getValue(), "tab");
+    private static void load(JsonArray jsonArray) {
+        for (final var entry : jsonArray) {
+            final CreativeModeTab.Builder builder = FabricItemGroup.builder();
+            final JsonObject entryData = GsonHelper.convertToJsonObject(entry, "tab");
+            if (entryData.has("title")) {
+                builder.title(Component.Serializer.fromJson(entryData.get("title")));
+            }
             if (entryData.has("icon")) {
                 builder.icon(parseItemStack(entryData.get("icon"), "icon"));
             }

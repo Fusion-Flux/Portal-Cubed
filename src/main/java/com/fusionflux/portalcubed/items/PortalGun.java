@@ -13,7 +13,6 @@ import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -121,13 +120,13 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
 
     @Override
     public InteractionResult onLeftClick(Player user, InteractionHand hand) {
-        shoot(user.level, user, hand, true);
+        shoot(user.level(), user, hand, true);
         return InteractionResult.CONSUME;
     }
 
     @Override
     public InteractionResult onRightClick(Player user, InteractionHand hand) {
-        shoot(user.level, user, hand, false);
+        shoot(user.level(), user, hand, false);
         return InteractionResult.CONSUME;
     }
 
@@ -222,7 +221,7 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
                 portalHolder.setColor(this.getSidedColor(stack));
 
                 //noinspection DataFlowIssue
-                final Direction.Axis hAxis = Direction.fromNormal(new BlockPos(right)).getAxis();
+                final Direction.Axis hAxis = Direction.fromDelta(right.getX(), right.getY(), right.getZ()).getAxis();
                 findCorrectOrientation:
                 if (!portalHolder.validate()) {
                     for (final var try_ : FAIL_TRIES.get(Pair.of(up, right))) {
@@ -254,7 +253,7 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
                     if (overlappingPortals.size() == 1) {
                         final Portal overlappingPortal = overlappingPortals.get(0);
                         if (overlappingPortal.getAxisW().equals(portalHolder.getAxisW())) {
-                            final Direction.Axis axis = Objects.requireNonNull(Direction.fromNormal(new BlockPos(right))).getAxis();
+                            final Direction.Axis axis = Objects.requireNonNull(Direction.fromDelta(right.getX(), right.getY(), right.getZ())).getAxis();
                             if (overlappingPortal.getOriginPos().get(axis) < portalHolder.getOriginPos().get(axis)) {
                                 portalHolder.setOriginPos(portalHolder.getOriginPos().with(axis, overlappingPortal.getOriginPos().get(axis) + 1));
                             } else {
@@ -346,8 +345,8 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
         portal2.setOtherRotation(Optional.of(portal1.getRotation()));
         portal2.setLinkedPortalUUID(Optional.of(portal1.getUUID()));
 
-        portal1.getLevel().playSound(null, portal1.position().x(), portal1.position().y(), portal1.position().z(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundSource.NEUTRAL, volume, 1F);
-        portal2.getLevel().playSound(null, portal2.position().x(), portal2.position().y(), portal2.position().z(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundSource.NEUTRAL, volume, 1F);
+        portal1.level().playSound(null, portal1.position().x(), portal1.position().y(), portal1.position().z(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundSource.NEUTRAL, volume, 1F);
+        portal2.level().playSound(null, portal2.position().x(), portal2.position().y(), portal2.position().z(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundSource.NEUTRAL, volume, 1F);
     }
 
     /**
@@ -368,19 +367,19 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
         final Vec3 start = user.getEyePosition(tickDelta);
         final Vec3 rotation = user.getViewVector(tickDelta);
         final Vec3 end = start.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
-        final Level world = user.level;
+        final Level level = user.level();
         final CollisionContext shapeContext = CollisionContext.of(user);
         return BlockGetter.traverseBlocks(
             start, end, null,
             (context, pos) -> {
-                final BlockState block = world.getBlockState(pos);
+                final BlockState block = level.getBlockState(pos);
                 if (block.is(PortalCubedBlocks.PORTAL_NONSOLID)) {
                     return null;
                 }
                 final VoxelShape blockShape = block.is(PortalCubedBlocks.PORTAL_SOLID)
-                    ? block.getShape(world, pos, shapeContext)
-                    : block.getCollisionShape(world, pos, shapeContext);
-                return world.clipWithInteractionOverride(start, end, pos, blockShape, block);
+                    ? block.getShape(level, pos, shapeContext)
+                    : block.getCollisionShape(level, pos, shapeContext);
+                return level.clipWithInteractionOverride(start, end, pos, blockShape, block);
             },
             context -> {
                 final Vec3 offset = start.subtract(end);

@@ -27,7 +27,7 @@ public class PropulsionGel extends BaseGel {
         if (entity.getType().equals(EntityType.BOAT)) {
             entity.hurt(level.damageSources().magic(), 200);
         } else {
-            if (entity.isOnGround()) {
+            if (entity.onGround()) {
                 if (!entity.isShiftKeyDown()) {
                     if (limiter.check(level, entity)) {
                         if (Math.abs(entity.getDeltaMovement().x) < 2 && Math.abs(entity.getDeltaMovement().z) < 2) {

@@ -86,10 +86,10 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide) return;
+        if (level().isClientSide) return;
         Vec3 vel = getDeltaMovement();
         {
-            final var catapult = level.getBlockEntity(blockPosition(), PortalCubedBlocks.CATAPULT_BLOCK_ENTITY);
+            final var catapult = level().getBlockEntity(blockPosition(), PortalCubedBlocks.CATAPULT_BLOCK_ENTITY);
             if (catapult.isPresent()) {
                 ((EntityExt)this).collidedWithCatapult(catapult.get());
                 vel = getDeltaMovement();
@@ -104,7 +104,7 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
             kill(null);
         } // life < 0 means green pellet
         if (tickCount == 1) {
-            level.playSound(null, position().x, position().y, position().z, PortalCubedSounds.PELLET_SPAWN_EVENT, SoundSource.HOSTILE, 1f, 1f);
+            level().playSound(null, position().x, position().y, position().z, PortalCubedSounds.PELLET_SPAWN_EVENT, SoundSource.HOSTILE, 1f, 1f);
         }
         Direction bouncedDir = null;
         if (verticalCollision) {
@@ -123,8 +123,8 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
         }
         setDeltaMovement(vel);
         if (bouncedDir != null) {
-            level.playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
-            if (level instanceof ServerLevel serverLevel) {
+            level().playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
+            if (level() instanceof ServerLevel serverLevel) {
                 final Vec3 spawnPos = serverLevel.clip(new ClipContext(
                     position(),
                     position().add(vel.with(bouncedDir.getAxis(), -vel.get(bouncedDir.getAxis()))),
@@ -144,13 +144,13 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
             }
         }
         if ((tickCount - 1) % 34 == 0) {
-            level.playSound(null, this, PortalCubedSounds.PELLET_TRAVEL_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
+            level().playSound(null, this, PortalCubedSounds.PELLET_TRAVEL_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
         }
-        final HitResult hit = ProjectileUtil.getHitResult(this, this::canHit);
+        final HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHit);
         if (hit.getType() == HitResult.Type.ENTITY) {
             bounceOrKill((LivingEntity)((EntityHitResult)hit).getEntity());
         } else {
-            final LivingEntity hit2 = level.getNearestEntity(
+            final LivingEntity hit2 = level().getNearestEntity(
                 LivingEntity.class,
                 TargetingConditions.forNonCombat().selector(this::canHit),
                 null, getX(), getY(), getZ(),
@@ -183,22 +183,22 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
             ));
             final double mag = vel.length();
             setDeltaMovement(Math.cos(newAngle) * mag, vel.y, Math.sin(newAngle) * mag);
-            level.playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
+            level().playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
         } else {
             kill(entity);
         }
     }
 
     private void kill(@Nullable LivingEntity entity) {
-        level.playSound(null, position().x, position().y, position().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundSource.HOSTILE, 0.8f, 1f);
-        if (level instanceof ServerLevel serverLevel) {
+        level().playSound(null, position().x, position().y, position().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundSource.HOSTILE, 0.8f, 1f);
+        if (level() instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(
                 PortalCubedParticleTypes.ENERGY_SPARK,
                 getX(), getY(), getZ(), 100, 0.1, 0.1, 0.1, 3.5
             );
         }
         if (entity != null) {
-            entity.hurt(pcSources(level).vaporization(), PortalCubedConfig.pelletDamage);
+            entity.hurt(pcSources(level()).vaporization(), PortalCubedConfig.pelletDamage);
         }
         kill();
     }

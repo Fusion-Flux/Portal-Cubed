@@ -30,7 +30,6 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
 import com.fusionflux.portalcubed.mixin.client.DeathScreenAccessor;
 import com.fusionflux.portalcubed.mixin.client.MusicManagerAccessor;
-import com.fusionflux.portalcubed.optionslist.OptionsListScreen;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.CameraControl;
@@ -153,7 +152,7 @@ public class PortalCubedClient implements ClientModInitializer {
 
         MenuScreens.register(PortalCubed.FAITH_PLATE_SCREEN_HANDLER, FaithPlateScreen::new);
         MenuScreens.register(PortalCubed.VELOCITY_HELPER_SCREEN_HANDLER, VelocityHelperScreen::new);
-        MenuScreens.register(PortalCubed.OPTIONS_LIST_SCREEN_HANDLER, OptionsListScreen::new);
+//        MenuScreens.register(PortalCubed.OPTIONS_LIST_SCREEN_HANDLER, OptionsListScreen::new);
 
         registerEntityRenderers();
         registerColorProviders();
@@ -368,7 +367,7 @@ public class PortalCubedClient implements ClientModInitializer {
             }
         });
 
-        HudRenderCallback.EVENT.register((matrixStack, tickDelta) -> {
+        HudRenderCallback.EVENT.register((graphics, tickDelta) -> {
             if (!isPortalHudMode()) return;
             final Minecraft client = Minecraft.getInstance();
             assert client.player != null;
@@ -384,7 +383,7 @@ public class PortalCubedClient implements ClientModInitializer {
                         client.player.getHealth() / client.player.getMaxHealth(), 0.65f, 1f
                     ), 0f, 1f);
             BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-            final Matrix4f matrix = matrixStack.last().pose();
+            final Matrix4f matrix = graphics.pose().last().pose();
             final float w = client.getWindow().getGuiScaledWidth();
             final float h = client.getWindow().getGuiScaledHeight();
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
@@ -395,7 +394,7 @@ public class PortalCubedClient implements ClientModInitializer {
             BufferUploader.drawWithShader(bufferBuilder.end());
         });
 
-        HudRenderCallback.EVENT.register((matrixStack, tickDelta) -> {
+        HudRenderCallback.EVENT.register((graphics, tickDelta) -> {
             if (gelOverlayTimer < 0) return;
             if (gelOverlayTimer > 100) {
                 gelOverlayTimer = -1;
@@ -415,7 +414,7 @@ public class PortalCubedClient implements ClientModInitializer {
             RenderSystem.enableBlend();
             RenderSystem.setShaderTexture(0, gelOverlayTexture);
             BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-            final Matrix4f matrix = matrixStack.last().pose();
+            final Matrix4f matrix = graphics.pose().last().pose();
             final float w = client.getWindow().getGuiScaledWidth();
             final float h = client.getWindow().getGuiScaledHeight();
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
@@ -466,17 +465,17 @@ public class PortalCubedClient implements ClientModInitializer {
 
         WorldRenderEvents.START.register(context -> worldRenderContext = context);
 
-        HudRenderCallback.EVENT.register((poseStack, tickDelta) -> {
+        HudRenderCallback.EVENT.register((graphics, tickDelta) -> {
             if (!showPos) return;
             final Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.options.renderDebug) return;
             final LocalPlayer player = minecraft.player;
             if (player == null) return;
 
-            minecraft.font.draw(poseStack, Component.literal("name: ").append(player.getName()), 2, 11, 0xffffffff);
+            graphics.drawString(minecraft.font, Component.literal("name: ").append(player.getName()), 2, 11, 0xffffffff);
 
-            minecraft.font.draw(
-                poseStack,
+            graphics.drawString(
+                minecraft.font,
                 "pos:  " + CL_SHOWPOS_FORMAT.format(player.getX()) +
                     ' ' + CL_SHOWPOS_FORMAT.format(player.getY()) +
                     ' ' + CL_SHOWPOS_FORMAT.format(player.getZ()),
@@ -489,16 +488,16 @@ public class PortalCubedClient implements ClientModInitializer {
                 quat = quat.hamiltonProduct(rotation.get());
             }
             final Vector3d angle = quat.toQuaterniond().getEulerAnglesZXY(new Vector3d());
-            minecraft.font.draw(
-                poseStack,
+            graphics.drawString(
+                minecraft.font,
                 "ang:  " + CL_SHOWPOS_FORMAT.format(Math.toDegrees(angle.x)) +
                     ' ' + CL_SHOWPOS_FORMAT.format(Mth.wrapDegrees(Math.toDegrees(angle.y) + 180)) +
                     ' ' + CL_SHOWPOS_FORMAT.format(Math.toDegrees(angle.z)),
                 2, 29, 0xffffffff
             );
 
-            minecraft.font.draw(
-                poseStack,
+            graphics.drawString(
+                minecraft.font,
                 "vel:  " + CL_SHOWPOS_FORMAT.format(player.getDeltaMovement().length()),
                 2, 38, 0xffffffff
             );

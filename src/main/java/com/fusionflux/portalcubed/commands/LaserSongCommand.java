@@ -38,7 +38,7 @@ public class LaserSongCommand {
                         }
                         entity.setSound(song);
                         ctx.getSource().sendSuccess(
-                            Component.translatable("portalcubed.command.lasersong.success", pos, song),
+                            () -> Component.translatable("portalcubed.command.lasersong.success", pos, song),
                             true
                         );
                         return 1;

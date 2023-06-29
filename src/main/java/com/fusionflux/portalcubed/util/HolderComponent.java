@@ -51,7 +51,7 @@ public final class HolderComponent implements AutoSyncedComponent {
             RayonIntegration.INSTANCE.setNoGravity(heldEntity, true);
             this.heldEntityUUID = Optional.of(entityToHold.getUUID());
             PortalCubedComponents.HOLDER_COMPONENT.sync(owner);
-            if (owner.level.isClientSide) {
+            if (owner.level().isClientSide) {
                 grabbedWithGun = owner.isHolding(i -> i.getItem() instanceof PortalGun);
                 playClientSound(false);
             }
@@ -71,7 +71,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     }
 
     public @Nullable CorePhysicsEntity entityBeingHeld() {
-        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((LevelExt) this.owner.level).getEntityByUuid(heldEntityUUID.get());
+        if (heldEntity == null && heldEntityUUID.isPresent()) this.heldEntity = (CorePhysicsEntity) ((LevelExt) this.owner.level()).getEntityByUuid(heldEntityUUID.get());
         return this.heldEntity;
     }
 
@@ -81,7 +81,7 @@ public final class HolderComponent implements AutoSyncedComponent {
             if (!heldEntity.fizzling()) {
                 RayonIntegration.INSTANCE.setNoGravity(heldEntity, false);
             }
-            if (owner.level.isClientSide && !heldEntity.isRemoved()) {
+            if (owner.level().isClientSide && !heldEntity.isRemoved()) {
                 var buf = PacketByteBufs.create();
                 buf.writeDouble(heldEntity.position().x);
                 buf.writeDouble(heldEntity.position().y);
@@ -97,7 +97,7 @@ public final class HolderComponent implements AutoSyncedComponent {
             this.heldEntityUUID = Optional.empty();
             this.heldEntity = null;
             PortalCubedComponents.HOLDER_COMPONENT.sync(owner);
-            if (owner.level.isClientSide) {
+            if (owner.level().isClientSide) {
                 playClientSound(true);
             }
             return true;
@@ -125,7 +125,7 @@ public final class HolderComponent implements AutoSyncedComponent {
     public void applySyncPacket(FriendlyByteBuf buf) {
         final var syncedHeldEntityUUID = EntityDataSerializers.OPTIONAL_UUID.read(buf);
         if (heldEntity == null && syncedHeldEntityUUID.isPresent()) {
-            hold((CorePhysicsEntity) ((LevelExt) this.owner.level).getEntityByUuid(syncedHeldEntityUUID.get()));
+            hold((CorePhysicsEntity) ((LevelExt) this.owner.level()).getEntityByUuid(syncedHeldEntityUUID.get()));
         } else if (syncedHeldEntityUUID.isEmpty() && heldEntity != null) {
             stopHolding();
         }

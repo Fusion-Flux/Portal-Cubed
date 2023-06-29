@@ -7,8 +7,12 @@ import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,7 +25,7 @@ public class PortalHud {
     private static final ResourceLocation ROUND_TEXTURE = id("textures/gui/active_portal_indicator.png");
     private static final ResourceLocation SQUARE_TEXTURE = id("textures/gui/active_portal_indicator_square.png");
 
-    public static void renderPortals(@SuppressWarnings("unused") PoseStack matrices, @SuppressWarnings("unused") float tickDelta) {
+    public static void renderPortals(@SuppressWarnings("unused") GuiGraphics graphics, @SuppressWarnings("unused") float tickDelta) {
         renderPortalSide(false, -9, -9, 16);
         renderPortalSide(true, 0, -5, 0);
     }

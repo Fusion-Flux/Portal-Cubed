@@ -12,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -97,13 +96,6 @@ public class HardLightBridgeBlock extends Block implements HardLightBridgePart {
             return stateFrom.getValue(FACING) == state.getValue(FACING);
         }
         return false;
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    @NotNull
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
     }
 
     static VoxelShape makeShape(BlockState state) {

@@ -91,7 +91,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     private void crowbarSwoosh(InteractionHand hand, CallbackInfo ci) {
         //noinspection ConstantValue
         if ((Object)this instanceof Player player && getItemInHand(hand).is(PortalCubedItems.CROWBAR)) {
-            level.playSound(
+            level().playSound(
                 player,
                 player.getX(), player.getY(), player.getZ(),
                 PortalCubedSounds.CROWBAR_SWOOSH_EVENT, SoundSource.PLAYERS,
@@ -116,7 +116,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                 (int)Math.ceil(boundingBox.maxY),
                 (int)Math.ceil(boundingBox.maxZ)
             )) {
-                final BlockState state = level.getBlockState(pos);
+                final BlockState state = level().getBlockState(pos);
                 if (state.is(PortalCubedBlocks.REPULSION_GEL) && BaseGel.collides(this, pos, state)) {
                     cir.setReturnValue(false);
                     return;

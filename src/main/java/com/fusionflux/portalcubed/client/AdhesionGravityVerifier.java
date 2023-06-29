@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
@@ -32,9 +31,8 @@ public class AdhesionGravityVerifier {
 
         if (packet.gravity.direction() == null) return false;
         info.readBlockPos();
-        Level world = player.getLevel();
         /*Return true if the block is a field generator or plating and could have triggered the gravity change.*/
-        return world != null;
+        return true;
     }
 
     public static FriendlyByteBuf packInfo(BlockPos block) {

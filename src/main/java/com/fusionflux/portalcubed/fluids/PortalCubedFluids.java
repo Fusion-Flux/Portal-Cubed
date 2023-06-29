@@ -9,7 +9,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
@@ -22,7 +22,7 @@ public class PortalCubedFluids {
     public static final FluidRegistryContainer TOXIC_GOO = createFluid(
         "toxic_goo",
         new ToxicGooFluid.Flowing(), new ToxicGooFluid.Still(),
-        still -> new ToxicGooFluid.Block(still, QuiltBlockSettings.copy(Blocks.WATER).color(MaterialColor.TERRACOTTA_GREEN))
+        still -> new ToxicGooFluid.Block(still, QuiltBlockSettings.copy(Blocks.WATER).mapColor(MapColor.TERRACOTTA_GREEN))
     );
 
     private static FluidRegistryContainer createFluid(String name, FlowingFluid flowing, FlowingFluid still, Function<FlowingFluid, LiquidBlock> blockSupplier) {

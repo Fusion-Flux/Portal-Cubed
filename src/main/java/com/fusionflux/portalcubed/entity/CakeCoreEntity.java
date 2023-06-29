@@ -15,9 +15,9 @@ public class CakeCoreEntity extends CorePhysicsEntity  {
 
     @Override
     public void tick() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (t == 0) {
-                level.playSound(null, this, PortalCubedSounds.CAKE_CORE_EVENT, this.getSoundSource(), 1f, 1f);
+                level().playSound(null, this, PortalCubedSounds.CAKE_CORE_EVENT, this.getSoundSource(), 1f, 1f);
                 t = 2407;
             }
             t--;
