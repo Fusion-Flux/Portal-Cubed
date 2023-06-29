@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.ARBFramebufferObject;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
@@ -21,6 +22,7 @@ public abstract class RenderTargetMixin implements RenderTargetExt {
     @Shadow public int width;
     @Shadow public int height;
 
+    @Unique
     private boolean stencilBufferEnabled;
 
     @ModifyArgs(

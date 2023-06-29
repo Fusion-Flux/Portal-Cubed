@@ -1,7 +1,7 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.client.PortalCubedClient;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ public class DeathScreenMixin extends Screen {
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void noDeathScreenR(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void noDeathScreenR(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (PortalCubedClient.isPortalHudMode()) {
             assert minecraft != null;
             minecraft.mouseHandler.grabMouse();

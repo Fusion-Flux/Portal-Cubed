@@ -18,12 +18,13 @@ public interface CollisionGetterMixin {
         method = "getBlockCollisions",
         at = @At("RETURN")
     )
+    @SuppressWarnings("unchecked")
     default Iterable<VoxelShape> supportCutout(Iterable<VoxelShape> original, @Local Entity entity) {
         if (entity == null) {
             return original;
         }
         final VoxelShape cutout = CalledValues.getPortalCutout(entity);
-        return () -> ((BlockCollisionsExt)original.iterator()).setPortalCutout(cutout);
+        return () -> ((BlockCollisionsExt<VoxelShape>)original.iterator()).setPortalCutout(cutout);
     }
 
     @ModifyVariable(
@@ -31,8 +32,8 @@ public interface CollisionGetterMixin {
         at = @At("STORE"),
         ordinal = 0
     )
-    @SuppressWarnings("InvalidInjectorMethodSignature")
-    default BlockCollisions supportCutout(BlockCollisions value, @Local Entity entity) {
-        return ((BlockCollisionsExt)value).setPortalCutout(CalledValues.getPortalCutout(entity));
+    @SuppressWarnings({"InvalidInjectorMethodSignature", "unchecked"})
+    default BlockCollisions<VoxelShape> supportCutout(BlockCollisions<VoxelShape> value, @Local Entity entity) {
+        return ((BlockCollisionsExt<VoxelShape>)value).setPortalCutout(CalledValues.getPortalCutout(entity));
     }
 }

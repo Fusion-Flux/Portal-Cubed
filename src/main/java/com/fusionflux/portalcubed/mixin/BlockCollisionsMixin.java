@@ -17,14 +17,15 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BlockCollisions.class)
-public class BlockCollisionsMixin implements BlockCollisionsExt {
+public class BlockCollisionsMixin<T> implements BlockCollisionsExt<T> {
     @Unique
     private VoxelShape pc$portalCutout = Shapes.empty();
 
     @Override
-    public BlockCollisions setPortalCutout(VoxelShape cutout) {
+    @SuppressWarnings("unchecked")
+    public BlockCollisions<T> setPortalCutout(VoxelShape cutout) {
         pc$portalCutout = cutout;
-        return (BlockCollisions)(Object)this;
+        return (BlockCollisions<T>)(Object)this;
     }
 
     @WrapOperation(
