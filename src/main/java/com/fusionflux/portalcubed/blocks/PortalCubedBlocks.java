@@ -31,7 +31,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedBlocks {
     public static final Item BASE_GEL = new Item(new QuiltItemSettings().fireResistant());
-    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(settings().randomTicks().destroyTime(0f).noOcclusion().noCollission().sound(new SoundType(1, -1, SoundEvents.HONEY_BLOCK_BREAK, SoundEvents.HONEY_BLOCK_STEP, SoundEvents.HONEY_BLOCK_PLACE, SoundEvents.HONEY_BLOCK_HIT, SoundEvents.HONEY_BLOCK_FALL)).mapColor(MapColor.COLOR_ORANGE));
+    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(settings().randomTicks().destroyTime(0f).noOcclusion().noCollission().sound(new SoundType(1, -1, SoundEvents.HONEY_BLOCK_BREAK, SoundEvents.HONEY_BLOCK_STEP, SoundEvents.HONEY_BLOCK_PLACE, SoundEvents.HONEY_BLOCK_HIT, SoundEvents.HONEY_BLOCK_FALL)).mapColor(MapColor.COLOR_ORANGE).pushReaction(PushReaction.DESTROY));
     public static final RepulsionGel REPULSION_GEL = new RepulsionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.COLOR_LIGHT_BLUE));
     public static final AdhesionGel ADHESION_GEL = new AdhesionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.COLOR_PURPLE));
     public static final BaseGel CONVERSION_GEL = new BaseGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.METAL));
@@ -45,7 +45,7 @@ public class PortalCubedBlocks {
     );
 
     // TODO: Due to remapping weirdness, QuiltMaterialBuilder couldn't be used properly here. However, the whole material system is redone in 1.20, and neurotoxin is broken anyway, so this is just a temporary patch.
-    public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(settings().noOcclusion().noCollission());
+    public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(settings().noOcclusion().noCollission().replaceable().mapColor(MapColor.NONE));
     public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().noCollission().sound(SoundType.STONE));
     public static final ExcursionFunnelEmitterBlock EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
     public static final ExcursionFunnelTubeBlock EXCURSION_FUNNEL = new ExcursionFunnelTubeBlock(settings().noOcclusion().noCollission().randomTicks().pushReaction(PushReaction.DESTROY));
@@ -71,15 +71,15 @@ public class PortalCubedBlocks {
     public static final BlockEntityType<NeurotoxinEmitterBlockEntity> NEUROTOXIN_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(NeurotoxinEmitterBlockEntity::new, NEUROTOXIN_EMITTER).build();
     public static final BlockEntityType<ExcursionFunnelEmitterBlockEntity> EXCURSION_FUNNEL_EMITTER_ENTITY = QuiltBlockEntityTypeBuilder.create(ExcursionFunnelEmitterBlockEntity::new, EXCURSION_FUNNEL_EMITTER).build();
 
-    public static final PowerBlock POWER_BLOCK = new PowerBlock(settings().strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
+    public static final PowerBlock POWER_BLOCK = new PowerBlock(settings().strength(-1.0F, 3600000.8F).noLootTable().noOcclusion().noCollission().replaceable().mapColor(MapColor.NONE));
 
-    public static final Block VELOCITY_HELPER = new VelocityHelperBlock(settings().strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
+    public static final Block VELOCITY_HELPER = new VelocityHelperBlock(settings().strength(-1.0F, 3600000.8F).noLootTable().noOcclusion().noCollission().replaceable().mapColor(MapColor.NONE));
     public static final BlockEntityType<VelocityHelperBlockEntity> VELOCITY_HELPER_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(VelocityHelperBlockEntity::new, VELOCITY_HELPER).build();
 
-    public static final Block CATAPULT = new CatapultBlock(settings().strength(-1.0F, 3600000.8F).noLootTable().noOcclusion());
+    public static final Block CATAPULT = new CatapultBlock(settings().strength(-1.0F, 3600000.8F).noLootTable().noOcclusion().noCollission().replaceable().mapColor(MapColor.NONE));
     public static final BlockEntityType<CatapultBlockEntity> CATAPULT_BLOCK_ENTITY = QuiltBlockEntityTypeBuilder.create(CatapultBlockEntity::new, CATAPULT).build();
 
-    public static final FizzlerBlock FIZZLER = new FizzlerBlock(settings().noCollission().strength(-1, 3600000));
+    public static final FizzlerBlock FIZZLER = new FizzlerBlock(settings().noCollission().strength(-1, 3600000).noOcclusion().noCollission().pushReaction(PushReaction.BLOCK));
     public static final FizzlerEmitter FIZZLER_EMITTER = new FizzlerEmitter(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.STONE), FIZZLER);
     public static final FizzlerBlock PORTAL_1_FIZZLER = new FizzlerBlock(QuiltBlockSettings.copyOf(FIZZLER));
     public static final FizzlerEmitter PORTAL_1_FIZZLER_EMITTER = new FizzlerEmitter(QuiltBlockSettings.copyOf(FIZZLER_EMITTER), PORTAL_1_FIZZLER);
