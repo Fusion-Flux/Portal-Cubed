@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "portalcubed:repulsion_gel",
+    "portalcubed:propulsion_gel",
+    "portalcubed:conversion_gel",
+    "portalcubed:adhesion_gel",
+    "portalcubed:reflection_gel"
+  ]
+}
