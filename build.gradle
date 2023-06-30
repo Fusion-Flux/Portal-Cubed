@@ -134,7 +134,9 @@ dependencies {
 
 	include(modImplementation("maven.modrinth:no-indium:1.1.0+1.20"))
 
-	modLocalRuntime(fileTree("runtime-mods/*.jar"))
+	file("runtime-mods").list { _, name -> name.endsWith(".jar") }.each {
+		modLocalRuntime(files("runtime-mods/$it"))
+	}
 }
 
 loom {
