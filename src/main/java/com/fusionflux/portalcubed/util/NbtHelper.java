@@ -3,7 +3,6 @@ package com.fusionflux.portalcubed.util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
 import net.minecraft.world.phys.Vec3;
-
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
@@ -62,8 +61,7 @@ public class NbtHelper {
         if (!tag.contains(key, Tag.TAG_STRING))
             return fallback;
         String name = tag.getString(key);
-        //noinspection unchecked
-        Class<T> clazz = (Class<T>) fallback.getClass();
+        @SuppressWarnings("unchecked") Class<T> clazz = (Class<T>) fallback.getClass();
         for (T entry : clazz.getEnumConstants()) {
             if (entry.name().equals(name))
                 return entry;

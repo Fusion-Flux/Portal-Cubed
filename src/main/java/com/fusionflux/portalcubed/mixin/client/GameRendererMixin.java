@@ -57,7 +57,8 @@ public abstract class GameRendererMixin implements GameRendererExt {
         method = {"getFov", "bobViewWhenHurt"},
         at = @At(
             value = "INVOKE",
-            target = "Ljava/lang/Math;min(FF)F"
+            target = "Ljava/lang/Math;min(FF)F",
+            remap = false
         )
     )
     private float noDeathEffects(float a, float b, Operation<Float> original) {

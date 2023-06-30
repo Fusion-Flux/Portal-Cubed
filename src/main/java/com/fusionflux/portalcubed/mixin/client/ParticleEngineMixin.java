@@ -33,7 +33,8 @@ public class ParticleEngineMixin {
         method = "<clinit>",
         at = @At(
             value = "INVOKE",
-            target = "Lcom/google/common/collect/ImmutableList;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;"
+            target = "Lcom/google/common/collect/ImmutableList;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;",
+            remap = false
         )
     )
     private static ImmutableList<?> addCustomRenderType(
