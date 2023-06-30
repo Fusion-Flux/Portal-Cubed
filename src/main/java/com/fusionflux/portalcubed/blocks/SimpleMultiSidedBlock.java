@@ -19,7 +19,6 @@ public class SimpleMultiSidedBlock extends MultifaceBlock {
 
     @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
-        // Copy from BlockBehaviour, instead of MultifaceBlock
-        return state.canBeReplaced() && (useContext.getItemInHand().isEmpty() || !useContext.getItemInHand().is(this.asItem()));
+        return useContext.getItemInHand().is(asItem()) ? super.canBeReplaced(state, useContext) : state.canBeReplaced();
     }
 }

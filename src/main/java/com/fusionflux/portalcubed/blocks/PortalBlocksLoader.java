@@ -139,6 +139,7 @@ public final class PortalBlocksLoader {
                     Optional.ofNullable(MapColorNames.COLORS.get(GsonHelper.convertToString(value, "map_color")))
                         .orElseThrow(() -> new IllegalArgumentException("Unknown map_color " + value))
                 );
+                case "replaceable" -> settings.replaceable(GsonHelper.convertToBoolean(value, "replaceable"));
                 case "render_layer" -> renderLayer = GsonHelper.convertToString(value, "render_layer");
                 default -> throw new IllegalArgumentException("Unknown Portal Block field " + entry.getKey());
             }
