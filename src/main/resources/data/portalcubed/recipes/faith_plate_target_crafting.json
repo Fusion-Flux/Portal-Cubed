@@ -7,7 +7,7 @@
     ],
     "key": {
         "X": {
-            "item": "minecraft:cyan_dye"
+            "tag": "c:cyan_dyes"
         },
         "Y": {
             "item": "minecraft:glow_ink_sac"

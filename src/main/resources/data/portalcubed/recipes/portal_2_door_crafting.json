@@ -11,7 +11,7 @@
             "tag": "portalcubed:portal_2_clean_gray_panels"
         },
         "Y": {
-            "item": "minecraft:cyan_dye"
+            "tag": "c:cyan_dyes"
         },
         "Z": {
             "item": "minecraft:iron_nugget"

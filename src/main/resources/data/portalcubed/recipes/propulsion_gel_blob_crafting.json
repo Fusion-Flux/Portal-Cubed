@@ -5,7 +5,7 @@
             "item": "portalcubed:base_gel"
         },
         {
-            "item": "minecraft:orange_dye"
+            "tag": "c:orange_dyes"
         },
         {
             "item": "minecraft:packed_ice"

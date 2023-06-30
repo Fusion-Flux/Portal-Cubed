@@ -8,7 +8,7 @@
       "item": "minecraft:dispenser"
     },
     {
-      "item": "minecraft:red_dye"
+      "tag": "c:red_dyes"
     },
     {
       "item": "minecraft:redstone"

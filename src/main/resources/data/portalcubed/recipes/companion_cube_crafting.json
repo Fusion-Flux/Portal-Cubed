@@ -13,7 +13,7 @@
             "item": "minecraft:redstone_lamp"
         },
         "Y": {
-            "item": "minecraft:pink_dye"
+            "tag": "c:pink_dyes"
         }
     },
     "result": {

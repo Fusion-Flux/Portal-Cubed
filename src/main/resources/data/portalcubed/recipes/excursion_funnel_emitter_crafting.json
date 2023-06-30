@@ -14,10 +14,10 @@
             "item": "minecraft:dispenser"
         },
         "Z": {
-            "item": "minecraft:light_blue_dye"
+            "tag": "c:light_blue_dyes"
         },
         "A": {
-            "item": "minecraft:orange_dye"
+            "tag": "c:orange_dyes"
         }
     },
     "result": {
