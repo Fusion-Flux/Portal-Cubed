@@ -52,6 +52,7 @@ public class PortalCubedServerPackets {
     public static final ResourceLocation CROWBAR_ATTACK = id("crowbar_attack");
     public static final ResourceLocation LEFT_CLICK = id("left_click");
     public static final ResourceLocation RIGHT_CLICK = id("right_click");
+    public static final ResourceLocation SYNC_SHOOTER_ROT = id("sync_shooter_rot");
 
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayer player, @SuppressWarnings("unused") ServerGamePacketListenerImpl handler, @SuppressWarnings("unused") FriendlyByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
@@ -190,5 +191,17 @@ public class PortalCubedServerPackets {
                 if (chi.onRightClick(player, InteractionHand.MAIN_HAND).shouldSwing()) player.swing(InteractionHand.MAIN_HAND, true);
             }
         }));
+        ServerPlayNetworking.registerGlobalReceiver(SYNC_SHOOTER_ROT, (server, player, handler, buf, responseSender) -> {
+            final float xRot = buf.readFloat();
+            final float yRot = buf.readFloat();
+            server.execute(() -> {
+                player.setXRot(xRot);
+                player.setYRot(yRot);
+                player.setYHeadRot(yRot);
+                // The O's are the ones that are actually used for getViewVector!
+                player.xRotO = xRot;
+                player.yHeadRotO = yRot;
+            });
+        });
     }
 }

@@ -1,12 +1,12 @@
 package com.fusionflux.portalcubed.items;
 
-
 import com.fusionflux.portalcubed.PortalCubedGameRules;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.ClickHandlingItem;
 import com.fusionflux.portalcubed.util.IPQuaternion;
@@ -15,12 +15,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
+import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -43,10 +45,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 import java.util.*;
 import java.util.function.BiFunction;
-
 
 public class PortalGun extends Item implements ClickHandlingItem, DyeableLeatherItem {
     private static final Map<Pair<Vec3i, Vec3i>, List<List<Direction>>> FAIL_TRIES;
@@ -304,7 +307,21 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
 
             tag.put(world.dimension().location().toString(), portalsTag);
         } else {
-            cancelClientMovement(user);
+            final LocalPlayer localPlayer = (LocalPlayer)user;
+            if (localPlayer.input.getMoveVector().lengthSquared() < 0.1 && user.getXRot() >= 88.0) {
+                user.setDeltaMovement(0, user.getDeltaMovement().y, 0);
+            }
+            localPlayer.connection.send(new ServerboundMovePlayerPacket.Pos(
+                user.getX(),
+                user.getY(),
+                user.getZ(),
+                user.onGround()
+            ));
+            // PosRot doesn't apply yHeadRot until the next tick, but we need it applied now
+            ClientPlayNetworking.send(PortalCubedServerPackets.SYNC_SHOOTER_ROT, Util.make(PacketByteBufs.create(), buf -> {
+                buf.writeFloat(user.getXRot());
+                buf.writeFloat(user.getYHeadRot());
+            }));
         }
     }
 
@@ -314,15 +331,6 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
      */
     private static boolean vectorsEqual(Vec3 a, Vec3 b) {
         return a.x() == b.x() && a.y() == b.y() && a.z() == b.z();
-    }
-
-    @ClientOnly
-    private static void cancelClientMovement(Entity user) {
-        if (user instanceof LocalPlayer clientPlayer) {
-            if (clientPlayer.input.getMoveVector().lengthSquared() < 0.1 && user.getXRot() >= 88.0) {
-                user.setDeltaMovement(0, user.getDeltaMovement().y, 0);
-            }
-        }
     }
 
     public static Optional<Portal> getPotentialOpposite(Level world, Vec3 portalPos, @Nullable Portal ignore, int color, boolean includePlayerPortals) {
