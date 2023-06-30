@@ -1,7 +1,6 @@
 package com.fusionflux.portalcubed.blocks;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -19,11 +18,5 @@ public class FacadeBlock extends SimpleMultiSidedBlock {
     @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
-    }
-
-    @Override
-    public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
-        // Copy from BlockBehaviour, instead of MultifaceBlock
-        return state.canBeReplaced() && (useContext.getItemInHand().isEmpty() || !useContext.getItemInHand().is(this.asItem()));
     }
 }
