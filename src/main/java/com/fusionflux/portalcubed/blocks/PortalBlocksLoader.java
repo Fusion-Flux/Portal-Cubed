@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.blocks;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.api.EnvType;
@@ -30,6 +31,7 @@ import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
@@ -46,6 +48,7 @@ public final class PortalBlocksLoader {
             .put("facade", FacadeBlock::new)
             .put("multiface", SimpleMultiSidedBlock::new)
             .build();
+    private static final Set<String> ALLOWED_IN_PROVIDED = Set.of("render_layer");
     @ClientOnly
     private static Map<String, RenderType> renderLayers;
     private static final Map<String, BlockData> BLOCK_DATA = new LinkedHashMap<>();
@@ -107,11 +110,11 @@ public final class PortalBlocksLoader {
 
     private static void load(JsonObject json) {
         for (final var entry : json.entrySet()) {
-            BLOCK_DATA.put(entry.getKey(), parseBlock(entry.getValue().getAsJsonObject()));
+            BLOCK_DATA.put(entry.getKey(), parseBlock(entry.getValue().getAsJsonObject(), entry.getKey()));
         }
     }
 
-    private static BlockData parseBlock(JsonObject json) {
+    private static BlockData parseBlock(JsonObject json, String name) {
         final var type = BLOCK_TYPES.get(GsonHelper.getAsString(json, "type", "default"));
         if (type == null) {
             throw new IllegalArgumentException("Unknown type " + json.get("type"));
@@ -144,7 +147,18 @@ public final class PortalBlocksLoader {
                 default -> throw new IllegalArgumentException("Unknown Portal Block field " + entry.getKey());
             }
         }
-        return new BlockData(type.apply(settings), renderLayer);
+
+        final Block result = type.apply(settings);
+        if (result == null) {
+            final Set<String> disallowedProperties = Sets.difference(json.keySet(), ALLOWED_IN_PROVIDED);
+            if (!disallowedProperties.isEmpty()) {
+                throw new IllegalArgumentException(
+                    "The following properties aren't allowed in \"provided\" block " + name +
+                        ": " + String.join(", ", disallowedProperties)
+                );
+            }
+        }
+        return new BlockData(result, renderLayer);
     }
 
     private static SoundType parseBlockSounds(JsonElement sounds) {
