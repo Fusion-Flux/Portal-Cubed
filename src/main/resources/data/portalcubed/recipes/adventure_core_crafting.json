@@ -8,7 +8,7 @@
       "item": "minecraft:map"
     },
     {
-      "item": "minecraft:lime_dye"
+      "tag": "c:lime_dyes"
     }
   ],
   "result": {

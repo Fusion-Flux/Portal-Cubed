@@ -9,7 +9,7 @@
       "item": "minecraft:firework_rocket"
     },
     {
-      "item": "minecraft:lime_dye"
+      "tag": "c:lime_dyes"
     },
     {
       "item": "portalcubed:solid_office_concrete"

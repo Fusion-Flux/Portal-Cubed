@@ -8,7 +8,7 @@
       "item": "minecraft:tnt"
     },
     {
-      "item": "minecraft:red_dye"
+      "tag": "c:red_dyes"
     }
   ],
   "result": {

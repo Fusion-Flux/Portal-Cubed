@@ -10,7 +10,7 @@
             "item": "minecraft:iron_nugget"
         },
         "X": {
-            "item": "minecraft:pink_dye"
+            "tag": "c:pink_dyes"
         }
     },
     "result": {

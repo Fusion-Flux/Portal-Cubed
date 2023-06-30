@@ -9,7 +9,7 @@
             "item": "minecraft:iron_nugget"
         },
         "Y": {
-            "item": "minecraft:orange_dye"
+            "tag": "c:orange_dyes"
         }
     },
     "result": {

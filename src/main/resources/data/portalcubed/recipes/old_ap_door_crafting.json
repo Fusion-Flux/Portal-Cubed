@@ -11,7 +11,7 @@
             "tag": "minecraft:logs"
         },
         "Y": {
-            "item": "minecraft:lime_dye"
+            "tag": "c:lime_dyes"
         },
         "Z": {
             "item": "minecraft:iron_nugget"

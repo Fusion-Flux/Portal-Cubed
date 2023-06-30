@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "portalcubed:portal_1_door",
+    "portalcubed:portal_2_door",
+    "portalcubed:old_ap_door",
+    "portalcubed:octopus_door"
+  ]
+}

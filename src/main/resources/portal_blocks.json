@@ -322,70 +322,196 @@
     }
   },
   "white_checkered_panel": {
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "white_half_panel": {
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "white_panel": {
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "white_2x1_panel_bottom": {
     "type": "pillar",
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "white_2x1_panel_top": {
     "type": "pillar",
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "white_2x2_panel_bottom_left": {
     "type": "directional",
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "white_2x2_panel_bottom_right": {
     "type": "directional",
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "white_2x2_panel_top_left": {
     "type": "directional",
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "white_2x2_panel_top_right": {
     "type": "directional",
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_checkered_panel": {
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_half_panel": {
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_panel": {
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_2x1_panel_bottom": {
     "type": "pillar",
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_2x1_panel_top": {
     "type": "pillar",
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_2x2_panel_bottom_left": {
     "type": "directional",
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_2x2_panel_bottom_right": {
     "type": "directional",
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_2x2_panel_top_left": {
     "type": "directional",
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_2x2_panel_top_right": {
     "type": "directional",
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "padded_gray_half_panel": {
     "map_color": "deepslate"
@@ -945,19 +1071,47 @@
   },
   "white_half_panel_facade": {
     "type": "facade",
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "white_panel_facade": {
     "type": "facade",
-    "map_color": "wool"
+    "map_color": "wool",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_half_panel_facade": {
     "type": "facade",
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "aged_white_panel_facade": {
     "type": "facade",
-    "map_color": "grass"
+    "map_color": "grass",
+    "sounds": {
+      "break": "minecraft:block.cherry_wood.break",
+      "step": "minecraft:block.cherry_wood.step",
+      "place": "minecraft:block.cherry_wood.place",
+      "hit": "minecraft:block.cherry_wood.hit",
+      "fall": "minecraft:block.cherry_wood.fall"
+    }
   },
   "padded_gray_half_panel_facade": {
     "type": "facade",

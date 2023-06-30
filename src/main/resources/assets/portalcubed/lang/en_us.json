@@ -3,8 +3,8 @@
   "itemGroup.portalcubed.other_testing_elements": "Other Testing Elements",
   "itemGroup.portalcubed.portal_blocks": "Portal Blocks",
 
-  "subtitles.portalcubed.gel_bounce": "Repulsion gel bounces",
-  "subtitles.portalcubed.gel_run": "Propulsion gel accelerates",
+  "subtitles.portalcubed.gel_bounce": "Something bounces on propulsion gel",
+  "subtitles.portalcubed.gel_run": "Something slides on propulsion gel",
   "subtitles.portalcubed.portal_gun_secondary_fire": "Portal gun secondary fire",
   "subtitles.portalcubed.portal_gun_primary_fire": "Portal gun primary fire",
   "subtitles.portalcubed.portal_invalid_surface": "Portal gun failed",
@@ -12,7 +12,7 @@
   "subtitles.portalcubed.portal_open": "Portal opens",
   "subtitles.portalcubed.portal_close": "Portal closes",
   "subtitles.portalcubed.portal_fizzle": "Portal fizzles",
-  "subtitles.portalcubed.material_emancipation": "Object disintegrates",
+  "subtitles.portalcubed.material_emancipation": "Something disintegrates",
 
   "subtitles.portalcubed.pedestal_button_press": "Switch activates",
   "subtitles.portalcubed.pedestal_button_release": "Switch deactivates",
