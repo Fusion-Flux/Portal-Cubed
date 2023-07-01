@@ -23,6 +23,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +47,8 @@ public class PortalRenderer extends EntityRenderer<Portal> {
     public void render(@NotNull Portal entity, float yaw, float tickDelta, @NotNull PoseStack matrices, @NotNull MultiBufferSource vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.pushPose();
-        matrices.mulPose(entity.getRotation());
+        Quaternionf rotation = entity.getRotation().get(tickDelta);
+        matrices.mulPose(rotation);
         matrices.mulPose(Axis.YP.rotationDegrees(180));
 
         int color = entity.getColor() * -1;
@@ -137,6 +139,9 @@ public class PortalRenderer extends EntityRenderer<Portal> {
         renderAxis(entry, vertices, entity.getAxisW(), 1f, 0f, 0f);
         renderAxis(entry, vertices, entity.getAxisH(), 1f, 0f, 0f);
         renderAxis(entry, vertices, entity.getNormal(), 0f, 1f, 0f);
+        Quaternionf rotation = entity.getRotation().get();
+        Vec3 rotationAxis = new Vec3(rotation.x, rotation.y, rotation.z).normalize();
+        renderAxis(entry, vertices, rotationAxis, 0.5f, 0f, 0.5f);
     }
 
     private void renderAxis(PoseStack.Pose entry, VertexConsumer vertices, Vec3 axis, float red, float green, float blue) {

@@ -109,7 +109,7 @@ public class LevelRendererMixin implements LevelRendererExt {
             renderer.shouldRender(portal, cullingFrustum, cameraPos.x, cameraPos.y, cameraPos.z);
             poseStack.pushPose();
             poseStack.translate(entity.getX(), entity.getY(), entity.getZ());
-            poseStack.mulPose(portal.getRotation());
+            poseStack.mulPose(portal.getRotation().get(partialTick));
             poseStack.mulPose(Axis.YP.rotationDegrees(180f));
             renderer.renderPortal(
                 poseStack,
