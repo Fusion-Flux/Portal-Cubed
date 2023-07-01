@@ -14,6 +14,7 @@ public class PortalCubedCommands implements CommandRegistrationCallback {
         FireRocketCommand.register(dispatcher);
         LaserSongCommand.register(dispatcher);
         FogCommand.register(dispatcher);
+        RotatePortalCommand.register(dispatcher);
         if (QuiltLoader.isModLoaded("pehkui")) {
             ChellScaleCommand.register(dispatcher);
         }

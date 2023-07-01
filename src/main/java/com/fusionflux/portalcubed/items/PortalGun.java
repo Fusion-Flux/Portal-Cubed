@@ -347,10 +347,10 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
 
     public static void linkPortals(Portal portal1, Portal portal2, float volume) {
         portal1.setDestination(Optional.of(portal2.getOriginPos()));
-        portal1.setOtherRotation(Optional.of(portal2.getRotation()));
+        portal1.setOtherRotation(Optional.of(portal2.getRotation().get()));
         portal1.setLinkedPortalUUID(Optional.of(portal2.getUUID()));
         portal2.setDestination(Optional.of(portal1.getOriginPos()));
-        portal2.setOtherRotation(Optional.of(portal1.getRotation()));
+        portal2.setOtherRotation(Optional.of(portal1.getRotation().get()));
         portal2.setLinkedPortalUUID(Optional.of(portal1.getUUID()));
 
         portal1.level().playSound(null, portal1.position().x(), portal1.position().y(), portal1.position().z(), PortalCubedSounds.ENTITY_PORTAL_OPEN, SoundSource.NEUTRAL, volume, 1F);

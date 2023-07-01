@@ -5,6 +5,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.fusionflux.portalcubed.util.LerpedQuaternion;
 import com.fusionflux.portalcubed.util.NbtHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
@@ -57,7 +58,7 @@ public class Portal extends Entity {
 
     private AABB cutoutBoundingBox = NULL_BOX;
 
-    private static final EntityDataAccessor<Quaternionf> ROTATION = SynchedEntityData.defineId(Portal.class, EntityDataSerializers.QUATERNION);
+    private static final EntityDataAccessor<LerpedQuaternion> ROTATION = SynchedEntityData.defineId(Portal.class, PortalCubedTrackedDataHandlers.LERPED_QUAT);
     private static final EntityDataAccessor<Optional<Quaternionf>> OTHER_ROTATION = SynchedEntityData.defineId(Portal.class, PortalCubedTrackedDataHandlers.OPTIONAL_QUAT);
     public static final EntityDataAccessor<Optional<UUID>> LINKED_PORTAL_UUID = SynchedEntityData.defineId(Portal.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<Boolean> IS_ACTIVE = SynchedEntityData.defineId(Portal.class, EntityDataSerializers.BOOLEAN);
@@ -75,7 +76,7 @@ public class Portal extends Entity {
 
     @Override
     protected void defineSynchedData() {
-        this.getEntityData().define(ROTATION, new Quaternionf());
+        this.getEntityData().define(ROTATION, new LerpedQuaternion(new Quaternionf()).withUpdateCallback(this::onRotationUpdate));
         this.getEntityData().define(OTHER_ROTATION, Optional.empty());
         this.getEntityData().define(LINKED_PORTAL_UUID, Optional.empty());
         this.getEntityData().define(IS_ACTIVE, false);
@@ -87,7 +88,7 @@ public class Portal extends Entity {
     @Override
     protected void readAdditionalSaveData(CompoundTag nbt) {
         this.setColor(nbt.getInt("color"));
-        setRotation(NbtHelper.getQuaternion(nbt, "PortalRotation"));
+        setRotation(LerpedQuaternion.fromNbt(nbt.getCompound("PortalRotation")));
         if (nbt.contains("OtherRotation")) {
             setOtherRotation(Optional.of(NbtHelper.getQuaternion(nbt, "OtherRotation")));
         } else {
@@ -102,7 +103,7 @@ public class Portal extends Entity {
     @Override
     protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putFloat("color", this.getColor());
-        NbtHelper.putQuaternion(nbt, "PortalRotation", getRotation());
+        nbt.put("PortalRotation", getRotation().toNbt());
         getOtherRotation().ifPresent(r -> NbtHelper.putQuaternion(nbt, "OtherRotation", r));
         this.getLinkedPortalUUID().ifPresent(uuid -> nbt.putUUID("linkedPortalUUID", uuid));
         this.getDestination().ifPresent(destination -> NbtHelper.putVec3d(nbt, "destination", destination));
@@ -156,12 +157,16 @@ public class Portal extends Entity {
         return result != null ? result : Direction.getNearest((float)x, (float)y, (float)z);
     }
 
-    public Quaternionf getRotation() {
+    public LerpedQuaternion getRotation() {
         return getEntityData().get(ROTATION);
     }
 
     public void setRotation(Quaternionf rotation) {
-        getEntityData().set(ROTATION, rotation);
+        setRotation(new LerpedQuaternion(rotation));
+    }
+
+    public void setRotation(LerpedQuaternion rotation) {
+        getEntityData().set(ROTATION, rotation.withUpdateCallback(this::onRotationUpdate));
     }
 
     public Optional<Quaternionf> getOtherRotation() {
@@ -173,7 +178,7 @@ public class Portal extends Entity {
     }
 
     private Vec3 applyAxis(Vec3 axis) {
-        return IPQuaternion.fromQuaternionf(getRotation()).rotate(axis, true);
+        return IPQuaternion.fromQuaternionf(getRotation().get()).rotate(axis, true);
     }
 
     public Vec3 getAxisW() {
@@ -225,6 +230,7 @@ public class Portal extends Entity {
     public void tick() {
         this.makeBoundingBox();
         this.calculateCutoutBox();
+        getRotation().tick();
         if (!this.level().isClientSide) {
             final ServerLevel serverLevel = (ServerLevel)level();
             serverLevel.getChunkSource().addRegionTicket(TicketType.PORTAL, chunkPosition(), 2, blockPosition());
@@ -262,6 +268,10 @@ public class Portal extends Entity {
         } else if (OTHER_ROTATION.equals(key)) {
             otherAxisW = otherAxisH = otherNormal = Optional.empty();
         }
+    }
+
+    public void setValidation(boolean validate) {
+        this.disableValidation = !validate;
     }
 
     public boolean validate() {
@@ -364,6 +374,10 @@ public class Portal extends Entity {
         return true;
     }
 
+    private void onRotationUpdate(LerpedQuaternion quaternion) {
+        getEntityData().set(ROTATION, quaternion.copy()); // update on the other side, server/client
+    }
+
     @NotNull
     @Override
     protected AABB makeBoundingBox() {
@@ -454,7 +468,7 @@ public class Portal extends Entity {
     }
 
     public IPQuaternion getTransformQuat() {
-        final IPQuaternion myRotation = IPQuaternion.fromQuaternionf(getRotation());
+        final IPQuaternion myRotation = IPQuaternion.fromQuaternionf(getRotation().get());
         final IPQuaternion otherRotation = IPQuaternion.fromQuaternionf(getOtherRotation().orElseThrow(NOT_INIT));
         return otherRotation
             .hamiltonProduct(FLIP_AXIS_W)
