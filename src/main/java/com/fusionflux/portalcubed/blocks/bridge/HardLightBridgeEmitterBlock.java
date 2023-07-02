@@ -2,15 +2,21 @@ package com.fusionflux.portalcubed.blocks.bridge;
 
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.entity.Portal;
+import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.util.VoxelShaper;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -22,14 +28,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public class HardLightBridgeEmitterBlock extends Block implements HardLightBridgePart {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -161,9 +172,39 @@ public class HardLightBridgeEmitterBlock extends Block implements HardLightBridg
                 pos.move(facing);
                 if (canPlaceBridge(level, pos, facing)) {
                     level.setBlockAndUpdate(pos, bridgeState);
-                } else {
-                    // TODO check for portals
-                    break;
+                } else { // hit a wall, check for portals
+                    pos.move(facing.getOpposite()); // step back
+                    AABB box = new AABB(pos);
+                    List<Portal> portals = level.getEntitiesOfClass(Portal.class, box);
+                    for (Portal portal : portals) {
+                        Direction portalFacing = portal.getFacingDirection();
+                        if (portalFacing.getOpposite() != facing)
+                            continue;
+                        Portal linked = portal.findLinkedPortal();
+                        if (linked == null)
+                            continue;
+                        if (!portal.snapToGrid() || !linked.snapToGrid())
+                            continue;
+                        Vec3 bridgePos = edge.offsetTowards(Vec3.atCenterOf(pos), facing, 0.4);
+                        Vec3 relative = bridgePos.subtract(portal.getOriginPos());
+                        Axis xAxis = Edge.RIGHT.toDirection(facing).getAxis();
+                        double x = relative.get(xAxis);
+                        Axis yAxis = Edge.UP.toDirection(facing).getAxis();
+                        double y = relative.get(yAxis);
+                        Vec3 linkedBase = linked.getPointInPlane(-x, -y); // negative???
+                        Vec3 linkedBridgePos = linkedBase.relative(linked.getFacingDirection(), 0.5);
+
+                        // successfully teleported. update stuff and continue propagating.
+                        pos.set(linkedBridgePos.x, linkedBridgePos.y, linkedBridgePos.z);
+                        edge = Edge.teleport(edge, portal, facing, linked.getFacingDirection());
+                        facing = linked.getFacingDirection();
+
+                        pos.move(facing.getOpposite()); // step back, will move forward again on next loop
+                        bridgeState = !powered ? Blocks.AIR.defaultBlockState()
+                                : PortalCubedBlocks.HLB_BLOCK.defaultBlockState()
+                                .setValue(FACING, facing).setValue(EDGE, edge);
+                        break;
+                    }
                 }
             }
         });
@@ -197,5 +238,22 @@ public class HardLightBridgeEmitterBlock extends Block implements HardLightBridg
             shape = Shapes.or(shape, HardLightBridgeBlock.makeShape(state));
         }
         return shape;
+    }
+
+    @Override
+    public void onPortalCreate(ServerLevel level, BlockState state, BlockPos pos, Portal portal) {
+        Direction facing = state.getValue(FACING);
+        if (facing != portal.getFacingDirection().getOpposite())
+            return;
+        // propagate through
+        HardLightBridgeEmitterBlock.updateEmission(level, state, pos, true);
+    }
+
+    @Override
+    public void beforePortalRemove(ServerLevel level, BlockState state, BlockPos pos, Portal portal) {
+        Direction facing = state.getValue(FACING);
+        if (facing == portal.getFacingDirection().getOpposite()) { // portal in front, remove bridge on other side.
+            HardLightBridgeEmitterBlock.updateEmission(level, state, pos, false);
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.fusionflux.portalcubed.blocks.bridge;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.entity.Portal;
+import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.fusionflux.portalcubed.util.VoxelShaper;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -12,6 +14,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -58,14 +62,14 @@ public class HardLightBridgeBlock extends Block implements HardLightBridgePart {
     @SuppressWarnings("deprecation")
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        Direction back = state.getValue(FACING).getOpposite();
-        BlockState behind = level.getBlockState(pos.relative(back));
-        if (behind.is(this) || behind.is(PortalCubedBlocks.HLB_EMITTER_BLOCK)) {
-            if (behind.getValue(FACING) == state.getValue(FACING) && behind.getValue(EDGE) == state.getValue(EDGE)) {
-                return;
+        boolean supported = hasSupportingBlockBehind(level, pos, state.getValue(FACING), state.getValue(EDGE), (behind, facing, edge) -> {
+            if (behind.is(this) || behind.is(PortalCubedBlocks.HLB_EMITTER_BLOCK)) {
+                return behind.getValue(FACING) == facing && behind.getValue(EDGE) == edge;
             }
-        }
-        level.destroyBlock(pos, false);
+            return false;
+        });
+        if (!supported)
+            level.destroyBlock(pos, false);
     }
 
     @SuppressWarnings("deprecation")
@@ -104,5 +108,58 @@ public class HardLightBridgeBlock extends Block implements HardLightBridgePart {
         if (facing.getAxis().isVertical())
             edge = edge.getOpposite();
         return SHAPERS.get(edge).get(facing);
+    }
+
+    @Override
+    public void onPortalCreate(ServerLevel level, BlockState state, BlockPos pos, Portal portal) {
+        Direction facing = state.getValue(FACING);
+        if (facing != portal.getFacingDirection().getOpposite())
+            return;
+        // propagate through
+        HardLightBridgeEmitterBlock.updateEmission(level, state, pos, true);
+    }
+
+    @Override
+    public void beforePortalRemove(ServerLevel level, BlockState state, BlockPos pos, Portal portal) {
+        Direction facing = state.getValue(FACING);
+        if (facing == portal.getFacingDirection()) { // portal is behind, remove bridge since support is gone
+            BlockPos start = pos.relative(facing.getOpposite());
+            HardLightBridgeEmitterBlock.updateEmission(level, state, start, false);
+        } else if (facing == portal.getFacingDirection().getOpposite()) { // portal in front, remove bridge on other side.
+            HardLightBridgeEmitterBlock.updateEmission(level, state, pos, false);
+        }
+        // else: don't care
+    }
+
+    public static boolean hasSupportingBlockBehind(Level level, BlockPos pos, Direction facing, Edge edge, SupportTest test) {
+        Direction back = facing.getOpposite();
+        BlockState behind = level.getBlockState(pos.relative(back));
+        if (test.test(behind, facing, edge))
+            return true;
+        // check through portals.
+        for (Portal portal : level.getEntitiesOfClass(Portal.class, new AABB(pos), Portal::isGridAligned)) {
+            Direction portalFacing = portal.getFacingDirection();
+            if (portalFacing != facing)
+                continue;
+            Portal linked = portal.findLinkedPortal();
+            if (linked == null)
+                continue;
+            Direction linkedFacing = linked.getFacingDirection();
+            Vec3 portalToPos = Vec3.atCenterOf(pos).subtract(portal.getOriginPos())
+                    .with(portalFacing.getAxis(), 0); // fixme: this override is needed because the rotated offset is negated. why???
+            Vec3 linkedToOtherPos = PortalDirectionUtils.rotateVector(portal, portalToPos)
+                    .with(linkedFacing.getAxis(), linkedFacing.getAxisDirection().getStep() / 2f);
+            BlockPos otherSide = BlockPos.containing(linked.getOriginPos().add(linkedToOtherPos));
+            BlockState otherSideState = level.getBlockState(otherSide);
+            Direction otherSideFacing = linkedFacing.getOpposite();
+            Edge otherSideEdge = Edge.teleport(edge, portal, facing, otherSideFacing);
+            if (test.test(otherSideState, otherSideFacing, otherSideEdge))
+                return true;
+        }
+        return false;
+    }
+
+    public interface SupportTest {
+        boolean test(BlockState behind, Direction facing, Edge edge);
     }
 }

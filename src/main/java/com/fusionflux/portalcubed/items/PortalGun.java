@@ -306,6 +306,11 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
             portalsTag.putUUID((leftClick ? "Left" : "Right") + "Portal", portalHolder.getUUID());
 
             tag.put(world.dimension().location().toString(), portalsTag);
+            portalHolder.notifyListeners(false);
+            // also notify the other portal to re-propagate
+            Portal linked = portalHolder.findLinkedPortal();
+            if (linked != null)
+                linked.notifyListeners(false);
         } else {
             final LocalPlayer localPlayer = (LocalPlayer)user;
             if (localPlayer.input.getMoveVector().lengthSquared() < 0.1 && user.getXRot() >= 88.0) {

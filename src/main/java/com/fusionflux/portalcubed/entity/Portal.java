@@ -2,14 +2,17 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.blocks.PortalMoveListeningBlock;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.LerpedQuaternion;
+import com.fusionflux.portalcubed.util.MutableVec3;
 import com.fusionflux.portalcubed.util.NbtHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -30,9 +33,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -217,8 +224,20 @@ public class Portal extends Entity {
         this.getEntityData().set(DESTINATION, destination);
     }
 
+    @Nullable
+    public Portal findLinkedPortal() {
+        if (!(level() instanceof ServerLevel level))
+            return null;
+        Optional<UUID> linkedId = getLinkedPortalUUID();
+        if (linkedId.isEmpty())
+            return null;
+        Entity linkedEntity = level.getEntity(linkedId.get());
+        return linkedEntity instanceof Portal linked ? linked : null;
+    }
+
     @Override
     public void kill() {
+        notifyListeners(true);
         getOwnerUUID().ifPresent(uuid -> {
             Entity player = ((ServerLevel) level()).getEntity(uuid);
             CalledValues.removePortals(player, this.getUUID());
@@ -376,6 +395,74 @@ public class Portal extends Entity {
 
     private void onRotationUpdate(LerpedQuaternion quaternion) {
         getEntityData().set(ROTATION, quaternion.copy()); // update on the other side, server/client
+    }
+
+    public boolean isGridAligned() {
+        return position().subtract(getGridAlignedPos()).lengthSqr() < EPSILON;
+    }
+
+    public boolean snapToGrid() {
+        Vec3 newPos = getGridAlignedPos();
+        Vec3 offset = newPos.subtract(position());
+        if (offset.lengthSqr() < EPSILON)
+            return true;
+        AABB movedBounds = getBoundingBox().move(offset);
+        List<Portal> intersecting = level().getEntitiesOfClass(Portal.class, movedBounds.inflate(0.1), portal -> portal != this);
+        if (!intersecting.isEmpty())
+            return false;
+        setPos(newPos);
+        return true;
+    }
+
+    private Vec3 getGridAlignedPos() {
+        Direction facing = getFacingDirection();
+
+        Axis forwards = facing.getAxis();
+        Vec3 down = getRelativeDown();
+        Axis vertical = Direction.getNearest(down.x, down.y, down.z).getAxis();
+        Axis horizontal = Axis.X;
+        // just find whichever hasn't been chosen yet
+        for (Axis axis : Axis.VALUES) {
+            if (axis != forwards && axis != vertical) {
+                horizontal = axis;
+                break;
+            }
+        }
+
+        Vec3 pos = position();
+        MutableVec3 newPos = new MutableVec3();
+        for (Axis axis : Axis.VALUES) {
+            if (axis == forwards) {  // forwards axis: leave alone, same offset from wall
+                newPos.set(axis, pos.get(axis));
+            } else if (axis == vertical) { // vertical axis: round to 0
+                newPos.set(axis, Math.floor(pos.get(axis)));
+            } else if (axis == horizontal) { // horizontal axis: round to 0.5
+                newPos.set(axis, Math.floor(pos.get(axis)) + 0.5);
+            }
+        }
+        return new Vec3(newPos.x, newPos.y, newPos.z);
+    }
+
+    public Vec3 getRelativeDown() {
+        Vector3f transformed = getRotation().get().transform(new Vector3f(0, -1, 0));
+        return new Vec3(transformed);
+    }
+
+    public void notifyListeners(boolean removed) {
+        if (level() instanceof ServerLevel level) {
+            Vec3 offset = Vec3.atBottomCenterOf(getFacingDirection().getNormal()).scale(0.5);
+            AABB bounds = makeBoundingBox().move(offset).inflate(-0.1);
+            BlockPos.betweenClosedStream(bounds).forEach(pos -> {
+                BlockState state = level.getBlockState(pos);
+                if (state.getBlock() instanceof PortalMoveListeningBlock listener) {
+                    if (removed) {
+                        listener.beforePortalRemove(level, state, pos, this);
+                    } else {
+                        listener.onPortalCreate(level, state, pos, this);
+                    }
+                }
+            });
+        }
     }
 
     @NotNull
