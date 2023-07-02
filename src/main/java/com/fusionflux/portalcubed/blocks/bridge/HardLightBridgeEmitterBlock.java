@@ -168,7 +168,7 @@ public class HardLightBridgeEmitterBlock extends Block implements HardLightBridg
                     .setValue(FACING, facing).setValue(EDGE, edge);
 
             MutableBlockPos pos = emitterPos.mutable();
-            for (int i = 0; i < PortalCubedConfig.maxBridgeLength; i++) {
+            distance: for (int i = 0; i < PortalCubedConfig.maxBridgeLength; i++) {
                 pos.move(facing);
                 if (canPlaceBridge(level, pos, facing)) {
                     level.setBlockAndUpdate(pos, bridgeState);
@@ -203,8 +203,9 @@ public class HardLightBridgeEmitterBlock extends Block implements HardLightBridg
                         bridgeState = !powered ? Blocks.AIR.defaultBlockState()
                                 : PortalCubedBlocks.HLB_BLOCK.defaultBlockState()
                                 .setValue(FACING, facing).setValue(EDGE, edge);
-                        break;
+                        continue distance;
                     }
+                    return; // couldn't teleport
                 }
             }
         });
