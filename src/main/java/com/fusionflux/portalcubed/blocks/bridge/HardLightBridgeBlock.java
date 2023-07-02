@@ -24,10 +24,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HardLightBridgeBlock extends Block implements HardLightBridgePart {
-    public static final VoxelShape BASE_SHAPE_DOWN = Block.box(2, 1.5, 0, 14, 2.5, 16);
-    public static final VoxelShape BASE_SHAPE_RIGHT = Block.box(1.5, 2, 0, 2.5, 14, 16);
-    public static final VoxelShape BASE_SHAPE_UP = Block.box(2, 13.5, 0, 14, 14.5, 16);
-    public static final VoxelShape BASE_SHAPE_LEFT = Block.box(13.5, 2, 0, 14.5, 14, 16);
+    public static final VoxelShape BASE_SHAPE_DOWN = Block.box(2, 1, 0, 14, 2, 16);
+    public static final VoxelShape BASE_SHAPE_RIGHT = Block.box(1, 2, 0, 2, 14, 16);
+    public static final VoxelShape BASE_SHAPE_UP = Block.box(2, 14, 0, 14, 15, 16);
+    public static final VoxelShape BASE_SHAPE_LEFT = Block.box(14, 2, 0, 15, 14, 16);
 
     public static final Map<Edge, VoxelShaper> SHAPERS = Util.make(new HashMap<>(), map -> {
         map.put(Edge.DOWN, VoxelShaper.forDirectional(BASE_SHAPE_DOWN, Direction.SOUTH));
