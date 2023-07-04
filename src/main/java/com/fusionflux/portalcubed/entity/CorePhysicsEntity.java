@@ -126,7 +126,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     @Override
     public ItemStack getPickResult() {
         ItemStack stack = super.getPickResult();
-        if (stack != null)
+        if (stack != null && this.hasCustomName())
             stack.setHoverName(getDisplayName());
         return stack;
     }
