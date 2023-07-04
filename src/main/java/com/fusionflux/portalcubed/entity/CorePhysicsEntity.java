@@ -185,13 +185,17 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
         if (isBeingHeld) {
             Player player = (Player) ((LevelExt) level()).getEntityByUuid(getHolderUUID().get());
             if (player != null && player.isAlive()) {
-                Vec3 vec3d = player.getEyePosition(0);
-                double d = 1.5;
+                Vec3 eyes = player.getEyePosition(0);
+                double distance = 1.5;
                 canUsePortals = false;
-                Vec3 vec3d2 = this.getPlayerRotationVector(player.getXRot(), player.getYRot());
-                Vec3 vec3d3 = vec3d.add((vec3d2.x * d) - rotatedOffset.x, (vec3d2.y * d) - rotatedOffset.y, (vec3d2.z * d) - rotatedOffset.z);
+                Vec3 rotation = this.getPlayerRotationVector(player.getXRot(), player.getYRot());
+                Vec3 target = eyes.add(
+                        (rotation.x * distance) - rotatedOffset.x,
+                        (rotation.y * distance) - rotatedOffset.y,
+                        (rotation.z * distance) - rotatedOffset.z
+                );
                 final AdvancedEntityRaycast.Result raycastResult = PortalDirectionUtils.raycast(level(), new ClipContext(
-                    vec3d, vec3d3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this
+                    eyes, target, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this
                 ));
                 final Vec3 holdPos = raycastResult.finalHit().getLocation();
                 if (!level().isClientSide) {
@@ -226,6 +230,9 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
                         RayonIntegration.INSTANCE.setVelocity(this, movement);
                     }
                     RayonIntegration.INSTANCE.simpleMove(this, MoverType.PLAYER, movement);
+                }
+                if (position().distanceToSqr(holdPos) > 2 * 2) {
+                    PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding();
                 }
             } else {
                 if (player != null) {
