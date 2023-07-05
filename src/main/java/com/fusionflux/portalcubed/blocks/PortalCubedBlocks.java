@@ -48,7 +48,7 @@ public class PortalCubedBlocks {
     public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(settings().noOcclusion().noCollission().replaceable().mapColor(MapColor.NONE));
     public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().noCollission().sound(SoundType.STONE));
     public static final ExcursionFunnelEmitterBlock EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
-    public static final ExcursionFunnelTubeBlock EXCURSION_FUNNEL = new ExcursionFunnelTubeBlock(settings().noOcclusion().noCollission().randomTicks().pushReaction(PushReaction.DESTROY));
+    public static final ExcursionFunnelTubeBlock EXCURSION_FUNNEL = new ExcursionFunnelTubeBlock(settings().noOcclusion().noCollission().randomTicks().pushReaction(PushReaction.DESTROY).replaceable());
 
     public static final TallButton TALL_BUTTON = new TallButton(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops());
     public static final OldApTallButton OLD_AP_PEDESTAL_BUTTON = new OldApTallButton(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops());
