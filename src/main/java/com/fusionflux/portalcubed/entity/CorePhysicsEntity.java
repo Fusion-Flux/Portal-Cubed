@@ -26,6 +26,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -89,7 +90,7 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        if (source.isCreativePlayer() || source == damageSources().fellOutOfWorld())
+        if (source.isCreativePlayer() || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
             return false;
         if (!(source.getEntity() instanceof Player player))
             return true;
@@ -99,7 +100,9 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (!level().isClientSide && !isInvulnerableTo(source) && !isRemoved()) {
-            dropAllDeathLoot(source);
+            if (!source.isCreativePlayer()) {
+                dropAllDeathLoot(source);
+            }
             discard();
             return true;
         }
