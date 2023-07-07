@@ -6,8 +6,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -23,8 +21,7 @@ public class ScreenEffectRendererMixin {
     )
     @SuppressWarnings("unused")
     private static boolean renderOverlays(TextureAtlasSprite sprite, PoseStack matrices) {
-        VoxelShape portalBox = CalledValues.getPortalCutout(Minecraft.getInstance().player);
-        return portalBox == Shapes.empty();
+        return CalledValues.getPortalCutout(Minecraft.getInstance().player).isEmpty();
     }
 
 }

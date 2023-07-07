@@ -11,6 +11,7 @@ import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.NetworkingSafetyWrapper;
+import com.fusionflux.portalcubed.util.GeneralUtil;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -32,8 +33,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
@@ -108,8 +107,6 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
     @Unique
     private boolean enableNoDrag2;
 
-    @Unique
-    private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickHead(CallbackInfo ci) {
         Player thisEntity = ((Player) (Object) this);
@@ -123,25 +120,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
             this.setDeltaMovement(CalledValues.getVelocityUpdateAfterTeleport(thisEntity));
         }
 
-        Vec3 entityVelocity = this.getDeltaMovement();
-
-        AABB portalCheckBox = getBoundingBox();
-        if (!this.level().isClientSide) {
-            portalCheckBox = portalCheckBox.inflate(10);
-        } else {
-            portalCheckBox = portalCheckBox.expandTowards(entityVelocity);
-        }
-        List<Portal> list = level().getEntitiesOfClass(Portal.class, portalCheckBox);
-        VoxelShape omittedDirections = Shapes.empty();
-
-        for (Portal portal : list) {
-            if (portal.calculateCutoutBox() != NULL_BOX) {
-                if (portal.getActive())
-                    omittedDirections = Shapes.or(omittedDirections, Shapes.create(portal.getCutoutBoundingBox()));
-            }
-        }
-        CalledValues.setPortalCutout(((Player) (Object) this), omittedDirections);
-
+        GeneralUtil.setupPortalShapes(this);
 
         ItemStack itemFeet = this.getItemBySlot(EquipmentSlot.FEET);
         if ((!this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.level().getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.level().getBlockState(new BlockPos(this.blockPosition().getX(), this.blockPosition().getY() + 1, this.blockPosition().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL))) {

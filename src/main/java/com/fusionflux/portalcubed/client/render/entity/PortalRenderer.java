@@ -7,11 +7,13 @@ import com.fusionflux.portalcubed.client.render.entity.model.PortalModel;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.entity.Portal;
+import com.fusionflux.portalcubed.util.GeneralUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -77,6 +79,25 @@ public class PortalRenderer extends EntityRenderer<Portal> {
 
         if (Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes() && !entity.isInvisible() && !Minecraft.getInstance().showOnlyReducedInfo()) {
             renderAxes(entity, matrices, vertexConsumers.getBuffer(RenderType.lines()));
+            LevelRenderer.renderLineBox(
+                matrices,
+                vertexConsumers.getBuffer(RenderType.lines()),
+                GeneralUtil.capAABBAt(
+                    entity.getOriginPos().subtract(2, 2, 2),
+                    entity.getOriginPos().add(2, 2, 2),
+                    entity.getFacingDirection(),
+                    entity.getOriginPos()
+                ).move(-entity.getX(), -entity.getY(), -entity.getZ()),
+                1f, 1f, 0f, 1f
+            );
+            LevelRenderer.renderVoxelShape(
+                matrices,
+                vertexConsumers.getBuffer(RenderType.lines()),
+                entity.getCrossPortalCollisionShapeOther(),
+                -entity.getX(), -entity.getY(), -entity.getZ(),
+                1f, 0.55f, 0f, 1f,
+                true
+            );
         }
     }
 

@@ -31,7 +31,7 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedBlocks {
     public static final Item BASE_GEL = new Item(new QuiltItemSettings().fireResistant());
-    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(settings().randomTicks().destroyTime(0f).noOcclusion().noCollission().sound(new SoundType(1, -1, SoundEvents.HONEY_BLOCK_BREAK, SoundEvents.HONEY_BLOCK_STEP, SoundEvents.HONEY_BLOCK_PLACE, SoundEvents.HONEY_BLOCK_HIT, SoundEvents.HONEY_BLOCK_FALL)).mapColor(MapColor.COLOR_ORANGE).pushReaction(PushReaction.DESTROY));
+    public static final PropulsionGel PROPULSION_GEL = new PropulsionGel(settings().replaceable(false).randomTicks().destroyTime(0f).noOcclusion().noCollission().sound(new SoundType(1, -1, SoundEvents.HONEY_BLOCK_BREAK, SoundEvents.HONEY_BLOCK_STEP, SoundEvents.HONEY_BLOCK_PLACE, SoundEvents.HONEY_BLOCK_HIT, SoundEvents.HONEY_BLOCK_FALL)).mapColor(MapColor.COLOR_ORANGE).pushReaction(PushReaction.DESTROY));
     public static final RepulsionGel REPULSION_GEL = new RepulsionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.COLOR_LIGHT_BLUE));
     public static final AdhesionGel ADHESION_GEL = new AdhesionGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.COLOR_PURPLE));
     public static final BaseGel CONVERSION_GEL = new BaseGel(QuiltBlockSettings.copyOf(PROPULSION_GEL).mapColor(MapColor.METAL));

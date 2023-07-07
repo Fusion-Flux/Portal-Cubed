@@ -1,13 +1,6 @@
 package com.fusionflux.portalcubed.util;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
 import com.fusionflux.portalcubed.fluids.ToxicGooFluid.Block;
-import org.apache.commons.lang3.mutable.MutableObject;
-
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
@@ -15,9 +8,17 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.mutable.MutableObject;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 // Taken from Create, licensed under MIT: https://github.com/Creators-of-Create/Create/blob/mc1.18/dev/src/main/java/com/simibubi/create/foundation/utility/VoxelShaper.java
 public class VoxelShaper {
+    private static final Vec3 BLOCK_CENTER = new Vec3(8, 8, 8);
+
     private final Map<Direction, VoxelShape> shapes = new HashMap<>();
 
     public VoxelShape get(Direction direction) {
@@ -48,7 +49,7 @@ public class VoxelShaper {
 
     public VoxelShaper withVerticalShapes(VoxelShape upShape) {
         shapes.put(Direction.UP, upShape);
-        shapes.put(Direction.DOWN, rotatedCopy(upShape, new Vec3(180, 0, 0)));
+        shapes.put(Direction.DOWN, rotatedCopy(upShape, new Vec3(180, 0, 0), BLOCK_CENTER));
         return this;
     }
 
@@ -74,38 +75,41 @@ public class VoxelShaper {
         return voxelShaper;
     }
 
-    protected static VoxelShape rotate(VoxelShape shape, Direction from, Direction to,
+    public static VoxelShape rotate(VoxelShape shape, Direction from, Direction to,
                                        Function<Direction, Vec3> usingValues) {
         if (from == to)
             return shape;
 
-        return rotatedCopy(shape, usingValues.apply(from)
+        return rotatedCopy(
+            shape,
+            usingValues.apply(from)
                 .reverse()
-                .add(usingValues.apply(to)));
+                .add(usingValues.apply(to)),
+            BLOCK_CENTER
+        );
     }
 
-    protected static VoxelShape rotatedCopy(VoxelShape shape, Vec3 rotation) {
+    public static VoxelShape rotatedCopy(VoxelShape shape, Vec3 rotation, Vec3 origin) {
         if (rotation.equals(Vec3.ZERO))
             return shape;
 
         MutableObject<VoxelShape> result = new MutableObject<>(Shapes.empty());
-        Vec3 center = new Vec3(8, 8, 8);
 
         shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
             Vec3 v1 = new Vec3(x1, y1, z1).scale(16)
-                    .subtract(center);
+                    .subtract(origin);
             Vec3 v2 = new Vec3(x2, y2, z2).scale(16)
-                    .subtract(center);
+                    .subtract(origin);
 
             v1 = rotate(v1, (float) rotation.x, Axis.X);
             v1 = rotate(v1, (float) rotation.y, Axis.Y);
             v1 = rotate(v1, (float) rotation.z, Axis.Z)
-                    .add(center);
+                    .add(origin);
 
             v2 = rotate(v2, (float) rotation.x, Axis.X);
             v2 = rotate(v2, (float) rotation.y, Axis.Y);
             v2 = rotate(v2, (float) rotation.z, Axis.Z)
-                    .add(center);
+                    .add(origin);
 
             VoxelShape rotated = blockBox(v1, v2);
             result.setValue(Shapes.or(result.getValue(), rotated));
