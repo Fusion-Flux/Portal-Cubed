@@ -448,25 +448,25 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         leftBlocks.putAll(collidingBlocks);
     }
 
-    @Redirect(
-            method = "checkInsideBlocks",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/block/state/BlockState;entityInside(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)V"
-            )
+    @WrapOperation(
+        method = "checkInsideBlocks",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/block/state/BlockState;entityInside(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)V"
+        )
     )
-    private void midBlockCheck(BlockState instance, Level world, BlockPos pos, Entity entity) {
-        instance.entityInside(world, pos, entity);
+    private void midBlockCheck(BlockState instance, Level level, BlockPos pos, Entity entity, Operation<Void> original) {
+        original.call(instance, level, pos, entity);
         if (
-                instance.getBlock() instanceof BlockCollisionTrigger trigger &&
-                        intersects(
-                                entity.getBoundingBox().move(pos.multiply(-1)),
-                                trigger.getTriggerShape(instance, world, pos, CollisionContext.of(entity))
-                        )
+            instance.getBlock() instanceof BlockCollisionTrigger trigger &&
+                intersects(
+                    entity.getBoundingBox().move(pos.multiply(-1)),
+                    trigger.getTriggerShape(instance, level, pos, CollisionContext.of(entity))
+                )
         ) {
             final BlockPos immutable = pos.immutable();
             if (collidingBlocks.put(instance, immutable) == null) {
-                trigger.onEntityEnter(instance, world, immutable, entity);
+                trigger.onEntityEnter(instance, level, immutable, entity);
             }
             leftBlocks.remove(instance);
         }
