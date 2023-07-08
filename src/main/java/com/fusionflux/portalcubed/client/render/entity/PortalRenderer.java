@@ -137,7 +137,7 @@ public class PortalRenderer extends EntityRenderer<Portal> {
             if (otherEntity instanceof Portal) continue;
             if (PortalCubedClient.cameraTransformedThroughPortal != null) {
                 final Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-                if (otherEntity == camera.getEntity() && !camera.isDetached()) return;
+                if (otherEntity == camera.getEntity() && !camera.isDetached()) continue;
             }
             poseStack.pushPose();
             poseStack.mulPose(otherPortal.getTransformQuat().toQuaternionf());
