@@ -569,20 +569,21 @@ public class Portal extends Entity {
             result = Shapes.or(result, Shapes.joinUnoptimized(shape, clippingShape, BooleanOp.AND));
         }
         if (otherRotation != null && !result.isEmpty() /* Empty shapes don't need to be translated */) {
-            final Direction to = getFacingDirection().getOpposite();
-            if (facing != to) {
+            if (facing != getFacingDirection().getOpposite()) {
                 result = result.move(-origin.x, -origin.y, -origin.z);
                 final Vector3d rotationVec = getTransformQuat().toQuaterniond().getEulerAnglesZXY(new Vector3d());
                 result = VoxelShaper.rotatedCopy(
                     result,
                     new Vec3(
                         Math.toDegrees(rotationVec.x),
-                        Math.toDegrees(rotationVec.y),
+                        -Math.toDegrees(rotationVec.y),
                         Math.toDegrees(rotationVec.z)
                     ),
                     Vec3.ZERO
                 );
                 result = result.move(getX(), getY(), getZ());
+            } else {
+                result = result.move(getX() - origin.x, getY() - origin.y, getZ() - origin.z);
             }
         }
         return result;
