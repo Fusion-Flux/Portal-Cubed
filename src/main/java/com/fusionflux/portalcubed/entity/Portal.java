@@ -56,6 +56,8 @@ public class Portal extends Entity {
 
     public static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
 
+    public static final double SURFACE_OFFSET = 0.01;
+
     private static final double WIDTH = 0.9, HEIGHT = 1.9;
     private static final double EPSILON = 1.0E-7;
 
@@ -557,6 +559,7 @@ public class Portal extends Entity {
     }
 
     private VoxelShape calculateCrossPortalCollisionShape(Vec3 normal, Vec3 origin, Quaternionf otherRotation) {
+        origin = origin.subtract(normal.scale(SURFACE_OFFSET));
         final Direction facing = Direction.getNearest(normal.x, normal.y, normal.z);
         final AABB clipping = GeneralUtil.capAABBAt(
             origin.subtract(2, 2, 2),
@@ -569,6 +572,7 @@ public class Portal extends Entity {
             result = Shapes.or(result, Shapes.joinUnoptimized(shape, clippingShape, BooleanOp.AND));
         }
         if (otherRotation != null && !result.isEmpty() /* Empty shapes don't need to be translated */) {
+            final Vec3 scaledNormalOffset = getNormal().scale(SURFACE_OFFSET);
             if (facing != getFacingDirection().getOpposite()) {
                 result = result.move(-origin.x, -origin.y, -origin.z);
                 final Vector3d rotationVec = getTransformQuat().toQuaterniond().getEulerAnglesZXY(new Vector3d());
@@ -581,9 +585,17 @@ public class Portal extends Entity {
                     ),
                     Vec3.ZERO
                 );
-                result = result.move(getX(), getY(), getZ());
+                result = result.move(
+                    getX() - scaledNormalOffset.x,
+                    getY() - scaledNormalOffset.y,
+                    getZ() - scaledNormalOffset.z
+                );
             } else {
-                result = result.move(getX() - origin.x, getY() - origin.y, getZ() - origin.z);
+                result = result.move(
+                    getX() - origin.x - scaledNormalOffset.x,
+                    getY() - origin.y - scaledNormalOffset.y,
+                    getZ() - origin.z - scaledNormalOffset.z
+                );
             }
         }
         return result;

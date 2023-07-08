@@ -141,7 +141,7 @@ public class PortalRenderer extends EntityRenderer<Portal> {
             }
             poseStack.pushPose();
             poseStack.mulPose(otherPortal.getTransformQuat().toQuaternionf());
-            poseStack.translate(0, 0.01, 0);
+            poseStack.translate(0, Portal.SURFACE_OFFSET, 0);
             dispatcher.render(
                 otherEntity,
                 Mth.lerp(tickDelta, otherEntity.xOld, otherEntity.getX()) - oplx,

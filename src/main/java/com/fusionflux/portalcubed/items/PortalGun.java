@@ -368,7 +368,7 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
      * @return a vector position specifying the portal's final position in the world.
      */
     private Vec3 calcPos(Vec3 hit, Vec3i facing) {
-        double faceOffset = -0.01;
+        double faceOffset = -Portal.SURFACE_OFFSET;
         return new Vec3(
             ((hit.x()) + faceOffset * facing.getX()), // x component
             ((hit.y()) + faceOffset * facing.getY()), // y component
