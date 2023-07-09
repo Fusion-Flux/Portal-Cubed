@@ -79,8 +79,6 @@ public class Portal extends Entity {
     private Vec3 axisW, axisH, normal;
     private Optional<Vec3> otherAxisW = Optional.empty(), otherAxisH = Optional.empty(), otherNormal = Optional.empty();
 
-    private VoxelShape crossCollisionOther;
-    private long crossCollisionOtherTick = -1;
     private VoxelShape crossCollisionThis;
     private long crossCollisionThisTick = -1;
 
@@ -536,29 +534,24 @@ public class Portal extends Entity {
         this.cutoutBoundingBox = boundingBox;
     }
 
-    public VoxelShape getCrossPortalCollisionShapeOther() {
-        final long tick = level().getGameTime();
-        if (crossCollisionOther == null || crossCollisionOtherTick < tick) {
-            // getActive() returning true asserts that these parameters return present Optionals
-            //noinspection OptionalGetWithoutIsPresent
-            crossCollisionOther = getActive()
-                ? calculateCrossPortalCollisionShape(getOtherNormal().get(), getDestination().get(), getOtherRotation().get())
-                : Shapes.empty();
-            crossCollisionOtherTick = tick;
-        }
-        return crossCollisionOther;
+    public VoxelShape getCrossPortalCollisionShapeOther(Entity context) {
+        // getActive() returning true asserts that these parameters return present Optionals
+        //noinspection OptionalGetWithoutIsPresent
+        return getActive()
+            ? calculateCrossPortalCollisionShape(getOtherNormal().get(), getDestination().get(), getOtherRotation().get(), context)
+            : Shapes.empty();
     }
 
     public VoxelShape getCrossPortalCollisionShapeThis() {
         final long tick = level().getGameTime();
         if (crossCollisionThis == null || crossCollisionThisTick < tick) {
-            crossCollisionThis = calculateCrossPortalCollisionShape(getNormal(), getOriginPos(), null);
+            crossCollisionThis = calculateCrossPortalCollisionShape(getNormal(), getOriginPos(), null, this);
             crossCollisionThisTick = tick;
         }
         return crossCollisionThis;
     }
 
-    private VoxelShape calculateCrossPortalCollisionShape(Vec3 normal, Vec3 origin, Quaternionf otherRotation) {
+    private VoxelShape calculateCrossPortalCollisionShape(Vec3 normal, Vec3 origin, Quaternionf otherRotation, Entity context) {
         origin = origin.subtract(normal.scale(SURFACE_OFFSET));
         final Direction facing = Direction.getNearest(normal.x, normal.y, normal.z);
         final AABB clipping = GeneralUtil.capAABBAt(
@@ -568,7 +561,7 @@ public class Portal extends Entity {
         );
         final VoxelShape clippingShape = Shapes.create(clipping);
         VoxelShape result = Shapes.empty();
-        for (final VoxelShape shape : level().getBlockCollisions(this, clipping)) {
+        for (final VoxelShape shape : level().getBlockCollisions(context, clipping)) {
             result = Shapes.or(result, Shapes.joinUnoptimized(shape, clippingShape, BooleanOp.AND));
         }
         if (otherRotation != null && !result.isEmpty() /* Empty shapes don't need to be translated */) {

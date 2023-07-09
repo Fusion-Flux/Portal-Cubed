@@ -93,7 +93,7 @@ public class PortalRenderer extends EntityRenderer<Portal> {
             LevelRenderer.renderVoxelShape(
                 matrices,
                 vertexConsumers.getBuffer(RenderType.lines()),
-                entity.getCrossPortalCollisionShapeOther(),
+                entity.getCrossPortalCollisionShapeOther(entity),
                 -entity.getX(), -entity.getY(), -entity.getZ(),
                 1f, 0.55f, 0f, 1f,
                 true

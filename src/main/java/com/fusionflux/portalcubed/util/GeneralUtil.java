@@ -119,7 +119,7 @@ public class GeneralUtil {
             if (portal.calculateCutoutBox() != NULL_BOX && portal.calculateBoundsCheckBox() != NULL_BOX && portal.getActive()) {
                 cutoutShape = Shapes.or(cutoutShape, Shapes.create(portal.getCutoutBoundingBox()));
                 // TODO: Uncomment for testing or when it's working fully
-//                crossPortalCollisionShape = Shapes.or(crossPortalCollisionShape, portal.getCrossPortalCollisionShapeOther());
+//                crossPortalCollisionShape = Shapes.or(crossPortalCollisionShape, portal.getCrossPortalCollisionShapeOther(entity));
             }
         }
 
