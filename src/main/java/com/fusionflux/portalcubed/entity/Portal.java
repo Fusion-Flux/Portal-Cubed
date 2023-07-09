@@ -301,8 +301,8 @@ public class Portal extends Entity {
         }
     }
 
-    public void setValidation(boolean validate) {
-        this.disableValidation = !validate;
+    public void setDisableValidation(boolean disableValidation) {
+        this.disableValidation = disableValidation;
     }
 
     public boolean validate() {
