@@ -1,12 +1,15 @@
 package com.fusionflux.portalcubed.fluids;
 
+import com.fusionflux.portalcubed.mixin.DispenserBlockAccessor;
 import com.google.common.base.Suppliers;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.MapColor;
@@ -53,7 +56,12 @@ public class PortalCubedFluids {
             Registry.register(BuiltInRegistries.FLUID, id("flowing_" + name), flowing);
             Registry.register(BuiltInRegistries.FLUID, id(name), still);
             Registry.register(BuiltInRegistries.BLOCK, id(name), block.get());
-            if (bucket != null) Registry.register(BuiltInRegistries.ITEM, id(name + "_bucket"), bucket);
+            if (bucket != null) {
+                Registry.register(BuiltInRegistries.ITEM, id(name + "_bucket"), bucket);
+                DispenserBlock.registerBehavior(
+                    bucket, ((DispenserBlockAccessor)Blocks.DISPENSER).invokeGetDispenseMethod(new ItemStack(Items.WATER_BUCKET))
+                );
+            }
         }
 
         public LiquidBlock getBlock() {
