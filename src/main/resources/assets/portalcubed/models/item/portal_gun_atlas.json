@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench by Cart3r.  ",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "portalcubed:item/portal_gun",
+		"0": "portalcubed:item/portal_gun_atlas",
 		"1": "portalcubed:item/portal_gun_dyeable",
-		"particle": "portalcubed:item/portal_gun"
+		"particle": "portalcubed:item/portal_gun_atlas"
 	},
 	"elements": [
 		{
@@ -238,11 +238,7 @@
 		}
 	],
 	"overrides": [
-		{"predicate": {"custom_model_data": 1}, "model": "portalcubed:item/portal_gun_atlas"},
-		{"predicate": {"custom_model_data": 2}, "model": "portalcubed:item/portal_gun_p_body"},
-		{"predicate": {"custom_model_data": 3}, "model": "portalcubed:item/legacy_portal_gun"},
-		{"predicate": {"custom_model_data": 4}, "model": "portalcubed:item/legacy_portal_gun_atlas"},
-		{"predicate": {"custom_model_data": 5}, "model": "portalcubed:item/legacy_portal_gun_p_body"}
+		{"predicate": {"custom_model_data": 1}, "model": "portal_gun_atlas"}
 	],
 	"display": {
 		"thirdperson_righthand": {
