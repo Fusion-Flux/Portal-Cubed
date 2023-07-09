@@ -16,6 +16,7 @@ import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.entity.Portal;
+import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
@@ -181,7 +182,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
 
         Entity thiz = (Entity) (Object) this;
 
-        if (!(thiz instanceof Player) && !(thiz instanceof Portal)) {
+        if (!(thiz instanceof Player) && !(thiz instanceof Portal) && !thiz.getType().is(PortalCubedEntities.PORTAL_BLACKLIST)) {
             GeneralUtil.setupPortalShapes(thiz);
         }
 
@@ -233,12 +234,11 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         prevGravDirec = GravityChangerAPI.getGravityDirection(((Entity) (Object) this));
     }
 
-
     @Inject(method = "tick", at = @At("TAIL"))
     public void tickTail(CallbackInfo ci) {
         Entity thisEntity = ((Entity) (Object) this);
 
-        if (!thisEntity.level().isClientSide() && !(thisEntity instanceof Player) && !(thisEntity instanceof Portal)) {
+        if (!thisEntity.level().isClientSide() && !(thisEntity instanceof Player) && !(thisEntity instanceof Portal) && !thisEntity.getType().is(PortalCubedEntities.PORTAL_BLACKLIST)) {
             Vec3 entityVelocity = this.getDeltaMovement();
 
 

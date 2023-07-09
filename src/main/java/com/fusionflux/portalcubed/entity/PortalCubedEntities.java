@@ -134,6 +134,7 @@ public class PortalCubedEntities {
         .build();
 
     public static final TagKey<EntityType<?>> P1_ENTITY = TagKey.create(Registries.ENTITY_TYPE, id("p1_entity"));
+    public static final TagKey<EntityType<?>> PORTAL_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, id("portal_blacklist"));
 
     public static void registerEntities() {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("portal"), PORTAL);
