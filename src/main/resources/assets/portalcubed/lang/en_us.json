@@ -12,7 +12,15 @@
   "subtitles.portalcubed.portal_open": "Portal opens",
   "subtitles.portalcubed.portal_close": "Portal closes",
   "subtitles.portalcubed.portal_fizzle": "Portal fizzles",
+
   "subtitles.portalcubed.material_emancipation": "Something disintegrates",
+
+  "subtitles.portalcubed.laser.activate": "Laser beam activates",
+  "subtitles.portalcubed.laser.ambiance": "Laser beam hums",
+  "subtitles.portalcubed.laser.node_activate": "Laser node activates",
+  "subtitles.portalcubed.laser.node_deactivate": "Laser node deactivates",
+  "subtitles.portalcubed.laser.node_sing": "Laser node sings",
+
 
   "subtitles.portalcubed.pedestal_button_press": "Switch activates",
   "subtitles.portalcubed.pedestal_button_release": "Switch deactivates",
@@ -28,6 +36,8 @@
   "subtitles.portalcubed.pellet.spawn": "Energy pellet launches",
 
   "subtitles.portalcubed.crowbar_swoosh": "Crowbar swooshes",
+
+  "subtitles.portalcubed.faith_plate": "Faith plate activates",
 
   "item.portalcubed.long_fall_boots": "Long Fall Boots",
   "item.portalcubed.hammer": "Hammer",
