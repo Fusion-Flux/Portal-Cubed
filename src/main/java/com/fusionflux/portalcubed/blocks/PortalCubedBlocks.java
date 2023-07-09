@@ -120,6 +120,7 @@ public class PortalCubedBlocks {
     public static final TagKey<Block> PORTAL_NONSOLID = TagKey.create(Registries.BLOCK, id("portal_nonsolid"));
     public static final TagKey<Block> PORTAL_SOLID = TagKey.create(Registries.BLOCK, id("portal_solid"));
     public static final TagKey<Block> PORTALABLE_GELS = TagKey.create(Registries.BLOCK, id("portalable_gels"));
+    public static final TagKey<Block> REFLECTIVE = TagKey.create(Registries.BLOCK, id("reflective"));
 
     public static void registerBlocks() {
         Registry.register(BuiltInRegistries.ITEM, id("base_gel"), BASE_GEL);

@@ -145,14 +145,14 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             if (segments.finalHit().getType() == HitResult.Type.BLOCK) {
                 final BlockHitResult finalHit = (BlockHitResult)segments.finalHit();
                 hitState = level.getBlockState(finalHit.getBlockPos());
-                if (hitState.is(PortalCubedBlocks.REFLECTION_GEL)) {
+                if (hitState.is(PortalCubedBlocks.REFLECTIVE)) {
                     final Direction.Axis axis = finalHit.getDirection().getAxis();
                     direction = direction.with(axis, -direction.get(axis));
                 }
             } else {
                 hitState = null;
             }
-        } while (hitState != null && (hitState.is(PortalCubedBlocks.LASER_RELAY) || hitState.is(PortalCubedBlocks.REFLECTION_GEL)));
+        } while (hitState != null && (hitState.is(PortalCubedBlocks.LASER_RELAY) || hitState.is(PortalCubedBlocks.REFLECTIVE)));
 
         if (level.isClientSide) {
             clientTick();
