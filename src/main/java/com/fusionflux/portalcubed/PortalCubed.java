@@ -20,8 +20,8 @@ import com.fusionflux.portalcubed.entity.PortalCubedTrackedDataHandlers;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.fog.FogPersistentState;
 import com.fusionflux.portalcubed.fog.FogSettings;
+import com.fusionflux.portalcubed.gui.BlockPosScreenHandler;
 import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
-import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
@@ -79,14 +79,7 @@ public class PortalCubed implements ModInitializer {
         BuiltInRegistries.MENU, id("faith_plate_screen"),
         new ExtendedScreenHandlerType<>(FaithPlateScreenHandler::new)
     );
-    public static final MenuType<VelocityHelperScreenHandler> VELOCITY_HELPER_SCREEN_HANDLER = Registry.register(
-        BuiltInRegistries.MENU, id("velocity_helper"),
-        new ExtendedScreenHandlerType<>(VelocityHelperScreenHandler::new)
-    );
-//    public static final MenuType<OptionsListScreenHandler> OPTIONS_LIST_SCREEN_HANDLER = Registry.register(
-//        BuiltInRegistries.MENU, id("options_list"),
-//        new ExtendedScreenHandlerType<>(OptionsListScreenHandler::new)
-//    );
+    public static final MenuType<BlockPosScreenHandler> VELOCITY_HELPER_SCREEN_HANDLER = BlockPosScreenHandler.registerNew("velocity_helper");
 
     public static final double MAX_SPEED = 2225 / 64.0 / 20.0, MAX_SPEED_SQR = MAX_SPEED * MAX_SPEED;
 
@@ -392,7 +385,7 @@ public class PortalCubed implements ModInitializer {
     }
 
     public static ResourceLocation id(String path) {
-        return new ResourceLocation(MOD_ID, path);
+        return path.indexOf(':') >= 0 ? new ResourceLocation(path) : new ResourceLocation(MOD_ID, path);
     }
 
 }

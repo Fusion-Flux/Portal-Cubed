@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.client.gui;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.VelocityHelperBlock;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
-import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
+import com.fusionflux.portalcubed.gui.BlockPosScreenHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelperScreenHandler> {
+public class VelocityHelperScreen extends AbstractContainerScreen<BlockPosScreenHandler> {
     private static final ResourceLocation TEXTURE = id("textures/gui/velocity_helper.png");
 
     private final VelocityHelperBlockEntity entity;
@@ -39,7 +39,7 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
     private ExpressionFieldWidget conditionWidget, icWidget;
     private Button doneButton;
 
-    public VelocityHelperScreen(VelocityHelperScreenHandler handler, Inventory inventory, Component title) {
+    public VelocityHelperScreen(BlockPosScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
         imageWidth = 248;
         imageHeight = 166;
