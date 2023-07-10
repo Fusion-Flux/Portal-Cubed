@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench by Cart3r.  ",
-	"texture_size": [32, 32],
+	"texture_size": [64, 64],
 	"textures": {
 		"0": "portalcubed:item/legacy_portal_gun",
 		"1": "portalcubed:item/portal_gun_dyeable",
@@ -12,11 +12,11 @@
 			"to": [11.5, 6, 18.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [-0.5, 0, 0]},
 			"faces": {
-				"north": {"uv": [1.265, 4.015, 2.985, 5.485], "texture": "#0"},
+				"north": {"uv": [8.258, 14.516, 9.992, 16], "texture": "#0"},
 				"east": {"uv": [0.015, 2.515, 2.485, 3.985], "texture": "#0"},
-				"south": {"uv": [3.015, 4.015, 4.735, 5.485], "texture": "#0"},
+				"south": {"uv": [10.008, 14.516, 11.742, 16], "texture": "#0"},
 				"west": {"uv": [2.515, 2.515, 4.985, 3.985], "texture": "#0"},
-				"up": {"uv": [1.735, 2.485, 0.015, 0.015], "texture": "#0"},
+				"up": {"uv": [8.742, 12.9755, 7.008, 10.538], "texture": "#0"},
 				"down": {"uv": [3.485, 0.015, 1.765, 2.485], "texture": "#0"}
 			}
 		},
