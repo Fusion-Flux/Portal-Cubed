@@ -2,22 +2,22 @@
     "type": "minecraft:crafting_shaped",
     "category": "redstone",
     "pattern": [
-        "XXX",
-        "YZA",
-        "XXX"
+        "XXA",
+        "YZ ",
+        "XXA"
     ],
     "key": {
         "X": {
             "tag": "portalcubed:portal_2_clean_gray_panels"
         },
         "Y": {
-            "item": "minecraft:dispenser"
+            "item": "minecraft:redstone"
         },
         "Z": {
-            "tag": "c:light_blue_dyes"
+            "item": "minecraft:end_rod"
         },
         "A": {
-            "tag": "c:orange_dyes"
+            "item": "minecraft:iron_ingot"
         }
     },
     "result": {
