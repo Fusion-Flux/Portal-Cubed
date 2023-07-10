@@ -1,9 +1,9 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.PortalCubedConfig;
+import com.fusionflux.portalcubed.blocks.AbstractLaserNodeBlock;
 import com.fusionflux.portalcubed.blocks.LaserCatcherBlock;
 import com.fusionflux.portalcubed.blocks.LaserEmitterBlock;
-import com.fusionflux.portalcubed.blocks.LaserRelayBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
@@ -179,7 +179,7 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             return;
         }
 
-        if (hitState != null && !(hitState.getBlock() instanceof LaserRelayBlock)) {
+        if (hitState != null && !(hitState.getBlock() instanceof AbstractLaserNodeBlock)) {
             final Vec3 finalPos = multiSegments.get(multiSegments.size() - 1).finalRay().end();
             ((ServerLevel)level).sendParticles(
                 PortalCubedParticleTypes.ENERGY_SPARK,
