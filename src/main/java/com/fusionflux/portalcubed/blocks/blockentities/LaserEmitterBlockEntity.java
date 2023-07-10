@@ -27,6 +27,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,6 +36,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -112,6 +114,24 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                 new ClipContext(
                     start, start.add(direction.scale(lengthRemaining)),
                     ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, null
+                ),
+                (level1, ctx) -> BlockGetter.traverseBlocks(
+                    ctx.getFrom(), ctx.getTo(), ctx,
+                    (ctx1, pos1) -> {
+                        final BlockState block = level1.getBlockState(pos1);
+                        final VoxelShape shape = block.is(PortalCubedBlocks.REFLECTIVE)
+                            ? block.getShape(level1, pos1)
+                            : ctx1.getBlockShape(block, level1, pos1);
+                        return level1.clipWithInteractionOverride(ctx1.getFrom(), ctx1.getTo(), pos1, shape, block);
+                    },
+                    ctx1 -> {
+                        final Vec3 offset = ctx1.getFrom().subtract(ctx1.getTo());
+                        return BlockHitResult.miss(
+                            ctx1.getTo(),
+                            Direction.getNearest(offset.x, offset.y, offset.z),
+                            BlockPos.containing(ctx1.getTo())
+                        );
+                    }
                 ),
                 PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
                 new AdvancedEntityRaycast.TransformInfo(
