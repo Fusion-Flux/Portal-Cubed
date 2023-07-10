@@ -568,7 +568,7 @@ public class Portal extends Entity {
             final Vec3 scaledNormalOffset = getNormal().scale(SURFACE_OFFSET);
             if (facing != getFacingDirection().getOpposite()) {
                 result = result.move(-origin.x, -origin.y, -origin.z);
-                final IPQuaternion transform = getTransformQuat().hamiltonProduct(FLIP_AXIS_W);
+                final IPQuaternion transform = getTransformQuat().getConjugated();
                 final MutableObject<VoxelShape> rotatedShape = new MutableObject<>(Shapes.empty());
                 result.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
                     final Vec3 minT = transform.rotate(new Vec3(x1, y1, z1), false);
