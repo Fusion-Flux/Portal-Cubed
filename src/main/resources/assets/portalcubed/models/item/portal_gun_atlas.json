@@ -237,9 +237,6 @@
 			}
 		}
 	],
-	"overrides": [
-		{"predicate": {"custom_model_data": 1}, "model": "portal_gun_atlas"}
-	],
 	"display": {
 		"thirdperson_righthand": {
 			"translation": [0, 2.75, -6.75],
