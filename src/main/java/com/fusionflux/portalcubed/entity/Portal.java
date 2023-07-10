@@ -33,10 +33,10 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -568,16 +568,24 @@ public class Portal extends Entity {
             final Vec3 scaledNormalOffset = getNormal().scale(SURFACE_OFFSET);
             if (facing != getFacingDirection().getOpposite()) {
                 result = result.move(-origin.x, -origin.y, -origin.z);
-                final Vector3d rotationVec = getTransformQuat().toQuaterniond().getEulerAnglesZXY(new Vector3d());
-                result = VoxelShaper.rotatedCopy(
-                    result,
-                    new Vec3(
-                        Math.toDegrees(rotationVec.x),
-                        -Math.toDegrees(rotationVec.y),
-                        Math.toDegrees(rotationVec.z)
-                    ),
-                    Vec3.ZERO
-                );
+                final IPQuaternion transform = getTransformQuat().hamiltonProduct(FLIP_AXIS_W);
+                final MutableObject<VoxelShape> rotatedShape = new MutableObject<>(Shapes.empty());
+                result.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
+                    final Vec3 minT = transform.rotate(new Vec3(x1, y1, z1), false);
+                    final Vec3 maxT = transform.rotate(new Vec3(x2, y2, z2), false);
+                    rotatedShape.setValue(Shapes.or(
+                        rotatedShape.getValue(),
+                        Shapes.box(
+                            Math.min(minT.x, maxT.x),
+                            Math.min(minT.y, maxT.y),
+                            Math.min(minT.z, maxT.z),
+                            Math.max(minT.x, maxT.x),
+                            Math.max(minT.y, maxT.y),
+                            Math.max(minT.z, maxT.z)
+                        )
+                    ));
+                });
+                result = rotatedShape.getValue();
                 result = result.move(
                     getX() - scaledNormalOffset.x,
                     getY() - scaledNormalOffset.y,
