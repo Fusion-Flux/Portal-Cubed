@@ -1309,10 +1309,6 @@
     "type": "provided",
     "render_layer": "translucent"
   },
-  "excursion_funnel": {
-    "type": "provided",
-    "render_layer": "translucent"
-  },
   "excursion_funnel_emitter": {
     "type": "provided",
     "render_layer": "cutout"

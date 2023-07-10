@@ -54,6 +54,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -708,6 +709,8 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(TurretRenderer.TURRET_LAYER, TurretModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.TURRET, TurretRenderer::new);
+
+        EntityRendererRegistry.register(PortalCubedEntities.EXCURSION_FUNNEL, NoopRenderer::new);
 
         BlockEntityRenderers.register(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER_ENTITY, ExcursionFunnelEmitterBlockEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(ExcursionFunnelEmitterCenterModel.LAYER, ExcursionFunnelEmitterCenterModel::createBodyLayer);
