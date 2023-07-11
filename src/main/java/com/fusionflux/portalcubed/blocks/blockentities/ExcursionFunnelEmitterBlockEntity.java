@@ -1,18 +1,23 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import java.util.UUID;
+
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock.Mode;
 import com.fusionflux.portalcubed.util.NbtHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ExcursionFunnelEmitterBlockEntity extends BlockEntity {
     private ToggleMode toggleMode = ToggleMode.FORWARD;
+    private UUID funnelEntityId = null;
 
     public ExcursionFunnelEmitterBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER_ENTITY, pos, state);
@@ -27,14 +32,28 @@ public class ExcursionFunnelEmitterBlockEntity extends BlockEntity {
         setChanged();
     }
 
+    @Nullable
+    public UUID getFunnelEntityId() {
+        return funnelEntityId;
+    }
+
+    public void setFunnelEntityId(UUID funnelEntityId) {
+        this.funnelEntityId = funnelEntityId;
+        setChanged();
+    }
+
     @Override
     public void saveAdditional(@NotNull CompoundTag tag) {
         tag.putString("toggleMode", toggleMode.getSerializedName());
+        if (funnelEntityId != null)
+            tag.putUUID("funnelEntityId", funnelEntityId);
     }
 
     @Override
     public void load(@NotNull CompoundTag tag) {
         this.toggleMode = NbtHelper.readEnum(tag, "toggleMode", toggleMode);
+        if (tag.contains("funnelEntityId", Tag.TAG_INT_ARRAY))
+            this.funnelEntityId = tag.getUUID("funnelEntityId");
     }
 
     public enum ToggleMode implements StringRepresentable {

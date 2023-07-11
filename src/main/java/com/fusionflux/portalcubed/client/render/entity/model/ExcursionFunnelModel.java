@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.client.render.PortalCubedRenderTypes;
+import com.fusionflux.portalcubed.entity.beams.EmittedEntity;
 import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,6 +17,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 
@@ -26,23 +28,24 @@ public class ExcursionFunnelModel extends Model {
 	private ModelPart part;
 
 	public ExcursionFunnelModel(ExcursionFunnelEntity entity) {
-		super(PortalCubedRenderTypes::getAnimatedTranslucentEntity);
+		super(RenderType::entityTranslucent);
 		this.rebuildGeometry(entity);
 	}
 
-	public void rebuildGeometry(ExcursionFunnelEntity entity) {
+	public void rebuildGeometry(EmittedEntity entity) {
 		MeshDefinition mesh = new MeshDefinition();
 		PartDefinition root = mesh.getRoot();
 		// this hurts my soul, but I don't know if improving it is possible
-		for (int block = 0; block < entity.length; block++) {
-			float length = Math.min(entity.length - block, 1);
-			boolean last = block + 1 >= entity.length;
+		float length = entity.getLength();
+		for (int block = 0; block < length; block++) {
+			float sectionLength = Math.min(length - block, 1);
+			boolean last = block + 1 >= length;
 			root.addOrReplaceChild(
 					"cube_" + block,
 					CubeListBuilder.create()
 							.texOffs(0, 0)
 							.addBox(
-									-15, block * 16, -15, 30, length * 16, 30,
+									-15, block * 16, -15, 30, sectionLength * 16, 30,
 									last ? VISIBLE_END : VISIBLE_MIDDLE
 							),
 					PartPose.ZERO

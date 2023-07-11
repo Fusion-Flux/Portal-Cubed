@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks.funnel;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity.ToggleMode;
+import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.util.TwoByTwo;
@@ -41,6 +42,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoByTwoFacingMultiblockBlock {
     public static final EnumProperty<Mode> MODE = EnumProperty.create("mode", Mode.class);
@@ -183,33 +185,26 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
     }
 
     private static void updateEmission(ServerLevel level, TwoByTwo multiblock, Direction facing, Mode newMode) {
-        // todo track spawned entity
         if (newMode.isOn) {
             spawnFunnelEntity(level, multiblock, facing, newMode.isReversed);
         } else {
-            List<ExcursionFunnelEntity> entities = level.getEntitiesOfClass(ExcursionFunnelEntity.class, multiblock.toBox(2));
-            for (ExcursionFunnelEntity entity : entities) {
-                entity.discard();
+            BlockEntity be = level.getBlockEntity(multiblock.byQuadrant(1));
+            if (be instanceof ExcursionFunnelEmitterBlockEntity emitter) {
+                UUID id = emitter.getFunnelEntityId();
+                if (id != null &&  level.getEntity(id) instanceof ExcursionFunnelEntity entity) {
+                   entity.discard();
+                }
             }
         }
     }
 
     private static void spawnFunnelEntity(ServerLevel level, TwoByTwo multiblock, Direction facing, boolean reversed) {
         Vec3 start = multiblock.getCenter().relative(facing, -0.3);
-        Axis facingAxis = facing.getAxis();
-        AABB bounds = AABB.ofSize(start,
-                facingAxis.choose(0.2, ExcursionFunnelEntity.SIZE, ExcursionFunnelEntity.SIZE),
-                facingAxis.choose(ExcursionFunnelEntity.SIZE, 0.2, ExcursionFunnelEntity.SIZE),
-                facingAxis.choose(ExcursionFunnelEntity.SIZE, ExcursionFunnelEntity.SIZE, 0.2)
-        );
-        // relative offset 100 blocks along facing
-        Vec3 offset = Vec3.ZERO.with(facingAxis, 100 * facing.getAxisDirection().getStep());
-        // how far the hitbox can actually move
-        Vec3 actualOffset = Entity.collideBoundingBox(null, offset, bounds, level, List.of());
-        float length = (float) (actualOffset.length() + 0.1);
-        ExcursionFunnelEntity entity = ExcursionFunnelEntity.create(level, facing, length);
-        entity.setPos(start);
-        level.addFreshEntity(entity);
+        ExcursionFunnelEntity entity = ExcursionFunnelEntity.spawnAndEmit(level, start, facing);
+        // block entity tracks entity
+        BlockEntity be = level.getBlockEntity(multiblock.byQuadrant(1));
+        if (be instanceof ExcursionFunnelEmitterBlockEntity emitter)
+            emitter.setFunnelEntityId(entity.getUUID());
     }
 
     protected void destroyMultiblock(ServerLevel level, BlockState state, BlockPos thisPos, boolean dropItem) {

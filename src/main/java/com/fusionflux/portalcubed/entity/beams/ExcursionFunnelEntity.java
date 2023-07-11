@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.entity.beams;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.EntityExt;
@@ -28,83 +29,33 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.DynamicGameEventListener;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.entity.networking.api.extended_spawn_data.QuiltExtendedSpawnDataEntity;
 
-public class ExcursionFunnelEntity extends Entity implements QuiltExtendedSpawnDataEntity {
+public class ExcursionFunnelEntity extends EmittedEntity {
 	public static final ResourceLocation MODEL = PortalCubed.id("entity/excursion_funnel_beam_forward");
 	public static final ResourceLocation REVERSED_MODEL = PortalCubed.id("entity/excursion_funnel_beam_reversed");
-	public static final EntityDataAccessor<Direction> FACING = SynchedEntityData.defineId(ExcursionFunnelEntity.class, EntityDataSerializers.DIRECTION);
-	public static final EntityDataAccessor<Float> LENGTH = SynchedEntityData.defineId(ExcursionFunnelEntity.class, EntityDataSerializers.FLOAT);
-	public static final float SIZE = (30 / 32f) * 2;
-	private Vec3 center = Vec3.ZERO;
 
-	public Direction facing = Direction.NORTH;
-	public float length = 1;
+	public static final float SIZE = (30 / 32f) * 2;
 
 	@ClientOnly
 	public ExcursionFunnelModel model;
 
 	public ExcursionFunnelEntity(EntityType<?> entityType, Level level) {
-		super(entityType, level);
-		setBoundingBox(makeBoundingBox());
+		super(entityType, level, 100);
 	}
 
-	// can't be a constructor, generics explode
-	public static ExcursionFunnelEntity create(ServerLevel level, Direction facing, float length) {
+	public static ExcursionFunnelEntity spawnAndEmit(ServerLevel level, Vec3 pos, Direction facing) {
 		ExcursionFunnelEntity entity = new ExcursionFunnelEntity(PortalCubedEntities.EXCURSION_FUNNEL, level);
-		entity.entityData.set(FACING, facing);
-		entity.onSyncedDataUpdated(FACING);
-		entity.entityData.set(LENGTH, length);
-		entity.onSyncedDataUpdated(LENGTH);
+		entity.setPos(pos);
+		entity.setFacing(facing);
+		entity.reEmit();
+		level.addFreshEntity(entity);
 		return entity;
-	}
-
-	@Override
-	protected void defineSynchedData() {
-		entityData.define(FACING, Direction.NORTH);
-		entityData.define(LENGTH, 1f);
-	}
-
-	@Override
-	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
-		super.onSyncedDataUpdated(key);
-		if (FACING.equals(key)) {
-			this.facing = entityData.get(FACING);
-			updateBounds();
-		} else if (LENGTH.equals(key)) {
-			this.length = entityData.get(LENGTH);
-			updateBounds();
-		}
-	}
-
-	@Override
-	public void writeAdditionalSpawnData(FriendlyByteBuf buf) {
-		buf.writeEnum(facing);
-		buf.writeFloat(length);
-	}
-
-	@Override
-	public void readAdditionalSpawnData(FriendlyByteBuf buf) {
-		this.facing = buf.readEnum(Direction.class);
-		this.length = buf.readFloat();
-	}
-
-	@Override
-	protected void addAdditionalSaveData(CompoundTag tag) {
-		tag.putString("facing", facing.getSerializedName());
-		tag.putFloat("length", length);
-	}
-
-	@Override
-	protected void readAdditionalSaveData(CompoundTag tag) {
-		Direction facing = NbtHelper.readEnum(tag, "facing", Direction.NORTH);
-		entityData.set(FACING, facing);
-		if (tag.contains("length", Tag.TAG_FLOAT))
-			entityData.set(LENGTH, tag.getFloat("length"));
 	}
 
 	public ResourceLocation getModel() {
@@ -112,26 +63,11 @@ public class ExcursionFunnelEntity extends Entity implements QuiltExtendedSpawnD
 	}
 
 	@Override
-	@NotNull
-	protected AABB makeBoundingBox() {
-		// null on initial load during super call
-		Direction facing = this.facing == null ? Direction.NORTH : this.facing;
+	protected AABB makeBaseBoundingBox() {
+		Direction facing = this.getFacing();
 		Axis axis = facing.getAxis();
 		Vec3 pos = position();
-		AABB base = AABB.ofSize(pos, axis.choose(0, SIZE, SIZE), axis.choose(SIZE, 0, SIZE), axis.choose(SIZE, SIZE, 0));
-		Vec3 offset = pos.relative(facing, length).subtract(pos); // relative offset along facing by length
-		AABB bounds = base.expandTowards(offset);
-		this.center = bounds.getCenter();
-		return bounds;
-	}
-
-	private void updateBounds() {
-		setBoundingBox(makeBoundingBox());
-	}
-
-	@Override
-	public boolean shouldRender(double x, double y, double z) {
-		return true;
+		return AABB.ofSize(pos, axis.choose(0, SIZE, SIZE), axis.choose(SIZE, 0, SIZE), axis.choose(SIZE, SIZE, 0));
 	}
 
 	@Override
@@ -140,7 +76,8 @@ public class ExcursionFunnelEntity extends Entity implements QuiltExtendedSpawnD
 		Level level = level();
 		List<LivingEntity> colliding = level.getEntitiesOfClass(LivingEntity.class, getBoundingBox(), Entity::isAlive);
 		if (!colliding.isEmpty()) {
-			Direction facing = entityData.get(FACING);
+			Direction facing = getFacing();
+			Vec3 center = getCenter();
 			for (LivingEntity entity : colliding) {
 				applyEffects(entity, center, facing);
 			}

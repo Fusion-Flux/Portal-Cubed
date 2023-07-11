@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.client.render.entity;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.client.render.entity.model.ExcursionFunnelModel;
 import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
 import org.jetbrains.annotations.NotNull;
@@ -8,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -22,14 +22,16 @@ public class ExcursionFunnelRenderer extends EntityRenderer<ExcursionFunnelEntit
 
 	@Override
 	public void render(ExcursionFunnelEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-		if (entity.model == null)
+		if (entity.model == null) {
 			entity.model = new ExcursionFunnelModel(entity);
+			entity.modelUpdater = entity.model::rebuildGeometry;
+		}
 		ExcursionFunnelModel model = entity.model;
 		VertexConsumer consumer = buffer.getBuffer(model.renderType(getTextureLocation(entity)));
 
 		poseStack.pushPose();
-		poseStack.mulPose(entity.facing.getRotation());
-		model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+		poseStack.mulPose(entity.getFacing().getRotation());
+		model.renderToBuffer(poseStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
 		poseStack.popPose();
 	}
 

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:block_open",
+    "minecraft:block_close",
+    "minecraft:block_place",
+    "minecraft:block_change",
+    "minecraft:block_destroy"
+  ]
+}

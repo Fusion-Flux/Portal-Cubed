@@ -137,6 +137,8 @@ public class PortalCubedEntities {
 
     public static final EntityType<ExcursionFunnelEntity> EXCURSION_FUNNEL = QuiltEntityTypeBuilder.create(MobCategory.MISC, ExcursionFunnelEntity::new)
             .setDimensions(EntityDimensions.scalable(1, 1))
+            .maxChunkTrackingRange(64)
+            .disableSummon()
             .build();
 
     public static final TagKey<EntityType<?>> P1_ENTITY = TagKey.create(Registries.ENTITY_TYPE, id("p1_entity"));
