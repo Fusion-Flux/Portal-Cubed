@@ -78,6 +78,7 @@ public class Portal extends Entity {
     private boolean disableValidation = false;
     private Vec3 axisW, axisH, normal;
     private Optional<Vec3> otherAxisW = Optional.empty(), otherAxisH = Optional.empty(), otherNormal = Optional.empty();
+    private IPQuaternion transformQuat;
 
     private VoxelShape crossCollisionThis;
     private long crossCollisionThisTick = -1;
@@ -295,9 +296,11 @@ public class Portal extends Entity {
         super.onSyncedDataUpdated(key);
         if (ROTATION.equals(key)) {
             axisW = axisH = normal = null;
+            transformQuat = null;
             makeBoundingBox();
         } else if (OTHER_ROTATION.equals(key)) {
             otherAxisW = otherAxisH = otherNormal = Optional.empty();
+            transformQuat = null;
         }
     }
 
@@ -635,9 +638,12 @@ public class Portal extends Entity {
     }
 
     public IPQuaternion getTransformQuat() {
+        if (transformQuat != null) {
+            return transformQuat;
+        }
         final IPQuaternion myRotation = IPQuaternion.fromQuaternionf(getRotation().get());
         final IPQuaternion otherRotation = IPQuaternion.fromQuaternionf(getOtherRotation().orElseThrow(NOT_INIT));
-        return otherRotation
+        return transformQuat = otherRotation
             .hamiltonProduct(FLIP_AXIS_W)
             .hamiltonProduct(myRotation.getConjugated());
     }

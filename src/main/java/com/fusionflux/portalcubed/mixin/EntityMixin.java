@@ -25,6 +25,7 @@ import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -59,11 +60,9 @@ import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.HashMap;
 import java.util.List;
@@ -168,7 +167,13 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     private final Map<BlockState, BlockPos> leftBlocks = new HashMap<>();
 
     @Unique
-    private Portal viewTranslatingPortal;
+    private Pair<Vec3, Portal> portalEyeInfo;
+    @Unique
+    private Vec3 portalEyeInfoKey;
+    @Unique
+    private Pair<Vec3, Portal> portalEyeInfo2;
+    @Unique
+    private Vec3 portalEyeInfo2Key;
 
     @Unique
     private VelocityHelperBlockEntity velocityHelper;
@@ -412,6 +417,24 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         return this.gelTransferTimer;
     }
 
+    @ModifyArgs(
+        method = "isInWall",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/phys/AABB;ofSize(Lnet/minecraft/world/phys/Vec3;DDD)Lnet/minecraft/world/phys/AABB;"
+        )
+    )
+    private void rotateInWallCheckBB(Args args) {
+        getEyePosition();
+        if (portalEyeInfo == null) return;
+        final Vec3 newBB = portalEyeInfo.second().getTransformQuat().rotate(
+            new Vec3(args.get(1), args.get(2), args.get(3)), false
+        );
+        args.set(1, newBB.x);
+        args.set(2, newBB.y);
+        args.set(3, newBB.z);
+    }
+
     @ModifyArg(
         method = "method_30022",
         at = @At(
@@ -511,33 +534,41 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
 
     @ModifyReturnValue(method = "getEyePosition()Lnet/minecraft/world/phys/Vec3;", at = @At("RETURN"))
     private Vec3 transformViaPortalNoInterp(Vec3 original) {
-        final var newPos = PortalDirectionUtils.simpleTransformPassingVector(
-            (Entity)(Object)this,
-            position().add(0, 0.02, 0),
-            original, p -> p.getNormal().y < 0
-        );
-        viewTranslatingPortal = newPos != null ? newPos.second() : null;
-        return newPos != null ? newPos.first() : original;
+        return transformVecThroughPortal(position(), original);
     }
 
     @ModifyReturnValue(method = "getEyePosition(F)Lnet/minecraft/world/phys/Vec3;", at = @At("RETURN"))
     private Vec3 transformViaPortalInterp(Vec3 original, float tickDelta) {
-        final var newPos = PortalDirectionUtils.simpleTransformPassingVector(
-            (Entity)(Object)this,
-            getPosition(tickDelta).add(0, 0.02, 0),
-            original, p -> p.getNormal().y < 0
-        );
-        viewTranslatingPortal = newPos != null ? newPos.second() : null;
-        return newPos != null ? newPos.first() : original;
+        return transformVecThroughPortal(getPosition(tickDelta), original);
+    }
+
+    @Unique
+    private Vec3 transformVecThroughPortal(Vec3 base, Vec3 vec) {
+        final Pair<Vec3, Portal> eyeInfo;
+        if (base == portalEyeInfoKey) {
+            eyeInfo = portalEyeInfo;
+        } else if (base == portalEyeInfo2Key) {
+            eyeInfo = portalEyeInfo2;
+        } else {
+            portalEyeInfo2 = portalEyeInfo;
+            portalEyeInfo2Key = portalEyeInfoKey;
+            eyeInfo = portalEyeInfo = PortalDirectionUtils.simpleTransformPassingVector(
+                (Entity)(Object)this,
+                base.add(0, 0.02, 0),
+                vec, p -> p.getNormal().y < 0
+            );
+            portalEyeInfoKey = base;
+        }
+        return eyeInfo != null ? eyeInfo.first() : vec;
     }
 
     @ModifyReturnValue(method = "calculateViewVector", at = @At("RETURN"))
     private Vec3 transformViewVector(Vec3 original, float xRot, float yRot) {
-        getEyePosition(); // Force a recalculation of viewTranslatingPortal
-        if (viewTranslatingPortal == null) {
+        getEyePosition();
+        if (portalEyeInfo == null) {
             return original;
         }
-        return viewTranslatingPortal.getTransformQuat().rotate(original, false);
+        return portalEyeInfo.second().getTransformQuat().rotate(original, false);
     }
 
     @WrapOperation(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setPos(DDD)V"))
