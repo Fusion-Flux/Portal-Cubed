@@ -109,7 +109,7 @@ public class GeneralUtil {
     }
 
     public static void setupPortalShapes(Entity entity) {
-        final AABB portalCheckBox = entity.getBoundingBox().expandTowards(entity.getDeltaMovement().add(0, .08, 0));
+        final AABB portalCheckBox = entity.getBoundingBox().expandTowards(entity.getDeltaMovement());
         List<Portal> list = entity.level().getEntitiesOfClass(Portal.class, portalCheckBox);
 
         VoxelShape cutoutShape = Shapes.empty();
