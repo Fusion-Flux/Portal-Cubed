@@ -229,7 +229,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
         assert portal.getOtherNormal().isPresent();
         final double y = portal.getNormal().y;
         final double oy = portal.getOtherNormal().get().y;
-        return (y > 0 && oy < 0) || (y < 0 && oy > 0);
+        return (y > 0 && oy < 0) || y < 0;
     }
 
     @Unique
@@ -270,6 +270,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
                 ((basePosition.y()) - portal.position().y()) * invert.y,
                 ((basePosition.z()) - portal.position().z()) * invert.z
             );
+            Vec3 teleportOffsetNoRotate = Vec3.ZERO;
             if (portal.getNormal().y < 0 && portal.getOtherNormal().get().y <= 0) {
                 teleportOffset = teleportOffset.add(
                     0,
@@ -278,16 +279,16 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
                     ),
                     0
                 );
+                teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
             } else if (portal.getNormal().y > 0 && portal.getOtherNormal().get().y > 0) {
                 teleportOffset = teleportOffset.add(0, thisEntity.getEyeHeight(), 0);
+            }
+            if (portal.getOtherNormal().get().y < 0 && portal.getNormal().y <= 0) {
+                teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
             }
             byteBuf.writeDouble(teleportOffset.x);
             byteBuf.writeDouble(teleportOffset.y);
             byteBuf.writeDouble(teleportOffset.z);
-            Vec3 teleportOffsetNoRotate = Vec3.ZERO;
-            if (portal.getOtherNormal().get().y < 0 && portal.getNormal().y <= 0) {
-                teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
-            }
             byteBuf.writeDouble(teleportOffsetNoRotate.x);
             byteBuf.writeDouble(teleportOffsetNoRotate.y);
             byteBuf.writeDouble(teleportOffsetNoRotate.z);
