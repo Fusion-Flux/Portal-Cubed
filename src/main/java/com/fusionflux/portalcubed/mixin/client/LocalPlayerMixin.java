@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.mixin.client;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -10,6 +11,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -50,14 +52,19 @@ public class LocalPlayerMixin extends AbstractClientPlayer implements HasMovemen
         }
     }
 
-    @Inject(method = "suffocatesAt", at = @At("HEAD"), cancellable = true)
-    private void noSuffocate(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(
+        method = "suffocatesAt",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/player/LocalPlayer;level()Lnet/minecraft/world/level/Level;"
+        ),
+        cancellable = true
+    )
+    private void noSuffocate(BlockPos pos, CallbackInfoReturnable<Boolean> cir, @Local(ordinal = 1) AABB aabb) {
         final VoxelShape cutout = CalledValues.getPortalCutout(this);
         if (cutout.isEmpty()) return;
-        if (!Shapes.joinUnoptimized(
-            Shapes.create(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1),
-            cutout, BooleanOp.AND
-        ).isEmpty()) {
+        // TODO: Maybe use Shapes.joinIsNotEmpty?
+        if (!Shapes.joinUnoptimized(Shapes.create(aabb), cutout, BooleanOp.AND).isEmpty()) {
             cir.setReturnValue(false);
         }
     }
