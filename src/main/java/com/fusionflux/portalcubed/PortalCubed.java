@@ -98,6 +98,7 @@ public class PortalCubed implements ModInitializer {
             ));
             final Vec3 entityVelocity = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
             final Vec3 teleportOffset = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            final Vec3 teleportOffsetNoRotate = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
             if (!Float.isFinite(yawSet)) {
                 handler.disconnect(Component.translatable("multiplayer.disconnect.invalid_player_movement"));
                 return;
@@ -134,6 +135,7 @@ public class PortalCubed implements ModInitializer {
                     portal,
                     entityVelocity,
                     teleportOffset,
+                    teleportOffsetNoRotate,
                     player,
                     currentAnimationDelta,
                     pitchSet, yawSet
@@ -311,6 +313,7 @@ public class PortalCubed implements ModInitializer {
         Portal portal,
         Vec3 entityVelocity,
         Vec3 teleportOffset,
+        Vec3 teleportOffsetNoRotate,
         Entity entity,
         Optional<IPQuaternion> currentAnimationDelta,
         float pitchSet, float yawSet
@@ -369,7 +372,7 @@ public class PortalCubed implements ModInitializer {
             }
         }
 
-        final Vec3 dest = portal.getDestination().get().add(rotatedOffsets);
+        final Vec3 dest = portal.getDestination().get().add(rotatedOffsets).add(teleportOffsetNoRotate);
 
         return new TeleportResult(
             dest,

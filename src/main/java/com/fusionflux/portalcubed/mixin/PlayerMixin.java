@@ -155,11 +155,9 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
 
             portalCheckBox = portalCheckBox.expandTowards(entityVelocity).expandTowards(entityVelocity.scale(-1));
 
-
             List<Portal> list = level().getEntitiesOfClass(Portal.class, portalCheckBox);
 
             Set<Pair<Portal, Vec3>> possiblePortals = new HashSet<>();
-
 
             for (Portal portalCheck : list) {
                 if (this.canChangeDimensions() && portalCheck.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
@@ -173,7 +171,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
                         entityVelocity = entityVelocity.add(0, .08 * .98, 0);
                     }
 //                        Vec3 entityPos = portalCheck.getNormal().y > 0 ? thisEntity.position() : thisEntity.getEyePosition();
-                    Vec3 entityPos = thisEntity.position().add(0, portalCheck.getOtherNormal().get().y < 0 || portalCheck.getNormal().y < 0 ? 0.02 - entityVelocity.y : thisEntity.getEyeHeight(), 0);
+                    Vec3 entityPos = thisEntity.position().add(0, doFeetTeleport(portalCheck) ? 0.02 - entityVelocity.y : thisEntity.getEyeHeight(), 0);
                     final boolean isColliding = portalCheck.getBoundingBox().distanceToSqr(entityPos) <= entityVelocity.lengthSqr();
                     if (portalFacing.step().x() < 0) {
                         if (entityPos.x() + entityVelocity.x >= portalCheck.position().x() && entityVelocity.x() > 0 && isColliding) {
@@ -224,6 +222,14 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
             PortalCubedComponents.HOLDER_COMPONENT.get(this).tick();
 
         }
+    }
+
+    @Unique
+    private static boolean doFeetTeleport(Portal portal) {
+        assert portal.getOtherNormal().isPresent();
+        final double y = portal.getNormal().y;
+        final double oy = portal.getOtherNormal().get().y;
+        return (y > 0 && oy < 0) || (y < 0 && oy > 0);
     }
 
     @Unique
@@ -278,6 +284,13 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
             byteBuf.writeDouble(teleportOffset.x);
             byteBuf.writeDouble(teleportOffset.y);
             byteBuf.writeDouble(teleportOffset.z);
+            Vec3 teleportOffsetNoRotate = Vec3.ZERO;
+            if (portal.getOtherNormal().get().y < 0 && portal.getNormal().y <= 0) {
+                teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
+            }
+            byteBuf.writeDouble(teleportOffsetNoRotate.x);
+            byteBuf.writeDouble(teleportOffsetNoRotate.y);
+            byteBuf.writeDouble(teleportOffsetNoRotate.z);
             NetworkingSafetyWrapper.sendFromClient("use_portal", byteBuf);
 //            CalledValues.setIsTeleporting(thisEntity, true);
 
@@ -285,6 +298,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
                 portal,
                 entityVelocity,
                 teleportOffset,
+                teleportOffsetNoRotate,
                 thisEntity,
                 cameraInterp,
                 thisEntity.getXRot(),

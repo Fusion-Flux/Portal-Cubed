@@ -325,6 +325,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
                 (thisEntity.getEyePosition().y()) - portal.position().y(),
                 (thisEntity.getEyePosition().z()) - portal.position().z()
             ),
+            Vec3.ZERO,
             thisEntity,
             Optional.empty(),
             thisEntity.getXRot(),
