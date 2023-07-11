@@ -63,8 +63,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer implements HasMovemen
     private void noSuffocate(BlockPos pos, CallbackInfoReturnable<Boolean> cir, @Local(ordinal = 1) AABB aabb) {
         final VoxelShape cutout = CalledValues.getPortalCutout(this);
         if (cutout.isEmpty()) return;
-        // TODO: Maybe use Shapes.joinIsNotEmpty?
-        if (!Shapes.joinUnoptimized(Shapes.create(aabb), cutout, BooleanOp.AND).isEmpty()) {
+        if (Shapes.joinIsNotEmpty(Shapes.create(aabb), cutout, BooleanOp.AND)) {
             cir.setReturnValue(false);
         }
     }
