@@ -84,6 +84,7 @@ dependencies {
 
 	mappings(loom.layered {
 		mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${mappings_version}:intermediary-v2")
+		parchment("org.parchmentmc.data:parchment-${project["parchment_version"]}@zip")
 		officialMojangMappings()
 	})
 
