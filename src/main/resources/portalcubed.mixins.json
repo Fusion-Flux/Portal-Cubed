@@ -60,6 +60,7 @@
     "client.ScreenEffectRendererMixin",
     "client.SimpleBakedModelAccessor",
     "client.SoundEngineMixin",
+    "client.SpriteContentsAccessor",
     "client.TextureAtlasAccessor",
     "client.VertexConsumerMixin"
   ],

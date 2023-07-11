@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -30,6 +31,11 @@ public class ExcursionFunnelRenderer extends EntityRenderer<ExcursionFunnelEntit
 		poseStack.mulPose(entity.facing.getRotation());
 		model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
 		poseStack.popPose();
+	}
+
+	@Override
+	public boolean shouldRender(ExcursionFunnelEntity entity, Frustum frustum, double x, double y, double z) {
+		return true;
 	}
 
 	@Override

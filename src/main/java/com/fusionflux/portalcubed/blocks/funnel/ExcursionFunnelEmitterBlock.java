@@ -146,17 +146,11 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
             return; // ignore updates from self
         if (!(level.getBlockEntity(pos) instanceof ExcursionFunnelEmitterBlockEntity be))
                 return;
-        boolean updateAnyway = false;
-        if (fromPos.equals(pos.relative(facing))) { // pos in front
-            BlockState newState = level.getBlockState(fromPos);
-            if (newState.isAir())
-                updateAnyway = true; // block in front removed, re-emit
-        }
         boolean anyPowered = anyPartPowered(level, multiblock);
         Mode currentMode = state.getValue(MODE);
         ToggleMode toggleMode = be.getToggleMode();
         boolean currentlyPowered = toggleMode.on == currentMode;
-        if (!updateAnyway && currentlyPowered == anyPowered)
+        if (currentlyPowered == anyPowered)
             return; // up to date
         Mode newMode = anyPowered ? toggleMode.on : toggleMode.off;
         updateEmitter(serverLevel, multiblock, newMode);
@@ -201,7 +195,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
     }
 
     private static void spawnFunnelEntity(ServerLevel level, TwoByTwo multiblock, Direction facing, boolean reversed) {
-        Vec3 start = multiblock.getCenter(); // TODO: add shift towards blocks here
+        Vec3 start = multiblock.getCenter().relative(facing, -0.3);
         Axis facingAxis = facing.getAxis();
         AABB bounds = AABB.ofSize(start,
                 facingAxis.choose(0.2, ExcursionFunnelEntity.SIZE, ExcursionFunnelEntity.SIZE),
@@ -212,7 +206,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
         Vec3 offset = Vec3.ZERO.with(facingAxis, 100 * facing.getAxisDirection().getStep());
         // how far the hitbox can actually move
         Vec3 actualOffset = Entity.collideBoundingBox(null, offset, bounds, level, List.of());
-        float length = (float) actualOffset.length();
+        float length = (float) (actualOffset.length() + 0.1);
         ExcursionFunnelEntity entity = ExcursionFunnelEntity.create(level, facing, length);
         entity.setPos(start);
         level.addFreshEntity(entity);

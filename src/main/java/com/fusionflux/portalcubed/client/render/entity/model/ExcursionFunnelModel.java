@@ -1,54 +1,55 @@
 package com.fusionflux.portalcubed.client.render.entity.model;
 
+import java.util.Set;
+
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.client.render.AnimatedEntityTextures;
 import com.fusionflux.portalcubed.client.render.PortalCubedRenderTypes;
-import com.fusionflux.portalcubed.client.render.entity.ExcursionFunnelRenderer;
 import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
-import com.fusionflux.portalcubed.mixin.client.TextureAtlasAccessor;
-import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 
 public class ExcursionFunnelModel extends Model {
-	public static final ResourceLocation TEXTURE = PortalCubed.id("excursion_funnel_beam_forward");
+	public static final Set<Direction> VISIBLE_MIDDLE = Set.of(Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+	public static final Set<Direction> VISIBLE_END = Set.of(Direction.values());
+	public static final ResourceLocation TEXTURE = PortalCubed.id("textures/animated_entity/excursion_funnel_beam_forward.png");
 	private ModelPart part;
 
 	public ExcursionFunnelModel(ExcursionFunnelEntity entity) {
-		super(texture -> PortalCubedRenderTypes.ANIMATED_TRANSLUCENT_ENTITY);
-		build(entity);
+		super(PortalCubedRenderTypes::getAnimatedTranslucentEntity);
+		this.rebuildGeometry(entity);
 	}
 
-	public void build(ExcursionFunnelEntity entity) {
-		TextureAtlas atlas = (TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(AnimatedEntityTextures.ATLAS_ID);
-		TextureAtlasAccessor atlasAccess = (TextureAtlasAccessor) atlas;
-		TextureAtlasSprite sprite = atlas.getSprite(TEXTURE);
-
+	public void rebuildGeometry(ExcursionFunnelEntity entity) {
 		MeshDefinition mesh = new MeshDefinition();
-		mesh.getRoot().addOrReplaceChild(
-				"bb_main",
-				CubeListBuilder.create()
-						.texOffs(sprite.getX(), sprite.getY())
-						.addBox(
-								-15.0F, -16.0F, -15.0F, 30.0F, entity.length, 30.0F,
-								CubeDeformation.NONE
-						),
-				PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition root = mesh.getRoot();
+		// this hurts my soul, but I don't know if improving it is possible
+		for (int block = 0; block < entity.length; block++) {
+			float length = Math.min(entity.length - block, 1);
+			boolean last = block + 1 >= entity.length;
+			root.addOrReplaceChild(
+					"cube_" + block,
+					CubeListBuilder.create()
+							.texOffs(0, 0)
+							.addBox(
+									-15, block * 16, -15, 30, length * 16, 30,
+									last ? VISIBLE_END : VISIBLE_MIDDLE
+							),
+					PartPose.ZERO
+			);
+		}
 
-		this.part = LayerDefinition.create(mesh, atlasAccess.invokeGetWidth(), atlasAccess.invokeGetHeight()).bakeRoot();
+		this.part = LayerDefinition.create(mesh,120, 1472).bakeRoot();
 	}
 
 	@Override
