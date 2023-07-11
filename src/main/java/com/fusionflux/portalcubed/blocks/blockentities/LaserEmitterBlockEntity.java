@@ -1,9 +1,9 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.PortalCubedConfig;
+import com.fusionflux.portalcubed.blocks.AbstractLaserNodeBlock;
 import com.fusionflux.portalcubed.blocks.LaserCatcherBlock;
 import com.fusionflux.portalcubed.blocks.LaserEmitterBlock;
-import com.fusionflux.portalcubed.blocks.LaserRelayBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.RedirectionCubeEntity;
@@ -27,6 +27,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,6 +36,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -113,6 +115,24 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                     start, start.add(direction.scale(lengthRemaining)),
                     ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, null
                 ),
+                (level1, ctx) -> BlockGetter.traverseBlocks(
+                    ctx.getFrom(), ctx.getTo(), ctx,
+                    (ctx1, pos1) -> {
+                        final BlockState block = level1.getBlockState(pos1);
+                        final VoxelShape shape = block.is(PortalCubedBlocks.REFLECTIVE)
+                            ? block.getShape(level1, pos1)
+                            : ctx1.getBlockShape(block, level1, pos1);
+                        return level1.clipWithInteractionOverride(ctx1.getFrom(), ctx1.getTo(), pos1, shape, block);
+                    },
+                    ctx1 -> {
+                        final Vec3 offset = ctx1.getFrom().subtract(ctx1.getTo());
+                        return BlockHitResult.miss(
+                            ctx1.getTo(),
+                            Direction.getNearest(offset.x, offset.y, offset.z),
+                            BlockPos.containing(ctx1.getTo())
+                        );
+                    }
+                ),
                 PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
                 new AdvancedEntityRaycast.TransformInfo(
                     e -> e instanceof RedirectionCubeEntity && !alreadyHit.contains(e),
@@ -145,21 +165,21 @@ public class LaserEmitterBlockEntity extends BlockEntity {
             if (segments.finalHit().getType() == HitResult.Type.BLOCK) {
                 final BlockHitResult finalHit = (BlockHitResult)segments.finalHit();
                 hitState = level.getBlockState(finalHit.getBlockPos());
-                if (hitState.is(PortalCubedBlocks.REFLECTION_GEL)) {
+                if (hitState.is(PortalCubedBlocks.REFLECTIVE)) {
                     final Direction.Axis axis = finalHit.getDirection().getAxis();
                     direction = direction.with(axis, -direction.get(axis));
                 }
             } else {
                 hitState = null;
             }
-        } while (hitState != null && (hitState.is(PortalCubedBlocks.LASER_RELAY) || hitState.is(PortalCubedBlocks.REFLECTION_GEL)));
+        } while (hitState != null && (hitState.is(PortalCubedBlocks.LASER_RELAY) || hitState.is(PortalCubedBlocks.REFLECTIVE)));
 
         if (level.isClientSide) {
             clientTick();
             return;
         }
 
-        if (hitState != null && !(hitState.getBlock() instanceof LaserRelayBlock)) {
+        if (hitState != null && !(hitState.getBlock() instanceof AbstractLaserNodeBlock)) {
             final Vec3 finalPos = multiSegments.get(multiSegments.size() - 1).finalRay().end();
             ((ServerLevel)level).sendParticles(
                 PortalCubedParticleTypes.ENERGY_SPARK,

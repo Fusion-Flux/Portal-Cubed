@@ -15,8 +15,8 @@ public class PortalGunPrimary extends PortalGun {
     }
 
     @Override
-    protected void shoot(Level world, Player user, InteractionHand hand, boolean leftClick) {
-        super.shoot(world, user, hand, true);
+    protected void shoot(Level level, Player user, InteractionHand hand, boolean leftClick) {
+        super.shoot(level, user, hand, true);
     }
 
     @Override

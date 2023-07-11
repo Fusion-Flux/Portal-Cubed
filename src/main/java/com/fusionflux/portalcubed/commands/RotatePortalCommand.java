@@ -1,20 +1,19 @@
 package com.fusionflux.portalcubed.commands;
 
-import static net.minecraft.commands.Commands.argument;
-import static net.minecraft.commands.Commands.literal;
-
 import com.fusionflux.portalcubed.entity.Portal;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import org.joml.Quaternionf;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import org.joml.Quaternionf;
+
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class RotatePortalCommand {
     private static final SimpleCommandExceptionType NOT_PORTAL = new SimpleCommandExceptionType(Component.literal("Entity is not a Portal"));
@@ -44,7 +43,7 @@ public class RotatePortalCommand {
         float y = FloatArgumentType.getFloat(ctx, "y");
         float z = FloatArgumentType.getFloat(ctx, "z");
         float w = FloatArgumentType.getFloat(ctx, "w");
-        portal.setValidation(false);
+        portal.setDisableValidation(true);
         portal.getRotation().lerpTo(new Quaternionf(x, y, z, w).normalize());
         return 1;
     }

@@ -17,7 +17,11 @@ public interface PortalCubedComponent extends Component {
 
     VoxelShape getPortalCutout();
 
-    void setPortalCutout(VoxelShape portalCutout);
+    void setPortalCutout(VoxelShape cutout);
+
+    VoxelShape getCrossPortalCollision();
+
+    void setCrossPortalCollision(VoxelShape collision);
 
     boolean getHasTeleportationHappened();
 

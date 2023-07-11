@@ -19,12 +19,15 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(BlockCollisions.class)
 public class BlockCollisionsMixin<T> implements BlockCollisionsExt<T> {
     @Unique
-    private VoxelShape pc$portalCutout = Shapes.empty();
+    private VoxelShape pc$portalCutout;
+    @Unique
+    private VoxelShape pc$crossCollision;
 
     @Override
     @SuppressWarnings("unchecked")
-    public BlockCollisions<T> setPortalCutout(VoxelShape cutout) {
+    public BlockCollisions<T> setExtraShapes(VoxelShape cutout, VoxelShape crossCollision) {
         pc$portalCutout = cutout;
+        pc$crossCollision = crossCollision;
         return (BlockCollisions<T>)(Object)this;
     }
 
@@ -41,9 +44,13 @@ public class BlockCollisionsMixin<T> implements BlockCollisionsExt<T> {
         @Local(ordinal = 0) int x, @Local(ordinal = 1) int y, @Local(ordinal = 2) int z
     ) {
         return Shapes.joinUnoptimized(
-            original.call(instance, level, pos, context),
-            pc$portalCutout.move(-x, -y, -z),
-            BooleanOp.ONLY_FIRST
+            Shapes.joinUnoptimized(
+                original.call(instance, level, pos, context),
+                (pc$portalCutout != null ? pc$portalCutout : Shapes.empty()).move(-x, -y, -z),
+                BooleanOp.ONLY_FIRST
+            ),
+            (pc$crossCollision != null ? pc$crossCollision : Shapes.empty()).move(-x, -y, -z),
+            BooleanOp.OR
         );
     }
 }

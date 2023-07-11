@@ -1,7 +1,8 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
+import com.fusionflux.portalcubed.gui.BlockPosScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.operator.Operator;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -93,6 +95,7 @@ public class VelocityHelperBlockEntity extends BlockEntity implements ExtendedSc
         nbt.putInt("FlightDuration", flightDuration);
     }
 
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
@@ -159,6 +162,7 @@ public class VelocityHelperBlockEntity extends BlockEntity implements ExtendedSc
         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
+    @NotNull
     @Override
     public Component getDisplayName() {
         return Component.translatable(getBlockState().getBlock().getDescriptionId());
@@ -167,7 +171,7 @@ public class VelocityHelperBlockEntity extends BlockEntity implements ExtendedSc
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player playerEntity) {
-        return new VelocityHelperScreenHandler(syncId, getBlockPos());
+        return new BlockPosScreenHandler(PortalCubed.VELOCITY_HELPER_SCREEN_HANDLER, syncId, getBlockPos());
     }
 
     @Override

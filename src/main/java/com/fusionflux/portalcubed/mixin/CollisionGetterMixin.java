@@ -24,7 +24,8 @@ public interface CollisionGetterMixin {
             return original;
         }
         final VoxelShape cutout = CalledValues.getPortalCutout(entity);
-        return () -> ((BlockCollisionsExt<VoxelShape>)original.iterator()).setPortalCutout(cutout);
+        final VoxelShape crossCollision = CalledValues.getCrossPortalCollision(entity);
+        return () -> ((BlockCollisionsExt<VoxelShape>)original.iterator()).setExtraShapes(cutout, crossCollision);
     }
 
     @ModifyVariable(
@@ -34,6 +35,9 @@ public interface CollisionGetterMixin {
     )
     @SuppressWarnings({"InvalidInjectorMethodSignature", "unchecked"})
     default BlockCollisions<VoxelShape> supportCutout(BlockCollisions<VoxelShape> value, @Local Entity entity) {
-        return ((BlockCollisionsExt<VoxelShape>)value).setPortalCutout(CalledValues.getPortalCutout(entity));
+        return ((BlockCollisionsExt<VoxelShape>)value).setExtraShapes(
+            CalledValues.getPortalCutout(entity),
+            CalledValues.getCrossPortalCollision(entity)
+        );
     }
 }

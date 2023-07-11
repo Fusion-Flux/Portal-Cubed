@@ -1,7 +1,10 @@
 package com.fusionflux.portalcubed.util;
 
+import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.entity.Portal;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -9,9 +12,17 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fusionflux.portalcubed.entity.Portal.NULL_BOX;
 import static java.lang.Math.*;
 
 public class GeneralUtil {
+    public static final Vec3 NEGATIVE_INFINITY = new Vec3(
+        Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY
+    );
+    public static final Vec3 POSITIVE_INFINITY = new Vec3(
+        Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY
+    );
+
     /**
      * @author maximum
      */
@@ -82,5 +93,36 @@ public class GeneralUtil {
             (float)toDegrees(-Mth.atan2(normal.y, sqrt(normal.x * normal.x + normal.z * normal.z))),
             (float)toDegrees(Mth.atan2(normal.z, normal.x)) - 90
         );
+    }
+
+    public static AABB capAABBAt(Vec3 min, Vec3 max, Direction direction, Vec3 origin) {
+        if (direction.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
+            min = min.with(direction.getAxis(), origin.get(direction.getAxis()));
+        } else {
+            max = max.with(direction.getAxis(), origin.get(direction.getAxis()));
+        }
+        return new AABB(min, max);
+    }
+
+    public static AABB createInfiniteForwardsAABB(Direction direction, Vec3 origin) {
+        return capAABBAt(NEGATIVE_INFINITY, POSITIVE_INFINITY, direction, origin);
+    }
+
+    public static void setupPortalShapes(Entity entity) {
+        final AABB portalCheckBox = entity.getBoundingBox().expandTowards(entity.getDeltaMovement().add(0, .08, 0));
+        List<Portal> list = entity.level().getEntitiesOfClass(Portal.class, portalCheckBox);
+
+        VoxelShape cutoutShape = Shapes.empty();
+        VoxelShape crossPortalCollisionShape = Shapes.empty();
+
+        for (Portal portal : list) {
+            if (portal.calculateCutoutBox() != NULL_BOX && portal.calculateBoundsCheckBox() != NULL_BOX && portal.getActive()) {
+                cutoutShape = Shapes.or(cutoutShape, Shapes.create(portal.getCutoutBoundingBox()));
+                crossPortalCollisionShape = Shapes.or(crossPortalCollisionShape, portal.getCrossPortalCollisionShapeOther(entity));
+            }
+        }
+
+        CalledValues.setPortalCutout(entity, cutoutShape);
+        CalledValues.setCrossPortalCollision(entity, crossPortalCollisionShape);
     }
 }

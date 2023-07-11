@@ -153,32 +153,12 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
         return false;
     }
 
-    protected void shoot(Level world, Player user, InteractionHand hand, boolean leftClick) {
+    protected void shoot(Level level, Player user, InteractionHand hand, boolean leftClick) {
         if (user.isSpectator() || PortalCubedComponents.HOLDER_COMPONENT.get(user).entityBeingHeld() != null) return;
         ItemStack stack = user.getItemInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", !leftClick);
-        if (!world.isClientSide) {
-            CompoundTag tag = stack.getOrCreateTag();
-
-            Portal portalHolder;
-            Portal originalPortal;
-            CompoundTag portalsTag = tag.getCompound(world.dimension().location().toString());
-
-            if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
-                originalPortal = (Portal) ((ServerLevel) world).getEntity(portalsTag.getUUID((leftClick ? "Left" : "Right") + "Portal"));
-            } else {
-                originalPortal = null;
-            }
-            portalHolder = PortalCubedEntities.PORTAL.create(world);
-
-            Portal otherPortal;
-            if (portalsTag.contains((leftClick ? "Right" : "Left") + "Portal")) {
-                otherPortal = (Portal) ((ServerLevel) world).getEntity(portalsTag.getUUID((leftClick ? "Right" : "Left") + "Portal"));
-            } else {
-                otherPortal = null;
-            }
-
-            world.playSound(null, user.position().x(), user.position().y(), user.position().z(), leftClick ? PortalCubedSounds.FIRE_EVENT_PRIMARY : PortalCubedSounds.FIRE_EVENT_SECONDARY, SoundSource.NEUTRAL, .3F, 1F);
+        if (!level.isClientSide) {
+            level.playSound(null, user.position().x(), user.position().y(), user.position().z(), leftClick ? PortalCubedSounds.FIRE_EVENT_PRIMARY : PortalCubedSounds.FIRE_EVENT_SECONDARY, SoundSource.NEUTRAL, .3F, 1F);
 
             Vec3i up;
             Vec3i normal;
@@ -186,131 +166,151 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
             Vec3 blockPos;
 
             HitResult hitResult = customRaycast(user, 128.0D, 0.0F);
-            if (hitResult.getType() == HitResult.Type.BLOCK) {
-                normal = ((BlockHitResult) hitResult).getDirection().getOpposite().getNormal();
-                if (normal.getY() == 0) {
-                    up = new Vec3i(0, 1, 0);
-                } else {
-                    final Vec3 lookAngle = user.getLookAngle();
-                    up = Direction.getNearest(lookAngle.x, 0, lookAngle.z).getNormal();
-                }
-                right = up.cross(normal);
+            if (hitResult.getType() != HitResult.Type.BLOCK) {
+                level.playSound(null, user.position().x(), user.position().y(), user.position().z(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundSource.NEUTRAL, 1F, 1F);
+                return;
+            }
 
-                final int alignment = world.getGameRules().getInt(PortalCubedGameRules.PORTAL_ALIGNMENT);
-                if (alignment == 0) {
-                    blockPos = hitResult.getLocation();
-                } else {
-                    blockPos = new Vec3(
-                            Math.round(hitResult.getLocation().x * alignment) / (double) alignment,
-                            Math.round(hitResult.getLocation().y * alignment) / (double) alignment,
-                            Math.round(hitResult.getLocation().z * alignment) / (double) alignment
-                    );
-                }
+            CompoundTag tag = stack.getOrCreateTag();
 
-                Vec3 portalPos1 = calcPos(blockPos, normal);
+            Portal portalHolder;
+            Portal originalPortal;
+            CompoundTag portalsTag = tag.getCompound(level.dimension().location().toString());
 
-                assert portalHolder != null;
-                portalHolder.setOwnerUUID(Optional.of(user.getUUID()));
-                portalHolder.setOriginPos(portalPos1);
-                portalHolder.setDestination(Optional.of(portalPos1));
+            if (portalsTag.contains((leftClick ? "Left" : "Right") + "Portal")) {
+                originalPortal = (Portal) ((ServerLevel) level).getEntity(portalsTag.getUUID((leftClick ? "Left" : "Right") + "Portal"));
+            } else {
+                originalPortal = null;
+            }
+            portalHolder = PortalCubedEntities.PORTAL.create(level);
 
-                portalHolder.setRotation(
-                    IPQuaternion.matrixToQuaternion(
-                        Vec3.atLowerCornerOf(right),
-                        Vec3.atLowerCornerOf(up),
-                        Vec3.atLowerCornerOf(normal)
-                    ).toQuaternionf()
+            Portal otherPortal;
+            if (portalsTag.contains((leftClick ? "Right" : "Left") + "Portal")) {
+                otherPortal = (Portal) ((ServerLevel) level).getEntity(portalsTag.getUUID((leftClick ? "Right" : "Left") + "Portal"));
+            } else {
+                otherPortal = null;
+            }
+
+            normal = ((BlockHitResult) hitResult).getDirection().getOpposite().getNormal();
+            if (normal.getY() == 0) {
+                up = new Vec3i(0, 1, 0);
+            } else {
+                final Vec3 lookAngle = user.getLookAngle();
+                up = Direction.getNearest(lookAngle.x, 0, lookAngle.z).getNormal();
+            }
+            right = up.cross(normal);
+
+            final int alignment = level.getGameRules().getInt(PortalCubedGameRules.PORTAL_ALIGNMENT);
+            if (alignment == 0) {
+                blockPos = hitResult.getLocation();
+            } else {
+                blockPos = new Vec3(
+                        Math.round(hitResult.getLocation().x * alignment) / (double) alignment,
+                        Math.round(hitResult.getLocation().y * alignment) / (double) alignment,
+                        Math.round(hitResult.getLocation().z * alignment) / (double) alignment
                 );
-                portalHolder.setColor(this.getSidedColor(stack));
+            }
 
-                //noinspection DataFlowIssue
-                final Direction.Axis hAxis = Direction.fromDelta(right.getX(), right.getY(), right.getZ()).getAxis();
-                findCorrectOrientation:
-                if (!portalHolder.validate()) {
-                    for (final var try_ : FAIL_TRIES.get(Pair.of(up, right))) {
-                        Vec3 tryPos = portalPos1;
-                        for (final Direction part : try_) {
-                            double newAxis = FAIL_AXIS_DIRS.get(part.getAxisDirection()).get(tryPos.get(part.getAxis()));
-                            if (part.getAxis() == hAxis) {
-                                newAxis += part.getAxisDirection() == Direction.AxisDirection.POSITIVE ? -0.5 : 0.5;
-                            }
-                            tryPos = tryPos.with(part.getAxis(), newAxis);
+            Vec3 portalPos1 = calcPos(blockPos, normal);
+
+            assert portalHolder != null;
+            portalHolder.setDisableValidation(level.getGameRules().getBoolean(PortalCubedGameRules.DISABLE_PORTAL_VALIDATION));
+            portalHolder.setOwnerUUID(Optional.of(user.getUUID()));
+            portalHolder.setOriginPos(portalPos1);
+            portalHolder.setDestination(Optional.of(portalPos1));
+
+            portalHolder.setRotation(
+                IPQuaternion.matrixToQuaternion(
+                    Vec3.atLowerCornerOf(right),
+                    Vec3.atLowerCornerOf(up),
+                    Vec3.atLowerCornerOf(normal)
+                ).toQuaternionf()
+            );
+            portalHolder.setColor(this.getSidedColor(stack));
+
+            //noinspection DataFlowIssue
+            final Direction.Axis hAxis = Direction.fromDelta(right.getX(), right.getY(), right.getZ()).getAxis();
+            findCorrectOrientation:
+            if (!portalHolder.validate()) {
+                for (final var try_ : FAIL_TRIES.get(Pair.of(up, right))) {
+                    Vec3 tryPos = portalPos1;
+                    for (final Direction part : try_) {
+                        double newAxis = FAIL_AXIS_DIRS.get(part.getAxisDirection()).get(tryPos.get(part.getAxis()));
+                        if (part.getAxis() == hAxis) {
+                            newAxis += part.getAxisDirection() == Direction.AxisDirection.POSITIVE ? -0.5 : 0.5;
                         }
-                        portalHolder.setOriginPos(tryPos);
-                        if (portalHolder.validate()) {
-                            break findCorrectOrientation;
-                        }
+                        tryPos = tryPos.with(part.getAxis(), newAxis);
                     }
-                    world.playSound(null, user.position().x(), user.position().y(), user.position().z(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundSource.NEUTRAL, 1F, 1F);
+                    portalHolder.setOriginPos(tryPos);
+                    if (portalHolder.validate()) {
+                        break findCorrectOrientation;
+                    }
+                }
+                level.playSound(null, user.position().x(), user.position().y(), user.position().z(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundSource.NEUTRAL, 1F, 1F);
+                return;
+            }
+
+            final List<Portal> overlappingPortals = level.getEntities(
+                    PortalCubedEntities.PORTAL,
+                    portalHolder.getBoundingBox(),
+                    p -> p != originalPortal && vectorsEqual(p.getNormal(), portalHolder.getNormal())
+            );
+
+            if (!overlappingPortals.isEmpty()) {
+                boolean bumpSuccess = false;
+                if (overlappingPortals.size() == 1) {
+                    final Portal overlappingPortal = overlappingPortals.get(0);
+                    if (overlappingPortal.getAxisW().equals(portalHolder.getAxisW())) {
+                        final Direction.Axis axis = Objects.requireNonNull(Direction.fromDelta(right.getX(), right.getY(), right.getZ())).getAxis();
+                        if (overlappingPortal.getOriginPos().get(axis) < portalHolder.getOriginPos().get(axis)) {
+                            portalHolder.setOriginPos(portalHolder.getOriginPos().with(axis, overlappingPortal.getOriginPos().get(axis) + 1));
+                        } else {
+                            portalHolder.setOriginPos(portalHolder.getOriginPos().with(axis, overlappingPortal.getOriginPos().get(axis) - 1));
+                        }
+                        bumpSuccess = portalHolder.validate();
+                    }
+                }
+                if (!bumpSuccess) {
+                    level.playSound(null, user.position().x(), user.position().y(), user.position().z(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundSource.NEUTRAL, 1F, 1F);
                     return;
                 }
+            }
 
-                final List<Portal> overlappingPortals = world.getEntities(
-                        PortalCubedEntities.PORTAL,
-                        portalHolder.getBoundingBox(),
-                        p -> p != originalPortal && vectorsEqual(p.getNormal(), portalHolder.getNormal())
-                );
-
-                if (!overlappingPortals.isEmpty()) {
-                    boolean bumpSuccess = false;
-                    if (overlappingPortals.size() == 1) {
-                        final Portal overlappingPortal = overlappingPortals.get(0);
-                        if (overlappingPortal.getAxisW().equals(portalHolder.getAxisW())) {
-                            final Direction.Axis axis = Objects.requireNonNull(Direction.fromDelta(right.getX(), right.getY(), right.getZ())).getAxis();
-                            if (overlappingPortal.getOriginPos().get(axis) < portalHolder.getOriginPos().get(axis)) {
-                                portalHolder.setOriginPos(portalHolder.getOriginPos().with(axis, overlappingPortal.getOriginPos().get(axis) + 1));
-                            } else {
-                                portalHolder.setOriginPos(portalHolder.getOriginPos().with(axis, overlappingPortal.getOriginPos().get(axis) - 1));
-                            }
-                            bumpSuccess = portalHolder.validate();
-                        }
-                    }
-                    if (!bumpSuccess) {
-                        world.playSound(null, user.position().x(), user.position().y(), user.position().z(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundSource.NEUTRAL, 1F, 1F);
-                        return;
-                    }
-                }
-
-                if (originalPortal == null) {
-                    portalHolder.setLinkedPortalUUID(Optional.empty());
-                } else {
-                    CalledValues.removePortals(user, originalPortal.getUUID());
-                    originalPortal.kill();
-                }
-                world.addFreshEntity(portalHolder);
-                CalledValues.addPortals(user, portalHolder.getUUID());
-                final boolean isOtherAuto = otherPortal == null;
-                if (isOtherAuto) {
-                    otherPortal = getPotentialOpposite(
-                        world, portalPos1, portalHolder, portalHolder.getColor(), allowLinkingToOther()
-                    ).orElse(null);
-                }
-                if (otherPortal != null) {
-                    linkPortals(portalHolder, otherPortal, 0.1f);
-
-                    portalHolder.setOwnerUUID(Optional.of(user.getUUID()));
-                    if (!isOtherAuto) {
-                        otherPortal.setOwnerUUID(Optional.of(user.getUUID()));
-                    }
-
-                    CalledValues.addPortals(user, portalHolder.getUUID());
-                    if (!isOtherAuto) {
-                        CalledValues.addPortals(user, otherPortal.getUUID());
-                    }
-                }
+            if (originalPortal == null) {
+                portalHolder.setLinkedPortalUUID(Optional.empty());
             } else {
-                world.playSound(null, user.position().x(), user.position().y(), user.position().z(), PortalCubedSounds.INVALID_PORTAL_EVENT, SoundSource.NEUTRAL, 1F, 1F);
-                return;
+                CalledValues.removePortals(user, originalPortal.getUUID());
+                originalPortal.kill();
+            }
+            level.addFreshEntity(portalHolder);
+            CalledValues.addPortals(user, portalHolder.getUUID());
+            final boolean isOtherAuto = otherPortal == null;
+            if (isOtherAuto) {
+                otherPortal = getPotentialOpposite(
+                    level, portalPos1, portalHolder, portalHolder.getColor(), allowLinkingToOther()
+                ).orElse(null);
+            }
+            if (otherPortal != null) {
+                linkPortals(portalHolder, otherPortal, 0.1f);
+
+                portalHolder.setOwnerUUID(Optional.of(user.getUUID()));
+                if (!isOtherAuto) {
+                    otherPortal.setOwnerUUID(Optional.of(user.getUUID()));
+                }
+
+                CalledValues.addPortals(user, portalHolder.getUUID());
+                if (!isOtherAuto) {
+                    CalledValues.addPortals(user, otherPortal.getUUID());
+                }
             }
 
             portalsTag.putUUID((leftClick ? "Left" : "Right") + "Portal", portalHolder.getUUID());
 
-            tag.put(world.dimension().location().toString(), portalsTag);
+            tag.put(level.dimension().location().toString(), portalsTag);
             portalHolder.notifyListeners(false);
             // also notify the other portal to re-propagate
-            Portal linked = portalHolder.findLinkedPortal();
-            if (linked != null)
-                linked.notifyListeners(false);
+            if (otherPortal != null)
+                otherPortal.notifyListeners(false);
         } else {
             final LocalPlayer localPlayer = (LocalPlayer)user;
             if (localPlayer.input.getMoveVector().lengthSquared() < 0.1 && user.getXRot() >= 88.0) {
@@ -368,7 +368,7 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
      * @return a vector position specifying the portal's final position in the world.
      */
     private Vec3 calcPos(Vec3 hit, Vec3i facing) {
-        double faceOffset = -0.01;
+        double faceOffset = -Portal.SURFACE_OFFSET;
         return new Vec3(
             ((hit.x()) + faceOffset * facing.getX()), // x component
             ((hit.y()) + faceOffset * facing.getY()), // y component

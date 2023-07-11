@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "create:stationary_contraption",
+      "required": false
+    },
+    {
+      "id": "create:gantry_contraption",
+      "required": false
+    },
+    {
+      "id": "create:carriage_contraption",
+      "required": false
+    },
+    {
+      "id": "create:super_glue",
+      "required": false
+    }
+  ]
+}

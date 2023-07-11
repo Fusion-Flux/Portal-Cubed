@@ -16,6 +16,7 @@ import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.GelBlobEntity;
 import com.fusionflux.portalcubed.entity.Portal;
+import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
@@ -162,9 +163,6 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     @Shadow public abstract Level level();
 
     @Unique
-    private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
-
-    @Unique
     private final Map<BlockState, BlockPos> collidingBlocks = new HashMap<>();
     @Unique
     private final Map<BlockState, BlockPos> leftBlocks = new HashMap<>();
@@ -182,26 +180,10 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
 
-        Entity thisentity = ((Entity) (Object) this);
+        Entity thiz = (Entity) (Object) this;
 
-        Vec3 entityVelocity = this.getDeltaMovement();
-
-
-        if (!(thisentity instanceof Player)) {
-            AABB portalCheckBox = getBoundingBox();
-
-            portalCheckBox = portalCheckBox.expandTowards(entityVelocity.add(0, .08, 0));
-
-            List<Portal> list = ((Entity) (Object) this).level().getEntitiesOfClass(Portal.class, portalCheckBox);
-            VoxelShape omittedDirections = Shapes.empty();
-
-            for (Portal portal : list) {
-                if (portal.calculateCutoutBox() != NULL_BOX && portal.calculateBoundsCheckBox() != NULL_BOX) {
-                    if (portal.getActive())
-                        omittedDirections = Shapes.or(omittedDirections, Shapes.create(portal.getCutoutBoundingBox()));
-                }
-            }
-            CalledValues.setPortalCutout(((Entity) (Object) this), omittedDirections);
+        if (!(thiz instanceof Player) && !(thiz instanceof Portal) && !thiz.getType().is(PortalCubedEntities.PORTAL_BLACKLIST)) {
+            GeneralUtil.setupPortalShapes(thiz);
         }
 
         if (this.isInFunnel() && this.getFunnelTimer() != 0) {
@@ -252,12 +234,11 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         prevGravDirec = GravityChangerAPI.getGravityDirection(((Entity) (Object) this));
     }
 
-
     @Inject(method = "tick", at = @At("TAIL"))
     public void tickTail(CallbackInfo ci) {
         Entity thisEntity = ((Entity) (Object) this);
 
-        if (!thisEntity.level().isClientSide() && !(thisEntity instanceof Player) && !(thisEntity instanceof Portal)) {
+        if (!thisEntity.level().isClientSide() && !(thisEntity instanceof Player) && !(thisEntity instanceof Portal) && !thisEntity.getType().is(PortalCubedEntities.PORTAL_BLACKLIST)) {
             Vec3 entityVelocity = this.getDeltaMovement();
 
 
@@ -439,7 +420,11 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         index = 0
     )
     private VoxelShape cutoutForIsInWall(VoxelShape shape) {
-        return Shapes.joinUnoptimized(shape, CalledValues.getPortalCutout(((Entity)(Object)this)), BooleanOp.ONLY_FIRST);
+        return Shapes.joinUnoptimized(
+            Shapes.joinUnoptimized(shape, CalledValues.getPortalCutout(((Entity)(Object)this)), BooleanOp.ONLY_FIRST),
+            CalledValues.getCrossPortalCollision((Entity)(Object)this),
+            BooleanOp.OR
+        );
     }
 
     @ModifyArg(
@@ -451,7 +436,11 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         index = 0
     )
     private VoxelShape cutoutForIsColliding(VoxelShape shape) {
-        return Shapes.joinUnoptimized(shape, CalledValues.getPortalCutout(((Entity)(Object)this)), BooleanOp.ONLY_FIRST);
+        return Shapes.joinUnoptimized(
+            Shapes.joinUnoptimized(shape, CalledValues.getPortalCutout(((Entity)(Object)this)), BooleanOp.ONLY_FIRST),
+            CalledValues.getCrossPortalCollision((Entity)(Object)this),
+            BooleanOp.OR
+        );
     }
 
     @Inject(method = "checkInsideBlocks", at = @At("HEAD"))
@@ -459,25 +448,25 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         leftBlocks.putAll(collidingBlocks);
     }
 
-    @Redirect(
-            method = "checkInsideBlocks",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/block/state/BlockState;entityInside(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)V"
-            )
+    @WrapOperation(
+        method = "checkInsideBlocks",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/block/state/BlockState;entityInside(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)V"
+        )
     )
-    private void midBlockCheck(BlockState instance, Level world, BlockPos pos, Entity entity) {
-        instance.entityInside(world, pos, entity);
+    private void midBlockCheck(BlockState instance, Level level, BlockPos pos, Entity entity, Operation<Void> original) {
+        original.call(instance, level, pos, entity);
         if (
-                instance.getBlock() instanceof BlockCollisionTrigger trigger &&
-                        intersects(
-                                entity.getBoundingBox().move(pos.multiply(-1)),
-                                trigger.getTriggerShape(instance, world, pos, CollisionContext.of(entity))
-                        )
+            instance.getBlock() instanceof BlockCollisionTrigger trigger &&
+                intersects(
+                    entity.getBoundingBox().move(pos.multiply(-1)),
+                    trigger.getTriggerShape(instance, level, pos, CollisionContext.of(entity))
+                )
         ) {
             final BlockPos immutable = pos.immutable();
             if (collidingBlocks.put(instance, immutable) == null) {
-                trigger.onEntityEnter(instance, world, immutable, entity);
+                trigger.onEntityEnter(instance, level, immutable, entity);
             }
             leftBlocks.remove(instance);
         }

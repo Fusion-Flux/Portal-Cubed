@@ -12,6 +12,7 @@
     "CollisionContextMixin",
     "CollisionGetterMixin",
     "CreativeModeTabsAccessor",
+    "DispenserBlockAccessor",
     "EntityMixin",
     "InventoryMixin",
     "ItemMixin",

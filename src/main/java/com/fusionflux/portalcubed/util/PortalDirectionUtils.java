@@ -49,8 +49,8 @@ public class PortalDirectionUtils {
         }
     );
 
-    public static AdvancedEntityRaycast.Result raycast(Level world, ClipContext context) {
-        return AdvancedEntityRaycast.raycast(world, context, PORTAL_RAYCAST_TRANSFORM);
+    public static AdvancedEntityRaycast.Result raycast(Level level, ClipContext context) {
+        return AdvancedEntityRaycast.raycast(level, context, Level::clip, PORTAL_RAYCAST_TRANSFORM);
     }
 
     /**

@@ -1,19 +1,17 @@
 package com.fusionflux.portalcubed.blocks.bridge;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Vec3i;
-import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.phys.Vec3;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public enum Edge implements StringRepresentable {
     LEFT, RIGHT, DOWN, UP;

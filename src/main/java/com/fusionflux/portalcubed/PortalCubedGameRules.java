@@ -30,6 +30,9 @@ public class PortalCubedGameRules {
     public static final GameRules.Key<GameRules.IntegerValue> PORTAL_ALIGNMENT = GameRuleRegistry.register(
         "portalAlignment", CATEGORY, GameRuleFactory.createIntRule(16, 0)
     );
+    public static final GameRules.Key<GameRules.BooleanValue> DISABLE_PORTAL_VALIDATION = GameRuleRegistry.register(
+        "disablePortalValidation", CATEGORY, GameRuleFactory.createBooleanRule(false)
+    );
     public static final GameRules.Key<GameRules.BooleanValue> USE_PORTAL_HUD = GameRuleRegistry.register(
         "usePortalHud", CATEGORY, GameRuleFactory.createBooleanRule(false, (server, rule) -> {
             final FriendlyByteBuf buf = PacketByteBufs.create();

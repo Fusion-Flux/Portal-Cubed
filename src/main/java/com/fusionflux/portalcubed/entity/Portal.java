@@ -5,10 +5,7 @@ import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.PortalMoveListeningBlock;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.IPQuaternion;
-import com.fusionflux.portalcubed.util.LerpedQuaternion;
-import com.fusionflux.portalcubed.util.MutableVec3;
-import com.fusionflux.portalcubed.util.NbtHelper;
+import com.fusionflux.portalcubed.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
 import net.minecraft.core.Direction;
@@ -21,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -31,9 +29,11 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -54,7 +54,9 @@ public class Portal extends Entity {
         new Vec3(0, 1, 0), 180
     ).fixFloatingPointErrorAccumulation();
 
-    private static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
+    public static final AABB NULL_BOX = new AABB(0, 0, 0, 0, 0, 0);
+
+    public static final double SURFACE_OFFSET = 0.01;
 
     private static final double WIDTH = 0.9, HEIGHT = 1.9;
     private static final double EPSILON = 1.0E-7;
@@ -76,6 +78,9 @@ public class Portal extends Entity {
     private boolean disableValidation = false;
     private Vec3 axisW, axisH, normal;
     private Optional<Vec3> otherAxisW = Optional.empty(), otherAxisH = Optional.empty(), otherNormal = Optional.empty();
+
+    private VoxelShape crossCollisionThis;
+    private long crossCollisionThisTick = -1;
 
     public Portal(EntityType<?> entityType, Level world) {
         super(entityType, world);
@@ -161,7 +166,7 @@ public class Portal extends Entity {
         final Vec3 normal = getNormal();
         final double x = normal.x, y = normal.y, z = normal.z;
         final Direction result = Direction.fromDelta((int)x, (int)y, (int)z);
-        return result != null ? result : Direction.getNearest((float)x, (float)y, (float)z);
+        return result != null ? result : Direction.getNearest(x, y, z);
     }
 
     public LerpedQuaternion getRotation() {
@@ -247,9 +252,14 @@ public class Portal extends Entity {
 
     @Override
     public void tick() {
+        final ProfilerFiller profiler = level().getProfiler();
+        profiler.push("portalTick");
+
         this.makeBoundingBox();
         this.calculateCutoutBox();
+
         getRotation().tick();
+
         if (!this.level().isClientSide) {
             final ServerLevel serverLevel = (ServerLevel)level();
             serverLevel.getChunkSource().addRegionTicket(TicketType.PORTAL, chunkPosition(), 2, blockPosition());
@@ -273,8 +283,10 @@ public class Portal extends Entity {
                 this.kill();
                 level().playSound(null, getX(), getY(), getZ(), PortalCubedSounds.ENTITY_PORTAL_CLOSE, SoundSource.NEUTRAL, .1F, 1F);
             }
+
         }
 
+        profiler.pop();
         super.tick();
     }
 
@@ -289,8 +301,8 @@ public class Portal extends Entity {
         }
     }
 
-    public void setValidation(boolean validate) {
-        this.disableValidation = !validate;
+    public void setDisableValidation(boolean disableValidation) {
+        this.disableValidation = disableValidation;
     }
 
     public boolean validate() {
@@ -520,6 +532,74 @@ public class Portal extends Entity {
 
     public final void setCutoutBoundingBox(AABB boundingBox) {
         this.cutoutBoundingBox = boundingBox;
+    }
+
+    public VoxelShape getCrossPortalCollisionShapeOther(Entity context) {
+        // getActive() returning true asserts that these parameters return present Optionals
+        //noinspection OptionalGetWithoutIsPresent
+        return getActive()
+            ? calculateCrossPortalCollisionShape(getOtherNormal().get(), getDestination().get(), getOtherRotation().get(), context)
+            : Shapes.empty();
+    }
+
+    public VoxelShape getCrossPortalCollisionShapeThis() {
+        final long tick = level().getGameTime();
+        if (crossCollisionThis == null || crossCollisionThisTick < tick) {
+            crossCollisionThis = calculateCrossPortalCollisionShape(getNormal(), getOriginPos(), null, this);
+            crossCollisionThisTick = tick;
+        }
+        return crossCollisionThis;
+    }
+
+    private VoxelShape calculateCrossPortalCollisionShape(Vec3 normal, Vec3 origin, Quaternionf otherRotation, Entity context) {
+        origin = origin.subtract(normal.scale(SURFACE_OFFSET));
+        final Direction facing = Direction.getNearest(normal.x, normal.y, normal.z);
+        final AABB clipping = GeneralUtil.capAABBAt(
+            origin.subtract(2, 2, 2),
+            origin.add(2, 2, 2),
+            facing, origin
+        );
+        final VoxelShape clippingShape = Shapes.create(clipping);
+        VoxelShape result = Shapes.empty();
+        for (final VoxelShape shape : level().getBlockCollisions(context, clipping)) {
+            result = Shapes.or(result, Shapes.joinUnoptimized(shape, clippingShape, BooleanOp.AND));
+        }
+        if (otherRotation != null && !result.isEmpty() /* Empty shapes don't need to be translated */) {
+            final Vec3 scaledNormalOffset = getNormal().scale(SURFACE_OFFSET);
+            if (facing != getFacingDirection().getOpposite()) {
+                result = result.move(-origin.x, -origin.y, -origin.z);
+                final IPQuaternion transform = getTransformQuat().getConjugated();
+                final MutableObject<VoxelShape> rotatedShape = new MutableObject<>(Shapes.empty());
+                result.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
+                    final Vec3 minT = transform.rotate(new Vec3(x1, y1, z1), false);
+                    final Vec3 maxT = transform.rotate(new Vec3(x2, y2, z2), false);
+                    rotatedShape.setValue(Shapes.or(
+                        rotatedShape.getValue(),
+                        Shapes.box(
+                            Math.min(minT.x, maxT.x),
+                            Math.min(minT.y, maxT.y),
+                            Math.min(minT.z, maxT.z),
+                            Math.max(minT.x, maxT.x),
+                            Math.max(minT.y, maxT.y),
+                            Math.max(minT.z, maxT.z)
+                        )
+                    ));
+                });
+                result = rotatedShape.getValue();
+                result = result.move(
+                    getX() - scaledNormalOffset.x,
+                    getY() - scaledNormalOffset.y,
+                    getZ() - scaledNormalOffset.z
+                );
+            } else {
+                result = result.move(
+                    getX() - origin.x - scaledNormalOffset.x,
+                    getY() - origin.y - scaledNormalOffset.y,
+                    getZ() - origin.z - scaledNormalOffset.z
+                );
+            }
+        }
+        return result;
     }
 
     public Vec3 getCutoutPointInPlane(double xInPlane, double yInPlane) {

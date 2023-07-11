@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -96,9 +97,14 @@ public class AdvancedEntityRaycast {
         }
     }
 
-    public static Result raycast(Level world, ClipContext context, TransformInfo... transforms) {
+    public static Result raycast(
+        Level level,
+        ClipContext context,
+        BiFunction<Level, ClipContext, BlockHitResult> clipper,
+        TransformInfo... transforms
+    ) {
         final List<Result.Ray> hits = new ArrayList<>();
-        final Supplier<Entity> marker = Suppliers.memoize(() -> EntityType.MARKER.create(world));
+        final Supplier<Entity> marker = Suppliers.memoize(() -> EntityType.MARKER.create(level));
         @SuppressWarnings("unchecked") Set<Entity>[] ignoredEntities = new Set[] {Set.of()};
         final Predicate<Entity> predicate = Arrays.stream(transforms)
             .map(TransformInfo::hittable)
@@ -108,7 +114,7 @@ public class AdvancedEntityRaycast {
         BlockHitResult result;
         mainLoop:
         while (true) {
-            result = world.clip(context);
+            result = clipper.apply(level, context);
             if (predicate == null) break;
             final Vec3 offset = result.getLocation().subtract(context.getFrom());
             final EntityHitResult hit = ProjectileUtil.getEntityHitResult(

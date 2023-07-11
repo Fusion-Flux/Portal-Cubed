@@ -127,7 +127,8 @@
 	"catapult_launch": {
 		"sounds": [
 			"portalcubed:heavy_metal_stop1"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.faith_plate"
 	},
 
 	"pedestal_button_press": {
@@ -219,42 +220,50 @@
 	"laser/emitter_activate": {
 		"sounds": [
 			"portalcubed:laser/laser_activation_01"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.laser.activate"
 	},
 	"laser/beam_music": {
 		"sounds": [
 			"portalcubed:laser/laser_beam_lp_02"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.laser.ambiance"
 	},
 	"laser/node_music": {
 		"sounds": [
 			"portalcubed:laser/laser_node_lp_01"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.laser.node_sing"
 	},
 	"laser/node_activate": {
 		"sounds": [
 			"portalcubed:laser/laser_node_power_on"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.laser.node_activate"
 	},
 	"laser/node_deactivate": {
 		"sounds": [
 			"portalcubed:laser/laser_node_power_off"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.laser.node_deactivate"
 	},
 	"laser/triple_laser_sound_demo_1": {
 		"sounds": [
 			"portalcubed:laser/sp_a2_triple_laser_l1_01"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.laser.node_sing"
 	},
 	"laser/triple_laser_sound_demo_2": {
 		"sounds": [
 			"portalcubed:laser/sp_a2_triple_laser_l2_01"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.laser.node_sing"
 	},
 	"laser/triple_laser_sound_demo_3": {
 		"sounds": [
 			"portalcubed:laser/sp_a2_triple_laser_l3_01"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.laser.node_sing"
 	},
 
 	"pellet/bounce": {

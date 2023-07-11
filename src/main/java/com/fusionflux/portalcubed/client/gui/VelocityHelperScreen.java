@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.client.gui;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.VelocityHelperBlock;
 import com.fusionflux.portalcubed.blocks.blockentities.VelocityHelperBlockEntity;
-import com.fusionflux.portalcubed.gui.VelocityHelperScreenHandler;
+import com.fusionflux.portalcubed.gui.BlockPosScreenHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
-public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelperScreenHandler> {
+public class VelocityHelperScreen extends AbstractContainerScreen<BlockPosScreenHandler> {
     private static final ResourceLocation TEXTURE = id("textures/gui/velocity_helper.png");
 
     private final VelocityHelperBlockEntity entity;
@@ -39,7 +39,7 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
     private ExpressionFieldWidget conditionWidget, icWidget;
     private Button doneButton;
 
-    public VelocityHelperScreen(VelocityHelperScreenHandler handler, Inventory inventory, Component title) {
+    public VelocityHelperScreen(BlockPosScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
         imageWidth = 248;
         imageHeight = 166;
@@ -59,7 +59,7 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(font, title, titleLabelX, titleLabelY, 0x404040);
+        graphics.drawString(font, title, titleLabelX, titleLabelY, 0x404040, false);
         drawTextRightAligned(
             graphics, font,
             Component.translatable("portalcubed.velocity_helper.flight_duration"),
@@ -129,8 +129,8 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
         });
         addRenderableWidget(
             Button.builder(CommonComponents.GUI_CANCEL, w -> onClose())
-                .width(width / 2 - 90)
-                .pos(this.topPos + imageHeight + 5, 75)
+                .width(75)
+                .pos(width / 2 - 90, this.topPos + imageHeight + 5)
                 .build()
         );
         doneButton = addRenderableWidget(
@@ -141,8 +141,8 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
                     buf.writeUtf(icWidget.getValue());
                 });
                 onClose();
-            }).width(width / 2 + 15)
-                .pos(this.topPos + imageHeight + 5, 75)
+            }).width(75)
+                .pos(width / 2 + 15, this.topPos + imageHeight + 5)
                 .build()
         );
     }
@@ -190,10 +190,10 @@ public class VelocityHelperScreen extends AbstractContainerScreen<VelocityHelper
     }
 
     public static void drawTextRightAligned(GuiGraphics graphics, Font font, Component text, int x, int y, int color) {
-        graphics.drawString(font, text, x - font.width(text), y, color);
+        graphics.drawString(font, text, x - font.width(text), y, color, false);
     }
 
     public static void drawTextCentered(GuiGraphics graphics, Font font, Component text, int x, int y, int color) {
-        graphics.drawString(font, text, x - font.width(text) / 2, y, color);
+        graphics.drawString(font, text, x - font.width(text) / 2, y, color, false);
     }
 }

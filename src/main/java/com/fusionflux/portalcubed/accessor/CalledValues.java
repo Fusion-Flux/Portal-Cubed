@@ -39,6 +39,14 @@ public abstract class CalledValues {
         maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setPortalCutout(setValue));
     }
 
+    public static VoxelShape getCrossPortalCollision(Entity entity) {
+        return maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).map(PortalCubedComponent::getCrossPortalCollision).orElse(Shapes.empty());
+    }
+
+    public static void setCrossPortalCollision(Entity entity, VoxelShape setValue) {
+        maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).ifPresent(gc -> gc.setCrossPortalCollision(setValue));
+    }
+
     public static boolean getHasTeleportationHappened(Entity entity) {
         return maybeGetSafe(PortalCubedComponents.ENTITY_COMPONENT, entity).map(PortalCubedComponent::getHasTeleportationHappened).orElse(false);
     }

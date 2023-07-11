@@ -14,6 +14,7 @@ import java.util.UUID;
 
 public class EntityComponent implements PortalCubedComponent, AutoSyncedComponent {
     VoxelShape portalCutout = Shapes.empty();
+    VoxelShape crossPortalCollision = Shapes.empty();
     boolean hasTeleportationHappened = false;
     public Set<UUID> portals = new HashSet<>();
     private final Entity entity;
@@ -36,8 +37,18 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     }
 
     @Override
-    public void setPortalCutout(VoxelShape portalCutout) {
-        this.portalCutout = portalCutout;
+    public void setPortalCutout(VoxelShape cutout) {
+        this.portalCutout = cutout;
+    }
+
+    @Override
+    public VoxelShape getCrossPortalCollision() {
+        return this.crossPortalCollision;
+    }
+
+    @Override
+    public void setCrossPortalCollision(VoxelShape collision) {
+        this.crossPortalCollision = collision;
     }
 
     @Override
