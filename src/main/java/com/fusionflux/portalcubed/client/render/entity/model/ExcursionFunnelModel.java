@@ -25,10 +25,12 @@ public class ExcursionFunnelModel extends Model {
 	public static final Set<Direction> VISIBLE_MIDDLE = Set.of(Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 	public static final Set<Direction> VISIBLE_END = Set.of(Direction.values());
 	public static final ResourceLocation TEXTURE = PortalCubed.id("textures/animated_entity/excursion_funnel_beam_forward.png");
+	public static final ResourceLocation REVERSED_TEXTURE = PortalCubed.id("textures/animated_entity/excursion_funnel_beam_reversed.png");
 	private ModelPart part;
 
 	public ExcursionFunnelModel(ExcursionFunnelEntity entity) {
 		super(RenderType::entityTranslucent);
+		entity.modelUpdater = this::rebuildGeometry;
 		this.rebuildGeometry(entity);
 	}
 

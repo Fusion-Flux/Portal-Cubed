@@ -1,46 +1,39 @@
 package com.fusionflux.portalcubed.entity.beams;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 
-import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.client.render.entity.model.ExcursionFunnelModel;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.ExcursionFunnelEnterSoundInstance;
-import com.fusionflux.portalcubed.util.NbtHelper;
-import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.DynamicGameEventListener;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import org.quiltmc.loader.api.minecraft.ClientOnly;
-import org.quiltmc.qsl.entity.networking.api.extended_spawn_data.QuiltExtendedSpawnDataEntity;
 
 public class ExcursionFunnelEntity extends EmittedEntity {
-	public static final ResourceLocation MODEL = PortalCubed.id("entity/excursion_funnel_beam_forward");
-	public static final ResourceLocation REVERSED_MODEL = PortalCubed.id("entity/excursion_funnel_beam_reversed");
+	public static final EntityDataAccessor<Boolean> REVERSED = SynchedEntityData.defineId(ExcursionFunnelEntity.class, EntityDataSerializers.BOOLEAN);
 
 	public static final float SIZE = (30 / 32f) * 2;
+
+	private boolean reversed;
 
 	@ClientOnly
 	public ExcursionFunnelModel model;
@@ -49,17 +42,60 @@ public class ExcursionFunnelEntity extends EmittedEntity {
 		super(entityType, level, 100);
 	}
 
-	public static ExcursionFunnelEntity spawnAndEmit(ServerLevel level, Vec3 pos, Direction facing) {
+	public static ExcursionFunnelEntity spawnAndEmit(ServerLevel level, Vec3 pos, Direction facing, boolean reversed) {
 		ExcursionFunnelEntity entity = new ExcursionFunnelEntity(PortalCubedEntities.EXCURSION_FUNNEL, level);
 		entity.setPos(pos);
 		entity.setFacing(facing);
+		entity.setReversed(reversed);
 		entity.reEmit();
 		level.addFreshEntity(entity);
 		return entity;
 	}
 
-	public ResourceLocation getModel() {
-		return MODEL;
+	public boolean isReversed() {
+		return reversed;
+	}
+
+	public void setReversed(boolean reversed) {
+		entityData.set(REVERSED, reversed);
+	}
+
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		entityData.define(REVERSED, false);
+	}
+
+	@Override
+	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+		super.onSyncedDataUpdated(key);
+		if (key.equals(REVERSED)) {
+			this.reversed = entityData.get(REVERSED);
+		}
+	}
+
+	@Override
+	public void writeAdditionalSpawnData(FriendlyByteBuf buf) {
+		super.writeAdditionalSpawnData(buf);
+		buf.writeBoolean(reversed);
+	}
+
+	@Override
+	public void readAdditionalSpawnData(FriendlyByteBuf buf) {
+		super.readAdditionalSpawnData(buf);
+		this.reversed = buf.readBoolean();
+	}
+
+	@Override
+	protected void addAdditionalSaveData(CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+		tag.putBoolean("reversed", reversed);
+	}
+
+	@Override
+	protected void readAdditionalSaveData(CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+		setReversed(tag.getBoolean("reversed"));
 	}
 
 	@Override
@@ -77,9 +113,10 @@ public class ExcursionFunnelEntity extends EmittedEntity {
 		List<LivingEntity> colliding = level.getEntitiesOfClass(LivingEntity.class, getBoundingBox(), Entity::isAlive);
 		if (!colliding.isEmpty()) {
 			Direction facing = getFacing();
+			Direction motion = isReversed() ? facing.getOpposite() : facing;
 			Vec3 center = getCenter();
 			for (LivingEntity entity : colliding) {
-				applyEffects(entity, center, facing);
+				applyEffects(entity, center, motion);
 			}
 		}
 	}
