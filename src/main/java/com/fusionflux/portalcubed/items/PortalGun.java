@@ -251,9 +251,9 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
             }
 
             final List<Portal> overlappingPortals = level.getEntities(
-                    PortalCubedEntities.PORTAL,
-                    portalHolder.getBoundingBox(),
-                    p -> p != originalPortal && vectorsEqual(p.getNormal(), portalHolder.getNormal())
+                PortalCubedEntities.PORTAL,
+                portalHolder.getBoundingBox(),
+                p -> p != originalPortal && vectorsEqual(p.getNormal(), portalHolder.getNormal())
             );
 
             if (!overlappingPortals.isEmpty()) {
@@ -267,7 +267,11 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
                         } else {
                             portalHolder.setOriginPos(portalHolder.getOriginPos().with(axis, overlappingPortal.getOriginPos().get(axis) - 1));
                         }
-                        bumpSuccess = portalHolder.validate();
+                        bumpSuccess = portalHolder.validate() && level.getEntities(
+                            PortalCubedEntities.PORTAL,
+                            portalHolder.getBoundingBox(),
+                            p -> p != originalPortal && vectorsEqual(p.getNormal(), portalHolder.getNormal())
+                        ).isEmpty();
                     }
                 }
                 if (!bumpSuccess) {
