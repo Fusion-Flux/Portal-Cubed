@@ -238,14 +238,17 @@
 		}
 	],
 	"overrides": [
-		{"predicate": {"custom_model_data": 1}, "model": "portalcubed:item/portal_gun_atlas"},
-		{"predicate": {"custom_model_data": 2}, "model": "portalcubed:item/portal_gun_p_body"},
-		{"predicate": {"custom_model_data": 3}, "model": "portalcubed:item/portal_gun_reloaded"},
-		{"predicate": {"custom_model_data": 4}, "model": "portalcubed:item/legacy_portal_gun"},
-		{"predicate": {"custom_model_data": 5}, "model": "portalcubed:item/legacy_portal_gun_atlas"},
-		{"predicate": {"custom_model_data": 6}, "model": "portalcubed:item/legacy_portal_gun_p_body"},
-		{"predicate": {"custom_model_data": 7}, "model": "portalcubed:item/legacy_portal_gun_reloaded"},
-		{"predicate": {"custom_model_data": 8}, "model": "portalcubed:item/mel_portal_gun"}
+		{"predicate": {"custom_model_data": 1}, "model": "portalcubed:item/potatos_portal_gun"},
+		{"predicate": {"custom_model_data": 2}, "model": "portalcubed:item/portal_gun_atlas"},
+		{"predicate": {"custom_model_data": 3}, "model": "portalcubed:item/portal_gun_p_body"},
+		{"predicate": {"custom_model_data": 4}, "model": "portalcubed:item/portal_gun_reloaded"},
+
+		{"predicate": {"custom_model_data": 101}, "model": "portalcubed:item/legacy_portal_gun"},
+		{"predicate": {"custom_model_data": 102}, "model": "portalcubed:item/legacy_portal_gun_atlas"},
+		{"predicate": {"custom_model_data": 103}, "model": "portalcubed:item/legacy_portal_gun_p_body"},
+		{"predicate": {"custom_model_data": 104}, "model": "portalcubed:item/legacy_portal_gun_reloaded"},
+
+		{"predicate": {"custom_model_data": 201}, "model": "portalcubed:item/mel_portal_gun"}
 	],
 	"display": {
 		"thirdperson_righthand": {
@@ -258,13 +261,13 @@
 		},
 		"firstperson_righthand": {
 			"rotation": [-1.39, 1.01, 0.19],
-			"translation": [2.75, 4.25, -8.25],
-			"scale": [1.64258, 2.18945, 1.61719]
+			"translation": [2.75, 4.25, -9],
+			"scale": [2.03, 2.18945, 1.99]
 		},
 		"firstperson_lefthand": {
 			"rotation": [-1.39, 1.01, 0.19],
-			"translation": [2.75, 4.25, -8.25],
-			"scale": [1.64258, 2.18945, 1.61719]
+			"translation": [2.75, 4.25, -9],
+			"scale": [2.03, 2.18945, 1.99]
 		},
 		"ground": {
 			"translation": [0, 4, 0],
