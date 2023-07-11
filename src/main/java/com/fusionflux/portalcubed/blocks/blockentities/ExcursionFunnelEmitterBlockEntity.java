@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -28,7 +29,7 @@ public class ExcursionFunnelEmitterBlockEntity extends BlockEntity {
 
     @Override
     public void saveAdditional(@NotNull CompoundTag tag) {
-        tag.putString("toggleMode", toggleMode.name());
+        tag.putString("toggleMode", toggleMode.getSerializedName());
     }
 
     @Override
@@ -36,7 +37,7 @@ public class ExcursionFunnelEmitterBlockEntity extends BlockEntity {
         this.toggleMode = NbtHelper.readEnum(tag, "toggleMode", toggleMode);
     }
 
-    public enum ToggleMode {
+    public enum ToggleMode implements StringRepresentable {
         FORWARD(Mode.FORWARD_OFF, Mode.FORWARD_ON),
         REVERSE(Mode.REVERSED_OFF, Mode.REVERSED_ON),
         SWITCH(Mode.FORWARD_ON, Mode.REVERSED_ON);
@@ -54,6 +55,12 @@ public class ExcursionFunnelEmitterBlockEntity extends BlockEntity {
                 case REVERSE -> SWITCH;
                 case SWITCH -> FORWARD;
             };
+        }
+
+        @Override
+        @NotNull
+        public String getSerializedName() {
+            return name();
         }
     }
 }

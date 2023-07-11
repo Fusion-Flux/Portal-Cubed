@@ -59,6 +59,7 @@
     "client.ScreenEffectRendererMixin",
     "client.SimpleBakedModelAccessor",
     "client.SoundEngineMixin",
+    "client.TextureAtlasAccessor",
     "client.VertexConsumerMixin"
   ],
   "injectors": {

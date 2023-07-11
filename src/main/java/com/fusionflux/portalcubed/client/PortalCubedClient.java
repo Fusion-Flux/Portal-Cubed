@@ -21,6 +21,7 @@ import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
+import com.fusionflux.portalcubed.client.render.AnimatedEntityTextures;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
@@ -54,7 +55,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -161,6 +161,7 @@ public class PortalCubedClient implements ClientModInitializer {
         PortalCubedClientPackets.registerPackets();
         PortalCubedKeyBindings.register();
         PortalCubedParticleProviders.register();
+        AnimatedEntityTextures.init();
 
         HudRenderCallback.EVENT.register(PortalHud::renderPortals);
 
@@ -689,6 +690,8 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityRendererRegistry.register(PortalCubedEntities.CONVERSION_GEL_BLOB, GelBlobRenderer::new);
         EntityRendererRegistry.register(PortalCubedEntities.REFLECTION_GEL_BLOB, GelBlobRenderer::new);
 
+        EntityRendererRegistry.register(PortalCubedEntities.EXCURSION_FUNNEL, ExcursionFunnelRenderer::new);
+
         BlockEntityRenderers.register(PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY, VelocityHelperRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(RocketTurretRenderer.ROCKET_TURRET_LAYER, RocketTurretModel::getTexturedModelData);
@@ -709,8 +712,6 @@ public class PortalCubedClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(TurretRenderer.TURRET_LAYER, TurretModel::getTexturedModelData);
         EntityRendererRegistry.register(PortalCubedEntities.TURRET, TurretRenderer::new);
-
-        EntityRendererRegistry.register(PortalCubedEntities.EXCURSION_FUNNEL, NoopRenderer::new);
 
         BlockEntityRenderers.register(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER_ENTITY, ExcursionFunnelEmitterBlockEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(ExcursionFunnelEmitterCenterModel.LAYER, ExcursionFunnelEmitterCenterModel::createBodyLayer);

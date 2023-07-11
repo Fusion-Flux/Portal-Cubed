@@ -193,7 +193,10 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
         if (newMode.isOn) {
             spawnFunnelEntity(level, multiblock, facing, newMode.isReversed);
         } else {
-
+            List<ExcursionFunnelEntity> entities = level.getEntitiesOfClass(ExcursionFunnelEntity.class, multiblock.toBox(2));
+            for (ExcursionFunnelEntity entity : entities) {
+                entity.discard();
+            }
         }
     }
 
@@ -213,13 +216,6 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
         ExcursionFunnelEntity entity = ExcursionFunnelEntity.create(level, facing, length);
         entity.setPos(start);
         level.addFreshEntity(entity);
-    }
-
-    private static BlockState getTubeState(BlockState emitter, BlockState base) {
-        if (base.isAir() || !emitter.hasProperty(QUADRANT))
-            return base;
-        Integer quadrant = emitter.getValue(QUADRANT);
-        return base.setValue(QUADRANT, quadrant);
     }
 
     protected void destroyMultiblock(ServerLevel level, BlockState state, BlockPos thisPos, boolean dropItem) {
