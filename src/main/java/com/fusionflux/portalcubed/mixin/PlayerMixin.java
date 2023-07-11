@@ -279,7 +279,9 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
                     ),
                     0
                 );
-                teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
+                if (portal.getOtherNormal().get().y > -1e-7) {
+                    teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
+                }
             } else if (portal.getNormal().y > 0 && portal.getOtherNormal().get().y > 0) {
                 teleportOffset = teleportOffset.add(0, thisEntity.getEyeHeight(), 0);
             }

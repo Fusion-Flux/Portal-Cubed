@@ -355,7 +355,7 @@ public class PortalCubed implements ModInitializer {
         }
         IPQuaternion immediateFinalRot = oldCameraRotation.hamiltonProduct(portalTransform.getConjugated());
         final Vector3d euler = immediateFinalRot.toQuaterniond().getEulerAnglesZXY(new Vector3d());
-        final float finalYaw = (float)Math.toDegrees(euler.y) + 180;
+        float finalYaw = (float)Math.toDegrees(euler.y) + 180;
         float finalPitch = (float)Math.toDegrees(euler.x);
 
         if (entity instanceof Player) {
@@ -368,7 +368,11 @@ public class PortalCubed implements ModInitializer {
                 tweak = true;
             }
             if (tweak) {
-                immediateFinalRot = immediateFinalRot.hamiltonProduct(IPQuaternion.rotationByDegrees(new Vec3(0, 1, 0), 180));
+                if (portal.getNormal().y > 0 && otherNormal.y > 0) {
+                    immediateFinalRot = immediateFinalRot.hamiltonProduct(IPQuaternion.rotationByDegrees(new Vec3(0, 1, 0), 180));
+                } else {
+                    finalYaw -= 180;
+                }
             }
         }
 
