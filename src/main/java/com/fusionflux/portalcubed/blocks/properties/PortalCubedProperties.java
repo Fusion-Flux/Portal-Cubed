@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.blocks.properties;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public class PortalCubedProperties {
 
@@ -17,6 +18,6 @@ public class PortalCubedProperties {
     public static final DirectionProperty HFACINGUP = DirectionProperty.create("hfacingup", Direction.Plane.HORIZONTAL);
     public static final DirectionProperty HFACINGDOWN = DirectionProperty.create("hfacingdown", Direction.Plane.HORIZONTAL);
     public static final DirectionProperty HORIFACING = DirectionProperty.create("horifacing", Direction.Plane.HORIZONTAL);
-    public static final FluidTypeProperty LOGGING = FluidTypeProperty.create("logging");
+    public static final EnumProperty<FluidType> LOGGING = EnumProperty.create("logging", FluidType.class);
 
 }

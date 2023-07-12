@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.blocks;
 
-import com.fusionflux.portalcubed.blocks.properties.FluidTypeProperty;
+import com.fusionflux.portalcubed.blocks.properties.FluidType;
 import com.fusionflux.portalcubed.blocks.properties.PortalCubedProperties;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -28,13 +29,13 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 
 public abstract class SpecialHiddenBlock extends Block implements SimpleLoggedBlock {
-    public static final FluidTypeProperty LOGGING = PortalCubedProperties.LOGGING;
+    public static final EnumProperty<FluidType> LOGGING = PortalCubedProperties.LOGGING;
 
     public SpecialHiddenBlock(Properties settings) {
         super(settings);
         registerDefaultState(
             getStateDefinition().any()
-                .setValue(LOGGING, FluidTypeProperty.getEmpty())
+                .setValue(LOGGING, FluidType.EMPTY)
         );
     }
 
@@ -91,7 +92,7 @@ public abstract class SpecialHiddenBlock extends Block implements SimpleLoggedBl
     @SuppressWarnings("deprecation")
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        final Fluid fluid = LOGGING.getFluid(state);
+        final Fluid fluid = state.getValue(LOGGING).fluid;
         if (fluid != Fluids.EMPTY) {
             world.scheduleTick(pos, fluid, fluid.getTickDelay(world));
         }
@@ -103,7 +104,7 @@ public abstract class SpecialHiddenBlock extends Block implements SimpleLoggedBl
     @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
-        final Fluid fluid = LOGGING.getFluid(state);
+        final Fluid fluid = state.getValue(LOGGING).fluid;
         return fluid instanceof FlowingFluid flowing ? flowing.getSource(false) : fluid.defaultFluidState();
     }
 }
