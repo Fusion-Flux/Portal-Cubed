@@ -1,8 +1,173 @@
 {
   "auto_portal": [
     {
-      "translate": "block.portalcubed.auto_portal.tooltip",
+      "translate": "tooltip.portalcubed.hammer_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.auto_portal.1",
+      "color": "blue"
+    },
+    {
+      "translate": "tooltip.portalcubed.empty",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.dye_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.auto_portal.2",
+      "color": "blue"
+    }
+  ],
+  "hammer": [
+    {
+      "translate": "tooltip.portalcubed.hammer.1",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.empty",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.hammer.2",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.hammer.3",
+      "color": "gray"
+    }
+  ],
+  "schrodinger_cube": [
+    {
+      "translate": "tooltip.portalcubed.name_tag_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.schrodinger_cube.1",
+      "color": "blue"
+    },
+    {
+      "translate": "tooltip.portalcubed.empty",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.schrodinger_cube.2",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.schrodinger_cube.3",
+      "color": "gray"
+    }
+  ],
+  "radio": [
+    {
+      "translate": "tooltip.portalcubed.hammer_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.radio.1",
+      "color": "blue"
+    }
+  ],
+  "velocity_helper": [
+    {
+      "translate": "tooltip.portalcubed.hammer_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.velocity_helper.1",
+      "color": "blue"
+    },
+    {
+      "translate": "tooltip.portalcubed.empty",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.velocity_helper_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.velocity_helper.2",
+      "color": "blue"
+    }
+  ],
+  "excursion_funnel_emitter": [
+    {
+      "translate": "tooltip.portalcubed.hammer_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.excursion_funnel_emitter.1",
+      "color": "blue"
+    }
+  ],
+  "pedestal_button": [
+    {
+      "translate": "tooltip.portalcubed.hammer_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.pedestal_button.1",
+      "color": "blue"
+    }
+  ],
+  "old_ap_pedestal_button": [
+    {
+      "translate": "tooltip.portalcubed.hammer_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.pedestal_button.1",
+      "color": "blue"
+    }
+  ],
+  "light_bridge_emitter": [
+    {
+      "translate": "tooltip.portalcubed.hammer_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.light_bridge_emitter.1",
+      "color": "blue"
+    }
+  ],
+  "faith_plate": [
+    {
+      "translate": "tooltip.portalcubed.hammer_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.faith_plate.1",
+      "color": "blue"
+    },
+    {
+      "translate": "tooltip.portalcubed.empty",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.faith_plate.2",
+      "color": "gray"
+    }
+  ],
+  "beta_faith_plate": [
+    {
+      "translate": "tooltip.portalcubed.hammer_interaction",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.faith_plate.1",
+      "color": "blue"
+    },
+    {
+      "translate": "tooltip.portalcubed.empty",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.faith_plate.2",
       "color": "gray"
     }
   ]
+
 }

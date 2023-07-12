@@ -39,6 +39,39 @@
 
   "subtitles.portalcubed.faith_plate": "Faith plate activates",
 
+
+  "tooltip.portalcubed.hammer_interaction": "Interact with Hammer:",
+  "tooltip.portalcubed.dye_interaction": "Interact with Dye:",
+  "tooltip.portalcubed.name_tag_interaction": "Interact with Name Tag:",
+  "tooltip.portalcubed.velocity_helper_interaction": "Interact with Velocity Helper:",
+  "tooltip.portalcubed.empty": "",
+
+  "tooltip.portalcubed.hammer.1": "Used to configure various Test Elements.",
+  "tooltip.portalcubed.hammer.2": "Required to turn cubes and other props",
+  "tooltip.portalcubed.hammer.3": "back into items in Survival Mode.",
+
+  "tooltip.portalcubed.schrodinger_cube.1": " Links Two Schrödinger Cubes",
+  "tooltip.portalcubed.schrodinger_cube.2": "Schrodinger Cubes linked by name",
+  "tooltip.portalcubed.schrodinger_cube.3": "ignore other Schrodinger Cubes.",
+
+  "tooltip.portalcubed.radio.1": " Changes if Grabbing the Radio toggles the Music",
+
+  "tooltip.portalcubed.velocity_helper.1": " Links Velocity Helpers",
+  "tooltip.portalcubed.velocity_helper.2": " Opens Configuration Menu",
+
+  "tooltip.portalcubed.auto_portal.1": " Changes Portal Type",
+  "tooltip.portalcubed.auto_portal.2": " Changes Portal Colors",
+
+  "tooltip.portalcubed.excursion_funnel_emitter.1": " Changes Funnel Polarity",
+
+  "tooltip.portalcubed.faith_plate.1": " Opens Configuration Menu",
+  "tooltip.portalcubed.faith_plate.2": "Hammer not required in Creative Mode",
+
+  "tooltip.portalcubed.pedestal_button.1": " Changes Placement Offset",
+
+  "tooltip.portalcubed.light_bridge_emitter.1": " Changes Edge Alignment",
+
+
   "item.portalcubed.long_fall_boots": "Long Fall Boots",
   "item.portalcubed.hammer": "Hammer",
   "item.portalcubed.energy_pellet": "High Energy Pellet",
@@ -80,7 +113,7 @@
   "item.portalcubed.mini_blackhole": "Miniature Black Hole",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
 
-  "item.portalcubed.turret": "Sentry Turret",
+  "block.portalcubed.turret": "Sentry Turret",
   "block.portalcubed.rocket_turret": "Rocket Turret",
 
   "block.portalcubed.power_block": "Power Block",
@@ -330,7 +363,7 @@
   "block.portalcubed.faith_plate_target": "Aerial Faith Plate Target",
 
   "block.portalcubed.light_bridge_emitter": "Hard Light Bridge Emitter",
-  "block.portalcubed.light_bridge": "Hard Light Bridge Emitter",
+  "block.portalcubed.light_bridge": "Hard Light Bridge",
 
   "portalcubed.midnightconfig.title": "Portal Cubed Config",
   "portalcubed.midnightconfig.maxBridgeLength": "Maximum Emitter Block Range",
@@ -366,7 +399,6 @@
   "key.portalcubed.remove_portals" : "Remove Portals",
   "key.portalcubed.toggle_hidden_blocks" : "Toggle Hidden Blocks",
 
-  "block.portalcubed.auto_portal.tooltip": "Interact with a Hammer to change portal type.",
   "portalcubed.auto_portal.set_portal_type": "Set portal type to %s",
   "portalcubed.portal_type.primary": "Primary",
   "portalcubed.portal_type.secondary": "Secondary",
