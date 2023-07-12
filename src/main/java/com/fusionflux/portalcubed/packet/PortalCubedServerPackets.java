@@ -10,13 +10,17 @@ import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.TurretEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.listeners.NbtSyncable;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
 import com.fusionflux.portalcubed.util.ClickHandlingItem;
 import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
+import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -52,6 +56,7 @@ public class PortalCubedServerPackets {
     public static final ResourceLocation LEFT_CLICK = id("left_click");
     public static final ResourceLocation RIGHT_CLICK = id("right_click");
     public static final ResourceLocation SYNC_SHOOTER_ROT = id("sync_shooter_rot");
+    public static final ResourceLocation NBT_SYNC = id("nbt_sync");
 
     public static void onGrabKeyPressed(MinecraftServer server, ServerPlayer player, @SuppressWarnings("unused") ServerGamePacketListenerImpl handler, @SuppressWarnings("unused") FriendlyByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
 
@@ -187,6 +192,33 @@ public class PortalCubedServerPackets {
                 // The O's are the ones that are actually used for getViewVector!
                 player.xRotO = xRot;
                 player.yHeadRotO = yRot;
+            });
+        });
+        ServerPlayNetworking.registerGlobalReceiver(NBT_SYNC, (server, player, handler, buf, responseSender) -> {
+            final BlockPos pos = buf.readBlockPos();
+            final CompoundTag nbt = buf.readNbt();
+            server.execute(() -> {
+                final Vec3 originPos = Vec3.atCenterOf(pos);
+                if (player.position().distanceToSqr(originPos) > 100) {
+                    PortalCubed.LOGGER.warn(
+                        "Player {} tried to update distant block entity ({})",
+                        player, player.position().distanceTo(originPos)
+                    );
+                    return;
+                }
+                if (player.level().getBlockState(pos) instanceof NbtSyncable syncable) {
+                    try {
+                        syncable.syncNbt(nbt, player);
+                    } catch (CommandRuntimeException e) {
+                        player.connection.disconnect(e.getComponent());
+                        PortalCubed.LOGGER.warn("Player {} sent invalid sync NBT: {}", player, e.getLocalizedMessage());
+                    } catch (Exception e) {
+                        player.connection.disconnect(Component.translatable("disconnect.genericReason", e.getLocalizedMessage()));
+                        PortalCubed.LOGGER.error("Error in handling nbt_sync", e);
+                    }
+                } else {
+                    PortalCubed.LOGGER.warn("{} failed to update non-existent block entity at {}", player, pos);
+                }
             });
         });
     }

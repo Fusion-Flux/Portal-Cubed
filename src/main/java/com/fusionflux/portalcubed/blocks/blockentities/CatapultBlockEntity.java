@@ -1,9 +1,12 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.listeners.NbtSyncable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -14,6 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CatapultBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
+public class CatapultBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, NbtSyncable {
     private double destX;
     private double destY;
     private double destZ;
@@ -52,6 +56,32 @@ public class CatapultBlockEntity extends BlockEntity implements ExtendedScreenHa
         nbt.putDouble("DestY", destY);
         nbt.putDouble("DestZ", destZ);
         nbt.putDouble("Angle", angle);
+    }
+
+    @Override
+    public void syncNbt(CompoundTag nbt, ServerPlayer player) throws CommandRuntimeException {
+        destX = getDouble(nbt, player, "DestX", destX);
+        destY = getDouble(nbt, player, "DestY", destY);
+        destZ = getDouble(nbt, player, "DestZ", destZ);
+        angle = getDouble(nbt, player, "Angle", angle);
+        updateListeners();
+    }
+
+    private static double getDouble(CompoundTag nbt, ServerPlayer player, String key, double defaultValue) throws CommandRuntimeException {
+        if (!nbt.contains(key, Tag.TAG_DOUBLE)) {
+            return defaultValue;
+        }
+        final double value = nbt.getDouble(key);
+        if (!Double.isFinite(value)) {
+            throw new CommandRuntimeException(Component.translatable("portalcubed.catapult.invalidDouble", value));
+        }
+        return value;
+    }
+
+    public void updateListeners() {
+        setChanged();
+        assert level != null;
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     @NotNull

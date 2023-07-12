@@ -494,5 +494,6 @@
   "portalcubed.catapult.destX": "Destination X",
   "portalcubed.catapult.destY": "Destination Y",
   "portalcubed.catapult.destZ": "Destination Z",
-  "portalcubed.catapult.angle": "Launch Angle"
+  "portalcubed.catapult.angle": "Launch Angle",
+  "portalcubed.catapult.invalidDouble": "Invalid double: %s"
 }
