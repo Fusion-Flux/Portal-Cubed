@@ -496,6 +496,17 @@ public class PortalCubedClient implements ClientModInitializer {
                         return 1;
                     })
                 );
+                dispatcher.register(literal("center")
+                    .executes(ctx -> {
+                        final Entity entity = ctx.getSource().getEntity();
+                        entity.setPos(
+                            entity.onGround()
+                                ? Vec3.atBottomCenterOf(entity.blockPosition())
+                                : Vec3.atCenterOf(entity.blockPosition())
+                        );
+                        return 1;
+                    })
+                );
             }
             dispatcher.register(literal("showpos")
                 .then(argument("enabled", BoolArgumentType.bool())

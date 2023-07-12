@@ -91,15 +91,20 @@ public class LaserEmitterBlockEntity extends BlockEntity {
         }
     }
 
+    public void clearTargets() {
+        assert level != null;
+        if (!level.isClientSide) {
+            for (final Target target : targets) {
+                level.getBlockEntity(target.pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
+            }
+            targets.clear();
+        }
+    }
+
     public void tick(Level level, BlockPos pos, BlockState state) {
         multiSegments.clear();
         if (!state.getValue(LaserEmitterBlock.POWERED)) {
-            if (!level.isClientSide) {
-                for (final Target target : targets) {
-                    level.getBlockEntity(target.pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
-                }
-                targets.clear();
-            }
+            clearTargets();
             return;
         }
         Vec3 direction = Vec3.atLowerCornerOf(state.getValue(LaserEmitterBlock.FACING).getNormal());

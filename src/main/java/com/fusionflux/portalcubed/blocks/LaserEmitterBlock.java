@@ -88,4 +88,10 @@ public class LaserEmitterBlock extends BaseEntityBlock {
             : null;
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        level.getBlockEntity(pos, PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY).ifPresent(LaserEmitterBlockEntity::clearTargets);
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
 }
