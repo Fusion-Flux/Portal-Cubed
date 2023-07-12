@@ -1,8 +1,6 @@
-// TODO: Reimplement GUI without optionslist
 package com.fusionflux.portalcubed.blocks.blockentities;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
-import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -24,16 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CatapultBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
-    @MidnightConfig.Entry(min = -30_000_000, max = 30_000_000)
     private double destX;
-
-    @MidnightConfig.Entry(min = -2032, max = 4064)
     private double destY;
-
-    @MidnightConfig.Entry(min = -30_000_000, max = 30_000_000)
     private double destZ;
-
-    @MidnightConfig.Entry(min = 0, max = 90)
     private double angle = 45;
 
     public CatapultBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -49,12 +40,18 @@ public class CatapultBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     @Override
     public void load(CompoundTag nbt) {
-//        OptionsListData.read(nbt, this);
+        destX = nbt.getDouble("DestX");
+        destY = nbt.getDouble("DestY");
+        destZ = nbt.getDouble("DestZ");
+        angle = nbt.contains("Angle") ? nbt.getDouble("Angle") : 45;
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt) {
-//        OptionsListData.write(nbt, this);
+        nbt.putDouble("DestX", destX);
+        nbt.putDouble("DestY", destY);
+        nbt.putDouble("DestZ", destZ);
+        nbt.putDouble("Angle", angle);
     }
 
     @NotNull
@@ -78,8 +75,7 @@ public class CatapultBlockEntity extends BlockEntity implements ExtendedScreenHa
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return null;
-//        return new OptionsListScreenHandler(i, worldPosition);
+        return null; // TODO: Implement GUI
     }
 
     @Override

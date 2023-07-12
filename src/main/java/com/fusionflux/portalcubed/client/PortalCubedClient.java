@@ -152,7 +152,6 @@ public class PortalCubedClient implements ClientModInitializer {
 
         MenuScreens.register(PortalCubed.FAITH_PLATE_SCREEN_HANDLER, FaithPlateScreen::new);
         MenuScreens.register(PortalCubed.VELOCITY_HELPER_SCREEN_HANDLER, VelocityHelperScreen::new);
-//        MenuScreens.register(PortalCubed.OPTIONS_LIST_SCREEN_HANDLER, OptionsListScreen::new);
 
         registerEntityRenderers();
         registerColorProviders();
@@ -424,32 +423,6 @@ public class PortalCubedClient implements ClientModInitializer {
             bufferBuilder.vertex(matrix, 0, 0, 0).uv(0f, 1f).color(1f, 1f, 1f, alpha).endVertex();
             BufferUploader.drawWithShader(bufferBuilder.end());
         });
-
-        // TODO: Note for gaming don't use camera setup for portal rendering
-        // RecoilEvents.CAMERA_SETUP.register((camera, cameraEntity, perspective, tickDelta, ctrl) -> {
-        //     final Vec3 entityPos = cameraEntity.getPosition(tickDelta);
-        //     final Vec3 startPos = entityPos.add(ctrl.getPos().subtract(entityPos).normalize().scale(0.1));
-        //     final Vec3 endPos = ctrl.getPos();
-        //     final var transformed = PortalDirectionUtils.simpleTransformPassingVector(
-        //         cameraEntity, startPos, endPos, p -> p.getNormal().y < 0
-        //     );
-        //     if (transformed != null) {
-        //         cameraTransformedThroughPortal = transformed.second();
-        //         ctrl.setPos(transformed.first());
-        //         final Quaternionf cameraRot = camera.rotation().mul(
-        //             cameraTransformedThroughPortal.getTransformQuat().toQuaternionf()
-        //         );
-        //         camera.getLookVector().set(0.0F, 0.0F, 1.0F).rotate(cameraRot);
-        //         camera.getUpVector().set(0.0F, 1.0F, 0.0F).rotate(cameraRot);
-        //         camera.getLeftVector().set(1.0F, 0.0F, 0.0F).rotate(cameraRot);
-        //         if (camera.isDetached()) {
-        //             ((CameraExt)camera).backCameraUp(transformed.first());
-        //             ctrl.setPos(camera.getPosition());
-        //         }
-        //     } else {
-        //         cameraTransformedThroughPortal = null;
-        //     }
-        // });
 
         //noinspection UnstableApiUsage
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(e -> e.addAfter(

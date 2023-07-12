@@ -47,7 +47,6 @@ public class PortalCubedServerPackets {
     public static final ResourceLocation GRAB_KEY_PRESSED = id("grab_key_pressed");
     public static final ResourceLocation REMOVE_PORTALS = id("remove_portals");
     public static final ResourceLocation VELOCITY_HELPER_CONFIGURE = id("velocity_helper_configure");
-    public static final ResourceLocation OPTIONS_LIST_CONFIGURE = id("options_list_configure");
     public static final ResourceLocation PLAY_BOUNCE_SOUND = id("play_bounce_sound");
     public static final ResourceLocation CROWBAR_ATTACK = id("crowbar_attack");
     public static final ResourceLocation LEFT_CLICK = id("left_click");
@@ -143,23 +142,10 @@ public class PortalCubedServerPackets {
         ));
     }
 
-    public static void onOptionsListConfigure(MinecraftServer server, ServerPlayer player, @SuppressWarnings("unused") ServerGamePacketListenerImpl handler, @SuppressWarnings("unused") FriendlyByteBuf buf, @SuppressWarnings("unused") PacketSender sender) {
-//        final BlockPos origin = buf.readBlockPos();
-//        final String json = buf.readUtf();
-//        server.execute(() -> {
-//            if (!(player.level().getBlockEntity(origin) instanceof OptionsListBlockEntity optionsListBlockEntity) || !player.isCreative()) {
-//                return;
-//            }
-//            OptionsListData.read(json, optionsListBlockEntity);
-//            optionsListBlockEntity.updateListeners();
-//        });
-    }
-
     public static void registerPackets() {
         ServerPlayNetworking.registerGlobalReceiver(GRAB_KEY_PRESSED, PortalCubedServerPackets::onGrabKeyPressed);
         ServerPlayNetworking.registerGlobalReceiver(REMOVE_PORTALS, PortalCubedServerPackets::onRemovePortalKeyPressed);
         ServerPlayNetworking.registerGlobalReceiver(VELOCITY_HELPER_CONFIGURE, PortalCubedServerPackets::onVelocityHelperConfigure);
-        ServerPlayNetworking.registerGlobalReceiver(OPTIONS_LIST_CONFIGURE, PortalCubedServerPackets::onOptionsListConfigure);
         ServerPlayNetworking.registerGlobalReceiver(
             PLAY_BOUNCE_SOUND, (server, player, handler, buf, responseSender) -> PortalCubed.playBounceSound(player)
         );

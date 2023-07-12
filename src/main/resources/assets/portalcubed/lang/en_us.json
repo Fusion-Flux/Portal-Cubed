@@ -491,8 +491,8 @@
   "portalcubed.ponder.auto_portal.text_5": "This portal is green because the Auto Portal is still set to secondary.",
   "portalcubed.ponder.auto_portal.text_6": "Sneak right-click with a hammer to reset the portal\u0027s base color.",
 
-  "optionslist.portalcubed.catapult.destX": "Destination X",
-  "optionslist.portalcubed.catapult.destY": "Destination Y",
-  "optionslist.portalcubed.catapult.destZ": "Destination Z",
-  "optionslist.portalcubed.catapult.angle": "Launch Angle"
+  "portalcubed.catapult.destX": "Destination X",
+  "portalcubed.catapult.destY": "Destination Y",
+  "portalcubed.catapult.destZ": "Destination Z",
+  "portalcubed.catapult.angle": "Launch Angle"
 }

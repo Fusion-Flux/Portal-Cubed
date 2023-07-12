@@ -37,10 +37,9 @@ public class FaithPlateTargetBlock extends SimpleMultiSidedBlock {
         final Vec3 destPos = Vec3.atCenterOf(hit.getBlockPos())
             .add(Vec3.atLowerCornerOf(hit.getDirection().getNormal()).scale(-0.5));
         final CompoundTag catapultNbt = new CompoundTag();
-        catapultNbt.putString("OptionsListData", String.format(
-            "{destX:%1$f,destY:%2$f,destZ:%3$f,angle:45}", // It's Gson lenient, so we don't need quotes
-            destPos.x, destPos.y, destPos.z
-        ));
+        catapultNbt.putDouble("DestX", destPos.x);
+        catapultNbt.putDouble("DestY", destPos.y);
+        catapultNbt.putDouble("DestZ", destPos.z);
         BlockItem.setBlockEntityData(result, PortalCubedBlocks.CATAPULT_BLOCK_ENTITY, catapultNbt);
 
         final CompoundTag display = new CompoundTag();
