@@ -54,7 +54,7 @@
   "tooltip.portalcubed.schrodinger_cube.2": "Schrodinger Cubes linked by name",
   "tooltip.portalcubed.schrodinger_cube.3": "ignore other Schrodinger Cubes.",
 
-  "tooltip.portalcubed.radio.1": " Changes if Grabbing the Radio toggles the Music",
+  "tooltip.portalcubed.radio.1": " Changes if the music toggles when picked up.",
 
   "tooltip.portalcubed.velocity_helper.1": " Links Velocity Helpers",
   "tooltip.portalcubed.velocity_helper.2": " Opens Configuration Menu",
@@ -113,7 +113,7 @@
   "item.portalcubed.mini_blackhole": "Miniature Black Hole",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
 
-  "block.portalcubed.turret": "Sentry Turret",
+  "item.portalcubed.turret": "Sentry Turret",
   "block.portalcubed.rocket_turret": "Rocket Turret",
 
   "block.portalcubed.power_block": "Power Block",
@@ -127,7 +127,7 @@
   "block.portalcubed.conversion_gel": "Conversion Gel Blob",
   "block.portalcubed.reflection_gel": "Reflection Gel Blob",
 
-  "block.portalcubed.auto_portal": "Auto Portal",
+  "block.portalcubed.auto_portal": "Autoportal",
 
   "block.portalcubed.sewage": "Sewage",
 
