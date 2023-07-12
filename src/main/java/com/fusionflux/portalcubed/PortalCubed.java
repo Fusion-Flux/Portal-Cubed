@@ -27,6 +27,8 @@ import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -42,6 +44,7 @@ import net.minecraft.server.commands.SpawnArmorTrimsCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -66,8 +69,10 @@ import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.slf4j.Logger;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.util.*;
 
 public class PortalCubed implements ModInitializer {
 
@@ -82,6 +87,8 @@ public class PortalCubed implements ModInitializer {
     public static final MenuType<BlockPosScreenHandler> VELOCITY_HELPER_SCREEN_HANDLER = BlockPosScreenHandler.registerNew("velocity_helper");
 
     public static final double MAX_SPEED = 2225 / 64.0 / 20.0, MAX_SPEED_SQR = MAX_SPEED * MAX_SPEED;
+
+    public static final Map<ResourceLocation, List<Component>> TOOLTIPS = new HashMap<>();
 
     @Override
     public void onInitialize(ModContainer mod) {
@@ -278,6 +285,19 @@ public class PortalCubed implements ModInitializer {
         RayonIntegration.INSTANCE.init();
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, buildContext, environment) -> SpawnArmorTrimsCommand.register(dispatcher)));
+
+        final JsonObject tooltipData;
+        try {
+            tooltipData = GsonHelper.parse(Files.newBufferedReader(mod.getPath("tooltips.json")));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        for (final var entry : tooltipData.entrySet()) {
+            final List<Component> output = TOOLTIPS.computeIfAbsent(id(entry.getKey()), k -> new ArrayList<>());
+            for (final JsonElement value : GsonHelper.convertToJsonArray(entry.getValue(), "tooltips")) {
+                output.add(Component.Serializer.fromJson(value));
+            }
+        }
     }
 
     public static void syncFog(ServerPlayer player) {

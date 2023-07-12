@@ -1,0 +1,8 @@
+{
+  "auto_portal": [
+    {
+      "translate": "block.portalcubed.auto_portal.tooltip",
+      "color": "gray"
+    }
+  ]
+}

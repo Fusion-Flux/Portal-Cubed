@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.util;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.entity.Portal;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.*;
@@ -124,5 +125,8 @@ public class GeneralUtil {
 
         CalledValues.setPortalCutout(entity, cutoutShape);
         CalledValues.setCrossPortalCollision(entity, crossPortalCollisionShape);
+    }
+
+    public static void appendTooltip(String descriptionId, List<Component> tooltipComponents) {
     }
 }
