@@ -189,7 +189,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         if (this.isInFunnel() && this.getFunnelTimer() != 0) {
             this.setFunnelTimer(this.getFunnelTimer() - 1);
         }
-        if (this.isInFunnel() && this.getFunnelTimer() == 0 && this.isNoGravity()) {
+        if (this.isInFunnel() && this.getFunnelTimer() == 0) {
             RayonIntegration.INSTANCE.setNoGravity((Entity)(Object)this, false);
             setInFunnel(false);
         }
