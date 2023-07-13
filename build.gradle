@@ -138,6 +138,8 @@ dependencies {
 	file("runtime-mods").list { _, name -> name.endsWith(".jar") }.each {
 		modLocalRuntime(files("runtime-mods/$it"))
 	}
+
+	modCompileOnly("maven.modrinth:sodium:mc1.20-0.4.10")
 }
 
 loom {

@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.client.render.entity.animatedtextures;
 
+import com.fusionflux.portalcubed.compat.sodium.SodiumIntegration;
 import com.fusionflux.portalcubed.mixin.client.SpriteContentsAccessor;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
@@ -53,6 +54,7 @@ public class AnimatedTexture extends AbstractTexture implements Tickable {
     }
 
     private void cycle() {
+        SodiumIntegration.INSTANCE.markSpriteActive(contents);
         bind();
         ticker.tickAndUpload(0, 0);
     }
