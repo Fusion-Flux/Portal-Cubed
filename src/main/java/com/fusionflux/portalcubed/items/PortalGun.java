@@ -52,7 +52,6 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Predicate;
 
 public class PortalGun extends Item implements ClickHandlingItem, DyeableLeatherItem {
     private static final Map<Pair<Vec3i, Vec3i>, List<List<Direction>>> FAIL_TRIES;

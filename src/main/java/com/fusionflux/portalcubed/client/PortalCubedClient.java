@@ -17,7 +17,7 @@ import com.fusionflux.portalcubed.client.render.PortalHud;
 import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.block.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.*;
-import com.fusionflux.portalcubed.client.render.entity.animated_textures.AnimatedEntityTextures;
+import com.fusionflux.portalcubed.client.render.entity.animatedtextures.AnimatedEntityTextures;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
