@@ -506,10 +506,14 @@ public class PortalCubedClient implements ClientModInitializer {
             }
             final BlockHitResult blockHitResult = (BlockHitResult)hitResult;
             final BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useHand, useStack, blockHitResult);
+            BlockPos pos = blockHitResult.getBlockPos();
+            if (!worldRenderContext.world().getBlockState(pos).canBeReplaced(blockPlaceContext)) {
+                pos = pos.relative(blockHitResult.getDirection());
+            }
             final TwoByTwo twoByTwo = useItem.findValidPlacement(
                 worldRenderContext.world(),
                 useItem.getBlock().getStateForPlacement(blockPlaceContext),
-                blockHitResult.getBlockPos().relative(blockHitResult.getDirection()),
+                pos,
                 blockPlaceContext.getHorizontalDirection()
             );
             if (twoByTwo != null) {
