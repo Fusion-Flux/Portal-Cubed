@@ -39,6 +39,7 @@ public class ExcursionFunnelModel extends Model {
 		PartDefinition root = mesh.getRoot();
 		// this hurts my soul, but I don't know if improving it is possible
 		float length = entity.getLength();
+		float tinyOffset = (entity.getId() % 20) / 10_000f; // avoids Z fighting when crossing
 		for (int block = 0; block < length; block++) {
 			float sectionLength = Math.min(length - block, 1);
 			boolean last = block + 1 >= length;
@@ -47,7 +48,8 @@ public class ExcursionFunnelModel extends Model {
 					CubeListBuilder.create()
 							.texOffs(0, 0)
 							.addBox(
-									-15, block * 16, -15, 30, sectionLength * 16, 30,
+									-15 + tinyOffset, block * 16 + tinyOffset, -15 + tinyOffset,
+									30, sectionLength * 16, 30,
 									last ? VISIBLE_END : VISIBLE_MIDDLE
 							),
 					PartPose.ZERO
