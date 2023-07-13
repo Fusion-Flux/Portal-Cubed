@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class ExcursionFunnelEmitterBlockItem extends BlockItem {
+public class ExcursionFunnelEmitterBlockItem extends BlockItem implements MultiblockItem {
     public static final Collection<Property<?>> REQUIRED_PROPERTIES = List.of(
             ExcursionFunnelEmitterBlock.QUADRANT, BlockStateProperties.FACING
     );
@@ -50,7 +50,8 @@ public class ExcursionFunnelEmitterBlockItem extends BlockItem {
     }
 
     @Nullable
-    protected TwoByTwo findValidPlacement(Level level, BlockState state, BlockPos initial, Direction playerFacing) {
+    @Override
+    public TwoByTwo findValidPlacement(Level level, BlockState state, BlockPos initial, Direction playerFacing) {
         Direction facing = state.getValue(BlockStateProperties.FACING);
         TwoByTwo bases = findBasePlacements(initial, facing, playerFacing);
         Direction left = getLeftOf(facing, Direction.SOUTH);

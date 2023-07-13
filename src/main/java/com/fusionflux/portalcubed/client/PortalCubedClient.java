@@ -17,15 +17,16 @@ import com.fusionflux.portalcubed.client.render.PortalHud;
 import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.block.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.*;
+import com.fusionflux.portalcubed.client.render.entity.animated_textures.AnimatedEntityTextures;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
-import com.fusionflux.portalcubed.client.render.entity.animated_textures.AnimatedEntityTextures;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
 import com.fusionflux.portalcubed.fog.FogSettings;
+import com.fusionflux.portalcubed.items.MultiblockItem;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.mixin.client.AbstractSoundInstanceAccessor;
@@ -33,10 +34,7 @@ import com.fusionflux.portalcubed.mixin.client.DeathScreenAccessor;
 import com.fusionflux.portalcubed.mixin.client.MusicManagerAccessor;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
-import com.fusionflux.portalcubed.util.CameraControl;
-import com.fusionflux.portalcubed.util.IPQuaternion;
-import com.fusionflux.portalcubed.util.PortalCubedComponents;
-import com.fusionflux.portalcubed.util.PortalDirectionUtils;
+import com.fusionflux.portalcubed.util.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -50,9 +48,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
@@ -68,11 +64,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.jetbrains.annotations.NotNull;
@@ -476,6 +477,55 @@ public class PortalCubedClient implements ClientModInitializer {
                 "vel:  " + CL_SHOWPOS_FORMAT.format(player.getDeltaMovement().length()),
                 2, 38, 0xffffffff
             );
+        });
+
+        WorldRenderEvents.BLOCK_OUTLINE.register((worldRenderContext, blockOutlineContext) -> {
+            final Minecraft minecraft = Minecraft.getInstance();
+            final HitResult hitResult = minecraft.hitResult;
+            if (hitResult == null || hitResult.getType() != HitResult.Type.BLOCK) {
+                return true;
+            }
+            final Player player = minecraft.player;
+            assert player != null;
+            ItemStack useStack = null;
+            InteractionHand useHand = null;
+            MultiblockItem useItem = null;
+            for (final InteractionHand hand : InteractionHand.values()) {
+                final ItemStack stack = player.getItemInHand(hand);
+                if (
+                    stack.getItem() instanceof MultiblockItem multiblockItem
+                ) {
+                    useStack = stack;
+                    useHand = hand;
+                    useItem = multiblockItem;
+                    break;
+                }
+            }
+            if (useItem == null) {
+                return true;
+            }
+            final BlockHitResult blockHitResult = (BlockHitResult)hitResult;
+            final BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useHand, useStack, blockHitResult);
+            final TwoByTwo twoByTwo = useItem.findValidPlacement(
+                worldRenderContext.world(),
+                useItem.getBlock().getStateForPlacement(blockPlaceContext),
+                blockHitResult.getBlockPos().relative(blockHitResult.getDirection()),
+                blockPlaceContext.getHorizontalDirection()
+            );
+            if (twoByTwo != null) {
+                //noinspection DataFlowIssue
+                LevelRenderer.renderLineBox(
+                    worldRenderContext.matrixStack(),
+                    worldRenderContext.consumers().getBuffer(RenderType.lines()),
+                    twoByTwo.toBox(0).expandTowards(1, 1, 1).move(
+                        -blockOutlineContext.cameraX(),
+                        -blockOutlineContext.cameraY(),
+                        -blockOutlineContext.cameraZ()
+                    ),
+                    0.25f, 0.25f, 1f, 0.6f
+                );
+            }
+            return true;
         });
 
         try {
