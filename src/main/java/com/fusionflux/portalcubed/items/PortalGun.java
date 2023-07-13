@@ -6,6 +6,7 @@ import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.ClickHandlingItem;
@@ -20,6 +21,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
@@ -50,6 +52,7 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 public class PortalGun extends Item implements ClickHandlingItem, DyeableLeatherItem {
     private static final Map<Pair<Vec3i, Vec3i>, List<List<Direction>>> FAIL_TRIES;
@@ -157,7 +160,7 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
         if (user.isSpectator() || PortalCubedComponents.HOLDER_COMPONENT.get(user).entityBeingHeld() != null) return;
         ItemStack stack = user.getItemInHand(hand);
         stack.getOrCreateTag().putBoolean("complementary", !leftClick);
-        if (!level.isClientSide) {
+        if (level instanceof ServerLevel serverLevel) {
             level.playSound(null, user.position().x(), user.position().y(), user.position().z(), leftClick ? PortalCubedSounds.FIRE_EVENT_PRIMARY : PortalCubedSounds.FIRE_EVENT_SECONDARY, SoundSource.NEUTRAL, .3F, 1F);
 
             Vec3i up;
@@ -191,7 +194,11 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
                 otherPortal = null;
             }
 
-            normal = ((BlockHitResult) hitResult).getDirection().getOpposite().getNormal();
+
+            Direction hitFace = ((BlockHitResult) hitResult).getDirection();
+            Direction intoWall = hitFace.getOpposite();
+            // fixme: why is this intoWall, and not hitFace?
+            normal = intoWall.getNormal();
             if (normal.getY() == 0) {
                 up = new Vec3i(0, 1, 0);
             } else {
@@ -212,6 +219,23 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
             }
 
             Vec3 portalPos1 = calcPos(blockPos, normal);
+            // align portal with nearest funnel
+            AABB funnelSearchArea = AABB.ofSize(portalPos1, 1, 1, 1)
+                    .expandTowards(hitFace.getStepX(), hitFace.getStepY(), hitFace.getStepZ());
+            List<? extends ExcursionFunnelEntity> funnels = serverLevel.getEntities(
+                    PortalCubedEntities.EXCURSION_FUNNEL,
+                    funnel -> funnel.getBoundingBox().intersects(funnelSearchArea) && funnel.getFacing() == intoWall
+            );
+            if (funnels.size() > 1) { // when multiple present, sort by nearest
+                Vec3 finalPortalPos = portalPos1;
+                funnels.sort(Comparator.comparingDouble(funnel -> funnel.distanceToSqr(finalPortalPos)));
+            }
+            for (ExcursionFunnelEntity funnel : funnels) {
+                Axis facingAxis = intoWall.getAxis();
+                // align with funnel
+                portalPos1 = funnel.position().with(facingAxis, portalPos1.get(facingAxis));
+                break; // only care about first
+            }
 
             assert portalHolder != null;
             portalHolder.setDisableValidation(level.getGameRules().getBoolean(PortalCubedGameRules.DISABLE_PORTAL_VALIDATION));
