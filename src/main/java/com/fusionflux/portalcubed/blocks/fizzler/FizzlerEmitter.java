@@ -134,7 +134,7 @@ public class FizzlerEmitter extends HorizontalDirectionalBlock {
         for (i = 0; i < PortalCubedConfig.maxBridgeLength; i++) {
             final BlockState checkState = world.getBlockState(searchPos);
             if (checkState.equals(targetState)) break;
-            if (placed && !checkState.isAir() && !checkState.is(fizzlerBlock)) return;
+            if (placed && !checkState.canBeReplaced() && !checkState.is(fizzlerBlock)) return;
             if (!placed && checkState.is(fizzlerBlock)) {
                 final BlockState newState = checkState.setValue(grillAxis, false);
                 world.setBlockAndUpdate(searchPos, AbstractFizzlerBlock.isEmpty(newState) ? Blocks.AIR.defaultBlockState() : newState);
@@ -149,7 +149,7 @@ public class FizzlerEmitter extends HorizontalDirectionalBlock {
         for (i = 0; i < PortalCubedConfig.maxBridgeLength; i++) {
             final BlockState checkState = world.getBlockState(searchPos);
             if (checkState.equals(targetState)) break;
-            world.setBlockAndUpdate(searchPos, checkState.is(Blocks.AIR) ? placedState : checkState.setValue(grillAxis, true));
+            world.setBlockAndUpdate(searchPos, checkState.canBeReplaced() ? placedState : checkState.setValue(grillAxis, true));
             searchPos = searchPos.relative(searchDir);
         }
     }
