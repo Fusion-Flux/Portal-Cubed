@@ -122,7 +122,7 @@ public abstract class EmittedEntity extends PortalListeningEntity implements Qui
 		setLength(length);
 
 		if (maxLength - length > 0.1) { // don't bother with going through portals if too short
-			AABB portalArea = bounds.move(actualOffset).expandTowards(actualOffset.normalize());
+			AABB portalArea = bounds.move(actualOffset).expandTowards(actualOffset.normalize().scale(0.25));
 			List<Portal> portals = level.getEntities(PortalCubedEntities.PORTAL, portalArea, this::isPortalAligned);
 			if (!portals.isEmpty()) {
 				if (portals.size() != 1) { // prefer nearest portal when multiple present
