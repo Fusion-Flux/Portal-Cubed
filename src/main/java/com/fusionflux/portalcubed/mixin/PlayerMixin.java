@@ -82,7 +82,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 portalCubed$what(Vec3 travelVectorOriginal) {
-        if (!this.isNoGravity() && !this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.level().getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.level().getBlockState(new BlockPos(this.blockPosition().getX(), this.blockPosition().getY() + 1, this.blockPosition().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
+        if (!this.isNoGravity() && !this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.isInFunnel()) {
             double mathVal = 1;
             double horizontalVelocity = Math.abs(this.getDeltaMovement().x) + Math.abs(this.getDeltaMovement().z);
             if (horizontalVelocity / 0.01783440120041885 > 1) {
@@ -99,7 +99,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
 
     @Inject(method = "getFlyingSpeed", at = @At("HEAD"), cancellable = true)
     private void replaceFlyingSpeed(CallbackInfoReturnable<Float> cir) {
-        if (!this.isNoGravity() && !this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.level().getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.level().getBlockState(new BlockPos(this.blockPosition().getX(), this.blockPosition().getY() + 1, this.blockPosition().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL)) {
+        if (!this.isNoGravity() && !this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.isInFunnel()) {
             cir.setReturnValue(0.04f);
         }
     }
@@ -123,7 +123,7 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
         GeneralUtil.setupPortalShapes(this);
 
         ItemStack itemFeet = this.getItemBySlot(EquipmentSlot.FEET);
-        if ((!this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.level().getBlockState(this.blockPosition()).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL) && !this.level().getBlockState(new BlockPos(this.blockPosition().getX(), this.blockPosition().getY() + 1, this.blockPosition().getZ())).getBlock().equals(PortalCubedBlocks.EXCURSION_FUNNEL))) {
+        if ((!this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.isInFunnel())) {
             if (!enableNoDrag2) {
                 enableNoDrag2 = true;
             }

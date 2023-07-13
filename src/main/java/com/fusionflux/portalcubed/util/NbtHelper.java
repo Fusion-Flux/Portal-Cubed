@@ -2,6 +2,7 @@ package com.fusionflux.portalcubed.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -57,13 +58,13 @@ public class NbtHelper {
         return null;
     }
 
-    public static <T extends Enum<T>> T readEnum(CompoundTag tag, String key, T fallback) {
+    public static <T extends Enum<T> & StringRepresentable> T readEnum(CompoundTag tag, String key, T fallback) {
         if (!tag.contains(key, Tag.TAG_STRING))
             return fallback;
         String name = tag.getString(key);
         @SuppressWarnings("unchecked") Class<T> clazz = (Class<T>) fallback.getClass();
         for (T entry : clazz.getEnumConstants()) {
-            if (entry.name().equals(name))
+            if (entry.getSerializedName().equals(name))
                 return entry;
         }
         return fallback;

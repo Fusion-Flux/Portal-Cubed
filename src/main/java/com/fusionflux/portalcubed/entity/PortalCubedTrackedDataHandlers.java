@@ -3,6 +3,7 @@ package com.fusionflux.portalcubed.entity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import com.fusionflux.portalcubed.util.LerpedQuaternion;
@@ -15,7 +16,6 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 import static net.minecraft.network.syncher.EntityDataSerializers.QUATERNION;
 
 public class PortalCubedTrackedDataHandlers {
-
     public static final EntityDataSerializer<LerpedQuaternion> LERPED_QUAT = EntityDataSerializer.simple(
             (buf, quat) -> quat.toNetwork(buf),
             LerpedQuaternion::fromNetwork

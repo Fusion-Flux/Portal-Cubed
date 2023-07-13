@@ -5,8 +5,6 @@
 		"1": "portalcubed:block/excursion_funnel_emitter",
 		"2": "portalcubed:block/excursion_funnel_emitter_wings_active_e",
 		"3": "portalcubed:block/excursion_funnel_emitter_wings_active",
-		"4": "portalcubed:block/excursion_funnel_beam",
-		"5": "portalcubed:block/reversed_excursion_funnel_beam_end",
 		"particle": "portalcubed:block/padded_gray_panel"
 	},
 	"elements": [
@@ -72,8 +70,7 @@
 			"faces": {
 				"up": {"uv": [14.968, 11.984, 7.5, 8.008], "rotation": 180, "texture": "#3"},
 				"down": {"uv": [14.968, 8.008, 7.5, 11.984], "rotation": 180, "texture": "#3"}
-			},
-				"portalcubed:render_type": "cutout"
+			}
 		},
 		{
 			"name": "wings",
@@ -82,8 +79,7 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6, 7.999]},
 			"faces": {
 				"up": {"uv": [7.532, 8.008, 15, 11.984], "texture": "#2"}
-			},
-				"portalcubed:render_type": "cutout"
+			}
 		},
 		{
 			"name": "wings",
@@ -93,8 +89,7 @@
 			"faces": {
 				"east": {"uv": [7.468, 12.024, 0, 16], "rotation": 90, "texture": "#3"},
 				"west": {"uv": [7.468, 16, 0, 12.024], "rotation": 90, "texture": "#3"}
-			},
-				"portalcubed:render_type": "cutout"
+			}
 		},
 		{
 			"name": "wings",
@@ -103,8 +98,7 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, -4, 8]},
 			"faces": {
 				"west": {"uv": [7.468, 16, 0, 12.024], "rotation": 90, "texture": "#2"}
-			},
-				"portalcubed:render_type": "cutout"
+			}
 		},
 		{
 			"from": [0, 2, 12.499],
@@ -114,38 +108,6 @@
 				"east": {"uv": [9.258, 6.984, 9.984, 3.516], "texture": "#1"},
 				"down": {"uv": [9.258, 3.484, 9.984, 0.016], "rotation": 90, "texture": "#1"}
 			}
-		},
-		{
-			"name": "beam",
-			"from": [-0.01, 0.99, -0.01],
-			"to": [15.01, 16.01, 12.01],
-			"rotation": {"angle": 0, "axis": "y", "origin": [-1, 1, 0]},
-			"faces": {
-				"east": {"uv": [10.016, 8.016, 15.984, 15.984], "texture": "#4"},
-				"down": {"uv": [10.016, 0.016, 15.984, 7.984], "rotation": 90, "texture": "#4"}
-			},
-				"portalcubed:render_type": "translucent"
-		},
-		{
-			"name": "beam",
-			"from": [15, 16, 12],
-			"to": [0, 1, 0],
-			"rotation": {"angle": 0, "axis": "y", "origin": [-1, 1, 0]},
-			"faces": {
-				"west": {"uv": [10.016, 15.984, 15.984, 8.016], "texture": "#4"},
-				"up": {"uv": [10.016, 7.984, 15.984, 0.016], "rotation": 90, "texture": "#4"}
-			},
-				"portalcubed:render_type": "translucent"
-		},
-		{
-			"name": "beam",
-			"from": [0, 0, 0],
-			"to": [16, 16, 0],
-			"faces": {
-				"north": {"uv": [16, 8, 8, 16], "texture": "#5", "cullface": "north"},
-				"south": {"uv": [8, 8, 16, 16], "texture": "#5", "cullface": "north"}
-			},
-				"portalcubed:render_type": "translucent"
 		}
 	],
 	"display": {
@@ -196,9 +158,6 @@
 			"color": 0,
 			"nbt": "{}",
 			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-		},
-		11,
-		12,
-		13
+		}
 	]
 }

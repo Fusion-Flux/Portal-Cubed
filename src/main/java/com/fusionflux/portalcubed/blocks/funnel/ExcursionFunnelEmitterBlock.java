@@ -1,10 +1,9 @@
 package com.fusionflux.portalcubed.blocks.funnel;
 
-import com.fusionflux.portalcubed.PortalCubedConfig;
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity.ToggleMode;
-import com.fusionflux.portalcubed.entity.Portal;
+import com.fusionflux.portalcubed.entity.beams.EmittedEntity;
+import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.util.TwoByTwo;
 import net.minecraft.Util;
@@ -14,29 +13,29 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoByTwoFacingMultiblockBlock {
     public static final EnumProperty<Mode> MODE = EnumProperty.create("mode", Mode.class);
@@ -48,8 +47,6 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
         map.put(Direction.SOUTH, Block.box(0, 0, 0, 16, 16, 4));
         map.put(Direction.NORTH, Block.box(0, 0, 12, 16, 16, 16));
     });
-
-    static boolean suppressUpdates;
 
     public ExcursionFunnelEmitterBlock(Properties settings) {
         super(settings);
@@ -91,7 +88,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
         // update emitter
         Mode newMode = powered ? newToggleMode.on : newToggleMode.off;
         updateEmitter(serverLevel, multiblock, newMode);
-        updateEmissionSuppressed(serverLevel, multiblock, facing, newMode);
+        updateEmission(serverLevel, multiblock, facing, newMode);
         return InteractionResult.SUCCESS;
     }
 
@@ -122,7 +119,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentState, Direction direction) {
         // this makes the end texture only render on the very end
-        if (!adjacentState.is(this) && !adjacentState.is(PortalCubedBlocks.EXCURSION_FUNNEL))
+        if (!adjacentState.is(this))
             return false;
         Direction facing = state.getValue(FACING);
         if (facing != direction)
@@ -133,57 +130,39 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
 
     @SuppressWarnings("deprecation")
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        Mode mode = state.getValue(MODE);
-        if (!mode.isOn)
-            return;
-        Direction facing = state.getValue(FACING);
-        TwoByTwo multiblock = TwoByTwoFacingMultiblockBlock.makeMultiblockFromQuadrant(pos, state.getValue(QUADRANT), facing);
-        Direction motion = mode.isReversed ? facing.getOpposite() : facing;
-        ExcursionFunnelTubeBlock.applyEffects(entity, multiblock.getCenter(), motion);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-        if (!(level instanceof ServerLevel serverLevel) || suppressUpdates)
+        if (!(level instanceof ServerLevel serverLevel))
             return;
         Direction facing = state.getValue(FACING);
         TwoByTwo multiblock = TwoByTwoFacingMultiblockBlock.makeMultiblockFromQuadrant(
                 pos, state.getValue(QUADRANT), facing
         );
-        if (block == PortalCubedBlocks.EXCURSION_FUNNEL || multiblock.contains(fromPos))
-            return; // ignore updates from self and funnels
+        if (multiblock.contains(fromPos))
+            return; // ignore updates from self
         if (!(level.getBlockEntity(pos) instanceof ExcursionFunnelEmitterBlockEntity be))
                 return;
-        boolean updateAnyway = false;
-        if (fromPos.equals(pos.relative(facing))) { // pos in front
-            BlockState newState = level.getBlockState(fromPos);
-            if (newState.isAir())
-                updateAnyway = true; // block in front removed, re-emit
-        }
         boolean anyPowered = anyPartPowered(level, multiblock);
         Mode currentMode = state.getValue(MODE);
         ToggleMode toggleMode = be.getToggleMode();
         boolean currentlyPowered = toggleMode.on == currentMode;
-        if (!updateAnyway && currentlyPowered == anyPowered)
+        if (currentlyPowered == anyPowered)
             return; // up to date
         Mode newMode = anyPowered ? toggleMode.on : toggleMode.off;
         updateEmitter(serverLevel, multiblock, newMode);
-        updateEmissionSuppressed(serverLevel, multiblock, facing, newMode);
+        updateEmission(serverLevel, multiblock, facing, newMode);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!suppressUpdates && level instanceof ServerLevel serverLevel && !state.is(newState.getBlock()))
+        if (level instanceof ServerLevel serverLevel && !state.is(newState.getBlock()))
             destroyMultiblock(serverLevel, state, pos, true);
         super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override
     public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        if (!suppressUpdates && level instanceof ServerLevel serverLevel && player.isCreative())
+        if (level instanceof ServerLevel serverLevel && player.isCreative())
             destroyMultiblock(serverLevel, state, pos, false); // intercept the destruction in creative to prevent drops
         super.playerWillDestroy(level, pos, state, player);
     }
@@ -198,68 +177,29 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
         });
     }
 
-    public static void updateEmissionSuppressed(ServerLevel level, TwoByTwo multiblock, Direction facing, Mode newMode) {
-        withUpdatesSuppressed(() -> updateEmission(level, multiblock, facing, newMode));
-    }
-
     private static void updateEmission(ServerLevel level, TwoByTwo multiblock, Direction facing, Mode newMode) {
-        TwoByTwo tubeBase = multiblock;
-        BlockState tubeStateBase = !newMode.isOn ? Blocks.AIR.defaultBlockState()
-                : PortalCubedBlocks.EXCURSION_FUNNEL.defaultBlockState()
-                .setValue(FACING, facing)
-                .setValue(ExcursionFunnelTubeBlock.REVERSED, newMode.isReversed);
-        BlockPos[] positionsToPlace = new BlockPos[4];
-        BlockState[] statesToPlace = new BlockState[4];
-
-        distance: for (int i = 1; i < PortalCubedConfig.maxBridgeLength; i++) {
-            for (int q = 0; q < 4; q++) {
-                BlockPos quadrant = tubeBase.byQuadrantIndex(q);
-                BlockPos offset = quadrant.relative(facing, i);
-
-                if (!canPlaceFunnel(level, offset, facing)) { // hit a wall. check for portals. TODO!
-//                    AABB bounds = tubeBase.toBox(3).move(offset.subtract(quadrant));
-//                    List<Portal> portals = level.getEntities(PortalCubedEntities.PORTAL, bounds, p -> mayPassThroughPortal(p, bounds));
-//                    if (portals.isEmpty())
-                        return; // none found, all done.
-//                    Portal portal = portals.get(0); // only care about 1
-//
-//                    Optional<UUID> linkedId = portal.getLinkedPortalUUID();
-//                    if (linkedId.isEmpty())
-//                        return;
-//                    if (!(level.getEntity(linkedId.get()) instanceof Portal linked))
-//                        return;
-//
-//                    facing = linked.getFacingDirection();
-//                    BlockPos otherSide = BlockPos.containing(linked.getOriginPos());
-//                    tubeBase = TwoByTwoFacingMultiblockBlock.makeMultiblockFromQuadrant(otherSide, q + 1, facing);
-//                    i = 0;
-//                    continue distance;
-                }
-
-                // store the state and pos for if all 4 quadrants succeed
-                BlockState partState = level.getBlockState(multiblock.byQuadrantIndex(q));
-                statesToPlace[q] = getTubeState(partState, tubeStateBase);
-                positionsToPlace[q] = offset;
-
-                if (q == 3) { // 4th quadrant, all good. go back through all quadrants and place.
-                    for (int j = 0; j < 4; j++) {
-                        level.setBlockAndUpdate(positionsToPlace[j], statesToPlace[j]);
-                    }
-                }
+        // remove old entity
+        BlockEntity be = level.getBlockEntity(multiblock.byQuadrant(1));
+        if (be instanceof ExcursionFunnelEmitterBlockEntity emitter) {
+            UUID id = emitter.getFunnelEntityId();
+            if (id != null &&  level.getEntity(id) instanceof ExcursionFunnelEntity entity) {
+                entity.discard();
             }
         }
+        if (newMode.isOn) // spawn new entity if enabled
+            spawnFunnelEntity(level, multiblock, facing, newMode.isReversed);
     }
 
-    private static BlockState getTubeState(BlockState emitter, BlockState base) {
-        if (base.isAir() || !emitter.hasProperty(QUADRANT))
-            return base;
-        Integer quadrant = emitter.getValue(QUADRANT);
-        return base.setValue(QUADRANT, quadrant);
+    private static void spawnFunnelEntity(ServerLevel level, TwoByTwo multiblock, Direction facing, boolean reversed) {
+        Vec3 start = multiblock.getCenter().relative(facing, -0.3);
+        ExcursionFunnelEntity entity = ExcursionFunnelEntity.spawnAndEmit(level, start, facing, reversed, EmittedEntity.MAX_LENGTH);
+        // block entity tracks entity
+        BlockEntity be = level.getBlockEntity(multiblock.byQuadrant(1));
+        if (be instanceof ExcursionFunnelEmitterBlockEntity emitter)
+            emitter.setFunnelEntityId(entity.getUUID());
     }
 
     protected void destroyMultiblock(ServerLevel level, BlockState state, BlockPos thisPos, boolean dropItem) {
-        if (suppressUpdates)
-            return;
         TwoByTwo multiblock = TwoByTwoFacingMultiblockBlock.makeMultiblockFromQuadrant(
                 thisPos, state.getValue(QUADRANT), state.getValue(FACING)
         );
@@ -270,7 +210,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
         }
         Mode mode = state.getValue(MODE);
         if (mode.isOn) // remove the funnel
-            updateEmissionSuppressed(level, multiblock, state.getValue(FACING), Mode.FORWARD_OFF);
+            updateEmission(level, multiblock, state.getValue(FACING), Mode.FORWARD_OFF);
     }
 
     private static boolean anyPartPowered(Level level, TwoByTwo multiblock) {
@@ -282,37 +222,6 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
             }
         }
         return anyPowered;
-    }
-
-    public static boolean canPlaceFunnel(Level level, BlockPos pos, Direction facing) {
-        if (!level.isLoaded(pos))
-            return false;
-        BlockState state = level.getBlockState(pos);
-        if (state.isAir())
-            return true;
-        // allow replacing other funnels
-        if (state.is(PortalCubedBlocks.EXCURSION_FUNNEL))
-            return state.getValue(FACING) == facing; // prevent crossing ones from fighting
-        return false;
-    }
-
-    public static void withUpdatesSuppressed(Runnable runnable) {
-        try {
-            suppressUpdates = true;
-            runnable.run();
-        } finally {
-            suppressUpdates = false;
-        }
-    }
-
-    private static boolean mayPassThroughPortal(Portal portal, AABB bounds) {
-        if (portal.isRemoved())
-            return false;
-        AABB portalBounds = portal.getBoundingBox();
-        // must be fully encapsulated
-        if (bounds.contains(portalBounds.minX, portalBounds.minY, portalBounds.minZ))
-            return bounds.contains(portalBounds.maxX, portalBounds.maxY, portalBounds.maxZ);
-        return false;
     }
 
     @Override

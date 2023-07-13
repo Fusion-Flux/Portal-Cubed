@@ -5,7 +5,6 @@ import com.fusionflux.portalcubed.blocks.bridge.HardLightBridgeBlock;
 import com.fusionflux.portalcubed.blocks.bridge.HardLightBridgeEmitterBlock;
 import com.fusionflux.portalcubed.blocks.fizzler.*;
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock;
-import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelTubeBlock;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.items.ExcursionFunnelEmitterBlockItem;
 import com.fusionflux.portalcubed.items.GelBlobItem;
@@ -48,7 +47,6 @@ public class PortalCubedBlocks {
     public static final NeurotoxinBlock NEUROTOXIN_BLOCK = new NeurotoxinBlock(settings().noOcclusion().noCollission().replaceable().mapColor(MapColor.NONE));
     public static final NeurotoxinEmitterBlock NEUROTOXIN_EMITTER = new NeurotoxinEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().noOcclusion().noCollission().sound(SoundType.STONE));
     public static final ExcursionFunnelEmitterBlock EXCURSION_FUNNEL_EMITTER = new ExcursionFunnelEmitterBlock(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
-    public static final ExcursionFunnelTubeBlock EXCURSION_FUNNEL = new ExcursionFunnelTubeBlock(settings().noOcclusion().noCollission().randomTicks().pushReaction(PushReaction.DESTROY).replaceable());
 
     public static final TallButton TALL_BUTTON = new TallButton(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops());
     public static final OldApTallButton OLD_AP_PEDESTAL_BUTTON = new OldApTallButton(settings().strength(3.5f, 3.5f).requiresCorrectToolForDrops());
@@ -168,7 +166,6 @@ public class PortalCubedBlocks {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("excursion_funnel_emitter_entity"), EXCURSION_FUNNEL_EMITTER_ENTITY);
         Registry.register(BuiltInRegistries.BLOCK, id("excursion_funnel_emitter"), EXCURSION_FUNNEL_EMITTER);
         Registry.register(BuiltInRegistries.ITEM, id("excursion_funnel_emitter"), new ExcursionFunnelEmitterBlockItem(EXCURSION_FUNNEL_EMITTER, new Item.Properties()));
-        Registry.register(BuiltInRegistries.BLOCK, id("excursion_funnel"), EXCURSION_FUNNEL);
 
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("faith_plate"), FAITH_PLATE_BLOCK_ENTITY);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("beta_faith_plate"), BETA_FAITH_PLATE_BLOCK_ENTITY);

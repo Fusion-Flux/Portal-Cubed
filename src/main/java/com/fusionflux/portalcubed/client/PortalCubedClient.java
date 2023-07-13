@@ -21,6 +21,7 @@ import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
+import com.fusionflux.portalcubed.client.render.entity.animated_textures.AnimatedEntityTextures;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
@@ -159,6 +160,7 @@ public class PortalCubedClient implements ClientModInitializer {
         PortalCubedClientPackets.registerPackets();
         PortalCubedKeyBindings.register();
         PortalCubedParticleProviders.register();
+        AnimatedEntityTextures.init();
 
         HudRenderCallback.EVENT.register(PortalHud::renderPortals);
 
@@ -671,6 +673,8 @@ public class PortalCubedClient implements ClientModInitializer {
         EntityRendererRegistry.register(PortalCubedEntities.ADHESION_GEL_BLOB, GelBlobRenderer::new);
         EntityRendererRegistry.register(PortalCubedEntities.CONVERSION_GEL_BLOB, GelBlobRenderer::new);
         EntityRendererRegistry.register(PortalCubedEntities.REFLECTION_GEL_BLOB, GelBlobRenderer::new);
+
+        EntityRendererRegistry.register(PortalCubedEntities.EXCURSION_FUNNEL, ExcursionFunnelRenderer::new);
 
         BlockEntityRenderers.register(PortalCubedBlocks.VELOCITY_HELPER_BLOCK_ENTITY, VelocityHelperRenderer::new);
 

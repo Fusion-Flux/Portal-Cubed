@@ -2,6 +2,8 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.blocks.BaseGel;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
+import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -133,6 +135,12 @@ public class PortalCubedEntities {
         .setDimensions(EntityDimensions.scalable(0.75f * TurretEntity.MODEL_SCALE, 1.5f * TurretEntity.MODEL_SCALE))
         .build();
 
+    public static final EntityType<ExcursionFunnelEntity> EXCURSION_FUNNEL = QuiltEntityTypeBuilder.create(MobCategory.MISC, ExcursionFunnelEntity::new)
+            .setDimensions(EntityDimensions.scalable(1, 1))
+            .maxChunkTrackingRange(64)
+            .disableSummon()
+            .build();
+
     public static final TagKey<EntityType<?>> P1_ENTITY = TagKey.create(Registries.ENTITY_TYPE, id("p1_entity"));
     public static final TagKey<EntityType<?>> PORTAL_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, id("portal_blacklist"));
 
@@ -173,6 +181,8 @@ public class PortalCubedEntities {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("energy_pellet"), ENERGY_PELLET);
 
         Registry.register(BuiltInRegistries.ENTITY_TYPE, id("turret"), TURRET);
+
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("excursion_funnel"), EXCURSION_FUNNEL);
 
         DefaultAttributes.SUPPLIERS.put(STORAGE_CUBE, StorageCubeEntity.createMobAttributes().build());
         DefaultAttributes.SUPPLIERS.put(COMPANION_CUBE, CompanionCubeEntity.createMobAttributes().build());
