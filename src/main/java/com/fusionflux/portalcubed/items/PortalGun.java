@@ -308,9 +308,13 @@ public class PortalGun extends Item implements ClickHandlingItem, DyeableLeather
 
             tag.put(level.dimension().location().toString(), portalsTag);
             portalHolder.notifyListeners(false);
+            portalHolder.notifyListenersOfCreation();
             // also notify the other portal to re-propagate
-            if (otherPortal != null)
+            if (otherPortal != null) {
                 otherPortal.notifyListeners(false);
+                Portal finalOtherPortal = otherPortal;
+                otherPortal.forEachListeningEntity(entity -> entity.onLinkedPortalCreate(finalOtherPortal, portalHolder));
+            }
         } else {
             final LocalPlayer localPlayer = (LocalPlayer)user;
             if (localPlayer.input.getMoveVector().lengthSquared() < 0.1 && user.getXRot() >= 88.0) {

@@ -12,13 +12,11 @@ import net.minecraft.util.AbortableIterationConsumer.Continuation;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.level.storage.WritableLevelData;
-import net.minecraft.world.phys.AABB;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,22 +26,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Mixin(Level.class)
-public abstract class LevelMixin implements LevelExt {
+public abstract class LevelMixin implements LevelAccessor, LevelExt {
     @Unique
     PortalCubedDamageSources pc$damageSources;
 
     @Shadow
     protected abstract LevelEntityGetter<Entity> getEntities();
-
-    @Shadow public abstract boolean isClientSide();
-
-    @Shadow public abstract <T extends Entity> List<T> getEntities(EntityTypeTest<Entity, T> filter, AABB box, Predicate<? super T> predicate);
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void createDamageSources(
@@ -63,7 +55,7 @@ public abstract class LevelMixin implements LevelExt {
 
     @Inject(method = "setBlocksDirty", at = @At("HEAD"))
     private void updateEmittedEntities(BlockPos pos, BlockState old, BlockState updated, CallbackInfo ci) {
-        if (!isClientSide()) {
+        if (!isClientSide() && old.getCollisionShape(this, pos) != updated.getCollisionShape(this, pos)) {
             getEntities().get(EmittedEntity.TYPE_TEST, emitted -> {
                 if (emitted.listensTo(pos))
                     emitted.reEmit();

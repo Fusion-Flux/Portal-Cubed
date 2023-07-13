@@ -37,12 +37,16 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
+import org.joml.Vector2d;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class Portal extends Entity {
@@ -82,6 +86,8 @@ public class Portal extends Entity {
     private VoxelShape crossCollisionThis;
     private long crossCollisionThisTick = -1;
 
+    private final List<EntityReference<PortalListeningEntity>> listeningEntities = new ArrayList<>();
+
     public Portal(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }
@@ -110,6 +116,14 @@ public class Portal extends Entity {
         if (nbt.contains("destination")) this.setDestination(Optional.of(NbtHelper.getVec3d(nbt, "destination")));
         if (nbt.hasUUID("ownerUUID")) this.setOwnerUUID(Optional.of(nbt.getUUID("ownerUUID")));
         disableValidation = nbt.getBoolean("DisableValidation");
+        if (level() instanceof ServerLevel level) {
+            listeningEntities.clear();
+            int sources = nbt.getInt("Listeners");
+            for (int i = 0; i < sources; i++) {
+                UUID id = nbt.getUUID("Listener" + i);
+                listeningEntities.add(new EntityReference<>(level, id, PortalListeningEntity.class));
+            }
+        }
     }
 
     @Override
@@ -121,6 +135,11 @@ public class Portal extends Entity {
         this.getDestination().ifPresent(destination -> NbtHelper.putVec3d(nbt, "destination", destination));
         this.getOwnerUUID().ifPresent(uuid -> nbt.putUUID("ownerUUID", uuid));
         nbt.putBoolean("DisableValidation", disableValidation);
+        listeningEntities.removeIf(EntityReference::isUnloaded);
+        nbt.putInt("Listeners", listeningEntities.size());
+        for (int i = 0; i < listeningEntities.size(); i++) {
+            nbt.putUUID("Listener" + i, listeningEntities.get(i).uuid);
+        }
     }
 
     public int getColor() {
@@ -237,17 +256,20 @@ public class Portal extends Entity {
         if (linkedId.isEmpty())
             return null;
         Entity linkedEntity = level.getEntity(linkedId.get());
-        return linkedEntity instanceof Portal linked ? linked : null;
+        return  linkedEntity instanceof Portal linked && linked.isAlive() ? linked : null;
     }
 
     @Override
     public void kill() {
-        notifyListeners(true);
-        getOwnerUUID().ifPresent(uuid -> {
-            Entity player = ((ServerLevel) level()).getEntity(uuid);
-            CalledValues.removePortals(player, this.getUUID());
-        });
         super.kill();
+        notifyListeners(true);
+        if (level() instanceof ServerLevel level) {
+            getOwnerUUID().ifPresent(uuid -> {
+                Entity player = level.getEntity(uuid);
+                CalledValues.removePortals(player, this.getUUID());
+            });
+            forEachListeningEntity(entity -> entity.onPortalRemove(this));
+        }
     }
 
     @Override
@@ -266,7 +288,7 @@ public class Portal extends Entity {
 
             getOwnerUUID().ifPresent(uuid -> {
                 Entity player = serverLevel.getEntity(uuid);
-                if (player == null || !player.isAlive()) {
+                if (player == null || !player.isAlive() && tickCount > 5) { // tickCount: slight delay on world load for listeners to load
                     this.kill();
                 }
             });
@@ -460,10 +482,11 @@ public class Portal extends Entity {
         return new Vec3(transformed);
     }
 
+    @Deprecated(forRemoval = true) // removing this once light bridges are ported to entities
     public void notifyListeners(boolean removed) {
         if (level() instanceof ServerLevel level) {
             Vec3 offset = Vec3.atBottomCenterOf(getFacingDirection().getNormal()).scale(0.5);
-            AABB bounds = makeBoundingBox().move(offset).inflate(-0.1);
+            AABB bounds = getBoundingBox().move(offset).inflate(-0.1);
             BlockPos.betweenClosedStream(bounds).forEach(pos -> {
                 BlockState state = level.getBlockState(pos);
                 if (state.getBlock() instanceof PortalMoveListeningBlock listener) {
@@ -618,6 +641,16 @@ public class Portal extends Entity {
         return getAxisW().scale(xInPlane).add(getAxisH().scale(yInPlane));
     }
 
+    public Vector2d getLocalPlaneCoords(Vec3 vec) {
+        Axis facingAxis = getFacingDirection().getAxis();
+        Vec3 pos = position();
+        Vec3 inPlane = vec.with(facingAxis, pos.get(facingAxis));
+        Vec3 relative = inPlane.subtract(pos);
+        Axis horizontal = axisOf(getAxisW());
+        Axis vertical = axisOf(getAxisH());
+        return new Vector2d(horizontal.choose(relative.x, relative.y, relative.z), vertical.choose(relative.x, relative.y, relative.z));
+    }
+
     public Vec3 getOriginPos() {
         return position();
     }
@@ -642,4 +675,37 @@ public class Portal extends Entity {
             .hamiltonProduct(myRotation.getConjugated());
     }
 
+    public void addListener(PortalListeningEntity source) {
+        if (level() instanceof ServerLevel level) {
+            this.listeningEntities.add(new EntityReference<>(level, source));
+        }
+    }
+
+    public void forEachListeningEntity(Consumer<PortalListeningEntity> consumer) {
+        Iterator<EntityReference<PortalListeningEntity>> itr = listeningEntities.iterator();
+        while (itr.hasNext()) {
+            EntityReference<PortalListeningEntity> entity = itr.next();
+            if (entity.isLoaded()) {
+                consumer.accept(entity.get());
+            } else {
+                itr.remove();
+            }
+        }
+    }
+
+    public void notifyListenersOfCreation() {
+        if (level() instanceof ServerLevel level) {
+            for (PortalListeningEntity entity : level.getEntities(PortalListeningEntity.TYPE_TEST, Entity::isAlive)) {
+                entity.onPortalCreate(this);
+            }
+        }
+    }
+
+    private static Axis axisOf(Vec3 axisVec) {
+        for (Axis axis : Axis.VALUES) {
+            if (axisVec.get(axis) != 0)
+                return axis;
+        }
+        throw new IllegalArgumentException("axisVec is ZERO");
+    }
 }

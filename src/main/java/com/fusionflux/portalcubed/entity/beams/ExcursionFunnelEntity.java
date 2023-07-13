@@ -17,7 +17,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,16 +38,24 @@ public class ExcursionFunnelEntity extends EmittedEntity {
 	public ExcursionFunnelModel model;
 
 	public ExcursionFunnelEntity(EntityType<?> entityType, Level level) {
-		super(entityType, level, 100);
+		super(entityType, level);
 	}
 
-	public static ExcursionFunnelEntity spawnAndEmit(ServerLevel level, Vec3 pos, Direction facing, boolean reversed) {
+	public static ExcursionFunnelEntity spawnAndEmit(Level level, Vec3 pos, Direction facing, boolean reversed, float length) {
 		ExcursionFunnelEntity entity = new ExcursionFunnelEntity(PortalCubedEntities.EXCURSION_FUNNEL, level);
 		entity.setPos(pos);
 		entity.setFacing(facing);
 		entity.setReversed(reversed);
-		entity.reEmit();
+
+		entity.reEmit(length);
 		level.addFreshEntity(entity);
+		return entity;
+	}
+
+	@Override
+	protected EmittedEntity createNext() {
+		ExcursionFunnelEntity entity = new ExcursionFunnelEntity(PortalCubedEntities.EXCURSION_FUNNEL, level());
+		entity.setReversed(isReversed());
 		return entity;
 	}
 

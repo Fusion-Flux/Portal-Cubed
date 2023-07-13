@@ -1,21 +1,18 @@
 package com.fusionflux.portalcubed.blocks.funnel;
 
-import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity;
 import com.fusionflux.portalcubed.blocks.blockentities.ExcursionFunnelEmitterBlockEntity.ToggleMode;
-import com.fusionflux.portalcubed.entity.PortalCubedEntities;
+import com.fusionflux.portalcubed.entity.beams.EmittedEntity;
 import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.util.TwoByTwo;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -27,19 +24,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -199,7 +192,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
 
     private static void spawnFunnelEntity(ServerLevel level, TwoByTwo multiblock, Direction facing, boolean reversed) {
         Vec3 start = multiblock.getCenter().relative(facing, -0.3);
-        ExcursionFunnelEntity entity = ExcursionFunnelEntity.spawnAndEmit(level, start, facing, reversed);
+        ExcursionFunnelEntity entity = ExcursionFunnelEntity.spawnAndEmit(level, start, facing, reversed, EmittedEntity.MAX_LENGTH);
         // block entity tracks entity
         BlockEntity be = level.getBlockEntity(multiblock.byQuadrant(1));
         if (be instanceof ExcursionFunnelEmitterBlockEntity emitter)
