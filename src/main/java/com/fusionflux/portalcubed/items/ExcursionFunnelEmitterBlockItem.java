@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.items;
 
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock;
+import com.fusionflux.portalcubed.blocks.funnel.TwoByTwoFacingMultiblockBlock;
 import com.fusionflux.portalcubed.util.TwoByTwo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -87,5 +88,11 @@ public class ExcursionFunnelEmitterBlockItem extends BlockItem implements Multib
         if (facing.getAxis().isHorizontal())
             return Direction.DOWN;
         return facing == Direction.DOWN ? perspectiveFacing.getOpposite() : perspectiveFacing;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Block & TwoByTwoFacingMultiblockBlock> T getMultiblockBlock() {
+        return (T)getBlock();
     }
 }

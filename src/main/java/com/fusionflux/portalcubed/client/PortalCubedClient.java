@@ -512,7 +512,7 @@ public class PortalCubedClient implements ClientModInitializer {
             }
             final TwoByTwo twoByTwo = useItem.findValidPlacement(
                 worldRenderContext.world(),
-                useItem.getBlock().getStateForPlacement(blockPlaceContext),
+                useItem.getMultiblockBlock().getStateForPlacement(blockPlaceContext),
                 pos,
                 blockPlaceContext.getHorizontalDirection()
             );
