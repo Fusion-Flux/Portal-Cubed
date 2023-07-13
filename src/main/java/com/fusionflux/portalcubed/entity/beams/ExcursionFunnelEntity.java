@@ -6,6 +6,7 @@ import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.accessor.HasMovementInputAccessor;
 import com.fusionflux.portalcubed.client.render.entity.model.ExcursionFunnelModel;
 import com.fusionflux.portalcubed.compat.rayon.RayonIntegration;
+import com.fusionflux.portalcubed.entity.LateRenderedEntity;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.sound.ExcursionFunnelEnterSoundInstance;
 
@@ -27,7 +28,7 @@ import net.minecraft.world.phys.Vec3;
 
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-public class ExcursionFunnelEntity extends EmittedEntity {
+public class ExcursionFunnelEntity extends EmittedEntity implements LateRenderedEntity {
 	public static final EntityDataAccessor<Boolean> REVERSED = SynchedEntityData.defineId(ExcursionFunnelEntity.class, EntityDataSerializers.BOOLEAN);
 
 	public static final float SIZE = (30 / 32f) * 2;
