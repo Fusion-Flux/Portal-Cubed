@@ -72,9 +72,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
             return InteractionResult.SUCCESS;
         Direction facing = state.getValue(FACING);
         TwoByTwo multiblock = TwoByTwoFacingMultiblockBlock.makeMultiblockFromQuadrant(pos, state.getValue(QUADRANT), facing);
-        // q1 is primary
-        BlockPos q1 = multiblock.byQuadrant(1);
-        if (!(level.getBlockEntity(q1) instanceof ExcursionFunnelEmitterBlockEntity emitter))
+        if (!(level.getBlockEntity(pos) instanceof ExcursionFunnelEmitterBlockEntity emitter))
             return InteractionResult.FAIL;
         ToggleMode mode = emitter.getToggleMode();
         boolean powered = state.getValue(MODE) == mode.on;
@@ -82,7 +80,7 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
         emitter.setToggleMode(newToggleMode);
         // sync with others
         multiblock.forEach(part -> {
-            if (part != q1 && level.getBlockEntity(part) instanceof ExcursionFunnelEmitterBlockEntity be)
+            if (part != pos && level.getBlockEntity(part) instanceof ExcursionFunnelEmitterBlockEntity be)
                 be.setToggleMode(newToggleMode);
         });
         // update emitter
@@ -113,19 +111,6 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
     @NotNull
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public boolean skipRendering(BlockState state, BlockState adjacentState, Direction direction) {
-        // this makes the end texture only render on the very end
-        if (!adjacentState.is(this))
-            return false;
-        Direction facing = state.getValue(FACING);
-        if (facing != direction)
-            return false;
-        Direction adjacentFacing = adjacentState.getValue(FACING);
-        return adjacentFacing == facing;
     }
 
     @SuppressWarnings("deprecation")

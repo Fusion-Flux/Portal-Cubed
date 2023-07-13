@@ -3,7 +3,6 @@ package com.fusionflux.portalcubed.client.render.entity.model;
 import java.util.Set;
 
 import com.fusionflux.portalcubed.PortalCubed;
-import com.fusionflux.portalcubed.client.render.PortalCubedRenderTypes;
 import com.fusionflux.portalcubed.entity.beams.EmittedEntity;
 import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
 
