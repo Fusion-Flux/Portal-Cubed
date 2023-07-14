@@ -341,7 +341,6 @@
 
   "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",
   "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",
-  "block.portalcubed.excursion_funnel": "Excursion Funnel",
   "block.portalcubed.portal_1_door": "Portal 1 Door",
   "block.portalcubed.portal_2_door": "Portal 2 Door",
   "block.portalcubed.octopus_door": "Octopus Door",
@@ -447,12 +446,13 @@
   "entity.portalcubed.schrodinger_cube": "Schrödinger Cube",
   "entity.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
 
-  "entity.portalcubed.decal": "Decal",
   "entity.portalcubed.energy_pellet": "High Energy Pellet",
 
   "entity.portalcubed.rocket": "Rocket",
 
   "entity.portalcubed.portal": "Portal",
+
+  "entity.portalcubed.excursion_funnel": "Excursion Funnel",
 
   "entity.portalcubed.turret": "Sentry Turret",
 
