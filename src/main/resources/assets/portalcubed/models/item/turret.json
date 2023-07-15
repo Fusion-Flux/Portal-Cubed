@@ -2,7 +2,7 @@
 	"credit": "Made by Cart3r using Blockbench.",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "portalcubed:item/default_turret"
+		"0": "portalcubed:entity/default_turret"
 	},
 	"elements": [
 		{
