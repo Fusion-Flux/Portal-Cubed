@@ -1315,7 +1315,7 @@
   },
   "neurotoxin_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "laser_emitter": {
     "type": "provided",

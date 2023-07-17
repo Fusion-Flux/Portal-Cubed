@@ -5,6 +5,7 @@
 
   "subtitles.portalcubed.gel_bounce": "Something bounces on propulsion gel",
   "subtitles.portalcubed.gel_run": "Something slides on propulsion gel",
+
   "subtitles.portalcubed.portal_gun_secondary_fire": "Portal gun secondary fire",
   "subtitles.portalcubed.portal_gun_primary_fire": "Portal gun primary fire",
   "subtitles.portalcubed.portal_invalid_surface": "Portal gun failed",
@@ -21,15 +22,14 @@
   "subtitles.portalcubed.laser.node_deactivate": "Laser node deactivates",
   "subtitles.portalcubed.laser.node_sing": "Laser node sings",
 
-
   "subtitles.portalcubed.pedestal_button_press": "Switch activates",
   "subtitles.portalcubed.pedestal_button_release": "Switch deactivates",
   "subtitles.portalcubed.floor_button_press": "Button activates",
   "subtitles.portalcubed.floor_button_release": "Button deactivates",
 
   "subtitles.portalcubed.rocket.fire": "Rocket launches",
-  "subtitles.portalcubed.rocket.locked": "Rocket locked",
-  "subtitles.portalcubed.rocket.locking": "Rocket locking",
+  "subtitles.portalcubed.rocket.locked": "Rocket turret fires",
+  "subtitles.portalcubed.rocket.locking": "Rocket turret locks on",
 
   "subtitles.portalcubed.pellet.bounce": "Energy pellet bounces",
   "subtitles.portalcubed.pellet.explode": "Energy pellet explodes",
@@ -54,7 +54,7 @@
   "tooltip.portalcubed.schrodinger_cube.2": "Schrodinger Cubes linked by name",
   "tooltip.portalcubed.schrodinger_cube.3": "ignore other Schrodinger Cubes.",
 
-  "tooltip.portalcubed.radio.1": " Changes if the music toggles when picked up.",
+  "tooltip.portalcubed.radio.1": " Changes if the music toggles when picked up",
 
   "tooltip.portalcubed.velocity_helper.1": " Links Velocity Helpers",
   "tooltip.portalcubed.velocity_helper.2": " Opens Configuration Menu",
