@@ -479,7 +479,7 @@
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
   "gamerule.allowCrouchFlyGlitch.description": "Enables the Excursion Funnel Crouch Fly Glitch from Portal 2.",
   "gamerule.disablePortalValidation": "Disable Portal Validation",
-  "gamerule.disablePortalValidation.description": "Disables placement checks when shooting portals, allowing them to be placed on any surface, including overhangs. May cause unexpected results.",
+  "gamerule.disablePortalValidation.description": "Disables placement checks when shooting portals, allowing them to be placed on any surface, including overhangs. May cause unexpected behavior - Issues caused by invalid portals will not be fixed.",
   "gamerule.portalAlignment": "Portal Alignment",
   "gamerule.portalAlignment.description": "Changes portal placement snapping, with the value being fraction of a block snapped to. For example, 16 is every pixel, 1 is full blocks, and 0 is off.",
   "gamerule.usePortalHud": "Use Portal HUD",

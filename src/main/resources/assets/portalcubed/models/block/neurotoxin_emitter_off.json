@@ -5,7 +5,7 @@
 		"1": "portalcubed:block/neurotoxin_emitter_front",
 		"2": "portalcubed:block/dirty_borderless_panel",
 		"3": "portalcubed:block/neurotoxin_emitter_background",
-		"particle": "portalcubed:block/neurotoxin_emitter_vent"
+		"particle": "portalcubed:block/dirty_borderless_panel"
 	},
 	"elements": [
 		{
