@@ -15,6 +15,14 @@
     "portalcubed:2x2_double_crossbar_bottom_left",
     "portalcubed:2x2_double_crossbar_top_right",
     "portalcubed:2x2_double_crossbar_bottom_right",
+    "portalcubed:old_ap_metal_grating_facade",
+    "portalcubed:portal_1_metal_grating_facade",
+    "portalcubed:portal_2_metal_grating_facade",
+    "portalcubed:portal_1_mesh_grating_facade",
+    "portalcubed:repulsion_gel",
+    "portalcubed:propulsion_gel",
+    "portalcubed:reflection_gel",
+    "portalcubed:adhesion_gel",
     "minecraft:iron_bars",
     "minecraft:oak_fence_gate",
     "minecraft:birch_fence_gate",
@@ -30,14 +38,6 @@
     "minecraft:end_rod",
     "#minecraft:candles",
     "minecraft:chain",
-    "minecraft:bamboo",
-    "portalcubed:old_ap_metal_grating_facade",
-    "portalcubed:portal_1_metal_grating_facade",
-    "portalcubed:portal_2_metal_grating_facade",
-    "portalcubed:portal_1_mesh_grating_facade",
-    "portalcubed:repulsion_gel",
-    "portalcubed:propulsion_gel",
-    "portalcubed:reflection_gel",
-    "portalcubed:adhesion_gel"
+    "minecraft:bamboo"
   ]
 }

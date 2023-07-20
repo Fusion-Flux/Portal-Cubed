@@ -1,0 +1,76 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/beans"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/chair"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/computer"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/core_frame"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/default_turret"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/lil_pineapple"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/old_ap_cube"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/mug_white"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/portal_1_companion_cube"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/portal_1_storage_cube"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/redirection_cube"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/schrodinger_cube"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/water_jug"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/radio"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/companion_cube"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/storage_cube"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/portal_1_cores"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/portal_2_cores"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench by Cart3r.  ",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "portalcubed:item/portal_1_cores"
+		"0": "portalcubed:entity/portal_1_cores"
 	},
 	"elements": [
 		{
@@ -34,10 +34,6 @@
 			"to": [11.45, 5.55, 4.75],
 			"rotation": {"angle": 45, "axis": "x", "origin": [7.95, 5.55, 5.125]},
 			"faces": {
-				"north": {"uv": [1.5, 12, 1.5, 15.5], "rotation": 90, "texture": "#0"},
-				"east": {"uv": [1.5, 10.5, 1.5, 12], "rotation": 270, "texture": "#0"},
-				"south": {"uv": [3, 12, 3, 15.5], "rotation": 270, "texture": "#0"},
-				"west": {"uv": [1.5, 12, 1.5, 10.5], "rotation": 270, "texture": "#0"},
 				"up": {"uv": [0, 12, 1.5, 15.5], "rotation": 270, "texture": "#0"},
 				"down": {"uv": [1.5, 12, 0, 15.5], "rotation": 270, "texture": "#0"}
 			}
@@ -73,10 +69,6 @@
 			"to": [11.45, 0.55, 4.75],
 			"rotation": {"angle": -45, "axis": "x", "origin": [7.95, 0.5, 5.25]},
 			"faces": {
-				"north": {"uv": [1.5, 12, 1.5, 15.5], "rotation": 90, "texture": "#0"},
-				"east": {"uv": [1.5, 10.5, 1.5, 12], "rotation": 270, "texture": "#0"},
-				"south": {"uv": [3, 12, 3, 15.5], "rotation": 270, "texture": "#0"},
-				"west": {"uv": [1.5, 12, 1.5, 10.5], "rotation": 270, "texture": "#0"},
 				"up": {"uv": [0, 12, 1.5, 15.5], "rotation": 270, "texture": "#0"},
 				"down": {"uv": [1.5, 12, 0, 15.5], "rotation": 270, "texture": "#0"}
 			}
@@ -85,12 +77,7 @@
 			"from": [6.5, 1.5, 5.075],
 			"to": [9.5, 4.5, 6.075],
 			"faces": {
-				"north": {"uv": [12.5, 0.5, 14, 2], "texture": "#0"},
-				"east": {"uv": [12, 0.5, 12.5, 2], "texture": "#0"},
-				"south": {"uv": [14.5, 0.5, 16, 2], "texture": "#0"},
-				"west": {"uv": [14, 0.5, 14.5, 2], "texture": "#0"},
-				"up": {"uv": [14, 0.5, 12.5, 0], "texture": "#0"},
-				"down": {"uv": [15.5, 0, 14, 0.5], "texture": "#0"}
+				"north": {"uv": [12.5, 7.5, 14, 9], "texture": "#0"}
 			}
 		}
 	],

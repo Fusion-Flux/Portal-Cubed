@@ -5,6 +5,7 @@
 
   "subtitles.portalcubed.gel_bounce": "Something bounces on propulsion gel",
   "subtitles.portalcubed.gel_run": "Something slides on propulsion gel",
+
   "subtitles.portalcubed.portal_gun_secondary_fire": "Portal gun secondary fire",
   "subtitles.portalcubed.portal_gun_primary_fire": "Portal gun primary fire",
   "subtitles.portalcubed.portal_invalid_surface": "Portal gun failed",
@@ -21,15 +22,14 @@
   "subtitles.portalcubed.laser.node_deactivate": "Laser node deactivates",
   "subtitles.portalcubed.laser.node_sing": "Laser node sings",
 
-
   "subtitles.portalcubed.pedestal_button_press": "Switch activates",
   "subtitles.portalcubed.pedestal_button_release": "Switch deactivates",
   "subtitles.portalcubed.floor_button_press": "Button activates",
   "subtitles.portalcubed.floor_button_release": "Button deactivates",
 
   "subtitles.portalcubed.rocket.fire": "Rocket launches",
-  "subtitles.portalcubed.rocket.locked": "Rocket locked",
-  "subtitles.portalcubed.rocket.locking": "Rocket locking",
+  "subtitles.portalcubed.rocket.locked": "Rocket turret fires",
+  "subtitles.portalcubed.rocket.locking": "Rocket turret locks on",
 
   "subtitles.portalcubed.pellet.bounce": "Energy pellet bounces",
   "subtitles.portalcubed.pellet.explode": "Energy pellet explodes",
@@ -54,7 +54,7 @@
   "tooltip.portalcubed.schrodinger_cube.2": "Schrodinger Cubes linked by name",
   "tooltip.portalcubed.schrodinger_cube.3": "ignore other Schrodinger Cubes.",
 
-  "tooltip.portalcubed.radio.1": " Changes if the music toggles when picked up.",
+  "tooltip.portalcubed.radio.1": " Changes if the music toggles when picked up",
 
   "tooltip.portalcubed.velocity_helper.1": " Links Velocity Helpers",
   "tooltip.portalcubed.velocity_helper.2": " Opens Configuration Menu",
@@ -341,7 +341,6 @@
 
   "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",
   "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",
-  "block.portalcubed.excursion_funnel": "Excursion Funnel",
   "block.portalcubed.portal_1_door": "Portal 1 Door",
   "block.portalcubed.portal_2_door": "Portal 2 Door",
   "block.portalcubed.octopus_door": "Octopus Door",
@@ -447,12 +446,13 @@
   "entity.portalcubed.schrodinger_cube": "Schrödinger Cube",
   "entity.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
 
-  "entity.portalcubed.decal": "Decal",
   "entity.portalcubed.energy_pellet": "High Energy Pellet",
 
   "entity.portalcubed.rocket": "Rocket",
 
   "entity.portalcubed.portal": "Portal",
+
+  "entity.portalcubed.excursion_funnel": "Excursion Funnel",
 
   "entity.portalcubed.turret": "Sentry Turret",
 
@@ -478,6 +478,8 @@
   "gamerule.category.portalcubed": "Portal Cubed",
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
   "gamerule.allowCrouchFlyGlitch.description": "Enables the Excursion Funnel Crouch Fly Glitch from Portal 2.",
+  "gamerule.disablePortalValidation": "Disable Portal Validation",
+  "gamerule.disablePortalValidation.description": "Disables placement checks when shooting portals, allowing them to be placed on any surface, including overhangs. May cause unexpected behavior - Issues caused by invalid portals will not be fixed.",
   "gamerule.portalAlignment": "Portal Alignment",
   "gamerule.portalAlignment.description": "Changes portal placement snapping, with the value being fraction of a block snapped to. For example, 16 is every pixel, 1 is full blocks, and 0 is off.",
   "gamerule.usePortalHud": "Use Portal HUD",
