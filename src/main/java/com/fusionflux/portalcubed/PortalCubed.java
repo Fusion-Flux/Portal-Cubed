@@ -25,6 +25,7 @@ import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
+import com.fusionflux.portalcubed.predicates.PortalCubedConditions;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.google.gson.JsonElement;
@@ -261,6 +262,7 @@ public class PortalCubed implements ModInitializer {
         );
 
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
+
         PortalBlocksLoader.init(mod);
         PortalCubedFluids.registerFluids();
         PortalCubedBlocks.registerBlocks();
@@ -271,6 +273,8 @@ public class PortalCubed implements ModInitializer {
         PortalCubedSounds.registerSounds();
         PortalCubedGameRules.register();
         PortalCubedParticleTypes.register();
+        PortalCubedConditions.register();
+
         PortalTabsLoader.load(mod);
         BlockContentRegistries.FLAMMABLE.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
         GravityChannel.UPDATE_GRAVITY.getVerifierRegistry().register(AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, AdhesionGravityVerifier::check);
