@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
@@ -52,15 +51,17 @@ public class FunnelCondition implements LootItemCondition {
     public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<FunnelCondition> {
         @Override
         public void serialize(JsonObject json, FunnelCondition value, JsonSerializationContext serializationContext) {
-            json.addProperty("in_funnel", value.inFunnel);
+            if (value.inFunnel != null) {
+                json.addProperty("in_funnel", value.inFunnel);
+            }
+            if (value.inCfg != null) {
+                json.addProperty("in_cfg", value.inCfg);
+            }
         }
 
         @NotNull
         @Override
         public FunnelCondition deserialize(JsonObject json, JsonDeserializationContext serializationContext) {
-            if (!json.has("in_funnel") && !json.has("in_cfg")) {
-                throw new JsonSyntaxException("portalcubed:funnel condition must have either in_funnel or in_cfg");
-            }
             return new FunnelCondition(
                 getAsOptionalBoolean(json, "in_funnel"),
                 getAsOptionalBoolean(json, "in_cfg")

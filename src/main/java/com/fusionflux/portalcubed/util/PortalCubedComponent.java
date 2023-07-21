@@ -1,8 +1,10 @@
 package com.fusionflux.portalcubed.util;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -42,5 +44,10 @@ public interface PortalCubedComponent extends Component {
     Vec3 getServerVelForGel();
 
     void setServerVelForGel(Vec3 velocity);
+
+    @Nullable
+    BlockPos getLauncher();
+
+    void setLauncher(@Nullable BlockPos launcher);
 
 }

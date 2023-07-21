@@ -28,10 +28,10 @@ public record TwoByTwo(BlockPos topRight, BlockPos topLeft, BlockPos bottomLeft,
 
     @Nullable
     public static TwoByTwo fromNbt(CompoundTag tag) {
-        BlockPos topRight = NbtHelper.readBlockPos(tag, "topRight");
-        BlockPos topLeft = NbtHelper.readBlockPos(tag, "topLeft");
-        BlockPos bottomLeft = NbtHelper.readBlockPos(tag, "bottomLeft");
-        BlockPos bottomRight = NbtHelper.readBlockPos(tag, "bottomRight");
+        BlockPos topRight = NbtHelper.readNullableBlockPos(tag, "topRight");
+        BlockPos topLeft = NbtHelper.readNullableBlockPos(tag, "topLeft");
+        BlockPos bottomLeft = NbtHelper.readNullableBlockPos(tag, "bottomLeft");
+        BlockPos bottomRight = NbtHelper.readNullableBlockPos(tag, "bottomRight");
         TwoByTwo twoByTwo = new TwoByTwo(topRight, topLeft, bottomLeft, bottomRight);
         for (BlockPos pos : twoByTwo) {
             if (pos == null)
