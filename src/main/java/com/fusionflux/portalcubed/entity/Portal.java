@@ -26,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -40,12 +41,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector2d;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -334,7 +330,19 @@ public class Portal extends Entity {
         if (disableValidation) {
             return true;
         }
-        return validateBehind() && validateFront();
+        return validateCommon() && validateBehind() && validateFront();
+    }
+
+    private boolean validateCommon() {
+        return insideWorldBorder(getBoundingBox(), level().getWorldBorder());
+    }
+
+    private static boolean insideWorldBorder(AABB bb, WorldBorder border) {
+        return
+            bb.minX >= Math.floor(border.getMinX()) &&
+            bb.maxX <= Math.ceil(border.getMaxX()) &&
+            bb.minZ >= Math.floor(border.getMinZ()) &&
+            bb.maxZ <= Math.ceil(border.getMaxZ());
     }
 
     private boolean validateBehind() {
