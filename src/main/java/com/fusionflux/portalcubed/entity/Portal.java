@@ -80,9 +80,6 @@ public class Portal extends Entity {
     private Optional<Vec3> otherAxisW = Optional.empty(), otherAxisH = Optional.empty(), otherNormal = Optional.empty();
     private IPQuaternion transformQuat;
 
-    private VoxelShape crossCollisionThis;
-    private long crossCollisionThisTick = -1;
-
     private final List<EntityReference<PortalListeningEntity>> listeningEntities = new ArrayList<>();
 
     public Portal(EntityType<?> entityType, Level world) {
@@ -576,15 +573,6 @@ public class Portal extends Entity {
             : Shapes.empty();
     }
 
-    public VoxelShape getCrossPortalCollisionShapeThis() {
-        final long tick = level().getGameTime();
-        if (crossCollisionThis == null || crossCollisionThisTick < tick) {
-            crossCollisionThis = calculateCrossPortalCollisionShape(getNormal(), getOriginPos(), null, this);
-            crossCollisionThisTick = tick;
-        }
-        return crossCollisionThis;
-    }
-
     private VoxelShape calculateCrossPortalCollisionShape(Vec3 normal, Vec3 origin, Quaternionf otherRotation, Entity context) {
         origin = origin.subtract(normal.scale(SURFACE_OFFSET));
         final Direction facing = Direction.getNearest(normal.x, normal.y, normal.z);
@@ -594,47 +582,56 @@ public class Portal extends Entity {
             facing, origin
         );
         final VoxelShape clippingShape = Shapes.create(clipping);
-        VoxelShape result = Shapes.empty();
+        final List<VoxelShape> shapes = new ArrayList<>();
         for (final VoxelShape shape : level().getBlockCollisions(context, clipping)) {
-            result = Shapes.joinUnoptimized(result, Shapes.joinUnoptimized(shape, clippingShape, BooleanOp.AND), BooleanOp.OR);
+            final VoxelShape clippedShape =
+                clipping.contains(shape.min(Axis.X), shape.min(Axis.Y), shape.min(Axis.Z)) &&
+                    clipping.contains(shape.max(Axis.X), shape.max(Axis.Y), shape.max(Axis.Z))
+                ? shape : Shapes.joinUnoptimized(shape, clippingShape, BooleanOp.AND);
+            shapes.add(clippedShape);
         }
-        if (otherRotation != null && !result.isEmpty() /* Empty shapes don't need to be translated */) {
+        if (!shapes.isEmpty() /* Empty shapes don't need to be translated */) {
             final Vec3 scaledNormalOffset = getNormal().scale(SURFACE_OFFSET);
             if (facing != getFacingDirection().getOpposite()) {
-                result = result.move(-origin.x, -origin.y, -origin.z);
                 final IPQuaternion transform = getTransformQuat().getConjugated();
-                final MutableObject<VoxelShape> rotatedShape = new MutableObject<>(Shapes.empty());
-                result.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
-                    final Vec3 minT = transform.rotate(new Vec3(x1, y1, z1), false);
-                    final Vec3 maxT = transform.rotate(new Vec3(x2, y2, z2), false);
-                    rotatedShape.setValue(Shapes.joinUnoptimized(
-                        rotatedShape.getValue(),
-                        Shapes.box(
-                            Math.min(minT.x, maxT.x),
-                            Math.min(minT.y, maxT.y),
-                            Math.min(minT.z, maxT.z),
-                            Math.max(minT.x, maxT.x),
-                            Math.max(minT.y, maxT.y),
-                            Math.max(minT.z, maxT.z)
-                        ),
-                        BooleanOp.OR
-                    ));
-                });
-                result = rotatedShape.getValue();
-                result = result.move(
-                    getX() - scaledNormalOffset.x,
-                    getY() - scaledNormalOffset.y,
-                    getZ() - scaledNormalOffset.z
-                );
+                final MutableObject<VoxelShape> result = new MutableObject<>(Shapes.empty());
+                final double originX = origin.x;
+                final double originY = origin.y;
+                final double originZ = origin.z;
+                final double ox = getX() - scaledNormalOffset.x;
+                final double oy = getY() - scaledNormalOffset.y;
+                final double oz = getZ() - scaledNormalOffset.z;
+                for (VoxelShape shape : shapes) {
+                    shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
+                        final Vec3 minT = transform.rotate(new Vec3(x1 - originX, y1 - originY, z1 - originZ), false);
+                        final Vec3 maxT = transform.rotate(new Vec3(x2 - originX, y2 - originY, z2 - originZ), false);
+                        result.setValue(Shapes.joinUnoptimized(
+                            result.getValue(),
+                            Shapes.box(
+                                Math.min(minT.x, maxT.x) + ox,
+                                Math.min(minT.y, maxT.y) + oy,
+                                Math.min(minT.z, maxT.z) + oz,
+                                Math.max(minT.x, maxT.x) + ox,
+                                Math.max(minT.y, maxT.y) + oy,
+                                Math.max(minT.z, maxT.z) + oz
+                            ),
+                            BooleanOp.OR
+                        ));
+                    });
+                }
+                return result.getValue();
             } else {
-                result = result.move(
-                    getX() - origin.x - scaledNormalOffset.x,
-                    getY() - origin.y - scaledNormalOffset.y,
-                    getZ() - origin.z - scaledNormalOffset.z
-                );
+                VoxelShape result = Shapes.empty();
+                final double ox = getX() - origin.x - scaledNormalOffset.x;
+                final double oy = getY() - origin.y - scaledNormalOffset.y;
+                final double oz = getZ() - origin.z - scaledNormalOffset.z;
+                for (VoxelShape shape : shapes) {
+                    result = Shapes.joinUnoptimized(result, shape.move(ox, oy, oz), BooleanOp.OR);
+                }
+                return result;
             }
         }
-        return result;
+        return Shapes.empty();
     }
 
     public Vec3 getCutoutPointInPlane(double xInPlane, double yInPlane) {
