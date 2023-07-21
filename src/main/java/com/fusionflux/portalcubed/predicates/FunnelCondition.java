@@ -16,11 +16,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class InFunnelCondition implements LootItemCondition {
+public class FunnelCondition implements LootItemCondition {
     private final Boolean inFunnel;
     private final Boolean inCfg;
 
-    public InFunnelCondition(Boolean inFunnel, Boolean inCfg) {
+    public FunnelCondition(Boolean inFunnel, Boolean inCfg) {
         this.inFunnel = inFunnel;
         this.inCfg = inCfg;
     }
@@ -49,19 +49,19 @@ public class InFunnelCondition implements LootItemCondition {
         return true;
     }
 
-    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<InFunnelCondition> {
+    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<FunnelCondition> {
         @Override
-        public void serialize(JsonObject json, InFunnelCondition value, JsonSerializationContext serializationContext) {
+        public void serialize(JsonObject json, FunnelCondition value, JsonSerializationContext serializationContext) {
             json.addProperty("in_funnel", value.inFunnel);
         }
 
         @NotNull
         @Override
-        public InFunnelCondition deserialize(JsonObject json, JsonDeserializationContext serializationContext) {
+        public FunnelCondition deserialize(JsonObject json, JsonDeserializationContext serializationContext) {
             if (!json.has("in_funnel") && !json.has("in_cfg")) {
                 throw new JsonSyntaxException("portalcubed:funnel condition must have either in_funnel or in_cfg");
             }
-            return new InFunnelCondition(
+            return new FunnelCondition(
                 getAsOptionalBoolean(json, "in_funnel"),
                 getAsOptionalBoolean(json, "in_cfg")
             );
