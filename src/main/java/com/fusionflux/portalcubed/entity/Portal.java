@@ -607,7 +607,7 @@ public class Portal extends Entity {
                 result.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
                     final Vec3 minT = transform.rotate(new Vec3(x1, y1, z1), false);
                     final Vec3 maxT = transform.rotate(new Vec3(x2, y2, z2), false);
-                    rotatedShape.setValue(Shapes.or(
+                    rotatedShape.setValue(Shapes.joinUnoptimized(
                         rotatedShape.getValue(),
                         Shapes.box(
                             Math.min(minT.x, maxT.x),
@@ -616,7 +616,8 @@ public class Portal extends Entity {
                             Math.max(minT.x, maxT.x),
                             Math.max(minT.y, maxT.y),
                             Math.max(minT.z, maxT.z)
-                        )
+                        ),
+                        BooleanOp.OR
                     ));
                 });
                 result = rotatedShape.getValue();

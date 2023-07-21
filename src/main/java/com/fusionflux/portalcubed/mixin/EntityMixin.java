@@ -36,6 +36,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -161,6 +162,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
 
     @Shadow public abstract Level level();
 
+    @Shadow private Level level;
     @Unique
     private final Map<BlockState, BlockPos> collidingBlocks = new HashMap<>();
     @Unique
@@ -184,6 +186,8 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
+        final ProfilerFiller profiler = level.getProfiler();
+        profiler.push("portalcubed_entity");
 
         Entity thiz = (Entity) (Object) this;
 
@@ -237,6 +241,8 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         }
 
         prevGravDirec = GravityChangerAPI.getGravityDirection(((Entity) (Object) this));
+
+        profiler.pop();
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
