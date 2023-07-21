@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:faith_plate"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.faith_plate.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.faith_plate.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/laser",
+  "criteria": {
+    "launch": {
+      "trigger": "portalcubed:fling",
+      "conditions": {
+	    "force": {
+          "x": {
+            "min": 0
+          },
+          "y": {
+            "min": 0
+          },
+          "z": {
+            "min": 0
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:auto_portal"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.autoportal.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.autoportal.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/root",
+  "criteria": {
+    "auto_portal": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "portalcubed:auto_portal",
+            "properties": {}
+          }
+        ]
+      }
+    }
+  }
+}

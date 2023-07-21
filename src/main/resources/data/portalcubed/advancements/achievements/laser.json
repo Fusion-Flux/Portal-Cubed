@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:laser_emitter"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.laser.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.laser.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/pellet",
+  "criteria": {
+    "laser_damage": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": {
+        "damage": {
+          "type": {
+            "tags": [
+              {
+                "id": "portalcubed:laser",
+                "expected": true
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:hammer"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.hammer_time.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.hammer_time.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/root",
+  "criteria": {
+    "charge_respawn_anchor": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "tag": "portalcubed:configurable_elements"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "tag": "c:wrenches"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

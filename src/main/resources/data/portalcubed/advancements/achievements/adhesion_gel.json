@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:adhesion_gel"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.adhesion_gel.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.adhesion_gel.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "portalcubed:achievements/conversion_gel",
+  "criteria": {
+    "run": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "portalcubed:adhesion_gel",
+        "state": {
+          "up": "true"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 50
+  }
+}

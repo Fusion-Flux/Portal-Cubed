@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:super_pellet"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.pellet_bounce.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.pellet_bounce.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "portalcubed:achievements/pellet",
+  "criteria": {
+    "requirement": {
+      "trigger": "portalcubed:bounce",
+      "conditions": {
+        "pellet": {
+          "type_specific": {
+            "type": "portalcubed:energy_pellet",
+            "bounces": 35,
+	    "starting_life": {
+		"min": 0
+	    }
+          }
+        }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 100
+  }
+}

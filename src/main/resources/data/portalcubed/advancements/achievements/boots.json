@@ -1,0 +1,45 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:long_fall_boots"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.boots.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.boots.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/root",
+  "criteria": {
+    "boots": {
+      "trigger": "minecraft:fall_from_height",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "equipment": {
+                "feet": {
+                  "items": [
+                    "portalcubed:long_fall_boots"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "distance": {
+          "y": {
+            "min": 4
+          }
+        }
+      }
+    }
+  }
+}

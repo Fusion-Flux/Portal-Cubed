@@ -1,0 +1,252 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:long_fall_boots",
+      "nbt": "{Trim:{pattern:tide,material:lapis}}"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.falling_with_style.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.falling_with_style.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "portalcubed:achievements/boots",
+  "criteria": {
+    "armor_trimmed_minecraft:coast_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:coast_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:dune_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:dune_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:eye_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:eye_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:host_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:host_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:raiser_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:raiser_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:rib_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:rib_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:sentry_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:sentry_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:shaper_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:shaper_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:silence_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:silence_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:snout_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:snout_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:spire_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:spire_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:tide_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:tide_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:vex_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:vex_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:ward_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:ward_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:wayfinder_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:wayfinder_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    },
+    "armor_trimmed_minecraft:wild_armor_trim_smithing_template_smithing_trim": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "minecraft:wild_armor_trim_smithing_template_smithing_trim",
+        "ingredients": [
+          {
+            "items": [
+              "portalcubed:long_fall_boots"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "armor_trimmed_minecraft:snout_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:raiser_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:dune_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:tide_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:silence_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:eye_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:spire_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:vex_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:shaper_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:wayfinder_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:coast_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:rib_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:host_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:ward_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:sentry_armor_trim_smithing_template_smithing_trim",
+      "armor_trimmed_minecraft:wild_armor_trim_smithing_template_smithing_trim"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}
