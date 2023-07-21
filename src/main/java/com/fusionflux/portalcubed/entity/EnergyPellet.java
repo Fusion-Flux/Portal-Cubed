@@ -256,6 +256,9 @@ public class EnergyPellet extends Entity implements ItemSupplier, WentThroughPor
 
     @Nullable
     public Entity getThrower() {
+        if (thrower == Util.NIL_UUID) {
+            return null;
+        }
         return ((LevelExt)level()).getEntityByUuid(thrower);
     }
 
