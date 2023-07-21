@@ -122,9 +122,6 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     public abstract boolean equals(Object o);
 
     @Shadow
-    public abstract boolean isNoGravity();
-
-    @Shadow
     public abstract boolean onGround();
 
     @Shadow

@@ -596,7 +596,7 @@ public class Portal extends Entity {
         final VoxelShape clippingShape = Shapes.create(clipping);
         VoxelShape result = Shapes.empty();
         for (final VoxelShape shape : level().getBlockCollisions(context, clipping)) {
-            result = Shapes.or(result, Shapes.joinUnoptimized(shape, clippingShape, BooleanOp.AND));
+            result = Shapes.joinUnoptimized(result, Shapes.joinUnoptimized(shape, clippingShape, BooleanOp.AND), BooleanOp.OR);
         }
         if (otherRotation != null && !result.isEmpty() /* Empty shapes don't need to be translated */) {
             final Vec3 scaledNormalOffset = getNormal().scale(SURFACE_OFFSET);
