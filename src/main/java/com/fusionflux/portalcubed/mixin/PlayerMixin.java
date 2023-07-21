@@ -2,10 +2,10 @@ package com.fusionflux.portalcubed.mixin;
 
 import com.fusionflux.portalcubed.PortalCubed;
 import com.fusionflux.portalcubed.PortalCubedConfig;
+import com.fusionflux.portalcubed.PortalCubedGameRules;
 import com.fusionflux.portalcubed.TeleportResult;
 import com.fusionflux.portalcubed.accessor.CalledValues;
 import com.fusionflux.portalcubed.accessor.EntityExt;
-import com.fusionflux.portalcubed.client.MixinPCClientAccessor;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
@@ -137,9 +137,20 @@ public abstract class PlayerMixin extends LivingEntity implements EntityExt {
             }
         }
 
-        if (!level().isClientSide || !MixinPCClientAccessor.allowCfg() || !isShiftKeyDown()) {
+        if (!(
+            level().isClientSide
+                ? pc$allowCfgClient()
+                : level().getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH)
+            ) || !isShiftKeyDown()
+        ) {
             cfg = false;
         }
+    }
+
+    @Unique
+    @ClientOnly
+    private static boolean pc$allowCfgClient() {
+        return PortalCubedClient.allowCfg;
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
