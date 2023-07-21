@@ -47,7 +47,9 @@ public class BounceTrigger extends SimpleCriterionTrigger<BounceTrigger.TriggerI
         @Override
         public JsonObject serializeToJson(SerializationContext context) {
             final JsonObject result = super.serializeToJson(context);
-            result.add("pellet", pellet.serializeToJson());
+            if (pellet != EntityPredicate.ANY) {
+                result.add("pellet", pellet.serializeToJson());
+            }
             return result;
         }
     }
