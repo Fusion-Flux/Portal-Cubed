@@ -258,4 +258,8 @@ public class EnergyPellet extends Entity implements ItemSupplier, WentThroughPor
     public Entity getThrower() {
         return ((LevelExt)level()).getEntityByUuid(thrower);
     }
+
+    public void setThrower(Entity thrower) {
+        this.thrower = thrower.getUUID();
+    }
 }

@@ -44,6 +44,7 @@ public class EnergyPelletItem extends Item {
         if (isSuper) {
             pellet.resetLife(-1);
         }
+        pellet.setThrower(user);
         world.addFreshEntity(pellet);
         return InteractionResultHolder.consume(item);
     }
