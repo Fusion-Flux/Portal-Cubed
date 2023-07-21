@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.predicates;
+package com.fusionflux.portalcubed.advancements.conditions;
 
 import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.google.common.collect.ImmutableSet;

@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.predicates;
+package com.fusionflux.portalcubed.advancements.conditions;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

@@ -2,18 +2,22 @@ package com.fusionflux.portalcubed.entity;
 
 import com.fusionflux.portalcubed.PortalCubedConfig;
 import com.fusionflux.portalcubed.accessor.EntityExt;
+import com.fusionflux.portalcubed.accessor.LevelExt;
+import com.fusionflux.portalcubed.advancements.triggers.PortalCubedTriggers;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.particle.DecalParticleOption;
 import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
+import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -32,13 +36,18 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSources;
 
-public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThroughPortalListener {
-    private static final EntityDataAccessor<Integer> STARTING_LIFE = SynchedEntityData.defineId(EnergyPelletEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> LIFE = SynchedEntityData.defineId(EnergyPelletEntity.class, EntityDataSerializers.INT);
+public class EnergyPellet extends Entity implements ItemSupplier, WentThroughPortalListener {
+    private static final EntityDataAccessor<Integer> STARTING_LIFE = SynchedEntityData.defineId(EnergyPellet.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> LIFE = SynchedEntityData.defineId(EnergyPellet.class, EntityDataSerializers.INT);
 
-    public EnergyPelletEntity(EntityType<?> type, Level world) {
+    private int bounces;
+    private UUID thrower = Util.NIL_UUID;
+
+    public EnergyPellet(EntityType<?> type, Level world) {
         super(type, world);
     }
 
@@ -51,11 +60,15 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
     @Override
     protected void readAdditionalSaveData(CompoundTag nbt) {
         setLife(nbt.getInt("Life"));
+        bounces = nbt.getInt("Bounces");
+        thrower = nbt.getUUID("Thrower");
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putInt("Life", getLife());
+        nbt.putInt("Bounces", bounces);
+        nbt.putUUID("Thrower", thrower);
     }
 
     public int getStartingLife() {
@@ -123,7 +136,7 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
         }
         setDeltaMovement(vel);
         if (bouncedDir != null) {
-            level().playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
+            bounced();
             if (level() instanceof ServerLevel serverLevel) {
                 final Vec3 spawnPos = serverLevel.clip(new ClipContext(
                     position(),
@@ -184,8 +197,20 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
             final double mag = vel.length();
             setDeltaMovement(Math.cos(newAngle) * mag, vel.y, Math.sin(newAngle) * mag);
             level().playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
+            bounced();
         } else {
             kill(entity);
+        }
+    }
+
+    private void bounced() {
+        level().playSound(null, this, PortalCubedSounds.PELLET_BOUNCE_EVENT, SoundSource.HOSTILE, 0.4f, 1f);
+        bounces++;
+        if (level() instanceof ServerLevel serverLevel && thrower != Util.NIL_UUID) {
+            final ServerPlayer player = (ServerPlayer)serverLevel.getPlayerByUUID(thrower);
+            if (player != null) {
+                PortalCubedTriggers.BOUNCE.trigger(player, this);
+            }
         }
     }
 
@@ -198,7 +223,7 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
             );
         }
         if (entity != null) {
-            entity.hurt(pcSources(level()).vaporization(), PortalCubedConfig.pelletDamage);
+            entity.hurt(pcSources(level()).vaporization(this, getThrower()), PortalCubedConfig.pelletDamage);
         }
         kill();
     }
@@ -217,5 +242,18 @@ public class EnergyPelletEntity extends Entity implements ItemSupplier, WentThro
     @Override
     public void wentThroughPortal(Portal portal) {
         setLife(getStartingLife());
+    }
+
+    public int getBounces() {
+        return bounces;
+    }
+
+    public UUID getThrowerUUID() {
+        return thrower;
+    }
+
+    @Nullable
+    public Entity getThrower() {
+        return ((LevelExt)level()).getEntityByUuid(thrower);
     }
 }

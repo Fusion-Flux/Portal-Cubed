@@ -1,13 +1,16 @@
 package com.fusionflux.portalcubed.mechanics;
 
 import com.fusionflux.portalcubed.accessor.LevelExt;
+import com.fusionflux.portalcubed.entity.EnergyPellet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class PortalCubedDamageSources {
 
@@ -36,6 +39,14 @@ public class PortalCubedDamageSources {
         return new DamageSource(damageTypes.getHolderOrThrow(key));
     }
 
+    private DamageSource source(ResourceKey<DamageType> damageTypeKey, @Nullable Entity entity) {
+        return new DamageSource(this.damageTypes.getHolderOrThrow(damageTypeKey), entity);
+    }
+
+    private DamageSource source(ResourceKey<DamageType> damageTypeKey, @Nullable Entity causingEntity, @Nullable Entity directEntity) {
+        return new DamageSource(this.damageTypes.getHolderOrThrow(damageTypeKey), causingEntity, directEntity);
+    }
+
     public DamageSource acid() {
         return acid;
     }
@@ -46,6 +57,10 @@ public class PortalCubedDamageSources {
 
     public DamageSource vaporization() {
         return vaporization;
+    }
+
+    public DamageSource vaporization(EnergyPellet pellet, @Nullable Entity thrower) {
+        return source(PortalCubedDamageTypes.VAPORIZATION, pellet, thrower);
     }
 
     public DamageSource laser() {

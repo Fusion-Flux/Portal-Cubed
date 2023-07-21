@@ -4,6 +4,7 @@ import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.GravityChannel;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.advancements.PortalCubedAdvancements;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.TallButtonVariant;
@@ -25,7 +26,6 @@ import com.fusionflux.portalcubed.gui.FaithPlateScreenHandler;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.packet.PortalCubedServerPackets;
 import com.fusionflux.portalcubed.particle.PortalCubedParticleTypes;
-import com.fusionflux.portalcubed.predicates.PortalCubedConditions;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.IPQuaternion;
 import com.google.gson.JsonElement;
@@ -273,7 +273,7 @@ public class PortalCubed implements ModInitializer {
         PortalCubedSounds.registerSounds();
         PortalCubedGameRules.register();
         PortalCubedParticleTypes.register();
-        PortalCubedConditions.register();
+        PortalCubedAdvancements.register();
 
         PortalTabsLoader.load(mod);
         BlockContentRegistries.FLAMMABLE.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));

@@ -3,7 +3,6 @@ package com.fusionflux.portalcubed.entity;
 import com.fusionflux.portalcubed.blocks.BaseGel;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.entity.beams.ExcursionFunnelEntity;
-
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -127,7 +126,7 @@ public class PortalCubedEntities {
         .setDimensions(EntityDimensions.scalable(0.1875f, 0.1875f))
         .build();
 
-    public static final EntityType<EnergyPelletEntity> ENERGY_PELLET = QuiltEntityTypeBuilder.create(MobCategory.MISC, EnergyPelletEntity::new)
+    public static final EntityType<EnergyPellet> ENERGY_PELLET = QuiltEntityTypeBuilder.create(MobCategory.MISC, EnergyPellet::new)
         .setDimensions(EntityDimensions.scalable(0.25f, 0.25f))
         .build();
 

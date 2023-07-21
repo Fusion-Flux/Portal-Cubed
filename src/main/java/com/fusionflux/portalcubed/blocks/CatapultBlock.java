@@ -3,7 +3,7 @@ package com.fusionflux.portalcubed.blocks;
 import com.fusionflux.portalcubed.accessor.BlockCollisionTrigger;
 import com.fusionflux.portalcubed.accessor.EntityExt;
 import com.fusionflux.portalcubed.blocks.blockentities.CatapultBlockEntity;
-import com.fusionflux.portalcubed.entity.EnergyPelletEntity;
+import com.fusionflux.portalcubed.entity.EnergyPellet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -46,7 +46,7 @@ public class CatapultBlock extends SpecialHiddenBlockWithEntity implements Block
 
     @Override
     public void onEntityEnter(BlockState state, Level world, BlockPos pos, Entity entity) {
-        if (entity instanceof EntityExt ext && !(entity instanceof EnergyPelletEntity)) {
+        if (entity instanceof EntityExt ext && !(entity instanceof EnergyPellet)) {
             world.getBlockEntity(pos, PortalCubedBlocks.CATAPULT_BLOCK_ENTITY).ifPresent(ext::collidedWithCatapult);
         }
     }
