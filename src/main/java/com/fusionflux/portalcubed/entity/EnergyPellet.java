@@ -59,6 +59,7 @@ public class EnergyPellet extends Entity implements ItemSupplier, WentThroughPor
 
     @Override
     protected void readAdditionalSaveData(CompoundTag nbt) {
+        setStartingLife(nbt.getInt("StartingLife"));
         setLife(nbt.getInt("Life"));
         bounces = nbt.getInt("Bounces");
         thrower = nbt.getUUID("Thrower");
@@ -66,6 +67,7 @@ public class EnergyPellet extends Entity implements ItemSupplier, WentThroughPor
 
     @Override
     protected void addAdditionalSaveData(CompoundTag nbt) {
+        nbt.putInt("StartingLife", getStartingLife());
         nbt.putInt("Life", getLife());
         nbt.putInt("Bounces", bounces);
         nbt.putUUID("Thrower", thrower);

@@ -12,16 +12,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergyPelletPredicate implements EntitySubPredicate {
+    private final MinMaxBounds.Ints startingLife;
+    private final MinMaxBounds.Ints life;
     private final MinMaxBounds.Ints bounces;
     private final EntityPredicate thrower;
 
-    public EnergyPelletPredicate(MinMaxBounds.Ints bounces, EntityPredicate thrower) {
+    public EnergyPelletPredicate(MinMaxBounds.Ints startingLife, MinMaxBounds.Ints life, MinMaxBounds.Ints bounces, EntityPredicate thrower) {
+        this.startingLife = startingLife;
+        this.life = life;
         this.bounces = bounces;
         this.thrower = thrower;
     }
 
     public static EnergyPelletPredicate fromJson(JsonObject json) {
         return new EnergyPelletPredicate(
+            MinMaxBounds.Ints.fromJson(json.get("starting_life")),
+            MinMaxBounds.Ints.fromJson(json.get("life")),
             MinMaxBounds.Ints.fromJson(json.get("bounces")),
             EntityPredicate.fromJson(json.get("thrower"))
         );
@@ -30,6 +36,12 @@ public class EnergyPelletPredicate implements EntitySubPredicate {
     @Override
     public boolean matches(Entity entity, ServerLevel level, @Nullable Vec3 pos) {
         if (!(entity instanceof EnergyPellet energyPellet)) {
+            return false;
+        }
+        if (!startingLife.matches(energyPellet.getStartingLife())) {
+            return false;
+        }
+        if (!life.matches(energyPellet.getLife())) {
             return false;
         }
         if (!bounces.matches(energyPellet.getBounces())) {
@@ -46,6 +58,12 @@ public class EnergyPelletPredicate implements EntitySubPredicate {
     @Override
     public JsonObject serializeCustomData() {
         final JsonObject result = new JsonObject();
+        if (!startingLife.isAny()) {
+            result.add("starting_life", bounces.serializeToJson());
+        }
+        if (!life.isAny()) {
+            result.add("life", bounces.serializeToJson());
+        }
         if (!bounces.isAny()) {
             result.add("bounces", bounces.serializeToJson());
         }
