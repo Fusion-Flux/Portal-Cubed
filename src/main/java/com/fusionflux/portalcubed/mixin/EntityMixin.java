@@ -21,6 +21,7 @@ import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.fusionflux.portalcubed.util.GeneralUtil;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -680,5 +681,10 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
             Mth.lerp(useProgress, velocityHelper.getBlockPos().getY() + 0.5, velocityHelper.getDestination().getY() + 0.5),
             Mth.lerp(useProgress, velocityHelper.getBlockPos().getZ() + 0.5, velocityHelper.getDestination().getZ() + 0.5)
         ).subtract(position()).subtract(velocityHelperOffset));
+    }
+
+    @Inject(method = "resetFallDistance", at = @At("HEAD"))
+    private void resetLauncher(CallbackInfo ci) {
+        PortalCubedComponents.ENTITY_COMPONENT.get(this).setLauncher(null);
     }
 }
