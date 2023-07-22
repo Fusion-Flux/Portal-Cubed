@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -20,9 +21,11 @@ import java.util.Set;
 
 public class LauncherCondition implements LootItemCondition {
     private final LocationPredicate location;
+    private final DistancePredicate distance;
 
-    public LauncherCondition(LocationPredicate location) {
+    public LauncherCondition(LocationPredicate location, DistancePredicate distance) {
         this.location = location;
+        this.distance = distance;
     }
 
     @NotNull
@@ -39,16 +42,20 @@ public class LauncherCondition implements LootItemCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
-        if (location != LocationPredicate.ANY) {
-            final Entity thisEntity = lootContext.getParam(LootContextParams.THIS_ENTITY);
-            final BlockPos launcher = PortalCubedComponents.ENTITY_COMPONENT.get(thisEntity).getLauncher();
-            if (launcher == null) {
-                return false;
-            }
-            //noinspection RedundantIfStatement
-            if (!location.matches((ServerLevel)thisEntity.level(), launcher.getX() + 0.5, launcher.getY() + 0.5, launcher.getZ() + 0.5)) {
-                return false;
-            }
+        final Entity thisEntity = lootContext.getParam(LootContextParams.THIS_ENTITY);
+        final BlockPos launcher = PortalCubedComponents.ENTITY_COMPONENT.get(thisEntity).getLauncher();
+        if (launcher == null) {
+            return false;
+        }
+        if (!location.matches((ServerLevel)thisEntity.level(), launcher.getX() + 0.5, launcher.getY() + 0.5, launcher.getZ() + 0.5)) {
+            return false;
+        }
+        //noinspection RedundantIfStatement
+        if (!distance.matches(
+            thisEntity.getX(), thisEntity.getY(), thisEntity.getZ(),
+            launcher.getX() + 0.5, launcher.getY() + 0.5, launcher.getZ() + 0.5
+        )) {
+            return false;
         }
         return true;
     }
@@ -59,13 +66,17 @@ public class LauncherCondition implements LootItemCondition {
             if (value.location != LocationPredicate.ANY) {
                 json.add("location", value.location.serializeToJson());
             }
+            if (value.distance != DistancePredicate.ANY) {
+                json.add("distance", value.distance.serializeToJson());
+            }
         }
 
         @NotNull
         @Override
         public LauncherCondition deserialize(JsonObject json, JsonDeserializationContext serializationContext) {
             return new LauncherCondition(
-                LocationPredicate.fromJson(json.get("location"))
+                LocationPredicate.fromJson(json.get("location")),
+                DistancePredicate.fromJson(json.get("distance"))
             );
         }
     }
