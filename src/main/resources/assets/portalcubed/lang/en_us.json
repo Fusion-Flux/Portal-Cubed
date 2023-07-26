@@ -465,6 +465,9 @@
   "key.portalcubed.remove_portals" : "Remove Portals",
   "key.portalcubed.toggle_hidden_blocks" : "Toggle Hidden Blocks",
 
+  "portalcubed.physics_entity.locked.true": "Physics entity is now locked",
+  "portalcubed.physics_entity.locked.false": "Physics entity is now unlocked",
+
   "portalcubed.auto_portal.set_portal_type": "Set portal type to %s",
   "portalcubed.portal_type.primary": "Primary",
   "portalcubed.portal_type.secondary": "Secondary",

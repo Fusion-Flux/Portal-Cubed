@@ -45,7 +45,7 @@ public final class HolderComponent implements AutoSyncedComponent {
 
     public boolean hold(CorePhysicsEntity entityToHold) {
         Objects.requireNonNull(entityToHold, "The entity to hold can not be null!");
-        if (entityBeingHeld() == null && !entityToHold.fizzling()) {
+        if (entityBeingHeld() == null && !entityToHold.fizzling() && !entityToHold.isLocked()) {
             entityToHold.setHolderUUID(Optional.of(owner.getUUID()));
             this.heldEntity = entityToHold;
             RayonIntegration.INSTANCE.setNoGravity(heldEntity, true);

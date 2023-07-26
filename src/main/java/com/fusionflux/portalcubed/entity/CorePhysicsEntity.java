@@ -14,6 +14,7 @@ import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -23,11 +24,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -109,6 +112,31 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     }
 
     @Override
+    @NotNull
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (!player.isCreative() || level().isClientSide())
+            return InteractionResult.PASS;
+        ItemStack stack = player.getItemInHand(hand);
+        if (!stack.is(PortalCubedItems.HAMMER))
+            return InteractionResult.PASS;
+        // toggle
+        Boolean locked = !entityData.get(LOCKED);
+        entityData.set(LOCKED, locked);
+
+        if (locked) {
+            getHolderUUID().ifPresent(uuid -> {
+                Player holder = level().getPlayerByUUID(uuid);
+                if (holder != null) {
+                    PortalCubedComponents.HOLDER_COMPONENT.get(holder).stopHolding();
+                }
+            });
+        }
+
+        player.displayClientMessage(Component.translatable("portalcubed.physics_entity.locked." + locked), true);
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
     public boolean shouldShowName() {
         return false;
     }
@@ -141,12 +169,14 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     private static final EntityDataAccessor<Optional<UUID>> HOLDER_UUID = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Boolean> ON_BUTTON = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> LOCKED = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.BOOLEAN);
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.getEntityData().define(HOLDER_UUID, Optional.empty());
         this.getEntityData().define(ON_BUTTON, false);
+        this.getEntityData().define(LOCKED, false);
     }
 
     public Optional<UUID> getHolderUUID() {
@@ -163,6 +193,10 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     public void setOnButton(boolean on) {
         getEntityData().set(ON_BUTTON, on);
+    }
+
+    public boolean isLocked() {
+        return entityData.get(LOCKED);
     }
 
     public void setRotYaw(float yaw) {
@@ -360,6 +394,18 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
         } else {
             hasCollided = false;
         }
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        entityData.set(LOCKED, compound.getBoolean("Locked"));
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean("Locked", isLocked());
     }
 
     protected SoundEvent getCollisionSound() {
