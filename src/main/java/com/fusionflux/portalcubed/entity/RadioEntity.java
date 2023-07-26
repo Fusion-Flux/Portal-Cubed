@@ -119,6 +119,9 @@ public class RadioEntity extends CorePhysicsEntity  {
     @NotNull
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (player.isShiftKeyDown())
+            return super.mobInteract(player, hand);
+
         if (!level().isClientSide && player.getItemInHand(hand).is(PortalCubedItems.WRENCHES)) {
             setAllowMute(!isAllowMute());
             if (isAllowMute()) {

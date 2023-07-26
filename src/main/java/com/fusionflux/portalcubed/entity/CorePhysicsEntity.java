@@ -114,7 +114,8 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     @Override
     @NotNull
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (!player.isCreative() || level().isClientSide())
+        Level level = level();
+        if (level.isClientSide() || !player.isCreative() || !player.isShiftKeyDown())
             return InteractionResult.PASS;
         ItemStack stack = player.getItemInHand(hand);
         if (!stack.is(PortalCubedItems.HAMMER))
