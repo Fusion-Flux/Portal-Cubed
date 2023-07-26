@@ -14,7 +14,7 @@
     "announce_to_chat": true,
     "hidden": false
   },
-  "parent": "portalcubed:achievements/laser",
+  "parent": "portalcubed:achievements/pellet",
   "criteria": {
     "goo": {
       "trigger": "minecraft:enter_block",

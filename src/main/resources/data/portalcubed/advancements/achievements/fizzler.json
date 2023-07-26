@@ -1,0 +1,45 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:fizzler_emitter"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.fizzler.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.fizzler.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/auto_portal",
+  "criteria": {
+    "p1": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "portalcubed:fizzler"
+      }
+    },
+    "p2": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "portalcubed:portal_1_fizzler"
+      }
+    },
+    "oa": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "portalcubed:old_aperture_fizzler"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "p1",
+      "p2",
+      "oa"
+    ]
+  ]
+}

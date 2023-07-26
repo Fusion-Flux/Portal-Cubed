@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "portalcubed:portal",
+    "portalcubed:energy_pellet",
+    "portalcubed:excursion_funnel",
+    "portalcubed:repulsion_gel_blob",
+    "portalcubed:propulsion_gel_blob",
+    "portalcubed:conversion_gel_blob",
+    "portalcubed:adhesion_gel_blob",
+    "portalcubed:reflection_gel_blob"
+  ]
+}

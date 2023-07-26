@@ -41,6 +41,18 @@
     {
       "translate": "tooltip.portalcubed.hammer.4",
       "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.empty",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.hammer.5",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.hammer.6",
+      "color": "gray"
     }
   ],
   "schrodinger_cube": [
