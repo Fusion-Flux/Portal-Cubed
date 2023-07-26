@@ -1,12 +1,10 @@
 package com.fusionflux.portalcubed.entity;
 
+import com.fusionflux.portalcubed.util.LerpedQuaternion;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import com.fusionflux.portalcubed.util.LerpedQuaternion;
 import org.joml.Quaternionf;
 import org.quiltmc.qsl.entity.networking.api.tracked_data.QuiltTrackedDataHandlerRegistry;
 

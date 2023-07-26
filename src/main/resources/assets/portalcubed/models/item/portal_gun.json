@@ -248,7 +248,8 @@
 		{"predicate": {"custom_model_data": 103}, "model": "portalcubed:item/legacy_portal_gun_p_body"},
 		{"predicate": {"custom_model_data": 104}, "model": "portalcubed:item/legacy_portal_gun_reloaded"},
 
-		{"predicate": {"custom_model_data": 201}, "model": "portalcubed:item/mel_portal_gun"}
+		{"predicate": {"custom_model_data": 201}, "model": "portalcubed:item/mel_portal_gun"},
+		{"predicate": {"custom_model_data": 202}, "model": "portalcubed:item/beta_portal_gun"}
 	],
 	"display": {
 		"thirdperson_righthand": {

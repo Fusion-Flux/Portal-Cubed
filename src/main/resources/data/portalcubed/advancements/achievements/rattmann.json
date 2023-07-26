@@ -1,0 +1,65 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:beans"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.rattmann.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.rattmann.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "portalcubed:achievements/hoopy",
+  "criteria": {
+    "rattmann": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "portalcubed:beans"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:chair"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:computer"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:mug"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:jug"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:radio"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:hoopy"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 50
+  }
+}

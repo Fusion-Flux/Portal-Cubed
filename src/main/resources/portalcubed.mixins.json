@@ -14,7 +14,7 @@
     "CreativeModeTabsAccessor",
     "DispenserBlockAccessor",
     "EntityMixin",
-    "EntityPositionSourceAccessor",
+    "EntitySubPredicate_TypesMixin",
     "InventoryMixin",
     "ItemMixin",
     "LevelMixin",
@@ -62,7 +62,6 @@
     "client.SimpleBakedModelAccessor",
     "client.SoundEngineMixin",
     "client.SpriteContentsAccessor",
-    "client.TextureAtlasAccessor",
     "client.VertexConsumerMixin"
   ],
   "injectors": {

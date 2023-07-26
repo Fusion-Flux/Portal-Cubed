@@ -1,0 +1,179 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:auto_portal",
+      "nbt": "{Enchantments:[{id:infinity,lvl:1}]}"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.rainbow_autoportals.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.rainbow_autoportals.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "portalcubed:achievements/auto_portal",
+  "criteria": {
+    "red_autoportal": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "portalcubed:auto_portal"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:red_dye",
+                "minecraft:pink_dye"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "orange_autoportal": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "portalcubed:auto_portal"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:orange_dye"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "yellow_autoportal": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "portalcubed:auto_portal"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:yellow_dye"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "green_autoportal": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "portalcubed:auto_portal"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:lime_dye",
+                "minecraft:green_dye"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "blue_autoportal": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "portalcubed:auto_portal"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:blue_dye",
+                "minecraft:cyan_dye",
+                "minecraft:light_blue_dye"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "purple_autoportal": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "portalcubed:auto_portal"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:purple_dye",
+                "minecraft:magenta_dye"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 100
+  }
+}

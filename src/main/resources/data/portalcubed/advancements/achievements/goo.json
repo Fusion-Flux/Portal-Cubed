@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:toxic_goo_bucket"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.goo.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.goo.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/laser",
+  "criteria": {
+    "goo": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "portalcubed:toxic_goo"
+      }
+    }
+  }
+}

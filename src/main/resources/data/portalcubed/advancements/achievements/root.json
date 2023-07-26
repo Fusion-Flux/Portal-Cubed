@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:portal_gun"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.root.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.root.description"
+    },
+    "background": "portalcubed:textures/block/white_half_panel.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "portal_gun": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "portalcubed:portal_gun"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

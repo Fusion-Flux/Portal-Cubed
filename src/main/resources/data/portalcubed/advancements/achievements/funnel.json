@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:excursion_funnel_emitter"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.funnel.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.funnel.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/light_bridge",
+  "criteria": {
+    "funnel": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "portalcubed:funnel",
+            "in_funnel": true
+          }
+        ]
+      }
+    }
+  }
+}

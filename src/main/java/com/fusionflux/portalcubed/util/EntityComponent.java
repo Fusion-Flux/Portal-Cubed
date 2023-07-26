@@ -1,12 +1,15 @@
 package com.fusionflux.portalcubed.util;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +29,9 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
     Vec3 teleportVelocity = Vec3.ZERO;
 
     Vec3 serverVelForGel = Vec3.ZERO;
+
+    @Nullable
+    private BlockPos launcher;
 
     public EntityComponent(Entity entity) {
         this.entity = entity;
@@ -125,6 +131,18 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
     }
 
+    @Nullable
+    @Override
+    public BlockPos getLauncher() {
+        return launcher;
+    }
+
+    @Override
+    public void setLauncher(@Nullable BlockPos launcher) {
+        this.launcher = launcher;
+        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+    }
+
     @Override
     public void readFromNbt(CompoundTag tag) {
         int size = tag.getInt("size");
@@ -145,6 +163,8 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         this.setServerVelForGel(NbtHelper.getVec3d(tag, "gelVelocity"));
 
         setCanFireGel(tag.getBoolean("canFireGel"));
+
+        setLauncher(NbtHelper.readNullableBlockPos(tag, "launcher"));
     }
 
     @Override
@@ -164,5 +184,9 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
         NbtHelper.putVec3d(tag, "gelVelocity", this.getServerVelForGel());
 
         tag.putBoolean("canFireGel", canFireGel);
+
+        if (launcher != null) {
+            tag.put("launcher", NbtUtils.writeBlockPos(launcher));
+        }
     }
 }

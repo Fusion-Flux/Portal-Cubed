@@ -49,7 +49,7 @@ public class NbtHelper {
     }
 
     @Nullable
-    public static BlockPos readBlockPos(CompoundTag tag, String key) {
+    public static BlockPos readNullableBlockPos(CompoundTag tag, String key) {
         if (!tag.contains(key, Tag.TAG_COMPOUND))
             return null;
         CompoundTag pos = tag.getCompound(key);

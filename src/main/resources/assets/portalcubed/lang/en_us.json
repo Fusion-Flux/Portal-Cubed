@@ -5,13 +5,17 @@
 
   "subtitles.portalcubed.gel_bounce": "Something bounces on propulsion gel",
   "subtitles.portalcubed.gel_run": "Something slides on propulsion gel",
-  "subtitles.portalcubed.portal_gun_secondary_fire": "Portal gun secondary fire",
-  "subtitles.portalcubed.portal_gun_primary_fire": "Portal gun primary fire",
-  "subtitles.portalcubed.portal_invalid_surface": "Portal gun failed",
+  "subtitles.portalcubed.gel_blob_splash": "Gel blob splashes",
+
+  "subtitles.portalcubed.portal_gun_secondary_fire": "Portal gun shoots secondary portal",
+  "subtitles.portalcubed.portal_gun_primary_fire": "Portal gun shoots primary portal",
+  "subtitles.portalcubed.portal_invalid_surface": "Portal gun shot fails",
 
   "subtitles.portalcubed.portal_open": "Portal opens",
   "subtitles.portalcubed.portal_close": "Portal closes",
   "subtitles.portalcubed.portal_fizzle": "Portal fizzles",
+  "subtitles.portalcubed.portal_enter": "Something enters a portal",
+  "subtitles.portalcubed.portal_exit": "Something exits a portal",
 
   "subtitles.portalcubed.material_emancipation": "Something disintegrates",
 
@@ -21,15 +25,15 @@
   "subtitles.portalcubed.laser.node_deactivate": "Laser node deactivates",
   "subtitles.portalcubed.laser.node_sing": "Laser node sings",
 
-
   "subtitles.portalcubed.pedestal_button_press": "Switch activates",
   "subtitles.portalcubed.pedestal_button_release": "Switch deactivates",
   "subtitles.portalcubed.floor_button_press": "Button activates",
   "subtitles.portalcubed.floor_button_release": "Button deactivates",
 
   "subtitles.portalcubed.rocket.fire": "Rocket launches",
-  "subtitles.portalcubed.rocket.locked": "Rocket locked",
-  "subtitles.portalcubed.rocket.locking": "Rocket locking",
+  "subtitles.portalcubed.rocket.locked": "Rocket turret fires",
+  "subtitles.portalcubed.rocket.locking": "Rocket turret locks on",
+  "subtitles.portalcubed.rocket.explosion": "Rocket explodes",
 
   "subtitles.portalcubed.pellet.bounce": "Energy pellet bounces",
   "subtitles.portalcubed.pellet.explode": "Energy pellet explodes",
@@ -40,6 +44,68 @@
   "subtitles.portalcubed.faith_plate": "Faith plate activates",
 
 
+  "advancement.portalcubed.root.title": "Portal Cubed",
+  "advancement.portalcubed.root.description": "Welcome to Aperture Science! You're here because we want the best, and you are it.",
+
+  "advancement.portalcubed.hammer_time.title": "Stop - Hammer Time!",
+  "advancement.portalcubed.hammer_time.description": "Use a Hammer to configure a test element",
+
+  "advancement.portalcubed.radio.title": "Tunes to Test to",
+  "advancement.portalcubed.radio.description": "Obtain a Radio",
+  "advancement.portalcubed.cubes.title": "Cubes to Keep You Company",
+  "advancement.portalcubed.cubes.description": "Obtain one of every cube variant",
+  "advancement.portalcubed.hoopy.title": "The Next Big Thing",
+  "advancement.portalcubed.hoopy.description": "Hold Hoopy the Hoop",
+  "advancement.portalcubed.rattmann.title": "I am Rattmann",
+  "advancement.portalcubed.rattmann.description": "Obtain every prop that can be found in a Rattmann den",
+
+  "advancement.portalcubed.boots.title": "Good Work, Boots",
+  "advancement.portalcubed.boots.description": "Prevent fall damage using the Long Fall Boots",
+  "advancement.portalcubed.falling_with_style.title": "Falling With Style",
+  "advancement.portalcubed.falling_with_style.description": "Trim a pair of Long Fall Boots",
+  "advancement.portalcubed.feather_falling_boots.title": "But Why?!",
+  "advancement.portalcubed.feather_falling_boots.description": "Enchant a pair of Long Fall Boots with Feather Falling",
+
+  "advancement.portalcubed.autoportal.title": "That Portal Was Framed",
+  "advancement.portalcubed.autoportal.description": "Place an Autoportal",
+  "advancement.portalcubed.rainbow_autoportals.title": "Pretty Painted Portal Producers",
+  "advancement.portalcubed.rainbow_autoportals.description": "Use Red, Orange, Yellow, Green, Blue, and Purple dyes on Autoportals. Any shade of each color works.",
+
+  "advancement.portalcubed.pellet.title": "Handle With Care",
+  "advancement.portalcubed.pellet.description": "Obtain a High Energy Pellet",
+  "advancement.portalcubed.pellet_bounce.title": "Volleyball World Champion",
+  "advancement.portalcubed.pellet_bounce.description": "Bounce a High Energy Pellet 35 times before it explodes",
+
+  "advancement.portalcubed.laser.title": "It Burns, Ah!",
+  "advancement.portalcubed.laser.description": "Touch a Thermal Discouragement Beam and become thermally discouraged",
+
+  "advancement.portalcubed.goo.title": "The Floor is Failure",
+  "advancement.portalcubed.goo.description": "Submerse yourself in a pool of Toxic Goo and receive an unsatisfactory mark to your record",
+
+  "advancement.portalcubed.faith_plate.title": "Soaring Through the Air...",
+  "advancement.portalcubed.faith_plate.description": "Launch yourself from an Aerial Faith Plate",
+
+  "advancement.portalcubed.light_bridge.title": "Walking on Sunshine",
+  "advancement.portalcubed.light_bridge.description": "Step onto a Hard Light Bridge",
+
+  "advancement.portalcubed.funnel.title": "Look Cave, No Hands!",
+  "advancement.portalcubed.funnel.description": "Take a ride in an Excursion Funnel",
+  "advancement.portalcubed.crouch_fly.title": "Sneaky Aviation",
+  "advancement.portalcubed.crouch_fly.description": "Activate the Crouch Fly Glitch",
+
+  "advancement.portalcubed.space_core.title": "Spaaaaaaaaaaaaaaaace!",
+  "advancement.portalcubed.space_core.description": "Take Space Core to y:500 or higher",
+
+  "advancement.portalcubed.repulsion_gel.title": "It's a Lively One",
+  "advancement.portalcubed.repulsion_gel.description": "Bounce off Repulsion Gel for the first time",
+  "advancement.portalcubed.propulsion_gel.title": "Gotta Go Fast!",
+  "advancement.portalcubed.propulsion_gel.description": "Slide on Propulsion Gel for the first time",
+  "advancement.portalcubed.conversion_gel.title": "Portal Here, There, Anywhere!",
+  "advancement.portalcubed.conversion_gel.description": "Shoot a portal on Conversion Gel for the first time",
+  "advancement.portalcubed.adhesion_gel.title": "Nice Try, Gravity",
+  "advancement.portalcubed.adhesion_gel.description": "Stand on the ceiling with Adhesion Gel",
+
+
   "tooltip.portalcubed.hammer_interaction": "Interact with Hammer:",
   "tooltip.portalcubed.dye_interaction": "Interact with Dye:",
   "tooltip.portalcubed.name_tag_interaction": "Interact with Name Tag:",
@@ -47,14 +113,15 @@
   "tooltip.portalcubed.empty": "",
 
   "tooltip.portalcubed.hammer.1": "Used to configure various Test Elements.",
-  "tooltip.portalcubed.hammer.2": "Required to turn cubes and other props",
-  "tooltip.portalcubed.hammer.3": "back into items in Survival Mode.",
+  "tooltip.portalcubed.hammer.2": "Any item tagged as c:wrenches also works as a hammer.",
+  "tooltip.portalcubed.hammer.3": "Required to turn cubes and other props",
+  "tooltip.portalcubed.hammer.4": "back into items in Survival Mode.",
 
   "tooltip.portalcubed.schrodinger_cube.1": " Links Two Schrödinger Cubes",
   "tooltip.portalcubed.schrodinger_cube.2": "Schrodinger Cubes linked by name",
   "tooltip.portalcubed.schrodinger_cube.3": "ignore other Schrodinger Cubes.",
 
-  "tooltip.portalcubed.radio.1": " Changes if the music toggles when picked up.",
+  "tooltip.portalcubed.radio.1": " Changes if the music toggles when picked up",
 
   "tooltip.portalcubed.velocity_helper.1": " Links Velocity Helpers",
   "tooltip.portalcubed.velocity_helper.2": " Opens Configuration Menu",
@@ -341,7 +408,6 @@
 
   "block.portalcubed.neurotoxin_emitter": "Neurotoxin Emitter",
   "block.portalcubed.excursion_funnel_emitter": "Excursion Funnel Emitter",
-  "block.portalcubed.excursion_funnel": "Excursion Funnel",
   "block.portalcubed.portal_1_door": "Portal 1 Door",
   "block.portalcubed.portal_2_door": "Portal 2 Door",
   "block.portalcubed.octopus_door": "Octopus Door",
@@ -447,12 +513,13 @@
   "entity.portalcubed.schrodinger_cube": "Schrödinger Cube",
   "entity.portalcubed.old_ap_cube": "Old Aperture Weighted Storage Cube",
 
-  "entity.portalcubed.decal": "Decal",
   "entity.portalcubed.energy_pellet": "High Energy Pellet",
 
   "entity.portalcubed.rocket": "Rocket",
 
   "entity.portalcubed.portal": "Portal",
+
+  "entity.portalcubed.excursion_funnel": "Excursion Funnel",
 
   "entity.portalcubed.turret": "Sentry Turret",
 
@@ -478,6 +545,8 @@
   "gamerule.category.portalcubed": "Portal Cubed",
   "gamerule.allowCrouchFlyGlitch": "Allow Crouch Fly Glitch",
   "gamerule.allowCrouchFlyGlitch.description": "Enables the Excursion Funnel Crouch Fly Glitch from Portal 2.",
+  "gamerule.disablePortalValidation": "Disable Portal Validation",
+  "gamerule.disablePortalValidation.description": "Disables placement checks when shooting portals, allowing them to be placed on any surface, including overhangs. May cause unexpected behavior - Issues caused by invalid portals will not be fixed.",
   "gamerule.portalAlignment": "Portal Alignment",
   "gamerule.portalAlignment.description": "Changes portal placement snapping, with the value being fraction of a block snapped to. For example, 16 is every pixel, 1 is full blocks, and 0 is off.",
   "gamerule.usePortalHud": "Use Portal HUD",

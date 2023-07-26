@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.items;
 
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock;
+import com.fusionflux.portalcubed.blocks.funnel.TwoByTwoFacingMultiblockBlock;
 import com.fusionflux.portalcubed.util.TwoByTwo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class ExcursionFunnelEmitterBlockItem extends BlockItem {
+public class ExcursionFunnelEmitterBlockItem extends BlockItem implements MultiblockItem {
     public static final Collection<Property<?>> REQUIRED_PROPERTIES = List.of(
             ExcursionFunnelEmitterBlock.QUADRANT, BlockStateProperties.FACING
     );
@@ -50,7 +51,8 @@ public class ExcursionFunnelEmitterBlockItem extends BlockItem {
     }
 
     @Nullable
-    protected TwoByTwo findValidPlacement(Level level, BlockState state, BlockPos initial, Direction playerFacing) {
+    @Override
+    public TwoByTwo findValidPlacement(Level level, BlockState state, BlockPos initial, Direction playerFacing) {
         Direction facing = state.getValue(BlockStateProperties.FACING);
         TwoByTwo bases = findBasePlacements(initial, facing, playerFacing);
         Direction left = getLeftOf(facing, Direction.SOUTH);
@@ -86,5 +88,11 @@ public class ExcursionFunnelEmitterBlockItem extends BlockItem {
         if (facing.getAxis().isHorizontal())
             return Direction.DOWN;
         return facing == Direction.DOWN ? perspectiveFacing.getOpposite() : perspectiveFacing;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Block & TwoByTwoFacingMultiblockBlock> T getMultiblockBlock() {
+        return (T)getBlock();
     }
 }

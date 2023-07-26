@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:light_bridge_emitter"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.light_bridge.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.light_bridge.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/faith_plate",
+  "criteria": {
+    "light_bridge": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "portalcubed:light_bridge"
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 package com.fusionflux.portalcubed.items;
 
-import com.fusionflux.portalcubed.entity.EnergyPelletEntity;
+import com.fusionflux.portalcubed.entity.EnergyPellet;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -33,7 +33,7 @@ public class EnergyPelletItem extends Item {
         if (!user.getAbilities().instabuild) {
             item.shrink(1);
         }
-        final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(world);
+        final EnergyPellet pellet = PortalCubedEntities.ENERGY_PELLET.create(world);
         if (pellet == null) return InteractionResultHolder.pass(item);
         pellet.setPos(user.getEyePosition(0).add(user.getLookAngle()));
         Vec3 userVelocity = user.getDeltaMovement();
@@ -44,6 +44,7 @@ public class EnergyPelletItem extends Item {
         if (isSuper) {
             pellet.resetLife(-1);
         }
+        pellet.setThrower(user);
         world.addFreshEntity(pellet);
         return InteractionResultHolder.consume(item);
     }
@@ -53,7 +54,7 @@ public class EnergyPelletItem extends Item {
             @NotNull
             @Override
             protected ItemStack execute(BlockSource pointer, ItemStack stack) {
-                final EnergyPelletEntity pellet = PortalCubedEntities.ENERGY_PELLET.create(pointer.getLevel());
+                final EnergyPellet pellet = PortalCubedEntities.ENERGY_PELLET.create(pointer.getLevel());
                 if (pellet == null) return stack;
                 final Position pos = DispenserBlock.getDispensePosition(pointer);
                 pellet.setPos(pos.x(), pos.y(), pos.z());

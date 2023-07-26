@@ -1,0 +1,65 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:companion_cube"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.cubes.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.cubes.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/radio",
+  "criteria": {
+    "cubes": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "portalcubed:portal_1_storage_cube"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:portal_1_companion_cube"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:storage_cube"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:companion_cube"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:redirection_cube"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:schrodinger_cube"
+            ]
+          },
+          {
+            "items": [
+              "portalcubed:old_ap_cube"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

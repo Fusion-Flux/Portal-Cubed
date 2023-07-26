@@ -54,40 +54,6 @@
     "block/reversed_excursion_funnel_beam_end"
   ],
 
-  "block/excursion_funnel_quadrant_1": [
-    "block/excursion_funnel_beam",
-    "block/excursion_funnel_beam_end"
-  ],
-  "block/excursion_funnel_quadrant_2": [
-    "block/excursion_funnel_beam",
-    "block/excursion_funnel_beam_end"
-  ],
-  "block/excursion_funnel_quadrant_3": [
-    "block/excursion_funnel_beam",
-    "block/excursion_funnel_beam_end"
-  ],
-  "block/excursion_funnel_quadrant_4": [
-    "block/excursion_funnel_beam",
-    "block/excursion_funnel_beam_end"
-  ],
-
-  "block/excursion_funnel_reversed_quadrant_1": [
-    "block/excursion_funnel_beam",
-    "block/reversed_excursion_funnel_beam_end"
-  ],
-  "block/excursion_funnel_reversed_quadrant_2": [
-    "block/excursion_funnel_beam",
-    "block/reversed_excursion_funnel_beam_end"
-  ],
-  "block/excursion_funnel_reversed_quadrant_3": [
-    "block/excursion_funnel_beam",
-    "block/reversed_excursion_funnel_beam_end"
-  ],
-  "block/excursion_funnel_reversed_quadrant_4": [
-    "block/excursion_funnel_beam",
-    "block/reversed_excursion_funnel_beam_end"
-  ],
-
 
   "block/laser_emitter_active": "block/laser_emitter_e",
   "block/laser_catcher_active": "block/laser_emitter_e",

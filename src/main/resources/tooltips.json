@@ -27,15 +27,19 @@
       "color": "gray"
     },
     {
-      "translate": "tooltip.portalcubed.empty",
-      "color": "gray"
-    },
-    {
       "translate": "tooltip.portalcubed.hammer.2",
       "color": "gray"
     },
     {
+      "translate": "tooltip.portalcubed.empty",
+      "color": "gray"
+    },
+    {
       "translate": "tooltip.portalcubed.hammer.3",
+      "color": "gray"
+    },
+    {
+      "translate": "tooltip.portalcubed.hammer.4",
       "color": "gray"
     }
   ],

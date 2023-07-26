@@ -20,6 +20,7 @@
 		]
 	},
 	"gel_splat": {
+		"subtitle": "subtitles.portalcubed.gel_blob_splash",
 		"sounds": [
 			"portalcubed:paint_blob_splat_01",
 			"portalcubed:paint_blob_splat_02",
@@ -208,6 +209,7 @@
 		"subtitle": "subtitles.portalcubed.rocket.locking"
 	},
 	"rocket/explode": {
+		"subtitle": "subtitles.portalcubed.rocket.explosion",
 		"sounds": [
 			"portalcubed:rocket/blast1"
 		]

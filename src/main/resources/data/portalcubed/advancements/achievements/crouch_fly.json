@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:excursion_funnel_emitter"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.crouch_fly.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.crouch_fly.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "portalcubed:achievements/funnel",
+  "criteria": {
+    "funnel": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "portalcubed:funnel",
+            "in_funnel": false,
+            "in_cfg": true
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 50
+  }
+}

@@ -4,6 +4,7 @@ import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.util.GravityChannel;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.fusionflux.portalcubed.accessor.CalledValues;
+import com.fusionflux.portalcubed.advancements.PortalCubedAdvancements;
 import com.fusionflux.portalcubed.blocks.PortalBlocksLoader;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.TallButtonVariant;
@@ -261,6 +262,7 @@ public class PortalCubed implements ModInitializer {
         );
 
         MidnightConfig.init("portalcubed", PortalCubedConfig.class);
+
         PortalBlocksLoader.init(mod);
         PortalCubedFluids.registerFluids();
         PortalCubedBlocks.registerBlocks();
@@ -271,6 +273,8 @@ public class PortalCubed implements ModInitializer {
         PortalCubedSounds.registerSounds();
         PortalCubedGameRules.register();
         PortalCubedParticleTypes.register();
+        PortalCubedAdvancements.register();
+
         PortalTabsLoader.load(mod);
         BlockContentRegistries.FLAMMABLE.put(PortalCubedBlocks.NEUROTOXIN_BLOCK, new FlammableBlockEntry(10000, 10000));
         GravityChannel.UPDATE_GRAVITY.getVerifierRegistry().register(AdhesionGravityVerifier.FIELD_GRAVITY_SOURCE, AdhesionGravityVerifier::check);

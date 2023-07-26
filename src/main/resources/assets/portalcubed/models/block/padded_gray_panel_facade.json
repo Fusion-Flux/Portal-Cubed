@@ -1,13 +1,15 @@
 {
+	"credit": "Made by Cart3r using Blockbench.",
 	"textures": {
-		"particle": "portalcubed:block/padded_gray_panel",
-		"1": "portalcubed:block/padded_gray_panel"
+		"1": "portalcubed:block/padded_gray_panel",
+		"particle": "portalcubed:block/padded_gray_panel"
 	},
 	"elements": [
-		{   "from": [ 0, 0, 0 ],
-			"to": [ 16, 16, 0.01 ],
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 0.01],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "north"},
 				"east": {"uv": [15.99, 0, 16, 16], "texture": "#1"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#1"},
 				"west": {"uv": [0, 0, 0.01, 16], "texture": "#1"},

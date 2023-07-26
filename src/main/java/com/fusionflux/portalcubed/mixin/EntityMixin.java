@@ -21,6 +21,7 @@ import com.fusionflux.portalcubed.items.PortalCubedItems;
 import com.fusionflux.portalcubed.listeners.WentThroughPortalListener;
 import com.fusionflux.portalcubed.mechanics.CrossPortalInteraction;
 import com.fusionflux.portalcubed.util.GeneralUtil;
+import com.fusionflux.portalcubed.util.PortalCubedComponents;
 import com.fusionflux.portalcubed.util.PortalDirectionUtils;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -36,6 +37,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -121,9 +123,6 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
     public abstract boolean equals(Object o);
 
     @Shadow
-    public abstract boolean isNoGravity();
-
-    @Shadow
     public abstract boolean onGround();
 
     @Shadow
@@ -161,6 +160,7 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
 
     @Shadow public abstract Level level();
 
+    @Shadow private Level level;
     @Unique
     private final Map<BlockState, BlockPos> collidingBlocks = new HashMap<>();
     @Unique
@@ -184,6 +184,8 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
+        final ProfilerFiller profiler = level.getProfiler();
+        profiler.push("portalcubed_entity");
 
         Entity thiz = (Entity) (Object) this;
 
@@ -237,6 +239,8 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         }
 
         prevGravDirec = GravityChangerAPI.getGravityDirection(((Entity) (Object) this));
+
+        profiler.pop();
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
@@ -677,5 +681,10 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
             Mth.lerp(useProgress, velocityHelper.getBlockPos().getY() + 0.5, velocityHelper.getDestination().getY() + 0.5),
             Mth.lerp(useProgress, velocityHelper.getBlockPos().getZ() + 0.5, velocityHelper.getDestination().getZ() + 0.5)
         ).subtract(position()).subtract(velocityHelperOffset));
+    }
+
+    @Inject(method = "resetFallDistance", at = @At("HEAD"))
+    private void resetLauncher(CallbackInfo ci) {
+        PortalCubedComponents.ENTITY_COMPONENT.get(this).setLauncher(null);
     }
 }

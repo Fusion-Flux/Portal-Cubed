@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:hoopy"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.hoopy.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.hoopy.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/radio",
+  "criteria": {
+    "crafting_table": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "portalcubed:hoopy"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

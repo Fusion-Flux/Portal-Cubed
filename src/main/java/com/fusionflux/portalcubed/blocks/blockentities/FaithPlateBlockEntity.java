@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.blocks.blockentities;
 
+import com.fusionflux.portalcubed.advancements.triggers.PortalCubedTriggers;
 import com.fusionflux.portalcubed.blocks.FaithPlateBlock;
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -79,7 +81,11 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
                     continue;
                 }
                 if (launch) {
-                    RayonIntegration.INSTANCE.setVelocity(liver, new Vec3(velX, velY, velZ));
+                    final Vec3 force = new Vec3(velX, velY, velZ);
+                    RayonIntegration.INSTANCE.setVelocity(liver, force);
+                    if (liver instanceof ServerPlayer player) {
+                        PortalCubedTriggers.FLING.trigger(player, worldPosition, force);
+                    }
                 }
                 timer = 5;
                 if (!world.isClientSide) {
@@ -173,6 +179,7 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
         buf.writeDouble(velZ);
     }
 
+    @NotNull
     @Override
     public Component getDisplayName() {
         return Component.empty();

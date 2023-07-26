@@ -1,16 +1,15 @@
 package com.fusionflux.portalcubed.blocks.funnel;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fusionflux.portalcubed.util.TwoByTwo;
-
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public interface TwoByTwoFacingMultiblockBlock {
     IntegerProperty QUADRANT = IntegerProperty.create("quadrant", 1, 4);

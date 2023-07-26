@@ -2,7 +2,7 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "YXY",
-        "XXX",
+        "ZXX",
         "YXY"
     ],
     "key": {
@@ -11,6 +11,9 @@
         },
         "X": {
             "tag": "c:glass_blocks"
+        },
+        "Z": {
+            "tag": "c:glass_panes"
         }
     },
     "result": {
