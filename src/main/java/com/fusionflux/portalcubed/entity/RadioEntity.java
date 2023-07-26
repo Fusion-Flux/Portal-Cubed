@@ -110,7 +110,9 @@ public class RadioEntity extends CorePhysicsEntity  {
         }
         if (song != lastSong) {
             lastSong = song;
-            performPlay();
+            if (level().isClientSide) {
+                performPlay();
+            }
         }
     }
 
