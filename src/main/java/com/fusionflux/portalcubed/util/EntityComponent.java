@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -64,8 +65,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void setHasTeleportationHappened(boolean hasHappened) {
-        hasTeleportationHappened = hasHappened;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        if (hasTeleportationHappened != hasHappened) {
+            hasTeleportationHappened = hasHappened;
+            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        }
     }
 
     @Override
@@ -75,8 +78,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void setWasInfiniteFalling(boolean infFall) {
-        wasInfiniteFalling = infFall;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        if (wasInfiniteFalling != infFall) {
+            wasInfiniteFalling = infFall;
+            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        }
     }
 
     @Override
@@ -86,8 +91,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void setVelocityUpdateAfterTeleport(Vec3 velocity) {
-        teleportVelocity = velocity;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        if (!teleportVelocity.equals(velocity)) {
+            teleportVelocity = velocity;
+            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        }
     }
 
 
@@ -99,8 +106,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void setCanFireGel(boolean canGel) {
-        canFireGel = canGel;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        if (canFireGel != canGel) {
+            canFireGel = canGel;
+            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        }
     }
 
     @Override
@@ -110,8 +119,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void setServerVelForGel(Vec3 velocity) {
-        serverVelForGel = velocity;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        if (!serverVelForGel.equals(velocity)) {
+            serverVelForGel = velocity;
+            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        }
     }
 
     @Override
@@ -121,14 +132,16 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void addPortals(UUID portalUUID) {
-        portals.add(portalUUID);
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        if (portals.add(portalUUID)) {
+            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        }
     }
 
     @Override
     public void removePortals(UUID portalUUID) {
-        portals.remove(portalUUID);
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        if (portals.remove(portalUUID)) {
+            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        }
     }
 
     @Nullable
@@ -139,8 +152,10 @@ public class EntityComponent implements PortalCubedComponent, AutoSyncedComponen
 
     @Override
     public void setLauncher(@Nullable BlockPos launcher) {
-        this.launcher = launcher;
-        PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        if (!Objects.equals(this.launcher, launcher)) {
+            this.launcher = launcher;
+            PortalCubedComponents.ENTITY_COMPONENT.sync(entity);
+        }
     }
 
     @Override
