@@ -43,10 +43,6 @@ repositories {
 	}
 
 	maven {
-		url = "https://lazurite.dev/maven"
-	}
-
-	maven {
 		name = "Ladysnake Mods"
 		url = uri("https://maven.ladysnake.org/releases")
 	}
@@ -129,7 +125,7 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	modCompileOnly("dev.lazurite:rayon-fabric:1.7.1+1.19.4")
+	modCompileOnly("maven.modrinth:rayon:1.7.2+1.20.1-fabric")
 
 	include(modImplementation("maven.modrinth:json-entity-animation:0.2.1+1.19.4"))
 
