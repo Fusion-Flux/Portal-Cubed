@@ -75,6 +75,10 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
     private final Vec3 offsetHeight = new Vec3(0, this.getBbHeight() / 2, 0);
 
+    private boolean locked = false;
+    private boolean onButton = false;
+    private Optional<UUID> holder = Optional.empty();
+
     @Override
     public boolean canBeCollidedWith() {
         return canUsePortals;
@@ -187,24 +191,36 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
         this.getEntityData().define(LOCKED, false);
     }
 
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (LOCKED.equals(key)) {
+            this.locked = entityData.get(LOCKED);
+        } else if (ON_BUTTON.equals(key)) {
+            this.onButton = entityData.get(ON_BUTTON);
+        } else if (HOLDER_UUID.equals(key)) {
+            this.holder = entityData.get(HOLDER_UUID);
+        }
+    }
+
     public Optional<UUID> getHolderUUID() {
-        return getEntityData().get(HOLDER_UUID);
+        return holder;
     }
 
     public void setHolderUUID(Optional<UUID> uuid) {
-        this.getEntityData().set(HOLDER_UUID, uuid);
+        entityData.set(HOLDER_UUID, uuid);
     }
 
     public boolean isOnButton() {
-        return getEntityData().get(ON_BUTTON);
+        return onButton;
     }
 
     public void setOnButton(boolean on) {
-        getEntityData().set(ON_BUTTON, on);
+        entityData.set(ON_BUTTON, on);
     }
 
     public boolean isLocked() {
-        return entityData.get(LOCKED);
+        return locked;
     }
 
     public void setRotYaw(float yaw) {
@@ -219,20 +235,21 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
     @Override
     public void tick() {
         super.tick();
-        final boolean isBeingHeld = getHolderUUID().isPresent() && !fizzling;
+        UUID holder = this.holder.orElse(null);
+        final boolean isBeingHeld = holder != null && !fizzling;
         timeSinceLastSound++;
         this.hasImpulse = true;
-        canUsePortals = getHolderUUID().isEmpty();
-        Vec3 rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
+        canUsePortals = holder == null;
         this.lastPos = this.position();
         this.setDiscardFriction(!this.onGround() && !((EntityExt) this).isInFunnel());
         if (isBeingHeld) {
-            Player player = (Player) ((LevelExt) level()).getEntityByUuid(getHolderUUID().get());
+            Player player = (Player) ((LevelExt) level()).getEntityByUuid(holder);
             if (player != null && player.isAlive()) {
                 Vec3 eyes = player.getEyePosition(0);
                 double distance = 1.5;
                 canUsePortals = false;
                 Vec3 rotation = this.getPlayerRotationVector(player.getXRot(), player.getYRot());
+                Vec3 rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
                 Vec3 target = eyes.add(
                         (rotation.x * distance) - rotatedOffset.x,
                         (rotation.y * distance) - rotatedOffset.y,
@@ -301,16 +318,12 @@ public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
                 }
             }
         }
-        if (getHolderUUID().isEmpty() && !level().isClientSide) {
-            //noinspection DataFlowIssue
-            level().getServer().getPlayerList().broadcast(
-                null, getX(), getY(), getZ(), 64,
-                level().dimension(),
-                new ClientboundRotateHeadPacket(this, (byte)Mth.floor(getYHeadRot() * 256f / 360f))
-            );
-        }
-        if (!RayonIntegration.INSTANCE.isPresent()) {
-            setXRot(0f);
+    }
+
+    @Override
+    public void aiStep() {
+        if (!isLocked()) {
+            super.aiStep();
         }
     }
 
