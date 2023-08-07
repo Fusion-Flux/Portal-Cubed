@@ -117,7 +117,7 @@ public class GeneralUtil {
         VoxelShape crossPortalCollisionShape = Shapes.empty();
 
         for (Portal portal : list) {
-            if (portal.calculateCutoutBox() != NULL_BOX && portal.calculateBoundsCheckBox() != NULL_BOX && portal.getActive()) {
+            if (portal.getActive() && portal.calculateCutoutBox() != NULL_BOX && portal.calculateBoundsCheckBox() != NULL_BOX) {
                 cutoutShape = Shapes.or(cutoutShape, Shapes.create(portal.getCutoutBoundingBox()));
                 crossPortalCollisionShape = Shapes.or(crossPortalCollisionShape, portal.getCrossPortalCollisionShapeOther(entity));
             }

@@ -448,11 +448,15 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         index = 0
     )
     private VoxelShape cutoutForIsInWall(VoxelShape shape) {
-        return Shapes.joinUnoptimized(
-            Shapes.joinUnoptimized(shape, CalledValues.getPortalCutout(((Entity)(Object)this)), BooleanOp.ONLY_FIRST),
-            CalledValues.getCrossPortalCollision((Entity)(Object)this),
-            BooleanOp.OR
-        );
+        VoxelShape portalCutout = CalledValues.getPortalCutout((Entity) (Object) this);
+        if (portalCutout != Shapes.empty()) {
+            shape = Shapes.joinUnoptimized(shape, portalCutout, BooleanOp.ONLY_FIRST);
+        }
+        VoxelShape crossPortalCollision = CalledValues.getCrossPortalCollision((Entity) (Object) this);
+        if (crossPortalCollision != Shapes.empty()) {
+            shape = Shapes.joinUnoptimized(shape, crossPortalCollision, BooleanOp.OR);
+        }
+        return shape;
     }
 
     @ModifyArg(
@@ -464,11 +468,15 @@ public abstract class EntityMixin implements EntityExt, EntityPortalsAccess, Cli
         index = 0
     )
     private VoxelShape cutoutForIsColliding(VoxelShape shape) {
-        return Shapes.joinUnoptimized(
-            Shapes.joinUnoptimized(shape, CalledValues.getPortalCutout(((Entity)(Object)this)), BooleanOp.ONLY_FIRST),
-            CalledValues.getCrossPortalCollision((Entity)(Object)this),
-            BooleanOp.OR
-        );
+        VoxelShape portalCutout = CalledValues.getPortalCutout((Entity) (Object) this);
+        if (portalCutout != Shapes.empty()) {
+            shape = Shapes.joinUnoptimized(shape, portalCutout, BooleanOp.ONLY_FIRST);
+        }
+        VoxelShape crossPortalCollision = CalledValues.getCrossPortalCollision((Entity) (Object) this);
+        if (crossPortalCollision != Shapes.empty()) {
+            shape = Shapes.joinUnoptimized(shape, crossPortalCollision, BooleanOp.OR);
+        }
+        return shape;
     }
 
     @Inject(method = "checkInsideBlocks", at = @At("HEAD"))
