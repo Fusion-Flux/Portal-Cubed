@@ -32,7 +32,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class EmittedEntity extends PortalListeningEntity implements QuiltExtendedSpawnDataEntity {
-    public static final int MAX_LENGTH = 100;
+    public static final int DEFAULT_MAX_LENGTH = 100;
     public static final EntityTypeTest<Entity, EmittedEntity> TYPE_TEST = EntityTypeTest.forClass(EmittedEntity.class);
     public static final EntityDataAccessor<Direction> FACING = SynchedEntityData.defineId(EmittedEntity.class, EntityDataSerializers.DIRECTION);
     public static final EntityDataAccessor<Float> LENGTH = SynchedEntityData.defineId(EmittedEntity.class, EntityDataSerializers.FLOAT);

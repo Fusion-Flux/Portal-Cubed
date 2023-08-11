@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.blocks.funnel.ExcursionFunnelEmitterBlock.Mode;
+import com.fusionflux.portalcubed.entity.beams.EmittedEntity;
 import com.fusionflux.portalcubed.util.NbtHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public class ExcursionFunnelEmitterBlockEntity extends BlockEntity {
     private ToggleMode toggleMode = ToggleMode.FORWARD;
     private UUID funnelEntityId = null;
+    @Nullable
+    private Float maxLength = null;
 
     public ExcursionFunnelEmitterBlockEntity(BlockPos pos, BlockState state) {
         super(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER_ENTITY, pos, state);
@@ -42,11 +45,17 @@ public class ExcursionFunnelEmitterBlockEntity extends BlockEntity {
         setChanged();
     }
 
+    public float getMaxLength() {
+        return maxLength == null ? EmittedEntity.DEFAULT_MAX_LENGTH : maxLength;
+    }
+
     @Override
     public void saveAdditional(@NotNull CompoundTag tag) {
         tag.putString("toggleMode", toggleMode.getSerializedName());
         if (funnelEntityId != null)
             tag.putUUID("funnelEntityId", funnelEntityId);
+        if (maxLength != null)
+            tag.putFloat("maxLength", maxLength);
     }
 
     @Override
@@ -54,6 +63,8 @@ public class ExcursionFunnelEmitterBlockEntity extends BlockEntity {
         this.toggleMode = NbtHelper.readEnum(tag, "toggleMode", toggleMode);
         if (tag.contains("funnelEntityId", Tag.TAG_INT_ARRAY))
             this.funnelEntityId = tag.getUUID("funnelEntityId");
+        if (tag.contains("maxLength", Tag.TAG_FLOAT))
+            this.maxLength = tag.getFloat("maxLength");
     }
 
     public enum ToggleMode implements StringRepresentable {

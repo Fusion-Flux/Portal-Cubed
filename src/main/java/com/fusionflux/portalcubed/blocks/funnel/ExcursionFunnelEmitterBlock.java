@@ -170,14 +170,14 @@ public class ExcursionFunnelEmitterBlock extends BaseEntityBlock implements TwoB
             if (id != null &&  level.getEntity(id) instanceof ExcursionFunnelEntity entity) {
                 entity.discard();
             }
+            if (newMode.isOn) // spawn new entity if enabled
+                spawnFunnelEntity(level, multiblock, facing, newMode.isReversed, emitter.getMaxLength());
         }
-        if (newMode.isOn) // spawn new entity if enabled
-            spawnFunnelEntity(level, multiblock, facing, newMode.isReversed);
     }
 
-    private static void spawnFunnelEntity(ServerLevel level, TwoByTwo multiblock, Direction facing, boolean reversed) {
+    private static void spawnFunnelEntity(ServerLevel level, TwoByTwo multiblock, Direction facing, boolean reversed, float maxLength) {
         Vec3 start = multiblock.getCenter().relative(facing, -0.3);
-        ExcursionFunnelEntity entity = ExcursionFunnelEntity.spawnAndEmit(level, start, facing, reversed, EmittedEntity.MAX_LENGTH);
+        ExcursionFunnelEntity entity = ExcursionFunnelEntity.spawnAndEmit(level, start, facing, reversed, maxLength);
         // block entity tracks entity
         BlockEntity be = level.getBlockEntity(multiblock.byQuadrant(1));
         if (be instanceof ExcursionFunnelEmitterBlockEntity emitter)
