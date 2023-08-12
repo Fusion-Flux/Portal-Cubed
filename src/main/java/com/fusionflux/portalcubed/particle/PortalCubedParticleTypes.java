@@ -17,7 +17,6 @@ public class PortalCubedParticleTypes {
     public static final ParticleType<DecalParticleOption> DECAL = register(
         "decal", false, DecalParticleOption.PARAMETERS_FACTORY, DecalParticleOption::codec
     );
-    public static final SimpleParticleType ENERGY_SPARK = register("energy_spark", false);
 
     private static SimpleParticleType register(String key, boolean overrideLimiter) {
         return Registry.register(BuiltInRegistries.PARTICLE_TYPE, id(key), FabricParticleTypes.simple(overrideLimiter));

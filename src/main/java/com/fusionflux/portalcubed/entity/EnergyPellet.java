@@ -152,10 +152,6 @@ public class EnergyPellet extends Entity implements ItemSupplier, WentThroughPor
                     spawnPos.x, spawnPos.y, spawnPos.z,
                     0, 0, 0, 0, 0
                 );
-                serverLevel.sendParticles(
-                    PortalCubedParticleTypes.ENERGY_SPARK,
-                    getX(), getY(), getZ(), 25, 0.1, 0.1, 0.1, 1
-                );
             }
         }
         if ((tickCount - 1) % 34 == 0) {
@@ -218,12 +214,6 @@ public class EnergyPellet extends Entity implements ItemSupplier, WentThroughPor
 
     private void kill(@Nullable LivingEntity entity) {
         level().playSound(null, position().x, position().y, position().z, PortalCubedSounds.PELLET_EXPLODE_EVENT, SoundSource.HOSTILE, 0.8f, 1f);
-        if (level() instanceof ServerLevel serverLevel) {
-            serverLevel.sendParticles(
-                PortalCubedParticleTypes.ENERGY_SPARK,
-                getX(), getY(), getZ(), 100, 0.1, 0.1, 0.1, 3.5
-            );
-        }
         if (entity != null) {
             entity.hurt(pcSources(level()).vaporization(this, getThrower()), PortalCubedConfig.pelletDamage);
         }

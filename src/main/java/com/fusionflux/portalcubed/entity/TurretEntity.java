@@ -125,10 +125,6 @@ public class TurretEntity extends CorePhysicsEntity {
         } else if (block.is(PortalCubedBlocks.BULLET_HOLE_METAL)) {
             soundEffect = PortalCubedSounds.BULLET_METAL_EVENT;
             particleTexture = DecalParticleOption.BULLET_HOLE_METAL;
-            level.sendParticles(
-                PortalCubedParticleTypes.ENERGY_SPARK,
-                pos.x, pos.y, pos.z, 50, 0.1, 0.1, 0.1, 2
-            );
         } else {
             soundEffect = null;
             particleTexture = null;

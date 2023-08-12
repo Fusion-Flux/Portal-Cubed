@@ -186,10 +186,6 @@ public class LaserEmitterBlockEntity extends BlockEntity {
 
         if (hitState != null && !(hitState.getBlock() instanceof AbstractLaserNodeBlock)) {
             final Vec3 finalPos = multiSegments.get(multiSegments.size() - 1).finalRay().end();
-            ((ServerLevel)level).sendParticles(
-                PortalCubedParticleTypes.ENERGY_SPARK,
-                finalPos.x, finalPos.y, finalPos.z, 5, 0, 0, 0, 0.01
-            );
         }
 
         Entity owner = EntityType.MARKER.create(level);
