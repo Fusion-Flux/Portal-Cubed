@@ -19,6 +19,6 @@ public interface VertexConsumerMixin {
         index = 6
     )
     default float modifyAlpha(float original) {
-        return Objects.requireNonNullElse(EnergyPelletRenderer.pelletAlpha, original);
+        return EnergyPelletRenderer.pelletAlpha == null ? original : EnergyPelletRenderer.pelletAlpha;
     }
 }
