@@ -40,6 +40,7 @@ public class ExcursionFunnelModel extends Model {
         for (int block = 0; block < length; block++) {
             float sectionLength = Math.min(length - block, 1);
             boolean last = block + 1 >= length;
+            if (last) sectionLength -= 0.001; // avoid z fighting at end
             root.addOrReplaceChild(
                 "cube_" + block,
                 CubeListBuilder.create()
