@@ -7,8 +7,9 @@ import com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.AbortableIterationConsumer.Continuation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -18,6 +19,9 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.level.storage.WritableLevelData;
 
+import com.google.common.collect.AbstractIterator;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,13 +30,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 @Mixin(Level.class)
 public abstract class LevelMixin implements LevelAccessor, LevelExt {
     @Unique
-    PortalCubedDamageSources pc$damageSources;
+    private PortalCubedDamageSources pc$damageSources;
+    @Unique
+    private Long2ObjectMap<List<EmittedEntity>> pc$blockChangeListeners = new Long2ObjectOpenHashMap<>();
 
     @Shadow
     protected abstract LevelEntityGetter<Entity> getEntities();
@@ -55,12 +65,38 @@ public abstract class LevelMixin implements LevelAccessor, LevelExt {
 
     @Inject(method = "setBlocksDirty", at = @At("HEAD"))
     private void updateEmittedEntities(BlockPos pos, BlockState old, BlockState updated, CallbackInfo ci) {
-        if (!isClientSide() && old.getCollisionShape(this, pos) != updated.getCollisionShape(this, pos)) {
-            getEntities().get(EmittedEntity.TYPE_TEST, emitted -> {
-                if (emitted.listensTo(pos))
-                    emitted.reEmit();
-                return Continuation.CONTINUE;
-            });
+        if ((Object) this instanceof ServerLevel) {
+            getListeners(pos).forEachRemaining(EmittedEntity::reEmit);
+        }
+    }
+
+    @Unique
+    private Iterator<EmittedEntity> getListeners(BlockPos pos) {
+        long sectionPos = SectionPos.asLong(pos);
+        List<EmittedEntity> listeners = pc$blockChangeListeners.get(sectionPos);
+        return listeners == null || listeners.isEmpty() ? Collections.emptyIterator() : new AbstractIterator<>() {
+            private final Iterator<EmittedEntity> entities = List.copyOf(listeners).iterator(); // copy to avoid CMEs
+
+            @Override
+            protected EmittedEntity computeNext() {
+                if (!entities.hasNext())
+                    return endOfData();
+                EmittedEntity next = entities.next();
+                return next.listensTo(pos) ? next : computeNext();
+            }
+        };
+    }
+
+    @Override
+    public void pc$addBlockChangeListener(long sectionPos, EmittedEntity entity) {
+        pc$blockChangeListeners.computeIfAbsent(sectionPos, $ -> new ArrayList<>()).add(entity);
+    }
+
+    @Override
+    public void pc$removeBlockChangeListener(long sectionPos, EmittedEntity entity) {
+        List<EmittedEntity> listeners = pc$blockChangeListeners.get(sectionPos);
+        if (listeners != null) {
+            listeners.remove(entity);
         }
     }
 
