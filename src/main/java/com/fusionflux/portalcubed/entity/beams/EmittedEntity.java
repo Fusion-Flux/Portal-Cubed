@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.entity.beams;
 
+import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.entity.PortalListeningEntity;
@@ -7,6 +8,7 @@ import com.fusionflux.portalcubed.util.NbtHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,7 +19,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,6 @@ import java.util.function.Consumer;
 
 public abstract class EmittedEntity extends PortalListeningEntity implements QuiltExtendedSpawnDataEntity {
     public static final int DEFAULT_MAX_LENGTH = 100;
-    public static final EntityTypeTest<Entity, EmittedEntity> TYPE_TEST = EntityTypeTest.forClass(EmittedEntity.class);
     public static final EntityDataAccessor<Direction> FACING = SynchedEntityData.defineId(EmittedEntity.class, EntityDataSerializers.DIRECTION);
     public static final EntityDataAccessor<Float> LENGTH = SynchedEntityData.defineId(EmittedEntity.class, EntityDataSerializers.FLOAT);
 
@@ -43,6 +43,7 @@ public abstract class EmittedEntity extends PortalListeningEntity implements Qui
     private Vec3 center = Vec3.ZERO;
     private AABB listeningArea = new AABB(BlockPos.ZERO);
     private int reEmitTimer;
+    private AABB cachedBounds;
 
     // UUID of next in line. resolving this will always work, since the first entity
     // is the only one that can be unloaded (others are chunk loaded by portals)
@@ -89,14 +90,27 @@ public abstract class EmittedEntity extends PortalListeningEntity implements Qui
     @Override
     @NotNull
     protected AABB makeBoundingBox() {
+        // updating bounds is expensive, minecraft calls this method constantly because of setPos
+        if (cachedBounds == null)
+            cachedBounds = actuallyMakeBoundingBox();
+        return cachedBounds;
+    }
+
+    protected AABB actuallyMakeBoundingBox() {
         AABB base = makeBaseBoundingBox();
         Vec3 pos = position();
         Vec3 offset = pos.relative(getFacing(), getLength()).subtract(pos); // relative offset along facing by length
         this.center = base.getCenter();
         AABB bounds = base.expandTowards(offset);
+
         Direction facing = getFacing();
         Vec3 facingNormal = Vec3.ZERO.with(facing.getAxis(), facing.getAxisDirection().getStep());
+
+        if (listeningArea != null)
+            stopListeningToArea(listeningArea);
         this.listeningArea = bounds.expandTowards(facingNormal);
+        startListeningToArea(listeningArea);
+
         return bounds;
     }
 
@@ -162,6 +176,7 @@ public abstract class EmittedEntity extends PortalListeningEntity implements Qui
     @Override
     public void remove(RemovalReason reason) {
         super.remove(reason);
+        stopListeningToArea(listeningArea);
         if (reason.shouldDestroy())
             removeNextEntity();
     }
@@ -227,6 +242,7 @@ public abstract class EmittedEntity extends PortalListeningEntity implements Qui
     }
 
     private void updateBounds() {
+        this.cachedBounds = actuallyMakeBoundingBox();
         setBoundingBox(makeBoundingBox());
         modelUpdater.accept(this);
     }
@@ -253,5 +269,25 @@ public abstract class EmittedEntity extends PortalListeningEntity implements Qui
     @Override
     public void onLinkedPortalCreate(Portal portal, Portal linked) {
         reEmitTimer = 3;
+    }
+
+    public void startListeningToArea(AABB area) {
+        if (level() instanceof ServerLevel level) {
+            forEachSection(area, section -> ((LevelExt) level).pc$addBlockChangeListener(section.asLong(), this));
+        }
+    }
+
+    public void stopListeningToArea(AABB area) {
+        if (level() instanceof ServerLevel level) {
+            forEachSection(area, section -> ((LevelExt) level).pc$removeBlockChangeListener(section.asLong(), this));
+        }
+    }
+
+    public static void forEachSection(AABB bounds, Consumer<SectionPos> consumer) {
+        BlockPos minBlock = BlockPos.containing(bounds.minX, bounds.minY, bounds.minZ);
+        BlockPos maxBlock = BlockPos.containing(bounds.maxX, bounds.maxY, bounds.maxZ);
+        SectionPos min = SectionPos.of(minBlock);
+        SectionPos max = SectionPos.of(maxBlock);
+        SectionPos.betweenClosedStream(min.x(), min.y(), min.z(), max.x(), max.y(), max.z()).forEach(consumer);
     }
 }
