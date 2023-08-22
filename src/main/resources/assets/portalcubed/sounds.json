@@ -134,53 +134,91 @@
 
 	"pedestal_button_press": {
 		"sounds": [
-			"portalcubed:button_synth_positive_01"
+			{
+				"name": "portalcubed:button_synth_positive_01",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.pedestal_button_press"
 	},
 	"pedestal_button_release": {
 		"sounds": [
-			"portalcubed:button_synth_negative_02"
+			{
+				"name": "portalcubed:button_synth_negative_02",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.pedestal_button_release"
 	},
 	"old_ap_pedestal_button_press": {
 		"sounds": [
-			"portalcubed:old_ap_pedestal_button_press"
+			{
+				"name": "portalcubed:old_ap_pedestal_button_press",
+				"volume": 0.3
+			}
+
 		],
 		"subtitle": "subtitles.portalcubed.pedestal_button_press"
 	},
 	"old_ap_pedestal_button_release": {
 		"sounds": [
-			"portalcubed:old_ap_pedestal_button_release"
+			{
+				"name": "portalcubed:old_ap_pedestal_button_release",
+				"volume": 0.3
+			}
+
 		],
 		"subtitle": "subtitles.portalcubed.pedestal_button_release"
 	},
 	"floor_button_press": {
 		"sounds": [
-			"portalcubed:portal_button_down_01"
+			{
+				"name": "portalcubed:portal_button_down_01",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.floor_button_press"
 	},
 	"floor_button_release": {
 		"sounds": [
-			"portalcubed:portal_button_up_01"
+			{
+				"name": "portalcubed:portal_button_up_01",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.floor_button_release"
 	},
 	"old_ap_floor_button_press": {
 		"sounds": [
-			"portalcubed:og_button_down_01",
-			"portalcubed:og_button_down_02",
-			"portalcubed:og_button_down_03"
+			{
+				"name": "portalcubed:og_button_down_01",
+				"volume": 0.3
+			},
+			{
+				"name": "portalcubed:og_button_down_02",
+				"volume": 0.3
+			},
+			{
+				"name": "portalcubed:og_button_down_03",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.floor_button_press"
 	},
 	"old_ap_floor_button_release": {
 		"sounds": [
-			"portalcubed:og_button_up_01",
-			"portalcubed:og_button_up_02",
-			"portalcubed:og_button_up_03"
+			{
+				"name": "portalcubed:og_button_up_01",
+				"volume": 0.3
+			},
+			{
+				"name": "portalcubed:og_button_up_02",
+				"volume": 0.3
+			},
+			{
+				"name": "portalcubed:og_button_up_03",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.floor_button_release"
 	},
@@ -378,7 +416,8 @@
 		"sounds": [
 			{
 				"name": "portalcubed:disc/portal_still_alive",
-				"stream": true
+				"stream": true,
+				"volume": 0.05
 			}
 		]
 	},
@@ -386,7 +425,8 @@
 		"sounds": [
 			{
 				"name": "portalcubed:disc/portal2-12-cara_mia_addio",
-				"stream": true
+				"stream": true,
+				"volume": 0.05
 			}
 		]
 	},
@@ -394,7 +434,8 @@
 		"sounds": [
 			{
 				"name": "portalcubed:disc/portal2-13-want_you_gone",
-				"stream": true
+				"stream": true,
+				"volume": 0.05
 			}
 		]
 	},
@@ -402,7 +443,8 @@
 		"sounds": [
 			{
 				"name": "portalcubed:disc/portal2-01-reconstructing_more_science",
-				"stream": true
+				"stream": true,
+				"volume": 0.05
 			}
 		]
 	},

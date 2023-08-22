@@ -9,6 +9,7 @@ public class ExcursionFunnelEnterSoundInstance extends AbstractTickableSoundInst
 
     public ExcursionFunnelEnterSoundInstance() {
         super(PortalCubedSounds.TBEAM_ENTER_EVENT, SoundSource.BLOCKS, SoundInstance.createUnseededRandom());
+        volume =.5f;
         this.attenuation = Attenuation.NONE;
     }
 
@@ -16,7 +17,7 @@ public class ExcursionFunnelEnterSoundInstance extends AbstractTickableSoundInst
     public void tick() {
         ticks++;
         if (ticks > 80) {
-            volume = 1f - 0.05f * (ticks - 80);
+            volume = .5f - 0.05f * (ticks - 80);
             if (volume <= 0) {
                 stop();
             }

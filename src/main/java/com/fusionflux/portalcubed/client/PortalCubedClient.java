@@ -242,12 +242,12 @@ public class PortalCubedClient implements ClientModInitializer {
                 if (excursionFunnelMusic == null) {
                     excursionFunnelMusic = new SimpleSoundInstance(
                         PortalCubedSounds.TBEAM_TRAVEL, SoundSource.BLOCKS,
-                        0.1f, 1f, SoundInstance.createUnseededRandom(),
+                        0.3f, 1f, SoundInstance.createUnseededRandom(),
                         true, 0, SoundInstance.Attenuation.NONE,
                         0.0, 0.0, 0.0, true
                     );
                     client.getSoundManager().play(excursionFunnelMusic);
-                } else if (excursionFunnelMusic.getVolume() < 1f && excursionFunnelMusic instanceof AbstractSoundInstanceAccessor access) {
+                } else if (excursionFunnelMusic.getVolume() < .3f && excursionFunnelMusic instanceof AbstractSoundInstanceAccessor access) {
                     access.setVolume(excursionFunnelMusic.getVolume() + 0.05f);
                     if (((MusicManagerAccessor)client.getMusicManager()).getCurrentMusic() instanceof AbstractSoundInstanceAccessor cAccess) {
                         cAccess.setVolume(1f - excursionFunnelMusic.getVolume() / 2);
