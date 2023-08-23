@@ -102,6 +102,8 @@ public class LaserEmitterBlockEntity extends BlockEntity {
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
+        if (!state.is(PortalCubedBlocks.LASER_EMITTER))
+            return;
         multiSegments.clear();
         if (!state.getValue(LaserEmitterBlock.POWERED)) {
             clearTargets();
