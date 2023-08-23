@@ -259,31 +259,46 @@
 
 	"laser/emitter_activate": {
 		"sounds": [
-			"portalcubed:laser/laser_activation_01"
+			{
+				"name": "portalcubed:laser/laser_activation_01",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.laser.activate"
 	},
 	"laser/beam_music": {
 		"sounds": [
-			"portalcubed:laser/laser_beam_lp_02"
+			{
+				"name": "portalcubed:laser/laser_beam_lp_02",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.laser.ambiance"
 	},
 	"laser/node_music": {
 		"sounds": [
-			"portalcubed:laser/laser_node_lp_01"
+			{
+				"name": "portalcubed:laser/laser_node_lp_01",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.laser.node_sing"
 	},
 	"laser/node_activate": {
 		"sounds": [
-			"portalcubed:laser/laser_node_power_on"
+			{
+				"name": "portalcubed:laser/laser_node_power_on",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.laser.node_activate"
 	},
 	"laser/node_deactivate": {
 		"sounds": [
-			"portalcubed:laser/laser_node_power_off"
+			{
+				"name": "portalcubed:laser/laser_node_power_off",
+				"volume": 0.3
+			}
 		],
 		"subtitle": "subtitles.portalcubed.laser.node_deactivate"
 	},
