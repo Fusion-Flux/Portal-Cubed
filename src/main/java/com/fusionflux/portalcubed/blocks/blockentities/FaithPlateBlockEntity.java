@@ -106,7 +106,7 @@ public class FaithPlateBlockEntity extends EntityLikeBlockEntity implements Exte
                     null,
                     pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
                     PortalCubedSounds.CATAPULT_LAUNCH_EVENT, SoundSource.BLOCKS,
-                        .3f, 1f
+                        .2f, 1f
                 );
             }
         }
