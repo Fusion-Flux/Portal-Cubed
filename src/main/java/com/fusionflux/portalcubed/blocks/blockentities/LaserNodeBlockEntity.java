@@ -38,7 +38,7 @@ public class LaserNodeBlockEntity extends BlockEntity {
 
     public void updateState(boolean toggle) {
         assert level != null;
-        level.playSound(null, worldPosition, toggle ? PortalCubedSounds.LASER_NODE_ACTIVATE_EVENT : PortalCubedSounds.LASER_NODE_DEACTIVATE_EVENT, SoundSource.BLOCKS, 0.5f, 1f);
+        level.playSound(null, worldPosition, toggle ? PortalCubedSounds.LASER_NODE_ACTIVATE_EVENT : PortalCubedSounds.LASER_NODE_DEACTIVATE_EVENT, SoundSource.BLOCKS, 0.3f, 1f);
         level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(BlockStateProperties.ENABLED, toggle));
         setChanged();
     }
