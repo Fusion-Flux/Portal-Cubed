@@ -209,7 +209,8 @@ public class LaserEmitterBlockEntity extends BlockEntity {
                         }
                         if (!hitEntity.onGround()) continue;
                         hitEntity.hurt(pcSources(level).laser(), PortalCubedConfig.laserDamage);
-                        hitEntity.setRemainingFireTicks(Math.max(10, hitEntity.getRemainingFireTicks()));
+                        if(PortalCubedConfig.laserDamage > 0)
+                            hitEntity.setRemainingFireTicks(Math.max(10, hitEntity.getRemainingFireTicks()));
                         final Vec3 velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.position())
                             .normalize()
                             .scale(1.25);
