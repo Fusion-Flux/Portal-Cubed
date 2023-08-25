@@ -122,21 +122,22 @@ public class LaserNodeBlockEntity extends BlockEntity {
 
                 @Override
                 public void tick() {
-                    if (
-                        isRemoved() ||
-                            !LaserNodeBlockEntity.this.sound.equals(soundId) ||
-                            level == null || !level.getBlockState(worldPosition).getValue(BlockStateProperties.ENABLED)
-                    ) {
-                        musicInstance = null;
-                        stop();
+                    if (level != null && !isRemoved() && LaserNodeBlockEntity.this.sound.equals(soundId)) {
+                        BlockState state = level.getBlockState(worldPosition);
+                        if (state.hasProperty(BlockStateProperties.ENABLED) && state.getValue(BlockStateProperties.ENABLED)) {
+                            if (!isCustomSound) return;
+                            final Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+                            final float newVolume = Mth.clampedLerp(0.01f, 1f, 1f - (float)cameraPos.subtract(x, y, z).length() / 16f);
+                            if (newVolume != volume) {
+                                volume = newVolume;
+                                Minecraft.getInstance().getSoundManager().updateSourceVolume(null, 0);
+                            }
+                            return;
+                        }
                     }
-                    if (!isCustomSound) return;
-                    final Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-                    final float newVolume = Mth.clampedLerp(0.01f, 1f, 1f - (float)cameraPos.subtract(x, y, z).length() / 16f);
-                    if (newVolume != volume) {
-                        volume = newVolume;
-                        Minecraft.getInstance().getSoundManager().updateSourceVolume(null, 0);
-                    }
+
+                    musicInstance = null;
+                    stop();
                 }
             };
             Minecraft.getInstance().getSoundManager().play(musicInstance);

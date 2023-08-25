@@ -10,6 +10,7 @@ import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleTypes;
 import com.fusionflux.portalcubed.entity.CorePhysicsEntity;
 import com.fusionflux.portalcubed.entity.TurretEntity;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
+import com.fusionflux.portalcubed.items.PortalGun;
 import com.fusionflux.portalcubed.listeners.NbtSyncable;
 import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import com.fusionflux.portalcubed.util.AdvancedEntityRaycast;
@@ -87,8 +88,11 @@ public class PortalCubedServerPackets {
                         return;
                     }
                 }
-                player.playNotifySound(PortalCubedSounds.HOLD_FAIL_EVENT, SoundSource.NEUTRAL, 0.3f, 1f);
-                ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
+                // bc: only do fail stuff if holding portal gun
+                if (player.isHolding(stack -> stack.getItem() instanceof PortalGun)) {
+                    player.playNotifySound(PortalCubedSounds.HOLD_FAIL_EVENT, SoundSource.NEUTRAL, 0.3f, 1f);
+                    ServerPlayNetworking.send(player, PortalCubedClientPackets.HAND_SHAKE_PACKET, PacketByteBufs.create());
+                }
             }
         });
     }
