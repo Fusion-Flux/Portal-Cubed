@@ -135,7 +135,7 @@ dependencies {
 		modLocalRuntime(files("runtime-mods/$it"))
 	}
 
-	modCompileOnly("maven.modrinth:sodium:mc1.20-0.4.10")
+	modCompileOnly("maven.modrinth:sodium:mc1.20.1-0.5.2")
 }
 
 loom {
