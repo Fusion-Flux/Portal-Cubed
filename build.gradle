@@ -1,141 +1,54 @@
 plugins {
 	id("org.quiltmc.loom") version "1.1.+"
 	id("org.ajoberstar.grgit") version "4.1.0"
-	id("checkstyle")
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
 
-base.archivesName.set(project["archives_base_name"] as String)
-project.version = "${project["mod_version"]}-rev.${grgit.head().abbreviatedId}"
-project.group = project["maven_group"]
-
-def minecraftVersion = project["minecraft_version"]
+archivesBaseName = archives_base_name
+version = "$mod_version-rev.${grgit.head().abbreviatedId}"
+group = maven_group
 
 repositories {
-	maven {
-		url = "https://maven.shedaniel.me/"
-	}
-
-	maven {
-		url = "https://www.cursemaven.com"
-	}
-
-	maven {
-		url = "https://maven.terraformersmc.com/releases"
-	}
-
-	maven {
-		url = "https://hephaestus.dev/release"
-	}
-
-	maven {
-		url = "https://api.modrinth.com/maven"
-	}
-
-	maven {
-		url = "https://maven.tterrag.com/"
-	}
-
-	maven {
-		url = "https://mvn.devos.one/snapshots/"
-	}
-
-	maven {
-		name = "Ladysnake Mods"
-		url = uri("https://maven.ladysnake.org/releases")
-	}
-
-	maven {
-		url = uri("https://maven.jamieswhiteshirt.com/libs-release")
-		content {
-			includeGroup("com.jamieswhiteshirt")
-		}
-	}
-
-	maven {
-		name = "AlexIIL"
-		url = uri("https://maven.alexiil.uk/")
-	}
-
-	maven {
-		name = "Gegy"
-		url = uri("https://maven.gegy.dev")
-	}
-
-	maven {
-		name = "ParchmentMC"
-		url = uri("https://maven.parchmentmc.org")
-	}
-
-	maven {
-		url = "https://jitpack.io/"
-	}
-
+	maven { url = "https://maven.terraformersmc.com/releases" } // Mod Menu
+	maven { url = "https://api.modrinth.com/maven" }
+	maven { url = "https://mvn.devos.one/snapshots/" } // SCRT
+	maven { url = "https://maven.ladysnake.org/releases" } // CCA
+	maven { url = "https://maven.gegy.dev" } // LDL
+	maven { url = "https://maven.parchmentmc.org" }
+	maven { url = "https://jitpack.io/" } // Mixin Extras
 }
 
 dependencies {
-	minecraft("com.mojang:minecraft:$minecraftVersion")
-
+	// Setup
+	minecraft("com.mojang:minecraft:$minecraft_version")
 	mappings(loom.layered {
-		mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${mappings_version}:intermediary-v2")
-		parchment("org.parchmentmc.data:parchment-${project["parchment_version"]}@zip")
-		officialMojangMappings()
+		mappings("org.quiltmc:quilt-mappings:$minecraft_version+build.$qm_version:intermediary-v2")
+		parchment("org.parchmentmc.data:parchment-$parchment_version@zip")
+		officialMojangMappings { nameSyntheticMembers = false }
 	})
+	modImplementation("org.quiltmc:quilt-loader:$loader_version")
 
-	modImplementation("org.quiltmc:quilt-loader:${project["loader_version"]}")
-	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${project["quilted_version"]}-$minecraftVersion")
+	// Dependencies
+	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:$qfapi_version-$minecraft_version")
+	modImplementation(include("io.github.tropheusj.stonecutter_recipe_tags:fabric:5.2.0+1.19.4.fabric")) { transitive = false }
+	modImplementation(include("maven.modrinth:gravity-api:$gravity_api_version"))
+	modImplementation(include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:$cca_version"))
+	modImplementation(include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:$cca_version"))
+	modImplementation(include("maven.modrinth:midnightlib:$midnight_lib_version-quilt"))
+	modImplementation(include("maven.modrinth:json-entity-animation:$jea_version"))
+	modImplementation(include("maven.modrinth:no-indium:$no_indium_version"))
+	implementation(include("net.objecthunter:exp4j:0.4.8")) // Velocity Helper math
+	annotationProcessor(modImplementation(include("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:$mixin_extras_version")))
 
-	modImplementation("com.terraformersmc:modmenu:${project["mod_menu_version"]}") {
-		exclude(group: "net.fabricmc.fabric-api")
-		exclude(group: "net.fabricmc")
-	}
-
-	include(modApi("io.github.tropheusj.stonecutter_recipe_tags:fabric:5.2.0+1.19.4.fabric") {
-		transitive = false
-	})
-
-	include(modImplementation("maven.modrinth:gravity-api:${project["gravity_api_version"]}") {
-		transitive = false
-	})
-
-	include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.1") {
-		exclude(group: "net.fabricmc.fabric-api")
-		exclude(group: "net.fabricmc")
-	})
-	include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.1")
-
-	include(modImplementation("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:0.2.0-beta.8"))
-	annotationProcessor("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:0.2.0-beta.8")
-
-	include(modImplementation("maven.modrinth:midnightlib:1.4.1-quilt"))
-
-//	modCompileOnly("com.simibubi.create:create-fabric-1.19.2:0.5.0.i-930+1.19.2")
-
-	modCompileOnly("maven.modrinth:visiblebarriers:2.0.4")
-
-	include(implementation("net.objecthunter:exp4j:0.4.8"))
-
-//	modCompileOnly("alexiil.mc.lib:libmultipart-all:0.8.0")
-
-	modCompileOnly("dev.lambdaurora:lambdynamiclights:2.3.1+1.20.1")
-
-	modCompileOnly("com.github.Virtuoel:Pehkui:3.6.3") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
-
-	modCompileOnly("maven.modrinth:rayon:1.7.2+1.20.1-fabric")
-
-	include(modImplementation("maven.modrinth:json-entity-animation:0.2.1+1.19.4"))
-
-	include(modImplementation("maven.modrinth:no-indium:1.1.0+1.20"))
-
-	file("runtime-mods").list { _, name -> name.endsWith(".jar") }.each {
-		modLocalRuntime(files("runtime-mods/$it"))
-	}
-
-	modCompileOnly("maven.modrinth:sodium:mc1.20.1-0.5.2")
+	// Compat
+	modImplementation("com.terraformersmc:modmenu:$mod_menu_version")
+	modCompileOnly("maven.modrinth:visiblebarriers:$vb_version")
+	modCompileOnly("dev.lambdaurora:lambdynamiclights:$ldl_version")
+	modCompileOnly("com.github.Virtuoel:Pehkui:$pehkui_version")
+	modCompileOnly("maven.modrinth:rayon:$rayon_version-fabric")
+	modCompileOnly("maven.modrinth:sodium:$sodium_version")
 }
 
 loom {
@@ -158,12 +71,6 @@ sourceSets {
 			exclude("src/generated/resources/.cache")
 		}
 	}
-}
-
-checkstyle {
-	toolVersion = "10.7.0"
-	ignoreFailures = false
-	maxWarnings = project["checkstyle_max_warns"] as int
 }
 
 tasks.processResources {
