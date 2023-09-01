@@ -10,8 +10,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public interface MultiblockItem {
-    <T extends Block & TwoByTwoFacingMultiblockBlock> T getMultiblockBlock();
+	<T extends Block & TwoByTwoFacingMultiblockBlock> T getMultiblockBlock();
 
-    @Nullable
-    TwoByTwo findValidPlacement(Level level, BlockState state, BlockPos initial, Direction playerFacing);
+	@Nullable
+	TwoByTwo findValidPlacement(Level level, BlockState state, BlockPos initial, Direction playerFacing);
 }

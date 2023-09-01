@@ -9,14 +9,14 @@ import net.minecraft.resources.ResourceLocation;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class Portal1CompanionCubeRenderer extends CorePhysicsRenderer<Portal1CompanionCubeEntity, Portal1CompanionCubeModel> {
-    private static final ResourceLocation BASE_TEXTURE = id("textures/entity/portal_1_companion_cube.png");
+	private static final ResourceLocation BASE_TEXTURE = id("textures/entity/portal_1_companion_cube.png");
 
-    public Portal1CompanionCubeRenderer(EntityRendererProvider.Context context) {
-        super(context, new Portal1CompanionCubeModel(Minecraft.getInstance().getEntityModels().bakeLayer(Portal1CompanionCubeModel.COMPANION_CUBE_MAIN_LAYER)), 0.5f);
-    }
+	public Portal1CompanionCubeRenderer(EntityRendererProvider.Context context) {
+		super(context, new Portal1CompanionCubeModel(Minecraft.getInstance().getEntityModels().bakeLayer(Portal1CompanionCubeModel.COMPANION_CUBE_MAIN_LAYER)), 0.5f);
+	}
 
-    @Override
-    public ResourceLocation getTextureLocation(Portal1CompanionCubeEntity entity) {
-        return BASE_TEXTURE;
-    }
+	@Override
+	public ResourceLocation getTextureLocation(Portal1CompanionCubeEntity entity) {
+		return BASE_TEXTURE;
+	}
 }

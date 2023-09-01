@@ -6,6 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(DeathScreen.class)
 public interface DeathScreenAccessor {
-    @Accessor
-    int getDelayTicker();
+	@Accessor
+	int getDelayTicker();
 }

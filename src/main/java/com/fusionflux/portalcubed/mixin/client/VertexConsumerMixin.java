@@ -10,15 +10,15 @@ import java.util.Objects;
 
 @Mixin(VertexConsumer.class)
 public interface VertexConsumerMixin {
-    @ModifyArg(
-        method = "putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFF[IIZ)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;vertex(FFFFFFFFFIIFFF)V"
-        ),
-        index = 6
-    )
-    default float modifyAlpha(float original) {
-        return EnergyPelletRenderer.pelletAlpha == null ? original : EnergyPelletRenderer.pelletAlpha;
-    }
+	@ModifyArg(
+		method = "putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFF[IIZ)V",
+		at = @At(
+			value = "INVOKE",
+			target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;vertex(FFFFFFFFFIIFFF)V"
+		),
+		index = 6
+	)
+	default float modifyAlpha(float original) {
+		return EnergyPelletRenderer.pelletAlpha == null ? original : EnergyPelletRenderer.pelletAlpha;
+	}
 }

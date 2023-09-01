@@ -39,75 +39,75 @@ import java.util.function.Supplier;
 
 @Mixin(Level.class)
 public abstract class LevelMixin implements LevelAccessor, LevelExt {
-    @Unique
-    private PortalCubedDamageSources pc$damageSources;
-    @Unique
-    private Long2ObjectMap<List<EmittedEntity>> pc$blockChangeListeners = new Long2ObjectOpenHashMap<>();
+	@Unique
+	private PortalCubedDamageSources pc$damageSources;
+	@Unique
+	private Long2ObjectMap<List<EmittedEntity>> pc$blockChangeListeners = new Long2ObjectOpenHashMap<>();
 
-    @Shadow
-    protected abstract LevelEntityGetter<Entity> getEntities();
+	@Shadow
+	protected abstract LevelEntityGetter<Entity> getEntities();
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void createDamageSources(
-        WritableLevelData writableLevelData,
-        ResourceKey<Level> resourceKey,
-        RegistryAccess registryAccess,
-        Holder<DimensionType> holder,
-        Supplier<ProfilerFiller> supplier,
-        boolean bl,
-        boolean bl2,
-        long l,
-        int i,
-        CallbackInfo ci
-    ) {
-        pc$damageSources = new PortalCubedDamageSources(registryAccess);
-    }
+	@Inject(method = "<init>", at = @At("TAIL"))
+	private void createDamageSources(
+		WritableLevelData writableLevelData,
+		ResourceKey<Level> resourceKey,
+		RegistryAccess registryAccess,
+		Holder<DimensionType> holder,
+		Supplier<ProfilerFiller> supplier,
+		boolean bl,
+		boolean bl2,
+		long l,
+		int i,
+		CallbackInfo ci
+	) {
+		pc$damageSources = new PortalCubedDamageSources(registryAccess);
+	}
 
-    @Inject(method = "setBlocksDirty", at = @At("HEAD"))
-    private void updateEmittedEntities(BlockPos pos, BlockState old, BlockState updated, CallbackInfo ci) {
-        if ((Object) this instanceof ServerLevel) {
-            getListeners(pos).forEachRemaining(EmittedEntity::reEmit);
-        }
-    }
+	@Inject(method = "setBlocksDirty", at = @At("HEAD"))
+	private void updateEmittedEntities(BlockPos pos, BlockState old, BlockState updated, CallbackInfo ci) {
+		if ((Object) this instanceof ServerLevel) {
+			getListeners(pos).forEachRemaining(EmittedEntity::reEmit);
+		}
+	}
 
-    @Unique
-    private Iterator<EmittedEntity> getListeners(BlockPos pos) {
-        long sectionPos = SectionPos.asLong(pos);
-        List<EmittedEntity> listeners = pc$blockChangeListeners.get(sectionPos);
-        return listeners == null || listeners.isEmpty() ? Collections.emptyIterator() : new AbstractIterator<>() {
-            private final Iterator<EmittedEntity> entities = List.copyOf(listeners).iterator(); // copy to avoid CMEs
+	@Unique
+	private Iterator<EmittedEntity> getListeners(BlockPos pos) {
+		long sectionPos = SectionPos.asLong(pos);
+		List<EmittedEntity> listeners = pc$blockChangeListeners.get(sectionPos);
+		return listeners == null || listeners.isEmpty() ? Collections.emptyIterator() : new AbstractIterator<>() {
+			private final Iterator<EmittedEntity> entities = List.copyOf(listeners).iterator(); // copy to avoid CMEs
 
-            @Override
-            protected EmittedEntity computeNext() {
-                if (!entities.hasNext())
-                    return endOfData();
-                EmittedEntity next = entities.next();
-                return next.listensTo(pos) ? next : computeNext();
-            }
-        };
-    }
+			@Override
+			protected EmittedEntity computeNext() {
+				if (!entities.hasNext())
+					return endOfData();
+				EmittedEntity next = entities.next();
+				return next.listensTo(pos) ? next : computeNext();
+			}
+		};
+	}
 
-    @Override
-    public void pc$addBlockChangeListener(long sectionPos, EmittedEntity entity) {
-        pc$blockChangeListeners.computeIfAbsent(sectionPos, $ -> new ArrayList<>()).add(entity);
-    }
+	@Override
+	public void pc$addBlockChangeListener(long sectionPos, EmittedEntity entity) {
+		pc$blockChangeListeners.computeIfAbsent(sectionPos, $ -> new ArrayList<>()).add(entity);
+	}
 
-    @Override
-    public void pc$removeBlockChangeListener(long sectionPos, EmittedEntity entity) {
-        List<EmittedEntity> listeners = pc$blockChangeListeners.get(sectionPos);
-        if (listeners != null) {
-            listeners.remove(entity);
-        }
-    }
+	@Override
+	public void pc$removeBlockChangeListener(long sectionPos, EmittedEntity entity) {
+		List<EmittedEntity> listeners = pc$blockChangeListeners.get(sectionPos);
+		if (listeners != null) {
+			listeners.remove(entity);
+		}
+	}
 
-    @Override
-    @Nullable
-    public Entity getEntityByUuid(UUID uuid) {
-        return this.getEntities().get(uuid);
-    }
+	@Override
+	@Nullable
+	public Entity getEntityByUuid(UUID uuid) {
+		return this.getEntities().get(uuid);
+	}
 
-    @Override
-    public PortalCubedDamageSources pcDamageSources() {
-        return pc$damageSources;
-    }
+	@Override
+	public PortalCubedDamageSources pcDamageSources() {
+		return pc$damageSources;
+	}
 }

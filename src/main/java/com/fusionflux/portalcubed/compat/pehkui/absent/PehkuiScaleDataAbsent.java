@@ -3,10 +3,10 @@ package com.fusionflux.portalcubed.compat.pehkui.absent;
 import com.fusionflux.portalcubed.compat.pehkui.PehkuiScaleData;
 
 enum PehkuiScaleDataAbsent implements PehkuiScaleData {
-    INSTANCE;
+	INSTANCE;
 
-    @Override
-    public double getScale() {
-        return 1;
-    }
+	@Override
+	public double getScale() {
+		return 1;
+	}
 }

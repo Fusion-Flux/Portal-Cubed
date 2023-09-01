@@ -7,9 +7,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(CreativeModeTabs.class)
 public interface CreativeModeTabsAccessor {
-    @Accessor
-    @SuppressWarnings("checkstyle:MethodName")
-    static void setCACHED_PARAMETERS(CreativeModeTab.ItemDisplayParameters cache) {
-        throw new AssertionError();
-    }
+	@Accessor
+	@SuppressWarnings("checkstyle:MethodName")
+	static void setCACHED_PARAMETERS(CreativeModeTab.ItemDisplayParameters cache) {
+		throw new AssertionError();
+	}
 }

@@ -16,41 +16,41 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public class CrowbarItem extends Item {
-    private static final Multimap<Attribute, AttributeModifier> ATTRIBUTE_MODIFIERS =
-        ImmutableMultimap.<Attribute, AttributeModifier>builder()
-            .put(
-                Attributes.ATTACK_DAMAGE,
-                new AttributeModifier(
-                    BASE_ATTACK_DAMAGE_UUID,
-                    "Weapon modifier",
-                    ((SwordItem)Items.IRON_SWORD).getDamage(),
-                    AttributeModifier.Operation.ADDITION
-                )
-            )
-            .put(
-                Attributes.ATTACK_SPEED,
-                new AttributeModifier(
-                    BASE_ATTACK_SPEED_UUID,
-                    "Weapon modifier",
-                    -2.4f,
-                    AttributeModifier.Operation.ADDITION
-                )
-            )
-            .build();
+	private static final Multimap<Attribute, AttributeModifier> ATTRIBUTE_MODIFIERS =
+		ImmutableMultimap.<Attribute, AttributeModifier>builder()
+			.put(
+				Attributes.ATTACK_DAMAGE,
+				new AttributeModifier(
+					BASE_ATTACK_DAMAGE_UUID,
+					"Weapon modifier",
+					((SwordItem)Items.IRON_SWORD).getDamage(),
+					AttributeModifier.Operation.ADDITION
+				)
+			)
+			.put(
+				Attributes.ATTACK_SPEED,
+				new AttributeModifier(
+					BASE_ATTACK_SPEED_UUID,
+					"Weapon modifier",
+					-2.4f,
+					AttributeModifier.Operation.ADDITION
+				)
+			)
+			.build();
 
-    public CrowbarItem(Properties settings) {
-        super(settings);
-    }
+	public CrowbarItem(Properties settings) {
+		super(settings);
+	}
 
-    @Override
-    public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player miner) {
-        // We spawn a decal instead of mining
-        return false;
-    }
+	@Override
+	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player miner) {
+		// We spawn a decal instead of mining
+		return false;
+	}
 
-    @NotNull
-    @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? ATTRIBUTE_MODIFIERS : super.getDefaultAttributeModifiers(slot);
-    }
+	@NotNull
+	@Override
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+		return slot == EquipmentSlot.MAINHAND ? ATTRIBUTE_MODIFIERS : super.getDefaultAttributeModifiers(slot);
+	}
 }

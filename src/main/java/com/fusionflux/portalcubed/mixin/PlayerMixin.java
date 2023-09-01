@@ -53,339 +53,339 @@ import java.util.Set;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity implements EntityExt {
-    @Unique
-    private boolean cfg;
+	@Unique
+	private boolean cfg;
 
-    protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level world) {
-        super(entityType, world);
-    }
+	protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level world) {
+		super(entityType, world);
+	}
 
-    @NotNull
-    @Shadow
-    @Override
-    public abstract ItemStack getItemBySlot(@NotNull EquipmentSlot slot);
+	@NotNull
+	@Shadow
+	@Override
+	public abstract ItemStack getItemBySlot(@NotNull EquipmentSlot slot);
 
-    @Shadow
-    @Override
-    public abstract void playSound(@NotNull SoundEvent sound, float volume, float pitch);
+	@Shadow
+	@Override
+	public abstract void playSound(@NotNull SoundEvent sound, float volume, float pitch);
 
-    @Shadow
-    @Override
-    public abstract boolean isSwimming();
+	@Shadow
+	@Override
+	public abstract boolean isSwimming();
 
-    @Shadow @Final private Abilities abilities;
+	@Shadow @Final private Abilities abilities;
 
-    @Override
-    @Shadow public abstract float getSpeed();
+	@Override
+	@Shadow public abstract float getSpeed();
 
-    @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
-    private Vec3 portalCubed$what(Vec3 travelVectorOriginal) {
-        if (!this.isNoGravity() && !this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.isInFunnel()) {
-            double mathVal = 1;
-            double horizontalVelocity = Math.abs(this.getDeltaMovement().x) + Math.abs(this.getDeltaMovement().z);
-            if (horizontalVelocity / 0.01783440120041885 > 1) {
-                mathVal = horizontalVelocity / 0.01783440120041885;
-            }
-            travelVectorOriginal = new Vec3(travelVectorOriginal.x / mathVal, travelVectorOriginal.y, travelVectorOriginal.z / mathVal);
-        }
-        if (CalledValues.getIsTeleporting(this)) {
-            travelVectorOriginal = Vec3.ZERO;
-        }
+	@ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
+	private Vec3 portalCubed$what(Vec3 travelVectorOriginal) {
+		if (!this.isNoGravity() && !this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.isInFunnel()) {
+			double mathVal = 1;
+			double horizontalVelocity = Math.abs(this.getDeltaMovement().x) + Math.abs(this.getDeltaMovement().z);
+			if (horizontalVelocity / 0.01783440120041885 > 1) {
+				mathVal = horizontalVelocity / 0.01783440120041885;
+			}
+			travelVectorOriginal = new Vec3(travelVectorOriginal.x / mathVal, travelVectorOriginal.y, travelVectorOriginal.z / mathVal);
+		}
+		if (CalledValues.getIsTeleporting(this)) {
+			travelVectorOriginal = Vec3.ZERO;
+		}
 
-        return travelVectorOriginal;
-    }
+		return travelVectorOriginal;
+	}
 
-    @Inject(method = "getFlyingSpeed", at = @At("HEAD"), cancellable = true)
-    private void replaceFlyingSpeed(CallbackInfoReturnable<Float> cir) {
-        if (!this.isNoGravity() && !this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.isInFunnel()) {
-            cir.setReturnValue(0.04f);
-        }
-    }
+	@Inject(method = "getFlyingSpeed", at = @At("HEAD"), cancellable = true)
+	private void replaceFlyingSpeed(CallbackInfoReturnable<Float> cir) {
+		if (!this.isNoGravity() && !this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && this.getItemBySlot(EquipmentSlot.FEET).getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.isInFunnel()) {
+			cir.setReturnValue(0.04f);
+		}
+	}
 
-    @Unique
-    private boolean enableNoDrag2;
+	@Unique
+	private boolean enableNoDrag2;
 
-    @Inject(method = "tick", at = @At("HEAD"))
-    public void tickHead(CallbackInfo ci) {
-        Player thisEntity = ((Player) (Object) this);
+	@Inject(method = "tick", at = @At("HEAD"))
+	public void tickHead(CallbackInfo ci) {
+		Player thisEntity = ((Player) (Object) this);
 
-        if (level().isClientSide && CalledValues.getHasTeleportationHappened(thisEntity)) {
-            var byteBuf = PacketByteBufs.create();
-            NetworkingSafetyWrapper.sendFromClient("client_teleport_update", byteBuf);
-            CalledValues.setHasTeleportationHappened(thisEntity, false);
-            ((EntityExt) thisEntity).setMaxFallHeight(-99999999);
-            CalledValues.setIsTeleporting(thisEntity, false);
-            this.setDeltaMovement(CalledValues.getVelocityUpdateAfterTeleport(thisEntity));
-        }
+		if (level().isClientSide && CalledValues.getHasTeleportationHappened(thisEntity)) {
+			var byteBuf = PacketByteBufs.create();
+			NetworkingSafetyWrapper.sendFromClient("client_teleport_update", byteBuf);
+			CalledValues.setHasTeleportationHappened(thisEntity, false);
+			((EntityExt) thisEntity).setMaxFallHeight(-99999999);
+			CalledValues.setIsTeleporting(thisEntity, false);
+			this.setDeltaMovement(CalledValues.getVelocityUpdateAfterTeleport(thisEntity));
+		}
 
-        GeneralUtil.setupPortalShapes(this);
+		GeneralUtil.setupPortalShapes(this);
 
-        ItemStack itemFeet = this.getItemBySlot(EquipmentSlot.FEET);
-        if ((!this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.isInFunnel())) {
-            if (!enableNoDrag2) {
-                enableNoDrag2 = true;
-            }
-            this.setDiscardFriction(true);
-        } else if (enableNoDrag2) {
-            enableNoDrag2 = false;
-            this.setDiscardFriction(false);
-        }
+		ItemStack itemFeet = this.getItemBySlot(EquipmentSlot.FEET);
+		if ((!this.onGround() && PortalCubedConfig.enableAccurateMovement && !this.isSwimming() && !this.abilities.flying && !this.isFallFlying() && itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS) && !this.isInFunnel())) {
+			if (!enableNoDrag2) {
+				enableNoDrag2 = true;
+			}
+			this.setDiscardFriction(true);
+		} else if (enableNoDrag2) {
+			enableNoDrag2 = false;
+			this.setDiscardFriction(false);
+		}
 
-        if (itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)) {
-            if (this.getDeltaMovement().y < -3.92) {
-                this.setDeltaMovement(this.getDeltaMovement().add(0, .081d, 0));
-            }
-        }
+		if (itemFeet.getItem().equals(PortalCubedItems.LONG_FALL_BOOTS)) {
+			if (this.getDeltaMovement().y < -3.92) {
+				this.setDeltaMovement(this.getDeltaMovement().add(0, .081d, 0));
+			}
+		}
 
-        if (!(
-            level().isClientSide
-                ? pc$allowCfgClient()
-                : level().getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH)
-            ) || !isShiftKeyDown()
-        ) {
-            cfg = false;
-        }
-    }
+		if (!(
+			level().isClientSide
+				? pc$allowCfgClient()
+				: level().getGameRules().getBoolean(PortalCubedGameRules.ALLOW_CROUCH_FLY_GLITCH)
+			) || !isShiftKeyDown()
+		) {
+			cfg = false;
+		}
+	}
 
-    @Unique
-    @ClientOnly
-    private static boolean pc$allowCfgClient() {
-        return PortalCubedClient.allowCfg;
-    }
+	@Unique
+	@ClientOnly
+	private static boolean pc$allowCfgClient() {
+		return PortalCubedClient.allowCfg;
+	}
 
-    @Inject(method = "tick", at = @At("TAIL"))
-    public void tickTail(CallbackInfo ci) {
-        if (this.level().isClientSide) {
-            Player thisEntity = ((Player) (Object) this);
+	@Inject(method = "tick", at = @At("TAIL"))
+	public void tickTail(CallbackInfo ci) {
+		if (this.level().isClientSide) {
+			Player thisEntity = ((Player) (Object) this);
 
-            Vec3 entityVelocity = thisEntity.getDeltaMovement();
+			Vec3 entityVelocity = thisEntity.getDeltaMovement();
 
-            AABB portalCheckBox = getBoundingBox();
+			AABB portalCheckBox = getBoundingBox();
 
-            portalCheckBox = portalCheckBox.expandTowards(entityVelocity).expandTowards(entityVelocity.scale(-1));
+			portalCheckBox = portalCheckBox.expandTowards(entityVelocity).expandTowards(entityVelocity.scale(-1));
 
-            List<Portal> list = level().getEntitiesOfClass(Portal.class, portalCheckBox);
+			List<Portal> list = level().getEntitiesOfClass(Portal.class, portalCheckBox);
 
-            Set<Pair<Portal, Vec3>> possiblePortals = new HashSet<>();
+			Set<Pair<Portal, Vec3>> possiblePortals = new HashSet<>();
 
-            for (Portal portalCheck : list) {
-                if (this.canChangeDimensions() && portalCheck.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
-                    assert portalCheck.getOtherNormal().isPresent();
-                    Direction portalFacing = portalCheck.getFacingDirection();
-                    entityVelocity = thisEntity.getDeltaMovement();
+			for (Portal portalCheck : list) {
+				if (this.canChangeDimensions() && portalCheck.getActive() && !CalledValues.getHasTeleportationHappened(thisEntity) && !CalledValues.getIsTeleporting(thisEntity)) {
+					assert portalCheck.getOtherNormal().isPresent();
+					Direction portalFacing = portalCheck.getFacingDirection();
+					entityVelocity = thisEntity.getDeltaMovement();
 
-                    if (thisEntity.shouldDiscardFriction()) {
-                        entityVelocity = entityVelocity.add(0, .08, 0);
-                    } else {
-                        entityVelocity = entityVelocity.add(0, .08 * .98, 0);
-                    }
-//                        Vec3 entityPos = portalCheck.getNormal().y > 0 ? thisEntity.position() : thisEntity.getEyePosition();
-                    Vec3 entityPos = thisEntity.position().add(0, doFeetTeleport(portalCheck) ? 0.02 - entityVelocity.y : thisEntity.getEyeHeight(), 0);
-                    final boolean isColliding = portalCheck.getBoundingBox().distanceToSqr(entityPos) <= entityVelocity.lengthSqr();
-                    if (portalFacing.step().x() < 0) {
-                        if (entityPos.x() + entityVelocity.x >= portalCheck.position().x() && entityVelocity.x() > 0 && isColliding) {
-                            possiblePortals.add(Pair.of(portalCheck, entityPos));
-                        }
-                    }
-                    if (portalFacing.step().y() < 0) {
-                        if (entityPos.y() + entityVelocity.y >= portalCheck.position().y() && entityVelocity.y() > 0 && isColliding) {
-                            possiblePortals.add(Pair.of(portalCheck, entityPos));
-                        }
-                    }
-                    if (portalFacing.step().z() < 0) {
-                        if (entityPos.z() + entityVelocity.z >= portalCheck.position().z() && entityVelocity.z() > 0 && isColliding) {
-                            possiblePortals.add(Pair.of(portalCheck, entityPos));
-                        }
-                    }
-                    if (portalFacing.step().x() > 0) {
-                        if (entityPos.x() + entityVelocity.x <= portalCheck.position().x() && entityVelocity.x() < 0 && isColliding) {
-                            possiblePortals.add(Pair.of(portalCheck, entityPos));
-                        }
-                    }
-                    if (portalFacing.step().y() > 0) {
-                        if (entityPos.y() + entityVelocity.y <= portalCheck.position().y() && entityVelocity.y() < 0 && isColliding) {
-                            possiblePortals.add(Pair.of(portalCheck, entityPos));
-                        }
-                    }
-                    if (portalFacing.step().z() > 0) {
-                        if (entityPos.z() + entityVelocity.z <= portalCheck.position().z() && entityVelocity.z() < 0 && isColliding) {
-                            possiblePortals.add(Pair.of(portalCheck, entityPos));
-                        }
-                    }
+					if (thisEntity.shouldDiscardFriction()) {
+						entityVelocity = entityVelocity.add(0, .08, 0);
+					} else {
+						entityVelocity = entityVelocity.add(0, .08 * .98, 0);
+					}
+//						Vec3 entityPos = portalCheck.getNormal().y > 0 ? thisEntity.position() : thisEntity.getEyePosition();
+					Vec3 entityPos = thisEntity.position().add(0, doFeetTeleport(portalCheck) ? 0.02 - entityVelocity.y : thisEntity.getEyeHeight(), 0);
+					final boolean isColliding = portalCheck.getBoundingBox().distanceToSqr(entityPos) <= entityVelocity.lengthSqr();
+					if (portalFacing.step().x() < 0) {
+						if (entityPos.x() + entityVelocity.x >= portalCheck.position().x() && entityVelocity.x() > 0 && isColliding) {
+							possiblePortals.add(Pair.of(portalCheck, entityPos));
+						}
+					}
+					if (portalFacing.step().y() < 0) {
+						if (entityPos.y() + entityVelocity.y >= portalCheck.position().y() && entityVelocity.y() > 0 && isColliding) {
+							possiblePortals.add(Pair.of(portalCheck, entityPos));
+						}
+					}
+					if (portalFacing.step().z() < 0) {
+						if (entityPos.z() + entityVelocity.z >= portalCheck.position().z() && entityVelocity.z() > 0 && isColliding) {
+							possiblePortals.add(Pair.of(portalCheck, entityPos));
+						}
+					}
+					if (portalFacing.step().x() > 0) {
+						if (entityPos.x() + entityVelocity.x <= portalCheck.position().x() && entityVelocity.x() < 0 && isColliding) {
+							possiblePortals.add(Pair.of(portalCheck, entityPos));
+						}
+					}
+					if (portalFacing.step().y() > 0) {
+						if (entityPos.y() + entityVelocity.y <= portalCheck.position().y() && entityVelocity.y() < 0 && isColliding) {
+							possiblePortals.add(Pair.of(portalCheck, entityPos));
+						}
+					}
+					if (portalFacing.step().z() > 0) {
+						if (entityPos.z() + entityVelocity.z <= portalCheck.position().z() && entityVelocity.z() < 0 && isColliding) {
+							possiblePortals.add(Pair.of(portalCheck, entityPos));
+						}
+					}
 
-                }
-            }
-            Pair<Portal, Vec3> portal = null;
-            double distance = 100;
-            for (var portalTry : possiblePortals) {
-                double checkDistance = portalTry.first().position().distanceTo(thisEntity.getBoundingBox().getCenter());
-                if (checkDistance < distance) {
-                    distance = checkDistance;
-                    portal = portalTry;
-                }
-            }
-            if (portal != null) {
-                performTeleport(thisEntity, portal.first(), entityVelocity, portal.second());
-            }
+				}
+			}
+			Pair<Portal, Vec3> portal = null;
+			double distance = 100;
+			for (var portalTry : possiblePortals) {
+				double checkDistance = portalTry.first().position().distanceTo(thisEntity.getBoundingBox().getCenter());
+				if (checkDistance < distance) {
+					distance = checkDistance;
+					portal = portalTry;
+				}
+			}
+			if (portal != null) {
+				performTeleport(thisEntity, portal.first(), entityVelocity, portal.second());
+			}
 
-            PortalCubedComponents.HOLDER_COMPONENT.get(this).tick();
+			PortalCubedComponents.HOLDER_COMPONENT.get(this).tick();
 
-        }
-    }
+		}
+	}
 
-    @Unique
-    private static boolean doFeetTeleport(Portal portal) {
-        assert portal.getOtherNormal().isPresent();
-        final double y = portal.getNormal().y;
-        final double oy = portal.getOtherNormal().get().y;
-        return (y > 0 && oy < 0) || y < 0;
-    }
+	@Unique
+	private static boolean doFeetTeleport(Portal portal) {
+		assert portal.getOtherNormal().isPresent();
+		final double y = portal.getNormal().y;
+		final double oy = portal.getOtherNormal().get().y;
+		return (y > 0 && oy < 0) || y < 0;
+	}
 
-    @Unique
-    private void performTeleport(
-            Player thisEntity,
-            Portal portal,
-            Vec3 entityVelocity,
-            Vec3 basePosition
-    ) {
-        assert portal.getDestination().isPresent();
-        assert portal.getOtherNormal().isPresent();
+	@Unique
+	private void performTeleport(
+			Player thisEntity,
+			Portal portal,
+			Vec3 entityVelocity,
+			Vec3 basePosition
+	) {
+		assert portal.getDestination().isPresent();
+		assert portal.getOtherNormal().isPresent();
 
-        if (this.level().isClientSide && thisEntity.isLocalPlayer()) {
-            Vec3 invert = (portal.getNormal().multiply(portal.getNormal())).scale(-1);
-            if (invert.x != 0) {
-                invert = invert.add(0, 1, 1);
-            } else if (invert.y != 0) {
-                invert = invert.add(1, 0, 1);
-            } else if (invert.z != 0) {
-                invert = invert.add(1, 1, 0);
-            }
-            final Optional<IPQuaternion> cameraInterp = interpCamera();
-            var byteBuf = PacketByteBufs.create();
-            byteBuf.writeVarInt(portal.getId());
-            byteBuf.writeFloat(thisEntity.getYRot());
-            byteBuf.writeFloat(thisEntity.getXRot());
-            byteBuf.writeOptional(cameraInterp, (b, q) -> {
-                b.writeDouble(q.x);
-                b.writeDouble(q.y);
-                b.writeDouble(q.z);
-                b.writeDouble(q.w);
-            });
-            byteBuf.writeDouble(entityVelocity.x);
-            byteBuf.writeDouble(entityVelocity.y);
-            byteBuf.writeDouble(entityVelocity.z);
-            Vec3 teleportOffset = new Vec3(
-                ((basePosition.x()) - portal.position().x()) * invert.x,
-                ((basePosition.y()) - portal.position().y()) * invert.y,
-                ((basePosition.z()) - portal.position().z()) * invert.z
-            );
-            Vec3 teleportOffsetNoRotate = Vec3.ZERO;
-            if (portal.getNormal().y < 0 && portal.getOtherNormal().get().y <= 0) {
-                teleportOffset = teleportOffset.add(
-                    0,
-                    thisEntity.getEyeHeight() - Math.sqrt(
-                        portal.getBoundingBox().distanceToSqr(thisEntity.position())
-                    ),
-                    0
-                );
-                if (portal.getOtherNormal().get().y > -1e-7) {
-                    teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
-                }
-            } else if (portal.getNormal().y > 0 && portal.getOtherNormal().get().y > 0) {
-                teleportOffset = teleportOffset.add(0, thisEntity.getEyeHeight(), 0);
-            }
-            if (portal.getOtherNormal().get().y < 0 && portal.getNormal().y <= 0) {
-                teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
-            }
-            byteBuf.writeDouble(teleportOffset.x);
-            byteBuf.writeDouble(teleportOffset.y);
-            byteBuf.writeDouble(teleportOffset.z);
-            byteBuf.writeDouble(teleportOffsetNoRotate.x);
-            byteBuf.writeDouble(teleportOffsetNoRotate.y);
-            byteBuf.writeDouble(teleportOffsetNoRotate.z);
-            NetworkingSafetyWrapper.sendFromClient("use_portal", byteBuf);
-//            CalledValues.setIsTeleporting(thisEntity, true);
+		if (this.level().isClientSide && thisEntity.isLocalPlayer()) {
+			Vec3 invert = (portal.getNormal().multiply(portal.getNormal())).scale(-1);
+			if (invert.x != 0) {
+				invert = invert.add(0, 1, 1);
+			} else if (invert.y != 0) {
+				invert = invert.add(1, 0, 1);
+			} else if (invert.z != 0) {
+				invert = invert.add(1, 1, 0);
+			}
+			final Optional<IPQuaternion> cameraInterp = interpCamera();
+			var byteBuf = PacketByteBufs.create();
+			byteBuf.writeVarInt(portal.getId());
+			byteBuf.writeFloat(thisEntity.getYRot());
+			byteBuf.writeFloat(thisEntity.getXRot());
+			byteBuf.writeOptional(cameraInterp, (b, q) -> {
+				b.writeDouble(q.x);
+				b.writeDouble(q.y);
+				b.writeDouble(q.z);
+				b.writeDouble(q.w);
+			});
+			byteBuf.writeDouble(entityVelocity.x);
+			byteBuf.writeDouble(entityVelocity.y);
+			byteBuf.writeDouble(entityVelocity.z);
+			Vec3 teleportOffset = new Vec3(
+				((basePosition.x()) - portal.position().x()) * invert.x,
+				((basePosition.y()) - portal.position().y()) * invert.y,
+				((basePosition.z()) - portal.position().z()) * invert.z
+			);
+			Vec3 teleportOffsetNoRotate = Vec3.ZERO;
+			if (portal.getNormal().y < 0 && portal.getOtherNormal().get().y <= 0) {
+				teleportOffset = teleportOffset.add(
+					0,
+					thisEntity.getEyeHeight() - Math.sqrt(
+						portal.getBoundingBox().distanceToSqr(thisEntity.position())
+					),
+					0
+				);
+				if (portal.getOtherNormal().get().y > -1e-7) {
+					teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
+				}
+			} else if (portal.getNormal().y > 0 && portal.getOtherNormal().get().y > 0) {
+				teleportOffset = teleportOffset.add(0, thisEntity.getEyeHeight(), 0);
+			}
+			if (portal.getOtherNormal().get().y < 0 && portal.getNormal().y <= 0) {
+				teleportOffsetNoRotate = teleportOffsetNoRotate.add(0, -thisEntity.getEyeHeight(), 0);
+			}
+			byteBuf.writeDouble(teleportOffset.x);
+			byteBuf.writeDouble(teleportOffset.y);
+			byteBuf.writeDouble(teleportOffset.z);
+			byteBuf.writeDouble(teleportOffsetNoRotate.x);
+			byteBuf.writeDouble(teleportOffsetNoRotate.y);
+			byteBuf.writeDouble(teleportOffsetNoRotate.z);
+			NetworkingSafetyWrapper.sendFromClient("use_portal", byteBuf);
+//			CalledValues.setIsTeleporting(thisEntity, true);
 
-            final TeleportResult result = PortalCubed.commonTeleport(
-                portal,
-                entityVelocity,
-                teleportOffset,
-                teleportOffsetNoRotate,
-                thisEntity,
-                cameraInterp,
-                thisEntity.getXRot(),
-                thisEntity.getYRot()
-            );
-            final Vec3 dest = result.dest();
-            moveTo(dest.x, dest.y, dest.z, result.yaw(), result.pitch());
-            setDeltaMovement(result.velocity());
-            interpCamera(
-                IPQuaternion.getCameraRotation(result.pitch(), result.yaw())
-                    .getConjugated()
-                    .hamiltonProduct(result.immediateFinalRot())
-            );
-        }
-    }
+			final TeleportResult result = PortalCubed.commonTeleport(
+				portal,
+				entityVelocity,
+				teleportOffset,
+				teleportOffsetNoRotate,
+				thisEntity,
+				cameraInterp,
+				thisEntity.getXRot(),
+				thisEntity.getYRot()
+			);
+			final Vec3 dest = result.dest();
+			moveTo(dest.x, dest.y, dest.z, result.yaw(), result.pitch());
+			setDeltaMovement(result.velocity());
+			interpCamera(
+				IPQuaternion.getCameraRotation(result.pitch(), result.yaw())
+					.getConjugated()
+					.hamiltonProduct(result.immediateFinalRot())
+			);
+		}
+	}
 
-    @Unique
-    @ClientOnly
-    private static Optional<IPQuaternion> interpCamera() {
-        return PortalCubedClient.interpCamera();
-    }
+	@Unique
+	@ClientOnly
+	private static Optional<IPQuaternion> interpCamera() {
+		return PortalCubedClient.interpCamera();
+	}
 
-    @Unique
-    @ClientOnly
-    private static void interpCamera(IPQuaternion interp) {
-        PortalCubedClient.cameraInterpStart = interp;
-        PortalCubedClient.cameraInterpStartTime = System.currentTimeMillis();
-    }
+	@Unique
+	@ClientOnly
+	private static void interpCamera(IPQuaternion interp) {
+		PortalCubedClient.cameraInterpStart = interp;
+		PortalCubedClient.cameraInterpStartTime = System.currentTimeMillis();
+	}
 
-    @Inject(
-        method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/player/Player;getEyeY()D"
-        )
-    )
-    public void portalCubed$dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<@Nullable ItemEntity> cir) {
-        if (!this.level().isClientSide && stack.getItem().equals(PortalCubedItems.PORTAL_GUN)) {
-            CompoundTag tag = stack.getOrCreateTag();
-            CompoundTag portalsTag = tag.getCompound(level().dimension().location().toString());
-            Portal portalHolder;
-            if (portalsTag.contains(("Left") + "Portal")) {
-                portalHolder = (Portal) ((ServerLevel) level()).getEntity(portalsTag.getUUID(("Left") + "Portal"));
-                if (portalHolder != null) {
-                    portalHolder.kill();
-                }
-            }
-            if (portalsTag.contains(("Right") + "Portal")) {
-                portalHolder = (Portal) ((ServerLevel) level()).getEntity(portalsTag.getUUID(("Right") + "Portal"));
-                if (portalHolder != null) {
-                    portalHolder.kill();
-                }
-            }
-        }
-    }
+	@Inject(
+		method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/player/Player;getEyeY()D"
+		)
+	)
+	public void portalCubed$dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<@Nullable ItemEntity> cir) {
+		if (!this.level().isClientSide && stack.getItem().equals(PortalCubedItems.PORTAL_GUN)) {
+			CompoundTag tag = stack.getOrCreateTag();
+			CompoundTag portalsTag = tag.getCompound(level().dimension().location().toString());
+			Portal portalHolder;
+			if (portalsTag.contains(("Left") + "Portal")) {
+				portalHolder = (Portal) ((ServerLevel) level()).getEntity(portalsTag.getUUID(("Left") + "Portal"));
+				if (portalHolder != null) {
+					portalHolder.kill();
+				}
+			}
+			if (portalsTag.contains(("Right") + "Portal")) {
+				portalHolder = (Portal) ((ServerLevel) level()).getEntity(portalsTag.getUUID(("Right") + "Portal"));
+				if (portalHolder != null) {
+					portalHolder.kill();
+				}
+			}
+		}
+	}
 
-    @Override
-    public boolean cfg() {
-        return cfg;
-    }
+	@Override
+	public boolean cfg() {
+		return cfg;
+	}
 
-    @Override
-    public void setCFG() {
-        cfg = true;
-    }
+	@Override
+	public void setCFG() {
+		cfg = true;
+	}
 
-    @WrapOperation(
-        method = "updatePlayerPose",
-        at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/world/entity/Pose;CROUCHING:Lnet/minecraft/world/entity/Pose;",
-            opcode = Opcodes.GETSTATIC
-        )
-    )
-    private Pose playerCrouching(Operation<Pose> original) {
-        return PortalCubed.portalHudModeServerOrClient(level()) ? Pose.SWIMMING : original.call();
-    }
+	@WrapOperation(
+		method = "updatePlayerPose",
+		at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/world/entity/Pose;CROUCHING:Lnet/minecraft/world/entity/Pose;",
+			opcode = Opcodes.GETSTATIC
+		)
+	)
+	private Pose playerCrouching(Operation<Pose> original) {
+		return PortalCubed.portalHudModeServerOrClient(level()) ? Pose.SWIMMING : original.call();
+	}
 }

@@ -12,9 +12,9 @@ import net.minecraft.core.Direction;
 
 @Mixin(SimpleBakedModel.class)
 public interface SimpleBakedModelAccessor {
-    @Accessor
-    List<BakedQuad> getUnculledFaces();
+	@Accessor
+	List<BakedQuad> getUnculledFaces();
 
-    @Accessor
-    Map<Direction, List<BakedQuad>> getCulledFaces();
+	@Accessor
+	Map<Direction, List<BakedQuad>> getCulledFaces();
 }

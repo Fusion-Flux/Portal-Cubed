@@ -12,16 +12,16 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ScreenEffectRenderer.class)
 public class ScreenEffectRendererMixin {
 
-    @WrapWithCondition(
-            method = "renderScreenEffect",
-            at = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/client/renderer/ScreenEffectRenderer;renderTex(Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;Lcom/mojang/blaze3d/vertex/PoseStack;)V"
-            )
-    )
-    @SuppressWarnings("unused")
-    private static boolean renderOverlays(TextureAtlasSprite sprite, PoseStack matrices) {
-        return CalledValues.getPortalCutout(Minecraft.getInstance().player).isEmpty();
-    }
+	@WrapWithCondition(
+			method = "renderScreenEffect",
+			at = @At(
+				value = "INVOKE",
+				target = "Lnet/minecraft/client/renderer/ScreenEffectRenderer;renderTex(Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;Lcom/mojang/blaze3d/vertex/PoseStack;)V"
+			)
+	)
+	@SuppressWarnings("unused")
+	private static boolean renderOverlays(TextureAtlasSprite sprite, PoseStack matrices) {
+		return CalledValues.getPortalCutout(Minecraft.getInstance().player).isEmpty();
+	}
 
 }

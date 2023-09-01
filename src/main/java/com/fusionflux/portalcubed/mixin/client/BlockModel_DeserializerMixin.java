@@ -12,18 +12,18 @@ import org.spongepowered.asm.mixin.injection.At;
 @SuppressWarnings("checkstyle:TypeName")
 @Mixin(BlockModel.Deserializer.class)
 public class BlockModel_DeserializerMixin {
-    // failing in parsing is much better than in baking.
-    @ModifyReturnValue(method = "deserialize", at = @At("RETURN"))
-    private BlockModel portalcubed$validateMultiRenderTypeModel(BlockModel original) {
-        if (!RenderMaterials.ARE_SUPPORTED)
-            return original;
+	// failing in parsing is much better than in baking.
+	@ModifyReturnValue(method = "deserialize", at = @At("RETURN"))
+	private BlockModel portalcubed$validateMultiRenderTypeModel(BlockModel original) {
+		if (!RenderMaterials.ARE_SUPPORTED)
+			return original;
 
-        for (BlockElement element : original.getElements()) {
-            String renderType = ((BlockElementExt) element).portalcubed$getRenderType();
-            if (renderType != null) {
-                MultiRenderTypeSimpleBakedModel.parseType(renderType);
-            }
-        }
-        return original;
-    }
+		for (BlockElement element : original.getElements()) {
+			String renderType = ((BlockElementExt) element).portalcubed$getRenderType();
+			if (renderType != null) {
+				MultiRenderTypeSimpleBakedModel.parseType(renderType);
+			}
+		}
+		return original;
+	}
 }

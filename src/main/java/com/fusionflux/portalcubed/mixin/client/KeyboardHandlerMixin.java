@@ -16,20 +16,20 @@ import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 
 @Mixin(KeyboardHandler.class)
 public class KeyboardHandlerMixin {
-    @Shadow @Final private Minecraft minecraft;
+	@Shadow @Final private Minecraft minecraft;
 
-    @WrapWithCondition(
-        method = "keyPress",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/KeyMapping;click(Lcom/mojang/blaze3d/platform/InputConstants$Key;)V"
-        )
-    )
-    private boolean dontSpamGrab(InputConstants.Key instance, long window, int key, int scancode, int action, int modifiers) {
-        if (action != GLFW_REPEAT) {
-            return true;
-        }
-        final KeyMapping keybind = KeyMappingAccessor.getMAP().get(instance);
-        return keybind != PortalCubedKeyBindings.GRAB && (!PortalCubedClient.isPortalHudMode() || keybind != minecraft.options.keyInventory);
-    }
+	@WrapWithCondition(
+		method = "keyPress",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/KeyMapping;click(Lcom/mojang/blaze3d/platform/InputConstants$Key;)V"
+		)
+	)
+	private boolean dontSpamGrab(InputConstants.Key instance, long window, int key, int scancode, int action, int modifiers) {
+		if (action != GLFW_REPEAT) {
+			return true;
+		}
+		final KeyMapping keybind = KeyMappingAccessor.getMAP().get(instance);
+		return keybind != PortalCubedKeyBindings.GRAB && (!PortalCubedClient.isPortalHudMode() || keybind != minecraft.options.keyInventory);
+	}
 }

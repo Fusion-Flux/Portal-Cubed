@@ -4,12 +4,12 @@ import com.fusionflux.portalcubed.sound.PortalCubedSounds;
 import net.minecraft.sounds.SoundEvent;
 
 public class TallButton extends TallButtonVariant {
-    public TallButton(Properties settings) {
-        super(settings);
-    }
+	public TallButton(Properties settings) {
+		super(settings);
+	}
 
-    @Override
-    public SoundEvent getClickSound(boolean powered) {
-        return powered ? PortalCubedSounds.PEDESTAL_BUTTON_PRESS_EVENT : PortalCubedSounds.PEDESTAL_BUTTON_RELEASE_EVENT;
-    }
+	@Override
+	public SoundEvent getClickSound(boolean powered) {
+		return powered ? PortalCubedSounds.PEDESTAL_BUTTON_PRESS_EVENT : PortalCubedSounds.PEDESTAL_BUTTON_RELEASE_EVENT;
+	}
 }

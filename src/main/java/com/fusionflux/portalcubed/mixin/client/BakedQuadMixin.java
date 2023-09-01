@@ -9,16 +9,16 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 
 @Mixin(BakedQuad.class)
 public class BakedQuadMixin implements BakedQuadExt {
-    @Unique
-    private String portalcubed$renderType;
+	@Unique
+	private String portalcubed$renderType;
 
-    @Override
-    public @Nullable String portalcubed$getRenderType() {
-        return portalcubed$renderType;
-    }
+	@Override
+	public @Nullable String portalcubed$getRenderType() {
+		return portalcubed$renderType;
+	}
 
-    @Override
-    public void portalcubed$setRenderType(String type) {
-        portalcubed$renderType = type;
-    }
+	@Override
+	public void portalcubed$setRenderType(String type) {
+		portalcubed$renderType = type;
+	}
 }

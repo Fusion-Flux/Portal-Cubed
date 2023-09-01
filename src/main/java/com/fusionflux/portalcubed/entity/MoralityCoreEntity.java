@@ -6,7 +6,7 @@ import net.minecraft.world.level.Level;
 
 public class MoralityCoreEntity extends CorePhysicsEntity  {
 
-    public MoralityCoreEntity(EntityType<? extends PathfinderMob> type, Level world) {
-        super(type, world);
-    }
+	public MoralityCoreEntity(EntityType<? extends PathfinderMob> type, Level world) {
+		super(type, world);
+	}
 }

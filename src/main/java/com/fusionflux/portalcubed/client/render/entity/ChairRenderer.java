@@ -9,14 +9,14 @@ import net.minecraft.resources.ResourceLocation;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class ChairRenderer extends CorePhysicsRenderer<ChairEntity, ChairModel> {
-    private static final ResourceLocation BASE_TEXTURE = id("textures/entity/chair.png");
+	private static final ResourceLocation BASE_TEXTURE = id("textures/entity/chair.png");
 
-    public ChairRenderer(EntityRendererProvider.Context context) {
-        super(context, new ChairModel(Minecraft.getInstance().getEntityModels().bakeLayer(ChairModel.CHAIR_LAYER)), 0.5f);
-    }
+	public ChairRenderer(EntityRendererProvider.Context context) {
+		super(context, new ChairModel(Minecraft.getInstance().getEntityModels().bakeLayer(ChairModel.CHAIR_LAYER)), 0.5f);
+	}
 
-    @Override
-    public ResourceLocation getTextureLocation(ChairEntity entity) {
-        return BASE_TEXTURE;
-    }
+	@Override
+	public ResourceLocation getTextureLocation(ChairEntity entity) {
+		return BASE_TEXTURE;
+	}
 }

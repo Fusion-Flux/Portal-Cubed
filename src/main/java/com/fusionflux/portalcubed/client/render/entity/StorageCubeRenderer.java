@@ -10,30 +10,30 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class StorageCubeRenderer extends CorePhysicsRenderer<StorageCubeEntity, StorageCubeModel> {
 
-    private static final ResourceLocation TEXTURE = id("textures/entity/storage_cube.png");
-    private static final ResourceLocation EMISSIVE_TEXTURE = id("textures/entity/storage_cube_e.png");
+	private static final ResourceLocation TEXTURE = id("textures/entity/storage_cube.png");
+	private static final ResourceLocation EMISSIVE_TEXTURE = id("textures/entity/storage_cube_e.png");
 
-    private static final ResourceLocation ACTIVE_TEXTURE = id("textures/entity/storage_cube_lit.png");
-    private static final ResourceLocation EMISSIVE_ACTIVE_TEXTURE = id("textures/entity/storage_cube_lit_e.png");
+	private static final ResourceLocation ACTIVE_TEXTURE = id("textures/entity/storage_cube_lit.png");
+	private static final ResourceLocation EMISSIVE_ACTIVE_TEXTURE = id("textures/entity/storage_cube_lit_e.png");
 
-    public StorageCubeRenderer(EntityRendererProvider.Context context) {
-        super(context, new StorageCubeModel(context.bakeLayer(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER)), 0.5f);
-        this.addLayer(EntityEmissiveRendering.featureRenderer(this, entity -> {
-            if (entity.isOnButton()) {
-                return EMISSIVE_ACTIVE_TEXTURE;
-            }
+	public StorageCubeRenderer(EntityRendererProvider.Context context) {
+		super(context, new StorageCubeModel(context.bakeLayer(StorageCubeModel.STORAGE_CUBE_MAIN_LAYER)), 0.5f);
+		this.addLayer(EntityEmissiveRendering.featureRenderer(this, entity -> {
+			if (entity.isOnButton()) {
+				return EMISSIVE_ACTIVE_TEXTURE;
+			}
 
-            return EMISSIVE_TEXTURE;
-        }));
-    }
+			return EMISSIVE_TEXTURE;
+		}));
+	}
 
-    @Override
-    public ResourceLocation getTextureLocation(StorageCubeEntity entity) {
-        if (entity.isOnButton()) {
-            return ACTIVE_TEXTURE;
-        }
+	@Override
+	public ResourceLocation getTextureLocation(StorageCubeEntity entity) {
+		if (entity.isOnButton()) {
+			return ACTIVE_TEXTURE;
+		}
 
-        return TEXTURE;
-    }
+		return TEXTURE;
+	}
 
 }

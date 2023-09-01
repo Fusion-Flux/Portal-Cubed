@@ -13,17 +13,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientAdvancements.class)
 public class ClientAdvancementMixin {
-    @Inject(
-        method = "update",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/protocol/game/ClientboundUpdateAdvancementsPacket;shouldReset()Z",
-            ordinal = 1
-        )
-    )
-    private void addGlobalAdvancement(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci, @Local Advancement advancement, @Local AdvancementProgress advancementProgress) {
-        if (advancementProgress.isDone()) {
-            PortalCubedClient.addGlobalAdvancement(advancement.getId());
-        }
-    }
+	@Inject(
+		method = "update",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/network/protocol/game/ClientboundUpdateAdvancementsPacket;shouldReset()Z",
+			ordinal = 1
+		)
+	)
+	private void addGlobalAdvancement(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci, @Local Advancement advancement, @Local AdvancementProgress advancementProgress) {
+		if (advancementProgress.isDone()) {
+			PortalCubedClient.addGlobalAdvancement(advancement.getId());
+		}
+	}
 }

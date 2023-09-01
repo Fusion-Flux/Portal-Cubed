@@ -6,37 +6,37 @@ import net.minecraft.world.phys.Vec3;
 
 public interface EntityExt {
 
-    boolean isBounced();
+	boolean isBounced();
 
-    void setBounced(boolean bounced);
+	void setBounced(boolean bounced);
 
-    boolean isInFunnel();
+	boolean isInFunnel();
 
-    void setInFunnel(boolean inFunnel);
+	void setInFunnel(boolean inFunnel);
 
-    int getFunnelTimer();
+	int getFunnelTimer();
 
-    void setFunnelTimer(int funnelTimer);
+	void setFunnelTimer(int funnelTimer);
 
-    double getMaxFallSpeed();
+	double getMaxFallSpeed();
 
-    void setMaxFallSpeed(double maxFallSpeed);
+	void setMaxFallSpeed(double maxFallSpeed);
 
-    double getMaxFallHeight();
+	double getMaxFallHeight();
 
-    int getGelTimer();
+	int getGelTimer();
 
-    void setGelTimer(int funnelTimer);
+	void setGelTimer(int funnelTimer);
 
-    Vec3 getLastVel();
+	Vec3 getLastVel();
 
-    void setMaxFallHeight(double maxFallHeight);
+	void setMaxFallHeight(double maxFallHeight);
 
-    boolean cfg();
+	boolean cfg();
 
-    void setCFG();
+	void setCFG();
 
-    void collidedWithVelocityHelper(VelocityHelperBlockEntity block);
+	void collidedWithVelocityHelper(VelocityHelperBlockEntity block);
 
-    void collidedWithCatapult(CatapultBlockEntity block);
+	void collidedWithCatapult(CatapultBlockEntity block);
 }

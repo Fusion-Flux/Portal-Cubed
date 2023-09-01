@@ -10,33 +10,33 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 
 public class PortalGunPrimary extends PortalGun {
-    public PortalGunPrimary(Properties settings) {
-        super(settings);
-    }
+	public PortalGunPrimary(Properties settings) {
+		super(settings);
+	}
 
-    @Override
-    protected void shoot(Level level, Player user, InteractionHand hand, boolean leftClick) {
-        super.shoot(level, user, hand, true);
-    }
+	@Override
+	protected void shoot(Level level, Player user, InteractionHand hand, boolean leftClick) {
+		super.shoot(level, user, hand, true);
+	}
 
-    @Override
-    public boolean isComplementary(ItemStack stack) {
-        return false;
-    }
+	@Override
+	public boolean isComplementary(ItemStack stack) {
+		return false;
+	}
 
-    @Override
-    public int getColorForHudHalf(ItemStack stack, boolean rightHalf) {
-        return super.getColorForHudHalf(stack, false);
-    }
+	@Override
+	public int getColorForHudHalf(ItemStack stack, boolean rightHalf) {
+		return super.getColorForHudHalf(stack, false);
+	}
 
-    @Override
-    @ClientOnly
-    public boolean isSideActive(ClientLevel level, ItemStack stack, boolean rightSide) {
-        return super.isSideActive(level, stack, false);
-    }
+	@Override
+	@ClientOnly
+	public boolean isSideActive(ClientLevel level, ItemStack stack, boolean rightSide) {
+		return super.isSideActive(level, stack, false);
+	}
 
-    @Override
-    protected boolean allowLinkingToOther() {
-        return true;
-    }
+	@Override
+	protected boolean allowLinkingToOther() {
+		return true;
+	}
 }

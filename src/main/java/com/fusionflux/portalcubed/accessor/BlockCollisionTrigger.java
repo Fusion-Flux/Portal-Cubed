@@ -9,11 +9,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public interface BlockCollisionTrigger {
-    default void onEntityEnter(BlockState state, Level world, BlockPos pos, Entity entity) {
-    }
+	default void onEntityEnter(BlockState state, Level world, BlockPos pos, Entity entity) {
+	}
 
-    default void onEntityLeave(BlockState state, Level world, BlockPos pos, Entity entity) {
-    }
+	default void onEntityLeave(BlockState state, Level world, BlockPos pos, Entity entity) {
+	}
 
-    VoxelShape getTriggerShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context);
+	VoxelShape getTriggerShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context);
 }

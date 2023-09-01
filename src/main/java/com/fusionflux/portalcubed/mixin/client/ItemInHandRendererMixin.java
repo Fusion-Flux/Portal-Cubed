@@ -27,73 +27,73 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
 public class ItemInHandRendererMixin implements ItemInHandRendererExt {
-    @Shadow @Final private Minecraft minecraft;
+	@Shadow @Final private Minecraft minecraft;
 
-    @Unique
-    private boolean isHoldingInvisible;
-    @Unique
-    private boolean handFaker;
+	@Unique
+	private boolean isHoldingInvisible;
+	@Unique
+	private boolean handFaker;
 
-    @Inject(
-        method = "renderArmWithItem",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            ordinal = 1
-        )
-    )
-    private void shakeGun(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
-        final long time = Util.getMillis() - PortalCubedClient.shakeStart;
-        if (time > 440) return;
-        matrices.mulPose(Axis.ZP.rotationDegrees((float)Math.sin(time / 35.0) * 6));
-    }
+	@Inject(
+		method = "renderArmWithItem",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+			ordinal = 1
+		)
+	)
+	private void shakeGun(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
+		final long time = Util.getMillis() - PortalCubedClient.shakeStart;
+		if (time > 440) return;
+		matrices.mulPose(Axis.ZP.rotationDegrees((float)Math.sin(time / 35.0) * 6));
+	}
 
-    @Inject(
-        method = "tick",
-        at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;",
-            opcode = Opcodes.PUTFIELD,
-            ordinal = 1
-        )
-    )
-    private void isHoldingInvisible(CallbackInfo ci) {
-        assert minecraft.player != null;
-        isHoldingInvisible =
-            !minecraft.player.getMainHandItem().is(PortalCubedItems.HOLDS_OBJECT) &&
-                PortalCubedComponents.HOLDER_COMPONENT.get(minecraft.player).entityBeingHeld() != null;
-        handFaker = false;
-    }
+	@Inject(
+		method = "tick",
+		at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;",
+			opcode = Opcodes.PUTFIELD,
+			ordinal = 1
+		)
+	)
+	private void isHoldingInvisible(CallbackInfo ci) {
+		assert minecraft.player != null;
+		isHoldingInvisible =
+			!minecraft.player.getMainHandItem().is(PortalCubedItems.HOLDS_OBJECT) &&
+				PortalCubedComponents.HOLDER_COMPONENT.get(minecraft.player).entityBeingHeld() != null;
+		handFaker = false;
+	}
 
-    @Inject(method = "renderArmWithItem", at = @At("HEAD"), cancellable = true)
-    private void noHandObject(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
-        if (hand == InteractionHand.MAIN_HAND && isHoldingInvisible) {
-            ci.cancel();
-        }
-    }
+	@Inject(method = "renderArmWithItem", at = @At("HEAD"), cancellable = true)
+	private void noHandObject(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
+		if (hand == InteractionHand.MAIN_HAND && isHoldingInvisible) {
+			ci.cancel();
+		}
+	}
 
-    @Inject(method = "renderPlayerArm", at = @At("HEAD"), cancellable = true)
-    private void noHandHud(PoseStack matrices, MultiBufferSource vertexConsumers, int light, float equipProgress, float swingProgress, HumanoidArm arm, CallbackInfo ci) {
-        if (PortalCubedClient.isPortalHudMode()) {
-            ci.cancel();
-        }
-    }
+	@Inject(method = "renderPlayerArm", at = @At("HEAD"), cancellable = true)
+	private void noHandHud(PoseStack matrices, MultiBufferSource vertexConsumers, int light, float equipProgress, float swingProgress, HumanoidArm arm, CallbackInfo ci) {
+		if (PortalCubedClient.isPortalHudMode()) {
+			ci.cancel();
+		}
+	}
 
-    @WrapOperation(
-        method = "tick",
-        at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;",
-            opcode = Opcodes.GETFIELD,
-            ordinal = 1
-        )
-    )
-    private ItemStack handFaker(ItemInHandRenderer instance, Operation<ItemStack> original) {
-        return handFaker ? null : original.call(instance);
-    }
+	@WrapOperation(
+		method = "tick",
+		at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;",
+			opcode = Opcodes.GETFIELD,
+			ordinal = 1
+		)
+	)
+	private ItemStack handFaker(ItemInHandRenderer instance, Operation<ItemStack> original) {
+		return handFaker ? null : original.call(instance);
+	}
 
-    @Override
-    public void startHandFaker() {
-        handFaker = true;
-    }
+	@Override
+	public void startHandFaker() {
+		handFaker = true;
+	}
 }

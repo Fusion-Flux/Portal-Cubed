@@ -22,53 +22,53 @@ import org.jetbrains.annotations.Nullable;
 
 public class NeurotoxinBlock extends BaseEntityBlock {
 
-    public NeurotoxinBlock(Properties settings) {
-        super(settings);
-    }
+	public NeurotoxinBlock(Properties settings) {
+		super(settings);
+	}
 
-    @NotNull
-    @Override
-    @SuppressWarnings("deprecation")
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return Shapes.empty();
-    }
+	@NotNull
+	@Override
+	@SuppressWarnings("deprecation")
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return Shapes.empty();
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (state.is(this)) {
-            if (random.nextInt(10) == 0) {
-                world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            }
-        }
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+		if (state.is(this)) {
+			if (random.nextInt(10) == 0) {
+				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+			}
+		}
+	}
 
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
-        return true;
-    }
+	@Override
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+		return true;
+	}
 
-    @NotNull
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
-    }
+	@NotNull
+	@Override
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.MODEL;
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (!level.isClientSide) {
-            entity.hurt(level.damageSources().drown(), 1);
-        }
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+		if (!level.isClientSide) {
+			entity.hurt(level.damageSources().drown(), 1);
+		}
+	}
 
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new NeurotoxinBlockEntity(pos, state);
-    }
+	@Override
+	public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new NeurotoxinBlockEntity(pos, state);
+	}
 
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, PortalCubedBlocks.NEUROTOXIN_BLOCK_ENTITY, NeurotoxinBlockEntity::tick);
-    }
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+		return createTickerHelper(type, PortalCubedBlocks.NEUROTOXIN_BLOCK_ENTITY, NeurotoxinBlockEntity::tick);
+	}
 }

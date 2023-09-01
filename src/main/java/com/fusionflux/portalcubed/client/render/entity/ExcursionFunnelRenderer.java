@@ -13,26 +13,26 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class ExcursionFunnelRenderer extends EntityRenderer<ExcursionFunnelEntity> {
-    public ExcursionFunnelRenderer(Context context) {
-        super(context);
-    }
+	public ExcursionFunnelRenderer(Context context) {
+		super(context);
+	}
 
-    @Override
-    public void render(ExcursionFunnelEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-        if (entity.model == null)
-            entity.model = new ExcursionFunnelModel(entity);
-        ExcursionFunnelModel model = entity.model;
-        VertexConsumer consumer = buffer.getBuffer(model.renderType(getTextureLocation(entity)));
+	@Override
+	public void render(ExcursionFunnelEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+		if (entity.model == null)
+			entity.model = new ExcursionFunnelModel(entity);
+		ExcursionFunnelModel model = entity.model;
+		VertexConsumer consumer = buffer.getBuffer(model.renderType(getTextureLocation(entity)));
 
-        poseStack.pushPose();
-        poseStack.mulPose(entity.getFacing().getRotation());
-        model.renderToBuffer(poseStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-        poseStack.popPose();
-    }
+		poseStack.pushPose();
+		poseStack.mulPose(entity.getFacing().getRotation());
+		model.renderToBuffer(poseStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+		poseStack.popPose();
+	}
 
-    @Override
-    @NotNull
-    public ResourceLocation getTextureLocation(ExcursionFunnelEntity entity) {
-        return entity.isReversed() ? ExcursionFunnelModel.REVERSED_TEXTURE : ExcursionFunnelModel.TEXTURE;
-    }
+	@Override
+	@NotNull
+	public ResourceLocation getTextureLocation(ExcursionFunnelEntity entity) {
+		return entity.isReversed() ? ExcursionFunnelModel.REVERSED_TEXTURE : ExcursionFunnelModel.TEXTURE;
+	}
 }

@@ -16,37 +16,37 @@ import java.util.function.Function;
 
 public final class EntityEmissiveRendering {
 
-    public static <T extends Entity, M extends EntityModel<T>> void renderEmissive(PoseStack matrices, MultiBufferSource vertexConsumers, T entity, M model, Function<T, ResourceLocation> emissiveTextureGetter) {
-        final ResourceLocation texture = emissiveTextureGetter.apply(entity);
-        if (texture == null) return;
-        var brightness = 1f;
-        if (entity instanceof Fizzleable fizzleable) {
-            brightness -= Math.min(fizzleable.getFizzleProgress(), 1f);
-        }
-        final var vertexConsumer = vertexConsumers.getBuffer(RenderType.eyes(emissiveTextureGetter.apply(entity)));
-        model.renderToBuffer(matrices, vertexConsumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, brightness, brightness, brightness, 1f);
-    }
+	public static <T extends Entity, M extends EntityModel<T>> void renderEmissive(PoseStack matrices, MultiBufferSource vertexConsumers, T entity, M model, Function<T, ResourceLocation> emissiveTextureGetter) {
+		final ResourceLocation texture = emissiveTextureGetter.apply(entity);
+		if (texture == null) return;
+		var brightness = 1f;
+		if (entity instanceof Fizzleable fizzleable) {
+			brightness -= Math.min(fizzleable.getFizzleProgress(), 1f);
+		}
+		final var vertexConsumer = vertexConsumers.getBuffer(RenderType.eyes(emissiveTextureGetter.apply(entity)));
+		model.renderToBuffer(matrices, vertexConsumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, brightness, brightness, brightness, 1f);
+	}
 
-    public static <T extends Entity, M extends EntityModel<T>> EmissiveFeatureRenderer<T, M> featureRenderer(RenderLayerParent<T, M> featureRendererContext, Function<T, ResourceLocation> emissiveTextureGetter) {
-        return new EmissiveFeatureRenderer<>(featureRendererContext, emissiveTextureGetter);
-    }
+	public static <T extends Entity, M extends EntityModel<T>> EmissiveFeatureRenderer<T, M> featureRenderer(RenderLayerParent<T, M> featureRendererContext, Function<T, ResourceLocation> emissiveTextureGetter) {
+		return new EmissiveFeatureRenderer<>(featureRendererContext, emissiveTextureGetter);
+	}
 
-    private static class EmissiveFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+	private static class EmissiveFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
-        private final Function<T, ResourceLocation> emissiveTextureGetter;
+		private final Function<T, ResourceLocation> emissiveTextureGetter;
 
-        private EmissiveFeatureRenderer(RenderLayerParent<T, M> featureRendererContext, Function<T, ResourceLocation> emissiveTextureGetter) {
-            super(featureRendererContext);
-            this.emissiveTextureGetter = emissiveTextureGetter;
-        }
+		private EmissiveFeatureRenderer(RenderLayerParent<T, M> featureRendererContext, Function<T, ResourceLocation> emissiveTextureGetter) {
+			super(featureRendererContext);
+			this.emissiveTextureGetter = emissiveTextureGetter;
+		}
 
-        @Override
-        public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity,
-                float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw,
-                float headPitch) {
-            EntityEmissiveRendering.renderEmissive(matrices, vertexConsumers, entity, getParentModel(), emissiveTextureGetter);
-        }
+		@Override
+		public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity,
+				float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw,
+				float headPitch) {
+			EntityEmissiveRendering.renderEmissive(matrices, vertexConsumers, entity, getParentModel(), emissiveTextureGetter);
+		}
 
-    }
+	}
 
 }

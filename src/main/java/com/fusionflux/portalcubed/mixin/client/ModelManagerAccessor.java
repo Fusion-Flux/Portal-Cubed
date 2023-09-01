@@ -11,6 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 
 @Mixin(ModelManager.class)
 public interface ModelManagerAccessor {
-    @Accessor
-    Map<ResourceLocation, BakedModel> getBakedRegistry();
+	@Accessor
+	Map<ResourceLocation, BakedModel> getBakedRegistry();
 }

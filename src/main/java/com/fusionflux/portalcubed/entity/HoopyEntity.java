@@ -6,7 +6,7 @@ import net.minecraft.world.level.Level;
 
 public class HoopyEntity extends CorePhysicsEntity  {
 
-    public HoopyEntity(EntityType<? extends PathfinderMob> type, Level world) {
-        super(type, world);
-    }
+	public HoopyEntity(EntityType<? extends PathfinderMob> type, Level world) {
+		super(type, world);
+	}
 }

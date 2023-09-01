@@ -6,8 +6,8 @@ import net.minecraft.world.entity.Entity;
 import virtuoel.pehkui.api.ScaleType;
 
 record PehkuiScaleTypePresent(ScaleType inner) implements PehkuiScaleType {
-    @Override
-    public PehkuiScaleData getScaleData(Entity entity) {
-        return new PehkuiScaleDataPresent(inner.getScaleData(entity));
-    }
+	@Override
+	public PehkuiScaleData getScaleData(Entity entity) {
+		return new PehkuiScaleDataPresent(inner.getScaleData(entity));
+	}
 }

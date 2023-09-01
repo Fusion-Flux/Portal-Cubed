@@ -11,25 +11,25 @@ import net.minecraft.world.entity.Entity;
 import java.util.function.Function;
 
 public abstract class FizzleableModel<T extends Entity & Fizzleable> extends EntityModel<T> {
-    private float fizzleProgress;
+	private float fizzleProgress;
 
-    public FizzleableModel() {
-        super();
-    }
+	public FizzleableModel() {
+		super();
+	}
 
-    public FizzleableModel(Function<ResourceLocation, RenderType> function) {
-        super(function);
-    }
+	public FizzleableModel(Function<ResourceLocation, RenderType> function) {
+		super(function);
+	}
 
-    @Override
-    public void setupAnim(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        fizzleProgress = 1f - Math.min(entity.getFizzleProgress(), 1f);
-    }
+	@Override
+	public void setupAnim(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+		fizzleProgress = 1f - Math.min(entity.getFizzleProgress(), 1f);
+	}
 
-    @Override
-    public final void renderToBuffer(PoseStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-        renderFizzled(matrices, vertices, light, overlay, red * fizzleProgress, green * fizzleProgress, blue * fizzleProgress, alpha);
-    }
+	@Override
+	public final void renderToBuffer(PoseStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+		renderFizzled(matrices, vertices, light, overlay, red * fizzleProgress, green * fizzleProgress, blue * fizzleProgress, alpha);
+	}
 
-    public abstract void renderFizzled(PoseStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha);
+	public abstract void renderFizzled(PoseStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha);
 }

@@ -18,14 +18,14 @@ import java.util.List;
 
 @Mixin(Item.class)
 public abstract class ItemMixin {
-    @Inject(method = "appendHoverText", at = @At("HEAD"))
-    private void portalCubedTooltip(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced, CallbackInfo ci) {
-        //noinspection ConstantValue
-        if (!((Object)this instanceof BlockItem)) {
-            final List<Component> tooltips = PortalCubed.TOOLTIPS.get(BuiltInRegistries.ITEM.getKey((Item)(Object)this));
-            if (tooltips != null) {
-                tooltipComponents.addAll(tooltips);
-            }
-        }
-    }
+	@Inject(method = "appendHoverText", at = @At("HEAD"))
+	private void portalCubedTooltip(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced, CallbackInfo ci) {
+		//noinspection ConstantValue
+		if (!((Object)this instanceof BlockItem)) {
+			final List<Component> tooltips = PortalCubed.TOOLTIPS.get(BuiltInRegistries.ITEM.getKey((Item)(Object)this));
+			if (tooltips != null) {
+				tooltipComponents.addAll(tooltips);
+			}
+		}
+	}
 }

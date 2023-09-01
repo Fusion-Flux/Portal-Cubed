@@ -5,9 +5,9 @@ import com.fusionflux.portalcubed.advancements.predicates.PortalCubedPredicates;
 import com.fusionflux.portalcubed.advancements.triggers.PortalCubedTriggers;
 
 public class PortalCubedAdvancements {
-    public static void register() {
-        PortalCubedConditions.register();
-        PortalCubedPredicates.register();
-        PortalCubedTriggers.register();
-    }
+	public static void register() {
+		PortalCubedConditions.register();
+		PortalCubedPredicates.register();
+		PortalCubedTriggers.register();
+	}
 }

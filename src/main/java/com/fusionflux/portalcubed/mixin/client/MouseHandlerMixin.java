@@ -16,30 +16,30 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
-    @Shadow @Final private Minecraft minecraft;
+	@Shadow @Final private Minecraft minecraft;
 
-    @WrapWithCondition(
-        method = "grabMouse",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V"
-        )
-    )
-    private boolean notPortalHud(Minecraft client, Screen screen) {
-        return screen != null || !(client.screen instanceof DeathScreen) || !PortalCubedClient.isPortalHudMode();
-    }
+	@WrapWithCondition(
+		method = "grabMouse",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V"
+		)
+	)
+	private boolean notPortalHud(Minecraft client, Screen screen) {
+		return screen != null || !(client.screen instanceof DeathScreen) || !PortalCubedClient.isPortalHudMode();
+	}
 
-    @WrapOperation(
-        method = "turnPlayer",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"
-        )
-    )
-    private Object slowLook(OptionInstance<Double> instance, Operation<Double> original) {
-        if (instance == minecraft.options.sensitivity() && PortalCubedClient.zoomDir > 0) {
-            return original.call(instance) / 2;
-        }
-        return original.call(instance);
-    }
+	@WrapOperation(
+		method = "turnPlayer",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"
+		)
+	)
+	private Object slowLook(OptionInstance<Double> instance, Operation<Double> original) {
+		if (instance == minecraft.options.sensitivity() && PortalCubedClient.zoomDir > 0) {
+			return original.call(instance) / 2;
+		}
+		return original.call(instance);
+	}
 }

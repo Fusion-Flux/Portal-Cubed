@@ -5,5 +5,5 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 @ClientOnly
 public interface GameRendererExt {
-    void setMainCamera(Camera camera);
+	void setMainCamera(Camera camera);
 }

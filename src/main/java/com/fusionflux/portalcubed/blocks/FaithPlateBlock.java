@@ -33,105 +33,105 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 import java.util.function.Supplier;
 
 public class FaithPlateBlock extends BaseEntityBlock {
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final DirectionProperty HORIFACING = PortalCubedProperties.HORIFACING;
+	public static final DirectionProperty FACING = BlockStateProperties.FACING;
+	public static final DirectionProperty HORIFACING = PortalCubedProperties.HORIFACING;
 
-    private final Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType;
+	private final Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType;
 
-    public FaithPlateBlock(Properties settings, Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType) {
-        super(settings);
-        this.registerDefaultState(
-            stateDefinition.any()
-                .setValue(FACING, Direction.UP)
-                .setValue(HORIFACING, Direction.NORTH)
-        );
-        this.blockEntityType = blockEntityType;
-    }
+	public FaithPlateBlock(Properties settings, Supplier<BlockEntityType<? extends FaithPlateBlockEntity>> blockEntityType) {
+		super(settings);
+		this.registerDefaultState(
+			stateDefinition.any()
+				.setValue(FACING, Direction.UP)
+				.setValue(HORIFACING, Direction.NORTH)
+		);
+		this.blockEntityType = blockEntityType;
+	}
 
-    @NotNull
-    @Override
-    @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide && canConfigure(player, hand)) {
-            //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity cast to
-            //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
-            MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
+	@NotNull
+	@Override
+	@SuppressWarnings("deprecation")
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!world.isClientSide && canConfigure(player, hand)) {
+			//This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity cast to
+			//a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
+			MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
 
-            if (screenHandlerFactory != null) {
-                //With this call the server will request the client to open the appropriate ScreenHandler
-                player.openMenu(screenHandlerFactory);
-            }
-        }
-        return InteractionResult.SUCCESS;
-    }
+			if (screenHandlerFactory != null) {
+				//With this call the server will request the client to open the appropriate ScreenHandler
+				player.openMenu(screenHandlerFactory);
+			}
+		}
+		return InteractionResult.SUCCESS;
+	}
 
-    public boolean canConfigure(Player player, InteractionHand hand) {
-        if (player.isCreative())
-            return true;
-        return player.getAbilities().mayBuild && player.getItemInHand(hand).is(PortalCubedItems.WRENCHES);
-    }
+	public boolean canConfigure(Player player, InteractionHand hand) {
+		if (player.isCreative())
+			return true;
+		return player.getAbilities().mayBuild && player.getItemInHand(hand).is(PortalCubedItems.WRENCHES);
+	}
 
-    @Override
-    @ClientOnly
-    @SuppressWarnings("deprecation")
-    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
-        return 1.0F;
-    }
+	@Override
+	@ClientOnly
+	@SuppressWarnings("deprecation")
+	public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
+		return 1.0F;
+	}
 
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
-        return true;
-    }
+	@Override
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+		return true;
+	}
 
-    @NotNull
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
-    }
+	@NotNull
+	@Override
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.MODEL;
+	}
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, HORIFACING);
-    }
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(FACING, HORIFACING);
+	}
 
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        final Direction look = ctx.getNearestLookingDirection();
-        if (look.getAxis().isVertical()) {
-            return defaultBlockState()
-                .setValue(FACING, look.getOpposite())
-                .setValue(HORIFACING, ctx.getHorizontalDirection());
-        }
-        return defaultBlockState()
-            .setValue(FACING, look.getOpposite());
-    }
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		final Direction look = ctx.getNearestLookingDirection();
+		if (look.getAxis().isVertical()) {
+			return defaultBlockState()
+				.setValue(FACING, look.getOpposite())
+				.setValue(HORIFACING, ctx.getHorizontalDirection());
+		}
+		return defaultBlockState()
+			.setValue(FACING, look.getOpposite());
+	}
 
-    @NotNull
-    @Override
-    @SuppressWarnings("deprecation")
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
-    }
+	@NotNull
+	@Override
+	@SuppressWarnings("deprecation")
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+	}
 
-    @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        world.getBlockEntity(pos, blockEntityType.get()).ifPresent(entity -> {
-            entity.setVelY(1.25);
-            final Direction facing = state.getValue(FACING).getAxis().isVertical() ? state.getValue(HORIFACING) : state.getValue(FACING);
-            entity.setVelX(facing.getStepX() * 0.75);
-            entity.setVelZ(facing.getStepZ() * 0.75);
-        });
-    }
+	@Override
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+		world.getBlockEntity(pos, blockEntityType.get()).ifPresent(entity -> {
+			entity.setVelY(1.25);
+			final Direction facing = state.getValue(FACING).getAxis().isVertical() ? state.getValue(HORIFACING) : state.getValue(FACING);
+			entity.setVelX(facing.getStepX() * 0.75);
+			entity.setVelZ(facing.getStepZ() * 0.75);
+		});
+	}
 
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return blockEntityType.get().create(pos, state);
-    }
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return blockEntityType.get().create(pos, state);
+	}
 
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return type == blockEntityType.get()
-            ? (world1, pos, state1, entity) -> ((FaithPlateBlockEntity)entity).tick(world1, pos, state1)
-            : null;
-    }
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+		return type == blockEntityType.get()
+			? (world1, pos, state1, entity) -> ((FaithPlateBlockEntity)entity).tick(world1, pos, state1)
+			: null;
+	}
 }

@@ -20,147 +20,147 @@ import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class FaithPlateScreen extends AbstractContainerScreen<AbstractContainerMenu> {
 
-    private static final ResourceLocation TEXTURE = id("textures/gui/container/faith_plate.png");
+	private static final ResourceLocation TEXTURE = id("textures/gui/container/faith_plate.png");
 
-    private final BlockPos pos;
-    private final double x;
-    private final double y;
-    private final double z;
+	private final BlockPos pos;
+	private final double x;
+	private final double y;
+	private final double z;
 
-    public FaithPlateScreen(AbstractContainerMenu screenHandler, Inventory playerInventory, Component text) {
-        super(screenHandler, playerInventory, text);
-        pos = getBlockPos(screenHandler);
-        x = getXVar(screenHandler);
-        y = getYVar(screenHandler);
-        z = getZVar(screenHandler);
-    }
+	public FaithPlateScreen(AbstractContainerMenu screenHandler, Inventory playerInventory, Component text) {
+		super(screenHandler, playerInventory, text);
+		pos = getBlockPos(screenHandler);
+		x = getXVar(screenHandler);
+		y = getYVar(screenHandler);
+		z = getZVar(screenHandler);
+	}
 
-    private static BlockPos getBlockPos(AbstractContainerMenu handler) {
-        if (handler instanceof FaithPlateScreenHandler) {
-            return ((FaithPlateScreenHandler) handler).getPos();
-        } else {
-            return BlockPos.ZERO;
-        }
-    }
-    private static double getXVar(AbstractContainerMenu handler) {
-        if (handler instanceof FaithPlateScreenHandler) {
-            return ((FaithPlateScreenHandler) handler).getX();
-        } else {
-            return 0;
-        }
-    }
-    private static double getYVar(AbstractContainerMenu handler) {
-        if (handler instanceof FaithPlateScreenHandler) {
-            return ((FaithPlateScreenHandler) handler).getY();
-        } else {
-            return 0;
-        }
-    }
-    private static double getZVar(AbstractContainerMenu handler) {
-        if (handler instanceof FaithPlateScreenHandler) {
-            return ((FaithPlateScreenHandler) handler).getZ();
-        } else {
-            return 0;
-        }
-    }
+	private static BlockPos getBlockPos(AbstractContainerMenu handler) {
+		if (handler instanceof FaithPlateScreenHandler) {
+			return ((FaithPlateScreenHandler) handler).getPos();
+		} else {
+			return BlockPos.ZERO;
+		}
+	}
+	private static double getXVar(AbstractContainerMenu handler) {
+		if (handler instanceof FaithPlateScreenHandler) {
+			return ((FaithPlateScreenHandler) handler).getX();
+		} else {
+			return 0;
+		}
+	}
+	private static double getYVar(AbstractContainerMenu handler) {
+		if (handler instanceof FaithPlateScreenHandler) {
+			return ((FaithPlateScreenHandler) handler).getY();
+		} else {
+			return 0;
+		}
+	}
+	private static double getZVar(AbstractContainerMenu handler) {
+		if (handler instanceof FaithPlateScreenHandler) {
+			return ((FaithPlateScreenHandler) handler).getZ();
+		} else {
+			return 0;
+		}
+	}
 
-    @Override
-    protected void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        int x = (width - imageWidth) / 2;
-        int y = (height - imageHeight) / 2;
-        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
-    }
+	@Override
+	protected void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		int x = (width - imageWidth) / 2;
+		int y = (height - imageHeight) / 2;
+		graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
+	}
 
-    @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-    }
+	@Override
+	protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+	}
 
-    @Override
-    protected void init() {
-        super.init();
-        var field1 = addRenderableWidget(new EditBox(
-                font,
-                (this.width / 2) - 80, // x ( aligned top-left )
-                (this.height / 2) - 30, // y
-                50, // width
-                20, // height
-                Component.nullToEmpty(String.valueOf(x)) // default text??? not sure
-        ));
-        field1.setValue("X: " + x);
-        var field2 = addRenderableWidget(new EditBox(
-                font,
-                (this.width / 2) - 25, // x ( aligned top-left )
-                (this.height / 2) - 30, // y
-                50, // width
-                20, // height
-                Component.nullToEmpty(String.valueOf(y)) // default text??? not sure
-        ));
-        field2.setValue("Y: " + y);
-        var field3 = addRenderableWidget(new EditBox(
-                font,
-                (this.width / 2) + 30, // x ( aligned top-left )
-                (this.height / 2) - 30, // y
-                50, // width
-                20, // height
-                Component.nullToEmpty(String.valueOf(z)) // default text??? not sure
-        ));
-        field3.setValue("Z: " + z);
+	@Override
+	protected void init() {
+		super.init();
+		var field1 = addRenderableWidget(new EditBox(
+				font,
+				(this.width / 2) - 80, // x ( aligned top-left )
+				(this.height / 2) - 30, // y
+				50, // width
+				20, // height
+				Component.nullToEmpty(String.valueOf(x)) // default text??? not sure
+		));
+		field1.setValue("X: " + x);
+		var field2 = addRenderableWidget(new EditBox(
+				font,
+				(this.width / 2) - 25, // x ( aligned top-left )
+				(this.height / 2) - 30, // y
+				50, // width
+				20, // height
+				Component.nullToEmpty(String.valueOf(y)) // default text??? not sure
+		));
+		field2.setValue("Y: " + y);
+		var field3 = addRenderableWidget(new EditBox(
+				font,
+				(this.width / 2) + 30, // x ( aligned top-left )
+				(this.height / 2) - 30, // y
+				50, // width
+				20, // height
+				Component.nullToEmpty(String.valueOf(z)) // default text??? not sure
+		));
+		field3.setValue("Z: " + z);
 
-        int x = this.width / 2;
-        int y = this.height / 2;
-        addRenderableWidget(Button.builder(Component.nullToEmpty("Done"), (button) -> {
+		int x = this.width / 2;
+		int y = this.height / 2;
+		addRenderableWidget(Button.builder(Component.nullToEmpty("Done"), (button) -> {
 
-            FriendlyByteBuf buf = PacketByteBufs.create();
+			FriendlyByteBuf buf = PacketByteBufs.create();
 
-            buf.writeBlockPos(pos);
+			buf.writeBlockPos(pos);
 
-            String xString = field1.getValue().replaceAll("[^\\d.-]", "").replaceFirst("[.]", "d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-", "m").replaceAll("-", "").replaceAll("m", "-");
-            String yString = field2.getValue().replaceAll("[^\\d.-]", "").replaceFirst("[.]", "d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-", "m").replaceAll("-", "").replaceAll("m", "-");
-            String zString = field3.getValue().replaceAll("[^\\d.-]", "").replaceFirst("[.]", "d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-", "m").replaceAll("-", "").replaceAll("m", "-");
+			String xString = field1.getValue().replaceAll("[^\\d.-]", "").replaceFirst("[.]", "d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-", "m").replaceAll("-", "").replaceAll("m", "-");
+			String yString = field2.getValue().replaceAll("[^\\d.-]", "").replaceFirst("[.]", "d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-", "m").replaceAll("-", "").replaceAll("m", "-");
+			String zString = field3.getValue().replaceAll("[^\\d.-]", "").replaceFirst("[.]", "d").replaceAll("[.]", "").replaceAll("d", ".").replaceFirst("-", "m").replaceAll("-", "").replaceAll("m", "-");
 
-            double sendX = 0;
-            double sendY = 0;
-            double sendZ = 0;
+			double sendX = 0;
+			double sendY = 0;
+			double sendZ = 0;
 
-            if (!xString.equals("")) {
-                sendX = Double.parseDouble(xString);
-            }
-            if (!yString.equals("")) {
-                sendY = Double.parseDouble(yString);
-            }
-            if (!zString.equals("")) {
-                sendZ = Double.parseDouble(zString);
-            }
+			if (!xString.equals("")) {
+				sendX = Double.parseDouble(xString);
+			}
+			if (!yString.equals("")) {
+				sendY = Double.parseDouble(yString);
+			}
+			if (!zString.equals("")) {
+				sendZ = Double.parseDouble(zString);
+			}
 
-            if (sendX > 4) {
-                sendX = 4;
-            }
-            if (sendY > 4) {
-                sendY = 4;
-            }
-            if (sendZ > 4) {
-                sendZ = 4;
-            }
+			if (sendX > 4) {
+				sendX = 4;
+			}
+			if (sendY > 4) {
+				sendY = 4;
+			}
+			if (sendZ > 4) {
+				sendZ = 4;
+			}
 
-            buf.writeDouble(sendX);
-            buf.writeDouble(sendY);
-            buf.writeDouble(sendZ);
-            NetworkingSafetyWrapper.sendFromClient("configure_faith_plate", buf);
-            this.onClose();
-           // ClientPlayNetworking.send("a", buf);
-        }).width(100).pos(x - 50, y).build());
-        // Center the title
-        titleLabelX = (imageWidth - font.width(title)) / 2;
-    }
+			buf.writeDouble(sendX);
+			buf.writeDouble(sendY);
+			buf.writeDouble(sendZ);
+			NetworkingSafetyWrapper.sendFromClient("configure_faith_plate", buf);
+			this.onClose();
+		   // ClientPlayNetworking.send("a", buf);
+		}).width(100).pos(x - 50, y).build());
+		// Center the title
+		titleLabelX = (imageWidth - font.width(title)) / 2;
+	}
 
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        renderBackground(graphics);
-        super.render(graphics, mouseX, mouseY, delta);
-        renderTooltip(graphics, mouseX, mouseY);
-    }
+	@Override
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		renderBackground(graphics);
+		super.render(graphics, mouseX, mouseY, delta);
+		renderTooltip(graphics, mouseX, mouseY);
+	}
 
 
 }

@@ -8,31 +8,31 @@ import net.minecraft.world.level.Level;
 
 public class CompanionCubeEntity extends StorageCubeEntity {
 
-    public CompanionCubeEntity(EntityType<? extends PathfinderMob> type, Level world) {
-        super(type, world);
-    }
+	public CompanionCubeEntity(EntityType<? extends PathfinderMob> type, Level world) {
+		super(type, world);
+	}
 
-    private int t = 1500;
+	private int t = 1500;
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (!this.level().isClientSide) {
-            if (t == 1500) {
-                level().playSound(null, this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundSource(), 1f, 1f);
-            }
-            t--;
-            if (t == 0) {
-                t = 1500;
-            }
+	@Override
+	public void tick() {
+		super.tick();
+		if (!this.level().isClientSide) {
+			if (t == 1500) {
+				level().playSound(null, this, PortalCubedSounds.COMPANION_CUBE_AMBIANCE_EVENT, this.getSoundSource(), 1f, 1f);
+			}
+			t--;
+			if (t == 0) {
+				t = 1500;
+			}
 
-        }
-    }
+		}
+	}
 
-    @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
-        t = 40;
-        super.recreateFromPacket(packet);
-    }
+	@Override
+	public void recreateFromPacket(ClientboundAddEntityPacket packet) {
+		t = 40;
+		super.recreateFromPacket(packet);
+	}
 
 }

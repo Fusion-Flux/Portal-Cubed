@@ -29,142 +29,142 @@ import java.util.Map;
 
 @ClientOnly
 public class DecalParticle extends Particle {
-    public static final ParticleRenderType PARTICLE_SHEET_MULTIPLY = new ParticleRenderType() {
-        @Override
-        @SuppressWarnings("deprecation")
-        public void begin(BufferBuilder bufferBuilder, TextureManager textureManager) {
-            RenderSystem.depthMask(true);
-            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-            RenderSystem.enableBlend();
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.SRC_COLOR);
-            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-        }
+	public static final ParticleRenderType PARTICLE_SHEET_MULTIPLY = new ParticleRenderType() {
+		@Override
+		@SuppressWarnings("deprecation")
+		public void begin(BufferBuilder bufferBuilder, TextureManager textureManager) {
+			RenderSystem.depthMask(true);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.SRC_COLOR);
+			bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+		}
 
-        @Override
-        public void end(Tesselator tessellator) {
-            tessellator.end();
-        }
+		@Override
+		public void end(Tesselator tessellator) {
+			tessellator.end();
+		}
 
-        public String toString() {
-            return "PARTICLE_SHEET_MULTIPLY";
-        }
-    };
+		public String toString() {
+			return "PARTICLE_SHEET_MULTIPLY";
+		}
+	};
 
-    private final TextureAtlasSprite sprite;
-    private final Quaternionf rotation;
-    private final Vector3f pixelOffset;
-    private final boolean multiply;
+	private final TextureAtlasSprite sprite;
+	private final Quaternionf rotation;
+	private final Vector3f pixelOffset;
+	private final boolean multiply;
 
-    public DecalParticle(
-        ClientLevel world,
-        double x, double y, double z,
-        TextureAtlasSprite sprite, Direction direction,
-        boolean multiply
-    ) {
-        super(world, x, y, z);
-        this.sprite = sprite;
-        rotation = direction.getRotation();
-        pixelOffset = getPixelOffset(direction);
-        this.multiply = multiply;
-        lifetime = 1400;
-    }
+	public DecalParticle(
+		ClientLevel world,
+		double x, double y, double z,
+		TextureAtlasSprite sprite, Direction direction,
+		boolean multiply
+	) {
+		super(world, x, y, z);
+		this.sprite = sprite;
+		rotation = direction.getRotation();
+		pixelOffset = getPixelOffset(direction);
+		this.multiply = multiply;
+		lifetime = 1400;
+	}
 
-    @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
-        final Vec3 cameraPos = camera.getPosition();
-        final float x = (float)(Mth.lerp(tickDelta, xo, this.x) - cameraPos.x());
-        final float y = (float)(Mth.lerp(tickDelta, yo, this.y) - cameraPos.y());
-        final float z = (float)(Mth.lerp(tickDelta, zo, this.z) - cameraPos.z());
+	@Override
+	public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
+		final Vec3 cameraPos = camera.getPosition();
+		final float x = (float)(Mth.lerp(tickDelta, xo, this.x) - cameraPos.x());
+		final float y = (float)(Mth.lerp(tickDelta, yo, this.y) - cameraPos.y());
+		final float z = (float)(Mth.lerp(tickDelta, zo, this.z) - cameraPos.z());
 
-        final Vector3f[] vertices = {
-            new Vector3f(-0.5f, 0f, -0.5f),
-            new Vector3f(-0.5f, 0f, 0.5f),
-            new Vector3f(0.5f, 0f, 0.5f),
-            new Vector3f(0.5f, 0f, -0.5f)
-        };
+		final Vector3f[] vertices = {
+			new Vector3f(-0.5f, 0f, -0.5f),
+			new Vector3f(-0.5f, 0f, 0.5f),
+			new Vector3f(0.5f, 0f, 0.5f),
+			new Vector3f(0.5f, 0f, -0.5f)
+		};
 
-        for (final Vector3f vertex : vertices) {
-            vertex.rotate(rotation).add(x, y, z).add(pixelOffset);
-        }
+		for (final Vector3f vertex : vertices) {
+			vertex.rotate(rotation).add(x, y, z).add(pixelOffset);
+		}
 
-        alpha = 1f;
-        if (age + 100 >= lifetime) {
-            final float past100 = (age + tickDelta) - lifetime + 100;
-            alpha = 1f - Mth.clamp(past100 / 100f, 0f, 1f);
-        }
+		alpha = 1f;
+		if (age + 100 >= lifetime) {
+			final float past100 = (age + tickDelta) - lifetime + 100;
+			alpha = 1f - Mth.clamp(past100 / 100f, 0f, 1f);
+		}
 
-        final float minU = sprite.getU0();
-        final float maxU = sprite.getU1();
-        final float minV = sprite.getV0();
-        final float maxV = sprite.getV1();
-        final int brightness = getLightColor(tickDelta);
-        vertexConsumer.vertex(vertices[0].x(), vertices[0].y(), vertices[0].z())
-            .uv(maxU, maxV)
-            .color(rCol, gCol, bCol, alpha)
-            .uv2(brightness)
-            .endVertex();
-        vertexConsumer.vertex(vertices[1].x(), vertices[1].y(), vertices[1].z())
-            .uv(maxU, minV)
-            .color(rCol, gCol, bCol, alpha)
-            .uv2(brightness)
-            .endVertex();
-        vertexConsumer.vertex(vertices[2].x(), vertices[2].y(), vertices[2].z())
-            .uv(minU, minV)
-            .color(rCol, gCol, bCol, alpha)
-            .uv2(brightness)
-            .endVertex();
-        vertexConsumer.vertex(vertices[3].x(), vertices[3].y(), vertices[3].z())
-            .uv(minU, maxV)
-            .color(rCol, gCol, bCol, alpha)
-            .uv2(brightness)
-            .endVertex();
-    }
+		final float minU = sprite.getU0();
+		final float maxU = sprite.getU1();
+		final float minV = sprite.getV0();
+		final float maxV = sprite.getV1();
+		final int brightness = getLightColor(tickDelta);
+		vertexConsumer.vertex(vertices[0].x(), vertices[0].y(), vertices[0].z())
+			.uv(maxU, maxV)
+			.color(rCol, gCol, bCol, alpha)
+			.uv2(brightness)
+			.endVertex();
+		vertexConsumer.vertex(vertices[1].x(), vertices[1].y(), vertices[1].z())
+			.uv(maxU, minV)
+			.color(rCol, gCol, bCol, alpha)
+			.uv2(brightness)
+			.endVertex();
+		vertexConsumer.vertex(vertices[2].x(), vertices[2].y(), vertices[2].z())
+			.uv(minU, minV)
+			.color(rCol, gCol, bCol, alpha)
+			.uv2(brightness)
+			.endVertex();
+		vertexConsumer.vertex(vertices[3].x(), vertices[3].y(), vertices[3].z())
+			.uv(minU, maxV)
+			.color(rCol, gCol, bCol, alpha)
+			.uv2(brightness)
+			.endVertex();
+	}
 
-    @NotNull
-    @Override
-    public ParticleRenderType getRenderType() {
-        return multiply ? PARTICLE_SHEET_MULTIPLY : ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-    }
+	@NotNull
+	@Override
+	public ParticleRenderType getRenderType() {
+		return multiply ? PARTICLE_SHEET_MULTIPLY : ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+	}
 
-    private static Vector3f getPixelOffset(Direction direction) {
-        final float HALF_PIXEL = 0.5f / 16;
-        if (direction == Direction.UP || direction == Direction.DOWN) {
-            return new Vector3f(-HALF_PIXEL, 0, -HALF_PIXEL);
-        }
-        return direction.getClockWise().step().mul(HALF_PIXEL).add(0, HALF_PIXEL, 0);
-    }
+	private static Vector3f getPixelOffset(Direction direction) {
+		final float HALF_PIXEL = 0.5f / 16;
+		if (direction == Direction.UP || direction == Direction.DOWN) {
+			return new Vector3f(-HALF_PIXEL, 0, -HALF_PIXEL);
+		}
+		return direction.getClockWise().step().mul(HALF_PIXEL).add(0, HALF_PIXEL, 0);
+	}
 
-    @ClientOnly
-    public static class Provider implements ParticleProvider<DecalParticleOption> {
-        private final FabricSpriteProvider spriteProvider;
+	@ClientOnly
+	public static class Provider implements ParticleProvider<DecalParticleOption> {
+		private final FabricSpriteProvider spriteProvider;
 
-        private List<TextureAtlasSprite> cacheKey;
-        private final Map<ResourceLocation, TextureAtlasSprite> spriteCache = new HashMap<>();
+		private List<TextureAtlasSprite> cacheKey;
+		private final Map<ResourceLocation, TextureAtlasSprite> spriteCache = new HashMap<>();
 
-        public Provider(FabricSpriteProvider spriteProvider) {
-            this.spriteProvider = spriteProvider;
-        }
+		public Provider(FabricSpriteProvider spriteProvider) {
+			this.spriteProvider = spriteProvider;
+		}
 
-        @Override
-        public Particle createParticle(DecalParticleOption parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            final TextureAtlasSprite sprite = getSpriteCache().get(parameters.getTexture());
-            if (sprite == null) {
-                PortalCubed.LOGGER.warn("Unknown decal particle texture {}", parameters.getTexture());
-                return null;
-            }
-            return new DecalParticle(world, x, y, z, sprite, parameters.getDirection(), parameters.isMultiply());
-        }
+		@Override
+		public Particle createParticle(DecalParticleOption parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+			final TextureAtlasSprite sprite = getSpriteCache().get(parameters.getTexture());
+			if (sprite == null) {
+				PortalCubed.LOGGER.warn("Unknown decal particle texture {}", parameters.getTexture());
+				return null;
+			}
+			return new DecalParticle(world, x, y, z, sprite, parameters.getDirection(), parameters.isMultiply());
+		}
 
-        private Map<ResourceLocation, TextureAtlasSprite> getSpriteCache() {
-            final List<TextureAtlasSprite> sprites = spriteProvider.getSprites();
-            if (sprites != cacheKey) {
-                cacheKey = sprites;
-                spriteCache.clear();
-                for (final TextureAtlasSprite sprite : sprites) {
-                    spriteCache.put(sprite.contents().name(), sprite);
-                }
-            }
-            return spriteCache;
-        }
-    }
+		private Map<ResourceLocation, TextureAtlasSprite> getSpriteCache() {
+			final List<TextureAtlasSprite> sprites = spriteProvider.getSprites();
+			if (sprites != cacheKey) {
+				cacheKey = sprites;
+				spriteCache.clear();
+				for (final TextureAtlasSprite sprite : sprites) {
+					spriteCache.put(sprite.contents().name(), sprite);
+				}
+			}
+			return spriteCache;
+		}
+	}
 }

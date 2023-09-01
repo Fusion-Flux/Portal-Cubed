@@ -26,74 +26,74 @@ import java.util.Objects;
 
 public class NeurotoxinEmitterBlock extends BaseEntityBlock {
 
-    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+	protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
 
 
-    public NeurotoxinEmitterBlock(Properties settings) {
-        super(settings);
-    }
+	public NeurotoxinEmitterBlock(Properties settings) {
+		super(settings);
+	}
 
 
 
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return SHAPE;
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return SHAPE;
+	}
 
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
-        return true;
-    }
+	@Override
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+		return true;
+	}
 
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
-    }
-
-
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED);
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return PortalCubedBlocks.NEUROTOXIN_EMITTER.defaultBlockState().setValue(BlockStateProperties.FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(BlockStateProperties.POWERED, false);
-    }
+	@Override
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.MODEL;
+	}
 
 
-    @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        if (!world.isClientSide) {
-            ((NeurotoxinEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).spookyUpdateObstructor(pos);
-        }
-    }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(BlockStateProperties.FACING, rotation.rotate(state.getValue(BlockStateProperties.FACING)));
-    }
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED);
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		return PortalCubedBlocks.NEUROTOXIN_EMITTER.defaultBlockState().setValue(BlockStateProperties.FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(BlockStateProperties.POWERED, false);
+	}
 
 
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new NeurotoxinEmitterBlockEntity(pos, state);
-    }
+	@Override
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+		if (!world.isClientSide) {
+			((NeurotoxinEmitterBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).spookyUpdateObstructor(pos);
+		}
+	}
 
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, PortalCubedBlocks.NEUROTOXIN_EMITTER_ENTITY, NeurotoxinEmitterBlockEntity::tick);
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		return state.setValue(BlockStateProperties.FACING, rotation.rotate(state.getValue(BlockStateProperties.FACING)));
+	}
+
+
+	@Override
+	public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new NeurotoxinEmitterBlockEntity(pos, state);
+	}
+
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+		return createTickerHelper(type, PortalCubedBlocks.NEUROTOXIN_EMITTER_ENTITY, NeurotoxinEmitterBlockEntity::tick);
+	}
 
 }

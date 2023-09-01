@@ -5,5 +5,5 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 @ClientOnly
 public interface MinecraftExt {
-    void setRenderBuffers(RenderBuffers buffers);
+	void setRenderBuffers(RenderBuffers buffers);
 }

@@ -4,9 +4,9 @@ import com.fusionflux.portalcubed.compat.sodium.SodiumIntegration;
 import net.minecraft.client.renderer.texture.SpriteContents;
 
 public enum SodiumIntegrationAbsent implements SodiumIntegration {
-    INSTANCE;
+	INSTANCE;
 
-    @Override
-    public void markSpriteActive(SpriteContents sprite) {
-    }
+	@Override
+	public void markSpriteActive(SpriteContents sprite) {
+	}
 }

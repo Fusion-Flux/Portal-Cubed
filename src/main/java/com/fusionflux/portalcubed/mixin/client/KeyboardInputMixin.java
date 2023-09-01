@@ -13,19 +13,19 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(KeyboardInput.class)
 public class KeyboardInputMixin {
-    @Shadow @Final private Options options;
+	@Shadow @Final private Options options;
 
-    @WrapOperation(
-        method = "tick",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/KeyMapping;isDown()Z"
-        )
-    )
-    private boolean ctrlToCrouch(KeyMapping instance, Operation<Boolean> original) {
-        if (instance != options.keyShift || !PortalCubedClient.isPortalHudMode()) {
-            return original.call(instance);
-        }
-        return original.call(instance) || options.keySprint.isDown();
-    }
+	@WrapOperation(
+		method = "tick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/KeyMapping;isDown()Z"
+		)
+	)
+	private boolean ctrlToCrouch(KeyMapping instance, Operation<Boolean> original) {
+		if (instance != options.keyShift || !PortalCubedClient.isPortalHudMode()) {
+			return original.call(instance);
+		}
+		return original.call(instance) || options.keySprint.isDown();
+	}
 }

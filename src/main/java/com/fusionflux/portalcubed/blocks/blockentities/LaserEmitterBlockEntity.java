@@ -49,276 +49,276 @@ import java.util.Set;
 import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSources;
 
 public class LaserEmitterBlockEntity extends BlockEntity {
-    private record Target(@NotNull BlockPos pos, @Nullable Direction side) {
-    }
+	private record Target(@NotNull BlockPos pos, @Nullable Direction side) {
+	}
 
-    private final List<AdvancedEntityRaycast.Result> multiSegments = new ArrayList<>();
-    private final Set<Target> targets = new HashSet<>();
+	private final List<AdvancedEntityRaycast.Result> multiSegments = new ArrayList<>();
+	private final Set<Target> targets = new HashSet<>();
 
-    @ClientOnly
-    private SoundInstance musicInstance;
+	@ClientOnly
+	private SoundInstance musicInstance;
 
-    public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
-        super(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, pos, state);
-    }
+	public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
+		super(PortalCubedBlocks.LASER_EMITTER_BLOCK_ENTITY, pos, state);
+	}
 
-    @Override
-    public void saveAdditional(@NotNull CompoundTag tag) {
-        final ListTag list = new ListTag();
-        for (final Target target : targets) {
-            final CompoundTag targetNbt = new CompoundTag();
-            targetNbt.putIntArray("Target", new int[] {target.pos.getX(), target.pos.getY(), target.pos.getZ()});
-            if (target.side != null) {
-                targetNbt.putString("TargetSide", target.side.getName());
-            }
-            list.add(targetNbt);
-        }
-        tag.put("Targets", list);
-    }
+	@Override
+	public void saveAdditional(@NotNull CompoundTag tag) {
+		final ListTag list = new ListTag();
+		for (final Target target : targets) {
+			final CompoundTag targetNbt = new CompoundTag();
+			targetNbt.putIntArray("Target", new int[] {target.pos.getX(), target.pos.getY(), target.pos.getZ()});
+			if (target.side != null) {
+				targetNbt.putString("TargetSide", target.side.getName());
+			}
+			list.add(targetNbt);
+		}
+		tag.put("Targets", list);
+	}
 
-    @Override
-    public void load(CompoundTag tag) {
-        targets.clear();
-        for (final Tag elem : tag.getList("Targets", Tag.TAG_COMPOUND)) {
-            final CompoundTag targetNbt = (CompoundTag)elem;
-            final int[] targetA = targetNbt.getIntArray("Target");
-            if (targetA.length >= 3) {
-                targets.add(new Target(
-                    new BlockPos(targetA[0], targetA[1], targetA[2]),
-                    Direction.byName(tag.getString("TargetSide"))
-                ));
-            }
-        }
-    }
+	@Override
+	public void load(CompoundTag tag) {
+		targets.clear();
+		for (final Tag elem : tag.getList("Targets", Tag.TAG_COMPOUND)) {
+			final CompoundTag targetNbt = (CompoundTag)elem;
+			final int[] targetA = targetNbt.getIntArray("Target");
+			if (targetA.length >= 3) {
+				targets.add(new Target(
+					new BlockPos(targetA[0], targetA[1], targetA[2]),
+					Direction.byName(tag.getString("TargetSide"))
+				));
+			}
+		}
+	}
 
-    public void clearTargets() {
-        assert level != null;
-        if (!level.isClientSide) {
-            for (final Target target : targets) {
-                level.getBlockEntity(target.pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
-            }
-            targets.clear();
-        }
-    }
+	public void clearTargets() {
+		assert level != null;
+		if (!level.isClientSide) {
+			for (final Target target : targets) {
+				level.getBlockEntity(target.pos, PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).ifPresent(LaserNodeBlockEntity::removeLaser);
+			}
+			targets.clear();
+		}
+	}
 
-    public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!state.is(PortalCubedBlocks.LASER_EMITTER))
-            return;
-        multiSegments.clear();
-        if (!state.getValue(LaserEmitterBlock.POWERED)) {
-            clearTargets();
-            return;
-        }
-        Vec3 direction = Vec3.atLowerCornerOf(state.getValue(LaserEmitterBlock.FACING).getNormal());
-        Vec3 start = Vec3.atCenterOf(pos).add(direction.scale(0.5));
-        double lengthRemaining = PortalCubedConfig.maxBridgeLength;
-        final Set<Entity> alreadyHit = new HashSet<>();
-        BlockState hitState;
-        do {
-            //noinspection DataFlowIssue
-            final AdvancedEntityRaycast.Result segments = AdvancedEntityRaycast.raycast(
-                level,
-                new ClipContext(
-                    start, start.add(direction.scale(lengthRemaining)),
-                    ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, null
-                ),
-                (level1, ctx) -> BlockGetter.traverseBlocks(
-                    ctx.getFrom(), ctx.getTo(), ctx,
-                    (ctx1, pos1) -> {
-                        final BlockState block = level1.getBlockState(pos1);
-                        final VoxelShape shape = block.is(PortalCubedBlocks.REFLECTIVE)
-                            ? block.getShape(level1, pos1)
-                            : ctx1.getBlockShape(block, level1, pos1);
-                        return level1.clipWithInteractionOverride(ctx1.getFrom(), ctx1.getTo(), pos1, shape, block);
-                    },
-                    ctx1 -> {
-                        final Vec3 offset = ctx1.getFrom().subtract(ctx1.getTo());
-                        return BlockHitResult.miss(
-                            ctx1.getTo(),
-                            Direction.getNearest(offset.x, offset.y, offset.z),
-                            BlockPos.containing(ctx1.getTo())
-                        );
-                    }
-                ),
-                PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
-                new AdvancedEntityRaycast.TransformInfo(
-                    e -> e instanceof RedirectionCubeEntity && !alreadyHit.contains(e),
-                    (context, blockHit, entityHit) -> {
-                        final RedirectionCubeEntity entity = (RedirectionCubeEntity)entityHit.getEntity();
-                        alreadyHit.add(entity);
-                        final double distance = context.getFrom().distanceTo(context.getTo());
-                        final Vec3 offset = entityHit.getLocation().subtract(context.getFrom());
-                        final RedirectionCubeEntity destination = entity.getConnection();
-                        alreadyHit.add(destination);
-                        destination.markActive();
-                        final Vec3 newOffset = Vec3.directionFromRotation(destination.getXRot(), destination.getYRot())
-                            .scale(distance - offset.length());
-                        final Vec3 origin = destination.position().add(new Vec3(0, destination.getBbHeight() / 2, 0));
-                        return new AdvancedEntityRaycast.TransformResult(
-                            entityHit.getLocation().add(offset.scale(0.25 / offset.length())),
-                            AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
-                        );
-                    }
-                ),
-                new AdvancedEntityRaycast.TransformInfo(
-                    e -> e instanceof CorePhysicsEntity && !alreadyHit.contains(e),
-                    (context, blockHit, entityHit) -> new AdvancedEntityRaycast.TransformResult(entityHit.getLocation(), null)
-                )
-            );
-            direction = segments.finalRay().relative().normalize();
-            start = segments.finalRay().end();
-            lengthRemaining -= segments.length();
-            multiSegments.add(segments);
-            if (segments.finalHit().getType() == HitResult.Type.BLOCK) {
-                final BlockHitResult finalHit = (BlockHitResult)segments.finalHit();
-                hitState = level.getBlockState(finalHit.getBlockPos());
-                if (hitState.is(PortalCubedBlocks.REFLECTIVE)) {
-                    final Direction.Axis axis = finalHit.getDirection().getAxis();
-                    direction = direction.with(axis, -direction.get(axis));
-                }
-            } else {
-                hitState = null;
-            }
-        } while (hitState != null && (hitState.is(PortalCubedBlocks.LASER_RELAY) || hitState.is(PortalCubedBlocks.REFLECTIVE)));
+	public void tick(Level level, BlockPos pos, BlockState state) {
+		if (!state.is(PortalCubedBlocks.LASER_EMITTER))
+			return;
+		multiSegments.clear();
+		if (!state.getValue(LaserEmitterBlock.POWERED)) {
+			clearTargets();
+			return;
+		}
+		Vec3 direction = Vec3.atLowerCornerOf(state.getValue(LaserEmitterBlock.FACING).getNormal());
+		Vec3 start = Vec3.atCenterOf(pos).add(direction.scale(0.5));
+		double lengthRemaining = PortalCubedConfig.maxBridgeLength;
+		final Set<Entity> alreadyHit = new HashSet<>();
+		BlockState hitState;
+		do {
+			//noinspection DataFlowIssue
+			final AdvancedEntityRaycast.Result segments = AdvancedEntityRaycast.raycast(
+				level,
+				new ClipContext(
+					start, start.add(direction.scale(lengthRemaining)),
+					ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, null
+				),
+				(level1, ctx) -> BlockGetter.traverseBlocks(
+					ctx.getFrom(), ctx.getTo(), ctx,
+					(ctx1, pos1) -> {
+						final BlockState block = level1.getBlockState(pos1);
+						final VoxelShape shape = block.is(PortalCubedBlocks.REFLECTIVE)
+							? block.getShape(level1, pos1)
+							: ctx1.getBlockShape(block, level1, pos1);
+						return level1.clipWithInteractionOverride(ctx1.getFrom(), ctx1.getTo(), pos1, shape, block);
+					},
+					ctx1 -> {
+						final Vec3 offset = ctx1.getFrom().subtract(ctx1.getTo());
+						return BlockHitResult.miss(
+							ctx1.getTo(),
+							Direction.getNearest(offset.x, offset.y, offset.z),
+							BlockPos.containing(ctx1.getTo())
+						);
+					}
+				),
+				PortalDirectionUtils.PORTAL_RAYCAST_TRANSFORM,
+				new AdvancedEntityRaycast.TransformInfo(
+					e -> e instanceof RedirectionCubeEntity && !alreadyHit.contains(e),
+					(context, blockHit, entityHit) -> {
+						final RedirectionCubeEntity entity = (RedirectionCubeEntity)entityHit.getEntity();
+						alreadyHit.add(entity);
+						final double distance = context.getFrom().distanceTo(context.getTo());
+						final Vec3 offset = entityHit.getLocation().subtract(context.getFrom());
+						final RedirectionCubeEntity destination = entity.getConnection();
+						alreadyHit.add(destination);
+						destination.markActive();
+						final Vec3 newOffset = Vec3.directionFromRotation(destination.getXRot(), destination.getYRot())
+							.scale(distance - offset.length());
+						final Vec3 origin = destination.position().add(new Vec3(0, destination.getBbHeight() / 2, 0));
+						return new AdvancedEntityRaycast.TransformResult(
+							entityHit.getLocation().add(offset.scale(0.25 / offset.length())),
+							AdvancedEntityRaycast.withStartEnd(context, origin, origin.add(newOffset))
+						);
+					}
+				),
+				new AdvancedEntityRaycast.TransformInfo(
+					e -> e instanceof CorePhysicsEntity && !alreadyHit.contains(e),
+					(context, blockHit, entityHit) -> new AdvancedEntityRaycast.TransformResult(entityHit.getLocation(), null)
+				)
+			);
+			direction = segments.finalRay().relative().normalize();
+			start = segments.finalRay().end();
+			lengthRemaining -= segments.length();
+			multiSegments.add(segments);
+			if (segments.finalHit().getType() == HitResult.Type.BLOCK) {
+				final BlockHitResult finalHit = (BlockHitResult)segments.finalHit();
+				hitState = level.getBlockState(finalHit.getBlockPos());
+				if (hitState.is(PortalCubedBlocks.REFLECTIVE)) {
+					final Direction.Axis axis = finalHit.getDirection().getAxis();
+					direction = direction.with(axis, -direction.get(axis));
+				}
+			} else {
+				hitState = null;
+			}
+		} while (hitState != null && (hitState.is(PortalCubedBlocks.LASER_RELAY) || hitState.is(PortalCubedBlocks.REFLECTIVE)));
 
-        if (level.isClientSide) {
-            clientTick();
-            return;
-        }
+		if (level.isClientSide) {
+			clientTick();
+			return;
+		}
 
-        if (hitState != null && !(hitState.getBlock() instanceof AbstractLaserNodeBlock)) {
-            final Vec3 finalPos = multiSegments.get(multiSegments.size() - 1).finalRay().end();
-        }
+		if (hitState != null && !(hitState.getBlock() instanceof AbstractLaserNodeBlock)) {
+			final Vec3 finalPos = multiSegments.get(multiSegments.size() - 1).finalRay().end();
+		}
 
-        Entity owner = EntityType.MARKER.create(level);
-        assert owner != null;
-        alreadyHit.clear();
-        for (final AdvancedEntityRaycast.Result result : multiSegments) {
-            for (final AdvancedEntityRaycast.Result.Ray ray : result.rays()) {
-                Vec3 rayStart = ray.start();
-                EntityHitResult hit;
-                do {
-                    hit = new AdvancedEntityRaycast.Result.Ray(rayStart, ray.end(), null).entityRaycast(owner, e -> e instanceof LivingEntity && !alreadyHit.contains(e));
-                    if (hit != null) {
-                        rayStart = hit.getLocation();
-                        final Entity hitEntity = hit.getEntity();
-                        alreadyHit.add(hitEntity);
-                        owner = hitEntity;
-                        if (hitEntity instanceof CorePhysicsEntity) {
-                            continue; // TODO: Turrets and chairs burn
-                        }
-                        if (!hitEntity.onGround()) continue;
-                        hitEntity.hurt(pcSources(level).laser(), PortalCubedConfig.laserDamage);
-                        if(PortalCubedConfig.laserDamage > 0)
-                            hitEntity.setRemainingFireTicks(Math.max(10, hitEntity.getRemainingFireTicks()));
-                        final Vec3 velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.position())
-                            .normalize()
-                            .scale(1.25);
-                        hitEntity.push(velocity.x, velocity.y, velocity.z);
-                    }
-                } while (hit != null && !GeneralUtil.targetsEqual(hit, ray.hit()));
-                if (ray.hit() instanceof EntityHitResult entityHitResult) {
-                    owner = entityHitResult.getEntity();
-                }
-            }
-        }
+		Entity owner = EntityType.MARKER.create(level);
+		assert owner != null;
+		alreadyHit.clear();
+		for (final AdvancedEntityRaycast.Result result : multiSegments) {
+			for (final AdvancedEntityRaycast.Result.Ray ray : result.rays()) {
+				Vec3 rayStart = ray.start();
+				EntityHitResult hit;
+				do {
+					hit = new AdvancedEntityRaycast.Result.Ray(rayStart, ray.end(), null).entityRaycast(owner, e -> e instanceof LivingEntity && !alreadyHit.contains(e));
+					if (hit != null) {
+						rayStart = hit.getLocation();
+						final Entity hitEntity = hit.getEntity();
+						alreadyHit.add(hitEntity);
+						owner = hitEntity;
+						if (hitEntity instanceof CorePhysicsEntity) {
+							continue; // TODO: Turrets and chairs burn
+						}
+						if (!hitEntity.onGround()) continue;
+						hitEntity.hurt(pcSources(level).laser(), PortalCubedConfig.laserDamage);
+						if(PortalCubedConfig.laserDamage > 0)
+							hitEntity.setRemainingFireTicks(Math.max(10, hitEntity.getRemainingFireTicks()));
+						final Vec3 velocity = GeneralUtil.calculatePerpendicularVector(ray.start(), ray.end(), hitEntity.position())
+							.normalize()
+							.scale(1.25);
+						hitEntity.push(velocity.x, velocity.y, velocity.z);
+					}
+				} while (hit != null && !GeneralUtil.targetsEqual(hit, ray.hit()));
+				if (ray.hit() instanceof EntityHitResult entityHitResult) {
+					owner = entityHitResult.getEntity();
+				}
+			}
+		}
 
-        final Set<Target> newTargets = new HashSet<>();
-        final Object2IntMap<BlockPos> changes = new Object2IntOpenHashMap<>(targets.size() + multiSegments.size());
-        for (final AdvancedEntityRaycast.Result result : multiSegments) {
-            if (result.finalHit().getType() != HitResult.Type.BLOCK) continue;
-            final BlockHitResult finalHit = (BlockHitResult)result.finalHit();
-            final BlockState hitState1 = level.getBlockState(finalHit.getBlockPos());
-            if (hitState1.is(PortalCubedBlocks.LASER_CATCHER) && finalHit.getDirection() != hitState1.getValue(LaserCatcherBlock.FACING)) continue;
-            final Target target = new Target(
-                finalHit.getBlockPos(),
-                hitState1.is(PortalCubedBlocks.LASER_RELAY) ? null : finalHit.getDirection()
-            );
-            newTargets.add(target);
-            if (targets.add(target)) {
-                changes.put(target.pos, changes.getOrDefault(target.pos, 0) + 1);
-            }
-        }
+		final Set<Target> newTargets = new HashSet<>();
+		final Object2IntMap<BlockPos> changes = new Object2IntOpenHashMap<>(targets.size() + multiSegments.size());
+		for (final AdvancedEntityRaycast.Result result : multiSegments) {
+			if (result.finalHit().getType() != HitResult.Type.BLOCK) continue;
+			final BlockHitResult finalHit = (BlockHitResult)result.finalHit();
+			final BlockState hitState1 = level.getBlockState(finalHit.getBlockPos());
+			if (hitState1.is(PortalCubedBlocks.LASER_CATCHER) && finalHit.getDirection() != hitState1.getValue(LaserCatcherBlock.FACING)) continue;
+			final Target target = new Target(
+				finalHit.getBlockPos(),
+				hitState1.is(PortalCubedBlocks.LASER_RELAY) ? null : finalHit.getDirection()
+			);
+			newTargets.add(target);
+			if (targets.add(target)) {
+				changes.put(target.pos, changes.getOrDefault(target.pos, 0) + 1);
+			}
+		}
 
-        for (final Target target : targets) {
-            if (!newTargets.contains(target)) {
-                changes.put(target.pos, changes.getOrDefault(target.pos, 0) - 1);
-            }
-        }
-        targets.retainAll(newTargets);
+		for (final Target target : targets) {
+			if (!newTargets.contains(target)) {
+				changes.put(target.pos, changes.getOrDefault(target.pos, 0) - 1);
+			}
+		}
+		targets.retainAll(newTargets);
 
-        for (final var entry : changes.object2IntEntrySet()) {
-            if (entry.getIntValue() == 0) continue;
-            final LaserNodeBlockEntity entity = level.getBlockEntity(entry.getKey(), PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).orElse(null);
-            if (entity == null) continue;
-            if (entry.getIntValue() > 0) {
-                for (int i = 0; i < entry.getIntValue(); i++) {
-                    entity.addLaser();
-                }
-            } else {
-                for (int i = 0; i < -entry.getIntValue(); i++) {
-                    entity.removeLaser();
-                }
-            }
-        }
-        if (!changes.isEmpty()) {
-            setChanged();
-        }
-    }
+		for (final var entry : changes.object2IntEntrySet()) {
+			if (entry.getIntValue() == 0) continue;
+			final LaserNodeBlockEntity entity = level.getBlockEntity(entry.getKey(), PortalCubedBlocks.LASER_NODE_BLOCK_ENTITY).orElse(null);
+			if (entity == null) continue;
+			if (entry.getIntValue() > 0) {
+				for (int i = 0; i < entry.getIntValue(); i++) {
+					entity.addLaser();
+				}
+			} else {
+				for (int i = 0; i < -entry.getIntValue(); i++) {
+					entity.removeLaser();
+				}
+			}
+		}
+		if (!changes.isEmpty()) {
+			setChanged();
+		}
+	}
 
-    public List<AdvancedEntityRaycast.Result> getMultiSegments() {
-        return multiSegments;
-    }
+	public List<AdvancedEntityRaycast.Result> getMultiSegments() {
+		return multiSegments;
+	}
 
-    @ClientOnly
-    protected void clientTick() {
-        if (musicInstance == null && level != null && level.getBlockState(worldPosition).getValue(LaserEmitterBlock.POWERED)) {
-            musicInstance = new AbstractTickableSoundInstance(PortalCubedSounds.LASER_BEAM_MUSIC_EVENT, SoundSource.BLOCKS, SoundInstance.createUnseededRandom()) {
-                {
-                    volume = 0.025f;
-                    looping = true;
-                }
+	@ClientOnly
+	protected void clientTick() {
+		if (musicInstance == null && level != null && level.getBlockState(worldPosition).getValue(LaserEmitterBlock.POWERED)) {
+			musicInstance = new AbstractTickableSoundInstance(PortalCubedSounds.LASER_BEAM_MUSIC_EVENT, SoundSource.BLOCKS, SoundInstance.createUnseededRandom()) {
+				{
+					volume = 0.025f;
+					looping = true;
+				}
 
-                @Override
-                public void tick() {
-                    if (isRemoved() || level == null || !level.getBlockState(worldPosition).getValue(LaserEmitterBlock.POWERED)) {
-                        musicInstance = null;
-                        stop();
-                        return;
-                    }
-                    final Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-                    Vec3 usePos = null;
-                    double distanceSq = Double.POSITIVE_INFINITY;
-                    for (final AdvancedEntityRaycast.Result segments : multiSegments) {
-                        for (final AdvancedEntityRaycast.Result.Ray ray : segments.rays()) {
-                            Vec3 tryPos = GeneralUtil.nearestPointOnLine(
-                                ray.start(), ray.end().subtract(ray.start()), cameraPos
-                            );
-                            double tryDistance = tryPos.distanceToSqr(cameraPos);
-                            if (tryPos.distanceToSqr(ray.start()) > ray.end().distanceToSqr(ray.start())) {
-                                tryPos = ray.end();
-                                tryDistance = tryPos.distanceToSqr(cameraPos);
-                            } else if (tryPos.distanceToSqr(ray.end()) > ray.end().distanceToSqr(ray.start())) {
-                                tryPos = ray.start();
-                                tryDistance = tryPos.distanceToSqr(cameraPos);
-                            }
-                            if (tryDistance < distanceSq) {
-                                usePos = tryPos;
-                                distanceSq = tryDistance;
-                            }
-                        }
-                    }
-                    if (usePos == null) {
-                        musicInstance = null;
-                        stop();
-                        return;
-                    }
-                    x = usePos.x;
-                    y = usePos.y;
-                    z = usePos.z;
-                }
-            };
-            Minecraft.getInstance().getSoundManager().play(musicInstance);
-        }
-    }
+				@Override
+				public void tick() {
+					if (isRemoved() || level == null || !level.getBlockState(worldPosition).getValue(LaserEmitterBlock.POWERED)) {
+						musicInstance = null;
+						stop();
+						return;
+					}
+					final Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+					Vec3 usePos = null;
+					double distanceSq = Double.POSITIVE_INFINITY;
+					for (final AdvancedEntityRaycast.Result segments : multiSegments) {
+						for (final AdvancedEntityRaycast.Result.Ray ray : segments.rays()) {
+							Vec3 tryPos = GeneralUtil.nearestPointOnLine(
+								ray.start(), ray.end().subtract(ray.start()), cameraPos
+							);
+							double tryDistance = tryPos.distanceToSqr(cameraPos);
+							if (tryPos.distanceToSqr(ray.start()) > ray.end().distanceToSqr(ray.start())) {
+								tryPos = ray.end();
+								tryDistance = tryPos.distanceToSqr(cameraPos);
+							} else if (tryPos.distanceToSqr(ray.end()) > ray.end().distanceToSqr(ray.start())) {
+								tryPos = ray.start();
+								tryDistance = tryPos.distanceToSqr(cameraPos);
+							}
+							if (tryDistance < distanceSq) {
+								usePos = tryPos;
+								distanceSq = tryDistance;
+							}
+						}
+					}
+					if (usePos == null) {
+						musicInstance = null;
+						stop();
+						return;
+					}
+					x = usePos.x;
+					y = usePos.y;
+					z = usePos.z;
+				}
+			};
+			Minecraft.getInstance().getSoundManager().play(musicInstance);
+		}
+	}
 }

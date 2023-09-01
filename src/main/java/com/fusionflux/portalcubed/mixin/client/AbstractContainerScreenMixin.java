@@ -11,14 +11,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
 public class AbstractContainerScreenMixin {
-    @Inject(method = "onClose", at = @At("HEAD"))
-    private void floorButtonEasterEgg(CallbackInfo ci) {
-        //noinspection ConstantValue
-        if ((Object)this instanceof EffectRenderingInventoryScreen<?>) {
-            if (FloorButtonBlock.enableEasterEgg) {
-                FloorButtonBlock.enableEasterEgg = false;
-                CreativeModeTabsAccessor.setCACHED_PARAMETERS(null);
-            }
-        }
-    }
+	@Inject(method = "onClose", at = @At("HEAD"))
+	private void floorButtonEasterEgg(CallbackInfo ci) {
+		//noinspection ConstantValue
+		if ((Object)this instanceof EffectRenderingInventoryScreen<?>) {
+			if (FloorButtonBlock.enableEasterEgg) {
+				FloorButtonBlock.enableEasterEgg = false;
+				CreativeModeTabsAccessor.setCACHED_PARAMETERS(null);
+			}
+		}
+	}
 }

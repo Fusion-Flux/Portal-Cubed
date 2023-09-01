@@ -13,37 +13,37 @@ import org.jetbrains.annotations.NotNull;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class BlockPosScreenHandler extends AbstractContainerMenu {
-    private final BlockPos at;
+	private final BlockPos at;
 
-    public BlockPosScreenHandler(MenuType<BlockPosScreenHandler> type, int syncId, BlockPos at) {
-        super(type, syncId);
-        this.at = at;
-    }
+	public BlockPosScreenHandler(MenuType<BlockPosScreenHandler> type, int syncId, BlockPos at) {
+		super(type, syncId);
+		this.at = at;
+	}
 
-    public static ExtendedScreenHandlerType<BlockPosScreenHandler> createType() {
-        @SuppressWarnings("unchecked")
-        final ExtendedScreenHandlerType<BlockPosScreenHandler>[] type = new ExtendedScreenHandlerType[1];
-        return type[0] = new ExtendedScreenHandlerType<>(
-            (syncId, inventory, buf) -> new BlockPosScreenHandler(type[0], syncId, buf.readBlockPos())
-        );
-    }
+	public static ExtendedScreenHandlerType<BlockPosScreenHandler> createType() {
+		@SuppressWarnings("unchecked")
+		final ExtendedScreenHandlerType<BlockPosScreenHandler>[] type = new ExtendedScreenHandlerType[1];
+		return type[0] = new ExtendedScreenHandlerType<>(
+			(syncId, inventory, buf) -> new BlockPosScreenHandler(type[0], syncId, buf.readBlockPos())
+		);
+	}
 
-    public static MenuType<BlockPosScreenHandler> registerNew(String id) {
-        return Registry.register(BuiltInRegistries.MENU, id(id), createType());
-    }
+	public static MenuType<BlockPosScreenHandler> registerNew(String id) {
+		return Registry.register(BuiltInRegistries.MENU, id(id), createType());
+	}
 
-    @NotNull
-    @Override
-    public ItemStack quickMoveStack(Player player, int fromIndex) {
-        return ItemStack.EMPTY;
-    }
+	@NotNull
+	@Override
+	public ItemStack quickMoveStack(Player player, int fromIndex) {
+		return ItemStack.EMPTY;
+	}
 
-    @Override
-    public boolean stillValid(Player player) {
-        return player.isCreative();
-    }
+	@Override
+	public boolean stillValid(Player player) {
+		return player.isCreative();
+	}
 
-    public BlockPos getAt() {
-        return at;
-    }
+	public BlockPos getAt() {
+		return at;
+	}
 }

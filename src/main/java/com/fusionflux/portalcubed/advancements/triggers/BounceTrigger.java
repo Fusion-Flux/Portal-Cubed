@@ -13,44 +13,44 @@ import org.jetbrains.annotations.Nullable;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class BounceTrigger extends SimpleCriterionTrigger<BounceTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = id("bounce");
+	public static final ResourceLocation ID = id("bounce");
 
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
+	@NotNull
+	@Override
+	public ResourceLocation getId() {
+		return ID;
+	}
 
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext deserializationContext) {
-        return new TriggerInstance(predicate, EntityPredicate.fromJson(json.get("pellet")));
-    }
+	@NotNull
+	@Override
+	protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext deserializationContext) {
+		return new TriggerInstance(predicate, EntityPredicate.fromJson(json.get("pellet")));
+	}
 
-    public void trigger(ServerPlayer player, EnergyPellet pellet) {
-        trigger(player, conditions -> conditions.matches(player.serverLevel(), player.position(), pellet));
-    }
+	public void trigger(ServerPlayer player, EnergyPellet pellet) {
+		trigger(player, conditions -> conditions.matches(player.serverLevel(), player.position(), pellet));
+	}
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final EntityPredicate pellet;
+	public static class TriggerInstance extends AbstractCriterionTriggerInstance {
+		private final EntityPredicate pellet;
 
-        public TriggerInstance(ContextAwarePredicate player, EntityPredicate pellet) {
-            super(ID, player);
-            this.pellet = pellet;
-        }
+		public TriggerInstance(ContextAwarePredicate player, EntityPredicate pellet) {
+			super(ID, player);
+			this.pellet = pellet;
+		}
 
-        public boolean matches(ServerLevel level, @Nullable Vec3 position, EnergyPellet pellet) {
-            return this.pellet.matches(level, position, pellet);
-        }
+		public boolean matches(ServerLevel level, @Nullable Vec3 position, EnergyPellet pellet) {
+			return this.pellet.matches(level, position, pellet);
+		}
 
-        @NotNull
-        @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            if (pellet != EntityPredicate.ANY) {
-                result.add("pellet", pellet.serializeToJson());
-            }
-            return result;
-        }
-    }
+		@NotNull
+		@Override
+		public JsonObject serializeToJson(SerializationContext context) {
+			final JsonObject result = super.serializeToJson(context);
+			if (pellet != EntityPredicate.ANY) {
+				result.add("pellet", pellet.serializeToJson());
+			}
+			return result;
+		}
+	}
 }

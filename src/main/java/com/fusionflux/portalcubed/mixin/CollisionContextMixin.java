@@ -9,10 +9,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CollisionContext.class)
 public interface CollisionContextMixin {
-    @Inject(method = "of", at = @At("HEAD"), cancellable = true)
-    private static void ofNullable(Entity entity, CallbackInfoReturnable<CollisionContext> cir) {
-        if (entity == null) {
-            cir.setReturnValue(CollisionContext.empty());
-        }
-    }
+	@Inject(method = "of", at = @At("HEAD"), cancellable = true)
+	private static void ofNullable(Entity entity, CallbackInfoReturnable<CollisionContext> cir) {
+		if (entity == null) {
+			cir.setReturnValue(CollisionContext.empty());
+		}
+	}
 }

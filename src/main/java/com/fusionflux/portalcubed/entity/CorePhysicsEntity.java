@@ -58,414 +58,414 @@ import static com.fusionflux.portalcubed.mechanics.PortalCubedDamageSources.pcSo
 // TODO: Extend LivingEntity
 public class CorePhysicsEntity extends PathfinderMob implements Fizzleable {
 
-    private float fizzleProgress = 0f;
-    private boolean fizzling = false;
+	private float fizzleProgress = 0f;
+	private boolean fizzling = false;
 
-    public CorePhysicsEntity(EntityType<? extends PathfinderMob> type, Level world) {
-        super(type, world);
-    }
+	public CorePhysicsEntity(EntityType<? extends PathfinderMob> type, Level world) {
+		super(type, world);
+	}
 
-    private boolean canUsePortals = true;
-    private boolean hasCollided;
-    private int timeSinceLastSound;
+	private boolean canUsePortals = true;
+	private boolean hasCollided;
+	private int timeSinceLastSound;
 
-    private List<UUID> intermediaryPortals = List.of();
+	private List<UUID> intermediaryPortals = List.of();
 
-    public Vec3 lastPos = this.position();
+	public Vec3 lastPos = this.position();
 
-    private final Vec3 offsetHeight = new Vec3(0, this.getBbHeight() / 2, 0);
+	private final Vec3 offsetHeight = new Vec3(0, this.getBbHeight() / 2, 0);
 
-    private boolean locked = false;
-    private boolean onButton = false;
-    private Optional<UUID> holder = Optional.empty();
+	private boolean locked = false;
+	private boolean onButton = false;
+	private Optional<UUID> holder = Optional.empty();
 
-    @Override
-    public boolean canBeCollidedWith() {
-        return canUsePortals;
-    }
+	@Override
+	public boolean canBeCollidedWith() {
+		return canUsePortals;
+	}
 
-    @Override
-    public boolean canCollideWith(Entity other) {
-        return other != this && canBeCollidedWith() && other instanceof LivingEntity && other.isAlive();
-    }
+	@Override
+	public boolean canCollideWith(Entity other) {
+		return other != this && canBeCollidedWith() && other instanceof LivingEntity && other.isAlive();
+	}
 
-    @Override
-    public boolean isPushable() {
-        return false;
-    }
+	@Override
+	public boolean isPushable() {
+		return false;
+	}
 
-    @Override
-    public boolean isInvulnerableTo(DamageSource source) {
-        if (source.isCreativePlayer() || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
-            return false;
-        if (!(source.getEntity() instanceof Player player))
-            return true;
-        return !player.getItemInHand(InteractionHand.MAIN_HAND).is(PortalCubedItems.WRENCHES);
-    }
+	@Override
+	public boolean isInvulnerableTo(DamageSource source) {
+		if (source.isCreativePlayer() || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
+			return false;
+		if (!(source.getEntity() instanceof Player player))
+			return true;
+		return !player.getItemInHand(InteractionHand.MAIN_HAND).is(PortalCubedItems.WRENCHES);
+	}
 
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (!level().isClientSide && !isInvulnerableTo(source) && !isRemoved()) {
-            if (!source.isCreativePlayer()) {
-                dropAllDeathLoot(source);
-            }
-            discard();
-            return true;
-        }
-        return false;
-    }
+	@Override
+	public boolean hurt(DamageSource source, float amount) {
+		if (!level().isClientSide && !isInvulnerableTo(source) && !isRemoved()) {
+			if (!source.isCreativePlayer()) {
+				dropAllDeathLoot(source);
+			}
+			discard();
+			return true;
+		}
+		return false;
+	}
 
-    @Override
-    @NotNull
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        return player.isShiftKeyDown() ? toggleLock(player, hand) : physicsEntityInteraction(player, hand);
-    }
+	@Override
+	@NotNull
+	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+		return player.isShiftKeyDown() ? toggleLock(player, hand) : physicsEntityInteraction(player, hand);
+	}
 
-    protected InteractionResult physicsEntityInteraction(Player player, InteractionHand hand) {
-        return InteractionResult.PASS;
-    }
+	protected InteractionResult physicsEntityInteraction(Player player, InteractionHand hand) {
+		return InteractionResult.PASS;
+	}
 
-    private InteractionResult toggleLock(Player player, InteractionHand hand) {
-        if (level().isClientSide() || !player.isCreative())
-            return InteractionResult.PASS;
-        ItemStack stack = player.getItemInHand(hand);
-        if (!stack.is(PortalCubedItems.HAMMER))
-            return InteractionResult.PASS;
-        // toggle
-        Boolean locked = !entityData.get(LOCKED);
-        entityData.set(LOCKED, locked);
+	private InteractionResult toggleLock(Player player, InteractionHand hand) {
+		if (level().isClientSide() || !player.isCreative())
+			return InteractionResult.PASS;
+		ItemStack stack = player.getItemInHand(hand);
+		if (!stack.is(PortalCubedItems.HAMMER))
+			return InteractionResult.PASS;
+		// toggle
+		Boolean locked = !entityData.get(LOCKED);
+		entityData.set(LOCKED, locked);
 
-        if (locked) {
-            getHolderUUID().ifPresent(uuid -> {
-                Player holder = level().getPlayerByUUID(uuid);
-                if (holder != null) {
-                    PortalCubedComponents.HOLDER_COMPONENT.get(holder).stopHolding();
-                }
-            });
-        }
+		if (locked) {
+			getHolderUUID().ifPresent(uuid -> {
+				Player holder = level().getPlayerByUUID(uuid);
+				if (holder != null) {
+					PortalCubedComponents.HOLDER_COMPONENT.get(holder).stopHolding();
+				}
+			});
+		}
 
-        player.displayClientMessage(Component.translatable("portalcubed.physics_entity.locked." + locked), true);
-        return InteractionResult.SUCCESS;
-    }
+		player.displayClientMessage(Component.translatable("portalcubed.physics_entity.locked." + locked), true);
+		return InteractionResult.SUCCESS;
+	}
 
-    @Override
-    public boolean shouldShowName() {
-        return false;
-    }
+	@Override
+	public boolean shouldShowName() {
+		return false;
+	}
 
-    @Override
-    public boolean isCustomNameVisible() {
-        return false;
-    }
+	@Override
+	public boolean isCustomNameVisible() {
+		return false;
+	}
 
-    @Override
-    @NotNull
-    public Component getDisplayName() {
-        return super.getDisplayName().plainCopy();
-    }
+	@Override
+	@NotNull
+	public Component getDisplayName() {
+		return super.getDisplayName().plainCopy();
+	}
 
-    @Nullable
-    @Override
-    public ItemStack getPickResult() {
-        ItemStack stack = super.getPickResult();
-        if (stack != null && this.hasCustomName())
-            stack.setHoverName(getDisplayName());
-        return stack;
-    }
+	@Nullable
+	@Override
+	public ItemStack getPickResult() {
+		ItemStack stack = super.getPickResult();
+		if (stack != null && this.hasCustomName())
+			stack.setHoverName(getDisplayName());
+		return stack;
+	}
 
-    @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
-        super.recreateFromPacket(packet);
-        this.setDiscardFriction(true);
-    }
+	@Override
+	public void recreateFromPacket(ClientboundAddEntityPacket packet) {
+		super.recreateFromPacket(packet);
+		this.setDiscardFriction(true);
+	}
 
-    private static final EntityDataAccessor<Optional<UUID>> HOLDER_UUID = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-    private static final EntityDataAccessor<Boolean> ON_BUTTON = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> LOCKED = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Optional<UUID>> HOLDER_UUID = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+	private static final EntityDataAccessor<Boolean> ON_BUTTON = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> LOCKED = SynchedEntityData.defineId(CorePhysicsEntity.class, EntityDataSerializers.BOOLEAN);
 
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(HOLDER_UUID, Optional.empty());
-        this.getEntityData().define(ON_BUTTON, false);
-        this.getEntityData().define(LOCKED, false);
-    }
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.getEntityData().define(HOLDER_UUID, Optional.empty());
+		this.getEntityData().define(ON_BUTTON, false);
+		this.getEntityData().define(LOCKED, false);
+	}
 
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
-        super.onSyncedDataUpdated(key);
-        if (LOCKED.equals(key)) {
-            this.locked = entityData.get(LOCKED);
-        } else if (ON_BUTTON.equals(key)) {
-            this.onButton = entityData.get(ON_BUTTON);
-        } else if (HOLDER_UUID.equals(key)) {
-            this.holder = entityData.get(HOLDER_UUID);
-        }
-    }
+	@Override
+	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+		super.onSyncedDataUpdated(key);
+		if (LOCKED.equals(key)) {
+			this.locked = entityData.get(LOCKED);
+		} else if (ON_BUTTON.equals(key)) {
+			this.onButton = entityData.get(ON_BUTTON);
+		} else if (HOLDER_UUID.equals(key)) {
+			this.holder = entityData.get(HOLDER_UUID);
+		}
+	}
 
-    public Optional<UUID> getHolderUUID() {
-        return holder;
-    }
+	public Optional<UUID> getHolderUUID() {
+		return holder;
+	}
 
-    public void setHolderUUID(Optional<UUID> uuid) {
-        entityData.set(HOLDER_UUID, uuid);
-    }
+	public void setHolderUUID(Optional<UUID> uuid) {
+		entityData.set(HOLDER_UUID, uuid);
+	}
 
-    public boolean isOnButton() {
-        return onButton;
-    }
+	public boolean isOnButton() {
+		return onButton;
+	}
 
-    public void setOnButton(boolean on) {
-        entityData.set(ON_BUTTON, on);
-    }
+	public void setOnButton(boolean on) {
+		entityData.set(ON_BUTTON, on);
+	}
 
-    public boolean isLocked() {
-        return locked;
-    }
+	public boolean isLocked() {
+		return locked;
+	}
 
-    public void setRotYaw(float yaw) {
-        this.yBodyRot = yaw;
-    }
+	public void setRotYaw(float yaw) {
+		this.yBodyRot = yaw;
+	}
 
-    @Override
-    public boolean canChangeDimensions() {
-        return canUsePortals;
-    }
+	@Override
+	public boolean canChangeDimensions() {
+		return canUsePortals;
+	}
 
-    @Override
-    public void tick() {
-        super.tick();
-        UUID holder = this.holder.orElse(null);
-        final boolean isBeingHeld = holder != null && !fizzling;
-        timeSinceLastSound++;
-        this.hasImpulse = true;
-        canUsePortals = holder == null;
-        this.lastPos = this.position();
-        this.setDiscardFriction(!this.onGround() && !((EntityExt) this).isInFunnel());
-        if (isBeingHeld) {
-            Player player = (Player) ((LevelExt) level()).getEntityByUuid(holder);
-            if (player != null && player.isAlive()) {
-                Vec3 eyes = player.getEyePosition(0);
-                double distance = 1.5;
-                canUsePortals = false;
-                Vec3 rotation = this.getPlayerRotationVector(player.getXRot(), player.getYRot());
-                Vec3 rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
-                Vec3 target = eyes.add(
-                        (rotation.x * distance) - rotatedOffset.x,
-                        (rotation.y * distance) - rotatedOffset.y,
-                        (rotation.z * distance) - rotatedOffset.z
-                );
-                final AdvancedEntityRaycast.Result raycastResult = PortalDirectionUtils.raycast(level(), new ClipContext(
-                    eyes, target, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this
-                ));
-                final Vec3 holdPos = raycastResult.finalHit().getLocation();
-                if (!level().isClientSide) {
-                    GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
-                }
-                this.fallDistance = 0;
-                if (RayonIntegration.INSTANCE.isPresent()) {
-                    final float destYaw = Mth.wrapDegrees(player.yHeadRot + 180);
-                    final float multiplier = (destYaw > 120 || destYaw < 0) ? -1 : 1;
-                    final float yawDelta = Mth.wrapDegrees(
-                        Mth.wrapDegrees(RayonIntegration.INSTANCE.getYaw(this) * multiplier) - destYaw
-                    );
-                    RayonIntegration.INSTANCE.rotateYaw(this, yawDelta);
-                    RayonIntegration.INSTANCE.setAngularVelocityYaw(this, new Vector3f(0, yawDelta, 0));
-                } else {
-                    setYRot(player.yHeadRot);
-                    setYHeadRot(player.yHeadRot);
-                    setYBodyRot(player.yHeadRot);
-                }
-                final List<UUID> portals = raycastResult.rays()
-                    .stream()
-                    .map(AdvancedEntityRaycast.Result.Ray::hit)
-                    .filter(h -> h instanceof EntityHitResult)
-                    .map(h -> ((EntityHitResult)h).getEntity().getUUID())
-                    .toList();
-                if (!portals.equals(intermediaryPortals)) {
-                    intermediaryPortals = portals;
-                    moveTo(holdPos);
-                } else {
-                    final Vec3 movement = RotationUtil.vecWorldToPlayer(holdPos.subtract(position()), GravityChangerAPI.getGravityDirection(player));
-                    if (RayonIntegration.INSTANCE.isPresent()) {
-                        RayonIntegration.INSTANCE.setVelocity(this, movement);
-                    }
-                    RayonIntegration.INSTANCE.simpleMove(this, MoverType.PLAYER, movement);
-                }
-                if (position().distanceToSqr(holdPos) > 2 * 2) {
-                    PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding();
-                }
-            } else {
-                if (player != null) {
-                    setHolderUUID(Optional.empty());
-                }
-                canUsePortals = true;
-            }
-            RayonIntegration.INSTANCE.setNoGravity(this, true);
-        } else if (this.isNoGravity() && !fizzling && !((EntityExt)this).isInFunnel()) {
-            RayonIntegration.INSTANCE.setNoGravity(this, false);
-        }
-        if (this.getDeltaMovement().y < -3.92) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0, .81d, 0));
-        }
-        if (fizzling) {
-            if (level().isClientSide) {
-                fizzleProgress += Minecraft.getInstance().getFrameTime();
-            } else {
-                fizzleProgress += 0.05f;
-                if (fizzleProgress >= 1f) {
-                    remove(RemovalReason.KILLED);
-                }
-            }
-        }
-    }
+	@Override
+	public void tick() {
+		super.tick();
+		UUID holder = this.holder.orElse(null);
+		final boolean isBeingHeld = holder != null && !fizzling;
+		timeSinceLastSound++;
+		this.hasImpulse = true;
+		canUsePortals = holder == null;
+		this.lastPos = this.position();
+		this.setDiscardFriction(!this.onGround() && !((EntityExt) this).isInFunnel());
+		if (isBeingHeld) {
+			Player player = (Player) ((LevelExt) level()).getEntityByUuid(holder);
+			if (player != null && player.isAlive()) {
+				Vec3 eyes = player.getEyePosition(0);
+				double distance = 1.5;
+				canUsePortals = false;
+				Vec3 rotation = this.getPlayerRotationVector(player.getXRot(), player.getYRot());
+				Vec3 rotatedOffset = RotationUtil.vecPlayerToWorld(offsetHeight, GravityChangerAPI.getGravityDirection(this));
+				Vec3 target = eyes.add(
+						(rotation.x * distance) - rotatedOffset.x,
+						(rotation.y * distance) - rotatedOffset.y,
+						(rotation.z * distance) - rotatedOffset.z
+				);
+				final AdvancedEntityRaycast.Result raycastResult = PortalDirectionUtils.raycast(level(), new ClipContext(
+					eyes, target, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this
+				));
+				final Vec3 holdPos = raycastResult.finalHit().getLocation();
+				if (!level().isClientSide) {
+					GravityChangerAPI.addGravity(this, new Gravity(GravityChangerAPI.getGravityDirection(player), 10, 1, "player_interaction"));
+				}
+				this.fallDistance = 0;
+				if (RayonIntegration.INSTANCE.isPresent()) {
+					final float destYaw = Mth.wrapDegrees(player.yHeadRot + 180);
+					final float multiplier = (destYaw > 120 || destYaw < 0) ? -1 : 1;
+					final float yawDelta = Mth.wrapDegrees(
+						Mth.wrapDegrees(RayonIntegration.INSTANCE.getYaw(this) * multiplier) - destYaw
+					);
+					RayonIntegration.INSTANCE.rotateYaw(this, yawDelta);
+					RayonIntegration.INSTANCE.setAngularVelocityYaw(this, new Vector3f(0, yawDelta, 0));
+				} else {
+					setYRot(player.yHeadRot);
+					setYHeadRot(player.yHeadRot);
+					setYBodyRot(player.yHeadRot);
+				}
+				final List<UUID> portals = raycastResult.rays()
+					.stream()
+					.map(AdvancedEntityRaycast.Result.Ray::hit)
+					.filter(h -> h instanceof EntityHitResult)
+					.map(h -> ((EntityHitResult)h).getEntity().getUUID())
+					.toList();
+				if (!portals.equals(intermediaryPortals)) {
+					intermediaryPortals = portals;
+					moveTo(holdPos);
+				} else {
+					final Vec3 movement = RotationUtil.vecWorldToPlayer(holdPos.subtract(position()), GravityChangerAPI.getGravityDirection(player));
+					if (RayonIntegration.INSTANCE.isPresent()) {
+						RayonIntegration.INSTANCE.setVelocity(this, movement);
+					}
+					RayonIntegration.INSTANCE.simpleMove(this, MoverType.PLAYER, movement);
+				}
+				if (position().distanceToSqr(holdPos) > 2 * 2) {
+					PortalCubedComponents.HOLDER_COMPONENT.get(player).stopHolding();
+				}
+			} else {
+				if (player != null) {
+					setHolderUUID(Optional.empty());
+				}
+				canUsePortals = true;
+			}
+			RayonIntegration.INSTANCE.setNoGravity(this, true);
+		} else if (this.isNoGravity() && !fizzling && !((EntityExt)this).isInFunnel()) {
+			RayonIntegration.INSTANCE.setNoGravity(this, false);
+		}
+		if (this.getDeltaMovement().y < -3.92) {
+			this.setDeltaMovement(this.getDeltaMovement().add(0, .81d, 0));
+		}
+		if (fizzling) {
+			if (level().isClientSide) {
+				fizzleProgress += Minecraft.getInstance().getFrameTime();
+			} else {
+				fizzleProgress += 0.05f;
+				if (fizzleProgress >= 1f) {
+					remove(RemovalReason.KILLED);
+				}
+			}
+		}
+	}
 
-    @Override
-    public void aiStep() {
-        if (!isLocked()) {
-            super.aiStep();
-        }
-    }
+	@Override
+	public void aiStep() {
+		if (!isLocked()) {
+			super.aiStep();
+		}
+	}
 
-    @Override
-    public boolean isControlledByLocalInstance() {
-        return !level().isClientSide || getHolderUUID().isPresent();
-    }
+	@Override
+	public boolean isControlledByLocalInstance() {
+		return !level().isClientSide || getHolderUUID().isPresent();
+	}
 
-    @NotNull
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return Collections.emptyList();
-    }
+	@NotNull
+	@Override
+	public Iterable<ItemStack> getArmorSlots() {
+		return Collections.emptyList();
+	}
 
-    @NotNull
-    @Override
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
-        return ItemStack.EMPTY;
-    }
+	@NotNull
+	@Override
+	public ItemStack getItemBySlot(EquipmentSlot slot) {
+		return ItemStack.EMPTY;
+	}
 
-    @Override
-    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
-    }
+	@Override
+	public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
+	}
 
-    @NotNull
-    @Override
-    public HumanoidArm getMainArm() {
-        return HumanoidArm.RIGHT;
-    }
+	@NotNull
+	@Override
+	public HumanoidArm getMainArm() {
+		return HumanoidArm.RIGHT;
+	}
 
-    @Override
-    public void startFizzlingProgress() {
-        fizzling = true;
-    }
+	@Override
+	public void startFizzlingProgress() {
+		fizzling = true;
+	}
 
-    @Override
-    public void fizzle() {
-        if (fizzling) return;
-        fizzling = true;
-        level().playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundSource.NEUTRAL, 0.1f, 1f);
-        RayonIntegration.INSTANCE.setNoGravity(this, true);
-        final FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeVarInt(getId());
-        final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);
-        PlayerLookup.tracking(this).forEach(player -> player.connection.send(packet));
-    }
+	@Override
+	public void fizzle() {
+		if (fizzling) return;
+		fizzling = true;
+		level().playSound(null, getX(), getY(), getZ(), PortalCubedSounds.MATERIAL_EMANCIPATION_EVENT, SoundSource.NEUTRAL, 0.1f, 1f);
+		RayonIntegration.INSTANCE.setNoGravity(this, true);
+		final FriendlyByteBuf buf = PacketByteBufs.create();
+		buf.writeVarInt(getId());
+		final Packet<?> packet = ServerPlayNetworking.createS2CPacket(PortalCubedClientPackets.FIZZLE_PACKET, buf);
+		PlayerLookup.tracking(this).forEach(player -> player.connection.send(packet));
+	}
 
-    @Override
-    public float getFizzleProgress() {
-        return fizzleProgress;
-    }
+	@Override
+	public float getFizzleProgress() {
+		return fizzleProgress;
+	}
 
-    @Override
-    public boolean fizzling() {
-        return fizzling;
-    }
+	@Override
+	public boolean fizzling() {
+		return fizzling;
+	}
 
-    @Override
-    public boolean fizzlesInGoo() {
-        return true;
-    }
+	@Override
+	public boolean fizzlesInGoo() {
+		return true;
+	}
 
-    @Override
-    public FizzleType getFizzleType() {
-        return FizzleType.OBJECT;
-    }
+	@Override
+	public FizzleType getFizzleType() {
+		return FizzleType.OBJECT;
+	}
 
-    protected final Vec3 getPlayerRotationVector(float pitch, float yaw) {
-        float f = pitch * (float) (Math.PI / 180.0);
-        float g = -yaw * (float) (Math.PI / 180.0);
-        float h = Mth.cos(g);
-        float i = Mth.sin(g);
-        float j = Mth.cos(f);
-        float k = Mth.sin(f);
-        return RotationUtil.vecPlayerToWorld(new Vec3(i * j, -k, h * j), GravityChangerAPI.getGravityDirection(this));
-    }
+	protected final Vec3 getPlayerRotationVector(float pitch, float yaw) {
+		float f = pitch * (float) (Math.PI / 180.0);
+		float g = -yaw * (float) (Math.PI / 180.0);
+		float h = Mth.cos(g);
+		float i = Mth.sin(g);
+		float j = Mth.cos(f);
+		float k = Mth.sin(f);
+		return RotationUtil.vecPlayerToWorld(new Vec3(i * j, -k, h * j), GravityChangerAPI.getGravityDirection(this));
+	}
 
-    @Override
-    public void move(MoverType movementType, Vec3 movement) {
-        super.move(movementType, movement);
-        if (horizontalCollision) {
-            if (!hasCollided) {
-                hasCollided = true;
-                if (!level().isClientSide && timeSinceLastSound >= 20) {
-                    level().playSound(null, this, getCollisionSound(), SoundSource.NEUTRAL, 1f, 1f);
-                    timeSinceLastSound = 0;
-                }
-            }
-        } else {
-            hasCollided = false;
-        }
-    }
+	@Override
+	public void move(MoverType movementType, Vec3 movement) {
+		super.move(movementType, movement);
+		if (horizontalCollision) {
+			if (!hasCollided) {
+				hasCollided = true;
+				if (!level().isClientSide && timeSinceLastSound >= 20) {
+					level().playSound(null, this, getCollisionSound(), SoundSource.NEUTRAL, 1f, 1f);
+					timeSinceLastSound = 0;
+				}
+			}
+		} else {
+			hasCollided = false;
+		}
+	}
 
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        entityData.set(LOCKED, compound.getBoolean("Locked"));
-    }
+	@Override
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
+		entityData.set(LOCKED, compound.getBoolean("Locked"));
+	}
 
-    @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putBoolean("Locked", isLocked());
-    }
+	@Override
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
+		compound.putBoolean("Locked", isLocked());
+	}
 
-    protected SoundEvent getCollisionSound() {
-        return PortalCubedSounds.CUBE_LOW_HIT_EVENT; // TODO: implement for other physics objects (this requires a lot of assets)
-    }
+	protected SoundEvent getCollisionSound() {
+		return PortalCubedSounds.CUBE_LOW_HIT_EVENT; // TODO: implement for other physics objects (this requires a lot of assets)
+	}
 
-    @Override
-    public void remove(RemovalReason reason) {
-        if (!level().isClientSide) //noinspection DataFlowIssue
-            getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get(((ServerLevel) level()).getEntity(value)).stopHolding());
-        super.remove(reason);
-    }
+	@Override
+	public void remove(RemovalReason reason) {
+		if (!level().isClientSide) //noinspection DataFlowIssue
+			getHolderUUID().ifPresent(value -> PortalCubedComponents.HOLDER_COMPONENT.get(((ServerLevel) level()).getEntity(value)).stopHolding());
+		super.remove(reason);
+	}
 
-    @Override
-    public void checkDespawn() {
-    }
+	@Override
+	public void checkDespawn() {
+	}
 
-    protected static AABB createFootBox(double x, double y, double z) {
-        return new AABB(-x / 2, 0, -z / 2, x / 2, y, z / 2);
-    }
+	protected static AABB createFootBox(double x, double y, double z) {
+		return new AABB(-x / 2, 0, -z / 2, x / 2, y, z / 2);
+	}
 
-    @NotNull
-    @Override
-    public Fallsounds getFallSounds() {
-        return new Fallsounds(PortalCubedSounds.GENERIC_PHYSICS_FALL_EVENT, PortalCubedSounds.GENERIC_PHYSICS_FALL_EVENT);
-    }
+	@NotNull
+	@Override
+	public Fallsounds getFallSounds() {
+		return new Fallsounds(PortalCubedSounds.GENERIC_PHYSICS_FALL_EVENT, PortalCubedSounds.GENERIC_PHYSICS_FALL_EVENT);
+	}
 
-    @Override
-    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
-        if (onGround) {
-            if (state.isAir() && fallDistance > 0 && getType().is(PortalCubedEntities.P1_ENTITY)) {
-                final List<Entity> collisions = level().getEntitiesOfClass(Entity.class, getBoundingBox().expandTowards(0, -0.1, 0), this::canCollideWith);
-                for (final Entity collision : collisions) {
-                    collision.hurt(pcSources(level()).cube(), fallDistance * 1.5f);
-                }
-            }
-            fallDistance = 0;
-        } else {
-            fallDistance -= y;
-        }
-    }
+	@Override
+	protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+		if (onGround) {
+			if (state.isAir() && fallDistance > 0 && getType().is(PortalCubedEntities.P1_ENTITY)) {
+				final List<Entity> collisions = level().getEntitiesOfClass(Entity.class, getBoundingBox().expandTowards(0, -0.1, 0), this::canCollideWith);
+				for (final Entity collision : collisions) {
+					collision.hurt(pcSources(level()).cube(), fallDistance * 1.5f);
+				}
+			}
+			fallDistance = 0;
+		} else {
+			fallDistance -= y;
+		}
+	}
 }

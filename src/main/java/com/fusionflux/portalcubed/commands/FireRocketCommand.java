@@ -16,27 +16,27 @@ import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
 public class FireRocketCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(literal("firerocket")
-            .requires(s -> s.hasPermission(2))
-            .executes(ctx -> fireRocket(ctx.getSource(), null))
-            .then(argument("rotation", RotationArgument.rotation())
-                .executes(ctx -> fireRocket(ctx.getSource(), RotationArgument.getRotation(ctx, "rotation")))
-            )
-        );
-    }
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+		dispatcher.register(literal("firerocket")
+			.requires(s -> s.hasPermission(2))
+			.executes(ctx -> fireRocket(ctx.getSource(), null))
+			.then(argument("rotation", RotationArgument.rotation())
+				.executes(ctx -> fireRocket(ctx.getSource(), RotationArgument.getRotation(ctx, "rotation")))
+			)
+		);
+	}
 
-    public static int fireRocket(CommandSourceStack source, @Nullable Coordinates rotationArg) {
-        final RocketEntity rocket = PortalCubedEntities.ROCKET.create(source.getLevel());
-        if (rocket == null) return 0;
-        final Vec2 rotation = rotationArg != null
-            ? rotationArg.getRotation(source)
-            : source.getRotation();
-        rocket.setPos(source.getAnchor().apply(source));
-        rocket.setYRot(rotation.y);
-        rocket.setXRot(rotation.x);
-        source.getLevel().addFreshEntity(rocket);
-        source.getLevel().playSound(null, rocket, PortalCubedSounds.ROCKET_FIRE_EVENT, SoundSource.HOSTILE, 1, 1);
-        return Command.SINGLE_SUCCESS;
-    }
+	public static int fireRocket(CommandSourceStack source, @Nullable Coordinates rotationArg) {
+		final RocketEntity rocket = PortalCubedEntities.ROCKET.create(source.getLevel());
+		if (rocket == null) return 0;
+		final Vec2 rotation = rotationArg != null
+			? rotationArg.getRotation(source)
+			: source.getRotation();
+		rocket.setPos(source.getAnchor().apply(source));
+		rocket.setYRot(rotation.y);
+		rocket.setXRot(rotation.x);
+		source.getLevel().addFreshEntity(rocket);
+		source.getLevel().playSound(null, rocket, PortalCubedSounds.ROCKET_FIRE_EVENT, SoundSource.HOSTILE, 1, 1);
+		return Command.SINGLE_SUCCESS;
+	}
 }

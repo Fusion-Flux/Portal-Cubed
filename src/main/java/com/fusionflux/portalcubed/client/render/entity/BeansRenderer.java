@@ -9,14 +9,14 @@ import net.minecraft.resources.ResourceLocation;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class BeansRenderer extends CorePhysicsRenderer<BeansEntity, BeansModel> {
-    private static final ResourceLocation BASE_TEXTURE = id("textures/entity/beans.png");
+	private static final ResourceLocation BASE_TEXTURE = id("textures/entity/beans.png");
 
-    public BeansRenderer(EntityRendererProvider.Context context) {
-        super(context, new BeansModel(Minecraft.getInstance().getEntityModels().bakeLayer(BeansModel.BEANS_LAYER)), 0.5f);
-    }
+	public BeansRenderer(EntityRendererProvider.Context context) {
+		super(context, new BeansModel(Minecraft.getInstance().getEntityModels().bakeLayer(BeansModel.BEANS_LAYER)), 0.5f);
+	}
 
-    @Override
-    public ResourceLocation getTextureLocation(BeansEntity entity) {
-        return BASE_TEXTURE;
-    }
+	@Override
+	public ResourceLocation getTextureLocation(BeansEntity entity) {
+		return BASE_TEXTURE;
+	}
 }

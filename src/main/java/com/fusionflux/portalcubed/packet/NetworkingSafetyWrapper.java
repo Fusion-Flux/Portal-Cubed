@@ -8,7 +8,7 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 //gotta have the `ClientPlayNetworking` call in a separate class
 //so that Mixin can resolve all the classes used when patching
 public class NetworkingSafetyWrapper {
-    public static void sendFromClient(String name, FriendlyByteBuf buf) {
-        ClientPlayNetworking.send(PortalCubed.id(name), buf);
-    }
+	public static void sendFromClient(String name, FriendlyByteBuf buf) {
+		ClientPlayNetworking.send(PortalCubed.id(name), buf);
+	}
 }

@@ -29,82 +29,82 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 
 public abstract class SpecialHiddenBlock extends Block implements SimpleLoggedBlock {
-    public static final EnumProperty<FluidType> LOGGING = PortalCubedProperties.LOGGING;
+	public static final EnumProperty<FluidType> LOGGING = PortalCubedProperties.LOGGING;
 
-    public SpecialHiddenBlock(Properties settings) {
-        super(settings);
-        registerDefaultState(
-            getStateDefinition().any()
-                .setValue(LOGGING, FluidType.EMPTY)
-        );
-    }
+	public SpecialHiddenBlock(Properties settings) {
+		super(settings);
+		registerDefaultState(
+			getStateDefinition().any()
+				.setValue(LOGGING, FluidType.EMPTY)
+		);
+	}
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LOGGING);
-    }
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(LOGGING);
+	}
 
-    @NotNull
-    @Override
-    @SuppressWarnings("deprecation")
-    public final VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return isHolding(context, asItem()) || isHolding(context, PortalCubedItems.HAMMER)
-            ? getVisibleOutlineShape(state, world, pos, context) : Shapes.empty();
-    }
+	@NotNull
+	@Override
+	@SuppressWarnings("deprecation")
+	public final VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return isHolding(context, asItem()) || isHolding(context, PortalCubedItems.HAMMER)
+			? getVisibleOutlineShape(state, world, pos, context) : Shapes.empty();
+	}
 
-    protected VoxelShape getVisibleOutlineShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return Shapes.block();
-    }
+	protected VoxelShape getVisibleOutlineShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return Shapes.block();
+	}
 
-    private static boolean isHolding(CollisionContext context, Item item) {
-        return context.isHoldingItem(item) ||
-            (context instanceof EntityCollisionContext entityContext &&
-                entityContext.getEntity() instanceof LivingEntity living &&
-                living.isHolding(item)
-            );
-    }
+	private static boolean isHolding(CollisionContext context, Item item) {
+		return context.isHoldingItem(item) ||
+			(context instanceof EntityCollisionContext entityContext &&
+				entityContext.getEntity() instanceof LivingEntity living &&
+				living.isHolding(item)
+			);
+	}
 
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
-        return true;
-    }
+	@Override
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+		return true;
+	}
 
-    @NotNull
-    @Override
-    @SuppressWarnings("deprecation")
-    public RenderShape getRenderShape(BlockState state) {
-        return MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT
-            ? overrideRenderTypeClient() : RenderShape.INVISIBLE;
-    }
+	@NotNull
+	@Override
+	@SuppressWarnings("deprecation")
+	public RenderShape getRenderShape(BlockState state) {
+		return MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT
+			? overrideRenderTypeClient() : RenderShape.INVISIBLE;
+	}
 
-    @ClientOnly
-    private RenderShape overrideRenderTypeClient() {
-        return PortalCubedClient.hiddenBlocksVisible() ? RenderShape.MODEL : RenderShape.INVISIBLE;
-    }
+	@ClientOnly
+	private RenderShape overrideRenderTypeClient() {
+		return PortalCubedClient.hiddenBlocksVisible() ? RenderShape.MODEL : RenderShape.INVISIBLE;
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
-        return 1f;
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
+		return 1f;
+	}
 
-    @NotNull
-    @SuppressWarnings("deprecation")
-    @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        final Fluid fluid = state.getValue(LOGGING).fluid;
-        if (fluid != Fluids.EMPTY) {
-            world.scheduleTick(pos, fluid, fluid.getTickDelay(world));
-        }
+	@NotNull
+	@SuppressWarnings("deprecation")
+	@Override
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+		final Fluid fluid = state.getValue(LOGGING).fluid;
+		if (fluid != Fluids.EMPTY) {
+			world.scheduleTick(pos, fluid, fluid.getTickDelay(world));
+		}
 
-        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
-    }
+		return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+	}
 
-    @NotNull
-    @Override
-    @SuppressWarnings("deprecation")
-    public FluidState getFluidState(BlockState state) {
-        final Fluid fluid = state.getValue(LOGGING).fluid;
-        return fluid instanceof FlowingFluid flowing ? flowing.getSource(false) : fluid.defaultFluidState();
-    }
+	@NotNull
+	@Override
+	@SuppressWarnings("deprecation")
+	public FluidState getFluidState(BlockState state) {
+		final Fluid fluid = state.getValue(LOGGING).fluid;
+		return fluid instanceof FlowingFluid flowing ? flowing.getSource(false) : fluid.defaultFluidState();
+	}
 }

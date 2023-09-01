@@ -6,6 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(AbstractSoundInstance.class)
 public interface AbstractSoundInstanceAccessor {
-    @Accessor("volume")
-    void setVolume(float volume);
+	@Accessor("volume")
+	void setVolume(float volume);
 }

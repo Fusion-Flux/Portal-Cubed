@@ -15,17 +15,17 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
-    @WrapOperation(
-        method = "performUseItemOn",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/level/block/state/BlockState;use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"
-        )
-    )
-    private InteractionResult noPlaceInPortalHud(BlockState instance, Level world, Player player, InteractionHand hand, BlockHitResult hit, Operation<InteractionResult> original) {
-        if (PortalCubedClient.isPortalHudMode()) {
-            return InteractionResult.PASS;
-        }
-        return original.call(instance, world, player, hand, hit);
-    }
+	@WrapOperation(
+		method = "performUseItemOn",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/state/BlockState;use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"
+		)
+	)
+	private InteractionResult noPlaceInPortalHud(BlockState instance, Level world, Player player, InteractionHand hand, BlockHitResult hit, Operation<InteractionResult> original) {
+		if (PortalCubedClient.isPortalHudMode()) {
+			return InteractionResult.PASS;
+		}
+		return original.call(instance, world, player, hand, hit);
+	}
 }

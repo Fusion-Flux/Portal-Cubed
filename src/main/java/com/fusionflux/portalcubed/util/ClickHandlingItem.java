@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 
 public interface ClickHandlingItem {
 
-    InteractionResult onLeftClick(Player user, InteractionHand hand);
-    InteractionResult onRightClick(Player user, InteractionHand hand);
+	InteractionResult onLeftClick(Player user, InteractionHand hand);
+	InteractionResult onRightClick(Player user, InteractionHand hand);
 
 }

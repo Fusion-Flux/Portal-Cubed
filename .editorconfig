@@ -13,7 +13,7 @@ insert_final_newline = true
 indent_size = 2
 
 [*.java]
-# indent_style = tab
+indent_style = tab
 ij_continuation_indent_size = 8
 ij_java_class_count_to_use_import_on_demand = 99
 ij_java_names_count_to_use_import_on_demand = 99

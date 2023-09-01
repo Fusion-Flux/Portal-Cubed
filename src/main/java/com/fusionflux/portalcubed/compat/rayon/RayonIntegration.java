@@ -11,30 +11,30 @@ import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public interface RayonIntegration {
-    RayonIntegration INSTANCE = QuiltLoader.isModLoaded("rayon") ? RayonPresentHolder.create() : RayonIntegrationAbsent.INSTANCE;
+	RayonIntegration INSTANCE = QuiltLoader.isModLoaded("rayon") ? RayonPresentHolder.create() : RayonIntegrationAbsent.INSTANCE;
 
-    void init();
+	void init();
 
-    boolean isPresent();
+	boolean isPresent();
 
-    void setVelocity(Entity entity, Vec3 velocity);
+	void setVelocity(Entity entity, Vec3 velocity);
 
-    void simpleMove(Entity entity, MoverType movementType, Vec3 movement);
+	void simpleMove(Entity entity, MoverType movementType, Vec3 movement);
 
-    void setNoGravity(Entity entity, boolean noGravity);
+	void setNoGravity(Entity entity, boolean noGravity);
 
-    float getYaw(Entity entity);
+	float getYaw(Entity entity);
 
-    void rotateYaw(Entity entity, float amount);
+	void rotateYaw(Entity entity, float amount);
 
-    void setAngularVelocityYaw(Entity entity, Vector3f angle);
+	void setAngularVelocityYaw(Entity entity, Vector3f angle);
 
-    @ClientOnly
-    void multiplyMatrices(PoseStack matrices, Entity entity, float tickDelta);
+	@ClientOnly
+	void multiplyMatrices(PoseStack matrices, Entity entity, float tickDelta);
 
-    class RayonPresentHolder {
-        private static RayonIntegration create() {
-            return new RayonIntegrationPresent();
-        }
-    }
+	class RayonPresentHolder {
+		private static RayonIntegration create() {
+			return new RayonIntegrationPresent();
+		}
+	}
 }

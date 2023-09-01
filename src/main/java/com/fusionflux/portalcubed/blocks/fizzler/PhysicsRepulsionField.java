@@ -10,18 +10,18 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class PhysicsRepulsionField extends AbstractFizzlerBlock {
-    public PhysicsRepulsionField(Properties settings) {
-        super(settings);
-    }
+	public PhysicsRepulsionField(Properties settings) {
+		super(settings);
+	}
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return context instanceof EntityCollisionContext entityCtx && entityCtx.getEntity() instanceof CorePhysicsEntity
-            ? getShape(state, world, pos, context)
-            : super.getCollisionShape(state, world, pos, context);
-    }
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return context instanceof EntityCollisionContext entityCtx && entityCtx.getEntity() instanceof CorePhysicsEntity
+			? getShape(state, world, pos, context)
+			: super.getCollisionShape(state, world, pos, context);
+	}
 
-    @Override
-    public void applyEffectsTo(Entity entity) {
-    }
+	@Override
+	public void applyEffectsTo(Entity entity) {
+	}
 }

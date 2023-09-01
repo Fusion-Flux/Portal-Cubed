@@ -17,69 +17,69 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
 public class PortalCubedModels extends FabricModelProvider {
-    public PortalCubedModels(FabricDataOutput output) {
-        super(output);
-    }
+	public PortalCubedModels(FabricDataOutput output) {
+		super(output);
+	}
 
-    @Override
-    public void generateBlockStateModels(BlockModelGenerators gen) {
-        gen.blockStateOutput.accept(excursionFunnelEmitter());
-        gen.skipAutoItemBlock(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER);
+	@Override
+	public void generateBlockStateModels(BlockModelGenerators gen) {
+		gen.blockStateOutput.accept(excursionFunnelEmitter());
+		gen.skipAutoItemBlock(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER);
 
-        gen.skipAutoItemBlock(PortalCubedBlocks.HLB_EMITTER_BLOCK);
-        gen.blockStateOutput.accept(
-                MultiVariantGenerator.multiVariant(PortalCubedBlocks.HLB_EMITTER_BLOCK)
-                        .with(BlockModelGenerators.createFacingDispatch())
-                        .with(PropertyDispatch.properties(HardLightBridgePart.EDGE, HardLightBridgeEmitterBlock.POWERED)
-                                .generate((edge, powered) -> {
-                                    String power = powered ? "on" : "off";
-                                    String model = "block/light_bridge_emitter_" + edge + "_edge_" + power;
-                                    ResourceLocation id = PortalCubed.id(model);
-                                    return Variant.variant().with(VariantProperties.MODEL, id);
-                                })
-                        )
-        );
-        gen.blockStateOutput.accept(
-                MultiVariantGenerator.multiVariant(PortalCubedBlocks.HLB_BLOCK)
-                        .with(BlockModelGenerators.createFacingDispatch())
-                        .with(PropertyDispatch.property(HardLightBridgePart.EDGE)
-                                .generate(edge -> {
-                                    ResourceLocation id = PortalCubed.id("block/light_bridge_" + edge);
-                                    return Variant.variant().with(VariantProperties.MODEL, id);
-                                })
-                        )
-        );
-    }
+		gen.skipAutoItemBlock(PortalCubedBlocks.HLB_EMITTER_BLOCK);
+		gen.blockStateOutput.accept(
+				MultiVariantGenerator.multiVariant(PortalCubedBlocks.HLB_EMITTER_BLOCK)
+						.with(BlockModelGenerators.createFacingDispatch())
+						.with(PropertyDispatch.properties(HardLightBridgePart.EDGE, HardLightBridgeEmitterBlock.POWERED)
+								.generate((edge, powered) -> {
+									String power = powered ? "on" : "off";
+									String model = "block/light_bridge_emitter_" + edge + "_edge_" + power;
+									ResourceLocation id = PortalCubed.id(model);
+									return Variant.variant().with(VariantProperties.MODEL, id);
+								})
+						)
+		);
+		gen.blockStateOutput.accept(
+				MultiVariantGenerator.multiVariant(PortalCubedBlocks.HLB_BLOCK)
+						.with(BlockModelGenerators.createFacingDispatch())
+						.with(PropertyDispatch.property(HardLightBridgePart.EDGE)
+								.generate(edge -> {
+									ResourceLocation id = PortalCubed.id("block/light_bridge_" + edge);
+									return Variant.variant().with(VariantProperties.MODEL, id);
+								})
+						)
+		);
+	}
 
-    protected BlockStateGenerator excursionFunnelEmitter() {
-        return MultiVariantGenerator.multiVariant(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER)
-                .with(
-                        PropertyDispatch.properties(ExcursionFunnelEmitterBlock.QUADRANT, ExcursionFunnelEmitterBlock.MODE)
-                        .generate(this::generateEmitterVariant)
-                )
-                .with(BlockModelGenerators.createFacingDispatch());
-    }
+	protected BlockStateGenerator excursionFunnelEmitter() {
+		return MultiVariantGenerator.multiVariant(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER)
+				.with(
+						PropertyDispatch.properties(ExcursionFunnelEmitterBlock.QUADRANT, ExcursionFunnelEmitterBlock.MODE)
+						.generate(this::generateEmitterVariant)
+				)
+				.with(BlockModelGenerators.createFacingDispatch());
+	}
 
-    protected Variant generateEmitterVariant(int quadrant, Mode state) {
-        ResourceLocation id = PortalCubed.id("block/excursion_funnel_emitter_" + state.getSerializedName() + "_quadrant_" + quadrant);
-        return Variant.variant().with(VariantProperties.MODEL, id);
-    }
+	protected Variant generateEmitterVariant(int quadrant, Mode state) {
+		ResourceLocation id = PortalCubed.id("block/excursion_funnel_emitter_" + state.getSerializedName() + "_quadrant_" + quadrant);
+		return Variant.variant().with(VariantProperties.MODEL, id);
+	}
 
-    protected Variant generateTubeVariant(int quadrant, boolean reversed) {
-        String reversion = reversed ? "reversed_" : "";
-        ResourceLocation id = PortalCubed.id("block/excursion_funnel_" + reversion + "quadrant_" + quadrant);
-        return Variant.variant().with(VariantProperties.MODEL, id);
-    }
+	protected Variant generateTubeVariant(int quadrant, boolean reversed) {
+		String reversion = reversed ? "reversed_" : "";
+		ResourceLocation id = PortalCubed.id("block/excursion_funnel_" + reversion + "quadrant_" + quadrant);
+		return Variant.variant().with(VariantProperties.MODEL, id);
+	}
 
-    @Override
-    public void generateItemModels(ItemModelGenerators gen) {
-    }
+	@Override
+	public void generateItemModels(ItemModelGenerators gen) {
+	}
 
-    protected void inheritFrom(ItemLike item, ResourceLocation parent, ItemModelGenerators gen) {
-        gen.output.accept(ModelLocationUtils.getModelLocation(item.asItem()), () -> {
-            JsonObject json = new JsonObject();
-            json.addProperty("parent", parent.toString());
-            return json;
-        });
-    }
+	protected void inheritFrom(ItemLike item, ResourceLocation parent, ItemModelGenerators gen) {
+		gen.output.accept(ModelLocationUtils.getModelLocation(item.asItem()), () -> {
+			JsonObject json = new JsonObject();
+			json.addProperty("parent", parent.toString());
+			return json;
+		});
+	}
 }

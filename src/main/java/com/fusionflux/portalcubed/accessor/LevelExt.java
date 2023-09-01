@@ -8,12 +8,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public interface LevelExt {
-    PortalCubedDamageSources pcDamageSources();
+	PortalCubedDamageSources pcDamageSources();
 
-    @Nullable
-    Entity getEntityByUuid(UUID uuid);
+	@Nullable
+	Entity getEntityByUuid(UUID uuid);
 
-    void pc$addBlockChangeListener(long sectionPos, EmittedEntity entity);
+	void pc$addBlockChangeListener(long sectionPos, EmittedEntity entity);
 
-    void pc$removeBlockChangeListener(long sectionPos, EmittedEntity entity);
+	void pc$removeBlockChangeListener(long sectionPos, EmittedEntity entity);
 }

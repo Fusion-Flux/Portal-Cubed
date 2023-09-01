@@ -4,8 +4,8 @@ import net.minecraft.world.entity.AnimationState;
 import org.jetbrains.annotations.Nullable;
 
 public interface ServerAnimatable {
-    int getAge();
+	int getAge();
 
-    @Nullable
-    AnimationState getAnimation(String name);
+	@Nullable
+	AnimationState getAnimation(String name);
 }

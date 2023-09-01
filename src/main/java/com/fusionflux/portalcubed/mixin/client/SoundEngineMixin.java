@@ -16,24 +16,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SoundEngine.class)
 public abstract class SoundEngineMixin {
-    @Shadow public abstract void play(SoundInstance sound);
+	@Shadow public abstract void play(SoundInstance sound);
 
-    @Inject(
-        method = "play",
-        at = @At(
-            value = "INVOKE",
-            target = "Ljava/util/Set;add(Ljava/lang/Object;)Z",
-            ordinal = 1
-        )
-    )
-    private void ohFiddlesticks(SoundInstance sound, CallbackInfo ci) {
-        if (
-            !sound.getLocation().getNamespace().equals(PortalCubed.MOD_ID) ||
-                BuiltInRegistries.SOUND_EVENT.getOrCreateTag(PortalCubedSounds.NO_ERROR_SOUND)
-                    .contains(BuiltInRegistries.SOUND_EVENT.getHolderOrThrow(
-                        ResourceKey.create(Registries.SOUND_EVENT, sound.getLocation())
-                    ))
-        ) return;
-        play(SimpleSoundInstance.forUI(PortalCubedSounds.ERROR_EVENT, 1f));
-    }
+	@Inject(
+		method = "play",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/Set;add(Ljava/lang/Object;)Z",
+			ordinal = 1
+		)
+	)
+	private void ohFiddlesticks(SoundInstance sound, CallbackInfo ci) {
+		if (
+			!sound.getLocation().getNamespace().equals(PortalCubed.MOD_ID) ||
+				BuiltInRegistries.SOUND_EVENT.getOrCreateTag(PortalCubedSounds.NO_ERROR_SOUND)
+					.contains(BuiltInRegistries.SOUND_EVENT.getHolderOrThrow(
+						ResourceKey.create(Registries.SOUND_EVENT, sound.getLocation())
+					))
+		) return;
+		play(SimpleSoundInstance.forUI(PortalCubedSounds.ERROR_EVENT, 1f));
+	}
 }

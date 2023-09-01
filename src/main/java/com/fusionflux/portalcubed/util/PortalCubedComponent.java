@@ -11,43 +11,43 @@ import java.util.UUID;
 
 public interface PortalCubedComponent extends Component {
 
-    Set<UUID> getPortals();
+	Set<UUID> getPortals();
 
-    void addPortals(UUID portalUUID);
+	void addPortals(UUID portalUUID);
 
-    void removePortals(UUID portalUUID);
+	void removePortals(UUID portalUUID);
 
-    VoxelShape getPortalCutout();
+	VoxelShape getPortalCutout();
 
-    void setPortalCutout(VoxelShape cutout);
+	void setPortalCutout(VoxelShape cutout);
 
-    VoxelShape getCrossPortalCollision();
+	VoxelShape getCrossPortalCollision();
 
-    void setCrossPortalCollision(VoxelShape collision);
+	void setCrossPortalCollision(VoxelShape collision);
 
-    boolean getHasTeleportationHappened();
+	boolean getHasTeleportationHappened();
 
-    void setHasTeleportationHappened(boolean hasHappened);
+	void setHasTeleportationHappened(boolean hasHappened);
 
-    boolean getWasInfiniteFalling();
+	boolean getWasInfiniteFalling();
 
-    void setWasInfiniteFalling(boolean infFall);
+	void setWasInfiniteFalling(boolean infFall);
 
-    Vec3 getVelocityUpdateAfterTeleport();
+	Vec3 getVelocityUpdateAfterTeleport();
 
-    void setVelocityUpdateAfterTeleport(Vec3 velocity);
+	void setVelocityUpdateAfterTeleport(Vec3 velocity);
 
-    boolean getCanFireGel();
+	boolean getCanFireGel();
 
-    void setCanFireGel(boolean canGel);
+	void setCanFireGel(boolean canGel);
 
-    Vec3 getServerVelForGel();
+	Vec3 getServerVelForGel();
 
-    void setServerVelForGel(Vec3 velocity);
+	void setServerVelForGel(Vec3 velocity);
 
-    @Nullable
-    BlockPos getLauncher();
+	@Nullable
+	BlockPos getLauncher();
 
-    void setLauncher(@Nullable BlockPos launcher);
+	void setLauncher(@Nullable BlockPos launcher);
 
 }

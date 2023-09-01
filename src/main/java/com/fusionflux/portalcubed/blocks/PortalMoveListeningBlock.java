@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface PortalMoveListeningBlock {
-    void onPortalCreate(ServerLevel level, BlockState state, BlockPos pos, Portal portal);
+	void onPortalCreate(ServerLevel level, BlockState state, BlockPos pos, Portal portal);
 
-    void beforePortalRemove(ServerLevel level, BlockState state, BlockPos pos, Portal portal);
+	void beforePortalRemove(ServerLevel level, BlockState state, BlockPos pos, Portal portal);
 }

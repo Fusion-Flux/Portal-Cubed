@@ -13,44 +13,44 @@ import java.util.Random;
 
 public class MugEntity extends CorePhysicsEntity  {
 
-    public MugEntity(EntityType<? extends PathfinderMob> type, Level world) {
-        super(type, world);
-    }
-    final Random rand = new Random();
+	public MugEntity(EntityType<? extends PathfinderMob> type, Level world) {
+		super(type, world);
+	}
+	final Random rand = new Random();
 
-    @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
-    }
+	@Override
+	public void addAdditionalSaveData(CompoundTag compoundTag) {
+	}
 
-    @Override
-    public void readAdditionalSaveData(CompoundTag compoundTag) {
-    }
+	@Override
+	public void readAdditionalSaveData(CompoundTag compoundTag) {
+	}
 
-    public int getMugType() {
-        return getEntityData().get(MUG_TYPE);
-    }
+	public int getMugType() {
+		return getEntityData().get(MUG_TYPE);
+	}
 
-    public void genMugType() {
-        setMugType(rand.nextInt(4));
-    }
+	public void genMugType() {
+		setMugType(rand.nextInt(4));
+	}
 
-    public void setMugType(Integer type) {
-        this.getEntityData().set(MUG_TYPE, type);
-    }
+	public void setMugType(Integer type) {
+		this.getEntityData().set(MUG_TYPE, type);
+	}
 
-    public static final EntityDataAccessor<Integer> MUG_TYPE = SynchedEntityData.defineId(MugEntity.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Integer> MUG_TYPE = SynchedEntityData.defineId(MugEntity.class, EntityDataSerializers.INT);
 
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(MUG_TYPE, 20);
-    }
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.getEntityData().define(MUG_TYPE, 20);
+	}
 
-    @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
-        if (this.getMugType() == 20) {
-            setMugType(rand.nextInt(4));
-        }
-        super.recreateFromPacket(packet);
-    }
+	@Override
+	public void recreateFromPacket(ClientboundAddEntityPacket packet) {
+		if (this.getMugType() == 20) {
+			setMugType(rand.nextInt(4));
+		}
+		super.recreateFromPacket(packet);
+	}
 }

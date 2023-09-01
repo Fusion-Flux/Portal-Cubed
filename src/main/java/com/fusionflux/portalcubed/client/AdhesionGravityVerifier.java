@@ -13,32 +13,32 @@ import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class AdhesionGravityVerifier {
-    public static final ResourceLocation FIELD_GRAVITY_SOURCE = id("adhesion_gel");
-    public static final int FIELD_GRAVITY_PRIORITY = 10;
-    public static final int FIELD_GRAVITY_MAX_DURATION = 2;
+	public static final ResourceLocation FIELD_GRAVITY_SOURCE = id("adhesion_gel");
+	public static final int FIELD_GRAVITY_PRIORITY = 10;
+	public static final int FIELD_GRAVITY_MAX_DURATION = 2;
 
 
-    public static Gravity newFieldGravity(Direction direction) {
-        return new Gravity(direction, FIELD_GRAVITY_PRIORITY, FIELD_GRAVITY_MAX_DURATION, FIELD_GRAVITY_SOURCE.toString(), new RotationParameters().rotateVelocity(true).alternateCenter(true));
-    }
+	public static Gravity newFieldGravity(Direction direction) {
+		return new Gravity(direction, FIELD_GRAVITY_PRIORITY, FIELD_GRAVITY_MAX_DURATION, FIELD_GRAVITY_SOURCE.toString(), new RotationParameters().rotateVelocity(true).alternateCenter(true));
+	}
 
-    public static boolean check(ServerPlayer player, FriendlyByteBuf info, UpdateGravityPacket packet) {
-        if (packet.gravity.duration() > FIELD_GRAVITY_MAX_DURATION) return false;
+	public static boolean check(ServerPlayer player, FriendlyByteBuf info, UpdateGravityPacket packet) {
+		if (packet.gravity.duration() > FIELD_GRAVITY_MAX_DURATION) return false;
 
-        if (packet.gravity.priority() > FIELD_GRAVITY_PRIORITY) return false;
+		if (packet.gravity.priority() > FIELD_GRAVITY_PRIORITY) return false;
 
-        if (!packet.gravity.source().equals(FIELD_GRAVITY_SOURCE.toString())) return false;
+		if (!packet.gravity.source().equals(FIELD_GRAVITY_SOURCE.toString())) return false;
 
-        if (packet.gravity.direction() == null) return false;
-        info.readBlockPos();
-        /*Return true if the block is a field generator or plating and could have triggered the gravity change.*/
-        return true;
-    }
+		if (packet.gravity.direction() == null) return false;
+		info.readBlockPos();
+		/*Return true if the block is a field generator or plating and could have triggered the gravity change.*/
+		return true;
+	}
 
-    public static FriendlyByteBuf packInfo(BlockPos block) {
-        var buf = PacketByteBufs.create();
-        buf.writeBlockPos(block);
-        return buf;
-    }
+	public static FriendlyByteBuf packInfo(BlockPos block) {
+		var buf = PacketByteBufs.create();
+		buf.writeBlockPos(block);
+		return buf;
+	}
 
 }

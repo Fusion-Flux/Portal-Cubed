@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(DispenserBlock.class)
 public interface DispenserBlockAccessor {
-    @Invoker
-    DispenseItemBehavior invokeGetDispenseMethod(ItemStack stack);
+	@Invoker
+	DispenseItemBehavior invokeGetDispenseMethod(ItemStack stack);
 }

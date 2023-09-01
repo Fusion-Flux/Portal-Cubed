@@ -10,17 +10,17 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(PlayerRenderer.class)
 public class PlayerRendererMixin {
-    @WrapOperation(
-        method = "setModelProperties",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/player/AbstractClientPlayer;isCrouching()Z"
-        )
-    )
-    private boolean fixAss(AbstractClientPlayer instance, Operation<Boolean> original) {
-        if (PortalCubedClient.isPortalHudModeServer()) {
-            return false;
-        }
-        return original.call(instance);
-    }
+	@WrapOperation(
+		method = "setModelProperties",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/player/AbstractClientPlayer;isCrouching()Z"
+		)
+	)
+	private boolean fixAss(AbstractClientPlayer instance, Operation<Boolean> original) {
+		if (PortalCubedClient.isPortalHudModeServer()) {
+			return false;
+		}
+		return original.call(instance);
+	}
 }

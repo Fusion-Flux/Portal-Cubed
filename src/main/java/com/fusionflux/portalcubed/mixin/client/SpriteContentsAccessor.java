@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(SpriteContents.class)
 public interface SpriteContentsAccessor {
-    @Accessor
-    NativeImage getOriginalImage();
+	@Accessor
+	NativeImage getOriginalImage();
 }

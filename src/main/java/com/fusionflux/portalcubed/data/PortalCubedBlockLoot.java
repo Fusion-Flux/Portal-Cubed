@@ -14,25 +14,25 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 
 public class PortalCubedBlockLoot extends PortalCubedLootProvider {
-    public PortalCubedBlockLoot(FabricDataOutput output) {
-        super(output, LootContextParamSets.BLOCK);
-    }
+	public PortalCubedBlockLoot(FabricDataOutput output) {
+		super(output, LootContextParamSets.BLOCK);
+	}
 
-    @Override
-    public void buildLootTables() {
-        dropSelfWhenProperty(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER, ExcursionFunnelEmitterBlock.QUADRANT, "1");
-    }
+	@Override
+	public void buildLootTables() {
+		dropSelfWhenProperty(PortalCubedBlocks.EXCURSION_FUNNEL_EMITTER, ExcursionFunnelEmitterBlock.QUADRANT, "1");
+	}
 
-    public void dropSelfWhenProperty(Block block, Property<?> property, String value) {
-        tables.put(block.getLootTable(), LootTable.lootTable()
-                .withPool(LootPool.lootPool()
-                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
-                                .setProperties(StatePropertiesPredicate.Builder.properties()
-                                        .hasProperty(property, value)
-                                )
-                        )
-                        .add(LootItem.lootTableItem(block))
-                )
-        );
-    }
+	public void dropSelfWhenProperty(Block block, Property<?> property, String value) {
+		tables.put(block.getLootTable(), LootTable.lootTable()
+				.withPool(LootPool.lootPool()
+						.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+								.setProperties(StatePropertiesPredicate.Builder.properties()
+										.hasProperty(property, value)
+								)
+						)
+						.add(LootItem.lootTableItem(block))
+				)
+		);
+	}
 }

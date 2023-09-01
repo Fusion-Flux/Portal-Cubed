@@ -14,81 +14,81 @@ import java.util.Iterator;
 import java.util.List;
 
 public record TwoByTwo(BlockPos topRight, BlockPos topLeft, BlockPos bottomLeft, BlockPos bottomRight) implements Iterable<BlockPos> {
-    public static TwoByTwo fromBottomRightCorner(BlockPos bottomRight, Direction left, Direction up) {
-        return new TwoByTwo(
-                bottomRight.relative(up), bottomRight.relative(up).relative(left), bottomRight.relative(left), bottomRight
-        );
-    }
+	public static TwoByTwo fromBottomRightCorner(BlockPos bottomRight, Direction left, Direction up) {
+		return new TwoByTwo(
+				bottomRight.relative(up), bottomRight.relative(up).relative(left), bottomRight.relative(left), bottomRight
+		);
+	}
 
-    public static TwoByTwo fromTopLeftCorner(BlockPos topLeft, Direction right, Direction down) {
-        return new TwoByTwo(
-                topLeft.relative(right), topLeft, topLeft.relative(down), topLeft.relative(right).relative(down)
-        );
-    }
+	public static TwoByTwo fromTopLeftCorner(BlockPos topLeft, Direction right, Direction down) {
+		return new TwoByTwo(
+				topLeft.relative(right), topLeft, topLeft.relative(down), topLeft.relative(right).relative(down)
+		);
+	}
 
-    @Nullable
-    public static TwoByTwo fromNbt(CompoundTag tag) {
-        BlockPos topRight = NbtHelper.readNullableBlockPos(tag, "topRight");
-        BlockPos topLeft = NbtHelper.readNullableBlockPos(tag, "topLeft");
-        BlockPos bottomLeft = NbtHelper.readNullableBlockPos(tag, "bottomLeft");
-        BlockPos bottomRight = NbtHelper.readNullableBlockPos(tag, "bottomRight");
-        TwoByTwo twoByTwo = new TwoByTwo(topRight, topLeft, bottomLeft, bottomRight);
-        for (BlockPos pos : twoByTwo) {
-            if (pos == null)
-                return null;
-        }
-        return twoByTwo;
-    }
+	@Nullable
+	public static TwoByTwo fromNbt(CompoundTag tag) {
+		BlockPos topRight = NbtHelper.readNullableBlockPos(tag, "topRight");
+		BlockPos topLeft = NbtHelper.readNullableBlockPos(tag, "topLeft");
+		BlockPos bottomLeft = NbtHelper.readNullableBlockPos(tag, "bottomLeft");
+		BlockPos bottomRight = NbtHelper.readNullableBlockPos(tag, "bottomRight");
+		TwoByTwo twoByTwo = new TwoByTwo(topRight, topLeft, bottomLeft, bottomRight);
+		for (BlockPos pos : twoByTwo) {
+			if (pos == null)
+				return null;
+		}
+		return twoByTwo;
+	}
 
-    public BlockPos byQuadrantIndex(int index) {
-        return byQuadrant(index + 1);
-    }
+	public BlockPos byQuadrantIndex(int index) {
+		return byQuadrant(index + 1);
+	}
 
-    public BlockPos byQuadrant(int quadrant) {
-        return switch (quadrant) {
-            case 1 -> topRight;
-            case 2 -> topLeft;
-            case 3 -> bottomLeft;
-            case 4 -> bottomRight;
-            default -> throw new IllegalArgumentException("Invalid quadrant: " + quadrant);
-        };
-    }
+	public BlockPos byQuadrant(int quadrant) {
+		return switch (quadrant) {
+			case 1 -> topRight;
+			case 2 -> topLeft;
+			case 3 -> bottomLeft;
+			case 4 -> bottomRight;
+			default -> throw new IllegalArgumentException("Invalid quadrant: " + quadrant);
+		};
+	}
 
-    public Iterable<BlockPos> quadrants(int first, int second, int third, int fourth) {
-        return List.of(byQuadrant(first), byQuadrant(second), byQuadrant(third), byQuadrant(fourth));
-    }
+	public Iterable<BlockPos> quadrants(int first, int second, int third, int fourth) {
+		return List.of(byQuadrant(first), byQuadrant(second), byQuadrant(third), byQuadrant(fourth));
+	}
 
-    public Vec3 getCenter() {
-        // average centers of each pos
-        double totalX = 0, totalY = 0, totalZ = 0;
-        for (BlockPos pos : this) {
-            totalX += pos.getX() + 0.5;
-            totalY += pos.getY() + 0.5;
-            totalZ += pos.getZ() + 0.5;
-        }
-        return new Vec3(totalX / 4f, totalY / 4f, totalZ / 4f);
-    }
+	public Vec3 getCenter() {
+		// average centers of each pos
+		double totalX = 0, totalY = 0, totalZ = 0;
+		for (BlockPos pos : this) {
+			totalX += pos.getX() + 0.5;
+			totalY += pos.getY() + 0.5;
+			totalZ += pos.getZ() + 0.5;
+		}
+		return new Vec3(totalX / 4f, totalY / 4f, totalZ / 4f);
+	}
 
-    public AABB toBox(double inflate) {
-        return new AABB(bottomLeft, topRight).inflate(inflate);
-    }
+	public AABB toBox(double inflate) {
+		return new AABB(bottomLeft, topRight).inflate(inflate);
+	}
 
-    public CompoundTag toNbt() {
-        CompoundTag tag = new CompoundTag();
-        tag.put("topRight", NbtUtils.writeBlockPos(topRight));
-        tag.put("topLeft", NbtUtils.writeBlockPos(topLeft));
-        tag.put("bottomLeft", NbtUtils.writeBlockPos(bottomLeft));
-        tag.put("bottomRight", NbtUtils.writeBlockPos(bottomRight));
-        return tag;
-    }
+	public CompoundTag toNbt() {
+		CompoundTag tag = new CompoundTag();
+		tag.put("topRight", NbtUtils.writeBlockPos(topRight));
+		tag.put("topLeft", NbtUtils.writeBlockPos(topLeft));
+		tag.put("bottomLeft", NbtUtils.writeBlockPos(bottomLeft));
+		tag.put("bottomRight", NbtUtils.writeBlockPos(bottomRight));
+		return tag;
+	}
 
-    @NotNull
-    @Override
-    public Iterator<BlockPos> iterator() {
-        return Iterators.forArray(topRight, topLeft, bottomLeft, bottomRight);
-    }
+	@NotNull
+	@Override
+	public Iterator<BlockPos> iterator() {
+		return Iterators.forArray(topRight, topLeft, bottomLeft, bottomRight);
+	}
 
-    public boolean contains(BlockPos pos) {
-        return pos.equals(topRight) || pos.equals(topLeft) || pos.equals(bottomLeft) || pos.equals(bottomRight);
-    }
+	public boolean contains(BlockPos pos) {
+		return pos.equals(topRight) || pos.equals(topLeft) || pos.equals(bottomLeft) || pos.equals(bottomRight);
+	}
 }

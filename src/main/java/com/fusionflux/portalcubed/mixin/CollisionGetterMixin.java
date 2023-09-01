@@ -14,30 +14,30 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(CollisionGetter.class)
 public interface CollisionGetterMixin {
-    @ModifyReturnValue(
-        method = "getBlockCollisions",
-        at = @At("RETURN")
-    )
-    @SuppressWarnings("unchecked")
-    default Iterable<VoxelShape> supportCutout(Iterable<VoxelShape> original, @Local Entity entity) {
-        if (entity == null) {
-            return original;
-        }
-        final VoxelShape cutout = CalledValues.getPortalCutout(entity);
-        final VoxelShape crossCollision = CalledValues.getCrossPortalCollision(entity);
-        return () -> ((BlockCollisionsExt<VoxelShape>)original.iterator()).setExtraShapes(cutout, crossCollision);
-    }
+	@ModifyReturnValue(
+		method = "getBlockCollisions",
+		at = @At("RETURN")
+	)
+	@SuppressWarnings("unchecked")
+	default Iterable<VoxelShape> supportCutout(Iterable<VoxelShape> original, @Local Entity entity) {
+		if (entity == null) {
+			return original;
+		}
+		final VoxelShape cutout = CalledValues.getPortalCutout(entity);
+		final VoxelShape crossCollision = CalledValues.getCrossPortalCollision(entity);
+		return () -> ((BlockCollisionsExt<VoxelShape>)original.iterator()).setExtraShapes(cutout, crossCollision);
+	}
 
-    @ModifyVariable(
-        method = "collidesWithSuffocatingBlock",
-        at = @At("STORE"),
-        ordinal = 0
-    )
-    @SuppressWarnings({"InvalidInjectorMethodSignature", "unchecked"})
-    default BlockCollisions<VoxelShape> supportCutout(BlockCollisions<VoxelShape> value, @Local Entity entity) {
-        return ((BlockCollisionsExt<VoxelShape>)value).setExtraShapes(
-            CalledValues.getPortalCutout(entity),
-            CalledValues.getCrossPortalCollision(entity)
-        );
-    }
+	@ModifyVariable(
+		method = "collidesWithSuffocatingBlock",
+		at = @At("STORE"),
+		ordinal = 0
+	)
+	@SuppressWarnings({"InvalidInjectorMethodSignature", "unchecked"})
+	default BlockCollisions<VoxelShape> supportCutout(BlockCollisions<VoxelShape> value, @Local Entity entity) {
+		return ((BlockCollisionsExt<VoxelShape>)value).setExtraShapes(
+			CalledValues.getPortalCutout(entity),
+			CalledValues.getCrossPortalCollision(entity)
+		);
+	}
 }

@@ -19,61 +19,61 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemEntityRenderer.class)
 public class ItemEntityRendererMixin {
-    @Inject(
-        method = "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-        at = @At("HEAD")
-    )
-    private void laysOnFloor(
-        ItemEntity itemEntity,
-        float f,
-        float g,
-        PoseStack matrixStack,
-        MultiBufferSource vertexConsumerProvider,
-        int i,
-        CallbackInfo ci,
-        @Share("laysOnFloor") LocalBooleanRef laysOnFloor
-    ) {
-        if (!PortalCubedConfig.staticPortalItemDrops) {
-            laysOnFloor.set(false);
-            return;
-        }
-        final ItemStack stack = itemEntity.getItem();
-        laysOnFloor.set(stack.getCount() == 1 && stack.is(PortalCubedItems.LAYS_ON_FLOOR));
-    }
+	@Inject(
+		method = "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+		at = @At("HEAD")
+	)
+	private void laysOnFloor(
+		ItemEntity itemEntity,
+		float f,
+		float g,
+		PoseStack matrixStack,
+		MultiBufferSource vertexConsumerProvider,
+		int i,
+		CallbackInfo ci,
+		@Share("laysOnFloor") LocalBooleanRef laysOnFloor
+	) {
+		if (!PortalCubedConfig.staticPortalItemDrops) {
+			laysOnFloor.set(false);
+			return;
+		}
+		final ItemStack stack = itemEntity.getItem();
+		laysOnFloor.set(stack.getCount() == 1 && stack.is(PortalCubedItems.LAYS_ON_FLOOR));
+	}
 
-    @WrapOperation(
-        method = "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
-            ordinal = 0
-        )
-    )
-    private void dontTranslate(
-        PoseStack instance,
-        float x,
-        float y,
-        float z,
-        Operation<Void> original,
-        @Share("laysOnFloor") LocalBooleanRef laysOnFloor,
-        @Local(ordinal = 2) float yOffset
-    ) {
-        original.call(instance, x, laysOnFloor.get() ? 0.25f * yOffset : y, z);
-    }
+	@WrapOperation(
+		method = "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+		at = @At(
+			value = "INVOKE",
+			target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
+			ordinal = 0
+		)
+	)
+	private void dontTranslate(
+		PoseStack instance,
+		float x,
+		float y,
+		float z,
+		Operation<Void> original,
+		@Share("laysOnFloor") LocalBooleanRef laysOnFloor,
+		@Local(ordinal = 2) float yOffset
+	) {
+		original.call(instance, x, laysOnFloor.get() ? 0.25f * yOffset : y, z);
+	}
 
-    @WrapOperation(
-        method = "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/item/ItemEntity;getSpin(F)F"
-        )
-    )
-    private float dontRotate(
-        ItemEntity instance,
-        float tickDelta,
-        Operation<Float> original,
-        @Share("laysOnFloor") LocalBooleanRef laysOnFloor
-    ) {
-        return laysOnFloor.get() ? instance.bobOffs : original.call(instance, tickDelta);
-    }
+	@WrapOperation(
+		method = "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/item/ItemEntity;getSpin(F)F"
+		)
+	)
+	private float dontRotate(
+		ItemEntity instance,
+		float tickDelta,
+		Operation<Float> original,
+		@Share("laysOnFloor") LocalBooleanRef laysOnFloor
+	) {
+		return laysOnFloor.get() ? instance.bobOffs : original.call(instance, tickDelta);
+	}
 }

@@ -9,14 +9,14 @@ import net.minecraft.resources.ResourceLocation;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class ComputerRenderer extends CorePhysicsRenderer<ComputerEntity, ComputerModel> {
-    private static final ResourceLocation BASE_TEXTURE = id("textures/entity/computer.png");
+	private static final ResourceLocation BASE_TEXTURE = id("textures/entity/computer.png");
 
-    public ComputerRenderer(EntityRendererProvider.Context context) {
-        super(context, new ComputerModel(Minecraft.getInstance().getEntityModels().bakeLayer(ComputerModel.COMPUTER_LAYER)), 0.5f);
-    }
+	public ComputerRenderer(EntityRendererProvider.Context context) {
+		super(context, new ComputerModel(Minecraft.getInstance().getEntityModels().bakeLayer(ComputerModel.COMPUTER_LAYER)), 0.5f);
+	}
 
-    @Override
-    public ResourceLocation getTextureLocation(ComputerEntity entity) {
-        return BASE_TEXTURE;
-    }
+	@Override
+	public ResourceLocation getTextureLocation(ComputerEntity entity) {
+		return BASE_TEXTURE;
+	}
 }

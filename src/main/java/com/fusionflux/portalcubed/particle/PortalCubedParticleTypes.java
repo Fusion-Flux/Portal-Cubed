@@ -14,27 +14,27 @@ import java.util.function.Function;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedParticleTypes {
-    public static final ParticleType<DecalParticleOption> DECAL = register(
-        "decal", false, DecalParticleOption.PARAMETERS_FACTORY, DecalParticleOption::codec
-    );
+	public static final ParticleType<DecalParticleOption> DECAL = register(
+		"decal", false, DecalParticleOption.PARAMETERS_FACTORY, DecalParticleOption::codec
+	);
 
-    private static SimpleParticleType register(String key, boolean overrideLimiter) {
-        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, id(key), FabricParticleTypes.simple(overrideLimiter));
-    }
+	private static SimpleParticleType register(String key, boolean overrideLimiter) {
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, id(key), FabricParticleTypes.simple(overrideLimiter));
+	}
 
-    @SuppressWarnings("deprecation")
-    private static <T extends ParticleOptions> ParticleType<T> register(
-        String name, boolean alwaysShow, ParticleOptions.Deserializer<T> parameterFactory, Function<ParticleType<T>, Codec<T>> codecProvider
-    ) {
-        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, id(name), new ParticleType<T>(alwaysShow, parameterFactory) {
-            @NotNull
-            @Override
-            public Codec<T> codec() {
-                return codecProvider.apply(this);
-            }
-        });
-    }
+	@SuppressWarnings("deprecation")
+	private static <T extends ParticleOptions> ParticleType<T> register(
+		String name, boolean alwaysShow, ParticleOptions.Deserializer<T> parameterFactory, Function<ParticleType<T>, Codec<T>> codecProvider
+	) {
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, id(name), new ParticleType<T>(alwaysShow, parameterFactory) {
+			@NotNull
+			@Override
+			public Codec<T> codec() {
+				return codecProvider.apply(this);
+			}
+		});
+	}
 
-    public static void register() {
-    }
+	public static void register() {
+	}
 }

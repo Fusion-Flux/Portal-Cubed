@@ -1,19 +1,19 @@
 package com.fusionflux.portalcubed.entity;
 
 public interface Fizzleable {
-    void startFizzlingProgress();
+	void startFizzlingProgress();
 
-    void fizzle();
+	void fizzle();
 
-    float getFizzleProgress();
+	float getFizzleProgress();
 
-    boolean fizzling();
+	boolean fizzling();
 
-    boolean fizzlesInGoo();
+	boolean fizzlesInGoo();
 
-    FizzleType getFizzleType();
+	FizzleType getFizzleType();
 
-    enum FizzleType {
-        NOT, OBJECT, LIVING
-    }
+	enum FizzleType {
+		NOT, OBJECT, LIVING
+	}
 }

@@ -5,5 +5,5 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 
 public interface NbtSyncable {
-    void syncNbt(CompoundTag nbt, ServerPlayer player) throws CommandRuntimeException;
+	void syncNbt(CompoundTag nbt, ServerPlayer player) throws CommandRuntimeException;
 }

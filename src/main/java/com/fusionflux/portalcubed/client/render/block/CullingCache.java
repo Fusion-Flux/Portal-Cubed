@@ -9,36 +9,36 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public final class CullingCache {
 
-    private final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+	private final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-    private BlockPos centerPos;
-    private BlockState state;
+	private BlockPos centerPos;
+	private BlockState state;
 
-    private int completionFlags = 0;
-    private int values = 0;
+	private int completionFlags = 0;
+	private int values = 0;
 
-    public void prepare(BlockPos centerPos, BlockState state) {
-        this.centerPos = centerPos;
-        this.state = state;
+	public void prepare(BlockPos centerPos, BlockState state) {
+		this.centerPos = centerPos;
+		this.state = state;
 
-        this.completionFlags = 0;
-        this.values = 0;
-    }
+		this.completionFlags = 0;
+		this.values = 0;
+	}
 
-    public boolean shouldCull(QuadView quad, BlockAndTintGetter blockView) {
-        Direction cullFace = quad.cullFace();
-        if (cullFace == null) return false;
-        int mask = 1 << cullFace.ordinal();
+	public boolean shouldCull(QuadView quad, BlockAndTintGetter blockView) {
+		Direction cullFace = quad.cullFace();
+		if (cullFace == null) return false;
+		int mask = 1 << cullFace.ordinal();
 
-        if ((completionFlags & mask) == 0) {
-            completionFlags |= mask;
+		if ((completionFlags & mask) == 0) {
+			completionFlags |= mask;
 
-            boolean shouldCull = !Block.shouldRenderFace(state, blockView, centerPos, cullFace, pos.setWithOffset(centerPos, cullFace));
-            if (shouldCull) values |= mask;
-            return shouldCull;
-        } else {
-            return (values & mask) == 0;
-        }
-    }
+			boolean shouldCull = !Block.shouldRenderFace(state, blockView, centerPos, cullFace, pos.setWithOffset(centerPos, cullFace));
+			if (shouldCull) values |= mask;
+			return shouldCull;
+		} else {
+			return (values & mask) == 0;
+		}
+	}
 
 }

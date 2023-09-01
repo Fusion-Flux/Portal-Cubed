@@ -30,76 +30,76 @@ import java.util.function.Supplier;
 
 public final class EmissiveBakedModel extends ForwardingBakedModel {
 
-    private static final Map<ResourceLocation, Function<BakedModel, EmissiveBakedModel>> WRAPPERS = new Object2ObjectOpenHashMap<>();
+	private static final Map<ResourceLocation, Function<BakedModel, EmissiveBakedModel>> WRAPPERS = new Object2ObjectOpenHashMap<>();
 
-    public static void register(ResourceLocation modelId) {
-        WRAPPERS.put(modelId, EmissiveBakedModel::new);
-    }
+	public static void register(ResourceLocation modelId) {
+		WRAPPERS.put(modelId, EmissiveBakedModel::new);
+	}
 
-    public static Optional<BakedModel> wrap(ResourceLocation modelId, BakedModel model) {
-        if (!RenderMaterials.ARE_SUPPORTED)
-            return Optional.empty();
-        final Function<BakedModel, EmissiveBakedModel> wrapper = WRAPPERS.get(new ResourceLocation(modelId.getNamespace(), modelId.getPath()));
-        if (wrapper != null) return Optional.of(wrapper.apply(model));
-        return Optional.empty();
-    }
+	public static Optional<BakedModel> wrap(ResourceLocation modelId, BakedModel model) {
+		if (!RenderMaterials.ARE_SUPPORTED)
+			return Optional.empty();
+		final Function<BakedModel, EmissiveBakedModel> wrapper = WRAPPERS.get(new ResourceLocation(modelId.getNamespace(), modelId.getPath()));
+		if (wrapper != null) return Optional.of(wrapper.apply(model));
+		return Optional.empty();
+	}
 
-    private static final Map<RenderMaterial, RenderMaterial> TO_EMISSIVE = new ConcurrentHashMap<>();
+	private static final Map<RenderMaterial, RenderMaterial> TO_EMISSIVE = new ConcurrentHashMap<>();
 
-    private final QuadTransform emissiveTransform;
+	private final QuadTransform emissiveTransform;
 
-    EmissiveBakedModel(BakedModel model) {
-        this.wrapped = model;
-        this.emissiveTransform = quad -> {
-            TextureAtlasSprite sprite = getSpriteFinder().find(quad);
-            if (EmissiveSpriteRegistry.isEmissive(sprite.contents().name())) {
-                RenderMaterial material = quad.material();
-                quad.material(getEmissiveMaterial(material));
-            }
-            return true;
-        };
-    }
+	EmissiveBakedModel(BakedModel model) {
+		this.wrapped = model;
+		this.emissiveTransform = quad -> {
+			TextureAtlasSprite sprite = getSpriteFinder().find(quad);
+			if (EmissiveSpriteRegistry.isEmissive(sprite.contents().name())) {
+				RenderMaterial material = quad.material();
+				quad.material(getEmissiveMaterial(material));
+			}
+			return true;
+		};
+	}
 
-    @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
+	@Override
+	public boolean isVanillaAdapter() {
+		return false;
+	}
 
-    @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-        context.pushTransform(emissiveTransform);
-        super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-        context.popTransform();
-    }
+	@Override
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
+		context.pushTransform(emissiveTransform);
+		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		context.popTransform();
+	}
 
-    @Override
-    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
-        context.pushTransform(emissiveTransform);
-        super.emitItemQuads(stack, randomSupplier, context);
-        context.popTransform();
-    }
+	@Override
+	public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
+		context.pushTransform(emissiveTransform);
+		super.emitItemQuads(stack, randomSupplier, context);
+		context.popTransform();
+	}
 
-    @Override
-    public List<BakedQuad> getQuads(BlockState blockState, Direction face, RandomSource rand) {
-        throw new UnsupportedOperationException("isVanillaAdapter is false! call emitBlockQuads/emitItemQuads!");
-    }
+	@Override
+	public List<BakedQuad> getQuads(BlockState blockState, Direction face, RandomSource rand) {
+		throw new UnsupportedOperationException("isVanillaAdapter is false! call emitBlockQuads/emitItemQuads!");
+	}
 
-    public static RenderMaterial getEmissiveMaterial(RenderMaterial base) {
-        return TO_EMISSIVE.computeIfAbsent(base, EmissiveBakedModel::makeEmissiveMaterial);
-    }
+	public static RenderMaterial getEmissiveMaterial(RenderMaterial base) {
+		return TO_EMISSIVE.computeIfAbsent(base, EmissiveBakedModel::makeEmissiveMaterial);
+	}
 
-    private static RenderMaterial makeEmissiveMaterial(RenderMaterial base) {
-        return RenderMaterials.FINDER.copyFrom(base)
-                .emissive(true)
-                .disableDiffuse(true)
-                .ambientOcclusion(TriState.FALSE)
-                .find();
-    }
+	private static RenderMaterial makeEmissiveMaterial(RenderMaterial base) {
+		return RenderMaterials.FINDER.copyFrom(base)
+				.emissive(true)
+				.disableDiffuse(true)
+				.ambientOcclusion(TriState.FALSE)
+				.find();
+	}
 
-    private static SpriteFinder getSpriteFinder() {
-        TextureAtlas blockAtlas = Minecraft.getInstance()
-                .getModelManager()
-                .getAtlas(InventoryMenu.BLOCK_ATLAS);
-        return SpriteFinder.get(blockAtlas);
-    }
+	private static SpriteFinder getSpriteFinder() {
+		TextureAtlas blockAtlas = Minecraft.getInstance()
+				.getModelManager()
+				.getAtlas(InventoryMenu.BLOCK_ATLAS);
+		return SpriteFinder.get(blockAtlas);
+	}
 }

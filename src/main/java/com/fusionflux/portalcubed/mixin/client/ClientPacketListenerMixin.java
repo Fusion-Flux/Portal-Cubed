@@ -10,14 +10,14 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ClientPacketListener.class)
 public class ClientPacketListenerMixin {
-    @WrapOperation(
-        method = "handlePlayerCombatKill",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/player/LocalPlayer;shouldShowDeathScreen()Z"
-        )
-    )
-    private boolean portal2Death(LocalPlayer instance, Operation<Boolean> original) {
-        return PortalCubedClient.isPortalHudMode() || original.call(instance);
-    }
+	@WrapOperation(
+		method = "handlePlayerCombatKill",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/player/LocalPlayer;shouldShowDeathScreen()Z"
+		)
+	)
+	private boolean portal2Death(LocalPlayer instance, Operation<Boolean> original) {
+		return PortalCubedClient.isPortalHudMode() || original.call(instance);
+	}
 }

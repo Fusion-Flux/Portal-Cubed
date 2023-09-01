@@ -14,32 +14,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Inventory.class)
 public class InventoryMixin {
-    @Shadow @Final public Player player;
+	@Shadow @Final public Player player;
 
-    @Inject(method = "swapPaint", at = @At("HEAD"), cancellable = true)
-    private void zoomInPortalMode(double scrollAmount, CallbackInfo ci) {
-        if (player.level().isClientSide && performZoom((int)Math.signum(scrollAmount))) {
-            ci.cancel();
-        }
-    }
+	@Inject(method = "swapPaint", at = @At("HEAD"), cancellable = true)
+	private void zoomInPortalMode(double scrollAmount, CallbackInfo ci) {
+		if (player.level().isClientSide && performZoom((int)Math.signum(scrollAmount))) {
+			ci.cancel();
+		}
+	}
 
-    @Unique
-    @ClientOnly
-    private boolean performZoom(int delta) {
-        if (!PortalCubedClient.isPortalHudMode()) {
-            return false;
-        }
-        if (delta > 0) {
-            if (PortalCubedClient.zoomDir == 0) {
-                PortalCubedClient.zoomTimer = 0;
-            } else if (PortalCubedClient.zoomDir < 0) {
-                PortalCubedClient.zoomTimer = PortalCubedClient.ZOOM_TIME - PortalCubedClient.zoomTimer;
-            }
-            PortalCubedClient.zoomDir = 1;
-        } else if (delta < 0 && PortalCubedClient.zoomDir > 0) {
-            PortalCubedClient.zoomDir = -1;
-            PortalCubedClient.zoomTimer = Math.max(PortalCubedClient.ZOOM_TIME - PortalCubedClient.zoomTimer, 0);
-        }
-        return true;
-    }
+	@Unique
+	@ClientOnly
+	private boolean performZoom(int delta) {
+		if (!PortalCubedClient.isPortalHudMode()) {
+			return false;
+		}
+		if (delta > 0) {
+			if (PortalCubedClient.zoomDir == 0) {
+				PortalCubedClient.zoomTimer = 0;
+			} else if (PortalCubedClient.zoomDir < 0) {
+				PortalCubedClient.zoomTimer = PortalCubedClient.ZOOM_TIME - PortalCubedClient.zoomTimer;
+			}
+			PortalCubedClient.zoomDir = 1;
+		} else if (delta < 0 && PortalCubedClient.zoomDir > 0) {
+			PortalCubedClient.zoomDir = -1;
+			PortalCubedClient.zoomTimer = Math.max(PortalCubedClient.ZOOM_TIME - PortalCubedClient.zoomTimer, 0);
+		}
+		return true;
+	}
 }

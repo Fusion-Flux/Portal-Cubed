@@ -24,52 +24,52 @@ import java.util.function.Predicate;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin implements GameRendererExt {
-    @Shadow
-    @Final
-    Minecraft minecraft;
+	@Shadow
+	@Final
+	Minecraft minecraft;
 
-    @Mutable
-    @Shadow @Final private Camera mainCamera;
+	@Mutable
+	@Shadow @Final private Camera mainCamera;
 
-    @ModifyReturnValue(method = "getFov", at = @At("RETURN"))
-    private double portalCubed$modifyFov(double org) {
-        var fov = new MutableDouble(org);
-        PortalCubedClient.zoomGoBrrrr(fov);
-        return fov.getValue();
-    }
+	@ModifyReturnValue(method = "getFov", at = @At("RETURN"))
+	private double portalCubed$modifyFov(double org) {
+		var fov = new MutableDouble(org);
+		PortalCubedClient.zoomGoBrrrr(fov);
+		return fov.getValue();
+	}
 
-    @WrapOperation(
-        method = "pick",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"
-        )
-    )
-    private EntityHitResult portalCubed$portalCompatibleEntityRaycast(Entity entity, Vec3 min, Vec3 max, AABB box, Predicate<Entity> predicate, double d, Operation<EntityHitResult> original) {
-        if (minecraft.hitResult instanceof AdvancedRaycastResultHolder resultHolder && resultHolder.getResult().isPresent()) {
-            return resultHolder.getResult().get().entityRaycast(entity, predicate);
-        } else {
-            return original.call(entity, min, max, box, predicate, d);
-        }
-    }
+	@WrapOperation(
+		method = "pick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"
+		)
+	)
+	private EntityHitResult portalCubed$portalCompatibleEntityRaycast(Entity entity, Vec3 min, Vec3 max, AABB box, Predicate<Entity> predicate, double d, Operation<EntityHitResult> original) {
+		if (minecraft.hitResult instanceof AdvancedRaycastResultHolder resultHolder && resultHolder.getResult().isPresent()) {
+			return resultHolder.getResult().get().entityRaycast(entity, predicate);
+		} else {
+			return original.call(entity, min, max, box, predicate, d);
+		}
+	}
 
-    @WrapOperation(
-        method = {"getFov", "bobViewWhenHurt"},
-        at = @At(
-            value = "INVOKE",
-            target = "Ljava/lang/Math;min(FF)F",
-            remap = false
-        )
-    )
-    private float noDeathEffects(float a, float b, Operation<Float> original) {
-        if (PortalCubedClient.isPortalHudMode()) {
-            return 0;
-        }
-        return original.call(a, b);
-    }
+	@WrapOperation(
+		method = {"getFov", "bobViewWhenHurt"},
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/lang/Math;min(FF)F",
+			remap = false
+		)
+	)
+	private float noDeathEffects(float a, float b, Operation<Float> original) {
+		if (PortalCubedClient.isPortalHudMode()) {
+			return 0;
+		}
+		return original.call(a, b);
+	}
 
-    @Override
-    public void setMainCamera(Camera camera) {
-        mainCamera = camera;
-    }
+	@Override
+	public void setMainCamera(Camera camera) {
+		mainCamera = camera;
+	}
 }

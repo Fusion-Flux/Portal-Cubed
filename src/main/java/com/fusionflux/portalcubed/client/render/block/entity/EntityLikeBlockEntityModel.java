@@ -9,13 +9,13 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Function;
 
 public abstract class EntityLikeBlockEntityModel<T extends EntityLikeBlockEntity> extends HierarchicalModel<BlockEntityWrapperEntity<T>> {
-    protected EntityLikeBlockEntityModel(Function<ResourceLocation, RenderType> renderLayer) {
-        super(renderLayer);
-    }
+	protected EntityLikeBlockEntityModel(Function<ResourceLocation, RenderType> renderLayer) {
+		super(renderLayer);
+	}
 
-    public abstract ResourceLocation getTexture(T entity);
+	public abstract ResourceLocation getTexture(T entity);
 
-    public ResourceLocation getEmissiveTexture(T entity) {
-        return null;
-    }
+	public ResourceLocation getEmissiveTexture(T entity) {
+		return null;
+	}
 }

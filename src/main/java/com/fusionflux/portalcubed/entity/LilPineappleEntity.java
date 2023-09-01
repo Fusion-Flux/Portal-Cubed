@@ -5,9 +5,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 
 public class LilPineappleEntity extends CorePhysicsEntity  {
-    public LilPineappleEntity(EntityType<? extends PathfinderMob> type, Level world) {
-        super(type, world);
-    }
+	public LilPineappleEntity(EntityType<? extends PathfinderMob> type, Level world) {
+		super(type, world);
+	}
 
 
 }

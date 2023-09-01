@@ -6,11 +6,11 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 @ClientOnly
 public interface LevelRendererExt {
-    Frustum getCullingFrustum();
+	Frustum getCullingFrustum();
 
-    void setCullingFrustum(Frustum frustum);
+	void setCullingFrustum(Frustum frustum);
 
-    RenderBuffers getRenderBuffers();
+	RenderBuffers getRenderBuffers();
 
-    void setRenderBuffers(RenderBuffers buffers);
+	void setRenderBuffers(RenderBuffers buffers);
 }

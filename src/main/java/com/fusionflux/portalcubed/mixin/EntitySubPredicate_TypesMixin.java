@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EntitySubPredicate.Types.class)
 @SuppressWarnings("checkstyle:TypeName")
 public class EntitySubPredicate_TypesMixin {
-    @Shadow @Final @Mutable
-    @SuppressWarnings("checkstyle:StaticVariableName")
-    public static BiMap<String, EntitySubPredicate.Type> TYPES;
+	@Shadow @Final @Mutable
+	@SuppressWarnings("checkstyle:StaticVariableName")
+	public static BiMap<String, EntitySubPredicate.Type> TYPES;
 
-    @Inject(method = "<clinit>", at = @At("TAIL"))
-    private static void makeMapMutable(CallbackInfo ci) {
-        TYPES = HashBiMap.create(TYPES);
-    }
+	@Inject(method = "<clinit>", at = @At("TAIL"))
+	private static void makeMapMutable(CallbackInfo ci) {
+		TYPES = HashBiMap.create(TYPES);
+	}
 }

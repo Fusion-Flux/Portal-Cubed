@@ -29,100 +29,100 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin implements LevelRendererExt {
-    @Shadow private Frustum cullingFrustum;
+	@Shadow private Frustum cullingFrustum;
 
-    @Mutable
-    @Shadow @Final private RenderBuffers renderBuffers;
+	@Mutable
+	@Shadow @Final private RenderBuffers renderBuffers;
 
-    @Shadow @Final private Minecraft minecraft;
+	@Shadow @Final private Minecraft minecraft;
 
-    @Shadow private @Nullable ClientLevel level;
+	@Shadow private @Nullable ClientLevel level;
 
-    @Inject(method = "prepareCullFrustum", at = @At("HEAD"))
-    private void modifyCameraRotation(PoseStack poseStack, Vec3 cameraPos, Matrix4f projectionMatrix, CallbackInfo ci) {
-        PortalCubedClient.interpCamera().ifPresent(q -> poseStack.mulPose(q.toQuaternionf()));
-        if (PortalCubedClient.cameraTransformedThroughPortal != null && !minecraft.gameRenderer.getMainCamera().isDetached()) {
-            poseStack.mulPose(PortalCubedClient.cameraTransformedThroughPortal.getTransformQuat().toQuaternionf().conjugate());
-        }
-    }
+	@Inject(method = "prepareCullFrustum", at = @At("HEAD"))
+	private void modifyCameraRotation(PoseStack poseStack, Vec3 cameraPos, Matrix4f projectionMatrix, CallbackInfo ci) {
+		PortalCubedClient.interpCamera().ifPresent(q -> poseStack.mulPose(q.toQuaternionf()));
+		if (PortalCubedClient.cameraTransformedThroughPortal != null && !minecraft.gameRenderer.getMainCamera().isDetached()) {
+			poseStack.mulPose(PortalCubedClient.cameraTransformedThroughPortal.getTransformQuat().toQuaternionf().conjugate());
+		}
+	}
 
-    @Override
-    public Frustum getCullingFrustum() {
-        return cullingFrustum;
-    }
+	@Override
+	public Frustum getCullingFrustum() {
+		return cullingFrustum;
+	}
 
-    @Override
-    public void setCullingFrustum(Frustum cullingFrustum) {
-        this.cullingFrustum = cullingFrustum;
-    }
+	@Override
+	public void setCullingFrustum(Frustum cullingFrustum) {
+		this.cullingFrustum = cullingFrustum;
+	}
 
-    @Override
-    public RenderBuffers getRenderBuffers() {
-        return renderBuffers;
-    }
+	@Override
+	public RenderBuffers getRenderBuffers() {
+		return renderBuffers;
+	}
 
-    @Override
-    public void setRenderBuffers(RenderBuffers renderBuffers) {
-        this.renderBuffers = renderBuffers;
-    }
+	@Override
+	public void setRenderBuffers(RenderBuffers renderBuffers) {
+		this.renderBuffers = renderBuffers;
+	}
 
-    @WrapOperation(
-        method = "renderLevel",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/Camera;isDetached()Z"
-        )
-    )
-    private boolean overrideDetached(Camera instance, Operation<Boolean> original) {
-        return PortalCubedClient.cameraTransformedThroughPortal != null || original.call(instance);
-    }
+	@WrapOperation(
+		method = "renderLevel",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/Camera;isDetached()Z"
+		)
+	)
+	private boolean overrideDetached(Camera instance, Operation<Boolean> original) {
+		return PortalCubedClient.cameraTransformedThroughPortal != null || original.call(instance);
+	}
 
-    @Inject(
-        method = "renderLevel",
-        at = @At("RETURN")
-    )
-    private void renderEndNoFapi(
-        PoseStack poseStack,
-        float partialTick,
-        long finishNanoTime,
-        boolean renderBlockOutline,
-        Camera camera,
-        GameRenderer gameRenderer,
-        LightTexture lightTexture,
-        Matrix4f projectionMatrix,
-        CallbackInfo ci
-    ) {
-        assert level != null;
+	@Inject(
+		method = "renderLevel",
+		at = @At("RETURN")
+	)
+	private void renderEndNoFapi(
+		PoseStack poseStack,
+		float partialTick,
+		long finishNanoTime,
+		boolean renderBlockOutline,
+		Camera camera,
+		GameRenderer gameRenderer,
+		LightTexture lightTexture,
+		Matrix4f projectionMatrix,
+		CallbackInfo ci
+	) {
+		assert level != null;
 
-        if (PortalCubedClient.getRenderer().targetPhase() != PortalRenderPhase.FINAL) return;
-        final MultiBufferSource.BufferSource consumers = renderBuffers.bufferSource();
-        final var cameraPos = camera.getPosition();
-        poseStack.pushPose();
-        poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-        final PortalRenderPhase oldRenderPhase = PortalRenderer.renderPhase;
-        PortalRenderer.renderPhase = PortalRenderPhase.FINAL;
+		if (PortalCubedClient.getRenderer().targetPhase() != PortalRenderPhase.FINAL) return;
+		final MultiBufferSource.BufferSource consumers = renderBuffers.bufferSource();
+		final var cameraPos = camera.getPosition();
+		poseStack.pushPose();
+		poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+		final PortalRenderPhase oldRenderPhase = PortalRenderer.renderPhase;
+		PortalRenderer.renderPhase = PortalRenderPhase.FINAL;
 
-        final EntityRenderDispatcher dispatcher = minecraft.getEntityRenderDispatcher();
-        for (final Entity entity : level.entitiesForRendering()) {
-            if (!(entity instanceof Portal portal) || !portal.getActive()) continue;
-            final PortalRenderer renderer = (PortalRenderer)dispatcher.getRenderer(portal);
-            renderer.shouldRender(portal, cullingFrustum, cameraPos.x, cameraPos.y, cameraPos.z);
-            poseStack.pushPose();
-            poseStack.translate(entity.getX(), entity.getY(), entity.getZ());
-            poseStack.mulPose(portal.getRotation().get(partialTick));
-            poseStack.mulPose(Axis.YP.rotationDegrees(180f));
-            renderer.renderPortal(
-                poseStack,
-                consumers,
-                portal,
-                0, 1, 1, 1,
-                partialTick
-            );
-            poseStack.popPose();
-        }
+		final EntityRenderDispatcher dispatcher = minecraft.getEntityRenderDispatcher();
+		for (final Entity entity : level.entitiesForRendering()) {
+			if (!(entity instanceof Portal portal) || !portal.getActive()) continue;
+			final PortalRenderer renderer = (PortalRenderer)dispatcher.getRenderer(portal);
+			renderer.shouldRender(portal, cullingFrustum, cameraPos.x, cameraPos.y, cameraPos.z);
+			poseStack.pushPose();
+			poseStack.translate(entity.getX(), entity.getY(), entity.getZ());
+			poseStack.mulPose(portal.getRotation().get(partialTick));
+			poseStack.mulPose(Axis.YP.rotationDegrees(180f));
+			renderer.renderPortal(
+				poseStack,
+				consumers,
+				portal,
+				0, 1, 1, 1,
+				partialTick
+			);
+			poseStack.popPose();
+		}
 
-        poseStack.popPose();
-        consumers.endLastBatch();
-        PortalRenderer.renderPhase = oldRenderPhase;
-    }
+		poseStack.popPose();
+		consumers.endLastBatch();
+		PortalRenderer.renderPhase = oldRenderPhase;
+	}
 }

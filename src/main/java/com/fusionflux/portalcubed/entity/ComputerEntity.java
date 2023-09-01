@@ -5,8 +5,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 
 public class ComputerEntity extends CorePhysicsEntity  {
-    public ComputerEntity(EntityType<? extends PathfinderMob> type, Level world) {
-        super(type, world);
-    }
+	public ComputerEntity(EntityType<? extends PathfinderMob> type, Level world) {
+		super(type, world);
+	}
 
 }

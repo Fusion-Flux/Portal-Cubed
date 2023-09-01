@@ -7,11 +7,11 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedConditions {
-    public static final LootItemConditionType FUNNEL = new LootItemConditionType(new FunnelCondition.Serializer());
-    public static final LootItemConditionType LAUNCHER = new LootItemConditionType(new LauncherCondition.Serializer());
+	public static final LootItemConditionType FUNNEL = new LootItemConditionType(new FunnelCondition.Serializer());
+	public static final LootItemConditionType LAUNCHER = new LootItemConditionType(new LauncherCondition.Serializer());
 
-    public static void register() {
-        Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, id("funnel"), FUNNEL);
-        Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, id("launcher"), LAUNCHER);
-    }
+	public static void register() {
+		Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, id("funnel"), FUNNEL);
+		Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, id("launcher"), LAUNCHER);
+	}
 }

@@ -6,8 +6,8 @@ import net.minecraft.world.level.Level;
 
 public class CoreFrameEntity extends CorePhysicsEntity {
 
-    public CoreFrameEntity(EntityType<? extends PathfinderMob> type, Level world) {
-        super(type, world);
-    }
+	public CoreFrameEntity(EntityType<? extends PathfinderMob> type, Level world) {
+		super(type, world);
+	}
 
 }

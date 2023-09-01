@@ -15,14 +15,14 @@ import java.util.Optional;
 
 @Mixin(BucketItem.class)
 public class BucketItemMixin {
-    @WrapOperation(
-        method = "use",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/level/block/BucketPickup;getPickupSound()Ljava/util/Optional;"
-        )
-    )
-    private Optional<SoundEvent> pickupSoundWithFluid(BucketPickup instance, Operation<Optional<SoundEvent>> original, @Local BlockState blockState) {
-        return instance instanceof BucketPickupEx ex ? ex.getPickupSound(blockState) : original.call(instance);
-    }
+	@WrapOperation(
+		method = "use",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/BucketPickup;getPickupSound()Ljava/util/Optional;"
+		)
+	)
+	private Optional<SoundEvent> pickupSoundWithFluid(BucketPickup instance, Operation<Optional<SoundEvent>> original, @Local BlockState blockState) {
+		return instance instanceof BucketPickupEx ex ? ex.getPickupSound(blockState) : original.call(instance);
+	}
 }

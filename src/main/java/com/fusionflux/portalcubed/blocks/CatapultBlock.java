@@ -22,47 +22,47 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CatapultBlock extends SpecialHiddenBlockWithEntity implements BlockCollisionTrigger {
-    private static final VoxelShape SHAPE = box(3, 3, 3, 13, 13, 13);
+	private static final VoxelShape SHAPE = box(3, 3, 3, 13, 13, 13);
 
-    public CatapultBlock(Properties settings) {
-        super(settings);
-    }
+	public CatapultBlock(Properties settings) {
+		super(settings);
+	}
 
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CatapultBlockEntity(pos, state);
-    }
+	@Nullable
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new CatapultBlockEntity(pos, state);
+	}
 
-    @Override
-    protected VoxelShape getVisibleOutlineShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
+	@Override
+	protected VoxelShape getVisibleOutlineShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return SHAPE;
+	}
 
-    @Override
-    public VoxelShape getTriggerShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return Shapes.block();
-    }
+	@Override
+	public VoxelShape getTriggerShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return Shapes.block();
+	}
 
-    @Override
-    public void onEntityEnter(BlockState state, Level world, BlockPos pos, Entity entity) {
-        if (entity instanceof EntityExt ext && !(entity instanceof EnergyPellet)) {
-            world.getBlockEntity(pos, PortalCubedBlocks.CATAPULT_BLOCK_ENTITY).ifPresent(ext::collidedWithCatapult);
-        }
-    }
+	@Override
+	public void onEntityEnter(BlockState state, Level world, BlockPos pos, Entity entity) {
+		if (entity instanceof EntityExt ext && !(entity instanceof EnergyPellet)) {
+			world.getBlockEntity(pos, PortalCubedBlocks.CATAPULT_BLOCK_ENTITY).ifPresent(ext::collidedWithCatapult);
+		}
+	}
 
-    @NotNull
-    @Override
-    @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!player.isCreative()) return InteractionResult.PASS;
-        if (!world.isClientSide) {
-            final MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
+	@NotNull
+	@Override
+	@SuppressWarnings("deprecation")
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!player.isCreative()) return InteractionResult.PASS;
+		if (!world.isClientSide) {
+			final MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
 
-            if (screenHandlerFactory != null) {
-                player.openMenu(screenHandlerFactory);
-            }
-        }
-        return InteractionResult.SUCCESS;
-    }
+			if (screenHandlerFactory != null) {
+				player.openMenu(screenHandlerFactory);
+			}
+		}
+		return InteractionResult.SUCCESS;
+	}
 }

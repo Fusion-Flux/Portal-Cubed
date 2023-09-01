@@ -12,28 +12,28 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 
 public class BaseGel extends SimpleMultiSidedBlock {
-    public BaseGel(Properties settings) {
-        super(settings);
-    }
+	public BaseGel(Properties settings) {
+		super(settings);
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (world.isRainingAt(pos.above())) {
-            world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-        }
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+		if (world.isRainingAt(pos.above())) {
+			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+		}
+	}
 
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
-        return true;
-    }
+	@Override
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+		return true;
+	}
 
-    public static boolean collides(Entity entity, BlockPos pos, BlockState state) {
-        return Shapes.joinIsNotEmpty(
-            state.getShape(entity.level(), pos, CollisionContext.of(entity)).move(pos.getX(), pos.getY(), pos.getZ()),
-            Shapes.create(entity.getBoundingBox()),
-            BooleanOp.AND
-        );
-    }
+	public static boolean collides(Entity entity, BlockPos pos, BlockState state) {
+		return Shapes.joinIsNotEmpty(
+			state.getShape(entity.level(), pos, CollisionContext.of(entity)).move(pos.getX(), pos.getY(), pos.getZ()),
+			Shapes.create(entity.getBoundingBox()),
+			BooleanOp.AND
+		);
+	}
 }

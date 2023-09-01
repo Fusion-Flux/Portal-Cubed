@@ -22,50 +22,50 @@ import java.util.function.Supplier;
 import static com.fusionflux.portalcubed.PortalCubed.id;
 
 public class PortalCubedFluids {
-    public static final FluidRegistryContainer TOXIC_GOO = createFluid(
-        "toxic_goo",
-        new ToxicGooFluid.Flowing(), new ToxicGooFluid.Still(),
-        still -> new ToxicGooFluid.Block(still, QuiltBlockSettings.copy(Blocks.WATER).mapColor(MapColor.TERRACOTTA_GREEN))
-    );
+	public static final FluidRegistryContainer TOXIC_GOO = createFluid(
+		"toxic_goo",
+		new ToxicGooFluid.Flowing(), new ToxicGooFluid.Still(),
+		still -> new ToxicGooFluid.Block(still, QuiltBlockSettings.copy(Blocks.WATER).mapColor(MapColor.TERRACOTTA_GREEN))
+	);
 
-    private static FluidRegistryContainer createFluid(String name, FlowingFluid flowing, FlowingFluid still, Function<FlowingFluid, LiquidBlock> blockSupplier) {
-        return new FluidRegistryContainer(name, flowing, still, blockSupplier, new BucketItem(still, new QuiltItemSettings().craftRemainder(Items.BUCKET).stacksTo(1)));
-    }
+	private static FluidRegistryContainer createFluid(String name, FlowingFluid flowing, FlowingFluid still, Function<FlowingFluid, LiquidBlock> blockSupplier) {
+		return new FluidRegistryContainer(name, flowing, still, blockSupplier, new BucketItem(still, new QuiltItemSettings().craftRemainder(Items.BUCKET).stacksTo(1)));
+	}
 
-    public static void registerFluids() {
-        TOXIC_GOO.register();
-    }
+	public static void registerFluids() {
+		TOXIC_GOO.register();
+	}
 
-    public static class FluidRegistryContainer {
-        public final String name;
-        public final FlowingFluid flowing;
-        public final FlowingFluid still;
-        public final Item bucket;
+	public static class FluidRegistryContainer {
+		public final String name;
+		public final FlowingFluid flowing;
+		public final FlowingFluid still;
+		public final Item bucket;
 
-        private final Supplier<LiquidBlock> block;
+		private final Supplier<LiquidBlock> block;
 
-        private FluidRegistryContainer(String name, FlowingFluid flowing, FlowingFluid still, Function<FlowingFluid, LiquidBlock> blockSupplier, Item bucket) {
-            this.name = name;
-            this.flowing = flowing;
-            this.still = still;
-            this.bucket = bucket;
-            block = Suppliers.memoize(() -> blockSupplier.apply(still));
-        }
+		private FluidRegistryContainer(String name, FlowingFluid flowing, FlowingFluid still, Function<FlowingFluid, LiquidBlock> blockSupplier, Item bucket) {
+			this.name = name;
+			this.flowing = flowing;
+			this.still = still;
+			this.bucket = bucket;
+			block = Suppliers.memoize(() -> blockSupplier.apply(still));
+		}
 
-        private void register() {
-            Registry.register(BuiltInRegistries.FLUID, id("flowing_" + name), flowing);
-            Registry.register(BuiltInRegistries.FLUID, id(name), still);
-            Registry.register(BuiltInRegistries.BLOCK, id(name), block.get());
-            if (bucket != null) {
-                Registry.register(BuiltInRegistries.ITEM, id(name + "_bucket"), bucket);
-                DispenserBlock.registerBehavior(
-                    bucket, ((DispenserBlockAccessor)Blocks.DISPENSER).invokeGetDispenseMethod(new ItemStack(Items.WATER_BUCKET))
-                );
-            }
-        }
+		private void register() {
+			Registry.register(BuiltInRegistries.FLUID, id("flowing_" + name), flowing);
+			Registry.register(BuiltInRegistries.FLUID, id(name), still);
+			Registry.register(BuiltInRegistries.BLOCK, id(name), block.get());
+			if (bucket != null) {
+				Registry.register(BuiltInRegistries.ITEM, id(name + "_bucket"), bucket);
+				DispenserBlock.registerBehavior(
+					bucket, ((DispenserBlockAccessor)Blocks.DISPENSER).invokeGetDispenseMethod(new ItemStack(Items.WATER_BUCKET))
+				);
+			}
+		}
 
-        public LiquidBlock getBlock() {
-            return block.get();
-        }
-    }
+		public LiquidBlock getBlock() {
+			return block.get();
+		}
+	}
 }

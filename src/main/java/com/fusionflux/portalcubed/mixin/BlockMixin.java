@@ -17,11 +17,11 @@ import java.util.List;
 
 @Mixin(Block.class)
 public abstract class BlockMixin {
-    @Inject(method = "appendHoverText", at = @At("HEAD"))
-    private void portalCubedTooltip(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag, CallbackInfo ci) {
-        final List<Component> tooltips = PortalCubed.TOOLTIPS.get(BuiltInRegistries.BLOCK.getKey((Block)(Object)this));
-        if (tooltips != null) {
-            tooltip.addAll(tooltips);
-        }
-    }
+	@Inject(method = "appendHoverText", at = @At("HEAD"))
+	private void portalCubedTooltip(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag, CallbackInfo ci) {
+		final List<Component> tooltips = PortalCubed.TOOLTIPS.get(BuiltInRegistries.BLOCK.getKey((Block)(Object)this));
+		if (tooltips != null) {
+			tooltip.addAll(tooltips);
+		}
+	}
 }
