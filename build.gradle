@@ -17,6 +17,9 @@ repositories {
 	maven { url = "https://maven.ladysnake.org/releases" } // CCA
 	maven { url = "https://maven.gegy.dev" } // LDL
 	maven { url = "https://maven.parchmentmc.org" }
+	maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // Forge Config API Port
+	maven { url = "https://maven.tterrag.com" } // Flywheel and Registrate
+	maven { url = "https://maven.createmod.net" } // Ponder and Catnip
 	maven { url = "https://jitpack.io/" } // Mixin Extras
 }
 
@@ -44,6 +47,12 @@ dependencies {
 
 	// Compat
 	modImplementation("com.terraformersmc:modmenu:$mod_menu_version")
+
+	modImplementation("com.jozufozu.flywheel:flywheel-fabric-$minecraft_version:$flywheel_version")
+	modImplementation("net.createmod.catnip:Catnip-Fabric-$minecraft_version:$catnip_version")
+	modImplementation("net.createmod.ponder:Ponder-Fabric-$minecraft_version:$ponder_version")
+	modLocalRuntime("org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated:$qfapi_version-$minecraft_version") // flywheel uses deprecated api
+
 	modCompileOnly("maven.modrinth:visiblebarriers:$vb_version")
 	modCompileOnly("dev.lambdaurora:lambdynamiclights:$ldl_version")
 	modCompileOnly("com.github.Virtuoel:Pehkui:$pehkui_version")

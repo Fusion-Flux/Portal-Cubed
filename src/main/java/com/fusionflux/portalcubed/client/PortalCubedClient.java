@@ -21,6 +21,7 @@ import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
+import com.fusionflux.portalcubed.compat.ponder.PortalCubedPonderPlugin;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
@@ -576,6 +577,10 @@ public class PortalCubedClient implements ClientModInitializer {
 				})
 			);
 		});
+
+		if (QuiltLoader.isModLoaded("ponder")) {
+			PortalCubedPonderPlugin.init();
+		}
 	}
 
 	public static void zoomGoBrrrr(MutableDouble fov) {
