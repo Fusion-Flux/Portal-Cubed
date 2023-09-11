@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.compat.ponder;
 
 import com.fusionflux.portalcubed.PortalCubed;
+import com.fusionflux.portalcubed.blocks.PortalCubedBlocks;
 import com.fusionflux.portalcubed.items.PortalCubedItems;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.createmod.ponder.foundation.PonderPlugin;
@@ -20,8 +21,12 @@ public class PortalCubedPonderPlugin implements PonderPlugin {
 	@Override
 	public void registerScenes() {
 		PonderRegistrationHelper helper = new PonderRegistrationHelper(getModID());
-		ResourceLocation portalGun = BuiltInRegistries.ITEM.getKey(PortalCubedItems.PORTAL_GUN);
-		helper.addStoryBoard(portalGun, "test_ponder", TestScene::test);
+
+		ResourceLocation autoPortal = BuiltInRegistries.BLOCK.getKey(PortalCubedBlocks.AUTO_PORTAL_BLOCK);
+		helper.addStoryBoard(autoPortal, "autoportal/introduction_and_configuration", AutoPortal::autoportal_intro);
+		helper.addStoryBoard(autoPortal, "autoportal/valid_portal_surfaces", AutoPortal::valid_portal_surfaces);
+		helper.addStoryBoard(autoPortal, "autoportal/multiple_autoportals", AutoPortal::multiple_autoportals);
+		helper.addStoryBoard(autoPortal, "autoportal/dyeing_autoportals", AutoPortal::dyeing_autoportals);
 	}
 
 	public static void init() {

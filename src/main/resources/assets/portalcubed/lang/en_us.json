@@ -562,13 +562,27 @@
   "gamerule.usePortalHud": "Use Portal HUD",
   "gamerule.usePortalHud.description": "Disables the hotbar and inventory, uses 'E' to grab objects, and disables clearing your portals with the keybind. Requires valid items to be in the first hotbar slot.",
 
-  "portalcubed.ponder.auto_portal.header": "Using the Auto Portal",
-  "portalcubed.ponder.auto_portal.text_1": "Power an Auto Portal with redstone to open it.",
-  "portalcubed.ponder.auto_portal.text_2": "Power an Auto Portal with redstone again to close it.",
-  "portalcubed.ponder.auto_portal.text_3": "Right-click with a hammer to switch between primary and secondary modes.",
-  "portalcubed.ponder.auto_portal.text_4": "Right-click with dye to change the portal\u0027s base color.",
-  "portalcubed.ponder.auto_portal.text_5": "This portal is green because the Auto Portal is still set to secondary.",
-  "portalcubed.ponder.auto_portal.text_6": "Sneak right-click with a hammer to reset the portal\u0027s base color.",
+  "portalcubed.ponder.autoportal_intro.header": "Using the Autoportal",
+  "portalcubed.ponder.autoportal_intro.text_1": "Autoportals create portals that are not associated with a player.",
+  "portalcubed.ponder.autoportal_intro.text_2": "By default, an autoportal will create a primary portal.",
+  "portalcubed.ponder.autoportal_intro.text_3": "Power an autoportal to open or close its portal.",
+  "portalcubed.ponder.autoportal_intro.text_4": "Interact with a Hammer to switch the autoportal to creating secondary portals.",
+  "portalcubed.ponder.autoportal_intro.text_5": "The two closest autoportals of opposite polarity that are not already linked will connect.",
+  "portalcubed.ponder.autoportal_intro.text_6": "Player portals will also link with unlinked autoportal portals.",
+
+  "portalcubed.ponder.valid_portal_surfaces.header": "Valid Portal Surfaces",
+  "portalcubed.ponder.valid_portal_surfaces.text_1": "The placement rules for player portals still apply to autoportal portals.",
+  "portalcubed.ponder.valid_portal_surfaces.text_2": "You cannot use an autoportal on surfaces that do not normally support portals.",
+
+  "portalcubed.ponder.multiple_autoportals.header": "Multiple Autoportals",
+  "portalcubed.ponder.multiple_autoportals.text_1": "When using more than 2 autoportals, the 2 closest unlinked frames of opposite polarity will connect.",
+  "portalcubed.ponder.multiple_autoportals.text_2": "If you have an odd number of active autoportals, the extra will remain unlinked.",
+
+  "portalcubed.ponder.dyeing_autoportals.header": "Dyeing Autoportals",
+  "portalcubed.ponder.dyeing_autoportals.text_1": "By right clicking with a dye, you can change the color of an autoportal's portals.",
+  "portalcubed.ponder.dyeing_autoportals.text_2": "The primary portal will be the color of the dye, and the secondary portal will be the opposite color.",
+  "portalcubed.ponder.dyeing_autoportals.text_3": "Autoportals will only link to other autoportals with the same dye color applied.",
+
 
   "portalcubed.catapult.destX": "Destination X",
   "portalcubed.catapult.destY": "Destination Y",
