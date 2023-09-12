@@ -25,11 +25,12 @@ public class AutoPortal {
 	public static void autoportal_intro(SceneBuilder scene, SceneBuildingUtil util) {
 
 		//Setup
-		BlockPos blueButtonPos = util.grid.at(2, 1, 3);
-		BlockPos orangeButtonPos = util.grid.at(3, 1, 2);
 		scene.title("autoportal_intro", "Using the Autoportal");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layersFrom(0), Direction.DOWN);
+		BlockPos blueButtonPos = util.grid.at(2, 1, 3);
+		BlockPos orangeButtonPos = util.grid.at(3, 1, 2);
+		scene.setNextUpEnabled(true);
 		scene.idle(20);
 
 		//Intro
@@ -108,10 +109,11 @@ public class AutoPortal {
 		//Setup
 		scene.title("valid_portal_surfaces", "Valid Portal Surfaces");
 		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layersFrom(0), Direction.DOWN);
 		BlockPos buttonPos = util.grid.at(1, 1, 1);
 		BlockPos wirePosX = util.grid.at(1, 1, 2);
 		BlockPos wirePosZ = util.grid.at(2, 1, 1);
-		scene.world.showSection(util.select.layersFrom(0), Direction.DOWN);
+		scene.setNextUpEnabled(true);
 		scene.idle(20);
 		//Intro Text
 		scene.overlay.showText(70)
@@ -148,6 +150,7 @@ public class AutoPortal {
 		BlockPos middleWire = util.grid.at(2, 1, 2);
 		Selection rightWire = util.select.fromTo(1, 1, 3, 2, 1, 4);
 		scene.world.showSection(util.select.layersFrom(0), Direction.DOWN);
+		scene.setNextUpEnabled(true);
 		scene.idle(20);
 
 		//Intro Text
@@ -215,7 +218,7 @@ public class AutoPortal {
 			return cubeEntity;
 		});
 		scene.idle(40);
-		scene.world.modifyEntity(Cube1, e -> e.lerpTo(3.6, 1, 0.5, 0, 0, 8, false));
+		scene.world.modifyEntity(Cube1, e -> e.lerpTo(3.6, 1, 0.5, 0, 0, 6, false));
 		scene.world.modifyEntity(Cube2, e -> e.lerpTo(4.5, 1, 2.5, 0, 0, 10, false));
 		scene.idle(5);
 		scene.world.modifyEntity(Cube3, e -> e.lerpTo(2.5, 1, 4.5, 0, 0, 10, false));
@@ -233,6 +236,7 @@ public class AutoPortal {
 		Selection leftWire = util.select.fromTo(4, 3, 3, 4, 3, 0);
 		Selection rightWire = util.select.fromTo(3, 3, 4, 0, 3, 4);
 		scene.world.showSection(util.select.layersFrom(0), Direction.DOWN);
+		scene.setNextUpEnabled(true);
 		scene.idle(20);
 
 		//Intro Text

@@ -569,19 +569,35 @@
   "portalcubed.ponder.autoportal_intro.text_4": "Interact with a Hammer to switch the autoportal to creating secondary portals.",
   "portalcubed.ponder.autoportal_intro.text_5": "The two closest autoportals of opposite polarity that are not already linked will connect.",
   "portalcubed.ponder.autoportal_intro.text_6": "Player portals will also link with unlinked autoportal portals.",
-
   "portalcubed.ponder.valid_portal_surfaces.header": "Valid Portal Surfaces",
   "portalcubed.ponder.valid_portal_surfaces.text_1": "The placement rules for player portals still apply to autoportal portals.",
   "portalcubed.ponder.valid_portal_surfaces.text_2": "You cannot use an autoportal on surfaces that do not normally support portals.",
-
   "portalcubed.ponder.multiple_autoportals.header": "Multiple Autoportals",
   "portalcubed.ponder.multiple_autoportals.text_1": "When using more than 2 autoportals, the 2 closest unlinked frames of opposite polarity will connect.",
   "portalcubed.ponder.multiple_autoportals.text_2": "If you have an odd number of active autoportals, the extra will remain unlinked.",
-
   "portalcubed.ponder.dyeing_autoportals.header": "Dyeing Autoportals",
   "portalcubed.ponder.dyeing_autoportals.text_1": "By right clicking with a dye, you can change the color of an autoportal's portals.",
   "portalcubed.ponder.dyeing_autoportals.text_2": "The primary portal will be the color of the dye, and the secondary portal will be the opposite color.",
   "portalcubed.ponder.dyeing_autoportals.text_3": "Autoportals will only link to other autoportals with the same dye color applied.",
+
+  "portalcubed.ponder.laser_intro.header": "Using Lasers",
+  "portalcubed.ponder.laser_intro.text_1": "Thermal Discouragement Beam Emitters output a laser when powered.",
+  "portalcubed.ponder.laser_intro.text_2": "The beam damages entities that make contact with it and briefly sets them on fire.",
+  "portalcubed.ponder.laser_intro.text_3": "There are a few ways the beam can be redirected, including usage of the Redirection Cube.",
+  "portalcubed.ponder.laser_intro.text_4": "The catcher lights up and spins when a laser is directed into it, while also outputting redstone power.",
+  "portalcubed.ponder.laser_relays.header": "Laser Relays",
+  "portalcubed.ponder.laser_relays.text_1": "Laser Relays can be attached to any surface and power the surrounding blocks when a laser passes through them.",
+  "portalcubed.ponder.laser_blocking.header": "Laser Blocking",
+  "portalcubed.ponder.laser_blocking.text_1": "Lasers can pass through most blocks that the player's camera can.  This includes things like glass and foliage.",
+  "portalcubed.ponder.laser_blocking.text_2": "Most normal blocks simply stop the laser, however some reflect it instead.",
+  "portalcubed.ponder.reflective_surfaces.header": "Reflective Surfaces",
+  "portalcubed.ponder.reflective_surfaces.text_1": "Some blocks reflect lasers instead of stopping them.",
+  "portalcubed.ponder.reflective_surfaces.text_2": "For example, when a laser hits reflection gel it bounces off.",
+  "portalcubed.ponder.reflective_surfaces.text_3": "Some vanilla blocks also have this property, including amethyst blocks, tinted glass, and most metal and gem blocks.",
+  "portalcubed.ponder.schrodinger_cubes.header": "Schrödinger Cubes",
+  "portalcubed.ponder.schrodinger_cubes.text_1": "Schrödinger Cubes are a special kind of Redirection Cube.",
+  "portalcubed.ponder.schrodinger_cubes.text_2": "When a laser passes into a Schrödinger Cube, it comes out of the nearest other Schrodinger Cube.",
+  "portalcubed.ponder.schrodinger_cubes.text_3": "To link 2 or more Schrödinger Cubes regardless of proximity and other cubes, apply a name tag to the cubes you want to link.",
 
 
   "portalcubed.catapult.destX": "Destination X",
