@@ -87,7 +87,7 @@
   "advancement.portalcubed.goo.title": "The Floor is Failure",
   "advancement.portalcubed.goo.description": "Submerse yourself in a pool of Toxic Goo and receive an unsatisfactory mark to your record",
 
-  "advancement.portalcubed.faith_plate.title": "Soaring Through the Air...",
+  "advancement.portalcubed.faith_plate.title": "Sailing Through the Air...",
   "advancement.portalcubed.faith_plate.description": "Launch yourself from an Aerial Faith Plate",
 
   "advancement.portalcubed.light_bridge.title": "Walking on Sunshine",
@@ -596,8 +596,30 @@
   "portalcubed.ponder.reflective_surfaces.text_3": "Some vanilla blocks also have this property, including amethyst blocks, tinted glass, and most metal and gem blocks.",
   "portalcubed.ponder.schrodinger_cubes.header": "Schrödinger Cubes",
   "portalcubed.ponder.schrodinger_cubes.text_1": "Schrödinger Cubes are a special kind of Redirection Cube.",
-  "portalcubed.ponder.schrodinger_cubes.text_2": "When a laser passes into a Schrödinger Cube, it comes out of the nearest other Schrodinger Cube.",
+  "portalcubed.ponder.schrodinger_cubes.text_2": "When a laser passes into a Schrödinger Cube, it comes out of the nearest other Schrödinger Cube.",
   "portalcubed.ponder.schrodinger_cubes.text_3": "To link 2 or more Schrödinger Cubes regardless of proximity and other cubes, apply a name tag to the cubes you want to link.",
+
+  "portalcubed.ponder.excursion_funnel.header": "Using the Excursion Funnel Emitter",
+  "portalcubed.ponder.excursion_funnel.text_1": "The polarity of Excursion Funnel Emitters can be changed using a Hammer.",
+  "portalcubed.ponder.excursion_funnel.text_2": "There are 3 modes - Forward, Reversed, and Dual.",
+  "portalcubed.ponder.excursion_funnel.text_3": "When using Forward or Reversed, the funnel will activate upon receiving redstone power and the beam will move entities in the selected direction.",
+  "portalcubed.ponder.excursion_funnel.text_4": "In Dual mode, the funnel is always active and changes polarity when powered.",
+
+
+  "portalcubed.ponder.fizzlers.header": "Fizzlers",
+  "portalcubed.ponder.fizzlers.text_1": "Fizzlers allow you to prevent players from taking chamber props into certain areas, and to clear the player's portals.",
+  "portalcubed.ponder.fizzlers.text_2": "To create a Fizzler field, place 2 Fizzler Emitters facing each other and power both.",
+  "portalcubed.ponder.fizzlers.text_3": "Players who walk through them will have their portals removed, and props that pass through them will be disintegrated.",
+  "portalcubed.ponder.laser_fields.header": "Laser Fields",
+  "portalcubed.ponder.laser_fields.text_1": "Laser Fields kill mobs that pass through them, but do not fizzle props or clear portals.",
+  "portalcubed.ponder.death_fizzlers.header": "Death Fizzlers",
+  "portalcubed.ponder.death_fizzlers.text_1": "Death Fizzlers combine the properties of Fizzlers and Laser Fields.",
+  "portalcubed.ponder.death_fizzlers.text_2": "Entities that pass through them are killed, and props that pass through them get disintegrated.",
+  "portalcubed.ponder.matter_inquisition_fields.header": "Matter Inquisition Fields",
+  "portalcubed.ponder.matter_inquisition_fields.text_1": "Matter Inquisition Fields fizzle props, but do not affect other entities or portals in any way.",
+  "portalcubed.ponder.physics_repulsion_fields.header": "Physics Repulsion Fields",
+  "portalcubed.ponder.physics_repulsion_fields.text_1": "Physics Repulsion Fields act as solid surfaces for props, but allow entities to pass through unaffected.",
+
 
   "portalcubed.ponder.position_setting.header": "Using the Hammer",
   "portalcubed.ponder.position_setting.text_1": "The Hammer can be used to configure the position and properties of various Test Elements.",
@@ -611,7 +633,7 @@
   "portalcubed.ponder.changing_modes.text_2": "The Autoportal can be switched between creating primary and secondary portals using the Hammer.",
   "portalcubed.ponder.changing_modes.text_3": "The polarity of Excursion Funnel Emitters can also be changed this way.",
   "portalcubed.ponder.changing_modes.text_4": "There are 3 modes - Forward, Reversed, and Dual.",
-  "portalcubed.ponder.changing_modes.text_5": "When using Forward and Reversed, the funnel will activate upon receiving redstone power and the beam will move entities in the selected direction.",
+  "portalcubed.ponder.changing_modes.text_5": "When using Forward or Reversed, the funnel will activate upon receiving redstone power and the beam will move entities in the selected direction.",
   "portalcubed.ponder.changing_modes.text_6": "In Dual mode, the funnel is always active and changes polarity when powered.",
   "portalcubed.ponder.locking_props.header": "Locking Props",
   "portalcubed.ponder.locking_props.text_1": "The Hammer can be used to lock prop entities in place.",
@@ -619,7 +641,6 @@
   "portalcubed.ponder.locking_props.text_3": "Sneak right click any prop entity while holding a Hammer to lock or unlock it.",
   "portalcubed.ponder.locking_props.text_4": "Radios have an extra function that can be toggled using the Hammer.",
   "portalcubed.ponder.locking_props.text_5": "Interact using the Hammer without sneaking to change whether or not grabbing the radio toggles the music.",
-
 
 
   "portalcubed.catapult.destX": "Destination X",

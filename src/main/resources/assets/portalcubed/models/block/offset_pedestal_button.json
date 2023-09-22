@@ -4,7 +4,7 @@
 	"textures": {
 		"0": "portalcubed:block/pedestal_button",
 		"2": "portalcubed:block/pedestal_button_e",
-		"particle": "portalcubed:block/padded_gray_panel"
+		"particle": "portalcubed:block/smooth_gray_panel"
 	},
 	"elements": [
 		{
@@ -15,7 +15,8 @@
 				"north": {"uv": [0.008, 0.008, 2.492, 7.992], "texture": "#0"},
 				"east": {"uv": [0.016, 0.016, 2.484, 7.984], "texture": "#0"},
 				"south": {"uv": [2.516, 0.016, 4.984, 7.984], "texture": "#0"},
-				"west": {"uv": [0.016, 0.016, 2.468, 7.968], "texture": "#0"}
+				"west": {"uv": [0.016, 0.016, 2.468, 7.968], "texture": "#0"},
+				"down": {"uv": [1, 9, 3, 11], "texture": "#0"}
 			}
 		},
 		{
@@ -129,7 +130,6 @@
 			"origin": [8, 8, 8],
 			"color": 0,
 			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [0, 1, 2, 3, 4, 5, 6]
 		}
 	]
