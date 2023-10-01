@@ -18,15 +18,8 @@
 				"west": {"uv": [2.515, 2.515, 4.985, 3.985], "texture": "#0"},
 				"up": {"uv": [1.735, 2.485, 0.015, 0.015], "texture": "#0"},
 				"down": {"uv": [3.485, 0.015, 1.765, 2.485], "texture": "#0"}
-			}
-		},
-		{
-			"from": [7.5, 6.025, 10.5],
-			"to": [8.5, 6.025, 11.5],
-			"rotation": {"angle": 0, "axis": "y", "origin": [-0.5, 0, 0]},
-			"faces": {
-				"up": {"uv": [4.515, 7.515, 4.015, 7.015], "texture": "#1", "tintindex": 0}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [4.5, 0, -0.5],
@@ -39,7 +32,8 @@
 				"west": {"uv": [5.515, 8.015, 6.985, 8.735], "texture": "#0"},
 				"up": {"uv": [6.485, 1.485, 4.765, 0.015], "texture": "#0"},
 				"down": {"uv": [6.485, 4.015, 4.765, 5.485], "texture": "#0"}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [5.5, 0.75, 4.5],
@@ -50,27 +44,8 @@
 				"west": {"uv": [7.265, 1.515, 8.242, 2.242], "texture": "#0"},
 				"up": {"uv": [4.742, 1.992, 3.515, 1.015], "texture": "#0"},
 				"down": {"uv": [1.242, 4.015, 0.008, 4.992], "texture": "#0"}
-			}
-		},
-		{
-			"from": [7, 3.75, 3.5],
-			"to": [9, 4.75, 8.5],
-			"rotation": {"angle": 0, "axis": "y", "origin": [-0.5, 0, 0]},
-			"faces": {
-				"east": {"uv": [13.5, 3.508, 16, 4.008], "texture": "#1", "tintindex": 0},
-				"west": {"uv": [13.5, 3.508, 16, 4.008], "texture": "#1", "tintindex": 0},
-				"up": {"uv": [14.5, 4.008, 13.5, 1.508], "texture": "#1", "tintindex": 0}
-			}
-		},
-		{
-			"from": [6.5, 3.25, 4.5],
-			"to": [9.5, 5.25, 8.5],
-			"rotation": {"angle": 0, "axis": "y", "origin": [-0.5, 0, 0]},
-			"faces": {
-				"east": {"uv": [11.008, 0.008, 11.492, 1.125], "rotation": 90, "texture": "#0", "tintindex": 0},
-				"west": {"uv": [11.008, 0.008, 11.492, 1.125], "rotation": 90, "texture": "#0", "tintindex": 0},
-				"up": {"uv": [11.008, 0.008, 11.742, 1.125], "texture": "#0", "tintindex": 0}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [5, 1, 0.5],
@@ -82,7 +57,8 @@
 				"south": {"uv": [5.515, 6.765, 6.985, 7.985], "texture": "#0"},
 				"west": {"uv": [8.015, 0.015, 8.985, 1.235], "texture": "#0"},
 				"up": {"uv": [8.735, 2.235, 7.265, 1.265], "texture": "#0"}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [6, 1.075, -2.25],
@@ -94,7 +70,8 @@
 				"west": {"uv": [3.765, 8.265, 4.735, 9.235], "texture": "#0"},
 				"up": {"uv": [9.735, 2.235, 8.765, 1.265], "texture": "#0"},
 				"down": {"uv": [5.735, 8.765, 4.765, 9.735], "texture": "#0"}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [10.375, -0.4, -5.5],
@@ -103,7 +80,8 @@
 			"faces": {
 				"up": {"uv": [7.492, 5.242, 6.508, 3.508], "texture": "#0"},
 				"down": {"uv": [7.492, 3.508, 6.508, 5.242], "texture": "#0"}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [1.425, -0.4, -5.5],
@@ -112,7 +90,8 @@
 			"faces": {
 				"up": {"uv": [6.508, 5.242, 7.492, 3.508], "texture": "#0"},
 				"down": {"uv": [6.508, 3.508, 7.492, 5.242], "texture": "#0"}
-			}
+			},
+				"portalcubed:render_type": "cutout"
 		},
 		{
 			"from": [8, 4.875, -5.5],
@@ -121,6 +100,37 @@
 			"faces": {
 				"east": {"uv": [6.508, 5.225, 7.492, 3.508], "rotation": 90, "texture": "#0"},
 				"west": {"uv": [6.508, 3.508, 7.492, 5.242], "rotation": 90, "texture": "#0"}
+			},
+				"portalcubed:render_type": "cutout"
+		},
+		{
+			"from": [7, 3.75, 3.5],
+			"to": [9, 4.75, 8.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-0.5, 0, 0]},
+			"faces": {
+				"east": {"uv": [13.5, 3.508, 16, 4.008], "texture": "#1", "tintindex": 0},
+				"west": {"uv": [13.5, 3.508, 16, 4.008], "texture": "#1", "tintindex": 0},
+				"up": {"uv": [14.5, 4.008, 13.5, 1.508], "texture": "#1", "tintindex": 0}
+			},
+				"portalcubed:render_type": "cutout"
+		},
+		{
+			"from": [7.5, 6.025, 10.5],
+			"to": [8.5, 6.025, 11.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-0.5, 0, 0]},
+			"faces": {
+				"up": {"uv": [4.515, 7.515, 4.015, 7.015], "texture": "#1", "tintindex": 0}
+			},
+				"portalcubed:render_type": "cutout"
+		},
+		{
+			"from": [6.5, 3.25, 4.5],
+			"to": [9.5, 5.25, 8.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-0.5, 0, 0]},
+			"faces": {
+				"east": {"uv": [11.016, 0, 12.484, 2.484], "rotation": 90, "texture": "#1", "tintindex": 0},
+				"west": {"uv": [11.016, 0, 12.484, 2.484], "rotation": 90, "texture": "#1", "tintindex": 0},
+				"up": {"uv": [11.016, 0, 12.484, 2.484], "rotation": 90, "texture": "#1", "tintindex": 0}
 			}
 		}
 	],

@@ -1403,15 +1403,15 @@
   },
   "matter_inquisition_field_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "physics_repulsion_field_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "fizzler_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "portal_1_fizzler": {
     "type": "provided",
@@ -1427,7 +1427,7 @@
   },
   "old_aperture_fizzler_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "death_fizzler": {
     "type": "provided",
@@ -1435,7 +1435,7 @@
   },
   "death_fizzler_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "laser_fizzler": {
     "type": "provided",
@@ -1443,7 +1443,7 @@
   },
   "laser_fizzler_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "old_aperture_death_fizzler": {
     "type": "provided",
@@ -1451,7 +1451,7 @@
   },
   "old_aperture_death_fizzler_emitter": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "power_block": {
     "type": "provided",

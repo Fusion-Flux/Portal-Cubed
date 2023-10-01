@@ -1,6 +1,123 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "portalcubed:item/portal_2_laser_field_icon"
-  }
+	"credit": "Made by Cart3r using Blockbench.",
+	"textures": {
+		"0": "portalcubed:item/portal_2_laser_field_icon",
+		"particle": "portalcubed:item/portal_2_laser_field_icon"
+	},
+	"elements": [
+		{
+			"name": "portal_2_fizzler_icon_5",
+			"from": [11, 3, 7.5],
+			"to": [12, 12, 8.5],
+			"faces": {
+				"east": {"uv": [11.032, 4.032, 11.968, 12.968], "texture": "#0"},
+				"west": {"uv": [11.032, 4.032, 11.968, 12.968], "texture": "#0"},
+				"up": {"uv": [11.032, 4.032, 11.968, 4.968], "texture": "#0"},
+				"down": {"uv": [11.032, 12.032, 11.968, 12.968], "texture": "#0"}
+			}
+		},
+		{
+			"name": "portal_2_fizzler_icon_4",
+			"from": [4, 3, 7.5],
+			"to": [5, 12, 8.5],
+			"faces": {
+				"east": {"uv": [4.032, 4.032, 4.968, 12.968], "texture": "#0"},
+				"west": {"uv": [4.032, 4.032, 4.968, 12.968], "texture": "#0"},
+				"up": {"uv": [4.032, 4.032, 4.968, 4.968], "texture": "#0"},
+				"down": {"uv": [4.032, 12.032, 4.968, 12.968], "texture": "#0"}
+			}
+		},
+		{
+			"name": "portal_2_fizzler_icon_3",
+			"from": [12, 1, 7.5],
+			"to": [13, 14, 8.5],
+			"faces": {
+				"east": {"uv": [12.032, 2.032, 12.968, 14.968], "texture": "#0"},
+				"west": {"uv": [12.032, 2.032, 12.968, 14.968], "texture": "#0"},
+				"up": {"uv": [12.032, 2.032, 12.968, 2.968], "texture": "#0"},
+				"down": {"uv": [12.032, 14.032, 12.968, 14.968], "texture": "#0"}
+			}
+		},
+		{
+			"name": "portal_2_fizzler_icon_2",
+			"from": [3, 1, 7.5],
+			"to": [4, 14, 8.5],
+			"faces": {
+				"east": {"uv": [3.032, 2.032, 3.968, 14.968], "texture": "#0"},
+				"west": {"uv": [3.032, 2.032, 3.968, 14.968], "texture": "#0"},
+				"up": {"uv": [3.032, 2.032, 3.968, 2.968], "texture": "#0"},
+				"down": {"uv": [3.032, 14.032, 3.968, 14.968], "texture": "#0"}
+			}
+		},
+		{
+			"name": "portal_2_fizzler_icon_1",
+			"from": [13, 0, 7.5],
+			"to": [15, 15, 8.5],
+			"faces": {
+				"north": {"uv": [14.968, 1.032, 13.032, 15.968], "texture": "#0"},
+				"east": {"uv": [14.032, 1.032, 14.968, 15.968], "texture": "#0"},
+				"south": {"uv": [13.032, 1.032, 14.968, 15.968], "texture": "#0"},
+				"west": {"uv": [13.032, 1.032, 13.968, 15.968], "texture": "#0"},
+				"up": {"uv": [13.032, 1.032, 14.968, 1.968], "texture": "#0"},
+				"down": {"uv": [13.032, 15.032, 14.968, 15.968], "texture": "#0"}
+			}
+		},
+		{
+			"name": "portal_2_fizzler_icon_0",
+			"from": [1, 0, 7.5],
+			"to": [3, 15, 8.5],
+			"faces": {
+				"north": {"uv": [2.968, 1.032, 1.032, 15.968], "texture": "#0"},
+				"east": {"uv": [2.032, 1.032, 2.968, 15.968], "texture": "#0"},
+				"south": {"uv": [1.032, 1.032, 2.968, 15.968], "texture": "#0"},
+				"west": {"uv": [1.032, 1.032, 1.968, 15.968], "texture": "#0"},
+				"up": {"uv": [1.032, 1.032, 2.968, 1.968], "texture": "#0"},
+				"down": {"uv": [1.032, 15.032, 2.968, 15.968], "texture": "#0"}
+			}
+		},
+		{
+			"name": "transparent",
+			"from": [3, 0, 7.5],
+			"to": [13, 15, 8.5],
+			"faces": {
+				"north": {"uv": [13, 1, 3, 16], "texture": "#0"},
+				"south": {"uv": [13, 1, 3, 16], "texture": "#0"},
+				"up": {"uv": [3.032, 1.032, 12.968, 1.968], "texture": "#0"},
+				"down": {"uv": [3.032, 1.032, 12.968, 1.968], "texture": "#0"}
+			},
+				"portalcubed:render_type": "translucent"
+		}
+	],
+	"gui_light": "front",
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, 3, 1],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, 3, 1],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -90, 25],
+			"translation": [1.13, 3.2, 1.13],
+			"scale": [0.68, 0.68, 0.68]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -90, 25],
+			"translation": [1.13, 3.2, 1.13],
+			"scale": [0.68, 0.68, 0.68]
+		},
+		"ground": {
+			"translation": [0, 2, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"head": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 13, 7]
+		},
+		"fixed": {
+			"rotation": [0, 180, 0]
+		}
+	}
 }
