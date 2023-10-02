@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+    "pattern": [
+    "EN",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:white_concrete"
+    },
+    "E": {
+      "item": "minecraft:black_dye"
+    },
+    "N": {
+      "item": "minecraft:gray_dye"
+    }
+  },
+  "result": {
+    "item": "portalcubed:light_borderless_office_concrete",
+    "count": 16
+  }
+}

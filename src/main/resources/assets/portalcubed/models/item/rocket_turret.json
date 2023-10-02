@@ -3,8 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "portalcubed:block/rocket_turret_inactive",
-		"1": "portalcubed:block/solid_office_concrete",
-		"2": "portalcubed:block/bordered_office_concrete",
+		"1": "portalcubed:block/dark_borderless_office_concrete",
 		"particle": "portalcubed:block/rocket_turret_inactive"
 	},
 	"elements": [
@@ -78,7 +77,7 @@
 				"east": {"uv": [0.008, 0.008, 15.992, 15.992], "texture": "#1"},
 				"south": {"uv": [0.008, 0.008, 15.992, 15.992], "texture": "#1"},
 				"west": {"uv": [0.008, 0.008, 15.992, 15.992], "texture": "#1"},
-				"down": {"uv": [0.008, 0.008, 15.992, 15.992], "texture": "#2"}
+				"down": {"uv": [0.008, 0.008, 15.992, 15.992], "texture": "#1"}
 			}
 		}
 	],

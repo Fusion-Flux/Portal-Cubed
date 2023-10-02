@@ -135,7 +135,9 @@
       "portalcubed:portal_1_elevator_wall_middle",
       "portalcubed:portal_1_elevator_wall_bottom",
       "portalcubed:solid_office_concrete",
-      "portalcubed:bordered_office_concrete",
+      "portalcubed:capped_office_concrete",
+      "portalcubed:light_borderless_office_concrete",
+      "portalcubed:dark_borderless_office_concrete",
 
       "portalcubed:portal_1_rusted_plating",
       "portalcubed:portal_1_rusted_tread_plating",

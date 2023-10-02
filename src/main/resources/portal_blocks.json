@@ -48,8 +48,14 @@
   "solid_office_concrete": {
     "map_color": "terracotta_cyan"
   },
-  "bordered_office_concrete": {
+  "capped_office_concrete": {
+    "map_color": "terracotta_cyan"
+  },
+  "dark_borderless_office_concrete": {
     "map_color": "terracotta_brown"
+  },
+  "light_borderless_office_concrete": {
+    "map_color": "terracotta_black"
   },
   "portal_1_smooth_tiles": {
     "map_color": "terracotta_light_gray"

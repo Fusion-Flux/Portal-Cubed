@@ -18,8 +18,10 @@
     "minecraft:red_concrete",
     "minecraft:black_concrete",
     "portalcubed:office_concrete",
-    "portalcubed:bordered_office_concrete",
+    "portalcubed:light_borderless_office_concrete",
+    "portalcubed:dark_borderless_office_concrete",
     "portalcubed:solid_office_concrete",
+    "portalcubed:capped_office_concrete",
     "portalcubed:blue_office_concrete",
     "portalcubed:striped_office_concrete"
   ]

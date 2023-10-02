@@ -7,7 +7,7 @@
 "entries": [
  {
 "type": "minecraft:item",
-"name": "portalcubed:bordered_office_concrete"
+"name": "portalcubed:light_borderless_office_concrete"
 }
 ],
 "conditions": [

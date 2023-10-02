@@ -3,9 +3,9 @@
 	"textures": {
 		"0": "portalcubed:block/neurotoxin_emitter_vent",
 		"1": "portalcubed:block/neurotoxin_emitter_front",
-		"2": "portalcubed:block/dirty_borderless_panel",
+		"2": "portalcubed:block/dark_borderless_office_concrete",
 		"3": "portalcubed:block/neurotoxin_emitter_background",
-		"particle": "portalcubed:block/dirty_borderless_panel"
+		"particle": "portalcubed:block/dark_borderless_office_concrete"
 	},
 	"elements": [
 		{

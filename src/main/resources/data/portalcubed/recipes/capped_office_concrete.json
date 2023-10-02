@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+    "pattern": [
+    "EN",
+    "GG",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:white_concrete"
+    },
+    "G": {
+      "item": "minecraft:light_gray_concrete"
+    },
+    "E": {
+      "item": "minecraft:blue_dye"
+    },
+    "N": {
+      "item": "minecraft:gray_dye"
+    }
+  },
+  "result": {
+    "item": "portalcubed:capped_office_concrete",
+    "count": 16
+  }
+}

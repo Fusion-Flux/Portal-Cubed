@@ -39,7 +39,9 @@
     "portalcubed:old_ap_white_2x2_panel_bottom_right",
     "portalcubed:office_concrete",
     "portalcubed:solid_office_concrete",
-    "portalcubed:bordered_office_concrete",
+    "portalcubed:capped_office_concrete",
+    "portalcubed:dark_borderless_office_concrete",
+    "portalcubed:light_borderless_office_concrete",
     "portalcubed:striped_office_concrete",
     "portalcubed:blue_office_concrete"
 

@@ -323,8 +323,10 @@
   "block.portalcubed.portal_2_metal_grating": "Portal 2 Metal Grating",
 
   "block.portalcubed.office_concrete": "Horizontal Office Concrete + Orange Tiling",
-  "block.portalcubed.solid_office_concrete": "Vertical Office Concrete + Blue Tiling",
-  "block.portalcubed.bordered_office_concrete": "Bordered Office Concrete + Brown Tiling",
+  "block.portalcubed.solid_office_concrete": "Vertical Office Concrete + Small Blue Tiling",
+  "block.portalcubed.capped_office_concrete": "Capped Vertical Office Concrete + Large Blue Tiling",
+  "block.portalcubed.dark_borderless_office_concrete": "Dark Borderless Office Concrete + Brown Tiling",
+  "block.portalcubed.light_borderless_office_concrete": "Light Borderless Office Concrete + Black Tiling",
   "block.portalcubed.blue_office_concrete": "Blue Horizontal Office Concrete + Tread Plating",
   "block.portalcubed.striped_office_concrete": "Striped Horizontal Office Concrete + Gray Tiling",
 

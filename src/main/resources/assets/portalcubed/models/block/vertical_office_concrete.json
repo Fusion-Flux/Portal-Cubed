@@ -1,9 +1,9 @@
 {
 	"credit": "Made by Cart3r using Blockbench.",
 	"textures": {
-		"particle": "portalcubed:block/blue_office_tiles",
-		"end": "portalcubed:block/blue_office_tiles",
-		"side": "portalcubed:block/solid_office_concrete"
+		"particle": "portalcubed:block/small_blue_office_tiles",
+		"end": "portalcubed:block/small_blue_office_tiles",
+		"side": "portalcubed:block/vertical_office_concrete"
 	},
 	"elements": [
 		{
