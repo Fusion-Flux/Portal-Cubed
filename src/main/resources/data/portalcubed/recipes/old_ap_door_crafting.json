@@ -8,13 +8,13 @@
     ],
     "key": {
         "X": {
-            "tag": "minecraft:logs"
+            "tag": "minecraft:planks"
         },
         "Y": {
             "tag": "c:lime_dyes"
         },
         "Z": {
-            "item": "minecraft:iron_nugget"
+            "item": "minecraft:iron_ingot"
         }
     },
     "result": {

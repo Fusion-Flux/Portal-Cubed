@@ -14,7 +14,7 @@
             "tag": "c:cyan_dyes"
         },
         "Z": {
-            "item": "minecraft:iron_nugget"
+            "item": "minecraft:iron_ingot"
         }
     },
     "result": {
