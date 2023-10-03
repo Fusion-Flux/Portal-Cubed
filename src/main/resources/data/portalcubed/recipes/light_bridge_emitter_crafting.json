@@ -8,7 +8,7 @@
     ],
     "key": {
         "X": {
-            "tag": "portalcubed:portal_2_clean_gray_panels"
+            "item": "minecraft:iron_ingot"
         },
         "Y": {
             "item": "minecraft:redstone"

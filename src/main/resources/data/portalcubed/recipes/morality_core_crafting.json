@@ -5,6 +5,9 @@
       "item": "portalcubed:core_frame"
     },
     {
+      "item": "minecraft:compass"
+    },
+    {
       "tag": "c:purple_dyes"
     }
   ],

@@ -8,12 +8,12 @@
             "tag": "c:orange_dyes"
         },
         {
-            "item": "minecraft:packed_ice"
+            "item": "minecraft:ice"
         }
     ],
     "result": {
         "item": "portalcubed:propulsion_gel",
-        "count": 2
+        "count": 4
     },
   "group": "gels"
 }
