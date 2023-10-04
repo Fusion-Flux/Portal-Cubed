@@ -451,7 +451,7 @@
   "portalcubed.midnightconfig.portalHudMode": "Use Portal HUD",
   "portalcubed.midnightconfig.gelOverlayOpacity": "Gel Screen Overlay Opacity",
   "portalcubed.midnightconfig.staticPortalItemDrops": "Static Portal Item Drops",
-  "portalcubed.midnightconfig.renderer": "Portal Renderer (in development)",
+  "portalcubed.midnightconfig.portalRenderingLayers": "Portal Rendering Layers (in development)",
   "portalcubed.midnightconfig.enum.PortalRenderers.DISABLED": "Disabled",
   "portalcubed.midnightconfig.enum.PortalRenderers.STENCIL": "Stencil",
   "portalcubed.midnightconfig.enum.PortalRenderers.FRAMEBUFFER": "Framebuffer",

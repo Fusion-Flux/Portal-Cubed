@@ -1,5 +1,6 @@
 accessWidener	v1	named
 accessible  class   net/minecraft/client/renderer/RenderType$CompositeState
-accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
-accessible	class	net/minecraft/client/resources/model/ModelBakery$BakedCacheKey
-accessible	field	net/minecraft/client/resources/model/ModelBakery	bakedCache	Ljava/util/Map;
+accessible  class   net/minecraft/client/renderer/RenderStateShard$TextureStateShard
+accessible  class   net/minecraft/client/resources/model/ModelBakery$BakedCacheKey
+accessible  field   net/minecraft/client/resources/model/ModelBakery    bakedCache  Ljava/util/Map;
+accessible  class   net/minecraft/client/renderer/LevelRenderer$RenderChunkInfo

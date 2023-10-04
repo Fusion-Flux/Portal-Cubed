@@ -19,8 +19,7 @@ import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.animatedtextures.AnimatedEntityTextures;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
-import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
-import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
+import com.fusionflux.portalcubed.client.render.portal.PortalRendering;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.entity.PortalCubedEntities;
 import com.fusionflux.portalcubed.fluids.PortalCubedFluids;
@@ -75,7 +74,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableDouble;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -135,9 +133,6 @@ public class PortalCubedClient implements ClientModInitializer {
 
 	public static int gelOverlayTimer = -1;
 	public static ResourceLocation gelOverlayTexture = TextureManager.INTENTIONAL_MISSING_TEXTURE;
-
-	private static PortalRendererImpl renderer;
-	private static PortalRenderers rendererType;
 
 	public static IPQuaternion cameraInterpStart;
 	public static long cameraInterpStartTime;
@@ -320,6 +315,7 @@ public class PortalCubedClient implements ClientModInitializer {
 			RenderSystem.depthFunc(GL11.GL_LEQUAL);
 			RenderSystem.enableCull();
 		});
+		PortalRendering.init();
 
 		PortalBlocksLoader.initClient();
 
@@ -802,15 +798,6 @@ public class PortalCubedClient implements ClientModInitializer {
 
 	public static int globalAdvancementsSize() {
 		return GLOBAL_ADVANCEMENTS.size();
-	}
-
-	@NotNull
-	public static PortalRendererImpl getRenderer() {
-		if (rendererType != PortalCubedConfig.renderer) {
-			rendererType = PortalCubedConfig.renderer;
-			renderer = rendererType.creator.get();
-		}
-		return renderer;
 	}
 
 	public static Optional<IPQuaternion> interpCamera() {

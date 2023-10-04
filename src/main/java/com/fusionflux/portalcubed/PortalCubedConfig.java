@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed;
 
-import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
 import eu.midnightdust.lib.config.MidnightConfig;
 
 @SuppressWarnings("CanBeFinal")
@@ -16,7 +15,7 @@ public class PortalCubedConfig extends MidnightConfig {
 	@Entry @Client public static boolean portalHudMode = false;
 	@Entry(min = 0, max = 100, isSlider = true) @Client public static int gelOverlayOpacity = 100;
 	@Entry @Client public static boolean staticPortalItemDrops = true;
-	@Entry @Client public static PortalRenderers renderer = PortalRenderers.DISABLED;
+	@Entry(min = 0, max = 4, isSlider = true) @Client public static int portalRenderingLayers = 1;
 	@Entry @Client public static boolean crossPortalEntityRendering = true;
 	@Entry(min = 0, max = 1000, isSlider = true) @Client public static int portalSmoothTime = 250;
 }

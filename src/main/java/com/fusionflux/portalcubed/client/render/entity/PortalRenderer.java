@@ -5,7 +5,6 @@ import com.fusionflux.portalcubed.accessor.LevelExt;
 import com.fusionflux.portalcubed.client.PortalCubedClient;
 import com.fusionflux.portalcubed.client.render.entity.model.PortalModel;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
-import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.entity.Portal;
 import com.fusionflux.portalcubed.util.GeneralUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -69,7 +68,7 @@ public class PortalRenderer extends EntityRenderer<Portal> {
 			matrices.scale(progress, progress, progress);
 		}
 
-		renderPortal(matrices, vertexConsumers, entity, light, r, g, b, tickDelta);
+		model.renderToBuffer(matrices, vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity))), light, OverlayTexture.NO_OVERLAY, r, g, b, 1F);
 
 		matrices.popPose();
 
@@ -98,27 +97,6 @@ public class PortalRenderer extends EntityRenderer<Portal> {
 				1f, 0.55f, 0f, 1f,
 				true
 			);
-		}
-	}
-
-	public void renderPortal(
-		PoseStack poseStack,
-		MultiBufferSource vertexConsumers,
-		Portal entity,
-		int light,
-		int r,
-		int g,
-		int b,
-		float tickDelta
-	) {
-		final PortalRendererImpl renderer = PortalCubedClient.getRenderer();
-		final boolean renderContents = renderPhase == renderer.targetPhase() && renderer.enabled(entity);
-		if (renderContents) {
-			renderer.preRender(entity, tickDelta, poseStack, vertexConsumers);
-		}
-		model.renderToBuffer(poseStack, vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity))), light, OverlayTexture.NO_OVERLAY, r, g, b, 1F);
-		if (renderContents) {
-			renderer.postRender(entity, tickDelta, poseStack, vertexConsumers);
 		}
 	}
 
