@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.mixin.client;
 
 import com.fusionflux.portalcubed.accessor.BakedQuadExt;
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -10,15 +11,16 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 @Mixin(BakedQuad.class)
 public class BakedQuadMixin implements BakedQuadExt {
 	@Unique
-	private String portalcubed$renderType;
+	private RenderMaterial material;
 
 	@Override
-	public @Nullable String portalcubed$getRenderType() {
-		return portalcubed$renderType;
+	@Nullable
+	public RenderMaterial portalcubed$getRenderMaterial() {
+		return this.material;
 	}
 
 	@Override
-	public void portalcubed$setRenderType(String type) {
-		portalcubed$renderType = type;
+	public void portalcubed$setRenderMaterial(RenderMaterial material) {
+		this.material = material;
 	}
 }

@@ -49,7 +49,6 @@
     "client.LocalPlayerMixin",
     "client.MinecraftAccessor",
     "client.MinecraftMixin",
-    "client.ModelBakery_ModelBakerImplMixin",
     "client.ModelManagerAccessor",
     "client.MouseHandlerMixin",
     "client.MultiPlayerGameModeMixin",

@@ -1,5 +1,6 @@
 package com.fusionflux.portalcubed.client.render.block;
 
+import com.fusionflux.portalcubed.client.render.models.emissive.EmissiveBakedModel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 
@@ -14,7 +15,7 @@ public final class EmissiveSpriteRegistry {
 	}
 
 	public static void register(ResourceLocation modelId, ResourceLocation spriteId) {
-		EmissiveBakedModel.register(modelId);
+//		EmissiveBakedModel.register(modelId);
 		register(spriteId);
 	}
 

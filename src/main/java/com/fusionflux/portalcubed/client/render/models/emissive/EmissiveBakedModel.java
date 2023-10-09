@@ -1,5 +1,7 @@
-package com.fusionflux.portalcubed.client.render.block;
+package com.fusionflux.portalcubed.client.render.models.emissive;
 
+import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
+import com.fusionflux.portalcubed.client.render.models.RenderMaterials;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
@@ -89,11 +91,12 @@ public final class EmissiveBakedModel extends ForwardingBakedModel {
 	}
 
 	private static RenderMaterial makeEmissiveMaterial(RenderMaterial base) {
-		return RenderMaterials.FINDER.copyFrom(base)
-				.emissive(true)
-				.disableDiffuse(true)
-				.ambientOcclusion(TriState.FALSE)
-				.find();
+		throw new RuntimeException("a");
+//		return RenderMaterials.FINDER.copyFrom(base)
+//				.emissive(true)
+//				.disableDiffuse(true)
+//				.ambientOcclusion(TriState.FALSE)
+//				.find();
 	}
 
 	private static SpriteFinder getSpriteFinder() {

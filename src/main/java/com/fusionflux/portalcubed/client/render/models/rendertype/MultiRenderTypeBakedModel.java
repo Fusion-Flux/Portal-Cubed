@@ -1,4 +1,4 @@
-package com.fusionflux.portalcubed.client.render.block;
+package com.fusionflux.portalcubed.client.render.models.rendertype;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.fusionflux.portalcubed.accessor.BakedQuadExt;
+import com.fusionflux.portalcubed.client.render.models.RenderMaterials;
 import com.fusionflux.portalcubed.mixin.client.SimpleBakedModelAccessor;
-import com.google.gson.JsonParseException;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
@@ -25,18 +25,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class MultiRenderTypeSimpleBakedModel extends ForwardingBakedModel {
-	public static final Map<String, Supplier<RenderMaterial>> SUPPORTED_TYPES = Map.of(
-			"default", () -> RenderMaterials.DEFAULT_MATERIAL,
-			"solid", () -> RenderMaterials.SOLID_MATERIAL,
-			"cutout", () -> RenderMaterials.CUTOUT_MATERIAL,
-			"translucent", () -> RenderMaterials.TRANSLUCENT_MATERIAL
-	);
-	public static final String SUPPORTED_TYPE_LIST = String.join(", ", SUPPORTED_TYPES.keySet());
-
+public class MultiRenderTypeBakedModel extends ForwardingBakedModel {
 	protected List<Triple<BakedQuad, RenderMaterial, Direction>> quads = new ArrayList<>();
 
-	public MultiRenderTypeSimpleBakedModel(SimpleBakedModel model) {
+	public MultiRenderTypeBakedModel(SimpleBakedModel model) {
 		this.wrapped = model;
 
 		List<BakedQuad> unculled = ((SimpleBakedModelAccessor) model).getUnculledFaces();
@@ -48,10 +40,10 @@ public class MultiRenderTypeSimpleBakedModel extends ForwardingBakedModel {
 	}
 
 	private void addQuad(BakedQuad quad, @Nullable Direction cullFace) {
-		String renderType = ((BakedQuadExt) quad).portalcubed$getRenderType();
-		if (renderType == null)
-			renderType = "default";
-		RenderMaterial material = parseType(renderType);
+		RenderMaterial material = ((BakedQuadExt) quad).portalcubed$getRenderMaterial();
+		if (material == null) {
+			material = RenderMaterials.DEFAULT;
+		}
 		this.quads.add(Triple.of(quad, material, cullFace));
 	}
 
@@ -84,12 +76,5 @@ public class MultiRenderTypeSimpleBakedModel extends ForwardingBakedModel {
 	@Override
 	public boolean isVanillaAdapter() {
 		return false;
-	}
-
-	public static RenderMaterial parseType(String name) throws JsonParseException {
-		Supplier<RenderMaterial> type = SUPPORTED_TYPES.get(name);
-		if (type != null)
-			return type.get();
-		throw new JsonParseException(name + " is not a supported RenderType. must be one of: " + SUPPORTED_TYPE_LIST);
 	}
 }

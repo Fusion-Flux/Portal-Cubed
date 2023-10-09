@@ -1,10 +1,11 @@
 package com.fusionflux.portalcubed.accessor;
 
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import org.jetbrains.annotations.Nullable;
 
 public interface BakedQuadExt {
 	@Nullable
-	String portalcubed$getRenderType();
+	RenderMaterial portalcubed$getRenderMaterial();
 
-	void portalcubed$setRenderType(String type);
+	void portalcubed$setRenderMaterial(RenderMaterial material);
 }
