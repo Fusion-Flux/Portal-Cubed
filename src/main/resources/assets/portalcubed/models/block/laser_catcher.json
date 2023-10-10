@@ -21,7 +21,7 @@
 			}
 		},
 		{
-			"name": "translucent",
+			"name": "transparent",
 			"from": [-0.01, 15.99, -0.01],
 			"to": [16.01, 17.01, 16.01],
 			"rotation": {"angle": 0, "axis": "y", "origin": [16, 23, 0]},
@@ -34,7 +34,7 @@
 			}
 		},
 		{
-			"name": "translucent",
+			"name": "transparent",
 			"from": [15.9, 16.75, 0.1],
 			"to": [0.075, 16.75, 15.9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [16, 23, 0]},
@@ -143,5 +143,8 @@
 			"rotation": [-90, 0, 0],
 			"scale": [0.5, 0.5, 0.5]
 		}
+	},
+	"portalcubed:render_types": {
+		"translucent": ["transparent"]
 	}
 }

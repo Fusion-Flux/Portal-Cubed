@@ -40,9 +40,11 @@
   "subtitles.portalcubed.pellet.spawn": "Energy pellet launches",
 
   "subtitles.portalcubed.crowbar_swoosh": "Crowbar swooshes",
+  "subtitles.portalcubed.impact.concrete": "Concrete crumbles",
+  "subtitles.portalcubed.impact.metal": "Metal clanks",
+  "subtitles.portalcubed.impact.glass": "Glass cracks",
 
   "subtitles.portalcubed.faith_plate": "Faith plate activates",
-
 
   "advancement.portalcubed.root.title": "Portal Cubed",
   "advancement.portalcubed.root.description": "Welcome to Aperture Science! You're here because we want the best, and you are it.",
@@ -82,7 +84,7 @@
   "advancement.portalcubed.pellet_bounce.description": "Bounce a High Energy Pellet at least 35 times before it expires",
 
   "advancement.portalcubed.laser.title": "It Burns, Ah!",
-  "advancement.portalcubed.laser.description": "Touch a Thermal Discouragement Beam and become thermally discouraged",
+  "advancement.portalcubed.laser.description": "Touch a Thermal Discouragement Beam and become thermally discouraged from doing it again",
 
   "advancement.portalcubed.goo.title": "The Floor is Failure",
   "advancement.portalcubed.goo.description": "Submerse yourself in a pool of Toxic Goo and receive an unsatisfactory mark to your record",
@@ -442,7 +444,7 @@
 
   "portalcubed.midnightconfig.title": "Portal Cubed Config",
   "portalcubed.midnightconfig.maxBridgeLength": "Maximum Emitter Block Range",
-  "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
+  "portalcubed.midnightconfig.enableRoundPortals": "Use Round Portal Texture",
   "portalcubed.midnightconfig.enableAccurateMovement": "Long Fall Boots Enable Source-Accurate Movement",
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
@@ -463,7 +465,7 @@
   "death.attack.fizzle": "%s was fizzled",
   "death.attack.fizzle.player": "%1$s was pushed into a fizzler by %2$s",
   "death.attack.vaporization": "%s was vaporized by a High Energy Pellet",
-  "death.attack.vaporization.player": "%1$s was vaporized by a High Energy Pellet because of %2$s",
+  "death.attack.vaporization.player": "%1$s was vaporized by a High Energy Pellet trying to escape %2$s",
   "death.attack.laser": "%s was thermally discouraged",
   "death.attack.laser.player": "%1$s was thermally discouraged trying to escape %2$s",
   "death.attack.cube": "%s was hit on the head by a falling Weighted Cube",

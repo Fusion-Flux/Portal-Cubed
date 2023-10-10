@@ -366,7 +366,8 @@
 			"portalcubed:bullet/concrete_impact_bullet2",
 			"portalcubed:bullet/concrete_impact_bullet3",
 			"portalcubed:bullet/concrete_impact_bullet4"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.impact.concrete"
 	},
 	"bullet/glass": {
 		"sounds": [
@@ -374,7 +375,8 @@
 			"portalcubed:bullet/glass_impact_bullet2",
 			"portalcubed:bullet/glass_impact_bullet3",
 			"portalcubed:bullet/glass_impact_bullet4"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.impact.glass"
 	},
 	"bullet/metal": {
 		"sounds": [
@@ -382,7 +384,8 @@
 			"portalcubed:bullet/metal_solid_impact_bullet2",
 			"portalcubed:bullet/metal_solid_impact_bullet3",
 			"portalcubed:bullet/metal_solid_impact_bullet4"
-		]
+		],
+		"subtitle": "subtitles.portalcubed.impact.metal"
 	},
 
 	"radio": {

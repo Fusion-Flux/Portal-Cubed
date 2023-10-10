@@ -1397,7 +1397,7 @@
   },
   "old_ap_floor_button": {
     "type": "provided",
-    "render_layer": "translucent"
+    "render_layer": "cutout"
   },
   "matter_inquisition_field": {
     "type": "provided",

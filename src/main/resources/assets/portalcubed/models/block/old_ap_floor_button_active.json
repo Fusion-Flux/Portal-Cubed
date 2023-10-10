@@ -121,6 +121,7 @@
 			}
 		},
 		{
+			"name": "transparent",
 			"from": [-2.52, 17.555, -2.52],
 			"to": [18.52, 18.595, 18.52],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 18.075, 8]},
@@ -165,5 +166,8 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
+	},
+	"portalcubed:render_types": {
+		"translucent": ["transparent"]
 	}
 }

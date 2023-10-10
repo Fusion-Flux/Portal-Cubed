@@ -11,6 +11,7 @@
     "minecraft:lava",
     "minecraft:nether_portal",
     "minecraft:end_portal",
+    "#minecraft:all_signs",
     "portalcubed:portal_1_smooth_gray_panel_facade",
     "portalcubed:portal_1_smooth_gray_half_panel_facade",
     "portalcubed:dirty_portal_1_smooth_gray_panel_facade",

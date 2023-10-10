@@ -58,7 +58,15 @@
     },
     {
       "type": "single",
+      "resource": "portalcubed:entity/radio_e"
+    },
+    {
+      "type": "single",
       "resource": "portalcubed:entity/companion_cube"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/companion_cube_e"
     },
     {
       "type": "single",
@@ -66,11 +74,23 @@
     },
     {
       "type": "single",
+      "resource": "portalcubed:entity/storage_cube_e"
+    },
+    {
+      "type": "single",
       "resource": "portalcubed:entity/portal_1_cores"
     },
     {
       "type": "single",
+      "resource": "portalcubed:entity/portal_1_cores_e"
+    },
+    {
+      "type": "single",
       "resource": "portalcubed:entity/portal_2_cores"
+    },
+    {
+      "type": "single",
+      "resource": "portalcubed:entity/portal_2_cores_e"
     }
   ]
 }
