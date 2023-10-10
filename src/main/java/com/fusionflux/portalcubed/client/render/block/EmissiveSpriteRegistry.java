@@ -1,6 +1,5 @@
 package com.fusionflux.portalcubed.client.render.block;
 
-import com.fusionflux.portalcubed.client.render.models.emissive.EmissiveBakedModel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 

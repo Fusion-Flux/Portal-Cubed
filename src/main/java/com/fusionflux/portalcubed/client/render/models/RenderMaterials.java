@@ -1,6 +1,7 @@
 package com.fusionflux.portalcubed.client.render.models;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.fusionflux.portalcubed.PortalCubed;
@@ -11,26 +12,32 @@ import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.util.TriState;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.Util;
 
 public class RenderMaterials {
-	private static final Renderer renderer = RendererAccess.INSTANCE.getRenderer();
-	private static final MaterialFinder finder = renderer == null ? null : renderer.materialFinder();
+	@Nullable
+	private static final MaterialFinder finder = Util.make(() -> {
+		Renderer renderer = RendererAccess.INSTANCE.getRenderer();
+		return renderer == null ? null : renderer.materialFinder();
+	});
 
 	public static final boolean ARE_SUPPORTED = checkSupport();
 
 	public static final Map<String, RenderMaterial> BY_NAME = new HashMap<>();
 
-	public static final RenderMaterial DEFAULT = makeMaterial("default", BlendMode.DEFAULT, false);
-	public static final RenderMaterial SOLID = makeMaterial("solid", BlendMode.SOLID, false);
-	public static final RenderMaterial CUTOUT = makeMaterial("cutout", BlendMode.CUTOUT, false);
-	public static final RenderMaterial CUTOUT_MIPPED = makeMaterial("cutout_mipped", BlendMode.CUTOUT_MIPPED, false);
-	public static final RenderMaterial TRANSLUCENT = makeMaterial("translucent", BlendMode.TRANSLUCENT, false);
+	public static final RenderMaterial DEFAULT = makeMaterial(BlendMode.DEFAULT, false);
+	public static final RenderMaterial SOLID = makeMaterial(BlendMode.SOLID, false);
+	public static final RenderMaterial CUTOUT = makeMaterial(BlendMode.CUTOUT, false);
+	public static final RenderMaterial CUTOUT_MIPPED = makeMaterial(BlendMode.CUTOUT_MIPPED, false);
+	public static final RenderMaterial TRANSLUCENT = makeMaterial(BlendMode.TRANSLUCENT, false);
 
-	public static final RenderMaterial DEFAULT_EMISSIVE = makeMaterial("default_emissive", BlendMode.DEFAULT, true);
-	public static final RenderMaterial SOLID_EMISSIVE = makeMaterial("solid_emissive", BlendMode.SOLID, true);
-	public static final RenderMaterial CUTOUT_EMISSIVE = makeMaterial("cutout_emissive", BlendMode.CUTOUT, true);
-	public static final RenderMaterial CUTOUT_MIPPED_EMISSIVE = makeMaterial("cutout_mipped_emissive", BlendMode.CUTOUT_MIPPED, true);
-	public static final RenderMaterial TRANSLUCENT_EMISSIVE = makeMaterial("translucent_emissive", BlendMode.TRANSLUCENT, true);
+	public static final RenderMaterial DEFAULT_EMISSIVE = makeMaterial(BlendMode.DEFAULT, true);
+	public static final RenderMaterial SOLID_EMISSIVE = makeMaterial(BlendMode.SOLID, true);
+	public static final RenderMaterial CUTOUT_EMISSIVE = makeMaterial(BlendMode.CUTOUT, true);
+	public static final RenderMaterial CUTOUT_MIPPED_EMISSIVE = makeMaterial(BlendMode.CUTOUT_MIPPED, true);
+	public static final RenderMaterial TRANSLUCENT_EMISSIVE = makeMaterial(BlendMode.TRANSLUCENT, true);
 
 	public static final String SUPPORTED_TYPES = String.join(", ", BY_NAME.keySet());
 
@@ -52,15 +59,17 @@ public class RenderMaterials {
 		return material;
 	}
 
-	private static RenderMaterial makeMaterial(String name, BlendMode mode, boolean emissive) {
+	private static RenderMaterial makeMaterial(BlendMode mode, boolean emissive) {
 		if (finder == null)
 			return null;
 
 		finder.clear().blendMode(mode);
+		String name = mode.name().toLowerCase(Locale.ROOT);
 		if (emissive) {
 			finder.emissive(true)
 					.disableDiffuse(true)
 					.ambientOcclusion(TriState.FALSE);
+			name += "_emissive";
 		}
 		RenderMaterial material = finder.find();
 		BY_NAME.put(name, material);
@@ -68,7 +77,7 @@ public class RenderMaterials {
 	}
 
 	private static boolean checkSupport() {
-		if (renderer == null) {
+		if (finder == null) {
 			PortalCubed.LOGGER.error("No renderer present, rendering will be wrong. If you have Sodium, install Indium!");
 			return false;
 		}

@@ -39,11 +39,15 @@ public class MultiRenderTypeBakedModel extends ForwardingBakedModel {
 		culled.forEach((cullFace, quads) -> quads.forEach(quad -> addQuad(quad, cullFace)));
 	}
 
-	private void addQuad(BakedQuad quad, @Nullable Direction cullFace) {
+	protected void addQuad(BakedQuad quad, @Nullable Direction cullFace) {
 		RenderMaterial material = ((BakedQuadExt) quad).portalcubed$getRenderMaterial();
 		if (material == null) {
 			material = RenderMaterials.DEFAULT;
 		}
+		this.addQuad(quad, material, cullFace);
+	}
+
+	protected void addQuad(BakedQuad quad, RenderMaterial material, @Nullable Direction cullFace) {
 		this.quads.add(Triple.of(quad, material, cullFace));
 	}
 

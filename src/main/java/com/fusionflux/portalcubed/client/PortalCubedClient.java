@@ -14,11 +14,11 @@ import com.fusionflux.portalcubed.client.gui.VelocityHelperScreen;
 import com.fusionflux.portalcubed.client.packet.PortalCubedClientPackets;
 import com.fusionflux.portalcubed.client.render.models.PortalCubedModelLoadingPlugin;
 import com.fusionflux.portalcubed.client.render.PortalHud;
-import com.fusionflux.portalcubed.client.render.block.EmissiveSpriteRegistry;
 import com.fusionflux.portalcubed.client.render.block.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.*;
 import com.fusionflux.portalcubed.client.render.entity.animatedtextures.AnimatedEntityTextures;
 import com.fusionflux.portalcubed.client.render.entity.model.*;
+import com.fusionflux.portalcubed.client.render.models.emissive.EmissiveLoader;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderPhase;
 import com.fusionflux.portalcubed.client.render.portal.PortalRendererImpl;
 import com.fusionflux.portalcubed.client.render.portal.PortalRenderers;
@@ -38,7 +38,7 @@ import com.fusionflux.portalcubed.util.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.BoolArgumentType;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.PreparableModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
@@ -63,7 +63,6 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -92,13 +91,10 @@ import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientLoginConnectionEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
+
 import xyz.amymialee.visiblebarriers.VisibleBarriers;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -158,12 +154,11 @@ public class PortalCubedClient implements ClientModInitializer {
 
 		registerEntityRenderers();
 		registerColorProviders();
-		registerEmissiveModels(mod);
 		PortalCubedClientPackets.registerPackets();
 		PortalCubedKeyBindings.register();
 		AnimatedEntityTextures.init();
 
-		ModelLoadingPlugin.register(PortalCubedModelLoadingPlugin.INSTANCE);
+		PreparableModelLoadingPlugin.register(EmissiveLoader.INSTANCE, PortalCubedModelLoadingPlugin.INSTANCE);
 
 		HudRenderCallback.EVENT.register(PortalHud::renderPortals);
 
@@ -627,22 +622,6 @@ public class PortalCubedClient implements ClientModInitializer {
 			}
 		} else {
 			cameraTransformedThroughPortal = null;
-		}
-	}
-
-	private void registerEmissiveModels(ModContainer mod) {
-		try (Reader reader = Files.newBufferedReader(mod.getPath("emissives.json"), StandardCharsets.UTF_8)) {
-			for (final var entry : GsonHelper.parse(reader).entrySet()) {
-				if (entry.getValue().isJsonArray()) {
-					for (final var value : entry.getValue().getAsJsonArray()) {
-						EmissiveSpriteRegistry.register(id(entry.getKey()), id(value.getAsString()));
-					}
-				} else {
-					EmissiveSpriteRegistry.register(id(entry.getKey()), id(entry.getValue().getAsString()));
-				}
-			}
-		} catch (IOException e) {
-			PortalCubed.LOGGER.error("Failed to load emissives.json", e);
 		}
 	}
 
