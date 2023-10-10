@@ -7,7 +7,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.resources.ResourceLocation;
 
 public record EmissiveData(Multimap<ResourceLocation, ResourceLocation> map) {
-	public Collection<ResourceLocation> getEmissiveTexturesForModel(ResourceLocation modelId) {
-		return map.get(modelId);
+	public Collection<ResourceLocation> getEmissiveTexturesForModel(ResourceLocation id) {
+		return map.get(id);
 	}
 }

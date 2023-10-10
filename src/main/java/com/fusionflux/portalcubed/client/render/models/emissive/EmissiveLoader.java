@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.fabricmc.fabric.api.client.model.loading.v1.PreparableModelLoadingPlugin.DataLoader;
 
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
@@ -28,7 +29,7 @@ public enum EmissiveLoader implements DataLoader<EmissiveData> {
 			try {
 				Multimap<ResourceLocation, ResourceLocation> modelToTextures = HashMultimap.create();
 				GsonHelper.parse(resource.openAsReader()).asMap().forEach((model, element) -> {
-					ResourceLocation modelId = getId(model);
+					ResourceLocation modelId = getModelId(model);
 					List<ResourceLocation> textures = getTextures(element);
 					modelToTextures.putAll(modelId, textures);
 				});
@@ -54,5 +55,14 @@ public enum EmissiveLoader implements DataLoader<EmissiveData> {
 		} else {
 			return PortalCubed.id(path);
 		}
+	}
+
+	private static ResourceLocation getModelId(String model) {
+		ResourceLocation id = getId(model);
+		if (id.getPath().startsWith("item/")) {
+			String path = id.getPath().substring(5);
+			return new ModelResourceLocation(id.getNamespace(), path, "inventory");
+		}
+		return id;
 	}
 }

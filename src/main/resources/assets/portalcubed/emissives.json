@@ -1,4 +1,7 @@
 {
+  "item/energy_pellet": "item/energy_pellet",
+  "item/super_pellet": "item/super_pellet",
+  "item/missing_pellet": "item/missing_pellet",
 
   "block/faith_plate_target": "block/faith_plate_target",
 
