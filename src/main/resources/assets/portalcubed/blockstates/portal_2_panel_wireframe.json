@@ -1,18 +1,30 @@
 {
   "variants": {
-    "":[
-      { "model": "portalcubed:block/portal_2_panel_wireframe_1" },
-      { "model": "portalcubed:block/portal_2_panel_wireframe_2" },
-      { "model": "portalcubed:block/portal_2_panel_wireframe_3" },
-      { "model": "portalcubed:block/portal_2_panel_wireframe_4" },
-      { "model": "portalcubed:block/portal_2_panel_wireframe_5" },
-      { "model": "portalcubed:block/portal_2_panel_wireframe_6" },
-      { "model": "portalcubed:block/portal_2_panel_wireframe_7" },
-      { "model": "portalcubed:block/portal_2_panel_wireframe_8" }
+    "": [
+      {
+        "model": "portalcubed:block/portal_2_panel_wireframe_1"
+      },
+      {
+        "model": "portalcubed:block/portal_2_panel_wireframe_2"
+      },
+      {
+        "model": "portalcubed:block/portal_2_panel_wireframe_3"
+      },
+      {
+        "model": "portalcubed:block/portal_2_panel_wireframe_4"
+      },
+      {
+        "model": "portalcubed:block/portal_2_panel_wireframe_5"
+      },
+      {
+        "model": "portalcubed:block/portal_2_panel_wireframe_6"
+      },
+      {
+        "model": "portalcubed:block/portal_2_panel_wireframe_7"
+      },
+      {
+        "model": "portalcubed:block/portal_2_panel_wireframe_8"
+      }
     ]
-
-
-
-
   }
 }

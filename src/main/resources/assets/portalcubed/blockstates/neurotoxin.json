@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "portalcubed:block/neurotoxin" }
+    "": {
+      "model": "portalcubed:block/neurotoxin"
+    }
   }
 }

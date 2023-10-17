@@ -1,12 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/blue_office_concrete" }
-
-
+    "": [
+      {
+        "model": "portalcubed:block/blue_office_concrete"
+      }
     ]
-
-
-
-
   }
 }

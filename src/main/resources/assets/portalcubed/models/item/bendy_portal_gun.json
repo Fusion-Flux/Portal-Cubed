@@ -1,0 +1,61 @@
+{
+	"credit": "Made by Cart3r using Blockbench.",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "portalcubed:item/bendy_portal_gun",
+		"particle": "portalcubed:item/bendy_portal_gun"
+	},
+	"elements": [
+		{
+			"from": [8, 0, -3],
+			"to": [8, 8, 19],
+			"faces": {
+				"east": {"uv": [11.5, 0.5, 0.5, 4.5], "texture": "#0"},
+				"west": {"uv": [0.5, 0.5, 11.5, 4.5], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, -180, 0],
+			"translation": [0, 3.5, -6.25],
+			"scale": [0.83789, 0.83789, 0.83789]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [0, -180, 0],
+			"translation": [0, 3.5, -6.25],
+			"scale": [0.83789, 0.83789, 0.83789]
+		},
+		"firstperson_righthand": {
+			"rotation": [-178.5, -0.25, 180],
+			"translation": [1.25, 5.5, -5],
+			"scale": [0.83789, 0.83789, 0.61719]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-178.5, -0.25, 180],
+			"translation": [1.25, 5.5, -5],
+			"scale": [0.83789, 0.83789, 0.61719]
+		},
+		"ground": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 4, 0],
+			"scale": [0.58984, 0.58984, 0.58984]
+		},
+		"gui": {
+			"rotation": [26.75, 141, 0],
+			"translation": [0, 3.75, 0],
+			"scale": [0.99024, 0.99024, 0.99024]
+		},
+		"head": {
+			"rotation": [-180, 0, -180],
+			"translation": [0, 14.25, 0]
+		},
+		"fixed": {
+			"rotation": [-90, 90, 0],
+			"translation": [-1, 0.25, -7.75]
+		}
+	},
+	"portalcubed:render_types": {
+		"translucent": ["transparent"]
+	}
+}

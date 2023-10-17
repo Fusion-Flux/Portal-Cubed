@@ -1,12 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/portal_1_rusted_plating" }
-
-
+    "": [
+      {
+        "model": "portalcubed:block/portal_1_rusted_plating"
+      }
     ]
-
-
-
-
   }
 }

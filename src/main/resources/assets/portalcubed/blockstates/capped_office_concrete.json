@@ -1,12 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/capped_vertical_office_concrete" }
-
-
+    "": [
+      {
+        "model": "portalcubed:block/capped_vertical_office_concrete"
+      }
     ]
-
-
-
-
   }
 }

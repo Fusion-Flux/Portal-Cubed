@@ -35,8 +35,6 @@
       "model": "portalcubed:block/beta_faith_plate",
       "y": 270
     },
-
-
     "facing=down,horifacing=south": {
       "model": "portalcubed:block/beta_faith_plate",
       "y": 180,

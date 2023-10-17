@@ -257,7 +257,15 @@
 		{"predicate": {"custom_model_data": 103}, "model": "portalcubed:item/legacy_portal_gun_p_body"},
 		{"predicate": {"custom_model_data": 104}, "model": "portalcubed:item/legacy_portal_gun_reloaded"},
 		{"predicate": {"custom_model_data": 201}, "model": "portalcubed:item/mel_portal_gun"},
-		{"predicate": {"custom_model_data": 202}, "model": "portalcubed:item/2006_beta_portal_gun"}
+		{"predicate": {"custom_model_data": 202}, "model": "portalcubed:item/2006_beta_portal_gun"},
+		{"predicate": {"custom_model_data": 203}, "model": "portalcubed:item/2005_beta_portal_gun"},
+		{"predicate": {"custom_model_data": 204}, "model": "portalcubed:item/bendy_portal_gun"},
+		{"predicate": {"custom_model_data": 205}, "model": "portalcubed:item/blueprint_portal_gun"},
+		{"predicate": {"custom_model_data": 206}, "model": "portalcubed:item/lego_portal_gun"},
+		{"predicate": {"custom_model_data": 301}, "model": "portalcubed:item/2d_portal_gun"},
+		{"predicate": {"custom_model_data": 302}, "model": "portalcubed:item/2d_portal_gun_atlas"},
+		{"predicate": {"custom_model_data": 303}, "model": "portalcubed:item/2d_portal_gun_p_body"},
+		{"predicate": {"custom_model_data": 304}, "model": "portalcubed:item/2d_portal_gun_reloaded"}
 	],
 	"display": {
 		"thirdperson_righthand": {

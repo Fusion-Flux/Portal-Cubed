@@ -1,12 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/old_ap_metal_grating" }
-
-
+    "": [
+      {
+        "model": "portalcubed:block/old_ap_metal_grating"
+      }
     ]
-
-
-
-
   }
 }

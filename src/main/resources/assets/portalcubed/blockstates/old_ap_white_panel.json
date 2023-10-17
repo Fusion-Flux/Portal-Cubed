@@ -1,18 +1,24 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/old_ap_white_panel" },
-      { "model": "portalcubed:block/old_ap_white_panel2" },
-      { "model": "portalcubed:block/old_ap_white_panel3" },
-      { "model": "portalcubed:block/old_ap_white_panel4" },
-      { "model": "portalcubed:block/old_ap_white_panel5" },
-      { "model": "portalcubed:block/old_ap_white_panel6" }
-
-
-
+    "": [
+      {
+        "model": "portalcubed:block/old_ap_white_panel"
+      },
+      {
+        "model": "portalcubed:block/old_ap_white_panel2"
+      },
+      {
+        "model": "portalcubed:block/old_ap_white_panel3"
+      },
+      {
+        "model": "portalcubed:block/old_ap_white_panel4"
+      },
+      {
+        "model": "portalcubed:block/old_ap_white_panel5"
+      },
+      {
+        "model": "portalcubed:block/old_ap_white_panel6"
+      }
     ]
-
-
-
-
   }
 }

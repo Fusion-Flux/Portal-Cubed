@@ -1,12 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/dirty_borderless_panel" }
-
-
+    "": [
+      {
+        "model": "portalcubed:block/dirty_borderless_panel"
+      }
     ]
-
-
-
-
   }
 }

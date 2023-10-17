@@ -1,17 +1,21 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/aged_white_panel" },
-      { "model": "portalcubed:block/aged_white_panel2" },
-      { "model": "portalcubed:block/aged_white_panel3" },
-      { "model": "portalcubed:block/aged_white_panel4" },
-      { "model": "portalcubed:block/aged_white_panel5" }
-
-
-
+    "": [
+      {
+        "model": "portalcubed:block/aged_white_panel"
+      },
+      {
+        "model": "portalcubed:block/aged_white_panel2"
+      },
+      {
+        "model": "portalcubed:block/aged_white_panel3"
+      },
+      {
+        "model": "portalcubed:block/aged_white_panel4"
+      },
+      {
+        "model": "portalcubed:block/aged_white_panel5"
+      }
     ]
-
-
-
-
   }
 }
