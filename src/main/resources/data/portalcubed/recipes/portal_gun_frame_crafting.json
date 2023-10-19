@@ -1,12 +1,15 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "  X",
+        " YX",
         "XXX"
     ],
     "key": {
         "X": {
             "item": "minecraft:obsidian"
+        },
+        "Y": {
+            "item": "minecraft:glass_pane"
         }
     },
     "result": {

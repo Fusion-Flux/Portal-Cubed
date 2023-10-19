@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values" : [
+    "portalcubed:fizzler",
+    "portalcubed:portal_1_fizzler",
+    "portalcubed:old_aperture_fizzler",
+    "portalcubed:death_fizzler",
+    "portalcubed:old_aperture_death_fizzler",
+    "portalcubed:matter_inquisition_field",
+    "portalcubed:toxic_goo"
+  ]
+}

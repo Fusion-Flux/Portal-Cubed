@@ -1,0 +1,45 @@
+{
+  "display": {
+    "icon": {
+      "item": "portalcubed:portal_1_companion_cube"
+    },
+    "title": {
+      "translate": "advancement.portalcubed.heartbreaker.title"
+    },
+    "description": {
+      "translate": "advancement.portalcubed.heartbreaker.description"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "portalcubed:achievements/fizzler",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "type_specific": {
+                "type": "player",
+                "looking_at": {
+                  "type": "#portalcubed:companion_cubes",
+                  "nbt": "{cardinal_components:{\"gravity_api:gravity_direction\":{ListSize: 0}},Locked:0b,NoGravity:1b}",
+                  "location": {
+                    "block": {
+                      "tag": "portalcubed:fizzles_props"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

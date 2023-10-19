@@ -3,6 +3,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "portalcubed:item/portal_gun",
+		"1": "portalcubed:item/portal_gun_dyeable",
 		"particle": "portalcubed:item/portal_gun"
 	},
 	"elements": [
@@ -97,9 +98,29 @@
 				"north": {"uv": [8.516, 9.516, 9.484, 10.484], "texture": "#0"},
 				"east": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#0"},
 				"south": {"uv": [8.516, 9.516, 9.484, 10.484], "texture": "#0"},
-				"west": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [7.516, 4.984, 8.484, 3.016], "texture": "#0"},
-				"down": {"uv": [7.516, 4.984, 8.484, 3.016], "texture": "#0"}
+				"up": {"uv": [7.516, 4.984, 8.484, 3.016], "texture": "#0"}
+			}
+		},
+		{
+			"name": "cube inverted inverted",
+			"from": [7.04, 2.4, 5.025],
+			"to": [9.04, 4.4, 8.975],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8.025, 3.35, 7]},
+			"faces": {
+				"west": {"uv": [8.484, 4.984, 7.516, 3.016], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [8.484, 4.984, 7.516, 3.016], "texture": "#0"}
+			}
+		},
+		{
+			"name": "transparent",
+			"from": [7, 2.4, 5],
+			"to": [9, 4.4, 9],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 3.4, 2.575]},
+			"faces": {
+				"east": {"uv": [10.516, 15, 12.516, 16], "texture": "#1"},
+				"west": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#1"},
+				"up": {"uv": [10.516, 15, 12.516, 16], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [7.516, 3.016, 8.516, 5.016], "rotation": 180, "texture": "#1"}
 			}
 		}
 	],
@@ -138,5 +159,8 @@
 			"rotation": [0, -87.75, 0],
 			"translation": [0, 4.75, -1.25]
 		}
+	},
+	"portalcubed:render_types": {
+		"translucent": ["transparent"]
 	}
 }
