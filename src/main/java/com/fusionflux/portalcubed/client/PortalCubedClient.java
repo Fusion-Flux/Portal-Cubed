@@ -91,6 +91,8 @@ import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientLoginConnectionEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
+import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
+import org.quiltmc.qsl.resource.loader.api.ResourcePackActivationType;
 
 import xyz.amymialee.visiblebarriers.VisibleBarriers;
 
@@ -161,6 +163,12 @@ public class PortalCubedClient implements ClientModInitializer {
 		PreparableModelLoadingPlugin.register(EmissiveLoader.INSTANCE, PortalCubedModelLoadingPlugin.INSTANCE);
 
 		HudRenderCallback.EVENT.register(PortalHud::renderPortals);
+
+		ResourceLoader.registerBuiltinResourcePack(
+				id("high_contrast"),
+				ResourcePackActivationType.NORMAL,
+				Component.literal("Portal Cubed High Contrast")
+		);
 
 		// Thanks to https://github.com/JulianWww/Amazia-fabric/blob/main/src/main/java/net/denanu/amazia/GUI/debug/VillagePathingOverlay.java for some code
 //		WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
