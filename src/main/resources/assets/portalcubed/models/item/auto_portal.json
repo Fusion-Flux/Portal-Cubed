@@ -1,6 +1,10 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "portalcubed:item/auto_portal"
-  }
+	"credit": "Made by Cart3r using Blockbench.",
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "portalcubed:item/auto_portal"
+	},
+	"overrides": [
+		{"model": "portalcubed:item/rainbow_autoportal", "predicate": {"custom_model_data": 1}}
+	]
 }

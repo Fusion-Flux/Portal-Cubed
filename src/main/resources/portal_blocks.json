@@ -37,13 +37,16 @@
     "map_color": "terracotta_white"
   },
   "portal_1_elevator_wall_bottom": {
-    "map_color": "clay"
+    "map_color": "clay",
+    "render_layer": "cutout"
   },
   "portal_1_elevator_wall_middle": {
-    "map_color": "clay"
+    "map_color": "clay",
+    "render_layer": "cutout"
   },
   "portal_1_elevator_wall_top": {
-    "map_color": "clay"
+    "map_color": "clay",
+    "render_layer": "cutout"
   },
   "solid_office_concrete": {
     "map_color": "terracotta_cyan"

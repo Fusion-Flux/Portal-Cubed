@@ -39,6 +39,7 @@
 
     "minecraft:tinted_glass",
 
-    "minecraft:beacon"
+    "minecraft:beacon",
+    "minecraft:sea_lantern"
   ]
 }

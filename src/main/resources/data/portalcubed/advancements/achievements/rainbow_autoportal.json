@@ -2,7 +2,7 @@
   "display": {
     "icon": {
       "item": "portalcubed:auto_portal",
-      "nbt": "{Enchantments:[{id:infinity,lvl:1}]}"
+      "nbt": "{CustomModelData:1}"
     },
     "title": {
       "translate": "advancement.portalcubed.rainbow_autoportals.title"

@@ -56,9 +56,17 @@
     "portalcubed:portal_1_2x2_exposed_panel_top_right",
     "portalcubed:portal_1_2x2_exposed_panel_bottom_right",
 
+    "portalcubed:portal_1_elevator_wall_bottom",
+    "portalcubed:portal_1_elevator_wall_middle",
+    "portalcubed:portal_1_elevator_wall_top",
+
     "portalcubed:portal_1_fizzler_emitter",
     "portalcubed:old_aperture_fizzler_emitter",
     "portalcubed:old_aperture_death_fizzler_emitter",
+    "portalcubed:pedestal_button",
+    "portalcubed:excursion_funnel_emitter",
+    "portalcubed:auto_portal",
+    "portalcubed:laser_relay",
 
     "minecraft:iron_block",
     "minecraft:gold_block",

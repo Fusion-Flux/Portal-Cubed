@@ -58,16 +58,17 @@
       "description": "A portal gun mod for Quilt",
       "contributors": {
         "Fusion Flux": "Developer",
-        "Gaming32": "Developer",
         "Maximum": "Developer",
+        "TropheusJ": "Developer",
         "Platymemo": "Developer",
+        "Gaming32": "Developer",
         "sailKite": "Cheerleader",
         "Siuolplex": "Quilt Porter",
         "Cart3r": "Artist",
         "LudoCrypt": "Audio",
         "asojidev": "Audio"
       },
-      "license": "MIT",
+      "license": "MPL-2.0",
       "contact": {
         "homepage": "https://modrinth.com/mod/portal-cubed",
         "sources": "https://github.com/Fusion-Flux/Portal-Cubed",

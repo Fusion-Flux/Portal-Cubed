@@ -1,6 +1,8 @@
 {
 	"credit": "Made by Cart3r using Blockbench.",
 	"textures": {
+		"2": "portalcubed:block/portal_1_elevator_wall_middle_top_e",
+		"3": "portalcubed:block/portal_1_elevator_wall_middle_e",
 		"particle": "portalcubed:block/portal_1_elevator_wall_middle_top",
 		"end": "portalcubed:block/portal_1_elevator_wall_middle_top",
 		"side": "portalcubed:block/portal_1_elevator_wall_middle"
@@ -16,6 +18,18 @@
 				"west": {"uv": [0, 0, 16, 16], "texture": "#side", "cullface": "west"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#end", "cullface": "up"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#end", "cullface": "down"}
+			}
+		},
+		{
+			"from": [-0.01, -0.01, -0.01],
+			"to": [16.01, 16.01, 16.01],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "down"}
 			}
 		}
 	],

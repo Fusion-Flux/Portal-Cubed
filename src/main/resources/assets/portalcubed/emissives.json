@@ -62,6 +62,30 @@
   "block/laser_catcher": "block/laser_emitter_e",
   "item/laser_catcher": "block/laser_emitter_e",
 
+  "block/portal_1_elevator_wall_top": [
+    "block/portal_1_elevator_wall_upper_e",
+    "block/portal_1_elevator_wall_middle_top_e"
+  ],
+  "block/portal_1_elevator_wall_middle": [
+    "block/portal_1_elevator_wall_middle_e",
+    "block/portal_1_elevator_wall_middle_top_e"
+  ],
+  "block/portal_1_elevator_wall_bottom": [
+    "block/portal_1_elevator_wall_lower_e",
+    "block/portal_1_elevator_wall_middle_top_e"
+  ],
+  "item/portal_1_elevator_wall_top": [
+    "block/portal_1_elevator_wall_upper_e",
+    "block/portal_1_elevator_wall_middle_top_e"
+  ],
+  "item/portal_1_elevator_wall_middle": [
+    "block/portal_1_elevator_wall_middle_e",
+    "block/portal_1_elevator_wall_middle_top_e"
+  ],
+  "item/portal_1_elevator_wall_bottom": [
+    "block/portal_1_elevator_wall_lower_e",
+    "block/portal_1_elevator_wall_middle_top_e"
+  ],
 
   "block/portal_2_fizzler_top": "block/portal_2_fizzler_top",
   "block/portal_2_fizzler_bottom": "block/portal_2_fizzler_bottom",

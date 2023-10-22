@@ -366,7 +366,8 @@
   "pellet/travel": {
     "sounds": [
       "portalcubed:pellet/energy_sing_loop4"
-    ]
+    ],
+    "subtitle": "subtitles.portalcubed.pellet.travel"
   },
   "portal_ambience": {
     "sounds": [
@@ -452,7 +453,8 @@
   "rocket/fly": {
     "sounds": [
       "portalcubed:rocket/rocket_fly_loop1"
-    ]
+    ],
+    "subtitle": "subtitles.portalcubed.rocket.travel"
   },
   "rocket/goo": {
     "sounds": []
