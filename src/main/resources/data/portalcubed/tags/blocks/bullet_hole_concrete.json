@@ -119,7 +119,6 @@
     "portalcubed:physics_repulsion_field_emitter",
     "portalcubed:matter_inquisition_field_emitter",
     "portalcubed:laser_emitter",
-    "portalcubed:laser_catcher",
-    "portalcubed:light_bridge_emitter"
+    "portalcubed:laser_catcher"
   ]
 }

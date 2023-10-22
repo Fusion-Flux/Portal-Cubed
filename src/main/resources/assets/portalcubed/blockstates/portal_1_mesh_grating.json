@@ -1,12 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/portal_1_mesh_grating" }
-
-
+    "": [
+      {
+        "model": "portalcubed:block/portal_1_mesh_grating"
+      }
     ]
-
-
-
-
   }
 }

@@ -1,8 +1,10 @@
 {
 	"credit": "Made with Blockbench by Cart3r.  ",
-	"texture_size": [64, 64],
+	"texture_size": [32, 32],
 	"textures": {
-		"0": "portalcubed:entity/radio"
+		"0": "portalcubed:entity/radio",
+		"1": "portalcubed:entity/radio_e",
+		"particle": "portalcubed:entity/radio_e"
 	},
 	"elements": [
 		{
@@ -23,11 +25,23 @@
 			"to": [9.5, 5, 11.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 1, 8.5]},
 			"faces": {
-				"north": {"uv": [0.008, 8.008, 1.492, 9.992], "texture": "#0"},
-				"east": {"uv": [1.508, 8.008, 4.992, 9.992], "texture": "#0"},
-				"south": {"uv": [5.008, 8.008, 6.492, 9.992], "texture": "#0"},
-				"west": {"uv": [6.508, 8.008, 9.992, 9.992], "texture": "#0"},
+				"north": {"uv": [1.492, 8.008, 0.008, 9.992], "texture": "#0"},
+				"east": {"uv": [4.992, 8.008, 1.508, 9.992], "texture": "#0"},
+				"south": {"uv": [6.492, 8.008, 5.008, 9.992], "texture": "#0"},
+				"west": {"uv": [9.992, 8.008, 6.508, 9.992], "texture": "#0"},
 				"up": {"uv": [1.508, 7.992, 4.992, 6.508], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [6.5, 1, 4.5],
+			"to": [9.5, 5, 11.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 1, 8.5]},
+			"faces": {
+				"north": {"uv": [0.008, 8.008, 1.492, 9.992], "texture": "#1"},
+				"east": {"uv": [1.508, 8.008, 4.992, 9.992], "texture": "#1"},
+				"south": {"uv": [5.008, 8.008, 6.492, 9.992], "texture": "#1"},
+				"west": {"uv": [6.508, 8.008, 9.992, 9.992], "texture": "#1"},
+				"up": {"uv": [1.508, 7.992, 4.992, 6.508], "rotation": 90, "texture": "#1"}
 			}
 		},
 		{

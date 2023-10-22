@@ -11,6 +11,9 @@
   "subtitles.portalcubed.portal_gun_primary_fire": "Portal gun shoots primary portal",
   "subtitles.portalcubed.portal_invalid_surface": "Portal gun shot fails",
 
+  "subtitles.portalcubed.object_pickup": "Portal gun picks up object",
+  "subtitles.portalcubed.object_drop": "Portal gun releases object",
+
   "subtitles.portalcubed.portal_open": "Portal opens",
   "subtitles.portalcubed.portal_close": "Portal closes",
   "subtitles.portalcubed.portal_fizzle": "Portal fizzles",
@@ -40,9 +43,11 @@
   "subtitles.portalcubed.pellet.spawn": "Energy pellet launches",
 
   "subtitles.portalcubed.crowbar_swoosh": "Crowbar swooshes",
+  "subtitles.portalcubed.impact.concrete": "Concrete crumbles",
+  "subtitles.portalcubed.impact.metal": "Metal clanks",
+  "subtitles.portalcubed.impact.glass": "Glass cracks",
 
   "subtitles.portalcubed.faith_plate": "Faith plate activates",
-
 
   "advancement.portalcubed.root.title": "Portal Cubed",
   "advancement.portalcubed.root.description": "Welcome to Aperture Science! You're here because we want the best, and you are it.",
@@ -75,6 +80,8 @@
 
   "advancement.portalcubed.fizzler.title": "Fizzle Me This",
   "advancement.portalcubed.fizzler.description": "Walk through a Material Emancipation Grill",
+  "advancement.portalcubed.heartbreaker.title": "Heartbreaker",
+  "advancement.portalcubed.heartbreaker.description": "Fizzle your faithful companion cube.  You monster.",
 
   "advancement.portalcubed.pellet.title": "Handle With Care",
   "advancement.portalcubed.pellet.description": "Obtain a High Energy Pellet",
@@ -82,7 +89,7 @@
   "advancement.portalcubed.pellet_bounce.description": "Bounce a High Energy Pellet at least 35 times before it expires",
 
   "advancement.portalcubed.laser.title": "It Burns, Ah!",
-  "advancement.portalcubed.laser.description": "Touch a Thermal Discouragement Beam and become thermally discouraged",
+  "advancement.portalcubed.laser.description": "Touch a Thermal Discouragement Beam and become thermally discouraged from doing it again",
 
   "advancement.portalcubed.goo.title": "The Floor is Failure",
   "advancement.portalcubed.goo.description": "Submerse yourself in a pool of Toxic Goo and receive an unsatisfactory mark to your record",
@@ -150,6 +157,7 @@
   "item.portalcubed.hammer": "Hammer",
   "item.portalcubed.energy_pellet": "High Energy Pellet",
   "item.portalcubed.super_pellet": "Super High Energy Pellet",
+  "item.portalcubed.missing_pellet": "Missing Texture Energy Pellet",
   "item.portalcubed.crowbar": "Crowbar",
 
   "item.portalcubed.storage_cube": "Weighted Storage Cube",
@@ -178,11 +186,29 @@
   "item.portalcubed.space_core": "Space Core",
   "item.portalcubed.adventure_core": "Adventure Core",
 
+  "item.portalcubed.portal_gun_frame": "Portal Gun Frame",
+  "item.portalcubed.portal_gun_casing": "Portal Gun Casing",
   "item.portalcubed.portal_gun": "Portal Gun",
   "item.portalcubed.portal_gun_primary": "Primary Portal Gun",
   "item.portalcubed.portal_gun_secondary": "Secondary Portal Gun",
-  "item.portalcubed.portal_gun_frame": "Portal Gun Frame",
-  "item.portalcubed.portal_gun_casing": "Portal Gun Casing",
+  "item.portalcubed.potatos_portal_gun": "PotatOS Portal Gun",
+  "item.portalcubed.portal_gun_atlas": "Atlas' Portal Gun",
+  "item.portalcubed.portal_gun_p_body": "P-Body's Portal Gun",
+  "item.portalcubed.portal_gun_reloaded": "Reloaded Portal Gun",
+  "item.portalcubed.legacy_portal_gun": "Portal Gun (Legacy)",
+  "item.portalcubed.legacy_portal_gun_atlas": "Atlas' Portal Gun (Legacy)",
+  "item.portalcubed.legacy_portal_gun_p_body": "P-Body's Portal Gun (Legacy)",
+  "item.portalcubed.legacy_portal_gun_reloaded": "Reloaded Portal Gun (Legacy)",
+  "item.portalcubed.2d_portal_gun": "Portal Gun (2D)",
+  "item.portalcubed.2d_portal_gun_atlas": "Atlas' Portal Gun (2D)",
+  "item.portalcubed.2d_portal_gun_p_body": "P-Body's Portal Gun (2D)",
+  "item.portalcubed.2d_portal_gun_reloaded": "Reloaded Portal Gun (2D)",
+  "item.portalcubed.mel_portal_gun": "Mel's Portal Gun",
+  "item.portalcubed.2005_beta_portal_gun": "Beta Portal Gun (2005)",
+  "item.portalcubed.2006_beta_portal_gun": "Beta Portal Gun (2006)",
+  "item.portalcubed.blueprint_portal_gun": "Blueprint Portal Gun",
+  "item.portalcubed.bendy_portal_gun": "Bendy's Portal Gun",
+  "item.portalcubed.lego_portal_gun": "Portal Gun (LEGO Dimensions)",
   "item.portalcubed.paint_gun": "Paint Gun",
   "item.portalcubed.mini_blackhole": "Miniature Black Hole",
   "item.portalcubed.toxic_goo_bucket": "Toxic Goo Bucket",
@@ -442,7 +468,7 @@
 
   "portalcubed.midnightconfig.title": "Portal Cubed Config",
   "portalcubed.midnightconfig.maxBridgeLength": "Maximum Emitter Block Range",
-  "portalcubed.midnightconfig.enableRoundPortals": "Enable Round Portals",
+  "portalcubed.midnightconfig.enableRoundPortals": "Use Round Portal Texture",
   "portalcubed.midnightconfig.enableAccurateMovement": "Long Fall Boots Enable Source-Accurate Movement",
   "portalcubed.midnightconfig.fizzlerDamage": "Death Fizzler Damage",
   "portalcubed.midnightconfig.rocketDamage": "Rocket Turret Damage",
@@ -463,7 +489,7 @@
   "death.attack.fizzle": "%s was fizzled",
   "death.attack.fizzle.player": "%1$s was pushed into a fizzler by %2$s",
   "death.attack.vaporization": "%s was vaporized by a High Energy Pellet",
-  "death.attack.vaporization.player": "%1$s was vaporized by a High Energy Pellet because of %2$s",
+  "death.attack.vaporization.player": "%1$s was vaporized by a High Energy Pellet trying to escape %2$s",
   "death.attack.laser": "%s was thermally discouraged",
   "death.attack.laser.player": "%1$s was thermally discouraged trying to escape %2$s",
   "death.attack.cube": "%s was hit on the head by a falling Weighted Cube",

@@ -15,7 +15,6 @@
       "model": "portalcubed:block/portal_1_fizzler_emitter_bottom",
       "y": 90
     },
-
     "facing=north,half=upper": {
       "model": "portalcubed:block/portal_1_fizzler_emitter_top"
     },

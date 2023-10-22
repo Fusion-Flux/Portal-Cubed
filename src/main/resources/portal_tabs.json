@@ -87,7 +87,93 @@
       "portalcubed:space_core",
       "portalcubed:adventure_core",
       "portalcubed:fact_core",
-      "portalcubed:lil_pineapple"
+      "portalcubed:lil_pineapple",
+      {
+        "condition": "hasPermissions",
+        "items": [
+          {
+            "id": "portalcubed:radio",
+            "nbt": "{display:{Name:'[{\"text\":\"Exile Vilify\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:energy_pellet",
+            "nbt": "{CustomModelData:1,display:{Name:'[{\"translate\": \"item.portalcubed.missing_pellet\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:1,display:{Name:'[{\"translate\":\"item.portalcubed.potatos_portal_gun\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:2,display:{Name:'[{\"translate\":\"item.portalcubed.portal_gun_atlas\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:3,display:{Name:'[{\"translate\":\"item.portalcubed.portal_gun_p_body\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:4,display:{Name:'[{\"translate\":\"item.portalcubed.portal_gun_reloaded\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:201,display:{Name:'[{\"translate\":\"item.portalcubed.mel_portal_gun\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:301,display:{Name:'[{\"translate\":\"item.portalcubed.2d_portal_gun\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:302,display:{Name:'[{\"translate\":\"item.portalcubed.2d_portal_gun_atlas\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:303,display:{Name:'[{\"translate\":\"item.portalcubed.2d_portal_gun_p_body\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:304,display:{Name:'[{\"translate\":\"item.portalcubed.2d_portal_gun_reloaded\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:101,display:{Name:'[{\"translate\":\"item.portalcubed.legacy_portal_gun\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:102,display:{Name:'[{\"translate\":\"item.portalcubed.legacy_portal_gun_atlas\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:103,display:{Name:'[{\"translate\":\"item.portalcubed.legacy_portal_gun_p_body\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:104,display:{Name:'[{\"translate\":\"item.portalcubed.legacy_portal_gun_reloaded\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:203,display:{Name:'[{\"translate\":\"item.portalcubed.2005_beta_portal_gun\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:202,display:{Name:'[{\"translate\":\"item.portalcubed.2006_beta_portal_gun\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:204,display:{Name:'[{\"translate\":\"item.portalcubed.bendy_portal_gun\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:205,display:{Name:'[{\"translate\":\"item.portalcubed.blueprint_portal_gun\",\"italic\":false}]'}}"
+          },
+          {
+            "id": "portalcubed:portal_gun",
+            "nbt": "{CustomModelData:206,display:{Name:'[{\"translate\":\"item.portalcubed.lego_portal_gun\",\"italic\":false}]'}}"
+          },
+          "portalcubed:block_item_icon"
+        ]
+      }
     ]
   },
   "portal_blocks": {

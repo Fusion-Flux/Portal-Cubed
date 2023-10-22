@@ -156,9 +156,7 @@
 				"north": {"uv": [8.516, 9.516, 9.484, 10.484], "texture": "#0"},
 				"east": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#0"},
 				"south": {"uv": [8.516, 9.516, 9.484, 10.484], "texture": "#0"},
-				"west": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [7.516, 4.984, 8.484, 3.016], "texture": "#0"},
-				"down": {"uv": [7.516, 4.984, 8.484, 3.016], "texture": "#0"}
+				"up": {"uv": [7.516, 4.984, 8.484, 3.016], "texture": "#0"}
 			}
 		},
 		{
@@ -188,7 +186,7 @@
 			"rotation": {"angle": 45, "axis": "z", "origin": [7.96492, 0.81711, 5.49]},
 			"faces": {
 				"up": {"uv": [6.532, 13.032, 10.984, 15.484], "rotation": 90, "texture": "#0"},
-				"down": {"uv": [10.984, 13.032, 6.532, 14.984], "rotation": 90, "texture": "#0"}
+				"down": {"uv": [10.984, 13.032, 6.532, 15.484], "rotation": 90, "texture": "#0"}
 			}
 		},
 		{
@@ -235,6 +233,18 @@
 				"north": {"uv": [6.516, 6.984, 6.984, 5.516], "rotation": 180, "texture": "#0"},
 				"south": {"uv": [6.516, 6.984, 6.984, 5.516], "texture": "#0"}
 			}
+		},
+		{
+			"name": "transparent",
+			"from": [7, 2.35, 5],
+			"to": [9, 4.35, 9],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 3.35, 2.575]},
+			"faces": {
+				"east": {"uv": [10.516, 15, 12.516, 16], "texture": "#1"},
+				"west": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [10.516, 15, 12.516, 16], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [7.516, 3.016, 8.516, 5.016], "rotation": 180, "texture": "#0"}
+			}
 		}
 	],
 	"overrides": [
@@ -242,14 +252,20 @@
 		{"predicate": {"custom_model_data": 2}, "model": "portalcubed:item/portal_gun_atlas"},
 		{"predicate": {"custom_model_data": 3}, "model": "portalcubed:item/portal_gun_p_body"},
 		{"predicate": {"custom_model_data": 4}, "model": "portalcubed:item/portal_gun_reloaded"},
-
 		{"predicate": {"custom_model_data": 101}, "model": "portalcubed:item/legacy_portal_gun"},
 		{"predicate": {"custom_model_data": 102}, "model": "portalcubed:item/legacy_portal_gun_atlas"},
 		{"predicate": {"custom_model_data": 103}, "model": "portalcubed:item/legacy_portal_gun_p_body"},
 		{"predicate": {"custom_model_data": 104}, "model": "portalcubed:item/legacy_portal_gun_reloaded"},
-
 		{"predicate": {"custom_model_data": 201}, "model": "portalcubed:item/mel_portal_gun"},
-		{"predicate": {"custom_model_data": 202}, "model": "portalcubed:item/beta_portal_gun"}
+		{"predicate": {"custom_model_data": 202}, "model": "portalcubed:item/2006_beta_portal_gun"},
+		{"predicate": {"custom_model_data": 203}, "model": "portalcubed:item/2005_beta_portal_gun"},
+		{"predicate": {"custom_model_data": 204}, "model": "portalcubed:item/bendy_portal_gun"},
+		{"predicate": {"custom_model_data": 205}, "model": "portalcubed:item/blueprint_portal_gun"},
+		{"predicate": {"custom_model_data": 206}, "model": "portalcubed:item/lego_portal_gun"},
+		{"predicate": {"custom_model_data": 301}, "model": "portalcubed:item/2d_portal_gun"},
+		{"predicate": {"custom_model_data": 302}, "model": "portalcubed:item/2d_portal_gun_atlas"},
+		{"predicate": {"custom_model_data": 303}, "model": "portalcubed:item/2d_portal_gun_p_body"},
+		{"predicate": {"custom_model_data": 304}, "model": "portalcubed:item/2d_portal_gun_reloaded"}
 	],
 	"display": {
 		"thirdperson_righthand": {
@@ -286,5 +302,8 @@
 			"rotation": [-90, -90, 0],
 			"translation": [-1, 0.25, -7.75]
 		}
+	},
+	"portalcubed:render_types": {
+		"translucent": ["transparent"]
 	}
 }

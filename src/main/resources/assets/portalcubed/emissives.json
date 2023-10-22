@@ -1,10 +1,9 @@
 {
-  "item/energy_pellet": "item/energy_pellet",
-  "item/super_pellet": "item/super_pellet",
-  "item/missing_pellet": "item/missing_pellet",
 
   "block/faith_plate_target": "block/faith_plate_target",
+  "item/faith_plate_target": "block/faith_plate_target",
 
+  "item/excursion_funnel_emitter": "block/excursion_funnel_emitter_e",
   "block/excursion_funnel_emitter_forward_off_quadrant_1": "block/excursion_funnel_emitter_e",
   "block/excursion_funnel_emitter_forward_off_quadrant_2": "block/excursion_funnel_emitter_e",
   "block/excursion_funnel_emitter_forward_off_quadrant_3": "block/excursion_funnel_emitter_e",
@@ -61,6 +60,7 @@
   "block/laser_emitter_active": "block/laser_emitter_e",
   "block/laser_catcher_active": "block/laser_emitter_e",
   "block/laser_catcher": "block/laser_emitter_e",
+  "item/laser_catcher": "block/laser_emitter_e",
 
 
   "block/portal_2_fizzler_top": "block/portal_2_fizzler_top",
@@ -138,31 +138,42 @@
   "block/auto_portal_lower": "block/auto_portal_e",
   "block/auto_portal_upper": "block/auto_portal_e",
 
-
-  "block/portal_1_door_bottom_left": "block/portal_1_door_e",
-  "block/portal_1_door_bottom_left_open": "block/portal_1_door_e",
   "block/portal_1_door_bottom_right": "block/portal_1_door_e",
   "block/portal_1_door_bottom_right_open": "block/portal_1_door_e",
+  "block/portal_1_door_bottom_left": "block/portal_1_door_e",
+  "block/portal_1_door_bottom_left_open": "block/portal_1_door_e",
+  "block/portal_1_door_top_right": "block/portal_1_door_e",
+  "block/portal_1_door_top_right_open": "block/portal_1_door_e",
+  "block/portal_1_door_top_left": "block/portal_1_door_e",
+  "block/portal_1_door_top_left_open": "block/portal_1_door_e",
 
   "block/portal_2_door_bottom_right": "block/portal_2_door_e",
   "block/portal_2_door_bottom_right_open": "block/portal_2_door_e",
+  "block/portal_2_door_bottom_left": "block/portal_2_door_e",
   "block/portal_2_door_bottom_left_open": "block/portal_2_door_e",
   "block/portal_2_door_top_right": "block/portal_2_door_e",
   "block/portal_2_door_top_right_open": "block/portal_2_door_e",
+  "block/portal_2_door_top_left": "block/portal_2_door_e",
+  "block/portal_2_door_top_left_open": "block/portal_2_door_e",
 
   "block/octopus_door_bottom_right": "block/octopus_door_e",
   "block/octopus_door_bottom_right_open": "block/octopus_door_e",
+  "block/octopus_door_bottom_left": "block/octopus_door_e",
   "block/octopus_door_bottom_left_open": "block/octopus_door_e",
   "block/octopus_door_top_right": "block/octopus_door_e",
   "block/octopus_door_top_right_open": "block/octopus_door_e",
+  "block/octopus_door_top_left": "block/octopus_door_e",
+  "block/octopus_door_top_left_open": "block/octopus_door_e",
 
-
+  "item/floor_button": "block/floor_button_e",
   "block/floor_button": "block/floor_button_e",
   "block/floor_button_active": "block/floor_button_e",
 
+  "item/old_ap_floor_button": "block/old_ap_floor_button_e",
   "block/old_ap_floor_button": "block/old_ap_floor_button_e",
   "block/old_ap_floor_button_active": "block/old_ap_floor_button_e",
 
+  "item/pedestal_button": "block/pedestal_button_e",
   "block/pedestal_button": "block/pedestal_button_e",
   "block/pedestal_button_active": "block/pedestal_button_e",
   "block/offset_pedestal_button": "block/pedestal_button_e",
@@ -172,5 +183,50 @@
 
   "block/rocket_turret_active": "block/rocket_turret_active_e",
   "block/rocket_turret_inactive": "block/rocket_turret_inactive_e",
-  "block/rocket_turret_lock_on": "block/rocket_turret_lock_on_e"
+  "block/rocket_turret_lock_on": "block/rocket_turret_lock_on_e",
+
+  "item/energy_pellet": "item/energy_pellet",
+  "item/super_pellet": "item/super_pellet",
+  "item/missing_pellet": "item/missing_pellet",
+
+  "item/portal_gun": "item/portal_gun_dyeable",
+  "item/portal_gun_primary": "item/portal_gun_dyeable",
+  "item/portal_gun_secondary": "item/portal_gun_dyeable",
+  "item/portal_gun_atlas": "item/portal_gun_dyeable",
+  "item/portal_gun_p_body": "item/portal_gun_dyeable",
+  "item/portal_gun_reloaded": "item/portal_gun_dyeable",
+  "item/potatos_portal_gun": "item/portal_gun_dyeable",
+  "item/2005_beta_portal_gun": "item/portal_gun_dyeable",
+  "item/2006_beta_portal_gun": "item/portal_gun_dyeable",
+  "item/mel_portal_gun": "item/portal_gun_dyeable",
+  "item/lego_portal_gun": "item/portal_gun_dyeable",
+  "item/2d_portal_gun": "item/portal_gun_dyeable",
+  "item/2d_portal_gun_atlas": "item/portal_gun_dyeable",
+  "item/2d_portal_gun_p_body": "item/portal_gun_dyeable",
+  "item/2d_portal_gun_reloaded": "item/portal_gun_dyeable",
+  "item/legacy_portal_gun": "item/portal_gun_dyeable",
+  "item/legacy_portal_gun_atlas": "item/portal_gun_dyeable",
+  "item/legacy_portal_gun_p_body": "item/portal_gun_dyeable",
+  "item/legacy_portal_gun_reloaded": "item/portal_gun_dyeable",
+
+  "item/fizzler_emitter": "item/portal_2_fizzler_icon",
+  "item/portal_1_fizzler_emitter": "item/portal_1_fizzler_icon",
+  "item/laser_fizzler_emitter": "item/portal_2_laser_field_icon",
+  "item/death_fizzler_emitter": "item/portal_2_death_fizzler_icon",
+  "item/old_aperture_fizzler_emitter": "item/old_aperture_fizzler_icon",
+  "item/old_aperture_death_fizzler_emitter": "item/old_aperture_death_fizzler_icon",
+  "item/matter_inquisition_field_emitter": "item/portal_2_matter_inquisition_field_icon",
+  "item/physics_repulsion_field_emitter": "item/portal_2_physics_repulsion_field_icon",
+
+  "item/storage_cube": "entity/storage_cube_e",
+  "item/companion_cube": "entity/companion_cube_e",
+  "item/radio": "entity/radio_e",
+  "item/morality_core": "entity/portal_1_cores_e",
+  "item/curiosity_core": "entity/portal_1_cores_e",
+  "item/intelligence_core": "entity/portal_1_cores_e",
+  "item/anger_core": "entity/portal_1_cores_e",
+  "item/space_core": "entity/portal_2_cores_e",
+  "item/adventure_core": "entity/portal_2_cores_e",
+  "item/fact_core": "entity/portal_2_cores_e"
+
 }

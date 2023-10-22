@@ -15,7 +15,6 @@
       "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom",
       "y": 90
     },
-
     "facing=north,powered=false,half=upper": {
       "model": "portalcubed:block/old_aperture_fizzler_emitter_top"
     },
@@ -31,7 +30,6 @@
       "model": "portalcubed:block/old_aperture_fizzler_emitter_top",
       "y": 90
     },
-
     "facing=north,powered=true,half=lower": {
       "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom"
     },
@@ -47,7 +45,6 @@
       "model": "portalcubed:block/old_aperture_fizzler_emitter_bottom",
       "y": 90
     },
-
     "facing=north,powered=true,half=upper": {
       "model": "portalcubed:block/old_aperture_fizzler_emitter_top"
     },

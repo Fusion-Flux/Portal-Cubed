@@ -1,12 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/portal_2_panel_frame" }
-
-
+    "": [
+      {
+        "model": "portalcubed:block/portal_2_panel_frame"
+      }
     ]
-
-
-
-
   }
 }

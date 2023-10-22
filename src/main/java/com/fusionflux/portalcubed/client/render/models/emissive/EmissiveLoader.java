@@ -29,7 +29,7 @@ public enum EmissiveLoader implements DataLoader<EmissiveData> {
 			try {
 				Multimap<ResourceLocation, ResourceLocation> modelToTextures = HashMultimap.create();
 				GsonHelper.parse(resource.openAsReader()).asMap().forEach((model, element) -> {
-					ResourceLocation modelId = getModelId(model);
+					ResourceLocation modelId = getId(model);
 					List<ResourceLocation> textures = getTextures(element);
 					modelToTextures.putAll(modelId, textures);
 				});
@@ -55,14 +55,5 @@ public enum EmissiveLoader implements DataLoader<EmissiveData> {
 		} else {
 			return PortalCubed.id(path);
 		}
-	}
-
-	private static ResourceLocation getModelId(String model) {
-		ResourceLocation id = getId(model);
-		if (id.getPath().startsWith("item/")) {
-			String path = id.getPath().substring(5);
-			return new ModelResourceLocation(id.getNamespace(), path, "inventory");
-		}
-		return id;
 	}
 }

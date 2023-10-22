@@ -148,20 +148,6 @@
 			}
 		},
 		{
-			"name": "cube inverted",
-			"from": [9.04, 4.4, 8.975],
-			"to": [7.04, 2.4, 5.025],
-			"rotation": {"angle": 45, "axis": "z", "origin": [8.025, 3.35, 7]},
-			"faces": {
-				"north": {"uv": [8.516, 9.516, 9.484, 10.484], "texture": "#0"},
-				"east": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#0"},
-				"south": {"uv": [8.516, 9.516, 9.484, 10.484], "texture": "#0"},
-				"west": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [7.516, 4.984, 8.484, 3.016], "texture": "#0"},
-				"down": {"uv": [7.516, 4.984, 8.484, 3.016], "texture": "#0"}
-			}
-		},
-		{
 			"name": "cube inverted inverted",
 			"from": [7.615, 3.3, 4.925],
 			"to": [8.815, 4.5, 9.075],
@@ -235,6 +221,30 @@
 				"north": {"uv": [6.516, 6.984, 6.984, 5.516], "rotation": 180, "texture": "#0"},
 				"south": {"uv": [6.516, 6.984, 6.984, 5.516], "texture": "#0"}
 			}
+		},
+		{
+			"name": "cube inverted",
+			"from": [9.04, 4.4, 8.975],
+			"to": [7.04, 2.4, 5.025],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8.025, 3.35, 7]},
+			"faces": {
+				"north": {"uv": [8.516, 9.516, 9.484, 10.484], "texture": "#0"},
+				"east": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [8.516, 9.516, 9.484, 10.484], "texture": "#0"},
+				"up": {"uv": [7.516, 4.984, 8.484, 3.016], "texture": "#0"}
+			}
+		},
+		{
+			"name": "transparent",
+			"from": [7, 2.35, 5],
+			"to": [9, 4.35, 9],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 3.35, 2.575]},
+			"faces": {
+				"east": {"uv": [10.516, 15, 12.516, 16], "texture": "#1"},
+				"west": {"uv": [7.516, 4.984, 8.484, 3.016], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [10.516, 15, 12.516, 16], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [7.516, 3.016, 8.516, 5.016], "rotation": 180, "texture": "#0"}
+			}
 		}
 	],
 	"display": {
@@ -272,5 +282,8 @@
 			"rotation": [-90, -90, 0],
 			"translation": [-1, 0.25, -7.75]
 		}
+	},
+	"portalcubed:render_types": {
+		"translucent": ["transparent"]
 	}
 }

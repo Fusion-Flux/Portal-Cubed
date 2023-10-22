@@ -15,7 +15,6 @@
       "model": "portalcubed:block/portal_2_fizzler_emitter_bottom_disabled",
       "y": 90
     },
-
     "facing=north,powered=false,half=upper": {
       "model": "portalcubed:block/portal_2_fizzler_emitter_top_disabled"
     },
@@ -31,7 +30,6 @@
       "model": "portalcubed:block/portal_2_fizzler_emitter_top_disabled",
       "y": 90
     },
-
     "facing=north,powered=true,half=lower": {
       "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom"
     },
@@ -47,7 +45,6 @@
       "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_bottom",
       "y": 90
     },
-
     "facing=north,powered=true,half=upper": {
       "model": "portalcubed:block/portal_2_physics_repulsion_field_emitter_top"
     },

@@ -1,12 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/old_ap_blue_panel" }
-
-
+    "": [
+      {
+        "model": "portalcubed:block/old_ap_blue_panel"
+      }
     ]
-
-
-
-
   }
 }

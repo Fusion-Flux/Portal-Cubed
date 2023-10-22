@@ -1,12 +1,9 @@
 {
   "variants": {
-    "":[ { "model": "portalcubed:block/insulation" }
-
-
+    "": [
+      {
+        "model": "portalcubed:block/insulation"
+      }
     ]
-
-
-
-
   }
 }
