@@ -39,7 +39,7 @@ Portal Cubed is a Minecraft mod for Quilt that adds mechanics from Valve's Porta
 
 
 ## License
-This project is licensed under the [Mozilla Public License version 2.0](LICENSE)
+This project is licensed under the [MIT](LICENSE)
 
 ## Discord Server
 Join my Discord server to talk about ClusterFlux mods, or if you need help with said mods!
