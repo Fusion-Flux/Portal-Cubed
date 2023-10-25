@@ -19,6 +19,11 @@
     "run": {
       "trigger": "minecraft:enter_block",
       "conditions": {
+        "player": {
+          "flags": {
+            "is_sneaking": false
+          }
+        },
         "block": "portalcubed:propulsion_gel"
       }
     }

@@ -24,19 +24,23 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
+              "type": "minecraft:player",
               "location": {
                 "block": {
                   "blocks": [
                     "portalcubed:repulsion_gel"
                   ]
                 }
+              },
+              "flags": {
+                "is_sneaking": false
               }
             }
           }
         ],
         "distance": {
           "y": {
-            "min": 1
+            "min": 0.1
           }
         }
       }
