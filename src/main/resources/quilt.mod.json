@@ -68,7 +68,7 @@
         "LudoCrypt": "Audio",
         "asojidev": "Audio"
       },
-      "license": "MPL-2.0",
+      "license": "MIT",
       "contact": {
         "homepage": "https://modrinth.com/mod/portal-cubed",
         "sources": "https://github.com/Fusion-Flux/Portal-Cubed",
