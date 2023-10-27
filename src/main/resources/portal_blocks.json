@@ -697,13 +697,24 @@
   },
   "old_ap_white_checkered_panel": {
     "map_color": "sand",
-  "sounds": {
-    "break": "minecraft:block.wood.break",
-    "step": "minecraft:block.wood.step",
-    "place": "minecraft:block.wood.place",
-    "hit": "minecraft:block.wood.hit",
-    "fall": "minecraft:block.wood.fall"
-  }},
+    "sounds": {
+      "break": "minecraft:block.wood.break",
+      "step": "minecraft:block.wood.step",
+      "place": "minecraft:block.wood.place",
+      "hit": "minecraft:block.wood.hit",
+      "fall": "minecraft:block.wood.fall"
+    }
+  },
+  "plywood": {
+    "map_color": "wood",
+    "sounds": {
+      "break": "minecraft:block.wood.break",
+      "step": "minecraft:block.wood.step",
+      "place": "minecraft:block.wood.place",
+      "hit": "minecraft:block.wood.hit",
+      "fall": "minecraft:block.wood.fall"
+    }
+  },
   "old_ap_white_panel": {
     "map_color": "sand",
   "sounds": {

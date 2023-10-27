@@ -14,7 +14,7 @@
             "tag": "minecraft:wooden_pressure_plates"
         },
         "Z": {
-            "tag": "portalcubed:portal_2_aged_gray_panels"
+            "item": "portalcubed:plywood"
         },
         "B": {
             "item": "minecraft:redstone"

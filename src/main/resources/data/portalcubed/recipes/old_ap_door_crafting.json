@@ -8,7 +8,7 @@
     ],
     "key": {
         "X": {
-            "tag": "minecraft:planks"
+            "item": "portalcubed:plywood"
         },
         "Y": {
             "tag": "c:lime_dyes"

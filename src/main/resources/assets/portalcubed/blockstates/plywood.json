@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "portalcubed:block/plywood"
+      },
+      {
+        "model": "portalcubed:block/plywood",
+        "y": 90
+      },
+      {
+        "model": "portalcubed:block/plywood",
+        "y": 180
+      },
+      {
+        "model": "portalcubed:block/plywood",
+        "y": 270
+      }
+    ]
+  }
+}
